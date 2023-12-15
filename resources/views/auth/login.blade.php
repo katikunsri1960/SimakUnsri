@@ -1,4 +1,66 @@
-@extends('layouts.app')
+@extends('layouts.guest')
+@section('title')
+Login Page
+@endsection
+@section('content')
+<div class="container h-p100">
+    <div class="row align-items-center justify-content-md-center h-p100">
+
+        <div class="col-12">
+            <div class="row justify-content-center g-0">
+                <div class="col-lg-5 col-md-12 col-sm-12">
+                    <div class="text-center">
+                        <img src="{{asset('images/unsri.png')}}" alt="UNSRI" class="img-responsive w-400">
+                    </div>
+                    <div class="bg-white rounded10 shadow-lg">
+                        <div class="content-top-agile p-20 pb-0">
+                            <h2 class="text-primary">SISTEM INFORMASI AKADEMIK</h2>
+                            <h2 class="text-primary">UNIVERSITAS SRIWIJAYA</h2>
+                        </div>
+                        <div class="p-40">
+                            {{-- if has any error --}}
+                            @if ($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <strong>Whoops!</strong> Username atau password anda salah.
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            </div>
+                            @endif
+                            <form action="{{ route('login') }}" method="post">
+                                @csrf
+                                <div class="form-group">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text bg-transparent"><i class="ti-user"></i></span>
+                                        <input type="text" class="form-control ps-15 bg-transparent" placeholder="Username" name="username" value="{{old('username')}}">
+                                    </div>
+                                    @error('username')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group mb-3">
+                                        <span class="input-group-text  bg-transparent"><i class="ti-lock"></i></span>
+                                        <input type="password" class="form-control ps-15 bg-transparent" placeholder="Password">
+                                    </div>
+                                </div>
+                                  <div class="row">
+
+                                    <div class="col-12 text-center">
+                                      <button type="submit" class="btn btn-danger mt-10 w-200">LOGIN</button>
+                                    </div>
+                                    <!-- /.col -->
+                                  </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+{{-- @extends('layouts.app')
 
 @section('content')
 <div class="container">
@@ -70,4 +132,4 @@
         </div>
     </div>
 </div>
-@endsection
+@endsection --}}

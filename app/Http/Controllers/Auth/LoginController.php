@@ -38,12 +38,10 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-    public array $username = ['username', 'email'];
-
-    public function username(): string
+    public function username()
     {
-        return $this->username[request()->input('username') ? 'username' : 'email'];
+        return 'username';
     }
 
-    
+
 }
