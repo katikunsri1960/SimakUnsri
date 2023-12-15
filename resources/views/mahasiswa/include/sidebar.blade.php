@@ -5,9 +5,9 @@
             <div class="multinav-scroll" style="height: 100%;">
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header">Dashboard & Apps</li>
-                    <li class="treeview">
-                        <a href="#">
+                    <li class="header">Dashboard</li>
+                    <li class="{{request()->routeIs('mahasiswa') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa')}}">
                             <i class="icon-Layout-4-blocks"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
@@ -15,24 +15,6 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li><a href="index.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 1</a></li>
-                            <li><a href="index2.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 2</a></li>
-                            <li><a href="index3.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 3</a></li>
-                            <li><a href="index4.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 4</a></li>
-                            <li><a href="index5.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 5</a></li>
-                            <li><a href="index6.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 6</a></li>
-                            <li><a href="index7.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 7</a></li>
-                            <li><a href="index8.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Dashboard 8</a></li>
-                        </ul>
                     </li>
                     <li class="treeview">
                         <a href="#">

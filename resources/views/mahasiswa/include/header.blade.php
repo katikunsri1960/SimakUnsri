@@ -7,10 +7,10 @@
                     class="path3"></span></span>
         </a>
         <!-- Logo -->
-        <a href="index.html" class="logo">
+        <a href="{{route('mahasiswa')}}" class="logo">
             <!-- logo-->
             <div class="logo-lg">
-                <span class="light-logo"><img src="images/images/logo-light-text.png" alt="logo"></span>
+                <span class="light-logo"><img src="images/siakad.png" alt="logo"></span>
                 <span class="dark-logo"><img src="images/images/logo-dark-text.png" alt="logo"></span>
             </div>
         </a>
