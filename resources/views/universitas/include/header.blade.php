@@ -7,7 +7,7 @@
                     class="path3"></span></span>
         </a>
         <!-- Logo -->
-        <a href="{{route('mahasiswa')}}" class="logo">
+        <a href="{{route('univ')}}" class="logo">
             <!-- logo-->
             <div class="logo-lg">
                 <span class="light-logo"><img src="images/siakad.png" alt="logo"></span>
@@ -19,7 +19,7 @@
     <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->
         <div class="app-menu">
-            <ul class="header-megamenu nav">
+            {{-- <ul class="header-megamenu nav">
                 <li class="btn-group nav-item d-md-none">
                     <a href="#" class="waves-effect waves-light nav-link push-btn" data-toggle="push-menu"
                         role="button">
@@ -46,7 +46,7 @@
                                 class="path2"></span><span class="path3"></span></i>
                     </a>
                 </li>
-            </ul>
+            </ul> --}}
         </div>
 
         <div class="navbar-custom-menu r-side">
@@ -141,8 +141,6 @@
                         <li class="user-body">
                             <a class="dropdown-item" href="#"><i class="ti-user text-muted me-2"></i>
                                 Data Diri</a>
-                            <a class="dropdown-item" href="#"><i class="ti-wallet text-muted me-2"></i> My
-                                Wallet</a>
                             <a class="dropdown-item" href="#"><i class="ti-settings text-muted me-2"></i>
                                 Settings</a>
                             <div class="dropdown-divider"></div>

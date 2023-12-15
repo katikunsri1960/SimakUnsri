@@ -6,8 +6,8 @@
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Dashboard</li>
-                    <li class="{{request()->routeIs('mahasiswa') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa')}}">
+                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
+                        <a href="{{route('univ')}}">
                             <i class="icon-Layout-4-blocks"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
@@ -188,7 +188,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="treeview">
+                    {{-- <li class="treeview">
                         <a href="#">
                             <i class="icon-File"><span class="path1"></span><span class="path2"></span><span
                                     class="path3"></span></i>
@@ -263,8 +263,8 @@
                                 </ul>
                             </li>
                         </ul>
-                    </li>
-                    <li class="treeview">
+                    </li> --}}
+                    {{-- <li class="treeview">
                         <a href="#">
                             <i class="icon-Chart-pie"><span class="path1"></span><span class="path2"></span></i>
                             <span>Charts</span>
@@ -309,8 +309,8 @@
                                             class="path1"></span><span class="path2"></span></i>Pie & Doughnut
                                     Chart</a></li>
                         </ul>
-                    </li>
-                    <li class="header">COLLECTIONS</li>
+                    </li> --}}
+                    {{-- <li class="header">COLLECTIONS</li>
                     <li class="treeview">
                         <a href="#">
                             <i class="icon-Library"><span class="path1"></span><span class="path2"></span></i>
@@ -492,7 +492,7 @@
                                             class="path1"></span><span class="path2"></span></i>Maintenance</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                 </ul>
             </div>
         </div>

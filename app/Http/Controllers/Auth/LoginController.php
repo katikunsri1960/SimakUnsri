@@ -58,7 +58,7 @@ class LoginController extends Controller
             if (auth()->user()->role == User::ADMINISTRATOR) {
                 return redirect()->route('admin.dashboard-admin');
             } else if (auth()->user()->role == User::ADMIN_UNIVERSITAS) {
-                return redirect()->route('admin-univ.dashboard-admin-univ');
+                return redirect()->route('univ');
             } else if(auth()->user()->role == User::ADMIN_FAKULTAS){
                 return redirect()->route('admin-fakultas.dashboard-admin-fakultas');
             } else if(auth()->user()->role == User::ADMIN_PRODI){

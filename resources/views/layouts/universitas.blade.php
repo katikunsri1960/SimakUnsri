@@ -27,9 +27,9 @@
     <div class="wrapper">
         <div id="loader"></div>
 
-        @include('mahasiswa.include.header')
+        @include('universitas.include.header')
 
-        @include('mahasiswa.include.sidebar')
+        @include('universitas.include.sidebar')
 
 
         <!-- Content Wrapper. Contains page content -->
@@ -181,7 +181,7 @@
                 </div>
                 <!-- /.tab-pane -->
                 <!-- Settings tab content -->
-                <div class="tab-pane" id="control-sidebar-settings-tab">
+                {{-- <div class="tab-pane" id="control-sidebar-settings-tab">
                     <div class="flexbox">
                         <a href="javascript:void(0)" class="text-grey">
                             <i class="ti-more"></i>
@@ -307,7 +307,7 @@
                             </div>
                         </li>
                     </ul>
-                </div>
+                </div> --}}
                 <!-- /.tab-pane -->
             </div>
         </aside>
@@ -320,7 +320,7 @@
     <!-- ./wrapper -->
 
     <!-- ./side demo panel -->
-    <div class="sticky-toolbar">
+    {{-- <div class="sticky-toolbar">
         <a href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Buy Now"
             class="waves-effect waves-light btn btn-success btn-flat mb-5 btn-sm" target="_blank">
             <span class="icon-Money"><span class="path1"></span><span class="path2"></span></span>
@@ -335,9 +335,9 @@
             <span class="icon-Group-chat"><span class="path1"></span><span class="path2"></span></span>
         </a>
     </div>
-    <!-- Sidebar -->
+    <!-- Sidebar --> --}}
 
-    <div id="chat-box-body">
+    {{-- <div id="chat-box-body">
         <div id="chat-circle" class="waves-effect waves-circle btn btn-circle btn-lg btn-warning l-h-70">
             <div id="chat-overlay"></div>
             <span class="icon-Group-chat fs-30"><span class="path1"></span><span class="path2"></span></span>
@@ -454,8 +454,8 @@
                 </form>
             </div>
         </div>
-    </div>
-   
+    </div> --}}
+
     <!-- Page Content overlay -->
 
 

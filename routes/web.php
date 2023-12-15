@@ -30,5 +30,9 @@ Route::group(['middleware' => ['auth']], function() {
     Route::group(['middleware' => ['role:dosen']], function() {
         Route::get('/dosen', [App\Http\Controllers\Dosen\DashboardController::class, 'index'])->name('dosen');
     });
+
+    Route::group(['middleware' => ['role:univ']], function() {
+        Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
+    });
 });
 
