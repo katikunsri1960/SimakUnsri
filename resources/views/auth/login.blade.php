@@ -10,7 +10,7 @@ Login Page
             <div class="row justify-content-center g-0">
                 <div class="col-lg-5 col-md-12 col-sm-12">
                     <div class="text-center">
-                        <img src="{{asset('images/unsri.png')}}" alt="UNSRI" class="img-responsive w-400">
+                        <img src="{{asset('images/unsri.png')}}" alt="UNSRI" class="img-responsive w-350">
                     </div>
                     <div class="bg-white rounded10 shadow-lg">
                         <div class="content-top-agile p-20 pb-0">
@@ -41,7 +41,7 @@ Login Page
                                 <div class="form-group">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text  bg-transparent"><i class="ti-lock"></i></span>
-                                        <input type="password" class="form-control ps-15 bg-transparent" placeholder="Password">
+                                        <input type="password" class="form-control ps-15 bg-transparent" placeholder="Password" name="password">
                                     </div>
                                 </div>
                                   <div class="row">

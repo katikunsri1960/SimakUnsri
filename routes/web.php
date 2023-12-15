@@ -22,6 +22,13 @@ Auth::routes([
 ]);
 
 Route::group(['middleware' => ['auth']], function() {
-    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    // route for mahasiswa
+    Route::group(['middleware' => ['role:mahasiswa']], function() {
+        Route::get('/mahasiswa', [App\Http\Controllers\Mahasiswa\DashboardController::class, 'index'])->name('mahasiswa');
+    });
+
+    Route::group(['middleware' => ['role:dosen']], function() {
+        Route::get('/dosen', [App\Http\Controllers\Dosen\DashboardController::class, 'index'])->name('dosen');
+    });
 });
 

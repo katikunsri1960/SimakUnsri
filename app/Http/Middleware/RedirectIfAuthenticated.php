@@ -21,7 +21,19 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+
+                if (auth()->user()->role == 'admin') {
+                    return redirect(RouteServiceProvider::ADMIN);
+                } elseif (auth()->user()->role === 'universitas') {
+                    return redirect(RouteServiceProvider::UNIVERSITAS);
+                } elseif (auth()->user()->role === 'fakultas') {
+                    return redirect(RouteServiceProvider::FAKULTAS);
+                } elseif (auth()->user()->role === 'prodi') {
+                    return redirect(RouteServiceProvider::PRODI);
+                } elseif (auth()->user()->role === 'mahasiswa') {
+                    return redirect(RouteServiceProvider::MAHASISWA);
+                }
+                // return redirect(RouteServiceProvider::HOME);
             }
         }
 
