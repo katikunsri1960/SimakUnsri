@@ -16,6 +16,7 @@ class User extends Authenticatable
     public const ADMIN_UNIVERSITAS = 'univ';
     public const ADMIN_FAKULTAS = 'fakultas';
     public const ADMIN_PRODI = 'prodi';
+    public const DOSEN = 'dosen';
     public const MAHASISWA = 'mahasiswa';
 
     /**

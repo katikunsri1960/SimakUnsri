@@ -28,6 +28,13 @@ class UserSeeder extends Seeder
                 'email' => 'admin@unsri.ac.id',
                 'name' => 'Admin Universitas',
             ],
+            [
+                'username' => 'dosen1',
+                'password' => bcrypt('dosen123'),
+                'role' => 'dosen',
+                'email' => 'dosen@unsri.ac.id',
+                'name' => 'Dosen',
+            ]
         ];
 
         User::insert($data);
