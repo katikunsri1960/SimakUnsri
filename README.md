@@ -1,4 +1,4 @@
-# Development Simak UNSRI
+# Development SIAKAD UNSRI
 
 ## Getting Started
 - Install composer dan node js pada perangkat yang digunakan

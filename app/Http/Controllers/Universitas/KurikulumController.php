@@ -7,6 +7,7 @@ use App\Models\MataKuliah;
 use App\Services\Feeder\FeederAPI;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 
 class KurikulumController extends Controller
 {
@@ -34,18 +35,10 @@ class KurikulumController extends Controller
         $limit = 0;
         $offset = 0;
         $order = "";
+        $model = \App\Models\ListKurikulum::class;
 
-        $api = new FeederAPI($act, $offset, $limit,  $order);
-
-        $result = $api->runWS();
-
-        if (ListKurikulum::count() == 0) {
-            ListKurikulum::insert($result['data']);
-        } else {
-            foreach ($result['data'] as $d) {
-                ListKurikulum::updateOrCreate(['id_kurikulum' => $d['id_kurikulum']], $d);
-            }
-        }
+        $batch = Bus::batch([])->dispatch();
+        $job = new ProccessSync($model, $act, $limit, $offset, $order);
 
         return redirect()->route('univ.kurikulum')->with('success', 'Data kurikulum berhasil disinkronisasi');
 
