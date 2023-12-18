@@ -28,7 +28,20 @@ Route::group(['middleware' => ['auth']], function() {
     });
 
     Route::group(['middleware' => ['role:dosen']], function() {
-        // Route::get('/dosen', [App\Http\Controllers\Dosen\DashboardController::class, 'index'])->name('dosen');
+        Route::get('/dosen', [App\Http\Controllers\Dosen\DashboardController::class, 'index'])->name('dosen');
+
+
+    });
+
+    Route::group(['middleware' => ['role:prodi']], function() {
+        Route::get('/prodi', [App\Http\Controllers\Prodi\DashboardController::class, 'index'])->name('prodi');
+
+
+    });
+
+    Route::group(['middleware' => ['role:fakultas']], function() {
+        Route::get('/fakultas', [App\Http\Controllers\Fakultas\DashboardController::class, 'index'])->name('fakultas');
+
     });
 
     Route::group(['middleware' => ['role:univ']], function() {
