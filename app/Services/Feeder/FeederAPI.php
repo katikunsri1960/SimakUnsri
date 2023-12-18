@@ -15,7 +15,7 @@ class FeederAPI {
     private $act, $offset, $limit, $order, $filter;
 
 
-    function __construct($act, $offset, $limit, $order, ) {
+    function __construct($act, $offset, $limit, $order, $filter = null) {
 
         $this->url = env('FEEDER_URL');
         $this->username = env('FEEDER_USERNAME');
@@ -24,6 +24,7 @@ class FeederAPI {
         $this->offset = $offset;
         $this->limit = $limit;
         $this->order = $order;
+        $this->filter = $filter;
 
     }
 
@@ -55,6 +56,7 @@ class FeederAPI {
                 "offset" => $this->offset,
                 "order" => $this->order,
                 "limit" => $this->limit,
+                "filter" => $this->filter,
             ];
 
             $req = $client->post( $this->url, [
