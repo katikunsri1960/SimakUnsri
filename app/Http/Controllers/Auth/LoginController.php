@@ -50,7 +50,7 @@ class LoginController extends Controller
         $input = $req->all();
 
         $this->validate($req, [
-            'username' => 'required',
+            'username' => 'required|exists:users,username',
             'password' => 'required',
         ]);
 

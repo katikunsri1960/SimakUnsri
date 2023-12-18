@@ -5,7 +5,7 @@
             <div class="multinav-scroll" style="height: 100%;">
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header">Dashboard</li>
+                    <li class="header">Menu Utama</li>
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
                         <a href="{{route('univ')}}">
                             <i class="icon-Layout-4-blocks"><span class="path1"></span><span
@@ -16,28 +16,25 @@
                             </span>
                         </a>
                     </li>
-                    <li class="treeview">
+                    <li class="treeview {{request()->routeIs('univ.kurikulum') | request()->routeIs('univ.mata-kuliah') ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i span class="icon-Layout-grid"><span class="path1"></span><span
+                            <i span class="icon-Library"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Apps</span>
+                            <span>Kurikulum</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="extra_calendar.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Calendar</a>
+                            <li class="{{request()->routeIs('univ.kurikulum') ? 'active' : ''}}"><a href="{{route('univ.kurikulum')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>List Kurikulum</a>
                             </li>
-                            <li><a href="contact_app.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Contact List</a>
+                            <li class="{{request()->routeIs('univ.mata-kuliah') ? 'active' : ''}}">
+                                <a href="{{route('univ.mata-kuliah')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Mata Kuliah</a>
                             </li>
                             <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Chat</a></li>
-                            <li><a href="extra_taskboard.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Todo</a></li>
-                            <li><a href="mailbox.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Mailbox</a></li>
+                                            class="path1"></span><span class="path2"></span></i>Matkul Kurikulum</a></li>
                         </ul>
                     </li>
                     <li class="header">Components & UI </li>

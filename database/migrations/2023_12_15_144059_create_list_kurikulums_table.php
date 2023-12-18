@@ -16,6 +16,7 @@ return new class extends Migration
             $table->integer("id_jenj_didik")->nullable();
             $table->integer("jml_sem_normal")->nullable();
             $table->string("id_kurikulum")->nullable();
+            $table->index("id_kurikulum");
             $table->string("nama_kurikulum");
             $table->string("id_prodi");
             $table->string("nama_program_studi");
@@ -24,9 +25,10 @@ return new class extends Migration
             $table->integer("jumlah_sks_lulus");
             $table->integer("jumlah_sks_wajib");
             $table->integer("jumlah_sks_pilihan");
-            $table->string("jumlah_sks_mata_kuliah_wajib")->nullable();
-            $table->string("jumlah_sks_mata_kuliah_pilihan")->nullable();
+            $table->float("jumlah_sks_mata_kuliah_wajib")->nullable();
+            $table->float("jumlah_sks_mata_kuliah_pilihan")->nullable();
             $table->string("status_sync");
+            $table->string("sk_kurikulum")->nullable();
             $table->timestamps();
         });
     }

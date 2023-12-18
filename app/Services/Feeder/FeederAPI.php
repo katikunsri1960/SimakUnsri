@@ -12,10 +12,10 @@ class FeederAPI {
     // Password
     private $password;
     //data
-    private $act, $offset, $limit, $order;
+    private $act, $offset, $limit, $order, $filter;
 
 
-    function __construct($act, $offset, $limit, $order) {
+    function __construct($act, $offset, $limit, $order, ) {
 
         $this->url = env('FEEDER_URL');
         $this->username = env('FEEDER_USERNAME');
@@ -64,7 +64,7 @@ class FeederAPI {
                 ],
                 'body' => json_encode($params)
             ]);
-            
+
             $response = $req->getBody();
 
             $result = json_decode($response,true);

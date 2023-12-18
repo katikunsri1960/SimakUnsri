@@ -28,11 +28,23 @@ Route::group(['middleware' => ['auth']], function() {
     });
 
     Route::group(['middleware' => ['role:dosen']], function() {
-        Route::get('/dosen', [App\Http\Controllers\Dosen\DashboardController::class, 'index'])->name('dosen');
+        // Route::get('/dosen', [App\Http\Controllers\Dosen\DashboardController::class, 'index'])->name('dosen');
     });
 
     Route::group(['middleware' => ['role:univ']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
+        Route::prefix('universitas')->group(function () {
+
+            Route::prefix('kurikulum')->group(function () {
+                Route::get('/', [App\Http\Controllers\Universitas\KurikulumController::class, 'index'])->name('univ.kurikulum');
+                Route::get('/sync-kurikulum', [App\Http\Controllers\Universitas\KurikulumController::class, 'sync_kurikulum'])->name('univ.kurikulum.sync');
+            });
+
+            Route::prefix('mata-kuliah')->group(function () {
+                Route::get('/', [App\Http\Controllers\Universitas\KurikulumController::class, 'matkul'])->name('univ.mata-kuliah');
+                Route::get('/sync-mata-kuliah', [App\Http\Controllers\Universitas\KurikulumController::class, 'sync_mata_kuliah'])->name('univ.mata-kuliah.sync');
+            });
+        });
     });
 });
 

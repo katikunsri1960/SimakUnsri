@@ -20,11 +20,14 @@ Login Page
                         <div class="p-40">
                             {{-- if has any error --}}
                             @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                                <strong>Whoops!</strong> Username atau password anda salah.
-                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <div class="alert alert-danger">
+                                <ul>
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
                             </div>
-                            @endif
+                        @endif
                             <form action="{{ route('login') }}" method="post">
                                 @csrf
                                 <div class="form-group">
@@ -43,6 +46,11 @@ Login Page
                                         <span class="input-group-text  bg-transparent"><i class="ti-lock"></i></span>
                                         <input type="password" class="form-control ps-15 bg-transparent" placeholder="Password" name="password">
                                     </div>
+                                    @error('password')
+                                    <span class="invalid-feedback text-danger" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                    @enderror
                                 </div>
                                   <div class="row">
 
