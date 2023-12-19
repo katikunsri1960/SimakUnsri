@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class MataKuliah extends Model
 {
     use HasFactory;
+    
     protected $guarded = [];
 
     public function matkul_kurikulum()

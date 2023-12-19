@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('id_prodi');
             $table->index('id_prodi');
             $table->string('id_jenis_mata_kuliah')->nullable();
-            $table->string('id_kelompok_mata_kuliah');
+            $table->string('id_kelompok_mata_kuliah')->nullable();
             $table->float('sks_mata_kuliah');
             $table->float('sks_tatap_muka')->nullable();
             $table->float('sks_praktek')->nullable();

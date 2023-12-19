@@ -38,45 +38,14 @@ Matakuliah
                     <div class="table-responsive">
                         <table id="data" class="table  table-hover margin-top-10 w-p100">
                           <thead>
-                              <tr>
-                                  <th class="text-center align-middle" rowspan="2">Status</th>
-                                  <th class="text-center align-middle" rowspan="2">No</th>
-                                  <th class="text-center align-middle" rowspan="2">Nama Kurikulum</th>
-                                  <th class="text-center align-middle" rowspan="2">Program Studi</th>
-                                  <th class="text-center align-middle" rowspan="2">Mulai Berlaku</th>
-                                  <th class="text-center align-middle" colspan="3">Aturan Jumlah sks</th>
-                                  <th class="text-center align-middle" colspan="2">Jumlah sks Matakuliah</th>
-                                  <th class="text-center align-middle" rowspan="2">SK Kurikulum</th>
-                              </tr>
-                              <tr>
-                                <th class="text-center align-middle">Lulus</th>
-                                <th class="text-center align-middle">Wajib</th>
-                                <th class="text-center align-middle">Pilihan</th>
-                                <th class="text-center align-middle">Wajib</th>
-                                <th class="text-center align-middle">Pilihan</th>
-                              </tr>
+                             <tr>
+                                <th class="text-center align-middle">Kode MK</th>
+                                <th class="text-center align-middle">Nama MK</th>
+                                <th class="text-center align-middle">Bobot</th>
+                             </tr>
                           </thead>
                           <tbody>
-                            @foreach ($data as $d)
-                            <tr>
-                                <td class="text-center align-middle">
-                                    <span class="badge badge-success">{{$d->status_sync}}</span>
 
-                                </td>
-                                <td class="text-center align-middle"></td>
-                                <td>{{$d->nama_kurikulum}}</td>
-                                <td>{{$d->nama_program_studi}}</td>
-                                <td class="text-center align-middle">{{$d->semester_mulai_berlaku}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_lulus}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_wajib}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_pilihan}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_mata_kuliah_wajib}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_mata_kuliah_pilihan}}</td>
-                                <td class="text-center align-middle">
-                                    {{$d->sk_kurikulum}}
-                                </td>
-                            </tr>
-                            @endforeach
                           </tbody>
                       </table>
                       </div>
@@ -92,27 +61,31 @@ Matakuliah
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
     $(function () {
-        "use strict";
+        // "use strict";
 
-        $('#data').DataTable( {
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+        $('#data').DataTable({
+            // dom: 'Bfrtip',
+            // buttons: [
+            //     'copy', 'csv', 'excel', 'pdf', 'print'
+            // ],
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{route('univ.mata-kuliah.data')}}',
+                type: 'GET',
+                data: function (d) {
+                    d.prodi = $('#prodi').val();
+                },
+                error: function (xhr, error, thrown) {
+                    alert('An error occurred. ' + thrown);
+                }
+            },
+            columns: [
+                {data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', searchable: true},
+                {data: 'nama_mata_kuliah', name: 'nama_mata_kuliah', searchable: true},
+                {data: 'sks_mata_kuliah', name: 'sks_mata_kuliah', class: 'text-center'},
             ],
-            columnDefs: [{
-                targets: 1,
-                searchable: false,
-                orderable: false,
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                },},
-                {
-                    targets: 0,
-                    searchable: false,
-                    orderable: false,
-                 },
-            ]
-        } );
+        });
 
         // sweet alert sync-form
         $('#sync-form').submit(function(e){
