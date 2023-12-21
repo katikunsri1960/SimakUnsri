@@ -45,7 +45,9 @@ class UserSeeder extends Seeder
             ],
         ];
 
-        User::insert($data);
+        foreach ($data as $d) {
+            User::create($d);
+        }
 
     }
 }
