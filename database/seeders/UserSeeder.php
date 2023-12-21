@@ -14,20 +14,20 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         $data = [
-            // [
-            //     'username' => '09011181320002',
-            //     'password' => bcrypt('09011181320002'),
-            //     'role' => 'mahasiswa',
-            //     'email' => '09011181320002@student.unsri.ac.id',
-            //     'name' => 'Rian Fitra Perdana',
-            // ],
-            // [
-            //     'username' => 'admin-univ',
-            //     'password' => bcrypt('admin123'),
-            //     'role' => 'univ',
-            //     'email' => 'admin@unsri.ac.id',
-            //     'name' => 'Admin Universitas',
-            // ],
+            [
+                'username' => '09011181320002',
+                'password' => bcrypt('09011181320002'),
+                'role' => 'mahasiswa',
+                'email' => '09011181320002@student.unsri.ac.id',
+                'name' => 'Rian Fitra Perdana',
+            ],
+            [
+                'username' => 'admin-univ',
+                'password' => bcrypt('admin123'),
+                'role' => 'univ',
+                'email' => 'admin@unsri.ac.id',
+                'name' => 'Admin Universitas',
+            ],
             [
                 'username' => 'dosen1',
                 'password' => bcrypt('dosen123'),
