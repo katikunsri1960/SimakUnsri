@@ -5,31 +5,35 @@
             <div class="multinav-scroll" style="height: 100%;">
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
-                    <li class="header">Dashboard</li>
-                    <li class="{{request()->routeIs('mahasiswa') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa')}}">
-                            <i class="icon-Layout-4-blocks"><span class="path1"></span><span
+                    <!-- <li class="header">Dashboard</li> -->
+                    <li class="{{request()->routeIs('mahasiswa.dashboard') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.dashboard')}}">
+                            <i class="fa fa-dashboard"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
+                        </a>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.biodata') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.biodata')}}">
+                            <i class="fa fa-id-badge"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Biodata</span>
                         </a>
                     </li>
                     <li class="treeview">
                         <a href="#">
-                            <i span class="icon-Layout-grid"><span class="path1"></span><span
+                            <i span class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Apps</span>
+                            <span>KRS</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="extra_calendar.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Calendar</a>
+                            <li><a href="{{route('mahasiswa.krs')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>KRS</a>
                             </li>
-                            <li><a href="contact_app.html"><i class="icon-Commit"><span
+                            <!-- <li><a href="contact_app.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Contact List</a>
                             </li>
                             <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
@@ -37,8 +41,108 @@
                             <li><a href="extra_taskboard.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Todo</a></li>
                             <li><a href="mailbox.html"><i class="icon-Commit"><span class="path1"></span><span
-                                            class="path2"></span></i>Mailbox</a></li>
+                                            class="path2"></span></i>Mailbox</a></li> -->
                         </ul>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.biaya-kuliah') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.biaya-kuliah')}}">
+                            <i class="fa fa-money"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Biaya Kuliah</span>
+                        </a>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.bahan-tugas') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.bahan-tugas')}}">
+                            <i class="fa fa-tasks"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Bahan & Tugas</span>
+                        </a>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.jadwal-presensi') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.jadwal-presensi')}}">
+                            <i class="fa fa-calendar"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Jadwal & Presensi</span>
+                        </a>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.pa-online') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.pa-online')}}">
+                            <i class="fa fa-calendar"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>PA Online</span>
+                        </a>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.kuisioner') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.kuisioner')}}">
+                            <i class="fa fa-calendar"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Kuisioner</span>
+                        </a>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.nilai') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.nilai')}}">
+                            <i class="fa fa-calendar"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Nilai</span>
+                        </a>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.skpi') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.skpi')}}">
+                            <i class="fa fa-calendar"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>SKPI</span>
+                        </a>
+                    </li>
+                    <li class="slide {{
+                        request()->routeIs('admin-prodi.informasi.*') || request()->routeIs('admin-prodi.informasi')
+                        // || request()->routeIs('view', ['id'=> $categoryInformations->id, 'slug'=> $categoryInformations->slug]) || request()->routeIs('visi.*') ||  request()->routeIs('lambang.*') || request()->routeIs('pimpinan.*') || request()->routeIs('senat.*')
+                        ? 'is-expanded' : '' }}">
+
+                        <a class="side-menu__item {{
+                            request()->routeIs('admin-prodi.informasi') || request()->routeIs('admin-prodi.informasi.*') || request()->routeIs('admin-prodi.view.*')
+                            ? 'active' : '' }}"
+
+                            href="{{route('admin-prodi.informasi.index')}}" ><i
+                                class="side-menu__icon fa fa-id-badge pl-4"></i><span
+                                class="side-menu__label" >INFORMATION</span><i class="angle fa fa-angle-right" data-bs-toggle="slide" href="javascript:void(0);"></i></a>
+
+                            {{-- href="{{route('admin-prodi.informasi.index')}}"><i class="side-menu__icon fa fa-newspaper-o"></i><span
+                                class="side-menu__label">INFORMATION</span></a> --}}
+
+                        <ul class="slide-menu">
+                        {{-- DAFTAR KATEGORI INFORMASI --}}
+                            {{-- @foreach ($categoryInformations as $c)
+                            <li><a href="{{route('admin-prodi.view', ['id'=> $c->id, 'slug'=> $c->slug])}}" class="slide-item {{
+                                request()->routeIs('view', ['id'=> $c->id, 'slug'=> $c->slug]) || request()->routeIs('view.*') ? 'active' : '' }}">
+                                    {{$c->name}}</a></li>
+                            @endforeach --}}
+
+                        </ul>
+                    </li>
+                    <li class="treeview {{request()->routeIs('mahasiswa.kegiatan-akademik') || request()->routeIs('mahasiswa.kegiatan-akademik') ? 'active' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-newspaper-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Kegiatan Mahasiswa</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li><a href="{{route('mahasiswa.kegiatan-akademik')}}" ><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Akademik</a>
+                            </li>
+                            <li><a href="{{route('mahasiswa.kegiatan-seminar')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Seminar</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.pengajuan-cuti') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.pengajuan-cuti')}}">
+                            <i class="fa fa-calendar"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Pengajuan Cuti</span>
+                        </a>
                     </li>
                     <li class="header">Components & UI </li>
                     <li class="treeview">
