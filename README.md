@@ -1,7 +1,7 @@
 # Development SIAKAD UNSRI
 
 ## Getting Started
-- Install composer, node js, dan database server pada perangkat yang digunakan
+- Install composer, node js dan database server pada perangkat yang digunakan
 - Clone repository ini
 - Jalankan perintah 'composer install' pada terminal
 - Jalankan perintah 'npm install && npm run dev' pada terminal
