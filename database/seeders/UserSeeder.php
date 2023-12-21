@@ -34,7 +34,15 @@ class UserSeeder extends Seeder
                 'role' => 'dosen',
                 'email' => 'dosen@unsri.ac.id',
                 'name' => 'Dosen',
-            ]
+            ],
+            [
+                'username' => 's1mesin',
+                'password' => bcrypt('s1mesin'),
+                'role' => 'prodi',
+                'email' => 's1mesin@unsri.ac.id',
+                'name' => 'Prodi S1 Mesin',
+                'fk_id' => '371d293-c602-4b1b-afc5-222081477091'
+            ],
         ];
 
         User::insert($data);
