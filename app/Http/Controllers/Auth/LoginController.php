@@ -62,7 +62,7 @@ class LoginController extends Controller
             } else if(auth()->user()->role == User::ADMIN_FAKULTAS){
                 return redirect()->route('admin-fakultas.dashboard-admin-fakultas');
             } else if(auth()->user()->role == User::ADMIN_PRODI){
-                return redirect()->route('admin-prodi.dashboard-admin-prodi');
+                return redirect()->route('prodi');
             }else if(auth()->user()->role == User::DOSEN){
                 return redirect()->route('dosen');
             }else if(auth()->user()->role == User::MAHASISWA){

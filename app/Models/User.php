@@ -19,6 +19,9 @@ class User extends Authenticatable
     public const DOSEN = 'dosen';
     public const MAHASISWA = 'mahasiswa';
 
+    const ROLE_PRODI = 'prodi';
+    const ROLE_FAKULTAS = 'fakultas';
+
     /**
      * The attributes that are mass assignable.
      *
@@ -52,4 +55,18 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function fk()
+    {
+        switch ($this->role) {
+            case User::ROLE_PRODI:
+                return $this->belongsTo(ProgramStudi::class, 'fk_id', 'id_prodi');
+            case User::ROLE_FAKULTAS:
+                return $this->belongsTo(Fakultas::class, 'fk_id', 'id');
+            default:
+                return null;
+        }
+    }
+
+
 }
