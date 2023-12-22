@@ -6,14 +6,14 @@
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Menu Utama</li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="{{route('univ')}}">
+                    <li class="{{request()->routeIs('dosen') ? 'active' : ''}}">
+                        <a href="{{route('dosen')}}">
                             <i class="fa fa-line-chart"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="treeview {{request()->routeIs('univ.kurikulum') | request()->routeIs('univ.mata-kuliah') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('dosen.profile.biodata') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-user"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -23,7 +23,7 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('univ.kurikulum') ? 'active' : ''}}"><a href="{{route('univ.kurikulum')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Biodata Dosen</a>
+                            <li class="{{request()->routeIs('dosen.profile.biodata') ? 'active' : ''}}"><a href="{{route('dosen.profile.biodata')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Biodata Dosen</a>
                             </li>
                             <li class="{{request()->routeIs('univ.mata-kuliah') ? 'active' : ''}}">
                                 <a href="{{route('univ.mata-kuliah')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Dosen</a>
@@ -45,22 +45,22 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="{{route('univ')}}">
+                    <li class="{{request()->routeIs('dosen') ? 'active' : ''}}">
+                        <a href="{{route('dosen')}}">
                             <i class="fa fa-calendar-o"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Kalender Akademik</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="{{route('univ')}}">
+                    <li class="{{request()->routeIs('dosen') ? 'active' : ''}}">
+                        <a href="{{route('dosen')}}">
                             <i class="fa fa-list"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Honor Akademik</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="{{route('univ')}}">
+                    <li class="{{request()->routeIs('dosen') ? 'active' : ''}}">
+                        <a href="{{route('dosen')}}">
                             <i class="fa fa-bullhorn"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Pengumuman</span>

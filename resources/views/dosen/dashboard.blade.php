@@ -14,8 +14,7 @@ Dashboard
                         <div class="col-12 col-lg-9">
                             <h2>Hello {{auth()->user()->name}}, Welcome Back!</h2>
                             <p class="text-dark mb-0 fs-16">
-                                Your course Overcoming the fear of public speaking was completed by 11
-                                New users this week!
+                                Selamat Datang di SIAKAD (Sistem Informasi Akademik) Universitas Sriwijaya
                             </p>
                         </div>
                     </div>
@@ -27,7 +26,7 @@ Dashboard
         <div class="col-12">
             <div class="box no-shadow mb-0 bg-transparent">
                 <div class="box-header no-border px-0">
-                    <h4 class="box-title">Your Courses</h4>
+                    <h4 class="box-title">Aktivitas Mengajar Dosen</h4>
                     <ul class="box-controls pull-right d-md-flex d-none">
                         <li>
                             <button class="btn btn-primary-light px-10">View All</button>
@@ -81,7 +80,7 @@ Dashboard
         </div>
         <div class="col-xl-3 col-md-6 col-12">
             <div class="box bg-secondary-light pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-2.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url(../images/images/svg-icon/color-svg/st-2.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center pe-2 justify-content-between">
@@ -176,7 +175,7 @@ Dashboard
         <div class="col-xl-4 col-12">
             <div class="box">
                 <div class="box-body">
-                    <p class="text-fade">Total Courses</p>
+                    <p class="text-fade">Jumlah SKS Ajar Semester</p>
                     <h3 class="mt-0 mb-20">19 <small class="text-success"><i class="fa fa-arrow-up ms-15 me-5"></i> 2
                             New</small></h3>
                     <div id="charts_widget_2_chart"></div>
@@ -186,7 +185,7 @@ Dashboard
         <div class="col-xl-5 col-12">
             <div class="box">
                 <div class="box-body">
-                    <p class="text-fade">Hours spent</p>
+                    <p class="text-fade">Jumlah Jam Mengajar Dosen</p>
                     <h3 class="mt-0 mb-20">21 h 30 min <small class="text-danger"><i
                                 class="fa fa-arrow-down ms-25 me-5"></i> 15%</small></h3>
                     <div id="charts_widget_1_chart"></div>
