@@ -66,7 +66,7 @@ class LoginController extends Controller
             }else if(auth()->user()->role == User::DOSEN){
                 return redirect()->route('dosen');
             }else if(auth()->user()->role == User::MAHASISWA){
-                return redirect()->route('mahasiswa.dashboard');
+                return redirect()->route('mahasiswa');
             }
 
         } else {

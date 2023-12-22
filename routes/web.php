@@ -23,22 +23,8 @@ Auth::routes([
 
 Route::group(['middleware' => ['auth']], function() {
     // route for mahasiswa
-    Route::group(['middleware' => ['role:mahasiswa'], 'as' => 'mahasiswa.'], function() {
-        Route::get('/dashboard', [App\Http\Controllers\Mahasiswa\DashboardController::class, 'index'])->name('dashboard');
-        Route::get('/biodata', [App\Http\Controllers\Mahasiswa\BiodataController::class, 'index'])->name('biodata');
-        Route::get('/kartu-rencana-studi', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'krs'])->name('krs');
-        Route::get('/kartu-hasil-studi', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'khs'])->name('khs');
-        Route::get('/transkrip-nilai', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'transkrip'])->name('transkrip');
-        Route::get('/biaya-kuliah', [App\Http\Controllers\Mahasiswa\BiayaKuliahController::class, 'index'])->name('biaya-kuliah');
-        Route::get('/bahan-tugas', [App\Http\Controllers\Mahasiswa\BahanTugasController::class, 'index'])->name('bahan-tugas');
-        Route::get('/jadwal-presensi', [App\Http\Controllers\Mahasiswa\JadwalPresensiController::class, 'index'])->name('jadwal-presensi');
-        Route::get('/pa-online', [App\Http\Controllers\Mahasiswa\PAController::class, 'index'])->name('pa-online');
-        Route::get('/kuisioner', [App\Http\Controllers\Mahasiswa\KuisionerController::class, 'index'])->name('kuisioner');
-        Route::get('/nilai', [App\Http\Controllers\Mahasiswa\NilaiController::class, 'index'])->name('nilai');
-        Route::get('/skpi', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('skpi');
-        Route::get('/kegiatan-akademik', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'akademik'])->name('akademik');
-        Route::get('/kegiatan-seminar', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'seminar'])->name('seminar');
-        Route::get('/pengajuan-cuti', [App\Http\Controllers\Mahasiswa\CutiController::class, 'index'])->name('pengajuan-cuti');       
+    Route::group(['middleware' => ['role:mahasiswa']], function() {
+        Route::get('/mahasiswa', [App\Http\Controllers\Mahasiswa\DashboardController::class, 'index'])->name('mahasiswa');
     });
 
     Route::group(['middleware' => ['role:dosen']], function() {
