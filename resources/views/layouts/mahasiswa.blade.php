@@ -31,7 +31,7 @@
 
         @include('mahasiswa.include.sidebar')
 
-
+        
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <div class="container-full">
@@ -455,7 +455,7 @@
             </div>
         </div>
     </div>
-   
+
     <!-- Page Content overlay -->
 
 
