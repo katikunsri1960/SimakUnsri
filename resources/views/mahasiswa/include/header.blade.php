@@ -10,7 +10,7 @@
         <a href="{{route('mahasiswa.dashboard')}}" class="logo">
             <!-- logo-->
             <div class="logo-lg">
-                <span class="light-logo"><img src="images/siakad.png" alt="logo"></span>
+                <span class="light-logo"><img src="{{asset('images/siakad.png')}}" alt="logo"></span>
                 <span class="dark-logo"><img src="images/images/logo-dark-text.png" alt="logo"></span>
             </div>
         </a>
