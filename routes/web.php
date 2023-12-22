@@ -24,7 +24,7 @@ Auth::routes([
 Route::group(['middleware' => ['auth']], function() {
     // route for mahasiswa
     Route::group(['middleware' => ['role:mahasiswa'], 'as' => 'mahasiswa.'], function() {
-        Route::prefix('referensi')->group(function () {
+        Route::prefix('dashboard-mahasiswa')->group(function () {
             Route::get('/dashboard', [App\Http\Controllers\Mahasiswa\DashboardController::class, 'index'])->name('dashboard');
             Route::get('/biodata', [App\Http\Controllers\Mahasiswa\BiodataController::class, 'index'])->name('biodata');
             Route::get('/kartu-rencana-studi', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'krs'])->name('krs');
