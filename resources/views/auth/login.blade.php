@@ -27,7 +27,14 @@ Login Page
                                     @endforeach
                                 </ul>
                             </div>
-                        @endif
+                            @endif
+                            {{-- if session has error --}}
+                            @if (session('error'))
+                            <div class="alert alert-danger">
+                                {{ session('error') }}
+                            </div>
+                            @endif
+
                             <form action="{{ route('login') }}" method="post">
                                 @csrf
                                 <div class="form-group">
