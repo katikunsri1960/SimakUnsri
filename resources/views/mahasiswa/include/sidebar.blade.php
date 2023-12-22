@@ -6,22 +6,22 @@
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
                     <!-- <li class="header">Dashboard</li> -->
-                    <li class="{{request()->routeIs('mahasiswa.dashboard') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.dashboard')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.dashboard') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.dashboard')}}">
                             <i class="fa fa-dashboard"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.biodata') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.biodata')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.biodata') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.biodata')}}">
                             <i class="fa fa-id-badge"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Biodata</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.krs') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.biodata')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.krs') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.biodata')}}">
                             <i class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Kartu Rencana Studi</span>
@@ -37,67 +37,67 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('mahasiswa.krs')
+                            <li class="{{request()->routeIs('mahasiswa.mahasiswa.krs')
                                 ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.krs')}}"><i class="icon-Commit"><span
+                                <a href="{{route('mahasiswa.mahasiswa.krs')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Kartu Rencana Studi</a>
                             </li>
-                            <li class="{{request()->routeIs('mahasiswa.khs')
+                            <li class="{{request()->routeIs('mahasiswa.mahasiswa.khs')
                                 ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.khs')}}"><i class="icon-Commit"><span
+                                <a href="{{route('mahasiswa.mahasiswa.khs')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
                             </li>
-                            <li class="{{request()->routeIs('mahasiswa.transkrip')
+                            <li class="{{request()->routeIs('mahasiswa.mahasiswa.transkrip')
                                 ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.transkrip')}}"><i class="icon-Commit"><span
+                                <a href="{{route('mahasiswa.mahasiswa.transkrip')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Transkrip Nilai</a>
                             </li>
                         </ul>
                     </li> -->
-                    <li class="{{request()->routeIs('mahasiswa.biaya-kuliah') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.biaya-kuliah')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.biaya-kuliah') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.biaya-kuliah')}}">
                             <i class="fa fa-money"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Biaya Kuliah</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.bahan-tugas') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.bahan-tugas')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.bahan-tugas') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.bahan-tugas')}}">
                             <i class="fa fa-tasks"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Bahan & Tugas</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.jadwal-presensi') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.jadwal-presensi')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.jadwal-presensi') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.jadwal-presensi')}}">
                             <i class="fa fa-calendar"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Jadwal & Presensi</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.pa-online') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.pa-online')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.pa-online') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.pa-online')}}">
                             <i class="fa fa-users"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>PA Online</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.kuisioner') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.kuisioner')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.kuisioner') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.kuisioner')}}">
                             <i class="fa fa-comments-o"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Kuisioner</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.nilai') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.nilai')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.nilai') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.nilai')}}">
                             <i class="fa fa-line-chart"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Nilai</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.skpi') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.skpi')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.skpi') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.skpi')}}">
                             <i class="fa fa-trophy"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>SKPI</span>
@@ -114,20 +114,20 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('mahasiswa.akademik')
+                            <li class="{{request()->routeIs('mahasiswa.mahasiswa.akademik')
                                 ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.akademik')}}"><i class="icon-Commit"><span
+                                <a href="{{route('mahasiswa.mahasiswa.akademik')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Akademik</a>
                             </li>
-                            <li class="{{request()->routeIs('mahasiswa.seminar')
+                            <li class="{{request()->routeIs('mahasiswa.mahasiswa.seminar')
                                 ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.seminar')}}"><i class="icon-Commit"><span
+                                <a href="{{route('mahasiswa.mahasiswa.seminar')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Seminar</a>
                             </li>
                         </ul>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.pengajuan-cuti') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.pengajuan-cuti')}}">
+                    <li class="{{request()->routeIs('mahasiswa.mahasiswa.pengajuan-cuti') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.mahasiswa.pengajuan-cuti')}}">
                             <i class="fa fa-calendar-times-o"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Pengajuan Cuti</span>
