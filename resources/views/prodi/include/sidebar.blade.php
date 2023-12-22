@@ -20,7 +20,7 @@
                         <a href="#">
                             <i span class="icon-Library"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Referensi</span>
+                            <span>Data Master</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
@@ -30,7 +30,40 @@
                                             class="path1"></span><span class="path2"></span></i>Program Studi</a>
                             </li> --}}
                             <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Matkul Kurikulum</a></li>
+                                            class="path1"></span><span class="path2"></span></i>Dosen</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Mahasiswa</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Kurikulum</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Mata Kuliah</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a></li>
+                        </ul>
+                    </li>
+                    <li class="treeview {{request()->routeIs('prodi.referensi.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-graduation-cap"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Data Akademik</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            {{-- <li class="{{request()->routeIs('prodi.referensi.prodi') ? 'active' : ''}}"><a href="{{route('prodi.referensi.prodi')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Program Studi</a>
+                            </li> --}}
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Kelas dan Penjadwalan</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Mahasiswa</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Kurikulum</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Mata Kuliah</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a></li>
                         </ul>
                     </li>
                     {{-- <li class="treeview {{request()->routeIs('prodi.kurikulum') | request()->routeIs('prodi.mata-kuliah') ? 'active menu-open' : ''}}">
