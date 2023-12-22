@@ -12,7 +12,7 @@ Dashboard
                         <div class="col-12 col-lg-3"><img src="images/images/svg-icon/color-svg/custom-14.svg" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Halaman khs {{auth()->user()->name}}</h2>
+                            <h2>Halaman SKPI {{auth()->user()->name}}</h2>
                             <p class="text-dark mb-0 fs-16">
                                 Your course Overcoming the fear of public speaking was completed by 11
                                 New users this week!
