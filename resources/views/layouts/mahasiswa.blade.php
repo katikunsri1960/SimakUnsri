@@ -74,7 +74,7 @@
                     <div class="media-list media-list-hover mt-20">
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-success" href="#">
-                                <img src="images/images/avatar/1.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/1.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
