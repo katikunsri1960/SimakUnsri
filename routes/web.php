@@ -27,10 +27,27 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/mahasiswa', [App\Http\Controllers\Mahasiswa\DashboardController::class, 'index'])->name('mahasiswa');
     });
 
+    //route for dosen
     Route::group(['middleware' => ['role:dosen']], function() {
         Route::get('/dosen', [App\Http\Controllers\Dosen\DashboardController::class, 'index'])->name('dosen');
+        Route::prefix('dosen')->group(function () {
 
+            Route::prefix('profile-dosen')->group(function () {
+                Route::get('/biodata-dosen', [App\Http\Controllers\Dosen\BiodataDosenController::class, 'biodata_dosen'])->name('dosen.profile.biodata');
+                // Route::get('/sync-prodi', [App\Http\Controllers\Universitas\ReferensiController::class, 'sync_prodi'])->name('univ.referensi.prodi.sync');
+            });
 
+            // Route::prefix('kurikulum')->group(function () {
+            //     Route::get('/', [App\Http\Controllers\Universitas\KurikulumController::class, 'index'])->name('univ.kurikulum');
+            //     Route::get('/sync-kurikulum', [App\Http\Controllers\Universitas\KurikulumController::class, 'sync_kurikulum'])->name('univ.kurikulum.sync');
+            // });
+
+            // Route::prefix('mata-kuliah')->group(function () {
+            //     Route::get('/', [App\Http\Controllers\Universitas\KurikulumController::class, 'matkul'])->name('univ.mata-kuliah');
+            //     Route::get('/data', [App\Http\Controllers\Universitas\KurikulumController::class, 'matkul_data'])->name('univ.mata-kuliah.data');
+            //     Route::get('/sync-mata-kuliah', [App\Http\Controllers\Universitas\KurikulumController::class, 'sync_mata_kuliah'])->name('univ.mata-kuliah.sync');
+            // });
+        });
     });
 
     Route::group(['middleware' => ['role:prodi']], function() {
