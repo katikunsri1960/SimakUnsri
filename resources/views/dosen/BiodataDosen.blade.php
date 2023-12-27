@@ -22,10 +22,10 @@ Biodata Dosen
 		</div>
     </div>
     <div class="row">
-        <div class="col-xl-12 col-lg-12 col-12 ">
+        <div class="col-xl-12 col-lg-12 col-12">
             <div class="bg-primary-light rounded20  big-side-section">
                 <div class="row">
-                    <div class="col-xxl-12 col-xl-12 col-lg-12">
+                    <div class="col-xxl-11 col-xl-11 col-lg-11 ms-55 pt-50 pb-10">
                         <div class="box">		
                             <div class="text-white box-body bg-img text-center m-20 py-65" style="background-image: url({{asset('images/images/gallery/creative/img-12.jpg')}});">
                             </div>
@@ -38,20 +38,43 @@ Biodata Dosen
                                             </a>	
                                         </div>
                                         <div class="ms-30 mb-15">
-                                            <h5 class="my-10 mb-0 fw-500 fs-18"><a class="text-dark" href="#">Arka Khalif</a></h5>
-                                            <span class="text-fade mt-5"><i class="fa fa-map-marker" aria-hidden="true"></i> Surakarta, INA</span>
+                                            <h5 class="my-10 mb-0 fw-500 fs-18"><a class="text-dark" href="#">Nama Dosen</a></h5>
+                                            <span class="text-fade mt-5">Nama Homebase Program Studi</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>					
                         </div>
                     </div>
-                    <div class="col-xxl-12 mt-xxl-20">
+                    <div class="col-xxl-11 ms-55 pb-50 mb-0">
                         <div class="box box-body mb-0">
                             <div class="row">
                                 <div class="col-xl-4 col-lg-12">
                                     <h3 class="fw-500 text-dark mt-0">Biodata</h3>
                                 </div>                             
+                            </div>
+                            <div class="row">
+                                <div class="table-responsive">
+                                    <table class="table table-striped mb-0">
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">Nama</th>
+                                                <td> : </td>
+                                                <td>Mark</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">NIP</th>
+                                                <td> : </td>
+                                                <td>Jacob</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">NIDN</th>
+                                                <td> : </td>
+                                                <td>Larry</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
