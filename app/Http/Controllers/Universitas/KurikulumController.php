@@ -30,7 +30,7 @@ class KurikulumController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = MataKuliah::query();
+        $query = MataKuliah::with('prodi');
 
         if ($searchValue) {
             $query = $query->where('kode_mata_kuliah', 'like', '%' . $searchValue . '%')
@@ -48,15 +48,21 @@ class KurikulumController extends Controller
         $offset = $request->input('start');
 
         // Define the column names that correspond to the DataTables column indices
-        $columns = ['kode_mata_kuliah', 'nama_mata_kuliah', 'sks_mata_kuliah'];
-
-        // Check if the order parameter is present in the request
         if ($request->has('order')) {
             $orderColumn = $request->input('order.0.column');
             $orderDirection = $request->input('order.0.dir');
 
-            // Order the query
-            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            // Define the column names that correspond to the DataTables column indices
+            $columns = ['kode_mata_kuliah', 'nama_mata_kuliah', 'sks_mata_kuliah', 'prodi'];
+
+            if ($columns[$orderColumn] == 'prodi') {
+                $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
+                    ->orderBy('prodi.nama_jenjang_pendidikan', $orderDirection)
+                    ->orderBy('prodi.nama_program_studi', $orderDirection)
+                    ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
+            } else {
+                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            }
         }
 
         $data = $query->skip($offset)->take($limit)->get();

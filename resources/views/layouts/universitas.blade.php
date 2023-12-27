@@ -10,7 +10,8 @@
     <link rel="icon" href="{{asset('images/unsri.png')}}">
 
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
-
+    
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <!-- Vendors Style-->
     <link rel="stylesheet" href="{{asset('assets/css/vendors_css.css')}}">
 
@@ -25,7 +26,7 @@
             align-items: center;
         }
     </style>
-    {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+
 
 </head>
 
