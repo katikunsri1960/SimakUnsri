@@ -25,7 +25,7 @@
             align-items: center;
         }
     </style>
-    {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+    <!-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) -->
 
 </head>
 
@@ -335,11 +335,13 @@
     <script src="{{asset('assets/js/vendors.min.js')}}"></script>
     <script src="{{asset('assets/icons/feather-icons/feather.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
+    <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
     @stack('js')
 
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script>
+    <script src="{{asset('assets/js/pages/data-table.js')}}"></script>
 
 
 </body>
