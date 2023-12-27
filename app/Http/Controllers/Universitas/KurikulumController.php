@@ -42,17 +42,25 @@ class KurikulumController extends Controller
             $query->whereIn('id_prodi', $filter);
         }
 
+        $recordsFiltered = $query->count();
+
         $limit = $request->input('length');
         $offset = $request->input('start');
-        // $order = $request->input('order.0.column');
-        // $dir = $request->input('order.0.dir');
 
-        $query->skip($offset)->take($limit);
+        // Define the column names that correspond to the DataTables column indices
+        $columns = ['kode_mata_kuliah', 'nama_mata_kuliah', 'sks_mata_kuliah'];
 
-        $data = $query->get();
+        // Check if the order parameter is present in the request
+        if ($request->has('order')) {
+            $orderColumn = $request->input('order.0.column');
+            $orderDirection = $request->input('order.0.dir');
 
+            // Order the query
+            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+        }
 
-        $recordsFiltered = $data->count();
+        $data = $query->skip($offset)->take($limit)->get();
+
         $recordsTotal = Matakuliah::count();
 
         $response = [
@@ -61,7 +69,7 @@ class KurikulumController extends Controller
             'recordsFiltered' => $recordsFiltered,
             'data' => $data,
         ];
-        // dd($response);
+
         return response()->json($response);
 
     }
