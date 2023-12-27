@@ -9,6 +9,6 @@ class BiodataDosenController extends Controller
 {
     public function biodata_dosen()
     {
-        return view('dosen.biodatadosen');
+        return view('dosen.biodata-dosen');
     }
 }
