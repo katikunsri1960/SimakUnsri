@@ -69,7 +69,7 @@
                     <li class="header">Perkuliahan</li>
                     <li class="treeview">
                         <a href="#">
-                            <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
+                            <i class="fa fa-calendar-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Jadwal Dosen</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
@@ -110,39 +110,39 @@
                     </li>
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
+                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Penilaian Sidang</span>
                         </a>
                     </li>  
                     <li class="header">Pembimbing Mahasiswa</li>
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
+                            <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Akademik</span>
                         </a>
                     </li>
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
+                            <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Non-Akademik</span>
                         </a>
                     </li>
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
+                            <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Tugas Akhir</span>
                         </a>
                     </li> 
                     <li class="header">Bantuan</li>
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
+                            <i class="fa fa-key"><span class="path1"></span><span class="path2"></span></i>
                             <span>Ganti Password</span>
                         </a>
                     </li>
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
+                            <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
                     </li>                
