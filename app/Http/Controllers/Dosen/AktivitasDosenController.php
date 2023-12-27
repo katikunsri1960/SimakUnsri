@@ -9,6 +9,6 @@ class AktivitasDosenController extends Controller
 {
     public function aktivitas_dosen()
     {
-        return view('dosen.aktivitasdosen');
+        return view('dosen.aktivitas-dosen');
     }
 }

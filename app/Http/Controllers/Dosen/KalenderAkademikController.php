@@ -9,6 +9,6 @@ class KalenderAkademikController extends Controller
 {
     public function kalender_akademik()
     {
-        return view('dosen.kalenderakademik');
+        return view('dosen.kalender-akademik');
     }
 }

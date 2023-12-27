@@ -23,7 +23,7 @@ Biodata Dosen
     </div>
     <div class="row">
         <div class="col-xl-12 col-lg-12 col-12">
-            <div class="bg-primary-light rounded20  big-side-section">
+            <div class="bg-primary-light rounded20 big-side-section">
                 <div class="row">
                     <div class="col-xxl-12 col-xl-12 col-lg-12 pt-20 px-20">
                         <div class="box">		

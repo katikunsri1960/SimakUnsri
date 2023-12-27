@@ -9,6 +9,6 @@ class MengajarDosenController extends Controller
 {
     public function mengajar_dosen()
     {
-        return view('dosen.mengajardosen');
+        return view('dosen.mengajar-dosen');
     }
 }
