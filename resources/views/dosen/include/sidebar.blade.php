@@ -67,7 +67,7 @@
                         </a>
                     </li> -->
                     <li class="header">Perkuliahan</li>
-                    <li class="treeview">
+                    <li class="treeview {{request()->routeIs('dosen.perkuliahan.kesediaan-waktu-dosen') | request()->routeIs('dosen.perkuliahan.jadwal-kuliah') | request()->routeIs('dosen.perkuliahan.jadwal-bimbingan') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-bimbingan') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-kuliah') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i class="fa fa-calendar-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Jadwal Dosen</span>
@@ -76,9 +76,12 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="ui_grid.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kesediaan Waktu Dosen</a></li>
-                            <li><a href="ui_grid.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Kuliah</a></li>
-                            <li><a href="ui_grid.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Bimbingan</a></li>
+                            <li class="{{request()->routeIs('dosen.perkuliahan.jadwal-kuliah') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-kuliah') ? 'active' : ''}}">
+                                <a href="{{route('dosen.perkuliahan.jadwal-kuliah')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Kuliah</a>
+                            </li>
+                            <li class="{{request()->routeIs('dosen.perkuliahan.jadwal-bimbingan') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-bimbingan') ? 'active' : ''}}">
+                                <a href="{{route('dosen.perkuliahan.jadwal-bimbingan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Bimbingan</a>
+                            </li>
                         </ul>
                     </li> 
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
