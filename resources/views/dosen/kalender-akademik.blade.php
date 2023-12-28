@@ -1,6 +1,6 @@
 @extends('layouts.dosen')
 @section('title')
-Biodata Dosen
+Kalender Akademik
 @endsection
 @section('content')
 <section class="content bg-white">
