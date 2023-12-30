@@ -67,7 +67,7 @@
                         </a>
                     </li>
                     <li class="header">Perkuliahan</li>
-                    <li class="treeview {{request()->routeIs('dosen.perkuliahan.kesediaan-waktu-dosen') | request()->routeIs('dosen.perkuliahan.jadwal-kuliah') | request()->routeIs('dosen.perkuliahan.jadwal-bimbingan') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-bimbingan') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-kuliah') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('dosen.perkuliahan.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i class="fa fa-calendar-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Jadwal Dosen</span>
