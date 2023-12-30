@@ -1,6 +1,6 @@
 @extends('layouts.dosen')
 @section('title')
-Dashboard
+Dashboard Dosen
 @endsection
 @section('content')
 <section class="content">

@@ -1,6 +1,6 @@
 @extends('layouts.dosen')
 @section('title')
-Biodata Dosen
+Mengajar Dosen
 @endsection
 @section('content')
 <section class="content bg-white">
