@@ -93,6 +93,11 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/bimbingan-non-akademik', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_non_akademik'])->name('dosen.pembimbing.bimbingan-non-akademik');
                 Route::get('/bimbingan-tugas-akhir', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_tugas_akhir'])->name('dosen.pembimbing.bimbingan-tugas-akhir');
             });
+
+            //Route Bantuan
+            Route::prefix('bantuan')->group(function () {
+                Route::get('/ganti-password', [App\Http\Controllers\Dosen\Bantuan\GantiPasswordController::class, 'ganti_password'])->name('dosen.bantuan.ganti-password');
+            });
         });
     });
 
