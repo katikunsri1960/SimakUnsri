@@ -5,7 +5,7 @@
             <div class="multinav-scroll" style="height: 100%;">
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
-                    <!-- <li class="header">Dashboard</li> -->
+                    <li class="header">MENU UTAMA</li>
                     <li class="{{request()->routeIs('mahasiswa.dashboard') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.dashboard')}}">
                             <i class="fa fa-dashboard"><span class="path1"></span><span
@@ -21,7 +21,7 @@
                         </a>
                     </li>
                     <li class="{{request()->routeIs('mahasiswa.krs') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.biodata')}}">
+                        <a href="{{route('mahasiswa.krs')}}">
                             <i class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Kartu Rencana Studi</span>
@@ -61,6 +61,8 @@
                             <span>Biaya Kuliah</span>
                         </a>
                     </li>
+
+                    <li class="header">PERKULIAHAN</li>
                     <li class="{{request()->routeIs('mahasiswa.bahan-tugas') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.bahan-tugas')}}">
                             <i class="fa fa-tasks"><span class="path1"></span><span
@@ -103,7 +105,6 @@
                             <span>SKPI</span>
                         </a>
                     </li>
-                    
                     <li class="treeview">
                         <a href="#">
                             <i span class="fa fa-newspaper-o"><span class="path1"></span><span
@@ -126,6 +127,8 @@
                             </li>
                         </ul>
                     </li>
+
+                    <li class="header">LAIN-LAIN</li>
                     <li class="{{request()->routeIs('mahasiswa.pengajuan-cuti') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.pengajuan-cuti')}}">
                             <i class="fa fa-calendar-times-o"><span class="path1"></span><span
@@ -133,7 +136,20 @@
                             <span>Pengajuan Cuti</span>
                         </a>
                     </li>
-                    
+
+                    <li class="header">BANTUAN</li>
+                    <li class="{{request()->routeIs('mahasiswa.ganti-password') ? 'active' : ''}}">
+                        <a href="#">
+                            <i class="fa fa-key"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Ganti Password</span>
+                        </a>
+                    </li>
+                    <li class="{{request()->routeIs('mahasiswa.panduan-aplikasi') ? 'active' : ''}}">
+                        <a href="#">
+                            <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Panduan Aplikasi</span>
+                        </a>
+                    </li>  
                 </ul>
             </div>
         </div>
