@@ -54,9 +54,9 @@ Penilaian Perkuliahan Mahasiswa
                                     <td>New York</td>
                                     <td>10</td>
                                     <td>
-                                        <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.kesediaan-waktu-bimbingan')}}" title="Presentase Nilai"><i class="fa fa-percent"><span class="path1"></span><span class="path2"></span></i></a>
-                                        <a class="btn btn-rounded bg-success-light" href="{{route('dosen.perkuliahan.kesediaan-waktu-bimbingan')}}" title="Download DPNA"><i class="fa fa-download"><span class="path1"></span><span class="path2"></span></i></a>
-                                        <a class="btn btn-rounded bg-primary-light" href="{{route('dosen.perkuliahan.kesediaan-waktu-bimbingan')}}" title="Upload DPNA"><i class="fa fa-upload"><span class="path1"></span><span class="path2"></span></i></a>
+                                        <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.penilaian.presentase-penilaian-perkuliahan')}}" title="Presentase Nilai"><i class="fa fa-percent"><span class="path1"></span><span class="path2"></span></i></a>
+                                        <a class="btn btn-rounded bg-success-light" href="#" title="Download DPNA"><i class="fa fa-download"><span class="path1"></span><span class="path2"></span></i></a>
+                                        <a class="btn btn-rounded bg-primary-light" href="#" title="Upload DPNA"><i class="fa fa-upload"><span class="path1"></span><span class="path2"></span></i></a>
                                     </td>
                                 </tr>
                             </tbody>
