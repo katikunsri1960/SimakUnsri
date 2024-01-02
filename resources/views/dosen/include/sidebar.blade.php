@@ -112,20 +112,20 @@
                         </a>
                     </li>  
                     <li class="header">Pembimbing Mahasiswa</li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="#">
+                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-akademik') ? 'active' : ''}}">
+                        <a href="{{route('dosen.pembimbing.bimbingan-akademik')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Akademik</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="#">
+                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-non-akademik') ? 'active' : ''}}">
+                        <a href="{{route('dosen.pembimbing.bimbingan-non-akademik')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Non-Akademik</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="#">
+                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-tugas-akhir') ? 'active' : ''}}">
+                        <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Tugas Akhir</span>
                         </a>
