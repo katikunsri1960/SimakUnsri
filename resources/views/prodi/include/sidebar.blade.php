@@ -16,7 +16,7 @@
                             </span>
                         </a>
                     </li>
-                    <li class="treeview {{request()->routeIs('prodi.referensi.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('prodi.data-master.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="icon-Library"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -29,15 +29,21 @@
                             {{-- <li class="{{request()->routeIs('prodi.referensi.prodi') ? 'active' : ''}}"><a href="{{route('prodi.referensi.prodi')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Program Studi</a>
                             </li> --}}
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Dosen</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('prodi.data-master.dosen') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.dosen')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Dosen</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-master.mahasiswa') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.mahasiswa')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Mahasiswa</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('prodi.data-master.kurikulum') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.kurikulum')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Kurikulum</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('prodi.data-master.mata-kuliah') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.mata-kuliah')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Mata Kuliah</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('prodi.data-master.ruang-perkuliahan') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a></li>
                         </ul>
                     </li>
