@@ -14,8 +14,7 @@ Dashboard
                         <div class="col-12 col-lg-9">
                             <h2>Hello {{auth()->user()->name}}, Welcome Back!</h2>
                             <p class="text-dark mb-0 fs-16">
-                                Your course Overcoming the fear of public speaking was completed by 11
-                                New users this week!
+                            Selamat Datang di SIAKAD (Sistem Informasi Akademik) Universitas Sriwijaya
                             </p>
                         </div>
                     </div>
@@ -27,7 +26,7 @@ Dashboard
         <div class="col-12">
             <div class="box no-shadow mb-0 bg-transparent">
                 <div class="box-header no-border px-0">
-                    <h4 class="box-title">Your Courses</h4>
+                    <h4 class="box-title">Aktivitas Kuliah Mahasiswa</h4>
                     <ul class="box-controls pull-right d-md-flex d-none">
                         <li>
                             <button class="btn btn-primary-light px-10">View All</button>

@@ -9,7 +9,12 @@ class AkademikController extends Controller
 {
     public function krs()
     {
-        return view('mahasiswa.krs');
+        return view('mahasiswa.krs.index');
+    }
+
+    public function create_krs()
+    {
+        return view('mahasiswa.krs.create');
     }
 
     public function khs()
