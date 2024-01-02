@@ -42,6 +42,7 @@ Matakuliah
                                 <th class="text-center align-middle">Kode MK</th>
                                 <th class="text-center align-middle">Nama MK</th>
                                 <th class="text-center align-middle">Bobot</th>
+                                <th class="text-center align-middle">Program Studi</th>
                              </tr>
                           </thead>
                           <tbody>
@@ -84,6 +85,14 @@ Matakuliah
                 {data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', searchable: true},
                 {data: 'nama_mata_kuliah', name: 'nama_mata_kuliah', searchable: true},
                 {data: 'sks_mata_kuliah', name: 'sks_mata_kuliah', class: 'text-center'},
+                {
+                    data: null,
+                    name: 'prodi',
+                    searchable: true,
+                    render: function (data, type, row, meta) {
+                        return data.prodi.nama_jenjang_pendidikan + ' ' + data.prodi.nama_program_studi ;
+                    }
+                }
             ],
         });
 

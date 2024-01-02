@@ -35,45 +35,22 @@ Program Studi
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table  table-hover margin-top-10 w-p100">
-                          <thead>
+                        <table id="data" class="table table-hover margin-top-10 w-p100">
+                          <thead class="table-primary">
                               <tr>
-                                  <th class="text-center align-middle" rowspan="2">Status</th>
-                                  <th class="text-center align-middle" rowspan="2">No</th>
-                                  <th class="text-center align-middle" rowspan="2">Nama Kurikulum</th>
-                                  <th class="text-center align-middle" rowspan="2">Program Studi</th>
-                                  <th class="text-center align-middle" rowspan="2">Mulai Berlaku</th>
-                                  <th class="text-center align-middle" colspan="3">Aturan Jumlah sks</th>
-                                  <th class="text-center align-middle" colspan="2">Jumlah sks Matakuliah</th>
-                                  <th class="text-center align-middle" rowspan="2">SK Kurikulum</th>
-                              </tr>
-                              <tr>
-                                <th class="text-center align-middle">Lulus</th>
-                                <th class="text-center align-middle">Wajib</th>
-                                <th class="text-center align-middle">Pilihan</th>
-                                <th class="text-center align-middle">Wajib</th>
-                                <th class="text-center align-middle">Pilihan</th>
+                                <th class="text-center align-middle">KODE PRODI</th>
+                                <th class="text-center align-middle">NAMA PRODI</th>
+                                <th class="text-center align-middle">JENJANG</th>
+                                <th class="text-center align-middle">STATUS</th>
                               </tr>
                           </thead>
                           <tbody>
                             @foreach ($data as $d)
                             <tr>
-                                <td class="text-center align-middle">
-                                    <span class="badge badge-success">{{$d->status_sync}}</span>
-
-                                </td>
-                                <td class="text-center align-middle"></td>
-                                <td>{{$d->nama_kurikulum}}</td>
-                                <td>{{$d->nama_program_studi}}</td>
-                                <td class="text-center align-middle">{{$d->semester_mulai_berlaku}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_lulus}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_wajib}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_pilihan}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_mata_kuliah_wajib}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_sks_mata_kuliah_pilihan}}</td>
-                                <td class="text-center align-middle">
-                                    {{$d->sk_kurikulum}}
-                                </td>
+                                <td class="text-center align-middle">{{$d->kode_program_studi}}</td>
+                                <td class="text-start align-middle">{{$d->nama_program_studi}}</td>
+                                <td class="text-center align-middle">{{$d->nama_jenjang_pendidikan}}</td>
+                                <td class="text-center align-middle">{{$d->status}}</td>
                             </tr>
                             @endforeach
                           </tbody>
@@ -93,25 +70,10 @@ Program Studi
     $(function () {
         "use strict";
 
-        $('#data').DataTable( {
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
-            columnDefs: [{
-                targets: 1,
-                searchable: false,
-                orderable: false,
-                render: function (data, type, row, meta) {
-                    return meta.row + meta.settings._iDisplayStart + 1;
-                },},
-                {
-                    targets: 0,
-                    searchable: false,
-                    orderable: false,
-                 },
-            ]
-        } );
+        $('#data').DataTable({
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, -1], [10, 25, 50, "All"]],
+        });
 
         // sweet alert sync-form
         $('#sync-form').submit(function(e){
