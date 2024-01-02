@@ -62,7 +62,7 @@ Biaya Kuliah
         <div class="col-xxl-12">
             <div class="box box-body mb-0 bg-light">
                 <div class="row">
-                    <div class="col-xl-4 col-lg-12">
+                    <div class="col-xl-12 col-lg-12">
                         <h3 class="fw-500 text-dark mt-0">Riwayat Pembayaran Uang Kuliah Tunggal</h3>
                     </div>                             
                 </div>

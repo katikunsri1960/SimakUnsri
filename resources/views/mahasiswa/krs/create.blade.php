@@ -12,7 +12,7 @@ Ambil KRS
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Kesediaan Waktu Kuliah Dosen</h2>
+								<h2 class="mb-10">Kartu Rencana Studi</h2>
 								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
 							</div>
 						</div>
@@ -27,68 +27,53 @@ Ambil KRS
                 <div class="box-header with-border">
                     <div class="row">
                         <div class="col-xl-4 col-lg-12 pb-20">
-                            <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.jadwal-kuliah')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
+                            <a class="btn btn-rounded bg-warning-light" href="{{route('mahasiswa.krs')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
                         </div>                             
                     </div>
                     <div class="row">
-                        <div class="col-xl-4 col-lg-12">
-                            <h3 class="fw-500 text-dark mt-0">Kesediaan Waktu Mengajar</h3>
+                        <div class="col-xl-12 col-lg-12">
+                            <h3 class="fw-500 text-dark mt-0">Riwayat Pembayaran Uang Kuliah Tunggal</h3>
                         </div>                             
                     </div>
                 </div>
                 <!-- /.box-header -->
                 <form class="form">
-                    <div class="box-body">
-                        <h4 class="box-title text-info mb-0"><i class="ti-user me-15"></i> About User</h4>
-                        <hr class="my-15">
-                        <div class="row">
-                            <div class="col-md-6">
-
-                            <div class="form-group">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" placeholder="First Name">
-                            </div>
-                            </div>
-                            <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" placeholder="Last Name">
-                            </div>
+                    <div class="row">
+                        <div class="col-xxl-12">
+                            <div class="box box-body mb-0 bg-light">
+                                <div class="row">
+                                    <div class="table-responsive">
+                                        <table id="example1" class="table table-bordered table-striped text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th>No</th>
+                                                    <th>Kode Mata Kuliah</th>
+                                                    <th>Nama Mata Kuliah</th>                                    
+                                                    <th>Kode Kelas</th>
+                                                    <th>Nama Kelas</th>
+                                                    <th>SKS</th>
+                                                    <th>Nama Dosen</th>
+                                                    <th>Waktu Kuliah</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>FSK11711</td>
+                                                    <td>KALKULUS II</td>
+                                                    <td>IDL01</td>
+                                                    <td>Inderalaya A</td>
+                                                    <td>3</td>
+                                                    <td>PROF. DR. IR. BAMBANG TUTUKO, M.T.</td>
+                                                    <td>Senin, Pukul 08.00 - 10.30 WIB</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">E-mail</label>
-                                <input type="text" class="form-control" placeholder="E-mail">
-                            </div>
-                            </div>
-                            <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Contact Number</label>
-                                <input type="text" class="form-control" placeholder="Phone">
-                            </div>
-                            </div>
-                        </div>
-                        <h4 class="box-title text-info mb-0 mt-20"><i class="ti-envelope me-15"></i> Contact Info & Bio</h4>
-                        <hr class="my-15">
-                        <div class="form-group">
-                            <label class="form-label">Email</label>
-                            <input class="form-control" type="email" placeholder="email">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Website</label>
-                            <input class="form-control" type="url" placeholder="http://">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Contact Number</label>
-                            <input class="form-control" type="tel" placeholder="Contact Number">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Bio</label>
-                            <textarea rows="4" class="form-control" placeholder="Bio"></textarea>
-                        </div>
-                    </div>
+                    </div>		
                     <!-- /.box-body -->
                     <div class="box-footer text-end">
                         <button type="button" class="btn btn-warning me-1">

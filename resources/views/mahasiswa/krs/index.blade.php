@@ -113,6 +113,7 @@ Kartu Rencana Studi
                                     <th>SKS</th>
                                     <th>Nama Dosen</th>
                                     <th>Waktu Kuliah</th>
+                                    <!-- <td>Action</td> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -121,13 +122,13 @@ Kartu Rencana Studi
                                     <td>FSK11711</td>
                                     <td>KALKULUS II</td>
                                     <td>IDL01</td>
-                                    <td>Kelas Inderalaya</td>
+                                    <td>Inderalaya A</td>
                                     <td>3</td>
                                     <td>PROF. DR. IR. BAMBANG TUTUKO, M.T.</td>
                                     <td>Senin, Pukul 08.00 - 10.30 WIB</td>
-                                    <td>
+                                    <!-- <td>
                                         <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                    </td>
+                                    </td> -->
                                 </tr>
                             </tbody>
 					  </table>
