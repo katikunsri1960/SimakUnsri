@@ -84,14 +84,14 @@
                             </li>
                         </ul>
                     </li> 
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
+                    <li>
                         <a href="https://elearning.unsri.ac.id/" target="_blank">
                             <i class="fa fa-desktop"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>E-Learning UNSRI</span>
                         </a>
                     </li> 
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
+                    <li>
                         <a href="https://uscamz.unsri.ac.id/b/signin" target="_blank">
                             <i class="fa fa-video-camera"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -131,14 +131,14 @@
                         </a>
                     </li> 
                     <li class="header">Bantuan</li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="#">
+                    <li class="{{request()->routeIs('dosen.bantuan.ganti-password') ? 'active' : ''}}">
+                        <a href="{{route('dosen.bantuan.ganti-password')}}">
                             <i class="fa fa-key"><span class="path1"></span><span class="path2"></span></i>
                             <span>Ganti Password</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
-                        <a href="#">
+                    <li>
+                        <a href="#" target="_blank">
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
