@@ -13,7 +13,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="treeview {{request()->routeIs('dosen.profile.biodata') | request()->routeIs('dosen.profile.aktivitas') | request()->routeIs('dosen.profile.mengajar') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('dosen.profile.biodata') | request()->routeIs('dosen.profile.aktivitas.penelitian') | request()->routeIs('dosen.profile.aktivitas.publikasi') | request()->routeIs('dosen.profile.aktivitas.pengabdian') | request()->routeIs('dosen.profile.mengajar') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-user"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -25,24 +25,34 @@
                         <ul class="treeview-menu">
                             <li class="{{request()->routeIs('dosen.profile.biodata') ? 'active' : ''}}"><a href="{{route('dosen.profile.biodata')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Biodata Dosen</a>
                             </li>
-                            <li class="{{request()->routeIs('dosen.profile.aktivitas') ? 'active' : ''}}">
+                            <li class="treeview {{request()->routeIs('dosen.profile.aktivitas.penelitian') | request()->routeIs('dosen.profile.aktivitas.publikasi') | request()->routeIs('dosen.profile.aktivitas.pengabdian') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Dosen
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('dosen.profile.aktivitas.penelitian') ? 'active' : ''}}">
+                                        <a href="{{route('dosen.profile.aktivitas.penelitian')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Penelitian Dosen</a>
+                                    </li>
+                                    <li class="{{request()->routeIs('dosen.profile.aktivitas.publikasi') ? 'active' : ''}}">
+                                        <a href="{{route('dosen.profile.aktivitas.publikasi')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Publikasi Dosen</a>
+                                    </li>
+                                    <li class="{{request()->routeIs('dosen.profile.aktivitas.pengabdian') ? 'active' : ''}}">
+                                        <a href="{{route('dosen.profile.aktivitas.pengabdian')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengabdian Dosen</a>
+                                    </li>	
+                                </ul>
+                            </li> 
+                            <?php /*<li class="{{request()->routeIs('dosen.profile.aktivitas') ? 'active' : ''}}">
                                 <a href="{{route('dosen.profile.aktivitas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Dosen</a>
-                            </li>
+                            </li> */?>
                             <li class="{{request()->routeIs('dosen.profile.mengajar') ? 'active' : ''}}">
                                 <a href="{{route('dosen.profile.mengajar')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mengajar Dosen</a>
                             </li>
                             <li class="{{request()->routeIs('dosen.profile.riwayat_pendidikan') ? 'active' : ''}}">
                                 <a href="{{route('dosen.profile.riwayat_pendidikan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Riwayat Pendidikan</a>
                             </li>
-                            <!-- <li>
-                                <a href="contact_app_chat.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Penelitian Dosen</a>
-                            </li>
-                            <li>
-                                <a href="contact_app_chat.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Publikasi Dosen</a>
-                            </li>
-                            <li>
-                                <a href="contact_app_chat.html"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengabdian Dosen</a>
-                            </li> -->
                         </ul>
                     </li>
                     <li class="{{request()->routeIs('dosen.kalender_akademik') ? 'active' : ''}}">
@@ -52,13 +62,6 @@
                             <span>Kalender Akademik</span>
                         </a>
                     </li>
-                    <!-- <li class="{{request()->routeIs('dosen') ? 'active' : ''}}">
-                        <a href="{{route('dosen')}}">
-                            <i class="fa fa-list"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Honor Akademik</span>
-                        </a>
-                    </li> -->
                     <li class="{{request()->routeIs('dosen.pengumuman') ? 'active' : ''}}">
                         <a href="{{route('dosen.pengumuman')}}">
                             <i class="fa fa-bullhorn"><span class="path1"></span><span
