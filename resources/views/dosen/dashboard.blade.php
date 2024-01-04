@@ -248,7 +248,7 @@ Dashboard Dosen
         </div>
         <div class="col-12">
             <div class="row">
-                <div class="col-xl-8 col-12">
+                <div class="col-xl-12 col-12">
                     <div class="row">
                         <div class="col-xl-5 col-lg-6 col-12">
                             <div class="box">
@@ -493,40 +493,6 @@ Dashboard Dosen
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-xl-4 col-12">
-                    <div class="box">
-                        <div class="box-body">
-                            <div id="calendar" class="dask evt-cal min-h-400"></div>
-                        </div>
-                    </div>
-                    <a href="#" class="box bg-danger bg-hover-danger pull-up">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="w-80 h-80 l-h-100 rounded-circle b-1 border-white text-center">
-                                    <span class="text-white icon-Cart2 fs-40"><span class="path1"></span><span
-                                            class="path2"></span></span>
-                                </div>
-                                <div class="ms-10">
-                                    <h4 class="text-white mb-0">+1 1234 456 789</h4>
-                                    <h5 class="text-white-50 mb-0">Toll Free</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="box bg-primary bg-hover-primary pull-up">
-                        <div class="box-body">
-                            <div class="d-flex align-items-center">
-                                <div class="w-80 h-80 l-h-100 rounded-circle b-1 border-white text-center">
-                                    <span class="text-white icon-Mail fs-40"></span>
-                                </div>
-                                <div class="ms-10">
-                                    <h4 class="text-white mb-0">info@EduAdmin.com</h4>
-                                    <h5 class="text-white-50 mb-0">Free to Fill Us</h5>
-                                </div>
-                            </div>
-                        </div>
-                    </a>
                 </div>
             </div>
         </div>
