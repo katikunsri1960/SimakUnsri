@@ -11,4 +11,19 @@ class AktivitasDosenController extends Controller
     {
         return view('dosen.aktivitas-dosen');
     }
+
+    public function penelitian_dosen()
+    {
+        return view('dosen.aktivitas.penelitian-dosen');
+    }
+
+    public function publikasi_dosen()
+    {
+        return view('dosen.aktivitas.publikasi-dosen');
+    }
+
+    public function pengabdian_dosen()
+    {
+        return view('dosen.aktivitas.pengabdian-dosen');
+    }
 }
