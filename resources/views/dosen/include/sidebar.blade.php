@@ -13,7 +13,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="treeview {{request()->routeIs('dosen.profile.biodata') | request()->routeIs('dosen.profile.aktivitas.penelitian') | request()->routeIs('dosen.profile.aktivitas.publikasi') | request()->routeIs('dosen.profile.aktivitas.pengabdian') | request()->routeIs('dosen.profile.mengajar') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('dosen.profile.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-user"><span class="path1"></span><span
                                     class="path2"></span></i>
