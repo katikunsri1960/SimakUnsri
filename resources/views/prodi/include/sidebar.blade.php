@@ -94,8 +94,8 @@
                         </ul>
                     </li> --}}
 
-                    <li class="header">Components & UI </li>
-                    <li class="treeview">
+                    {{-- <li class="header">Components & UI </li> --}}
+                    {{-- <li class="treeview">
                         <a href="#">
                             <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
                             <span>UI Elements</span>
@@ -241,7 +241,7 @@
                                 </ul>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     {{-- <li class="treeview">
                         <a href="#">
                             <i class="icon-File"><span class="path1"></span><span class="path2"></span><span
