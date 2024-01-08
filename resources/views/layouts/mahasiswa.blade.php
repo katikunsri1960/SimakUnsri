@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="images/unsri.png">
+    <link rel="icon" href="{{asset('images/unsri.png')}}">
 
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
 
@@ -468,12 +468,16 @@
     <script src="{{asset('assets/vendor_components/apexcharts-bundle/dist/apexcharts.js')}}"></script>
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/fullcalendar/fullcalendar.js')}}"></script>
+    <script src="{{asset('assets/assets/vendor_components/chart.js-master/Chart.min.js')}}"></script>
+    <script src="{{asset('assets/vendor_components/easypiechart/dist/jquery.easypiechart.js')}}"></script>
 
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script>
     <script src="{{asset('assets/js/pages/calendar.js')}}"></script>
     <script src="{{asset('assets/js/pages/data-table.js')}}"></script>
+    <script src="{{asset('assets/js/pages/chart-widgets.js')}}"></script>
+    <script src="{{asset('assets/js/pages/chartjs-int.js')}}"></script>
 
 </body>
 
