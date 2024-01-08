@@ -3,6 +3,7 @@
 Perubahan Password Akun
 @endsection
 @section('content')
+@include('swal')
 <section class="content bg-light">
     <div class="row items-align">
         <div class="col-lg-12 col-12">
@@ -20,27 +21,21 @@ Perubahan Password Akun
                     </div>
                 </div>
                 <!-- /.box-header -->
-                <form class="form">
+                <form class="form" action="{{route('dosen.bantuan.proses-ganti-password')}}" id="update-password" method="POST">
+                    @csrf
                     <div class="box-body">
-                        <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <div class="input-group mb-3">
-                                <span class="input-group-text"><i class="ti-lock"></i></span>
-                                <input type="password" class="form-control" placeholder="Password">
-                            </div>
-                        </div>
                         <div class="form-group">
                             <label class="form-label">New Password</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i class="ti-lock"></i></span>
-                                <input type="password" class="form-control" placeholder="New Password">
+                                <input name="new_password" type="password" class="form-control" placeholder="New Password" required>
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="form-label">Confirm New Password</label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text"><i class="ti-lock"></i></span>
-                                <input type="password" class="form-control" placeholder="Confirm New Password">
+                                <input name="confirm_password" type="password" class="form-control" placeholder="Confirm New Password" required>
                             </div>
                         </div>
                     </div>
@@ -61,3 +56,27 @@ Perubahan Password Akun
 </section>
 @endsection
 
+@push('js')
+<script>
+    // sweet alert update password
+    $('#update-password').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Perubahan Password Akun',
+            text: "Apakah anda yakin ingin melakukan perubahan password?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#update-password').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
+    });
+
+</script>
+@endpush

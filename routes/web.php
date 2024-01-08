@@ -103,6 +103,7 @@ Route::group(['middleware' => ['auth']], function() {
             //Route Bantuan
             Route::prefix('bantuan')->group(function () {
                 Route::get('/ganti-password', [App\Http\Controllers\Dosen\Bantuan\GantiPasswordController::class, 'ganti_password'])->name('dosen.bantuan.ganti-password');
+                Route::post('/proses-ganti-password', [App\Http\Controllers\Dosen\Bantuan\GantiPasswordController::class, 'proses_ganti_password'])->name('dosen.bantuan.proses-ganti-password');
             });
         });
     });
