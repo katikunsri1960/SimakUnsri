@@ -49,7 +49,15 @@ Ruang Perkuliahan
                              </tr>
                           </thead>
                           <tbody>
-
+                            <tr>
+                                <td class="text-center align-middle">1</td>
+                                <td class="text-center align-middle">Customer Support</td>
+                                <td class="text-center align-middle">New York</td>
+                                <td class="text-center align-middle">
+                                    <a class="btn btn-rounded bg-warning" href="{{route('dosen.perkuliahan.kesediaan-waktu-bimbingan')}}" title="Edit Data"><i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i></a>
+                                    <a class="btn btn-rounded bg-danger" href="{{route('dosen.perkuliahan.kesediaan-waktu-bimbingan')}}" title="Delete Data"><i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i></a>
+                                </td>
+                            </tr>
                           </tbody>
                       </table>
                       </div>
