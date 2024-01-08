@@ -9,4 +9,14 @@ class Wilayah extends Model
 {
     use HasFactory;
     protected $guarded = [];
+
+    public function level()
+    {
+        return $this->belongsTo(LevelWilayah::class, 'id_level_wilayah', 'id_level_wilayah');
+    }
+
+    public function negara()
+    {
+        return $this->belongsTo(Negara::class, 'id_negara', 'id_negara');
+    }
 }
