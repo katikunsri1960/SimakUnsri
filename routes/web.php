@@ -27,7 +27,7 @@ Route::group(['middleware' => ['auth']], function() {
         Route::prefix('mahasiswa')->group(function () {
             Route::get('/dashboard', [App\Http\Controllers\Mahasiswa\DashboardController::class, 'index'])->name('mahasiswa.dashboard');
             Route::get('/biodata', [App\Http\Controllers\Mahasiswa\BiodataController::class, 'index'])->name('mahasiswa.biodata');
-            
+
             Route::get('/kartu-rencana-studi', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'krs'])->name('mahasiswa.krs');
             Route::get('/ambil-krs', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'create_krs'])->name('mahasiswa.create-krs');
 
@@ -54,9 +54,15 @@ Route::group(['middleware' => ['auth']], function() {
             //Route Menu Utama
             Route::prefix('profile-dosen')->group(function () {
                 Route::get('/biodata-dosen', [App\Http\Controllers\Dosen\BiodataDosenController::class, 'biodata_dosen'])->name('dosen.profile.biodata');
-                Route::get('/aktivitas-dosen', [App\Http\Controllers\Dosen\AktivitasDosenController::class, 'aktivitas_Dosen'])->name('dosen.profile.aktivitas');
+                // Route::get('/aktivitas-dosen', [App\Http\Controllers\Dosen\AktivitasDosenController::class, 'aktivitas_Dosen'])->name('dosen.profile.aktivitas');
                 Route::get('/mengajar-dosen', [App\Http\Controllers\Dosen\MengajarDosenController::class, 'mengajar_dosen'])->name('dosen.profile.mengajar');
                 Route::get('/riwayat-pendidikan-dosen', [App\Http\Controllers\Dosen\RiwayatPendidikanDosenController::class, 'riwayat_pendidikan_dosen'])->name('dosen.profile.riwayat_pendidikan');
+
+                Route::prefix('aktivitas-dosen')->group(function () {
+                    Route::get('/penelitian-dosen', [App\Http\Controllers\Dosen\AktivitasDosenController::class, 'penelitian_dosen'])->name('dosen.profile.aktivitas.penelitian');
+                    Route::get('/publikasi-dosen', [App\Http\Controllers\Dosen\AktivitasDosenController::class, 'publikasi_dosen'])->name('dosen.profile.aktivitas.publikasi');
+                    Route::get('/pengabdian-dosen', [App\Http\Controllers\Dosen\AktivitasDosenController::class, 'pengabdian_dosen'])->name('dosen.profile.aktivitas.pengabdian');
+                });
             });
 
             Route::prefix('kalender-akademik')->group(function () {
@@ -83,8 +89,21 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/penilaian-sidang', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'penilaian_sidang'])->name('dosen.penilaian.penilaian-sidang');
 
                 //Detail Fitur
-                // Route::get('/kesediaan-waktu-bimbingan', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_bimbingan'])->name('dosen.perkuliahan.kesediaan-waktu-bimbingan');
+                Route::get('/presentase-penilaian-perkuliahan', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'presentase_penilaian_perkuliahan'])->name('dosen.penilaian.presentase-penilaian-perkuliahan');
                 // Route::get('/kesediaan-waktu-kuliah', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_kuliah'])->name('dosen.perkuliahan.kesediaan-waktu-kuliah');
+            });
+
+            //Route Pembimbing Mahasiswa
+            Route::prefix('pembimbing')->group(function () {
+                Route::get('/bimbingan-akademik', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_akademik'])->name('dosen.pembimbing.bimbingan-akademik');
+                Route::get('/bimbingan-non-akademik', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_non_akademik'])->name('dosen.pembimbing.bimbingan-non-akademik');
+                Route::get('/bimbingan-tugas-akhir', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_tugas_akhir'])->name('dosen.pembimbing.bimbingan-tugas-akhir');
+            });
+
+            //Route Bantuan
+            Route::prefix('bantuan')->group(function () {
+                Route::get('/ganti-password', [App\Http\Controllers\Dosen\Bantuan\GantiPasswordController::class, 'ganti_password'])->name('dosen.bantuan.ganti-password');
+                Route::post('/proses-ganti-password', [App\Http\Controllers\Dosen\Bantuan\GantiPasswordController::class, 'proses_ganti_password'])->name('dosen.bantuan.proses-ganti-password');
             });
         });
     });
@@ -114,9 +133,15 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
         Route::prefix('universitas')->group(function () {
 
+            Route::prefix('mahasiswa')->group(function () {
+                Route::get('/', [App\Http\Controllers\Universitas\MahasiswaController::class, 'daftar_mahasiswa'])->name('univ.mahasiswa');
+                Route::get('/data', [App\Http\Controllers\Universitas\MahasiswaController::class, 'daftar_mahasiswa_data'])->name('univ.mahasiswa.data');
+            });
+
             Route::prefix('referensi')->group(function () {
                 Route::get('/prodi', [App\Http\Controllers\Universitas\ReferensiController::class, 'prodi'])->name('univ.referensi.prodi');
                 Route::get('/sync-prodi', [App\Http\Controllers\Universitas\ReferensiController::class, 'sync_prodi'])->name('univ.referensi.prodi.sync');
+                Route::get('/sync-referensi', [App\Http\Controllers\Universitas\ReferensiController::class, 'sync_referensi'])->name('univ.referensi.sync');
             });
 
             Route::prefix('kurikulum')->group(function () {

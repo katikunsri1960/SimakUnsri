@@ -336,6 +336,7 @@
     <script src="{{asset('assets/icons/feather-icons/feather.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+    <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
     @stack('js')
 
     <!-- EduAdmin App -->

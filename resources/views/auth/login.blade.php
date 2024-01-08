@@ -10,7 +10,7 @@ Login Page
             <div class="row justify-content-center g-0">
                 <div class="col-lg-5 col-md-12 col-sm-12">
                     <div class="text-center">
-                        <img src="{{asset('images/unsri.png')}}" alt="UNSRI" class="img-responsive w-350">
+                        <img src="{{asset('images/logo-unsri.png')}}" alt="UNSRI" class="img-responsive w-350">
                     </div>
                     <div class="bg-white rounded10 shadow-lg">
                         <div class="content-top-agile p-20 pb-0">

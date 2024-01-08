@@ -31,6 +31,9 @@ Program Studi
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.referensi.sync')}}" method="get" id="sync-ref">
+                            <button class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Referensi</button>
+                        </form>
                     </div>
                 </div>
                 <div class="box-body">
@@ -90,6 +93,25 @@ Program Studi
             }, function(isConfirm){
                 if (isConfirm) {
                     $('#sync-form').unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
+        });
+
+        $('#sync-ref').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Sinkronisasi Data',
+                text: "Apakah anda yakin ingin melakukan sinkronisasi data?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Sinkronkan!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#sync-ref').unbind('submit').submit();
                     $('#spinner').show();
                 }
             });

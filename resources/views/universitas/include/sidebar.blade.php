@@ -16,6 +16,23 @@
                             </span>
                         </a>
                     </li>
+                    <li class="treeview {{request()->routeIs('univ.mahasiswa.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-graduation-cap"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Mahasiswa</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('univ.referensi.prodi') ? 'active' : ''}}"><a href="{{route('univ.referensi.prodi')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Daftar Mahasiswa</a>
+                            </li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li>
+                        </ul>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="icon-Library"><span class="path1"></span><span
@@ -55,7 +72,7 @@
                         </ul>
                     </li>
 
-                    <li class="header">Components & UI </li>
+                    {{-- <li class="header">Components & UI </li>
                     <li class="treeview">
                         <a href="#">
                             <i class="icon-Write"><span class="path1"></span><span class="path2"></span></i>
@@ -202,7 +219,7 @@
                                 </ul>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     {{-- <li class="treeview">
                         <a href="#">
                             <i class="icon-File"><span class="path1"></span><span class="path2"></span><span
