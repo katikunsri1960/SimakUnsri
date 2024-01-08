@@ -8,12 +8,9 @@ $(function () {
 	
 	var options = {
           series: [{
-          name: 'PRODUCT A',
+          name: 'IPS',
           data: [44, 55, 41, 67, 22, 43]
-        }, {
-          name: 'PRODUCT B',
-          data: [-44, -55, -41, -67, -22, -43]
-        }],
+        }, ],
           chart: {
 		  foreColor:"#bac0c7",
           type: 'bar',
@@ -53,10 +50,8 @@ $(function () {
         },
  
         xaxis: {
-          type: 'datetime',
-          categories: ['01/01/2011 GMT', '01/02/2011 GMT', '01/03/2011 GMT', '01/04/2011 GMT',
-            '01/05/2011 GMT', '01/06/2011 GMT'
-          ],
+          type: 'data',
+          categories: ['1', '2', '3', '4','5', '6', '7', '8', '9', '10'],
         },
         legend: {
           show: false,
@@ -73,7 +68,7 @@ $(function () {
 	var options = {
         series: [{
             name: "Profit",
-            data: [0, 40, 110, 70, 100, 60, 130, 55, 140, 125]
+            data: [19, 21, 6, 24, 21, 19, 24]
         }],
         chart: {
 			foreColor:"#bac0c7",
@@ -105,7 +100,7 @@ $(function () {
 			fillOpacity: 1,
 			discrete: [],
 			shape: "circle",
-			radius: 5,
+			radius: 4,
 			offsetX: 0,
 			offsetY: 0,
 			onClick: undefined,
@@ -137,7 +132,7 @@ $(function () {
 			}
 		  },
         xaxis: {
-          categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct'],
+            categories: ['1', '2','SP', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14',],
 		  labels: {
 			show: true,        
           },
@@ -151,15 +146,19 @@ $(function () {
             enabled: true,        
           },
         },
-        yaxis: {
-          labels: {
-            show: true,
-            formatter: function (val) {
-              return val + "K";
-            }
-          }
+        labels:{
+            show:true,
+            
+        }
+        // yaxis: {
+        //   labels: {
+        //     show: true,
+        //     formatter: function (val) {
+        //       return val + "K";
+        //     }
+        //   }
         
-        },
+        // },
       };
       var chart = new ApexCharts(document.querySelector("#charts_widget_2_chart"), options);
       chart.render();
