@@ -9,7 +9,7 @@ $(function () {
 	var options = {
           series: [{
           name: 'IPS',
-          data: [44, 55, 41, 67, 22, 43]
+          data: [3.1, 2.8, 2.5, 2.9, 3.5, 3.1, 0, 0, 0, 0]
         }, ],
           chart: {
 		  foreColor:"#bac0c7",

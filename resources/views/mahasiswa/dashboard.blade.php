@@ -131,9 +131,12 @@ Dashboard
     <div class="row">
         <div class="col-xl-12 col-12">
             <div class="box">
+                <div class="box-header">
+                    <h4 class="box-title">Grafik IPS</h4>
+                </div>
                 <div class="box-body">
-                    <p class="text-fade">Hours spent</p>
-                    <h3 class="mt-0 mb-20">21 h 30 min <small class="text-danger"><i class="fa fa-arrow-down ms-25 me-5"></i> 15%</small></h3>
+                    <!-- <p class="text-fade">Grafik IPK</p> -->
+                    <!-- <h3 class="mt-0 mb-20">21 h 30 min <small class="text-danger"><i class="fa fa-arrow-down ms-25 me-5"></i> 15%</small></h3> -->
                     <div id="charts_widget_1_chart"></div>
                 </div>
             </div>

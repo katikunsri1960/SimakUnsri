@@ -27,14 +27,14 @@ Biodata
         <div class="col-12">
             <div class="box">
 				<!-- Nav tabs -->
-                <ul class="nav nav-tabs justify-content-center" role="tablist">
-                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#data-diri" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ms-15">Data Diri</span></a> </li>
+                <ul class="nav nav-tabs rounded10 justify-content-center" role="tablist">
+                    <li class="nav-item"> <a class="nav-link active" data-bs-toggle="tab" href="#data-diri" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ms-15">Data Diri</span></a> </li>
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#akademik" role="tab"><span><i class="ion-reader"></i></span> <span class="hidden-xs-down ms-15">Akademik</span></a> </li>
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#alamat" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ms-15">Alamat</span></a> </li>
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#orang-tua" role="tab"><span><i class="ion-family"></i></span> <span class="hidden-xs-down ms-15">Orang Tua</span></a> </li>
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#wali" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ms-15">Wali</span></a> </li>
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#data-sekolah" role="tab"><span><i class="ion-camera"></i></span> <span class="hidden-xs-down ms-15">Data Sekolah</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link active" data-bs-toggle="tab" href="#perguruan-tinggi-asal" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ms-15">Perguruan Tinggi Asal</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#pt-asal" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ms-15">Perguruan Tinggi Asal</span></a> </li>
                     <li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#riwayat-pendidikan" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ms-15">Riwayat Pendidikan</span></a> </li>
                 </ul>
                 <!-- Tab panes -->
@@ -46,13 +46,7 @@ Biodata
                     @include('mahasiswa.biodata.include.wali')
                     @include('mahasiswa.biodata.include.data-sekolah')
                     @include('mahasiswa.biodata.include.pt-asal')
-                    <!-- <div class="tab-pane" id="riwayat-pendidikan" role="tabpanel">
-                        <div class="p-15">
-                            <h3>Donec vitae laoreet neque, id convallis ante.</h3>
-                            <p>Duis cursus eros lorem, pretium ornare purus tincidunt eleifend. Etiam quis justo vitae erat faucibus pharetra. Morbi in ullamcorper diam. Morbi lacinia, sem vitae dignissim cursus, massa nibh semper magna, nec pellentesque lorem nisl quis ex.</p>
-                            <h4>Fusce porta eros a nisl varius, non molestie metus mollis. Pellentesque tincidunt ante sit amet ornare lacinia.</h4>
-                        </div>
-                    </div> -->
+                    @include('mahasiswa.biodata.include.riwayat-pendidikan')
                 </div>
 				<!-- /.box-body -->
             </div>
