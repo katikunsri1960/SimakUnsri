@@ -8,7 +8,7 @@
                     <li class="header">Menu Utama</li>
                     <li class="{{request()->routeIs('prodi') ? 'active' : ''}}">
                         <a href="{{route('prodi')}}">
-                            <i class="fa fa-line-chart"><span class="path1"></span><span
+                            <i class="fa fa-th-large"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
                         </a>
@@ -44,7 +44,7 @@
                                 class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a></li>
                         </ul>
                     </li>
-                    <li class="treeview {{request()->routeIs('prodi.referensi.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('prodi.data-akademik.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-graduation-cap"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -57,18 +57,24 @@
                             {{-- <li class="{{request()->routeIs('prodi.referensi.prodi') ? 'active' : ''}}"><a href="{{route('prodi.referensi.prodi')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Program Studi</a>
                             </li> --}}
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Kelas dan Penjadwalan</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Kartu Rencana Studi</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Sidang Mahasiswa</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Yudisium Mahasiswa</a></li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Daftar Transkrip Nilai</a></li>
+                            <li class="{{request()->routeIs('prodi.data-akademik.kelas-penjadwalan') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kelas dan Penjadwalan</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-akademik.krs') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-akademik.krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Rencana Studi</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-akademik.khs') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-akademik.sidang-mahasiswa') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-akademik.sidang-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Sidang Mahasiswa</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-akademik.yudisium-mahasiswa') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-akademik.yudisium-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Yudisium Mahasiswa</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-akademik.transkrip-mahasiswa') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-akademik.transkrip-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Transkrip Nilai</a>
+                            </li>
                         </ul>
                     </li>
 

@@ -8,7 +8,7 @@
                     <li class="header">Menu Utama</li>
                     <li class="{{request()->routeIs('dosen') ? 'active' : ''}}">
                         <a href="{{route('dosen')}}">
-                            <i class="fa fa-line-chart"><span class="path1"></span><span
+                            <i class="fa fa-th-large"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
                         </a>
