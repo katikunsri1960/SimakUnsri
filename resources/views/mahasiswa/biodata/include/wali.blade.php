@@ -7,7 +7,7 @@
                     <div class="box box-body">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12">
-                                <h3 class="fw-500 text-dark mt-0">Wali</h3>
+                                <h3 class="fw-500 text-dark mt-0 mb-20">Wali</h3>
                             </div>                             
                         </div>
                         <div class="row">
@@ -122,7 +122,7 @@
                     <div class="box box-body">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12">
-                                <h3 class="fw-500 text-dark mt-0">Wali</h3>
+                                <h3 class="fw-500 text-dark mt-0 mb-20">Wali</h3>
                             </div>                             
                         </div>
                         <div class="row">

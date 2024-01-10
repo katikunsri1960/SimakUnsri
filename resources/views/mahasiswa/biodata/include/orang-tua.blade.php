@@ -6,7 +6,7 @@
                     <div class="box box-body">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12">
-                                <h3 class="fw-500 text-dark mt-0">Orang Tua</h3>
+                                <h3 class="fw-500 text-dark mt-0 mb-20">Orang Tua</h3>
                             </div>                             
                         </div>
                         <div class="row">
