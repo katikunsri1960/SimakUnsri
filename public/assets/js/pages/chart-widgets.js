@@ -51,7 +51,7 @@ $(function () {
  
         xaxis: {
           type: 'data',
-          categories: ['1', '2', '3', '4','5', '6', '7', '8', '9', '10'],
+          categories: ['Semester 1', 'Semester 2', 'Semester 3', 'Semester 4','Semester 5', 'Semester 6', 'Semester 7', 'Semester 8', 'Semester 9', 'Semester 10'],
         },
         legend: {
           show: false,
@@ -67,7 +67,7 @@ $(function () {
 	
 	var options = {
         series: [{
-            name: "Profit",
+            name: "SKS",
             data: [19, 21, 6, 24, 21, 19, 24]
         }],
         chart: {
@@ -132,8 +132,8 @@ $(function () {
 			}
 		  },
         xaxis: {
-            categories: ['1', '2','SP', '3', '4', '5', '6', '7', '8', '9', '10','11', '12', '13', '14',],
-		  labels: {
+            categories: ['Semester 1', 'Semester 2', 'SP', 'Semester 3', 'Semester 4','Semester 5', 'Semester 6', 'Semester 7', 'Semester 8', 'Semester 9', 'Semester 10'],
+		    labels: {
 			show: true,        
           },
           axisBorder: {
