@@ -11,6 +11,16 @@
                                         <h3 class="fw-500 text-dark mt-0 mb-20">Riwayat Pendidikan</h3>
                                     </div>                             
                                 </div>
+                                <!-- <div class="row">
+                                    <div class="col-lg-1 text-right" style="text-align-last: end;">
+                                        <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
+                                    </div>
+                                    <div class="col-lg-10 text-left text-danger">
+                                        <label>
+                                            Data Perguruan Tinggi Asal hanya untuk mahasiswa dengan Jenis Pendaftaran selain  Peserta Didik Baru
+                                        </label>
+                                    </div>
+                                </div> -->
                                 <div class="row">
                                     <div class="table-responsive">
                                         <table id="example1" class="table table-bordered table-striped text-center">
@@ -29,6 +39,19 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
+                                                    <td colspan="9">
+                                                        <div class="col-lg-12 text-center text-danger">
+                                                            <label>
+                                                                Data tidak tersedia
+                                                            </label>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                </tr>
+                                            </tbody>
+
+                                            <!-- <tbody>
+                                                <tr>
                                                     <td>1</td>
                                                     <td>Sarjana (S1)</td>
                                                     <td>S.Kom</td>
@@ -40,10 +63,9 @@
                                                     <td>
                                                         <a class="btn btn-rounded bg-warning-light" href="#" title="Hapus Riwayat"><i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i></a>
                                                         <a class="btn btn-rounded bg-success-light" href="#" title="Edit Riwayat"><i class="fa fa-pen-to-square"><span class="path1"></span><span class="path2"></span></i></a>
-                                                        <!-- <a class="btn btn-rounded bg-primary-light" href="#" title="Tambah Riwayat"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i></a> -->
                                                     </td>
                                                 </tr>
-                                            </tbody>
+                                            </tbody> -->
                                         </table>
                                     </div>
                                 </div>

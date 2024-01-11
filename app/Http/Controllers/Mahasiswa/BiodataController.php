@@ -20,7 +20,7 @@ class BiodataController extends Controller
                                 END AS jenis_kelamin')
                     )
             // ->order('ni', 'desc')
-            // ->where('id_registrasi_mahasiswa', '45fb8d68-9cfe-4a40-ab3b-91753116b766')
+            ->where('id_registrasi_mahasiswa', '010692d5-a378-4d17-a850-7c1fb4332e8b')
             ->first();
             
             // ->limit(1)

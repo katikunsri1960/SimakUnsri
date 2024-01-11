@@ -27,23 +27,7 @@ Kartu Rencana Studi
         <div class="col-12">
             <div class="box no-shadow mb-0 bg-transparent">
                 <div class="box-header no-border px-0">
-                    <h4 class="box-title">KRS</h4>
-                    <ul class="box-controls pull-right d-md-flex d-none">
-                        <li>
-                            <button class="btn btn-primary-light px-10">View All</button>
-                        </li>
-                        <li class="dropdown">
-                            <button class="dropdown-toggle btn btn-primary-light px-10" data-bs-toggle="dropdown"
-                                href="#" aria-expanded="false">Most
-                                Popular</button>
-                            <div class="dropdown-menu dropdown-menu-end" style="">
-                                <a class="dropdown-item active" href="#">Today</a>
-                                <a class="dropdown-item" href="#">Yesterday</a>
-                                <a class="dropdown-item" href="#">Last week</a>
-                                <a class="dropdown-item" href="#">Last month</a>
-                            </div>
-                        </li>
-                    </ul>
+                    <h4 class="box-title"><i class="fa fa-file-invoice"></i> KRS</h4>
                 </div>
             </div>
         </div>
@@ -92,50 +76,60 @@ Kartu Rencana Studi
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col-xxl-12">
-            <div class="box box-body mb-0 bg-light">
+    <div class="row mt-20">
+        <div class="col-lg-12 col-xl-12 mt-5">
+            <div class="box">
+				<!-- Nav tabs -->
+                <ul class="nav nav-pills justify-content-left" role="tablist">
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
+                </ul>
                 <div class="row">
-                    <div class="col-xl-4 col-lg-12">
-                        <h3 class="fw-500 text-dark mt-0">Daftar Mata Kuliah</h3>
-                    </div>                             
-                </div>
-                <div class="row">
-                    <div class="table-responsive">
-                        <table id="example1" class="table table-bordered table-striped text-center">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Kode Mata Kuliah</th>
-                                    <th>Nama Mata Kuliah</th>                                    
-                                    <th>Kode Kelas</th>
-                                    <th>Nama Kelas</th>
-                                    <th>SKS</th>
-                                    <th>Nama Dosen</th>
-                                    <th>Waktu Kuliah</th>
-                                    <!-- <td>Action</td> -->
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>FSK11711</td>
-                                    <td>KALKULUS II</td>
-                                    <td>IDL01</td>
-                                    <td>Inderalaya A</td>
-                                    <td>3</td>
-                                    <td>PROF. DR. IR. BAMBANG TUTUKO, M.T.</td>
-                                    <td>Senin, Pukul 08.00 - 10.30 WIB</td>
-                                    <!-- <td>
-                                        <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                    </td> -->
-                                </tr>
-                            </tbody>
-					  </table>
+                    <div class="col-12">
+                        <div class="box no-shadow">
+                            <div class="box-header no-border px-0 mb-40">
+                                <ul class="box-controls pull-right d-md-flex d-none">
+                                    <!-- <li> -->
+                                    <div class="clearfix">
+                                        <!-- <a class="waves-effect waves-light btn btn-app btn-info" href="#">
+                                            <i class="fa fa-print"></i> Print
+                                        </a> -->
+                                        <a class="waves-effect waves-light btn btn-app btn-success mb-20" href="#">
+                                            <i class="fa fa-print"></i> Print
+                                        </a>
+                                    </div>
+                                    <div class="form-group m-10">
+                                        <!-- <label class="form-label">Interested in</label> -->
+                                        <select class="form-select">
+                                            <option>2019/2020 Ganjil</option>
+                                            <option>2019/2020 Genap</option>
+                                            <option>2020/2021 Ganjil</option>
+                                            <option>2020/2021 Genap</option>
+                                            <option>2021/2022 Ganjil</option>
+                                            <option>2021/2022 Genap</option>
+                                            <option>2022/2023 Ganjil</option>
+                                            <option>2022/2023 Genap</option>
+                                            <option>2023/2024 Ganjil</option>
+                                            <option>2023/2024 Genap</option>
+                                        </select>
+                                    </div>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                <!-- Tab panes -->
+                <div class="tab-content tabcontent">
+                    @include('mahasiswa.krs.include.krs')
+                    @include('mahasiswa.krs.include.data-kelas-kuliah')
+                </div>
+				<!-- /.box-body -->
             </div>
+            <!-- /.box -->
         </div>
-    </div>			
+        <!-- /.col -->
+    </div>		
+    
+    	
 </section>
 @endsection
