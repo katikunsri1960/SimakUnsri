@@ -26,7 +26,7 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('univ.referensi.prodi') ? 'active' : ''}}"><a href="{{route('univ.referensi.prodi')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('univ.mahasiswa') ? 'active' : ''}}"><a href="{{route('univ.mahasiswa')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Daftar Mahasiswa</a>
                             </li>
                             <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
