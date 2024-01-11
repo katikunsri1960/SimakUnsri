@@ -35,7 +35,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="table-responsive">
-                                        <table id="example3" class="table table-bordered table-striped text-center">
+                                        <table id="example2" class="table table-bordered table-striped text-center">
                                             <thead>
                                                 <tr>
                                                     <th>No</th>
@@ -58,7 +58,7 @@
                                                     <td>Rp 0</td>
                                                     <td>Rp 3.380.000</td>
                                                     <td>
-                                                        <a class="btn btn-rounded bg-success-light"><i class="fa fa-check"><span class="path1"></span><span class="path2"></span></i> Lunas</a>
+                                                        <a class="btn btn-rounded bg-success-light" href=""><i class="fa fa-check"><span class="path1"></span><span class="path2"></span></i> Lunas</a>
                                                     </td>
                                                 </tr>
                                             </tbody>

@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Biaya Kuliah
+Jadwal dan Presensi
 @endsection
 @section('content')
 <section class="content">
@@ -13,7 +13,7 @@ Biaya Kuliah
                         </div>
                         <div class="col-12 col-lg-9">
                             <!-- <h2>Halaman KRS {{auth()->user()->name}}</h2> -->
-                            <h2>Biaya Kuliah Mahasiswa</h2>
+                            <h2>Jadwal dan Presensi</h2>
                             <p class="text-dark mb-0 fs-16">
                                 Universitas Sriwijaya
                             </p>
@@ -28,16 +28,16 @@ Biaya Kuliah
             <div class="box">
 				<!-- Nav tabs -->
                 <ul class="nav nav-pills justify-content-left" role="tablist">
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#tagihan" role="tab"><span><i class="fa fa-money"></i></span> <span class="hidden-xs-down ms-15">Tagihan</span></a> </li>
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#riwayat-pembayaran" role="tab"><span><i class="fa-solid fa-refresh"></i></span> <span class="hidden-xs-down ms-15">Riwayat Pembayaran</span></a> </li>
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#rekap-pembayaran" role="tab"><span><i class="fa-solid fa-tasks"></i></span> <span class="hidden-xs-down ms-15">Rekap Pembayaran</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#kuliah" role="tab"><span><i class="fa fa-book"></i></span> <span class="hidden-xs-down ms-15">Kuliah</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#uts" role="tab"><span><i class="fa-solid fa-tasks"></i></span> <span class="hidden-xs-down ms-15">UTS</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#uas" role="tab"><span><i class="fa-solid fa-tasks"></i></span> <span class="hidden-xs-down ms-15">UAS</span></a> </li>
                 </ul>
                 
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
-                    @include('mahasiswa.biaya-kuliah.include.tagihan')
-                    @include('mahasiswa.biaya-kuliah.include.riwayat-pembayaran')
-                    @include('mahasiswa.biaya-kuliah.include.rekap-pembayaran')
+                    @include('mahasiswa.jadwal-presensi.include.kuliah')
+                    @include('mahasiswa.jadwal-presensi.include.uts')
+                    @include('mahasiswa.jadwal-presensi.include.uas')
                 </div>
 				<!-- /.box-body -->
             </div>

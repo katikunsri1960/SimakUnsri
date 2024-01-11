@@ -101,16 +101,12 @@ Kartu Rencana Studi
                                     <div class="form-group m-10">
                                         <!-- <label class="form-label">Interested in</label> -->
                                         <select class="form-select">
-                                            <option>2019/2020 Ganjil</option>
-                                            <option>2019/2020 Genap</option>
-                                            <option>2020/2021 Ganjil</option>
-                                            <option>2020/2021 Genap</option>
-                                            <option>2021/2022 Ganjil</option>
-                                            <option>2021/2022 Genap</option>
-                                            <option>2022/2023 Ganjil</option>
-                                            <option>2022/2023 Genap</option>
-                                            <option>2023/2024 Ganjil</option>
                                             <option>2023/2024 Genap</option>
+                                            <option>2023/2024 Ganjil</option>
+                                            <option>2022/2023 Genap</option>
+                                            <option>2022/2023 Ganjil</option>
+                                            <option>2021/2022 Genap</option>
+                                            <option>2021/2022 Ganjil</option>
                                         </select>
                                     </div>
                                 </ul>
