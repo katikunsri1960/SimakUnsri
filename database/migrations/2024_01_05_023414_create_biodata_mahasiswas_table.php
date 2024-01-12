@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string("nama_mahasiswa");
             $table->enum("jenis_kelamin", ["L", "P", "*"]);
-            $table->string("tempat_lahir");
-            $table->date("tanggal_lahir");
+            $table->string("tempat_lahir")->nullable();
+            $table->string("tanggal_lahir")->nullable();
             $table->string("id_mahasiswa");
             $table->index('id_mahasiswa', 'idx_biodata');
             $table->string("id_agama");
@@ -26,7 +26,7 @@ return new class extends Migration
             $table->string("npwp")->nullable();
             $table->string("id_negara");
             $table->string("kewarganegaraan");
-            $table->string("jalan");
+            $table->text("jalan")->nullable();
             $table->string("dusun")->nullable();
             $table->string("rt")->nullable();
             $table->string("rw")->nullable();

@@ -147,6 +147,7 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('mahasiswa')->group(function () {
                 Route::get('/', [App\Http\Controllers\Universitas\MahasiswaController::class, 'daftar_mahasiswa'])->name('univ.mahasiswa');
                 Route::get('/data', [App\Http\Controllers\Universitas\MahasiswaController::class, 'daftar_mahasiswa_data'])->name('univ.mahasiswa.data');
+                Route::get('/sync-mahasiswa', [App\Http\Controllers\Universitas\MahasiswaController::class, 'sync_mahasiswa'])->name('univ.mahasiswa.sync');
             });
 
             Route::prefix('referensi')->group(function () {
