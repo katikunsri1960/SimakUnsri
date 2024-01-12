@@ -29,7 +29,7 @@ return new class extends Migration
             $table->string("id_jalur_daftar")->nullable();
             $table->string("id_periode_masuk");
             $table->index('id_periode_masuk', 'idx_periode_masuk');
-            $table->string("nama_periode_masuk");
+            $table->string("nama_periode_masuk")->nullable();
             $table->string("id_jenis_keluar")->nullable();
             $table->string("keterangan_keluar")->nullable();
             $table->string("id_perguruan_tinggi");
@@ -65,10 +65,14 @@ return new class extends Migration
      */
     public function down(): void
     {
+
+        // drop idx_prodi in program_studis table if exists
         Schema::table('program_studis', function (Blueprint $table) {
-            $table->dropIndex('idx_prodi');
+            if (Schema::hasColumn('program_studis', 'idx_prodi')) {
+                $table->dropIndex('idx_prodi');
+            }
         });
-        
+
         Schema::dropIfExists('riwayat_pendidikans');
     }
 };

@@ -14,4 +14,5 @@ class BiodataMahasiswa extends Model
     {
         return $this->hasMany(RiwayatPendidikan::class, 'id_mahasiswa', 'id_mahasiswa');
     }
+
 }

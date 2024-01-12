@@ -29,7 +29,7 @@ class MahasiswaController extends Controller
     {
         $data = [
             ['act' => 'GetBiodataMahasiswa', 'count' => 'GetCountBiodataMahasiswa', 'order' => 'id_mahasiswa', 'job' => \App\Jobs\Mahasiswa\BiodataJob::class],
-            // ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class]
+            ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class]
         ];
 
         $batch = Bus::batch([])->dispatch();
@@ -43,7 +43,7 @@ class MahasiswaController extends Controller
             $order = $d['order'];
 
             for ($i=0; $i < $count; $i+=$limit) {
-                $job = new $d['job']($act, $i, $limit, $order);
+                $job = new $d['job']($act, $limit, $i, $order);
                 $batch->add($job);
             }
 

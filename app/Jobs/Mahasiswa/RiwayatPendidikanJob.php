@@ -2,17 +2,17 @@
 
 namespace App\Jobs\Mahasiswa;
 
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Services\Feeder\FeederAPI;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Mahasiswa\BiodataMahasiswa;
-use App\Services\Feeder\FeederAPI;
-use Illuminate\Bus\Batchable;// Import the Log class
 
-class BiodataJob implements ShouldQueue
+class RiwayatPendidikanJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -39,10 +39,17 @@ class BiodataJob implements ShouldQueue
         if (isset($response['data']) && !empty($response['data'])) {
 
             // chunk data
-            $chunks = array_chunk($response['data'], 100);
+            $chunks = array_chunk($response['data'], 500);
 
             foreach ($chunks as $chunk) {
-                BiodataMahasiswa::upsert($chunk, 'id_mahasiswa');
+
+                $chunk = array_map(function ($value) {
+                    $value['tanggal_daftar'] = empty($value['tanggal_daftar']) ? null : date('Y-m-d', strtotime($value['tanggal_daftar']));
+                    $value['tanggal_keluar'] = empty($value['tanggal_keluar']) ? null : date('Y-m-d', strtotime($value['tanggal_keluar']));
+                    return $value;
+                }, $chunk);
+
+                RiwayatPendidikan::upsert($chunk, 'id_registrasi_mahasiswa');
             }
 
         }
