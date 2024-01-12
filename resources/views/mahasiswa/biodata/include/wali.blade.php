@@ -50,7 +50,7 @@
                                 <div class="form-group">
                                     <label>Status Hidup</label>
                                     <select class="form-select" disabled aria-label="Default select example">
-                                        <option selected>Hidup</option>
+                                        <option selected>Meninggal</option>
                                         <option value="1">Hidup</option>
                                         <option value="2">Meninggal</option>
                                     </select>

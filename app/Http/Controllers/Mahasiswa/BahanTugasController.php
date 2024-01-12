@@ -9,6 +9,6 @@ class BahanTugasController extends Controller
 {
     public function index()
     {
-        return view('mahasiswa.bahan-tugas');
+        return view('mahasiswa.bahan-tugas.index');
     }
 }
