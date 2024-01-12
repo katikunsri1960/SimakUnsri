@@ -65,6 +65,10 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::table('program_studis', function (Blueprint $table) {
+            $table->dropIndex('idx_prodi');
+        });
+        
         Schema::dropIfExists('riwayat_pendidikans');
     }
 };
