@@ -90,13 +90,13 @@
                                             value="Reguler">
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <!-- <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Grade</label>
                                         <input type="name" class="form-control" disabled
                                             value="-">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Status</label>
@@ -111,13 +111,13 @@
                                             value="1 Agustus 2013">
                                     </div>
                                 </div>
-                                <div class="col-lg-6">
+                                <!-- <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>NIRM</label>
                                         <input type="name" class="form-control" disabled
                                             value="-">
                                     </div>
-                                </div>
+                                </div> -->
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Periode Masuk</label>

@@ -7,7 +7,10 @@ $(function () {
     "use strict";
 
     $('#example1').DataTable();
-    $('#example2').DataTable({
+    $('#example2').DataTable();
+    $('#example3').DataTable();
+    $('#example4').DataTable();
+    $('#example9').DataTable({
       'paging'      : true,
       'lengthChange': false,
       'searching'   : false,

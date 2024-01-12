@@ -9,6 +9,6 @@ class BiayaKuliahController extends Controller
 {
     public function index()
     {
-        return view('mahasiswa.biaya-kuliah');
+        return view('mahasiswa.biaya-kuliah.index');
     }
 }

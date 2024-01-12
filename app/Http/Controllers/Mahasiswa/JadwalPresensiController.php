@@ -9,6 +9,6 @@ class JadwalPresensiController extends Controller
 {
     public function index()
     {
-        return view('mahasiswa.jadwal-presensi');
+        return view('mahasiswa.jadwal-presensi.index');
     }
 }
