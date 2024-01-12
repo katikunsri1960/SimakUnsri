@@ -38,13 +38,9 @@ class BiodataJob implements ShouldQueue
         $response = $data->runWS();
 
         if (isset($response['data']) && !empty($response['data'])) {
-            
-            $chunkSize = 500; // Adjust this value based on your memory limit
-            $chunks = array_chunk($response['data'], $chunkSize);
 
-            foreach ($chunks as $chunk) {
-                BiodataMahasiswa::upsert($chunk, 'id_mahasiswa');
-            }
+            BiodataMahasiswa::upsert($response['data'], 'id_mahasiswa');
+            
         }
     }
 }

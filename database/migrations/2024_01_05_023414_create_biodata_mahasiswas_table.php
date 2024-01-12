@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum("jenis_kelamin", ["L", "P", "*"]);
             $table->string("tempat_lahir")->nullable();
             $table->string("tanggal_lahir")->nullable();
-            $table->string("id_mahasiswa");
+            $table->string("id_mahasiswa")->unique();
             $table->index('id_mahasiswa', 'idx_biodata');
             $table->string("id_agama");
             $table->string("nama_agama");
