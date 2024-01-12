@@ -49,7 +49,7 @@ class MahasiswaController extends Controller
 
         }
 
-        return redirect()->route('univ.mahasiswa.index');
+        return redirect()->route('univ.mahasiswa');
 
     }
 

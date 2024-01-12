@@ -34,16 +34,11 @@ class BiodataJob implements ShouldQueue
      */
     public function handle(): void
     {
-        try {
-            $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order);
-            $response = $data->runWS();
-        } catch (\Exception $e) {
-            // Log the error and exit the job
-            Log::error('Failed to fetch data from API: ' . $e->getMessage()); // Fix the undefined type error
-            return;
-        }
+        $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order);
+        $response = $data->runWS();
 
         if (isset($response['data']) && !empty($response['data'])) {
+            
             $chunkSize = 500; // Adjust this value based on your memory limit
             $chunks = array_chunk($response['data'], $chunkSize);
 

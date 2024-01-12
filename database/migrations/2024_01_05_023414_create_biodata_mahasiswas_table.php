@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string("rt")->nullable();
             $table->string("rw")->nullable();
             $table->string("kelurahan");
-            $table->string("kode_pos");
+            $table->string("kode_pos")->nullable();
             $table->string("id_wilayah");
             $table->string("nama_wilayah");
             $table->string("id_jenis_tinggal")->nullable();
