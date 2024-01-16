@@ -85,7 +85,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="treeview {{request()->routeIs('prodi.data-akademik.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('prodi.data-aktivitas.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-trophy"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -95,14 +95,14 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('prodi.data-akademik.transkrip-mahasiswa') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-akademik.transkrip-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Penelitian</a>
+                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-penelitian') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-aktivitas.aktivitas-penelitian')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Penelitian</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-akademik.sidang-mahasiswa') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-akademik.sidang-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Lomba</a>
+                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-lomba') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-aktivitas.aktivitas-lomba')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Lomba</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-akademik.yudisium-mahasiswa') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-akademik.yudisium-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i> Aktivitas Organisasi</a>
+                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-organisasi') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-aktivitas.aktivitas-organisasi')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i> Aktivitas Organisasi</a>
                             </li>
                         </ul>
                     </li>
