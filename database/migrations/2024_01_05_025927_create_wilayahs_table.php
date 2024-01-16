@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('wilayahs', function (Blueprint $table) {
             $table->id();
-            $table->string('id_wilayah');
+            $table->string('id_wilayah')->unique();
             $table->index('id_wilayah', 'idx_wilayah');
             $table->integer('id_level_wilayah');
             $table->foreign('id_level_wilayah')->references('id_level_wilayah')->on('level_wilayahs');

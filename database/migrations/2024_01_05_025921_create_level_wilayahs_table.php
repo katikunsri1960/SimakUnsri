@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('level_wilayahs', function (Blueprint $table) {
             $table->id();
-            $table->integer('id_level_wilayah');
-            $table->index('id_level_wilayah', 'idx_level_wilayah');
+            $table->integer('id_level_wilayah')->unique();
             $table->string('nama_level_wilayah');
             $table->timestamps();
         });
