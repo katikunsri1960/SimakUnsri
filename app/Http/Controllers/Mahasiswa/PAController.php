@@ -9,6 +9,6 @@ class PAController extends Controller
 {
     public function index()
     {
-        return view('mahasiswa.pa-online');
+        return view('mahasiswa.pa-online.index');
     }
 }
