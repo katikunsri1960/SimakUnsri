@@ -9,6 +9,6 @@ class KuisionerController extends Controller
 {
     public function index()
     {
-        return view('mahasiswa.kuisioner');
+        return view('mahasiswa.kuisioner.index');
     }
 }
