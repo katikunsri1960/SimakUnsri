@@ -132,7 +132,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="treeview {{request()->routeIs('prodi') | request()->routeIs('prodi') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('prodi.monitoring.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-television"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -142,12 +142,11 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('prodi') ? 'active' : ''}}"><a href="{{route('prodi')}}"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Entry Nilai Dosen</a>
+                            <li class="{{request()->routeIs('prodi.monitoring.entry-nilai') ? 'active' : ''}}">
+                                <a href="{{route('prodi.monitoring.entry-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Entry Nilai Dosen</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi') ? 'active' : ''}}">
-                                <a href="{{route('prodi')}}"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Kinerja Pengajaran Dosen</a>
+                            <li class="{{request()->routeIs('prodi.monitoring.pengajaran-dosen') ? 'active' : ''}}">
+                                <a href="{{route('prodi.monitoring.pengajaran-dosen')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengajaran Dosen</a>
                             </li>
                         </ul>
                     </li>

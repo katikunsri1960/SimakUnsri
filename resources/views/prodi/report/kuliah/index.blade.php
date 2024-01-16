@@ -52,10 +52,10 @@ Report Perkuliahan Mahasiswa
                     <!-- /.box-body -->
                     <div class="box-footer text-end">
                         <button type="button" class="btn btn-warning me-1">
-                            <i class="ti-trash"></i> Cancel
+                            <i class="fa fa-trash"></i> Cancel
                         </button>
                         <button type="submit" class="btn btn-primary">
-                            <i class="ti-save-alt"></i> Save
+                            <i class="fa fa-download"></i> Export
                         </button>
                     </div>  
                 </form>
