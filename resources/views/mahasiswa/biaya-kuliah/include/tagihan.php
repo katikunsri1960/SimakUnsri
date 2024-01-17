@@ -59,22 +59,22 @@
                                                     <table id="example1" class="table table-bordered table-striped text-center">
                                                         <thead>
                                                             <tr>
-                                                                <th>No</th>
-                                                                <th>Nama Tagihan</th>
-                                                                <th>Periode</th>
-                                                                <!-- <th>Tahun Ajaran</th>                                     -->
-                                                                <th>Nominal Tagihan</th>
-                                                                <th>Batas Akhir Tagihan</th>
+                                                                <th class="text-center">No</th>
+                                                                <th class="text-center">Nama Tagihan</th>
+                                                                <th class="text-center">Periode</th>
+                                                                <!-- <th class="text-center">Tahun Ajaran</th>                                     -->
+                                                                <th class="text-center">Nominal Tagihan</th>
+                                                                <th class="text-center">Batas Akhir Tagihan</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td>1</td>
-                                                                <td>UKT Periode 2023/2024 Genap</td>
-                                                                <td>Periode 2023/2024 Genap</td>
-                                                                <!-- <td>2023/2024</td> -->
-                                                                <td>Rp. 3.375.000</td>
-                                                                <td>1 Agustus 2023</td>
+                                                                <td class="text-center">1</td>
+                                                                <td class="text-start">UKT Periode 2023/2024 Genap</td>
+                                                                <td class="text-start">Periode 2023/2024 Genap</td>
+                                                                <!-- <td class="text-start">2023/2024</td> -->
+                                                                <td class="text-start">Rp. 3.375.000</td>
+                                                                <td class="text-start">1 Agustus 2023</td>
                                                             </tr>
                                                         </tbody>
                                                 </table>
