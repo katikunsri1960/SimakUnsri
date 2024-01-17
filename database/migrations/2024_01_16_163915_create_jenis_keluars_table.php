@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('negaras', function (Blueprint $table) {
+        Schema::create('jenis_keluars', function (Blueprint $table) {
             $table->id();
-            $table->string('id_negara')->unique();
-            $table->index('id_negara', 'idx_negara');
-            $table->string('nama_negara');
+            $table->integer('id_jenis_keluar')->unique();
+            $table->string('jenis_keluar');
+            $table->boolean('apa_mahasiswa');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('negaras');
+        Schema::dropIfExists('jenis_keluars');
     }
 };

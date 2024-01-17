@@ -20,6 +20,7 @@ class UserSeeder extends Seeder
                 'role' => 'mahasiswa',
                 'email' => '09011181320002@student.unsri.ac.id',
                 'name' => 'Rian Fitra Perdana',
+                'fk_id' => '45fb8d68-9cfe-4a40-ab3b-91753116b766'
             ],
             [
                 'username' => 'admin-univ',

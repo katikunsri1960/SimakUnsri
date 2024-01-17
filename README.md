@@ -11,4 +11,9 @@
 - Jalankan perintah 'php artisan migrate --seed' pada terminal
 - Jalankan perintah 'php artisan serve' pada terminal
 - Buka browser dan akses localhost:8000
+- Pastikan alamat dan username serta password feeder pada .env sudah terisi dengan benar
+- Jalankan perintah 'php artisan queue:work' pada terminal untuk menjalankan queue saat syncronisasi data
 
+## Update 
+- Jalankan perintah 'composer install' pada terminal saat terdapat perubahan pada file composer.json
+- Lalu jalankan pernitah 'npm install && npm run dev' kembali pada terminal

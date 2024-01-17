@@ -55,9 +55,11 @@ class ReferensiController extends Controller
     public function sync_referensi()
     {
         $ref = [
-            ['act' => 'GetLevelWilayah', 'model' => LevelWilayah::class],
-            ['act' => 'GetWilayah', 'model' => Wilayah::class],
-            ['act' => 'GetNegara', 'model' => Negara::class],
+            ['act' => 'GetLevelWilayah', 'primary' => 'id_level_wilayah', 'model' => LevelWilayah::class],
+            ['act' => 'GetWilayah', 'primary' =>'id_wilayah', 'model' => Wilayah::class],
+            ['act' => 'GetNegara', 'primary' => 'id_negara', 'model' => Negara::class],
+            ['act' => 'GetStatusMahasiswa', 'primary' => 'id_status_mahasiswa', 'model' => \App\Models\StatusMahasiswa::class],
+            ['act' => 'GetSemester', 'primary' => 'id_semester', 'model' => \App\Models\Semester::class]
         ];
 
         foreach ($ref as $r) {
@@ -66,14 +68,10 @@ class ReferensiController extends Controller
             $limit = 0;
             $order = '';
 
-            DB::statement('SET FOREIGN_KEY_CHECKS=0;');
-            $r['model']::truncate();
-            DB::statement('SET FOREIGN_KEY_CHECKS=1;');
-
             $data = $this->sync($act, $limit, $offset, $order);
 
-            if (!empty($data['data'])) {
-                $r['model']::insert($data['data']);
+            if (isset($data['data']) && !empty($data['data'])) {
+                $r['model']::upsert($data['data'], $r['primary']);
             }
         }
 
