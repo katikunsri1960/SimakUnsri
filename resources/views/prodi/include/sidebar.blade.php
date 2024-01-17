@@ -152,16 +152,18 @@
                     </li>
 
                     <li class="header">Bantuan</li>
-                    <li class="">
-                        <a href="#">
+                    <li class="{{request()->routeIs('prodi.bantuan.ganti-password') ? 'active' : ''}}">
+                        <a href="{{route('prodi.bantuan.ganti-password')}}">
                             <i class="fa fa-key"><span class="path1"></span><span class="path2"></span></i>
                             <span>Ganti Password</span>
                         </a>
-                        <a href="#">
+                    </li>
+                    <li>
+                        <a href="#" target="_blank">
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
-                    </li>
+                    </li>  
                 </ul>
             </div>
         </div>
