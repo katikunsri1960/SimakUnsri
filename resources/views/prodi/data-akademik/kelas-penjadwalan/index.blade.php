@@ -26,13 +26,13 @@ Kelas Penjadwalan
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    {{-- <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-end">
                         <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button>
-                    </div> --}}
+                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</button>
+                    </div>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
