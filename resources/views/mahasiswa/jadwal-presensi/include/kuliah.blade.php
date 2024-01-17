@@ -49,94 +49,94 @@
                                                     <table id="example1" class="table table-bordered table-striped text-left">
                                                         <thead>
                                                             <tr>
-                                                                <th>No</th>
-                                                                <th>Nama Mata Kuliah</th>
-                                                                <th>Nama Kelas</th>
+                                                                <th  class="text-center">No</th>
+                                                                <th  class="text-center">Nama Mata Kuliah</th>
+                                                                <th  class="text-center">Nama Kelas</th>
                                                                 <!-- <th>Tahun Ajaran</th>                                     -->
-                                                                <th>Jadwal</th>
-                                                                <th>Dosen Pengajar</th>
-                                                                <th>Kehadiran</th>
+                                                                <th  class="text-center">Jadwal</th>
+                                                                <th  class="text-center">Dosen Pengajar</th>
+                                                                <th  class="text-center">Kehadiran</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td>1 </td>
-                                                                <td>KERJA PRAKTEK</td>
-                                                                <td>Inderalaya A</td>
-                                                                <td>-</td>
-                                                                <td>ADMINISTRATOR.</td>    
-                                                                <td>
+                                                                <td  class="text-center">1 </td>
+                                                                <td  class="text-start">KERJA PRAKTEK</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">-</td>
+                                                                <td  class="text-start">ADMINISTRATOR.</td>    
+                                                                <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
 
                                                             <tr>
-                                                                <td>2</td>
-                                                                <td>PROBABILITAS DAN STATISTIK</td>
-                                                                <td>Inderalaya A</td>
-                                                                <td>Senin, Pukul 08.00 - 10.30 WIB</td>
-                                                                <td>PROF. DR. ERWIN, S.SI, M.SI.</td>
-                                                                <td>
+                                                                <td  class="text-center">2</td>
+                                                                <td  class="text-start">PROBABILITAS DAN STATISTIK</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Senin, Pukul 08.00 - 10.30 WIB</td>
+                                                                <td  class="text-start">PROF. DR. ERWIN, S.SI, M.SI.</td>
+                                                                <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                            <td>3</td>
-                                                            <td>SISTEM TERDISTRIBUSI</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>Senin, Pukul 13.00 - 15.30 WIB</td>
-                                                            <td>AHMAD HERYANTO, S.KOM, M.T.</td>
-                                                                <td>
+                                                                <td  class="text-center">3</td>
+                                                                <td  class="text-start">SISTEM TERDISTRIBUSI</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Senin, Pukul 13.00 - 15.30 WIB</td>
+                                                                <td  class="text-start">AHMAD HERYANTO, S.KOM, M.T.</td>
+                                                                <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                            <td>4</td>
-                                                            <td>SISTEM BASIS DATA</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>Selasa, Pukul 08.00 - 10.30 WIB</td>
-                                                            <td>DR. FIRDAUS, M.KOM.</td>
-                                                                <td>
+                                                                <td  class="text-center">4</td>
+                                                                <td  class="text-start">SISTEM BASIS DATA</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Selasa, Pukul 08.00 - 10.30 WIB</td>
+                                                                <td  class="text-start">DR. FIRDAUS, M.KOM.</td>
+                                                                <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                            <td>5</td>
-                                                            <td>PENGOLAHAN SIGNAL DIGITAL</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>Selasa, Pukul 13.00 - 15.30 WIB</td>
-                                                            <td>RENDYANSYAH, S.KOM., M.T.</td>
-                                                                <td>
+                                                                <td  class="text-center">5</td>
+                                                                <td  class="text-start">PENGOLAHAN SIGNAL DIGITAL</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Selasa, Pukul 13.00 - 15.30 WIB</td>
+                                                                <td  class="text-start">RENDYANSYAH, S.KOM., M.T.</td>
+                                                                <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                            <td>6</td>
-                                                            <td>ANTARMUKA DAN PERIPHERAL</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>Rabu, Pukul 08.00 - 10.30 WIB</td>
-                                                            <td>SARMAYANTA SEMBIRING, M.T.</td>
-                                                                <td>
+                                                                <td  class="text-center">6</td>
+                                                                <td  class="text-start">ANTARMUKA DAN PERIPHERAL</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Rabu, Pukul 08.00 - 10.30 WIB</td>
+                                                                <td  class="text-start">SARMAYANTA SEMBIRING, M.T.</td>
+                                                                <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>7</td>
-                                                                <td>PRAKTIKUM ANTARMUKA DAN PERIPHERAL</td>
-                                                                <td>Inderalaya A</td>
-                                                                <td>Rabu, Pukul 11.00 - 11.50 WIB</td>
-                                                                <td>SARMAYANTA SEMBIRING, M.T.<br>RICY FIRNANDO, S.KOM.</td>                                                                
-                                                                <td>
+                                                                <td  class="text-center">7</td>
+                                                                <td  class="text-start">PRAKTIKUM ANTARMUKA DAN PERIPHERAL</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Rabu, Pukul 11.00 - 11.50 WIB</td>
+                                                                <td  class="text-start">SARMAYANTA SEMBIRING, M.T.<br>RICY FIRNANDO, S.KOM.</td>                                                                
+                                                                <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>8</td>
-                                                                <td>ETIKA PROFESI</td>
-                                                                <td>Inderalaya A</td>
-                                                                <td>Kamis, Pukul 08.00 - 10.30 WIB</td>
-                                                                <td>SUTARNO, S.T., M.T.</td>
-                                                                <td>
+                                                                <td  class="text-center">8</td>
+                                                                <td  class="text-start">ETIKA PROFESI</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Kamis, Pukul 08.00 - 10.30 WIB</td>
+                                                                <td  class="text-start">SUTARNO, S.T., M.T.</td>
+                                                                <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
