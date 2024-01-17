@@ -48,37 +48,37 @@
                                                     <table id="example1" class="table table-bordered table-striped text-left">
                                                         <thead>
                                                             <tr>
-                                                                <th>No</th>
-                                                                <th>Nama Mata Kuliah</th>
-                                                                <th>Dosen Pengajar</th>
-                                                                <!-- <th>Tahun Ajaran</th>                                     -->
-                                                                <th>Jadwal Pengisian</th>
-                                                                <th>Status</th>
-                                                                <th>Aksi</th>
+                                                                <th class="text-center">No</th>
+                                                                <th class="text-center">Nama Mata Kuliah</th>
+                                                                <th class="text-center">Dosen Pengajar</th>
+                                                                <!-- <th class="text-center">Tahun Ajaran</th>                                     -->
+                                                                <th class="text-center">Jadwal Pengisian</th>
+                                                                <th class="text-center">Status</th>
+                                                                <th class="text-center">Aksi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
-                                                                <td>1</td>
-                                                                <td>PROBABILITAS DAN STATISTIK</td>
-                                                                <td>PROF. DR. ERWIN, S.SI, M.SI.</td>
-                                                                <td>20 Desember 2023 - 25 Desember 2023</td>
-                                                                <td>
+                                                                <td  class="text-center">1</td>
+                                                                <td  class="text-start">PROBABILITAS DAN STATISTIK</td>
+                                                                <td  class="text-start">PROF. DR. ERWIN, S.SI, M.SI.</td>
+                                                                <td  class="text-start">20 Desember 2023 - 25 Desember 2023</td>
+                                                                <td  class="text-center">
                                                                     <button type="button" class="waves-effect waves-light btn btn-success-light mb-5">Sudah isi</button>
                                                                 </td>
-                                                                <td>
+                                                                <td  class="text-center">
                                                                     <button type="button" class="waves-effect waves-light btn btn-primary mb-5"><i class="fa fa-pen"></i> Jawab</button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
-                                                                <td>2</td>
-                                                                <td>SISTEM TERDISTRIBUSI</td>
-                                                                <td>AHMAD HERYANTO, S.KOM, M.T.</td>
-                                                                <td>20 Desember 2023 - 25 Desember 2023</td>
-                                                                <td>
+                                                                <td  class="text-center">2</td>
+                                                                <td  class="text-start">SISTEM TERDISTRIBUSI</td>
+                                                                <td  class="text-start">AHMAD HERYANTO, S.KOM, M.T.</td>
+                                                                <td  class="text-start">20 Desember 2023 - 25 Desember 2023</td>
+                                                                <td  class="text-center">
                                                                     <button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum isi</button>
                                                                 </td>
-                                                                <td>
+                                                                <td  class="text-center">
                                                                     <button type="button" class="waves-effect waves-light btn btn-primary mb-5"><i class="fa fa-pen"></i> Jawab</button>
                                                                 </td>
                                                             </tr>

@@ -61,10 +61,10 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td  class="text-center">1 </td>
-                                                                <td  class="text-left">KERJA PRAKTEK</td>
-                                                                <td  class="text-left">Inderalaya A</td>
-                                                                <td  class="text-left">-</td>
-                                                                <td  class="text-left">ADMINISTRATOR.</td>    
+                                                                <td  class="text-start">KERJA PRAKTEK</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">-</td>
+                                                                <td  class="text-start">ADMINISTRATOR.</td>    
                                                                 <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
@@ -72,70 +72,70 @@
 
                                                             <tr>
                                                                 <td  class="text-center">2</td>
-                                                                <td  class="text-left">PROBABILITAS DAN STATISTIK</td>
-                                                                <td  class="text-left">Inderalaya A</td>
-                                                                <td  class="text-left">Senin, Pukul 08.00 - 10.30 WIB</td>
-                                                                <td  class="text-left">PROF. DR. ERWIN, S.SI, M.SI.</td>
+                                                                <td  class="text-start">PROBABILITAS DAN STATISTIK</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Senin, Pukul 08.00 - 10.30 WIB</td>
+                                                                <td  class="text-start">PROF. DR. ERWIN, S.SI, M.SI.</td>
                                                                 <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td  class="text-center">3</td>
-                                                                <td  class="text-left">SISTEM TERDISTRIBUSI</td>
-                                                                <td  class="text-left">Inderalaya A</td>
-                                                                <td  class="text-left">Senin, Pukul 13.00 - 15.30 WIB</td>
-                                                                <td  class="text-left">AHMAD HERYANTO, S.KOM, M.T.</td>
+                                                                <td  class="text-start">SISTEM TERDISTRIBUSI</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Senin, Pukul 13.00 - 15.30 WIB</td>
+                                                                <td  class="text-start">AHMAD HERYANTO, S.KOM, M.T.</td>
                                                                 <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td  class="text-center">4</td>
-                                                                <td  class="text-left">SISTEM BASIS DATA</td>
-                                                                <td  class="text-left">Inderalaya A</td>
-                                                                <td  class="text-left">Selasa, Pukul 08.00 - 10.30 WIB</td>
-                                                                <td  class="text-left">DR. FIRDAUS, M.KOM.</td>
+                                                                <td  class="text-start">SISTEM BASIS DATA</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Selasa, Pukul 08.00 - 10.30 WIB</td>
+                                                                <td  class="text-start">DR. FIRDAUS, M.KOM.</td>
                                                                 <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td  class="text-center">5</td>
-                                                                <td  class="text-left">PENGOLAHAN SIGNAL DIGITAL</td>
-                                                                <td  class="text-left">Inderalaya A</td>
-                                                                <td  class="text-left">Selasa, Pukul 13.00 - 15.30 WIB</td>
-                                                                <td  class="text-left">RENDYANSYAH, S.KOM., M.T.</td>
+                                                                <td  class="text-start">PENGOLAHAN SIGNAL DIGITAL</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Selasa, Pukul 13.00 - 15.30 WIB</td>
+                                                                <td  class="text-start">RENDYANSYAH, S.KOM., M.T.</td>
                                                                 <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td  class="text-center">6</td>
-                                                                <td  class="text-left">ANTARMUKA DAN PERIPHERAL</td>
-                                                                <td  class="text-left">Inderalaya A</td>
-                                                                <td  class="text-left">Rabu, Pukul 08.00 - 10.30 WIB</td>
-                                                                <td  class="text-left">SARMAYANTA SEMBIRING, M.T.</td>
+                                                                <td  class="text-start">ANTARMUKA DAN PERIPHERAL</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Rabu, Pukul 08.00 - 10.30 WIB</td>
+                                                                <td  class="text-start">SARMAYANTA SEMBIRING, M.T.</td>
                                                                 <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td  class="text-center">7</td>
-                                                                <td  class="text-left">PRAKTIKUM ANTARMUKA DAN PERIPHERAL</td>
-                                                                <td  class="text-left">Inderalaya A</td>
-                                                                <td  class="text-left">Rabu, Pukul 11.00 - 11.50 WIB</td>
-                                                                <td  class="text-left">SARMAYANTA SEMBIRING, M.T.<br>RICY FIRNANDO, S.KOM.</td>                                                                
+                                                                <td  class="text-start">PRAKTIKUM ANTARMUKA DAN PERIPHERAL</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Rabu, Pukul 11.00 - 11.50 WIB</td>
+                                                                <td  class="text-start">SARMAYANTA SEMBIRING, M.T.<br>RICY FIRNANDO, S.KOM.</td>                                                                
                                                                 <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>
                                                             </tr>
                                                             <tr>
                                                                 <td  class="text-center">8</td>
-                                                                <td  class="text-left">ETIKA PROFESI</td>
-                                                                <td  class="text-left">Inderalaya A</td>
-                                                                <td  class="text-left">Kamis, Pukul 08.00 - 10.30 WIB</td>
-                                                                <td  class="text-left">SUTARNO, S.T., M.T.</td>
+                                                                <td  class="text-start">ETIKA PROFESI</td>
+                                                                <td  class="text-start">Inderalaya A</td>
+                                                                <td  class="text-start">Kamis, Pukul 08.00 - 10.30 WIB</td>
+                                                                <td  class="text-start">SUTARNO, S.T., M.T.</td>
                                                                 <td  class="text-center">
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td>

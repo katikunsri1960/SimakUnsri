@@ -59,10 +59,10 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class="text-center">1 </td>
-                                                                <td class="text-left">KERJA PRAKTEK</td>
-                                                                <td class="text-left">-</td>
-                                                                <td class="text-left"></td>
-                                                                <td class="text-left"></td>
+                                                                <td class="text-start">KERJA PRAKTEK</td>
+                                                                <td class="text-start">-</td>
+                                                                <td class="text-start"></td>
+                                                                <td class="text-start"></td>
                                                                 <!-- <td>
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td> -->
@@ -70,70 +70,70 @@
 
                                                             <tr>
                                                                 <td class="text-center">2</td>
-                                                                <td class="text-left">PROBABILITAS DAN STATISTIK</td>
-                                                                <td class="text-left">Senin, 19 Maret 2024 | Pukul 08.00 - 10.30 WIB</td>
-                                                                <td class="text-left"></td>
-                                                                <td class="text-left"></td>
+                                                                <td class="text-start">PROBABILITAS DAN STATISTIK</td>
+                                                                <td class="text-start">Senin, 19 Maret 2024 | Pukul 08.00 - 10.30 WIB</td>
+                                                                <td class="text-start"></td>
+                                                                <td class="text-start"></td>
                                                                 <!-- <td>
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td> -->
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">3</td>
-                                                                <td class="text-left">SISTEM TERDISTRIBUSI</td>
-                                                                <td class="text-left">Senin, 19 Maret 2024 | Pukul 13.00 - 15.30 WIB</td>
-                                                                <td class="text-left"></td>
-                                                                <td class="text-left"></td>
+                                                                <td class="text-start">SISTEM TERDISTRIBUSI</td>
+                                                                <td class="text-start">Senin, 19 Maret 2024 | Pukul 13.00 - 15.30 WIB</td>
+                                                                <td class="text-start"></td>
+                                                                <td class="text-start"></td>
                                                             <!-- <td>
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td> -->
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">4</td>
-                                                                <td class="text-left">SISTEM BASIS DATA</td>
-                                                                <td class="text-left">Selasa, 20 Maret 2024 | Pukul 08.00 - 10.30 WIB</td>
-                                                                <td class="text-left"></td>
-                                                                <td class="text-left"></td>
+                                                                <td class="text-start">SISTEM BASIS DATA</td>
+                                                                <td class="text-start">Selasa, 20 Maret 2024 | Pukul 08.00 - 10.30 WIB</td>
+                                                                <td class="text-start"></td>
+                                                                <td class="text-start"></td>
                                                             <!-- <td>
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td> -->
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">5</td>
-                                                                <td class="text-left">PENGOLAHAN SIGNAL DIGITAL</td>
-                                                                <td class="text-left">Selasa, 20 Maret 2024 | Pukul 13.00 - 15.30 WIB</td>
-                                                                <td class="text-left"></td>
-                                                                <td class="text-left"></td>
+                                                                <td class="text-start">PENGOLAHAN SIGNAL DIGITAL</td>
+                                                                <td class="text-start">Selasa, 20 Maret 2024 | Pukul 13.00 - 15.30 WIB</td>
+                                                                <td class="text-start"></td>
+                                                                <td class="text-start"></td>
                                                             <!-- <td>
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td> -->
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">6</td>
-                                                                <td class="text-left">ANTARMUKA DAN PERIPHERAL</td>
-                                                                <td class="text-left">Rabu, 21 Maret 2024 | Pukul 08.00 - 10.30 WIB</td>
-                                                                <td class="text-left"></td>
-                                                                <td class="text-left"></td>
+                                                                <td class="text-start">ANTARMUKA DAN PERIPHERAL</td>
+                                                                <td class="text-start">Rabu, 21 Maret 2024 | Pukul 08.00 - 10.30 WIB</td>
+                                                                <td class="text-start"></td>
+                                                                <td class="text-start"></td>
                                                             <!-- <td>
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td> -->
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">7</td>
-                                                                <td class="text-left">PRAKTIKUM ANTARMUKA DAN PERIPHERAL</td>
-                                                                <td class="text-left">Rabu, 21 Maret 2024 | Pukul 11.00 - 11.50 WIB</td>
-                                                                <td class="text-left"></td>
-                                                                <td class="text-left"></td>
+                                                                <td class="text-start">PRAKTIKUM ANTARMUKA DAN PERIPHERAL</td>
+                                                                <td class="text-start">Rabu, 21 Maret 2024 | Pukul 11.00 - 11.50 WIB</td>
+                                                                <td class="text-start"></td>
+                                                                <td class="text-start"></td>
                                                                 <!-- <td>
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td> -->
                                                             </tr>
                                                             <tr>
                                                                 <td class="text-center">8</td>
-                                                                <td class="text-left">ETIKA PROFESI</td>
-                                                                <td class="text-left">Kamis, 22 Maret 2024 | Pukul 08.00 - 10.30 WIB</td>
-                                                                <td class="text-left"></td>
-                                                                <td class="text-left"></td>
+                                                                <td class="text-start">ETIKA PROFESI</td>
+                                                                <td class="text-start">Kamis, 22 Maret 2024 | Pukul 08.00 - 10.30 WIB</td>
+                                                                <td class="text-start"></td>
+                                                                <td class="text-start"></td>
                                                                 <!-- <td>
                                                                     <button class="waves-effect waves-circle btn btn-social-icon btn-circle btn-success"><i class="fa fa-list-alt"></i></button>
                                                                 </td> -->

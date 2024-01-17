@@ -38,26 +38,26 @@
                                         <table id="example3" class="table table-bordered table-striped text-center">
                                             <thead>
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Kode Tagihan</th>
-                                                    <th>Nama Tagihan</th>                                    
-                                                    <th>Tagihan</th>
-                                                    <th>Denda</th>
-                                                    <th>Potongan</th>
-                                                    <th>Jumlah Bayar</th>
-                                                    <th>Status</th>
+                                                    <th class="text-center">No</th>
+                                                    <th class="text-center">Kode Tagihan</th>
+                                                    <th class="text-center">Nama Tagihan</th>                                    
+                                                    <th class="text-center">Tagihan</th>
+                                                    <th class="text-center">Denda</th>
+                                                    <th class="text-center">Potongan</th>
+                                                    <th class="text-center">Jumlah Bayar</th>
+                                                    <th class="text-center">Status</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td>1</td>
-                                                    <td>UKT23241</td>
-                                                    <td>UKT Periode 2023/2024 Ganjil</td>
-                                                    <td>Rp 3.375.000</td>
-                                                    <td>Rp 0</td>
-                                                    <td>Rp 0</td>
-                                                    <td>Rp 3.380.000</td>
-                                                    <td>
+                                                    <td class="text-center">1</td>
+                                                    <td class="text-start">UKT23241</td>
+                                                    <td class="text-start">UKT Periode 2023/2024 Ganjil</td>
+                                                    <td class="text-start">Rp 3.375.000</td>
+                                                    <td class="text-start">Rp 0</td>
+                                                    <td class="text-start">Rp 0</td>
+                                                    <td class="text-start">Rp 3.380.000</td>
+                                                    <td class="text-center">
                                                         <a class="btn btn-rounded bg-success-light"><i class="fa fa-check"><span class="path1"></span><span class="path2"></span></i> Lunas</a>
                                                     </td>
                                                 </tr>

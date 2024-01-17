@@ -80,10 +80,10 @@ Jadwal dan Presensi
                                             <tbody>
                                                 <tr>
                                                     <td class="text-center">1 </td>
-                                                    <td class="text-left">Pertemuan 1 </td>
-                                                    <td class="text-left">Rabu, 10 Januari 2024 08:00</td>
-                                                    <td class="text-left">Rabu, 17 Januari 2024 23:59</td>
-                                                    <td class="text-left">
+                                                    <td class="text-start">Pertemuan 1 </td>
+                                                    <td class="text-start">Rabu, 10 Januari 2024 08:00</td>
+                                                    <td class="text-start">Rabu, 17 Januari 2024 23:59</td>
+                                                    <td class="text-start">
                                                         <button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum isi</button>
                                                         <button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Di luar jadwal</button>
                                                     </td>
@@ -91,10 +91,10 @@ Jadwal dan Presensi
 
                                                 <tr>
                                                     <td class="text-center">2</td>
-                                                    <td class="text-left">Pertemuan 2</td>
-                                                    <td class="text-left">Selasa, 1 Agustus 2023 08:00</td>
-                                                    <td class="text-left">Selasa, 8 Agustus 2023 23:59</td>
-                                                    <td class="text-left">
+                                                    <td class="text-start">Pertemuan 2</td>
+                                                    <td class="text-start">Selasa, 1 Agustus 2023 08:00</td>
+                                                    <td class="text-start">Selasa, 8 Agustus 2023 23:59</td>
+                                                    <td class="text-start">
                                                         <button type="button" class="waves-effect waves-light btn btn-success-light mb-5">Sudah isi</button>
                                                         <button type="button" class="waves-effect waves-light btn btn-outline btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#createModal">Lihat Pertanyaan</button>
                                                         @include('mahasiswa.pa-online.include.create')
@@ -103,10 +103,10 @@ Jadwal dan Presensi
                                                 </tr>
                                                 <tr>
                                                     <td class="text-center">3</td>
-                                                    <td class="text-left">Pertemuan 3</td>
-                                                    <td class="text-left">Kamis, 5 Januari 2023 08:00</td>
-                                                    <td class="text-left">Kamis, 12 Januari 2023 23:59</td>
-                                                    <td class="text-left">
+                                                    <td class="text-start">Pertemuan 3</td>
+                                                    <td class="text-start">Kamis, 5 Januari 2023 08:00</td>
+                                                    <td class="text-start">Kamis, 12 Januari 2023 23:59</td>
+                                                    <td class="text-start">
                                                         <button type="button" class="waves-effect waves-light btn btn-success-light mb-5">Sudah isi</button>
                                                         <button type="button" class="waves-effect waves-light btn btn-outline btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#createModal">Lihat Pertanyaan</button>
                                                         @include('mahasiswa.pa-online.include.create')
@@ -115,10 +115,10 @@ Jadwal dan Presensi
                                                 </tr>
                                                 <tr>
                                                     <td class="text-center">4</td>
-                                                    <td class="text-left">Pertemuan 4</td>
-                                                    <td class="text-left">Rabu, 3 Agustus 2022 08:00</td>
-                                                    <td class="text-left">Rabu, 10 Agustus 2022 23:59</td>
-                                                    <td class="text-left">
+                                                    <td class="text-start">Pertemuan 4</td>
+                                                    <td class="text-start">Rabu, 3 Agustus 2022 08:00</td>
+                                                    <td class="text-start">Rabu, 10 Agustus 2022 23:59</td>
+                                                    <td class="text-start">
                                                         <button type="button" class="waves-effect waves-light btn btn-success-light mb-5">Sudah isi</button>
                                                         <button type="button" class="waves-effect waves-light btn btn-outline btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#createModal">Lihat Pertanyaan</button>
                                                         @include('mahasiswa.pa-online.include.create')
@@ -127,10 +127,10 @@ Jadwal dan Presensi
                                                 </tr>
                                                 <tr>
                                                     <td class="text-center">5</td>
-                                                    <td class="text-left">Pertemuan 5</td>
-                                                    <td class="text-left">Sabtu, 2 Januari 2022 08:00</td>
-                                                    <td class="text-left">Sabtu, 9 Januari 2022 23:59</td>
-                                                    <td class="text-left">
+                                                    <td class="text-start">Pertemuan 5</td>
+                                                    <td class="text-start">Sabtu, 2 Januari 2022 08:00</td>
+                                                    <td class="text-start">Sabtu, 9 Januari 2022 23:59</td>
+                                                    <td class="text-start">
                                                         <button type="button" class="waves-effect waves-light btn btn-success-light mb-5">Sudah isi</button>
                                                         <button type="button" class="waves-effect waves-light btn btn-outline btn-primary mb-5" data-bs-toggle="modal" data-bs-target="#createModal">Lihat Pertanyaan</button>
                                                         @include('mahasiswa.pa-online.include.create')
@@ -139,10 +139,10 @@ Jadwal dan Presensi
                                                 </tr>
                                                 <tr>
                                                     <td class="text-center">6</td>
-                                                    <td class="text-left">Pertemuan 6</td>
-                                                    <td class="text-left">Sabtu, 1 Agustus 2021 08:00</td>
-                                                    <td class="text-left">Sabtu, 8 Agustus 2021 23:59</td>
-                                                    <td class="text-left">
+                                                    <td class="text-start">Pertemuan 6</td>
+                                                    <td class="text-start">Sabtu, 1 Agustus 2021 08:00</td>
+                                                    <td class="text-start">Sabtu, 8 Agustus 2021 23:59</td>
+                                                    <td class="text-start">
                                                         <button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum isi</button>
                                                         <button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Di luar jadwal</button>
                                                     </td>
