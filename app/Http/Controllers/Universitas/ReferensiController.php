@@ -63,6 +63,7 @@ class ReferensiController extends Controller
             ['act' => 'GetJenisKeluar', 'primary' => 'id_jenis_keluar', 'model' => \App\Models\JenisKeluar::class],
             ['act' => 'GetJenisPendaftaran', 'primary' => 'id_jenis_daftar', 'model' => \App\Models\JenisDaftar::class],
             ['act' => 'GetJalurMasuk', 'primary' => 'id_jalur_masuk', 'model' => \App\Models\JalurMasuk::class],
+            ['act' => 'GetJenisEvaluasi', 'primary' => 'id_jenis_evaluasi', 'model' => \App\Models\JenisEvaluasi::class]
         ];
 
         foreach ($ref as $r) {
