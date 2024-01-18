@@ -2,6 +2,7 @@
 
 namespace App\Models\Mahasiswa;
 
+use App\Models\Wilayah;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -30,6 +31,14 @@ class BiodataMahasiswa extends Model
             return "Lainnya";
         }
     }
+
+    public function wilayah()
+    {
+        return $this->belongsTo(Wilayah::class, 'id_wilayah', 'id_wilayah');
+    }
+
+
+
 
     
 

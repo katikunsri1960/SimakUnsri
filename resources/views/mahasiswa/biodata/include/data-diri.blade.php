@@ -102,6 +102,7 @@
                                         </div>
                                     </div>
 
+                                    <!-- JENIS KELAMIN -->
                                     @if ($biodata->biodata->jenis_kelamin == "Laki-laki" )
                                         <div class="col-lg-6">
                                             <label class="mb-5">Jenis Kelamin</label>
@@ -175,6 +176,8 @@
                                             </div>
                                         </div>
                                     @endif
+
+
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Golongan Darah</label>

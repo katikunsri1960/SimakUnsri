@@ -31,4 +31,14 @@ class RiwayatPendidikan extends Model
     {
         return substr($this->id_periode_masuk, 0, 4);
     }
+
+    public function getGelombangMasukAttribute()
+    {
+        return substr($this->id_periode_masuk, 4, 1);
+    }
+
+    public function getIdJalurMasukAttribute()
+    {
+        return substr($this->nim, 5, 1);
+    }
 }
