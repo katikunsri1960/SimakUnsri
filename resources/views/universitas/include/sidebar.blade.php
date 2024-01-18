@@ -33,6 +33,23 @@
                                             class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li>
                         </ul>
                     </li>
+                    <li class="treeview {{request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-scroll"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Perkuliahan</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('univ.perkuliahan.kelas-kuliah') ? 'active' : ''}}"><a href="{{route('univ.perkuliahan.kelas-kuliah')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Kelas Perkuliahan</a>
+                            </li>
+                            {{-- <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li> --}}
+                        </ul>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="icon-Library"><span class="path1"></span><span
