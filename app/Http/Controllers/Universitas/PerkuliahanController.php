@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\Perkuliahan\Kelas\GetKelasJob;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use Illuminate\Http\Request;
@@ -24,22 +25,22 @@ class PerkuliahanController extends Controller
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();
         $semester = Semester::pluck('id_semester')->toArray();
 
-        dd($prodi, $semester);
+        // dd($prodi, $semester);
 
-        // $batch = Bus::batch([])->name('Kelas Kuliah')->dispatch();
+        $batch = Bus::batch([])->name('Kelas Kuliah')->dispatch();
 
-        // $act = $v['act'];
-        // $limit = '';
-        // $offset = 0;
-        // $order = '';
+        $act = 'GetDetailKelasKuliah';
+        $limit = '';
+        $offset = 0;
+        $order = '';
 
-        // foreach ($prodi as $p) {
-        //     foreach ($semester as $s ) {
-        //         $filter = "id_prodi = '$p' AND id_semester = '$s'";
-        //         // dd($filter);
-        //         $batch->add(new FetchProcessV2($act,$offset,$limit, $order, $filter, $v['table']));
-        //     }
-        // }
+        foreach ($prodi as $p) {
+            foreach ($semester as $s ) {
+                $filter = "id_prodi = '$p' AND id_semester = '$s'";
+                // dd($filter);
+                $batch->add(new GetKelasJob($act, $limit, $offset, $order, $filter));
+            }
+        }
 
     }
 }
