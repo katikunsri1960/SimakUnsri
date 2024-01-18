@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Prodi;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+use App\Models\RuangPerkuliahan;
 
 class DataMasterController extends Controller
 {
@@ -29,12 +31,22 @@ class DataMasterController extends Controller
 
     public function ruang_perkuliahan_store(Request $request)
     {
+        $prodi_id = auth()->user()->fk_id;
         $data = $request->validate([
             'nama_ruang' => 'required',
-            'lokasi' => 'required',
+            'lokasi' => [
+                'required',
+                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$prodi_id) {
+                    return $query->where('nama_ruang', $request->nama_ruang)
+                    ->where('lokasi', $request->lokasi)
+                    ->where('id_prodi', $prodi_id);
+                }),
+            ],
         ]);
 
+        RuangPerkuliahan::create(['nama_ruang'=> $request->nama_ruang, 'lokasi'=> $request->lokasi, 'id_prodi'=> $prodi_id]);
 
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
 
     public function kurikulum()
