@@ -59,7 +59,10 @@ class ReferensiController extends Controller
             ['act' => 'GetWilayah', 'primary' =>'id_wilayah', 'model' => Wilayah::class],
             ['act' => 'GetNegara', 'primary' => 'id_negara', 'model' => Negara::class],
             ['act' => 'GetStatusMahasiswa', 'primary' => 'id_status_mahasiswa', 'model' => \App\Models\StatusMahasiswa::class],
-            ['act' => 'GetSemester', 'primary' => 'id_semester', 'model' => \App\Models\Semester::class]
+            ['act' => 'GetSemester', 'primary' => 'id_semester', 'model' => \App\Models\Semester::class],
+            ['act' => 'GetJenisKeluar', 'primary' => 'id_jenis_keluar', 'model' => \App\Models\JenisKeluar::class],
+            ['act' => 'GetJenisPendaftaran', 'primary' => 'id_jenis_daftar', 'model' => \App\Models\JenisDaftar::class],
+            ['act' => 'GetJalurMasuk', 'primary' => 'id_jalur_masuk', 'model' => \App\Models\JalurMasuk::class],
         ];
 
         foreach ($ref as $r) {
