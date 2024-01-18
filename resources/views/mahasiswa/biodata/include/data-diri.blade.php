@@ -4,7 +4,8 @@
             <div class="row">
                 <div class="col-xxl-12 col-xl-12 col-lg-12 pt-20 px-20">
                     <div class="box">		
-                        <div class="text-white box-body bg-img text-center m-20 py-65" style="background-image: url({{asset('images/images/gallery/creative/img-12.jpg')}});">
+                        <div class="text-white box-body bg-img text-center m-20 py-65" 
+                        style="background-image: url({{asset('images/images/gallery/creative/img-12.jpg')}});">
                         </div>
                         <div class="box-body up-mar100 pb-0">	
                             <div class=" justify-content-center">
