@@ -4,29 +4,27 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use Illuminate\Support\Number;
 
 class BiodataController extends Controller
 {
     public function index()
     {
-        $biodata = DB::table('pd_feeder_list_riwayat_pendidikan_mahasiswa')
-            ->leftJoin('pd_feeder_biodata_mahasiswa','pd_feeder_biodata_mahasiswa.id_mahasiswa','=','pd_feeder_list_riwayat_pendidikan_mahasiswa.id_mahasiswa')
-            
-            ->select('*', 
-                    DB::raw('CASE WHEN pd_feeder_list_riwayat_pendidikan_mahasiswa.jenis_kelamin = "P" THEN "Perempuan"
-                                WHEN pd_feeder_list_riwayat_pendidikan_mahasiswa.jenis_kelamin = "L" THEN "Laki-Laki"
-                                ELSE "Tidak Diisi"
-                                END AS jenis_kelamin')
-                    )
-            // ->order('ni', 'desc')
-            ->where('id_registrasi_mahasiswa', '010692d5-a378-4d17-a850-7c1fb4332e8b')
-            ->first();
-            
-            // ->limit(1)
-            // ->get()
-            // ;
-            // dd($biodata);
+        $id_reg = auth()->user()->fk_id;
+
+        $biodata = RiwayatPendidikan::with('biodata')
+                // ->where('id_registrasi_mahasiswa', '55f28aa8-168c-432e-b553-e64d150c423d')//PT Asal
+                // ->where('id_registrasi_mahasiswa', '00013266-4d53-4314-a4bd-a3b0407a46b7')//Lulus
+                
+                ->where('id_registrasi_mahasiswa', $id_reg)//Default
+                ->first();
+                
+                // ->limit(1)
+                // ->get()
+                // ;
+                // dd($biodata);
+        
 
         return view('mahasiswa.biodata.index', compact('biodata'));
     }

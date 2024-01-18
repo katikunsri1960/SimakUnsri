@@ -16,42 +16,42 @@
                                         <div class="form-group">
                                             <label>Jalan</label>
                                             <input type="name" class="form-control" 
-                                                value="{{ $biodata->jalan }}">
+                                                value="{{ $biodata->biodata->jalan }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Dusun</label>
                                             <input type="name" class="form-control" 
-                                                value="{{ $biodata->dusun }}">
+                                                value="{{ $biodata->biodata->dusun }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="form-group">
                                             <label>RT</label>
                                             <input type="name" class="form-control" 
-                                                value="{{ $biodata->rt }}">
+                                                value="{{ $biodata->biodata->rt }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="form-group">
                                             <label>RW</label>
                                             <input type="name" class="form-control" 
-                                                value="{{ $biodata->rw }}">
+                                                value="{{ $biodata->biodata->rw }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Kelurahan</label>
                                             <input type="name" class="form-control" 
-                                                value="{{ $biodata->kelurahan }}">
+                                                value="{{ $biodata->biodata->kelurahan }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Kecamatan</label>
                                             <input type="name" class="form-control" 
-                                                value="{{ $biodata->nama_wilayah }}">
+                                                value="{{ $biodata->biodata->nama_wilayah }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
@@ -72,7 +72,7 @@
                                         <div class="form-group">
                                             <label>Kode Pos</label>
                                             <input type="name" class="form-control" 
-                                                value="{{ $biodata->kode_pos }}">
+                                                value="{{ $biodata->biodata->kode_pos }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
@@ -93,11 +93,11 @@
                                         </div>
                                     </div>
                                     <div class="col-lg-8"
-                                        style="@if ($biodata->penerima_kps == 'Tidak') visibility: hidden @endif">
+                                        style="@if ($biodata->biodata->penerima_kps == 'Tidak') visibility: hidden @endif">
                                         <div class="form-group">
                                             <label>No. KPS</label>
                                             <input type="name" class="form-control" 
-                                                value="{{ $biodata->nomor_kps }}">
+                                                value="{{ $biodata->biodata->nomor_kps }}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">

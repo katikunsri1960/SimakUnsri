@@ -18,7 +18,7 @@
                                             <div class="box-body">
                                                 <div class="flex-grow-1">
                                                     <p class="mt-5 mb-5 text-fade fs-12">UKT</p>
-                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">Rp. 3.375.000</h4>
+                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -29,7 +29,7 @@
                                             <div class="box-body">
                                                 <div class="flex-grow-1">
                                                     <p class="mt-5 mb-5 text-fade fs-12">UKT yang Belum Dibayar</p>
-                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">Rp. 3.375.000</h4>
+                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -73,7 +73,7 @@
                                                                 <td class="text-start">UKT Periode 2023/2024 Genap</td>
                                                                 <td class="text-start">Periode 2023/2024 Genap</td>
                                                                 <!-- <td class="text-start">2023/2024</td> -->
-                                                                <td class="text-start">Rp. 3.375.000</td>
+                                                                <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
                                                                 <td class="text-start">1 Agustus 2023</td>
                                                             </tr>
                                                         </tbody>

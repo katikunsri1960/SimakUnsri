@@ -30,6 +30,7 @@ class FeederAPI {
 
     public function runWS()
     {
+        // dd($this->url);
         $client = new Client();
         $params = [
             "act" => "GetToken",
