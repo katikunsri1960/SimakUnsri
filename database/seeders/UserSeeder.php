@@ -15,11 +15,11 @@ class UserSeeder extends Seeder
     {
         $data = [
             [
-                'username' => '09011181320002',
-                'password' => bcrypt('09011181320002'),
+                'username' => '09011282126085',
+                'password' => bcrypt('09011282126085'),
                 'role' => 'mahasiswa',
-                'email' => '09011181320002@student.unsri.ac.id',
-                'name' => 'Rian Fitra Perdana',
+                'email' => '09011282126085@student.unsri.ac.id',
+                'name' => 'MUHAMMAD SYAHRUL WIJAYA',
                 'fk_id' => '45fb8d68-9cfe-4a40-ab3b-91753116b766'
             ],
             [

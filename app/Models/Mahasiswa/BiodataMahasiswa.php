@@ -21,7 +21,17 @@ class BiodataMahasiswa extends Model
         {
             return "Laki-laki";
         }
+        elseif ($value==="P")
+        {
+            return "Perempuan";
+        }
+        else
+        {
+            return "Lainnya";
+        }
     }
+
+    
 
     // public function getUKTAttribute($value)
     // {

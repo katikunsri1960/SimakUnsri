@@ -93,32 +93,87 @@
                                         </div>
                                     </div>
 
-
                                     <div class="col-lg-6">
                                         <div class="form-group">
-                                            <label>Jenis Kelamin</label>
+                                            <!-- <label>Jenis Kelamin</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$biodata->biodata->jenis_kelamin}}">
+                                                value="{{$biodata->biodata->jenis_kelamin}}"> -->
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-6">
-                                        <label class="mb-5">Jenis Kelamin</label>
-                                        <div class="form-group ">
-                                            <div class="form-check form-check-inline">
-                                                <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios1" value="kelamin1" checked disabled>
-                                                <label class="form-check-label" for="exampleRadios1">
-                                                    Laki-Laki
-                                                </label>
-                                            </div>
-                                            <div class="form-check form-check-inline">
-                                                <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios2" value="kelamin2" disabled>
-                                                <label class="form-check-label" for="exampleRadios2">
-                                                    Perempuan
-                                                </label>
+                                    @if ($biodata->biodata->jenis_kelamin == "Laki-laki" )
+                                        <div class="col-lg-6">
+                                            <label class="mb-5">Jenis Kelamin</label>
+                                            <div class="form-group ">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios1" value="kelamin1" checked disabled>
+                                                    <label class="form-check-label" for="exampleRadios1">
+                                                        Laki-Laki
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios2" value="kelamin2" disabled>
+                                                    <label class="form-check-label" for="exampleRadios2">
+                                                        Perempuan
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios3" value="kelamin3" disabled>
+                                                    <label class="form-check-label" for="exampleRadios3">
+                                                        Lainnya
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    @elseif ($biodata->biodata->jenis_kelamin == "Perempuan" )
+                                        <div class="col-lg-6">
+                                            <label class="mb-5">Jenis Kelamin</label>
+                                            <div class="form-group ">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios1" value="kelamin1"  disabled>
+                                                    <label class="form-check-label" for="exampleRadios1">
+                                                        Laki-Laki
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios2" value="kelamin2" checked disabled>
+                                                    <label class="form-check-label" for="exampleRadios2">
+                                                        Perempuan
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios3" value="kelamin3" disabled>
+                                                    <label class="form-check-label" for="exampleRadios3">
+                                                        Lainnya
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @else
+                                        <div class="col-lg-6">
+                                            <label class="mb-5">Jenis Kelamin</label>
+                                            <div class="form-group ">
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios1" value="kelamin1"  disabled>
+                                                    <label class="form-check-label" for="exampleRadios1">
+                                                        Laki-Laki
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios2" value="kelamin2"  disabled>
+                                                    <label class="form-check-label" for="exampleRadios2">
+                                                        Perempuan
+                                                    </label>
+                                                </div>
+                                                <div class="form-check form-check-inline">
+                                                    <input class="with-gap radio-col-success" type="radio" name="jenisKelamin" id="exampleRadios3" value="kelamin3" checked disabled>
+                                                    <label class="form-check-label" for="exampleRadios3">
+                                                        Lainnya
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Golongan Darah</label>

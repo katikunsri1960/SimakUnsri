@@ -43,7 +43,7 @@
                                                             <td class="text-start">10 Januari 2024</td>
                                                             <td class="text-start">UKT Periode 2023/2024 Genap</td>
                                                             <td class="text-start">Periode 2023/2024 Genap</td>
-                                                            <td class="text-start">Rp 3.375.000</td>
+                                                            <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
                                                             <td class="text-start">BNI Virtual Account</td>
                                                             <td class="text-center">
                                                                 <a class="btn btn-rounded bg-warning-light" href=""><i class="fa fa-circle-exclamation"><span class="path1"></span><span class="path2"></span></i></a>
@@ -54,7 +54,7 @@
                                                             <td class="text-start">1 Agustus 2023</td>
                                                             <td class="text-start">UKT Periode 2023/2024 Ganjil</td>
                                                             <td class="text-start">Periode 2023/2024 Ganjil</td>
-                                                            <td class="text-start">Rp 3.375.000</td>
+                                                            <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
                                                             <td class="text-start">BNI Virtual Account</td>
                                                             <td class="text-center">
                                                                 <a class="btn btn-rounded bg-warning-light" href=""><i class="fa fa-circle-exclamation"><span class="path1"></span><span class="path2"></span></i></a>
@@ -65,7 +65,7 @@
                                                             <td class="text-start">5 Januari 2023</td>
                                                             <td class="text-start">UKT Periode 2022/2023 Genap</td>
                                                             <td class="text-start">Periode 2022/2023 Ganjil</td>
-                                                            <td class="text-start">Rp 3.375.000</td>
+                                                            <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
                                                             <td class="text-start">BNI</td>
                                                             <td class="text-center">
                                                                 <a class="btn btn-rounded bg-warning-light" href=""><i class="fa fa-circle-exclamation"><span class="path1"></span><span class="path2"></span></i></a>
@@ -76,7 +76,7 @@
                                                             <td class="text-start">3 Agustus 2022</td>
                                                             <td class="text-start">UKT Periode 2022/2023 Ganjil</td>
                                                             <td class="text-start">Periode 2022/2023 Ganjil</td>
-                                                            <td class="text-start">Rp 3.375.000</td>
+                                                            <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
                                                             <td class="text-start">BNI Virtual Account</td>
                                                             <td class="text-center">
                                                                 <a class="btn btn-rounded bg-warning-light" href=""><i class="fa fa-circle-exclamation"><span class="path1"></span><span class="path2"></span></i></a>
@@ -87,7 +87,7 @@
                                                             <td class="text-start">2 Januari 2022</td>
                                                             <td class="text-start">UKT Periode 2021/2022 Genap</td>
                                                             <td class="text-start">Periode 2021/2022 Genap</td>
-                                                            <td class="text-start">Rp 3.375.000</td>
+                                                            <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
                                                             <td class="text-start">BNI Virtual Account</td>
                                                             <td class="text-center">
                                                                 <a class="btn btn-rounded bg-warning-light" href=""><i class="fa fa-circle-exclamation"><span class="path1"></span><span class="path2"></span></i></a>
@@ -98,7 +98,7 @@
                                                             <td class="text-start">1 Agustus 2021</td>
                                                             <td class="text-start">UKT Periode 2021/2022 Ganjil</td>
                                                             <td class="text-start">Periode 2021/2022 Ganjil</td>
-                                                            <td class="text-start">Rp 3.375.000</td>
+                                                            <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
                                                             <td class="text-start">BNI</td>
                                                             <td class="text-center">
                                                                 <a class="btn btn-rounded bg-warning-light" href=""><i class="fa fa-circle-exclamation"><span class="path1"></span><span class="path2"></span></i></a>

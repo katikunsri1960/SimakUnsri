@@ -53,10 +53,10 @@
                                                     <td class="text-center">1</td>
                                                     <td class="text-start">UKT23241</td>
                                                     <td class="text-start">UKT Periode 2023/2024 Ganjil</td>
-                                                    <td class="text-start">Rp 3.375.000</td>
+                                                    <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
                                                     <td class="text-start">Rp 0</td>
                                                     <td class="text-start">Rp 0</td>
-                                                    <td class="text-start">Rp 3.380.000</td>
+                                                    <td class="text-start">Rp  {{number_format(($biaya_kuliah->biaya_masuk + 5000), 2, ',', '.') }}</td>
                                                     <td class="text-center">
                                                         <a class="btn btn-rounded bg-success-light"><i class="fa fa-check"><span class="path1"></span><span class="path2"></span></i> Lunas</a>
                                                     </td>

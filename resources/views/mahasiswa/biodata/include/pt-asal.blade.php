@@ -12,7 +12,7 @@
                                     </div>                             
                                 </div>
                                 <!-- ($pt_asal[0]->nama_perguruan_tinggi_asal == Null) -->
-                                @if ($pt_asal[0]->id_jenis_daftar == 1 )
+                                @if ($biodata->id_jenis_daftar == 1 )
                                 <div class="row ">
                                     <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
                                         <div class="box box-body bg-warning-light">
@@ -48,9 +48,9 @@
                                                 @endphp
                                                 <tr>
                                                     <td class="text-center">{{ $no++ }}</td>
-                                                    <td class="text-center">{{$pt_asal[0]->nama_jenis_daftar}}</td>
-                                                    <td class="text-start">{{$pt_asal[0]->nama_perguruan_tinggi_asal}}</td>
-                                                    <td class="text-start">{{$pt_asal[0]->nama_program_studi_asal}}</td>
+                                                    <td class="text-center">{{$biodata->nama_jenis_daftar}}</td>
+                                                    <td class="text-start">{{$biodata->nama_perguruan_tinggi_asal}}</td>
+                                                    <td class="text-start">{{$biodata->nama_program_studi_asal}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>

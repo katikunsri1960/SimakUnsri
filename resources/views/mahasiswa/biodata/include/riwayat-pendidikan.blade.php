@@ -11,7 +11,7 @@
                                         <h3 class="fw-500 text-dark mt-0 mb-20">Riwayat Pendidikan</h3>
                                     </div>                             
                                 </div>
-                                @if ($riwayat_pendidikan[0]->id_jenis_daftar == 1 )
+                                @if ($biodata->id_jenis_keluar == Null )
                                 <div class="row ">
                                     <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
                                         <div class="box box-body bg-warning-light">
@@ -21,7 +21,7 @@
                                                 </div>
                                                 <div class="col-lg-10 text-left text-danger">
                                                     <label>
-                                                        Data Perguruan Tinggi Asal hanya untuk mahasiswa dengan Jenis Pendaftaran selain  Peserta Didik Baru !
+                                                        Data <strong>Riwayat Pendidikan</strong> hanya untuk mahasiswa dengan Jenis Keluar <strong>LULUS</strong> !
                                                     </label>
                                                 </div>
                                                 
@@ -51,8 +51,8 @@
                                                     <td class="text-center">1</td>
                                                     <td class="text-start"></td>
                                                     <td class="text-start"></td>
-                                                    <td class="text-start">{{$pt_asal[0]->nama_perguruan_tinggi_asal}}</td>
-                                                    <td class="text-start">{{$pt_asal[0]->nama_program_studi_asal}}</td>
+                                                    <td class="text-start">{{$biodata->nama_perguruan_tinggi_asal}}</td>
+                                                    <td class="text-start">{{$biodata->nama_program_studi_asal}}</td>
                                                     <td class="text-start"></td>
                                                     <td class="text-center"></td>
                                                     <td class="text-center"></td>
@@ -67,9 +67,9 @@
                                 </div>
                                 @endif
                             </div>
-                            <div class="box-footer text-end">
+                            <!-- <div class="box-footer text-end">
                                 <a class="btn btn-rounded bg-primary" href="#"><i class="fa-solid fa-plus"> <span class="path1"></span><span class="path2"></span></i> Tambah</a>
-                            </div>  
+                            </div>   -->
                         </div>
                     </div>
                 </div>  
