@@ -15,7 +15,7 @@
                                     <div class="form-group">
                                         <label>Perguruan Tinggi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Universitas Sriwijaya">
+                                            value="{{$biodata->nama_perguruan_tinggi}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -29,28 +29,28 @@
                                     <div class="form-group">
                                         <label>NIM</label>
                                         <input type="name" class="form-control" disabled
-                                            value="09011181320002">
+                                            value="{{$biodata->nim}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jenis Pendaftaran</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Peserta Didik Baru">
+                                            value="{{$biodata->nama_jenis_daftar}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Program Studi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="S1 - Sistem Komputer">
+                                            value="{{$biodata->nama_program_studi}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jalur Pendaftaran</label>
                                         <input type="name" class="form-control" disabled
-                                            value="SNMPTN">
+                                            value="Ambil dari digit ke 6 NIM">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -64,7 +64,7 @@
                                     <div class="form-group">
                                         <label>UKT</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Rp 3.375.000">
+                                            value="Rp  {{number_format($biodata->biaya_masuk, 2, ',', '.') }}">
                                     </div>
                                 </div>
 

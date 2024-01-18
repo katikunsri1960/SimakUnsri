@@ -11,64 +11,61 @@
                                         <h3 class="fw-500 text-dark mt-0 mb-20">Riwayat Pendidikan</h3>
                                     </div>                             
                                 </div>
-                                <!-- <div class="row">
-                                    <div class="col-lg-1 text-right" style="text-align-last: end;">
-                                        <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
+                                @if ($riwayat_pendidikan[0]->id_jenis_daftar == 1 )
+                                <div class="row ">
+                                    <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
+                                        <div class="box box-body bg-warning-light">
+                                            <div class="row" style="align-items: center;">
+                                                <div class="col-lg-1 text-right" style="text-align-last: end;">
+                                                    <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
+                                                </div>
+                                                <div class="col-lg-10 text-left text-danger">
+                                                    <label>
+                                                        Data Perguruan Tinggi Asal hanya untuk mahasiswa dengan Jenis Pendaftaran selain  Peserta Didik Baru !
+                                                    </label>
+                                                </div>
+                                                
+                                            </div>                       
+                                        </div>
                                     </div>
-                                    <div class="col-lg-10 text-left text-danger">
-                                        <label>
-                                            Data Perguruan Tinggi Asal hanya untuk mahasiswa dengan Jenis Pendaftaran selain  Peserta Didik Baru
-                                        </label>
-                                    </div>
-                                </div> -->
+                                </div>  
+                                @else
                                 <div class="row">
                                     <div class="table-responsive">
-                                        <table id="example1" class="table table-bordered table-striped text-center">
+                                        <table id="example2" class="table table-bordered table-striped text-center">
                                             <thead>
                                                 <tr>
-                                                    <th>No</th>
-                                                    <th>Jenjang Studi</th>
-                                                    <th>Gelar Akademik</th>                                    
-                                                    <th>Nama PT</th>
-                                                    <th>Bidang Ilmu</th>
-                                                    <th>Tanggal Ijazah</th>
-                                                    <th>SKS Lulus</th>
-                                                    <th>IPK Lulus</th>
-                                                    <th>Action</th>
+                                                    <th class="text-center">No</th>
+                                                    <th class="text-center">Jenjang Studi</th>
+                                                    <th class="text-center">Gelar Akademik</th>                                    
+                                                    <th class="text-center">Nama PT</th>
+                                                    <th class="text-center">Bidang Ilmu</th>
+                                                    <th class="text-center">Tanggal Ijazah</th>
+                                                    <th class="text-center">SKS Lulus</th>
+                                                    <th class="text-center">IPK Lulus</th>
+                                                    <th class="text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <td colspan="9">
-                                                        <div class="col-lg-12 text-center text-danger">
-                                                            <label>
-                                                                Data tidak tersedia
-                                                            </label>
-                                                        </div>
-                                                    </td>
-                                                    
-                                                </tr>
-                                            </tbody>
-
-                                            <!-- <tbody>
-                                                <tr>
-                                                    <td>1</td>
-                                                    <td>Sarjana (S1)</td>
-                                                    <td>S.Kom</td>
-                                                    <td>Universitas Sriwijaya</td>
-                                                    <td>Teknik Informatika</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>-</td>
-                                                    <td>
+                                                    <td class="text-center">1</td>
+                                                    <td class="text-start"></td>
+                                                    <td class="text-start"></td>
+                                                    <td class="text-start">{{$pt_asal[0]->nama_perguruan_tinggi_asal}}</td>
+                                                    <td class="text-start">{{$pt_asal[0]->nama_program_studi_asal}}</td>
+                                                    <td class="text-start"></td>
+                                                    <td class="text-center"></td>
+                                                    <td class="text-center"></td>
+                                                    <td class="text-center">
                                                         <a class="btn btn-rounded bg-warning-light" href="#" title="Hapus Riwayat"><i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i></a>
                                                         <a class="btn btn-rounded bg-success-light" href="#" title="Edit Riwayat"><i class="fa fa-pen-to-square"><span class="path1"></span><span class="path2"></span></i></a>
                                                     </td>
                                                 </tr>
-                                            </tbody> -->
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
+                                @endif
                             </div>
                             <div class="box-footer text-end">
                                 <a class="btn btn-rounded bg-primary" href="#"><i class="fa-solid fa-plus"> <span class="path1"></span><span class="path2"></span></i> Tambah</a>
