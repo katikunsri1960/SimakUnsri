@@ -3,6 +3,7 @@
 Ruang Perkuliahan
 @endsection
 @section('content')
+@include('swal')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
@@ -17,7 +18,6 @@ Ruang Perkuliahan
                 </nav>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -27,10 +27,6 @@ Ruang Perkuliahan
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
-                        {{-- <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form> --}}
-                        <span class="divider-line mx-1"></span>
                         <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
                         data-bs-target="#tambahRuangKuliah"><i class="fa fa-plus"></i> Tambah Ruang Kuliah</button>
                     </div>
@@ -76,6 +72,25 @@ Ruang Perkuliahan
         "use strict";
 
         $('#data').DataTable();
+    });
+
+    $('#tambah-ruang').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Pembuatan Ruang Kuliah',
+            text: "Apakah anda yakin ingin menambahkan ruang?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#tambah-ruang').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
     });
 </script>
 @endpush
