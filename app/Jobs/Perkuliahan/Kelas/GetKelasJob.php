@@ -36,17 +36,17 @@ class GetKelasJob implements ShouldQueue
         $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
         $response = $data->runWS();
 
-        if (isset($response['data']) && !empty($response['data'])) {
+        if (!empty($response['data'])) {
 
-            $data = $response['data'];
-            
-            $data = array_map(function ($value) {
+            $result = $response['data'];
+
+            $result = array_map(function ($value) {
                 $value['tanggal_mulai_efektif'] = empty($value['tanggal_mulai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai_efektif']));
                 $value['tanggal_akhir_efektif'] = empty($value['tanggal_akhir_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_akhir_efektif']));
                 return $value;
-            }, $data);
+            }, $result);
 
-            KelasKuliah::upsert($data, 'id_kelas_kuliah');
+            KelasKuliah::upsert($result, 'id_kelas_kuliah');
         }
     }
 }

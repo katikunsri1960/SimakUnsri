@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Jobs\Perkuliahan\Kelas\GetKelasJob;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
+use App\Models\Wilayah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 
@@ -22,25 +23,32 @@ class PerkuliahanController extends Controller
             return redirect()->back()->with('error', 'Data Program Studi atau Semester Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
         }
 
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();
         $semester = Semester::pluck('id_semester')->toArray();
-
-        // dd($prodi, $semester);
+        $semester = array_chunk($semester, 4);
+        $semester = array_map(function ($value) {
+            return "id_semester IN ('" . implode("','", $value) . "')";
+        }, $semester);
 
         $batch = Bus::batch([])->name('Kelas Kuliah')->dispatch();
 
         $act = 'GetDetailKelasKuliah';
         $limit = '';
-        $offset = 0;
+        $offset = '';
         $order = '';
 
         foreach ($prodi as $p) {
-            foreach ($semester as $s ) {
-                $filter = "id_prodi = '$p' AND id_semester = '$s'";
+            foreach ($semester as $s) {
+                $filter = "id_prodi = '$p' AND $s";
                 // dd($filter);
                 $batch->add(new GetKelasJob($act, $limit, $offset, $order, $filter));
             }
         }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
 
     }
 }

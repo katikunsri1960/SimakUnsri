@@ -75,7 +75,15 @@ class ReferensiController extends Controller
             $data = $this->sync($act, $limit, $offset, $order);
 
             if (isset($data['data']) && !empty($data['data'])) {
-                // if act == getWilayah, trim $data['data']['id_wilayah] to 1000
+                // if act == getWilayah, trim $data['data']['id_wilayah] and $data['data']['id_induk_wilayah']
+                if ($act == 'GetWilayah') {
+                    foreach ($data['data'] as $d) {
+                        $d['id_wilayah'] = trim($d['id_wilayah']);
+                        $d['id_induk_wilayah'] = trim($d['id_induk_wilayah']);
+                    }
+                }
+
+                
                 $r['model']::upsert($data['data'], $r['primary']);
             }
         }
