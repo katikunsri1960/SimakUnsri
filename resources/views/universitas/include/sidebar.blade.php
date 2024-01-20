@@ -33,6 +33,21 @@
                                             class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li>
                         </ul>
                     </li>
+                    <li class="treeview {{request()->routeIs('univ.dosen.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-person-chalkboard"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Dosen</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('univ.dosen') ? 'active' : ''}}"><a href="{{route('univ.dosen')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Daftar Dosen</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-scroll"><span class="path1"></span><span

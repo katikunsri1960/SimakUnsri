@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Jobs\Perkuliahan\Kelas\GetKelasJob;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
-use App\Models\Wilayah;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 

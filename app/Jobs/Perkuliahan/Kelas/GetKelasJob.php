@@ -2,7 +2,7 @@
 
 namespace App\Jobs\Perkuliahan\Kelas;
 
-use App\Models\KelasKuliah;
+use App\Models\Perkuliahan\KelasKuliah;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
