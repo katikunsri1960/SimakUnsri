@@ -54,6 +54,9 @@ class ReferensiController extends Controller
 
     public function sync_referensi()
     {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
         $ref = [
             ['act' => 'GetLevelWilayah', 'primary' => 'id_level_wilayah', 'model' => LevelWilayah::class],
             ['act' => 'GetWilayah', 'primary' =>'id_wilayah', 'model' => Wilayah::class],
@@ -63,7 +66,8 @@ class ReferensiController extends Controller
             ['act' => 'GetJenisKeluar', 'primary' => 'id_jenis_keluar', 'model' => \App\Models\JenisKeluar::class],
             ['act' => 'GetJenisPendaftaran', 'primary' => 'id_jenis_daftar', 'model' => \App\Models\JenisDaftar::class],
             ['act' => 'GetJalurMasuk', 'primary' => 'id_jalur_masuk', 'model' => \App\Models\JalurMasuk::class],
-            ['act' => 'GetJenisEvaluasi', 'primary' => 'id_jenis_evaluasi', 'model' => \App\Models\JenisEvaluasi::class]
+            ['act' => 'GetJenisEvaluasi', 'primary' => 'id_jenis_evaluasi', 'model' => \App\Models\JenisEvaluasi::class],
+            ['act' => 'GetIkatanKerjaSdm', 'primary' => 'id_ikatan_kerja', 'model' => \App\Models\IkatanKerja::class]
         ];
 
         foreach ($ref as $r) {
@@ -75,7 +79,7 @@ class ReferensiController extends Controller
             $data = $this->sync($act, $limit, $offset, $order);
 
             if (isset($data['data']) && !empty($data['data'])) {
-                // if act == getWilayah, trim $data['data']['id_wilayah] and $data['data']['id_induk_wilayah']
+
                 if ($act == 'GetWilayah') {
                     foreach ($data['data'] as $d) {
                         $d['id_wilayah'] = trim($d['id_wilayah']);
@@ -83,13 +87,11 @@ class ReferensiController extends Controller
                     }
                 }
 
-                
                 $r['model']::upsert($data['data'], $r['primary']);
             }
         }
 
         return redirect()->route('univ.referensi.prodi');
-
 
     }
 }
