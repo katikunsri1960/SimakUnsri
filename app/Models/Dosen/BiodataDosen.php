@@ -16,6 +16,11 @@ class BiodataDosen extends Model
         return $this->belongsTo(Wilayah::class, 'id_wilayah', 'id_wilayah');
     }
 
+    public function penugasan()
+    {
+        return $this->hasMany(PenugasanDosen::class, 'id_dosen', 'id_dosen');
+    }
+
     public function getJenisKelaminAttribute($value)
     {
         switch ($value) {

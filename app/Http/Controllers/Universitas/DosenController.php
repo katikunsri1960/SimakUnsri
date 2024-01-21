@@ -4,12 +4,25 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
+use App\Models\Dosen\PenugasanDosen;
+use App\Models\ProgramStudi;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\Bus;
 
 class DosenController extends Controller
 {
+
+    private function sync($act, $limit, $offset, $order)
+    {
+        $get = new FeederAPI($act, $offset, $limit, $order);
+
+        $data = $get->runWS();
+
+        return $data;
+    }
+
     private function count_value($act)
     {
         $data = new FeederAPI($act,0,0, '');
@@ -53,5 +66,32 @@ class DosenController extends Controller
         }
 
         return redirect()->back()->with('success', 'Sinkronisasi Data Dosen Berhasil!');
+    }
+
+    public function sync_penugasan_dosen()
+    {
+
+        if (ProgramStudi::count() == 0 || Semester::count() == 0) {
+            return redirect()->back()->with('error', 'Data Program Studi atau Semester Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
+        }
+
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $act = 'GetListPenugasanDosen';
+        $limit = 1000;
+        $offset = 0;
+        $order = 'id_registrasi_dosen';
+
+        $count = $this->count_value('GetCountPenugasanSemuaDosen');
+
+        $batch = Bus::batch([])->dispatch();
+
+        for($i=0; $i < $count; $i+=$limit) {
+            $job = new \App\Jobs\Dosen\PenugasanDosenJob($act, $limit, $i, $order);
+            $batch->add($job);
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Data Penugasan Dosen Berhasil!');
     }
 }

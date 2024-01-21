@@ -32,6 +32,10 @@ List Dosen
                                     class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.dosen.sync-penugasan')}}" method="get" id="sync-penugasan">
+                            <button class="btn btn-success waves-effect waves-light" type="submit"><i
+                                    class="fa fa-refresh"></i> Sinkronisasi Penugasan</button>
+                        </form>
                         {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i
                                 class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
                     </div>
@@ -97,6 +101,25 @@ List Dosen
                 if (isConfirm) {
                     $('#spinner').show();
                     $('#sync-form').unbind('submit').submit();
+                }
+            });
+        });
+
+        $('#sync-penugasan').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Sinkronisasi Data',
+                text: "Apakah anda yakin ingin melakukan sinkronisasi?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Sinkronkan!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $('#sync-penugasan').unbind('submit').submit();
                 }
             });
         });
