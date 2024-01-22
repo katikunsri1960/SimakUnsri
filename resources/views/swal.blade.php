@@ -17,3 +17,18 @@
     })
 </script>
 @endif
+@if ($errors->any())
+@php
+    $message='';
+    foreach ($errors->all() as $error){
+        $message .= $error;
+    }
+@endphp
+<script>
+    swal({
+        type: 'error',
+        title: 'Gagal !!',
+        text: '{{$message}}',
+    })
+</script>
+@endif
