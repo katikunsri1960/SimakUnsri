@@ -13,6 +13,7 @@
 
     <!-- Vendors Style-->
     <link rel="stylesheet" href="{{asset('assets/css/vendors_css.css')}}">
+    @stack('css')
 
     <!-- Style-->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
@@ -328,7 +329,7 @@
     <script src="{{asset('assets/vendor_components/apexcharts-bundle/dist/apexcharts.js')}}"></script>
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/fullcalendar/fullcalendar.js')}}"></script>
-
+    @stack('js')
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script>

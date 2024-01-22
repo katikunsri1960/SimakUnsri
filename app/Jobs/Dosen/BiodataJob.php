@@ -1,17 +1,15 @@
 <?php
 
-namespace App\Jobs\Mahasiswa;
+namespace App\Jobs\Dosen;
 
 use App\Models\Dosen\BiodataDosen;
+use App\Services\Feeder\FeederAPI;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Mahasiswa\BiodataMahasiswa;
-use App\Services\Feeder\FeederAPI;
-use Illuminate\Bus\Batchable;// Import the Log class
 
 class BiodataJob implements ShouldQueue
 {
@@ -40,10 +38,16 @@ class BiodataJob implements ShouldQueue
         if (isset($response['data']) && !empty($response['data'])) {
 
             // chunk data
-            $chunks = array_chunk($response['data'], 100);
+            $chunks = array_chunk($response['data'], 500);
 
             foreach ($chunks as $chunk) {
-                BiodataDosen::upsert($chunk, 'id_mahasiswa');
+
+                $chunk = array_map(function ($value) {
+                    $value['tanggal_lahir'] = empty($value['tanggal_lahir']) ? null : date('Y-m-d', strtotime($value['tanggal_lahir']));
+                    return $value;
+                }, $chunk);
+
+                BiodataDosen::upsert($chunk, $this->order);
             }
 
         }

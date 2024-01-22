@@ -54,6 +54,9 @@ class ReferensiController extends Controller
 
     public function sync_referensi()
     {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
         $ref = [
             ['act' => 'GetLevelWilayah', 'primary' => 'id_level_wilayah', 'model' => LevelWilayah::class],
             ['act' => 'GetWilayah', 'primary' =>'id_wilayah', 'model' => Wilayah::class],
@@ -63,7 +66,10 @@ class ReferensiController extends Controller
             ['act' => 'GetJenisKeluar', 'primary' => 'id_jenis_keluar', 'model' => \App\Models\JenisKeluar::class],
             ['act' => 'GetJenisPendaftaran', 'primary' => 'id_jenis_daftar', 'model' => \App\Models\JenisDaftar::class],
             ['act' => 'GetJalurMasuk', 'primary' => 'id_jalur_masuk', 'model' => \App\Models\JalurMasuk::class],
-            ['act' => 'GetJenisEvaluasi', 'primary' => 'id_jenis_evaluasi', 'model' => \App\Models\JenisEvaluasi::class]
+            ['act' => 'GetJenisEvaluasi', 'primary' => 'id_jenis_evaluasi', 'model' => \App\Models\JenisEvaluasi::class],
+            ['act' => 'GetIkatanKerjaSdm', 'primary' => 'id_ikatan_kerja', 'model' => \App\Models\IkatanKerja::class],
+            ['act' => 'GetJenisSubstansi', 'primary' => 'id_jenis_substansi', 'model' => \App\Models\JenisSubstansi::class],
+            ['act' => 'GetListSubstansiKuliah', 'primary' => 'id_substansi', 'model' => \App\Models\Perkuliahan\SubstansiKuliah::class],
         ];
 
         foreach ($ref as $r) {
@@ -75,12 +81,27 @@ class ReferensiController extends Controller
             $data = $this->sync($act, $limit, $offset, $order);
 
             if (isset($data['data']) && !empty($data['data'])) {
+
+                if ($act == 'GetWilayah') {
+                    $data['data'] = array_map(function($d) {
+                        $d['id_wilayah'] = trim($d['id_wilayah']);
+                        $d['id_induk_wilayah'] = trim($d['id_induk_wilayah']);
+                        return $d;
+                    }, $data['data']);
+                }
+
+                if ($act == 'GetJenisSubstansi') {
+                    $data['data'] = array_map(function($d) {
+                        $d['id_jenis_substansi'] = trim($d['id_jenis_substansi']);
+                        return $d;
+                    }, $data['data']);
+                }
+
                 $r['model']::upsert($data['data'], $r['primary']);
             }
         }
 
-        return redirect()->route('univ.referensi.prodi');
-
+        return redirect()->route('univ.referensi.prodi')->with('success', 'Sinkronisasi Data Referensi Berhasil!');
 
     }
 }

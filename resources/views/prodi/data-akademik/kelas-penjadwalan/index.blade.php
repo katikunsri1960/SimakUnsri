@@ -27,11 +27,7 @@ Kelas Penjadwalan
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
-                        <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form>
-                        <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</button>
+                        <a type="button" class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</a>
                     </div>
                 </div>
                 <div class="box-body">
@@ -40,9 +36,11 @@ Kelas Penjadwalan
                           <thead>
                              <tr>
                                 <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">NIDK/NIDN</th>
-                                <th class="text-center align-middle">NIP</th>
-                                <th class="text-center align-middle">NAMA</th>
+                                <th class="text-center align-middle">NAMA MATA KULIAH</th>
+                                <th class="text-center align-middle">NAMA KELAS</th>
+                                <th class="text-center align-middle">NAMA RUANG</th>
+                                <th class="text-center align-middle">LOKASI RUANG</th>
+                                <th class="text-center align-middle">PERIODE PERKULIAHAN</th>
                                 <th class="text-center align-middle">AKSI</th>
                              </tr>
                           </thead>
