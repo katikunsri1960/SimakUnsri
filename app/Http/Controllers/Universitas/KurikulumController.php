@@ -106,15 +106,16 @@ class KurikulumController extends Controller
         $count = "GetCountMataKuliah";
         $limit = 1000;
         $offset = 0;
-        $order = "";
+        $order = '';
 
         $api = new FeederAPI($count,$offset, $limit, $order);
 
         $result = $api->runWS();
-
+        // dd($result['data']);
         $total = $result['data'];
 
         $batch = Bus::batch([])->dispatch();
+        $order = 'id_matkul';
 
         for ($i = 0; $i < $total; $i += $limit) {
             $job = new ProccessSync(\App\Models\MataKuliah::class, $act, $limit, $i, $order);

@@ -1,19 +1,17 @@
 <?php
 
-namespace App\Jobs\Mahasiswa;
+namespace App\Jobs\Dosen;
 
-use App\Models\Dosen\BiodataDosen;
+use App\Models\Dosen\PenugasanDosen;
+use App\Services\Feeder\FeederAPI;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Models\Mahasiswa\BiodataMahasiswa;
-use App\Services\Feeder\FeederAPI;
-use Illuminate\Bus\Batchable;// Import the Log class
 
-class BiodataJob implements ShouldQueue
+class PenugasanDosenJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -39,13 +37,9 @@ class BiodataJob implements ShouldQueue
 
         if (isset($response['data']) && !empty($response['data'])) {
 
-            // chunk data
-            $chunks = array_chunk($response['data'], 100);
+            $data = $response['data'];
 
-            foreach ($chunks as $chunk) {
-                BiodataDosen::upsert($chunk, 'id_mahasiswa');
-            }
-
+            PenugasanDosen::upsert($data, ['id_tahun_ajaran', 'id_registrasi_dosen']);
         }
     }
 }

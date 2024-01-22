@@ -19,4 +19,6 @@ class Wilayah extends Model
     {
         return $this->belongsTo(Negara::class, 'id_negara', 'id_negara');
     }
+
+    
 }

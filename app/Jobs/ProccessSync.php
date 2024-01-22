@@ -40,7 +40,7 @@ class ProccessSync implements ShouldQueue
 
 
         foreach ($result['data'] as $d) {
-            
+
             $tanggal_mulai_efektif = isset($d['tanggal_mulai_efektif']) ? \Carbon\Carbon::parse($d['tanggal_mulai_efektif'])->format('Y-m-d') : null;
             $tanggal_akhir_efektif = isset($d['tanggal_akhir_efektif']) ? \Carbon\Carbon::parse($d['tanggal_akhir_efektif'])->format('Y-m-d') : null;
 
