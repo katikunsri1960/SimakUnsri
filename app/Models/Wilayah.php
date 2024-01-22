@@ -19,4 +19,14 @@ class Wilayah extends Model
     {
         return $this->belongsTo(Negara::class, 'id_negara', 'id_negara');
     }
+
+    public function kab_kota()
+    {
+        return $this->belongsTo(Wilayah::class, 'id_induk_wilayah', 'id_wilayah')->whereNotNull('id_induk_wilayah');
+    }
+
+    // public function provinsi()
+    // {
+    //     return $this->belongsTo(Wilayah::class, 'id_induk_wilayah', 'id_wilayah');
+    // }
 }

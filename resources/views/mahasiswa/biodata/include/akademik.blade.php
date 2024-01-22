@@ -15,7 +15,7 @@
                                     <div class="form-group">
                                         <label>Perguruan Tinggi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$biodata->nama_perguruan_tinggi}}">
+                                            value="{{$data->nama_perguruan_tinggi}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -29,73 +29,41 @@
                                     <div class="form-group">
                                         <label>NIM</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$biodata->nim}}">
+                                            value="{{$data->nim}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jenis Pendaftaran</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$biodata->nama_jenis_daftar}}">
+                                            value="{{$data->nama_jenis_daftar}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Program Studi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$biodata->nama_program_studi}}">
+                                            value="{{$data->nama_program_studi}}">
                                     </div>
                                 </div>
 
+                                <div class="col-lg-6">
+                                    <div class="form-group">
+                                        <label>Jalur Pendaftaran</label>
+                                        <input type="name" class="form-control" disabled
+                                            value="{{$data->nama_jalur_masuk}}">
+                                    </div>
+                                </div>
 
-                                <!-- JALUR MASUK -->
-                                @if ($biodata->id_jalur_masuk == 1)
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Jalur Pendaftaran</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="SNMPTN / SNBP">
-                                    </div>
-                                </div>
-                                @elseif ($biodata->id_jalur_masuk == 2)
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Jalur Pendaftaran</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="SBMPTN / SNBT">
-                                    </div>
-                                </div>
-                                @elseif ($biodata->id_jalur_masuk == 3)
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Jalur Pendaftaran</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="USM / USMB">
-                                    </div>
-                                </div>
-                                @else
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Jalur Pendaftaran</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="Lainnya">
-                                    </div>
-                                </div>
-                                @endif
+                            
                                 
                                 
-                                <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Jalur Pendaftaran</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="{{$biodata->id_jalur_masuk}}">
-                                    </div>
-                                </div>
+                                
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>UKT</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Rp  {{number_format($biodata->biaya_masuk, 2, ',', '.') }}">
+                                            value="Rp  {{number_format($data->biaya_masuk, 2, ',', '.') }}">
                                     </div>
                                 </div>
 
@@ -104,19 +72,19 @@
                                     <div class="form-group">
                                         <label>Angkatan</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$biodata->angkatan}}">
+                                            value="{{$data->angkatan}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Gelombang Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$biodata->gelombang_masuk}}">
+                                            value="{{$data->gelombang_masuk}}">
                                     </div>
                                 </div>
                                 
                                 <!-- STATUS KELUAR -->
-                                @if ($biodata->keterangan_keluar == Null)
+                                @if ($data->keterangan_keluar == Null)
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Status</label>
@@ -129,7 +97,7 @@
                                     <div class="form-group">
                                         <label>Status</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$biodata->keterangan_keluar}}">
+                                            value="{{$data->keterangan_keluar}}">
                                     </div>
                                 </div>
                                 @endif
@@ -138,14 +106,14 @@
                                     <div class="form-group">
                                         <label>Tanggal Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{date_format(new DateTime($biodata->tanggal_daftar), 'd-m-Y') }}">
+                                            value="{{date_format(new DateTime($data->tanggal_daftar), 'd-m-Y') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Periode Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$biodata->nama_periode_masuk}}">
+                                            value="{{$data->nama_periode_masuk}}">
                                     </div>
                                 </div>
                             </div>
