@@ -6765,16 +6765,16 @@
         },
         {
             "name": "laravel-lang/actions",
-            "version": "1.4.1",
+            "version": "1.4.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/actions.git",
-                "reference": "8bf23383a69c13404f9753de4884028e5c4077ce"
+                "reference": "1792cb2539b8d3bab30407ebf21431bd7286f2fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/actions/zipball/8bf23383a69c13404f9753de4884028e5c4077ce",
-                "reference": "8bf23383a69c13404f9753de4884028e5c4077ce",
+                "url": "https://api.github.com/repos/Laravel-Lang/actions/zipball/1792cb2539b8d3bab30407ebf21431bd7286f2fd",
+                "reference": "1792cb2539b8d3bab30407ebf21431bd7286f2fd",
                 "shasum": ""
             },
             "require": {
@@ -6826,9 +6826,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/actions/issues",
-                "source": "https://github.com/Laravel-Lang/actions/tree/1.4.1"
+                "source": "https://github.com/Laravel-Lang/actions/tree/1.4.2"
             },
-            "time": "2024-01-02T09:51:24+00:00"
+            "time": "2024-01-20T01:25:54+00:00"
         },
         {
             "name": "laravel-lang/attributes",
@@ -8412,16 +8412,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "10.5.7",
+            "version": "10.5.8",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "e5c5b397a95cb0db013270a985726fcae93e61b8"
+                "reference": "08f4fa74d5fbfff1ef22abffee47aaedcaea227e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/e5c5b397a95cb0db013270a985726fcae93e61b8",
-                "reference": "e5c5b397a95cb0db013270a985726fcae93e61b8",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/08f4fa74d5fbfff1ef22abffee47aaedcaea227e",
+                "reference": "08f4fa74d5fbfff1ef22abffee47aaedcaea227e",
                 "shasum": ""
             },
             "require": {
@@ -8493,7 +8493,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.7"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/10.5.8"
             },
             "funding": [
                 {
@@ -8509,7 +8509,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-01-14T16:40:30+00:00"
+            "time": "2024-01-19T07:07:27+00:00"
         },
         {
             "name": "sebastian/cli-parser",

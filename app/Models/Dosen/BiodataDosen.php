@@ -38,9 +38,14 @@ class BiodataDosen extends Model
         return date('d-m-Y', strtotime($this->tanggal_lahir));
     }
 
-    public function list_dosen()
+    public function list_dosen($tahun_ajaran = null)
     {
-        return $this->select('id_dosen', 'nama_dosen', 'nidn', 'jenis_kelamin', 'nama_agama', 'nama_status_aktif', 'tanggal_lahir')
-                    ->where('id_jenis_sdm', 12)->get();
+        $tahun_ajaran = $tahun_ajaran ?? (date('m') >= 8 ? date('Y') : date('Y') - 1);
+
+        return $this->leftJoin('penugasan_dosens as p', 'p.id_dosen', '=', 'biodata_dosens.id_dosen')
+                    ->select('biodata_dosens.*', 'p.nama_program_studi as prodi', 'p.a_sp_homebase as homebase')
+                    ->where('id_jenis_sdm', 12)
+                    ->where('p.id_tahun_ajaran', $tahun_ajaran)
+                    ->get();
     }
 }

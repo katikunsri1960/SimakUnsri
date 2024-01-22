@@ -14,15 +14,6 @@ use Illuminate\Support\Facades\Bus;
 class DosenController extends Controller
 {
 
-    private function sync($act, $limit, $offset, $order)
-    {
-        $get = new FeederAPI($act, $offset, $limit, $order);
-
-        $data = $get->runWS();
-
-        return $data;
-    }
-
     private function count_value($act)
     {
         $data = new FeederAPI($act,0,0, '');
@@ -36,7 +27,7 @@ class DosenController extends Controller
     {
         $db = new BiodataDosen();
         $data = $db->list_dosen();
-
+        // dd($data);
         return view('universitas.dosen.index', [
             'data' => $data,
         ]);

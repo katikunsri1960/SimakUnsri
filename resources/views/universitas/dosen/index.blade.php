@@ -47,11 +47,13 @@ List Dosen
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Nama</th>
+                                    <th class="text-center align-middle">Program Studi</th>
                                     <th class="text-center align-middle">NIDN</th>
                                     <th class="text-center align-middle">Jenis Kelamin</th>
                                     <th class="text-center align-middle">Agama</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Tanggal Lahir</th>
+                                    <th class="text-center align-middle">Homebase</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,11 +61,17 @@ List Dosen
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-start align-middle">{{$d->nama_dosen}}</td>
+                                    <td class="text-start align-middle">{{$d->prodi}}</td>
                                     <td class="text-center align-middle">{{$d->nidn}}</td>
                                     <td class="text-center align-middle">{{$d->jenis_kelamin}}</td>
                                     <td class="text-center align-middle">{{$d->nama_agama}}</td>
                                     <td class="text-center align-middle">{{$d->nama_status_aktif}}</td>
                                     <td class="text-center align-middle">{{$d->id_tanggal_lahir}}</td>
+                                    <td class="text-center align-middle">
+                                        @if($d->homebase == 1)
+                                            <i class="fa-regular fa-circle-check "></i>
+                                        @endif
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
