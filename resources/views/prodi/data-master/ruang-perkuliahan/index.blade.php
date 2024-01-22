@@ -32,7 +32,7 @@ Ruang Perkuliahan
                     </div>
                 </div>
                 @include('prodi.data-master.ruang-perkuliahan.create')
-
+                @include('prodi.data-master.ruang-perkuliahan.update')
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover margin-top-10 w-p100">
@@ -45,15 +45,28 @@ Ruang Perkuliahan
                              </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                                <td class="text-center align-middle">1</td>
-                                <td class="text-center align-middle">Customer Support</td>
-                                <td class="text-center align-middle">New York</td>
-                                <td class="text-center align-middle">
-                                    <a class="btn btn-rounded bg-warning" href="{{route('dosen.perkuliahan.kesediaan-waktu-bimbingan')}}" title="Edit Data"><i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i></a>
-                                    <a class="btn btn-rounded bg-danger" href="{{route('dosen.perkuliahan.kesediaan-waktu-bimbingan')}}" title="Delete Data"><i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i></a>
-                                </td>
-                            </tr>
+                            @php
+                                $row = 0;
+                            @endphp
+                            @foreach ($data as $d)
+                                <tr>
+                                    <td class="text-center align-middle">{{$row = $row + 1}}</td>
+                                    <td class="text-center align-middle">{{$d->nama_ruang}}</td>
+                                    <td class="text-center align-middle">{{$d->lokasi}}</td>
+                                    <td class="text-center align-middle">
+                                        <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editRuangKuliah" onclick="editRuang({{$d}}, {{$d->id}})"> 
+                                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
+                                        </button>
+                                        <form action="{{route('prodi.data-master.ruang-perkuliahan.delete', $d)}}" method="POST" id="delete-ruang-{{$d->id}}">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-rounded bg-danger" title="Delete Data">
+                                                <i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            @endforeach
                           </tbody>
                       </table>
                       </div>
@@ -68,11 +81,12 @@ Ruang Perkuliahan
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-    $(function() {
-        "use strict";
-
-        $('#data').DataTable();
-    });
+    function editRuang(data, id) {
+        document.getElementById('edit_nama_ruang').value = data.nama_ruang;
+        document.getElementById('edit_lokasi').value = data.lokasi;
+        // Populate other fields...
+        document.getElementById('edit-ruang').action = '/prodi/data-master/ruang-perkuliahan/' + id + '/update';
+    }
 
     $('#tambah-ruang').submit(function(e){
         e.preventDefault();
@@ -88,6 +102,44 @@ Ruang Perkuliahan
         }, function(isConfirm){
             if (isConfirm) {
                 $('#tambah-ruang').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
+    });
+
+    $('#edit-ruang').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Edit Data Ruang Kuliah',
+            text: "Apakah anda yakin ingin merubah ruang?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#edit-ruang').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
+    });
+
+    $('#delete-ruang-{{$d->id}}').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Delete Data Ruang Kuliah',
+            text: "Apakah anda yakin ingin menghapus ruang?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#delete-ruang-{{$d->id}}').unbind('submit').submit();
                 $('#spinner').show();
             }
         });
