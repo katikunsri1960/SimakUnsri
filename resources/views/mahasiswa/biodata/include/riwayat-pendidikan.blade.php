@@ -11,7 +11,7 @@
                                         <h3 class="fw-500 text-dark mt-0 mb-20">Riwayat Pendidikan</h3>
                                     </div>                             
                                 </div>
-                                @if ($biodata->id_jenis_keluar == Null )
+                                @if ($riwayat_pendidikan -> isEmpty() )
                                 <div class="row ">
                                     <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
                                         <div class="box box-body bg-warning-light">
@@ -37,7 +37,7 @@
                                                 <tr>
                                                     <th class="text-center">No</th>
                                                     <th class="text-center">Jenjang Studi</th>
-                                                    <th class="text-center">Gelar Akademik</th>                                    
+                                                    {{-- <th class="text-center">Gelar Akademik</th>                                     --}}
                                                     <th class="text-center">Nama PT</th>
                                                     <th class="text-center">Bidang Ilmu</th>
                                                     <th class="text-center">Tanggal Ijazah</th>
@@ -47,20 +47,23 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @foreach ($riwayat_pendidikan as $data)
                                                 <tr>
                                                     <td class="text-center">1</td>
-                                                    <td class="text-start"></td>
-                                                    <td class="text-start"></td>
-                                                    <td class="text-start">{{$biodata->nama_perguruan_tinggi_asal}}</td>
-                                                    <td class="text-start">{{$biodata->nama_program_studi_asal}}</td>
-                                                    <td class="text-start"></td>
-                                                    <td class="text-center"></td>
+                                                    <td class="text-start">{{$data->nama_jenjang_pendidikan}}</td>
+                                                    {{-- <td class="text-start"></td> --}}
+                                                    <td class="text-start">{{$data->nama_perguruan_tinggi}}</td>
+                                                    <td class="text-start">{{$data->nama_program_studi}}</td>
+                                                    <td class="text-start">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
+                                                    <td class="text-center">{{$data->sks_diakui}}</td>
                                                     <td class="text-center"></td>
                                                     <td class="text-center">
                                                         <a class="btn btn-rounded bg-warning-light" href="#" title="Hapus Riwayat"><i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i></a>
                                                         <a class="btn btn-rounded bg-success-light" href="#" title="Edit Riwayat"><i class="fa fa-pen-to-square"><span class="path1"></span><span class="path2"></span></i></a>
                                                     </td>
                                                 </tr>
+                                                @endforeach
+                                                
                                             </tbody>
                                         </table>
                                     </div>
