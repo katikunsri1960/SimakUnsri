@@ -41,7 +41,7 @@ class PerkuliahanController extends Controller
             foreach ($semester as $s) {
                 $filter = "id_prodi = '$p' AND $s";
                 // dd($filter);
-                $job = new $job($act, $limit, $offset, $order, $filter);
+                $batch->add(new $job($act, $limit, $offset, $order, $filter));
             }
         }
 
@@ -81,11 +81,12 @@ class PerkuliahanController extends Controller
         ini_set('memory_limit', '1G');
 
         $act = 'GetDosenPengajarKelasKuliah';
+        $count = $this->count_value('GetCountDosenPengajarKelasKuliah');
         $limit = '';
         $offset = '';
         $order = '';
 
-        $job = \App\Jobs\Perkuliahan\Kelas\GetKelasJob::class;
+        $job = \App\Jobs\Perkuliahan\PengajarKelasJob::class;
         $name = 'pengajar-kelas-kuliah';
 
         $batch = $this->sync($act, $limit, $offset, $order, $job, $name);
