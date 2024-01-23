@@ -43,7 +43,15 @@ Kelas Kuliah
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table  table-hover margin-top-10 w-p100">
-
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">Kode MK</th>
+                                    <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                    <th class="text-center align-middle">Nama Kelas</th>
+                                    <th class="text-center align-middle">Dosen Pengajar</th>
+                                </tr>
+                            </thead>
                           <tbody>
 
                           </tbody>
@@ -62,6 +70,32 @@ Kelas Kuliah
 <script>
     $(function () {
         // "use strict";
+
+        $('#data').DataTable({
+            // dom: 'Bfrtip',
+            // buttons: [
+            //     'copy', 'csv', 'excel', 'pdf', 'print'
+            // ],
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{route('univ.perkuliahan.kelas-kuliah.data')}}',
+                type: 'GET',
+                data: function (d) {
+                    d.prodi = $('#prodi').val();
+                },
+                error: function (xhr, error, thrown) {
+                    alert('An error occurred. ' + thrown);
+                }
+            },
+            columns: [
+                {data: 'nama_semester', name: 'nama_semester', class: 'text-center', searchable: false},
+                {data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', class: 'text-center', searchable: true},
+                {data: 'nama_mata_kuliah', name: 'nama_mata_kuliah', class: 'text-start'},
+                {data: 'nama_kelas_kuliah', name: 'nama_kelas_kuliah', class: 'text-center'},
+                {data: 'nama_dosen', name: 'nama_dosen', class: 'text-start'},
+            ],
+        });
 
         // sweet alert sync-form
         $('#sync-form').submit(function(e){
