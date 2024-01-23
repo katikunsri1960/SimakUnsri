@@ -10,12 +10,13 @@
                                     <h3 class="fw-500 text-dark mt-0 mb-20">Akademik</h3>
                                 </div>                             
                             </div>
+                            @foreach ($riwayat_pendidikan as $data)
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Perguruan Tinggi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->riwayat_pendidikan[0]->nama_perguruan_tinggi}}">
+                                            value="{{$data->nama_perguruan_tinggi}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -29,21 +30,21 @@
                                     <div class="form-group">
                                         <label>NIM</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->riwayat_pendidikan[0]->nim}}">
+                                            value="{{$data->nim}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jenis Pendaftaran</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->riwayat_pendidikan[0]->nama_jenis_daftar}}">
+                                            value="{{$data->nama_jenis_daftar}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Program Studi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->riwayat_pendidikan[0]->nama_program_studi}}">
+                                            value="{{$data->nama_program_studi}}">
                                     </div>
                                 </div>
 
@@ -51,25 +52,21 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jalur Pendaftaran</label>
-                                        @if($data->riwayat_pendidikan[0]->jalur_masuk == Null)
+                                        @if($data->jalur_masuk == Null)
                                         <input type="name" class="form-control" disabled
                                             value="Tidak diisi">
                                         @else
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->riwayat_pendidikan[0]->jalur_masuk->nama_jalur_masuk}}">
+                                            value="{{$data->jalur_masuk->nama_jalur_masuk}}">
                                         @endif
                                     </div>
                                 </div>
 
-                            
-                                
-                                
-                                
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>UKT</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Rp  {{number_format($data->riwayat_pendidikan[0]->biaya_masuk, 2, ',', '.') }}">
+                                            value="Rp  {{number_format($data->biaya_masuk, 2, ',', '.') }}">
                                     </div>
                                 </div>
 
@@ -78,14 +75,14 @@
                                     <div class="form-group">
                                         <label>Angkatan</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->riwayat_pendidikan[0]->angkatan}}">
+                                            value="{{$data->angkatan}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Gelombang Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->riwayat_pendidikan[0]->gelombang_masuk}}">
+                                            value="{{$data->gelombang_masuk}}">
                                     </div>
                                 </div>
                                 
@@ -93,13 +90,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Status</label>
-                                        @if ($data->riwayat_pendidikan[0]->keterangan_keluar == Null)
+                                        @if ($data->keterangan_keluar == Null)
                                             <input type="name" class="form-control" disabled
                                                 value="Aktif">
                                         @else
                                         
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->riwayat_pendidikan[0]->keterangan_keluar}}">
+                                                value="{{$data->keterangan_keluar}}">
                                         @endif
                                     </div>
                                 </div>
@@ -109,17 +106,18 @@
                                     <div class="form-group">
                                         <label>Tanggal Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{date_format(new DateTime($data->riwayat_pendidikan[0]->tanggal_daftar), 'd-m-Y') }}">
+                                            value="{{date_format(new DateTime($data->tanggal_daftar), 'd-m-Y') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Periode Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->riwayat_pendidikan[0]->nama_periode_masuk}}">
+                                            value="{{$data->nama_periode_masuk}}">
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>  

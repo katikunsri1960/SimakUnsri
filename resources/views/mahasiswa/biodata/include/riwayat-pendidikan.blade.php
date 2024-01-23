@@ -47,7 +47,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($riwayat_pendidikan as $data)
+                                                @foreach ($data->riwayat_pendidikan as $data)
                                                 <tr>
                                                     <td class="text-center">1</td>
                                                     <td class="text-center">{{$data->nama_jenjang_pendidikan}}</td>
