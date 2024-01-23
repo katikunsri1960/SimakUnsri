@@ -27,7 +27,7 @@ class DataMasterController extends Controller
     public function ruang_perkuliahan()
     {
         $prodi_id = auth()->user()->fk_id;
-        $data = RuangPerkuliahan::all()->where('id_prodi',$prodi_id);
+        $data = RuangPerkuliahan::where('id_prodi',$prodi_id)->get();
 
         return view('prodi.data-master.ruang-perkuliahan.index', [
             'data' => $data

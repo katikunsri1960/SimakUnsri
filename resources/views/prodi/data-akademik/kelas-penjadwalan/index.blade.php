@@ -33,20 +33,37 @@ Kelas Penjadwalan
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover margin-top-10 w-p100">
-                          <thead>
-                             <tr>
-                                <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">NAMA MATA KULIAH</th>
-                                <th class="text-center align-middle">NAMA KELAS</th>
-                                <th class="text-center align-middle">NAMA RUANG</th>
-                                <th class="text-center align-middle">LOKASI RUANG</th>
-                                <th class="text-center align-middle">PERIODE PERKULIAHAN</th>
-                                <th class="text-center align-middle">AKSI</th>
-                             </tr>
-                          </thead>
-                          <tbody>
-
-                          </tbody>
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">KODE MATA KULIAH</th>
+                                    <th class="text-center align-middle">NAMA MATA KULIAH</th>
+                                    <th class="text-center align-middle">NAMA KELAS</th>
+                                    <th class="text-center align-middle">NAMA RUANG</th>
+                                    <th class="text-center align-middle">LOKASI RUANG</th>
+                                    <th class="text-center align-middle">PERIODE PERKULIAHAN</th>
+                                    <th class="text-center align-middle">AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $row=0;
+                                @endphp
+                                @foreach($data as $d)
+                                    <tr>
+                                        <td class="text-center align-middle">{{$row = $row + 1}}</td>
+                                        <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
+                                        <td class="text-center align-middle">{{$d->nama_mata_kuliah}}</td>
+                                        <td class="text-center align-middle">{{$d->nama_kelas_kuliah}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center align-middle">{{$d->nama_semester}}</td>
+                                        <td class="text-center align-middle">
+                                            
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
                       </table>
                       </div>
                 </div>
