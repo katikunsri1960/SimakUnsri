@@ -23,9 +23,9 @@ class BiodataController extends Controller
                 ->leftJoin('wilayahs','wilayahs.id_wilayah','=','biodata_mahasiswas.id_wilayah')
                 // ->addSelect(DB::raw('(SELECT nama_wilayah FROM pd_feeder_wilayah WHERE id_wilayah = pd_feeder_detail_biodata_dosen.id_wilayah LIMIT 1) AS kecamatan'))
                 
-                // ->where('id_mahasiswa', $bio)//Default
+                ->where('id_mahasiswa', $bio)//Default
                 // ->where('id_mahasiswa', '3cc994cf-5c0d-4c03-a585-0ba1ea0ef1dd')//PT Asal
-                ->where('id_mahasiswa', '0121ccfb-b750-443e-8539-d2b500206fec')//id_wilayah 000000
+                // ->where('id_mahasiswa', '0121ccfb-b750-443e-8539-d2b500206fec')//id_wilayah 000000
                 // ->where('id_mahasiswa', '0023fd6c-146d-490a-83a1-5646547439ec')//Lulus
                 // ->where('id_mahasiswa', '027d305e-b101-4c74-8164-f770a304b4f9')//Penerima KPS
                 ->first();
