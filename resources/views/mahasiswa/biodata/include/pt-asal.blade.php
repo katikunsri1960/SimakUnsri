@@ -11,8 +11,9 @@
                                         <h3 class="fw-500 text-dark mt-0 mb-20">Perguruan Tinggi Asal</h3>
                                     </div>                             
                                 </div>
+                                @foreach ($riwayat_pendidikan as $data)
                                 <!-- ($pt_asal[0]->nama_perguruan_tinggi_asal == Null) -->
-                                @if ($pt_asal -> isEmpty() )
+                                @if ($data->id_jenis_daftar == 1)
                                 <div class="row ">
                                     <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
                                         <div class="box box-body bg-warning-light">
@@ -46,17 +47,20 @@
                                                 @php
                                                     $no=1;
                                                 @endphp
-                                                <tr>
-                                                    <td class="text-center">{{ $no++ }}</td>
-                                                    <td class="text-center">{{$data->nama_jenis_daftar}}</td>
-                                                    <td class="text-start">{{$data->nama_perguruan_tinggi_asal}}</td>
-                                                    <td class="text-start">{{$data->nama_program_studi_asal}}</td>
-                                                </tr>
+                                                {{-- @foreach ($pt_asal as $data) --}}
+                                                    <tr>
+                                                        <td class="text-center">{{ $no++ }}</td>
+                                                        <td class="text-center">{{$data->nama_jenis_daftar}}</td>
+                                                        <td class="text-start">{{$data->nama_perguruan_tinggi_asal}}</td>
+                                                        <td class="text-start">{{$data->nama_program_studi_asal}}</td>
+                                                    </tr>
+                                                {{-- @endforeach                                                --}}
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                                 @endif
+                                @endforeach  
                             </div>
                             <div class="box-footer text-end">
                                 <a class="btn btn-rounded bg-primary" href="#"><i class="fa-solid fa-plus"> <span class="path1"></span><span class="path2"></span></i> Tambah</a>

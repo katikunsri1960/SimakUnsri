@@ -37,6 +37,8 @@ class BiodataMahasiswa extends Model
         return $this->belongsTo(Wilayah::class, 'id_wilayah', 'id_wilayah');
     }
 
+    
+
 
 
 

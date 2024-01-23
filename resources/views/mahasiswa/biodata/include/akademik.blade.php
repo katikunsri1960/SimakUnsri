@@ -10,6 +10,7 @@
                                     <h3 class="fw-500 text-dark mt-0 mb-20">Akademik</h3>
                                 </div>                             
                             </div>
+                            @foreach ($riwayat_pendidikan as $data)
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -47,18 +48,20 @@
                                     </div>
                                 </div>
 
+                                {{-- CEK KONDISI $JALUR MASUK = NULL --}}
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jalur Pendaftaran</label>
+                                        @if($data->jalur_masuk == Null)
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_jalur_masuk}}">
+                                            value="Tidak diisi">
+                                        @else
+                                        <input type="name" class="form-control" disabled
+                                            value="{{$data->jalur_masuk->nama_jalur_masuk}}">
+                                        @endif
                                     </div>
                                 </div>
 
-                            
-                                
-                                
-                                
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>UKT</label>
@@ -83,24 +86,21 @@
                                     </div>
                                 </div>
                                 
-                                <!-- STATUS KELUAR -->
-                                @if ($data->keterangan_keluar == Null)
+                                <!-- CEK STATUS KELUAR = NULL-->
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Status</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="Aktif">
+                                        @if ($data->keterangan_keluar == Null)
+                                            <input type="name" class="form-control" disabled
+                                                value="Aktif">
+                                        @else
+                                        
+                                            <input type="name" class="form-control" disabled
+                                                value="{{$data->keterangan_keluar}}">
+                                        @endif
                                     </div>
                                 </div>
-                               @else
-                               <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Status</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="{{$data->keterangan_keluar}}">
-                                    </div>
-                                </div>
-                                @endif
+                               
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -117,6 +117,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>  

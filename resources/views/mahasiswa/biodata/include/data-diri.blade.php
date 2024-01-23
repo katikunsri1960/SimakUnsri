@@ -21,8 +21,8 @@
                                         <button type="button" class="waves-effect waves-light btn btn-outline btn-primary btn-xs mb-5 mt-70"><i class="fa fa-pen"> </i> Ganti Foto Profil</button>
                                     <!-- </div> -->
                                     <div class="ms-30 mb-15">
-                                        <h5 class="my-10 mb-0 text-dark fw-500 fs-18">{{$data->biodata->nama_mahasiswa}}</h5>
-                                        <span class="text-fade mt-5">{{$data->biodata->nama_program_studi}}</span>
+                                        <h5 class="my-10 mb-0 text-dark fw-500 fs-18">{{$data->nama_mahasiswa}}</h5>
+                                        <span class="text-fade mt-5">{{$data->nama_program_studi}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -41,56 +41,56 @@
                                         <div class="form-group">
                                             <label>Nama</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->biodata->nama_mahasiswa}}">
+                                                value="{{$data->nama_mahasiswa}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>NIK</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->biodata->nik}}">
+                                                value="{{$data->nik}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>NPWP</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->biodata->npwp}}">
+                                                value="{{$data->npwp}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Tempat Lahir</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->biodata->tempat_lahir}}">
+                                                value="{{$data->tempat_lahir}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Tanggal Lahir</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->biodata->tanggal_lahir}}">
+                                                value="{{$data->tanggal_lahir}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Agama</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->biodata->nama_agama}}">
+                                                value="{{$data->nama_agama}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Kewarganegaraan</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->biodata->kewarganegaraan}}">
+                                                value="{{$data->kewarganegaraan}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>No. Telpon</label>
                                             <input type="name" class="form-control"
-                                                value="{{$data->biodata->telepon}}">
+                                                value="{{$data->telepon}}">
                                         </div>
                                     </div>
 
@@ -98,12 +98,12 @@
                                         <div class="form-group">
                                             <!-- <label>Jenis Kelamin</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->biodata->jenis_kelamin}}"> -->
+                                                value="{{$data->jenis_kelamin}}"> -->
                                         </div>
                                     </div>
 
                                     <!-- JENIS KELAMIN -->
-                                    @if ($data->biodata->jenis_kelamin == "Laki-laki" )
+                                    @if ($data->jenis_kelamin == "Laki-laki" )
                                         <div class="col-lg-6">
                                             <label class="mb-5">Jenis Kelamin</label>
                                             <div class="form-group ">
@@ -127,7 +127,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    @elseif ($data->biodata->jenis_kelamin == "Perempuan" )
+                                    @elseif ($data->jenis_kelamin == "Perempuan" )
                                         <div class="col-lg-6">
                                             <label class="mb-5">Jenis Kelamin</label>
                                             <div class="form-group ">
@@ -261,14 +261,14 @@
                                         <div class="form-group">
                                             <label>Email</label>
                                             <input type="name" class="form-control"
-                                                value="{{$data->biodata->email}}">
+                                                value="{{$data->email}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>No. HP</label>
                                             <input type="name" class="form-control"
-                                                value="{{$data->biodata->handphone}}">
+                                                value="{{$data->handphone}}">
                                         </div>
                                     </div>
                                 </div>
