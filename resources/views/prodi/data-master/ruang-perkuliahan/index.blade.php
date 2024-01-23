@@ -81,6 +81,12 @@ Ruang Perkuliahan
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
+     $(function() {
+        "use strict";
+        
+        $('#data').DataTable();
+    });
+    
     function editRuang(data, id) {
         document.getElementById('edit_nama_ruang').value = data.nama_ruang;
         document.getElementById('edit_lokasi').value = data.lokasi;
