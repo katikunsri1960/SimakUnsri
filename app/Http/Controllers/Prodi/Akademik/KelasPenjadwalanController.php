@@ -15,4 +15,12 @@ class KelasPenjadwalanController extends Controller
         // dd($data);
         return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data]);
     }
+
+    public function kelas_penjadwalan_store()
+    {
+        $prodi_id = auth()->user()->fk_id;
+        $data = KelasKuliah::where('id_prodi',$prodi_id)->get();
+        // dd($data);
+        return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data]);
+    }
 }
