@@ -13,7 +13,7 @@
                                 </div>
                                 @foreach ($riwayat_pendidikan as $data)
                                 <!-- ($pt_asal[0]->nama_perguruan_tinggi_asal == Null) -->
-                                @if ($data->id_jenis_daftar == 1)
+                                @if ($data->id_jenis_daftar == 1 )
                                 <div class="row ">
                                     <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
                                         <div class="box box-body bg-warning-light">
