@@ -46,12 +46,14 @@
                                                 @php
                                                     $no=1;
                                                 @endphp
-                                                <tr>
-                                                    <td class="text-center">{{ $no++ }}</td>
-                                                    <td class="text-center">{{$data->nama_jenis_daftar}}</td>
-                                                    <td class="text-start">{{$data->nama_perguruan_tinggi_asal}}</td>
-                                                    <td class="text-start">{{$data->nama_program_studi_asal}}</td>
-                                                </tr>
+                                                @foreach ($pt_asal as $data)
+                                                    <tr>
+                                                        <td class="text-center">{{ $no++ }}</td>
+                                                        <td class="text-center">{{$data->nama_jenis_daftar}}</td>
+                                                        <td class="text-start">{{$data->nama_perguruan_tinggi_asal}}</td>
+                                                        <td class="text-start">{{$data->nama_program_studi_asal}}</td>
+                                                    </tr>
+                                                @endforeach                                               
                                             </tbody>
                                         </table>
                                     </div>

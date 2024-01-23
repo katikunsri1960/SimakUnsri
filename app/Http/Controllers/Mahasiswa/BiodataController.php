@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Number;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\Builder;
 use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 
@@ -16,31 +17,47 @@ class BiodataController extends Controller
     public function index()
     {
         $id_reg = auth()->user()->fk_id;
-        
+        $bio = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->pluck('id_mahasiswa')->first();
 
-        $data = RiwayatPendidikan::
-                // with(['biodata', 'biodata.wilayah', 'jalur_masuk', 'biodata.wilayah.kab_kota', ])
-                leftJoin('biodata_mahasiswas','biodata_mahasiswas.id_mahasiswa','=','riwayat_pendidikans.id_mahasiswa')
-                ->leftJoin('jalur_masuks','jalur_masuks.id_jalur_masuk','=','riwayat_pendidikans.id_jalur_daftar')
+        $data = BiodataMahasiswa::with(['riwayat_pendidikan', 'riwayat_pendidikan.jalur_masuk'])
                 ->leftJoin('wilayahs','wilayahs.id_wilayah','=','biodata_mahasiswas.id_wilayah')
-                ->select('riwayat_pendidikans.*', 'biodata_mahasiswas.*',  'id_jalur_masuk', 'nama_jalur_masuk', 'id_level_wilayah', 'id_induk_wilayah')
+                // ->addSelect(DB::raw('(SELECT nama_wilayah FROM pd_feeder_wilayah WHERE id_wilayah = pd_feeder_detail_biodata_dosen.id_wilayah LIMIT 1) AS kecamatan'))
                 
-                // ->where('id_registrasi_mahasiswa', '55f28aa8-168c-432e-b553-e64d150c423d')//PT Asal
-                // ->where('id_registrasi_mahasiswa', '3905aa74-281c-4bf2-8170-b14d2fdbb0ae')//id_wilayah 000000
-                // ->where('riwayat_pendidikans.id_mahasiswa', '09827b92-fb07-417b-b5d3-d214d2e45cea')//Lulus
-                
-                ->where('id_registrasi_mahasiswa', $id_reg)//Default
+                // ->where('id_mahasiswa', $bio)//Default
+                // ->where('id_mahasiswa', '3cc994cf-5c0d-4c03-a585-0ba1ea0ef1dd')//PT Asal
+                ->where('id_mahasiswa', '0121ccfb-b750-443e-8539-d2b500206fec')//id_wilayah 000000
+                // ->where('id_mahasiswa', '0023fd6c-146d-490a-83a1-5646547439ec')//Lulus
+                // ->where('id_mahasiswa', '027d305e-b101-4c74-8164-f770a304b4f9')//Penerima KPS
                 ->first();
                 // dd($data);
+                
+        //CEK WILAYAH
+        $cek_id_wil = $data->id_wilayah;
+        $kab_kota= Wilayah::where('id_wilayah', $data->id_induk_wilayah)->pluck('id_induk_wilayah')->first();
+        //  dd($kab_kota);
+        
+        if ($cek_id_wil == 999999 || $kab_kota == NULL) {
+                $kab_kota="-";
+                $provinsi= "-";
+        }
+        else
+        {
+                $provinsi= Wilayah::where('id_wilayah', $kab_kota)
+                        ->whereNotNull('id_wilayah')
+                        ->pluck('nama_wilayah')
+                        ->first();
+        }
+        // dd($provinsi);
+
 
         $riwayat_pendidikan = RiwayatPendidikan::leftJoin('program_studis','program_studis.id_prodi','=','riwayat_pendidikans.id_prodi')
                 ->select('id_registrasi_mahasiswa', 'id_mahasiswa', 'nim', 'nama_mahasiswa', 'id_jenis_daftar', 'nama_jenis_daftar', 'id_jalur_daftar', 'id_periode_masuk',
-                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi',
+                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 
                         'riwayat_pendidikans.id_prodi', 'riwayat_pendidikans.nama_program_studi', 'sks_diakui', 'status', 'id_jenjang_pendidikan', 'nama_jenjang_pendidikan', 'fakultas_id',)
-                ->where('id_registrasi_mahasiswa', $id_reg)//Default
+                ->where('id_mahasiswa', $bio)//Default
                 ->where('id_jenis_keluar', 1)
                 ->groupBy('id_registrasi_mahasiswa', 'id_mahasiswa', 'nim', 'nama_mahasiswa', 'id_jenis_daftar', 'nama_jenis_daftar', 'id_jalur_daftar', 'id_periode_masuk',
-                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi',
+                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 
                         'riwayat_pendidikans.id_prodi', 'riwayat_pendidikans.nama_program_studi', 'sks_diakui', 'status', 'id_jenjang_pendidikan', 'nama_jenjang_pendidikan', 'fakultas_id',)
                 ->orderBy('id_jenjang_pendidikan', 'DESC')
                 ->get();
@@ -49,38 +66,15 @@ class BiodataController extends Controller
                 ->select('id_registrasi_mahasiswa', 'id_mahasiswa', 'nim', 'nama_mahasiswa', 'id_jenis_daftar', 'nama_jenis_daftar', 'id_jalur_daftar', 'id_periode_masuk',
                         'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 
                         'riwayat_pendidikans.id_prodi', 'riwayat_pendidikans.nama_program_studi', 'sks_diakui', 'status', 'id_jenjang_pendidikan', 'nama_jenjang_pendidikan', 'fakultas_id',)
-                ->where('id_registrasi_mahasiswa', $id_reg)//Default
-                ->whereNotIn('id_jenis_daftar', [1,0])
+                ->where('id_mahasiswa', $bio)//Default
+                ->whereNotIn('id_jenis_daftar', [1])
                 ->groupBy('id_registrasi_mahasiswa', 'id_mahasiswa', 'nim', 'nama_mahasiswa', 'id_jenis_daftar', 'nama_jenis_daftar', 'id_jalur_daftar', 'id_periode_masuk',
-                'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 
+                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 
                         'riwayat_pendidikans.id_prodi', 'riwayat_pendidikans.nama_program_studi', 'sks_diakui', 'status', 'id_jenjang_pendidikan', 'nama_jenjang_pendidikan', 'fakultas_id',)
                 ->get();
 
-
-        //CEK WILAYAH
-        $cek_id_wil = $data->biodata->wilayah->id_wilayah;
-
-        if ($cek_id_wil == NULL || $cek_id_wil == 999999 || $data->biodata->wilayah->kab_kota == NULL) {
-            
-            $provinsi= array(
-                "nama_wilayah" => "Tidak diisi"
-            );
-        }
-        else
-        {
-            // Kode untuk kondisi ketika $cek_id_wil bukan NULL atau bukan 999999
-            $id_wil = $data->biodata->wilayah->kab_kota->id_induk_wilayah;
-
-            $provinsi= Wilayah::where('id_wilayah', $id_wil)
-                    ->whereNotNull('id_wilayah')
-                    ->first();
-        }
-                    // dd($riwayat_pendidikan);
-
-        return view('mahasiswa.biodata.index', compact('data',
-         'provinsi',
-         'pt_asal',
-         'riwayat_pendidikan'
-        ));
+        // dd($riwayat_pendidikan);
+          
+        return view('mahasiswa.biodata.index', compact('data','provinsi','pt_asal','riwayat_pendidikan', 'kab_kota'));
     }
 }

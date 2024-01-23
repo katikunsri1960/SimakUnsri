@@ -15,7 +15,7 @@
                                 <div class="form-group">
                                     <label>Nama Wali</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_wali }}">
+                                        value="{{ $data->nama_wali }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -36,14 +36,14 @@
                                 <div class="form-group">
                                     <label>NIK</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nik_wali }}">
+                                        value="{{ $data->nik_wali }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Tanggal Lahir</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->tanggal_lahir_wali }}">
+                                        value="{{ $data->tanggal_lahir_wali }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -60,14 +60,14 @@
                                 <div class="form-group">
                                     <label>Pendidikan Terakhir</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_pendidikan_wali }}">
+                                        value="{{ $data->nama_pendidikan_wali }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Penghasilan</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_penghasilan_wali }}">
+                                        value="{{ $data->nama_penghasilan_wali }}">
                                 </div>
                             </div>
                             <div class="col-lg-12">
@@ -81,7 +81,7 @@
                                 <div class="form-group">
                                     <label>Kecamatan</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_wilayah_wali }}">
+                                        value="{{ $data->nama_wilayah_wali }}">
                                 </div>
                             </div>
                             <div class="col-lg-6">
@@ -102,7 +102,7 @@
                                 <div class="form-group">
                                     <label>Kode Pos</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->kode_pos_wali }}">
+                                        value="{{ $data->kode_pos_wali }}">
                                 </div>
                             </div>
                             

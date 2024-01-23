@@ -15,7 +15,7 @@
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_ayah }}">
+                                        value="{{ $data->nama_ayah }}">
                                 </div>
                                 <div class="form-group">
                                     <label>No. HP</label>
@@ -30,12 +30,12 @@
                                 <div class="form-group">
                                     <label>NIK</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nik_ayah }}">
+                                        value="{{ $data->nik_ayah }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Tanggal Lahir</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->tanggal_lahir_ayah }}">
+                                        value="{{ $data->tanggal_lahir_ayah }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Status Hidup</label>
@@ -48,22 +48,22 @@
                                 <div class="form-group">
                                     <label>Pendidikan Terakhir</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_pendidikan_ayah }}">
+                                        value="{{ $data->nama_pendidikan_ayah }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Penghasilan</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_penghasilan_ayah }}">
+                                        value="{{ $data->nama_penghasilan_ayah }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Alamat</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{$data->biodata->jalan }}, {{$data->biodata->dusun }}, RT.{{$data->biodata->rt }}/RW.{{$data->biodata->rw }}, {{$data->biodata->kelurahan }}">
+                                        value="{{$data->jalan }}, {{$data->dusun }}, RT.{{$data->rt }}/RW.{{$data->rw }}, {{$data->kelurahan }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Kecamatan</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_wilayah }}">
+                                        value="{{ $data->nama_wilayah }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Kab/Kota</label>
@@ -78,7 +78,7 @@
                                 <div class="form-group">
                                     <label>Kode Pos</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->kode_pos }}">
+                                        value="{{ $data->kode_pos }}">
                                 </div>
                             </div>
                             
@@ -88,7 +88,7 @@
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_ibu_kandung }}">
+                                        value="{{ $data->nama_ibu_kandung }}">
                                 </div>
                                 <div class="form-group">
                                     <label>No. HP</label>
@@ -103,12 +103,12 @@
                                 <div class="form-group">
                                     <label>NIK</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nik_ibu }}">
+                                        value="{{ $data->nik_ibu }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Tanggal Lahir</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->tanggal_lahir_ibu }}">
+                                        value="{{ $data->tanggal_lahir_ibu }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Status Hidup</label>
@@ -121,22 +121,22 @@
                                 <div class="form-group">
                                     <label>Pendidikan Terakhir</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_pendidikan_ibu }}">
+                                        value="{{ $data->nama_pendidikan_ibu }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Penghasilan</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_penghasilan_ibu }}">
+                                        value="{{ $data->nama_penghasilan_ibu }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Alamat</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{$data->biodata->jalan }}, {{$data->biodata->dusun }}, RT.{{$data->biodata->rt }}/RW.{{$data->biodata->rw }}, {{$data->biodata->kelurahan }}">
+                                        value="{{$data->jalan }}, {{$data->dusun }}, RT.{{$data->rt }}/RW.{{$data->rw }}, {{$data->kelurahan }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Kecamatan</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->nama_wilayah }}">
+                                        value="{{ $data->nama_wilayah }}">
                                 </div>
                                 <div class="form-group">
                                     <label>Kab/Kota</label>
@@ -151,7 +151,7 @@
                                 <div class="form-group">
                                     <label>Kode Pos</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata->kode_pos }}">
+                                        value="{{ $data->kode_pos }}">
                                 </div>
                                 <!-- </div> -->
                             </div>

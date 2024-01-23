@@ -15,7 +15,7 @@
                                     <div class="form-group">
                                         <label>Perguruan Tinggi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_perguruan_tinggi}}">
+                                            value="{{$data->riwayat_pendidikan[0]->nama_perguruan_tinggi}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -29,29 +29,35 @@
                                     <div class="form-group">
                                         <label>NIM</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nim}}">
+                                            value="{{$data->riwayat_pendidikan[0]->nim}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jenis Pendaftaran</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_jenis_daftar}}">
+                                            value="{{$data->riwayat_pendidikan[0]->nama_jenis_daftar}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Program Studi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_program_studi}}">
+                                            value="{{$data->riwayat_pendidikan[0]->nama_program_studi}}">
                                     </div>
                                 </div>
 
+                                {{-- CEK KONDISI $JALUR MASUK = NULL --}}
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jalur Pendaftaran</label>
+                                        @if($data->riwayat_pendidikan[0]->jalur_masuk == Null)
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_jalur_masuk}}">
+                                            value="Tidak diisi">
+                                        @else
+                                        <input type="name" class="form-control" disabled
+                                            value="{{$data->riwayat_pendidikan[0]->jalur_masuk->nama_jalur_masuk}}">
+                                        @endif
                                     </div>
                                 </div>
 
@@ -63,7 +69,7 @@
                                     <div class="form-group">
                                         <label>UKT</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Rp  {{number_format($data->biaya_masuk, 2, ',', '.') }}">
+                                            value="Rp  {{number_format($data->riwayat_pendidikan[0]->biaya_masuk, 2, ',', '.') }}">
                                     </div>
                                 </div>
 
@@ -72,48 +78,45 @@
                                     <div class="form-group">
                                         <label>Angkatan</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->angkatan}}">
+                                            value="{{$data->riwayat_pendidikan[0]->angkatan}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Gelombang Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->gelombang_masuk}}">
+                                            value="{{$data->riwayat_pendidikan[0]->gelombang_masuk}}">
                                     </div>
                                 </div>
                                 
-                                <!-- STATUS KELUAR -->
-                                @if ($data->keterangan_keluar == Null)
+                                <!-- CEK STATUS KELUAR = NULL-->
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Status</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="Aktif">
+                                        @if ($data->riwayat_pendidikan[0]->keterangan_keluar == Null)
+                                            <input type="name" class="form-control" disabled
+                                                value="Aktif">
+                                        @else
+                                        
+                                            <input type="name" class="form-control" disabled
+                                                value="{{$data->riwayat_pendidikan[0]->keterangan_keluar}}">
+                                        @endif
                                     </div>
                                 </div>
-                               @else
-                               <div class="col-lg-6">
-                                    <div class="form-group">
-                                        <label>Status</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="{{$data->keterangan_keluar}}">
-                                    </div>
-                                </div>
-                                @endif
+                               
 
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Tanggal Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{date_format(new DateTime($data->tanggal_daftar), 'd-m-Y') }}">
+                                            value="{{date_format(new DateTime($data->riwayat_pendidikan[0]->tanggal_daftar), 'd-m-Y') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Periode Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_periode_masuk}}">
+                                            value="{{$data->riwayat_pendidikan[0]->nama_periode_masuk}}">
                                     </div>
                                 </div>
                             </div>

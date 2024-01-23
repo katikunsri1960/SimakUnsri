@@ -50,11 +50,11 @@
                                                 @foreach ($riwayat_pendidikan as $data)
                                                 <tr>
                                                     <td class="text-center">1</td>
-                                                    <td class="text-start">{{$data->nama_jenjang_pendidikan}}</td>
+                                                    <td class="text-center">{{$data->nama_jenjang_pendidikan}}</td>
                                                     {{-- <td class="text-start"></td> --}}
                                                     <td class="text-start">{{$data->nama_perguruan_tinggi}}</td>
                                                     <td class="text-start">{{$data->nama_program_studi}}</td>
-                                                    <td class="text-start">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
+                                                    <td class="text-center">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
                                                     <td class="text-center">{{$data->sks_diakui}}</td>
                                                     <td class="text-center"></td>
                                                     <td class="text-center">
