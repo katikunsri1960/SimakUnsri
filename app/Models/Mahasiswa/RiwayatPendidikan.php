@@ -2,10 +2,11 @@
 
 namespace App\Models\Mahasiswa;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\ProgramStudi;
 use App\Models\Semester;
+use App\Models\JalurMasuk;
+use App\Models\ProgramStudi;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class RiwayatPendidikan extends Model
 {
@@ -31,4 +32,15 @@ class RiwayatPendidikan extends Model
     {
         return substr($this->id_periode_masuk, 0, 4);
     }
+
+    public function getGelombangMasukAttribute()
+    {
+        return substr($this->id_periode_masuk, 4, 1);
+    }
+
+    public function jalur_masuk()
+    {
+        return $this->belongsTo(JalurMasuk::class, 'id_jalur_daftar', 'id_jalur_masuk');
+    }
+    
 }

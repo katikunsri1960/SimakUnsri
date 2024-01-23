@@ -15,7 +15,7 @@
                                     <div class="form-group">
                                         <label>NISN</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{ $biodata->biodata->nisn }}">
+                                            value="{{ $data->biodata->nisn }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
