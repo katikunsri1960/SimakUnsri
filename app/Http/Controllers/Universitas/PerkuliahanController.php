@@ -100,7 +100,25 @@ class PerkuliahanController extends Controller
             return redirect()->back()->with('error', 'Data Program Studi atau Semester Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
         }
 
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
 
+        $act = 'GetPesertaKelasKuliah';
+        $limit = '';
+        $offset = '';
+        $order = '';
+
+        $batch = Bus::batch([])->name('peserta-kelas-kuliah')->dispatch();
+
+        $kelasKuliahIds = KelasKuliah::select('id_kelas_kuliah')->get()->pluck('id_kelas_kuliah')->toArray();
+
+        $chunks = array_chunk($kelasKuliahIds, 8);
+
+        foreach ($chunks as $chunk) {
+            $filter = "id_kelas_kuliah IN ('" . implode("','", $chunk) . "')";
+            // dd($filter);
+            $batch->add(new \App\Jobs\Perkuliahan\PesertaKelasJob($act, $limit, $offset, $order, $filter));
+        }
 
         return redirect()->back()->with('success', 'Sinkronisasi Peserta Kelas Kuliah Berhasil!');
     }

@@ -30,6 +30,13 @@ Kelas Kuliah
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.perkuliahan.kelas-kuliah.sync-pengajar-kelas')}}" method="get" id="sync-pengajar">
+                            <button class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Pengajar</button>
+                        </form>
+                        <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.perkuliahan.kelas-kuliah.sync-peserta-kelas')}}" method="get" id="sync-peserta">
+                            <button class="btn btn-secondary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Peserta</button>
+                        </form>
                         {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
                     </div>
                 </div>
@@ -72,6 +79,44 @@ Kelas Kuliah
                 if (isConfirm) {
                     $('#spinner').show();
                     $('#sync-form').unbind('submit').submit();
+                }
+            });
+        });
+
+        $('#sync-pengajar').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Sinkronisasi Data',
+                text: "Apakah anda yakin ingin melakukan sinkronisasi?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Sinkronkan!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $('#sync-pengajar').unbind('submit').submit();
+                }
+            });
+        });
+
+        $('#sync-peserta').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Sinkronisasi Data',
+                text: "Apakah anda yakin ingin melakukan sinkronisasi?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Sinkronkan!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $('#sync-peserta').unbind('submit').submit();
                 }
             });
         });
