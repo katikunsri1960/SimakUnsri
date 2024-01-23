@@ -100,8 +100,86 @@ class PerkuliahanController extends Controller
             return redirect()->back()->with('error', 'Data Program Studi atau Semester Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
         }
 
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
 
+        $act = 'GetPesertaKelasKuliah';
+        $limit = '';
+        $offset = '';
+        $order = '';
+
+        $batch = Bus::batch([])->name('peserta-kelas-kuliah')->dispatch();
+
+        $kelasKuliahIds = KelasKuliah::select('id_kelas_kuliah')->get()->pluck('id_kelas_kuliah')->toArray();
+
+        $chunks = array_chunk($kelasKuliahIds, 8);
+
+        foreach ($chunks as $chunk) {
+            $filter = "id_kelas_kuliah IN ('" . implode("','", $chunk) . "')";
+            // dd($filter);
+            $batch->add(new \App\Jobs\Perkuliahan\PesertaKelasJob($act, $limit, $offset, $order, $filter));
+        }
 
         return redirect()->back()->with('success', 'Sinkronisasi Peserta Kelas Kuliah Berhasil!');
+    }
+
+    public function kelas_data(Request $request)
+    {
+        $searchValue = $request->input('search.value');
+
+        $query = KelasKuliah::with('dosen_pengajar', 'prodi', 'semester', 'dosen_pengajar.dosen');
+
+        if ($searchValue) {
+            $query = $query->where('kode_mata_kuliah', 'like', '%' . $searchValue . '%')
+                ->orWhere('nama_kelas_kuliah', 'like', '%' . $searchValue . '%')
+                ->orWhere('nama_mata_kuliah', 'like', '%' . $searchValue . '%');
+        }
+
+        if ($request->has('prodi') && !empty($request->prodi)) {
+            $filter = $request->prodi;
+            $query->whereIn('id_prodi', $filter);
+        }
+
+        $recordsFiltered = $query->count();
+
+        $limit = $request->input('length');
+        $offset = $request->input('start');
+
+        // Define the column names that correspond to the DataTables column indices
+        if ($request->has('order')) {
+            $orderColumn = $request->input('order.0.column');
+            $orderDirection = $request->input('order.0.dir');
+
+            // Define the column names that correspond to the DataTables column indices
+            $columns = ['nama_semester', 'kode_mata_kuliah', 'nama_mata_kuliah'];
+
+            // if ($columns[$orderColumn] == 'prodi') {
+            //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
+            //         ->orderBy('prodi.nama_jenjang_pendidikan', $orderDirection)
+            //         ->orderBy('prodi.nama_program_studi', $orderDirection)
+            //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
+            // } else {
+                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            // }
+        }
+
+        $data = $query->skip($offset)->take($limit)->get()->map(function ($kelasKuliah) {
+            $kelasKuliahArray = $kelasKuliah->toArray(); // Convert the KelasKuliah to an array
+            $kelasKuliahArray['nama_dosen'] = $kelasKuliah->dosen_pengajar->map(function ($dosenPengajar) {
+                return $dosenPengajar->dosen->nama_dosen;
+            })->implode(', ');
+            return $kelasKuliahArray;
+        });
+
+        $recordsTotal = KelasKuliah::count();
+
+        $response = [
+            'draw' => $request->input('draw'),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ];
+
+        return response()->json($response);
     }
 }

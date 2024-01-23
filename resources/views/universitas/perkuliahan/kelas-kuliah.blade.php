@@ -30,13 +30,28 @@ Kelas Kuliah
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.perkuliahan.kelas-kuliah.sync-pengajar-kelas')}}" method="get" id="sync-pengajar">
+                            <button class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Pengajar</button>
+                        </form>
+                        <span class="divider-line mx-1"></span>
+                        {{-- <form action="{{route('univ.perkuliahan.kelas-kuliah.sync-peserta-kelas')}}" method="get" id="sync-peserta">
+                            <button class="btn btn-secondary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Peserta</button>
+                        </form> --}}
                         {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
                     </div>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table  table-hover margin-top-10 w-p100">
-
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">Kode MK</th>
+                                    <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                    <th class="text-center align-middle">Nama Kelas</th>
+                                    <th class="text-center align-middle">Dosen Pengajar</th>
+                                </tr>
+                            </thead>
                           <tbody>
 
                           </tbody>
@@ -56,6 +71,32 @@ Kelas Kuliah
     $(function () {
         // "use strict";
 
+        $('#data').DataTable({
+            // dom: 'Bfrtip',
+            // buttons: [
+            //     'copy', 'csv', 'excel', 'pdf', 'print'
+            // ],
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{route('univ.perkuliahan.kelas-kuliah.data')}}',
+                type: 'GET',
+                data: function (d) {
+                    d.prodi = $('#prodi').val();
+                },
+                error: function (xhr, error, thrown) {
+                    alert('An error occurred. ' + thrown);
+                }
+            },
+            columns: [
+                {data: 'nama_semester', name: 'nama_semester', class: 'text-center', searchable: false},
+                {data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', class: 'text-center', searchable: true},
+                {data: 'nama_mata_kuliah', name: 'nama_mata_kuliah', class: 'text-start'},
+                {data: 'nama_kelas_kuliah', name: 'nama_kelas_kuliah', class: 'text-center'},
+                {data: 'nama_dosen', name: 'nama_dosen', class: 'text-start'},
+            ],
+        });
+
         // sweet alert sync-form
         $('#sync-form').submit(function(e){
             e.preventDefault();
@@ -72,6 +113,44 @@ Kelas Kuliah
                 if (isConfirm) {
                     $('#spinner').show();
                     $('#sync-form').unbind('submit').submit();
+                }
+            });
+        });
+
+        $('#sync-pengajar').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Sinkronisasi Data',
+                text: "Apakah anda yakin ingin melakukan sinkronisasi?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Sinkronkan!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $('#sync-pengajar').unbind('submit').submit();
+                }
+            });
+        });
+
+        $('#sync-peserta').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Sinkronisasi Data',
+                text: "Apakah anda yakin ingin melakukan sinkronisasi?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Sinkronkan!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $('#sync-peserta').unbind('submit').submit();
                 }
             });
         });
