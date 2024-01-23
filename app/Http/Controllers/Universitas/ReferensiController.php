@@ -70,6 +70,7 @@ class ReferensiController extends Controller
             ['act' => 'GetIkatanKerjaSdm', 'primary' => 'id_ikatan_kerja', 'model' => \App\Models\IkatanKerja::class],
             ['act' => 'GetJenisSubstansi', 'primary' => 'id_jenis_substansi', 'model' => \App\Models\JenisSubstansi::class],
             ['act' => 'GetListSubstansiKuliah', 'primary' => 'id_substansi', 'model' => \App\Models\Perkuliahan\SubstansiKuliah::class],
+            ['act' => 'GetPembiayaan', 'primary' => 'id_pembiayaan', 'model' => \App\Models\Referensi\Pembiayaan::class],
         ];
 
         foreach ($ref as $r) {
@@ -95,6 +96,20 @@ class ReferensiController extends Controller
                         $d['id_jenis_substansi'] = trim($d['id_jenis_substansi']);
                         return $d;
                     }, $data['data']);
+                }
+
+                if($act == 'GetStatusMahasiswa')
+                {
+                    // add new status mahasiswa id_status_mahasiswa = 'K', nama_status_mahasiswa = 'Keluar'
+                    $newStatusMahasiswa = [
+                        ['id_status_mahasiswa' => 'K', 'nama_status_mahasiswa' => 'Keluar'],
+                        ['id_status_mahasiswa' => 'D', 'nama_status_mahasiswa' => 'Drop-Out/Putus Studi'],
+                        ['id_status_mahasiswa' => 'U', 'nama_status_mahasiswa' => 'Menunggu Ujian'],
+                        ['id_status_mahasiswa' => 'L', 'nama_status_mahasiswa' => 'Lulus'],
+                    ];
+
+                    array_push($data['data'], ...$newStatusMahasiswa);
+
                 }
 
                 $r['model']::upsert($data['data'], $r['primary']);

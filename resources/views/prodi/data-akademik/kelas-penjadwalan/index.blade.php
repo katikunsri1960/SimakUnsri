@@ -27,26 +27,45 @@ Kelas Penjadwalan
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
-                        <a type="button" class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</a>
+                        <button type="button" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
+                        data-bs-target="#tambahKelasKuliah"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</button>
                     </div>
                 </div>
+                @include('prodi.data-akademik.kelas-penjadwalan.create')
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover margin-top-10 w-p100">
-                          <thead>
-                             <tr>
-                                <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">NAMA MATA KULIAH</th>
-                                <th class="text-center align-middle">NAMA KELAS</th>
-                                <th class="text-center align-middle">NAMA RUANG</th>
-                                <th class="text-center align-middle">LOKASI RUANG</th>
-                                <th class="text-center align-middle">PERIODE PERKULIAHAN</th>
-                                <th class="text-center align-middle">AKSI</th>
-                             </tr>
-                          </thead>
-                          <tbody>
-
-                          </tbody>
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">KODE MATA KULIAH</th>
+                                    <th class="text-center align-middle">NAMA MATA KULIAH</th>
+                                    <th class="text-center align-middle">NAMA KELAS</th>
+                                    <th class="text-center align-middle">NAMA RUANG</th>
+                                    <th class="text-center align-middle">LOKASI RUANG</th>
+                                    <th class="text-center align-middle">PERIODE PERKULIAHAN</th>
+                                    <th class="text-center align-middle">AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                    $row=0;
+                                @endphp
+                                @foreach($data as $d)
+                                    <tr>
+                                        <td class="text-center align-middle">{{$row = $row + 1}}</td>
+                                        <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
+                                        <td class="text-center align-middle">{{$d->nama_mata_kuliah}}</td>
+                                        <td class="text-center align-middle">{{$d->nama_kelas_kuliah}}</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td class="text-center align-middle">{{$d->nama_semester}}</td>
+                                        <td class="text-center align-middle">
+                                            
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
                       </table>
                       </div>
                 </div>
@@ -64,6 +83,25 @@ Kelas Penjadwalan
         "use strict";
         
         $('#data').DataTable();
+    });
+
+    $('#tambah-kelas').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Pembuatan Kelas Kuliah',
+            text: "Apakah anda yakin ingin menambahkan kelas?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#tambah-kelas').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
     });
 </script>
 @endpush
