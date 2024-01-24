@@ -11,26 +11,6 @@
                                         <h3 class="fw-500 text-dark mt-0 mb-20">Riwayat Pendidikan</h3>
                                     </div>                             
                                 </div>
-
-                                @if ($riwayat_pendidikan[0]->id_jenis_keluar != 1 )
-                                <div class="row ">
-                                    <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
-                                        <div class="box box-body bg-warning-light">
-                                            <div class="row" style="align-items: center;">
-                                                <div class="col-lg-1 text-right" style="text-align-last: end;">
-                                                    <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
-                                                </div>
-                                                <div class="col-lg-10 text-left text-danger">
-                                                    <label>
-                                                        Data <strong>Riwayat Pendidikan</strong> hanya untuk mahasiswa dengan Jenis Keluar <strong>LULUS</strong> !
-                                                    </label>
-                                                </div>
-                                                
-                                            </div>                       
-                                        </div>
-                                    </div>
-                                </div>  
-                                @else
                                 <div class="row">
                                     <div class="table-responsive">
                                         <table id="example2" class="table table-bordered table-striped text-center">
@@ -42,38 +22,47 @@
                                                     <th class="text-center">Nama PT</th>
                                                     <th class="text-center">Program Studi</th>
                                                     <th class="text-center">Bidang Minat</th>
-                                                    <th class="text-center">Tanggal Lulus</th>
+                                                    <th class="text-center">Status</th>
+                                                    <th class="text-center">Tanggal Keluar</th>
                                                     <th class="text-center">SKS Lulus</th>
                                                     <th class="text-center">IPK Lulus</th>
                                                     <th class="text-center">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @php
+                                                    $no=1;
+                                                @endphp
+
                                                 @foreach ($data->riwayat_pendidikan as $data)
-                                                    {{-- @if($data->id_jenis_keluar == 1) --}}
-                                                        <tr>
-                                                            <td class="text-center">1</td>
-                                                            <td class="text-center">{{$data->prodi->nama_jenjang_pendidikan}}</td>
-                                                            {{-- <td class="text-start"></td> --}}
-                                                            <td class="text-start">{{$data->nama_perguruan_tinggi}}</td>
-                                                            <td class="text-start">{{$data->prodi->nama_program_studi}}</td>
-                                                            <td class="text-start">{{$data->nm_bidang_minat}}</td>
-                                                            <td class="text-center">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
-                                                            <td class="text-center">{{$data->sks_diakui}}</td>
-                                                            <td class="text-center"></td>
-                                                            <td class="text-center">
-                                                                <a class="btn btn-rounded bg-warning-light" href="#" title="Hapus Riwayat"><i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i></a>
-                                                                <a class="btn btn-rounded bg-success-light" href="#" title="Edit Riwayat"><i class="fa fa-pen-to-square"><span class="path1"></span><span class="path2"></span></i></a>
-                                                            </td>
-                                                        </tr>
-                                                    {{-- @endif --}}
+                                                    <tr>
+                                                        <td class="text-center">{{ $no++ }}</td>
+                                                        <td class="text-center">{{$data->prodi->nama_jenjang_pendidikan}}</td>
+                                                        {{-- <td class="text-start"></td> --}}
+                                                        <td class="text-start">{{$data->nama_perguruan_tinggi}}</td>
+                                                        <td class="text-start">{{$data->prodi->nama_program_studi}}</td>
+                                                        <td class="text-start">{{$data->nm_bidang_minat}}</td>
+                                                        
+                                                        @if ($data->id_jenis_keluar == NULL)
+                                                            <td class="text-center">Aktif</td>
+                                                        @else
+                                                            <td class="text-center">{{$data->keterangan_keluar}}</td>
+                                                        @endif
+                                                        
+                                                        <td class="text-center">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
+                                                        <td class="text-center">{{$data->sks_diakui}}</td>
+                                                        <td class="text-center"></td>
+                                                        <td class="text-center">
+                                                            <a class="btn btn-rounded bg-warning-light" href="#" title="Hapus Riwayat"><i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i></a>
+                                                            <a class="btn btn-rounded bg-success-light" href="#" title="Edit Riwayat"><i class="fa fa-pen-to-square"><span class="path1"></span><span class="path2"></span></i></a>
+                                                        </td>
+                                                    </tr>
                                                 @endforeach
-                                                
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
-                                @endif
+                                {{-- @endif --}}
                             </div>
                             <!-- <div class="box-footer text-end">
                                 <a class="btn btn-rounded bg-primary" href="#"><i class="fa-solid fa-plus"> <span class="path1"></span><span class="path2"></span></i> Tambah</a>
