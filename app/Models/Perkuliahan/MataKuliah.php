@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Perkuliahan;
 
+use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

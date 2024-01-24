@@ -209,4 +209,9 @@ class PerkuliahanController extends Controller
 
         return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
     }
+
+    public function aktivitas_kuliah_data(Request $request)
+    {
+        
+    }
 }

@@ -39,7 +39,12 @@ class PengajarKelasJob implements ShouldQueue
 
             $result = $response['data'];
 
-            DosenPengajarKelasKuliah::upsert($result, 'id_aktivitas_mengajar');
+            $result = array_chunk($result, 100);
+
+            foreach ($result as $r) {
+                DosenPengajarKelasKuliah::upsert($r, 'id_aktivitas_mengajar');
+            }
+
         }
     }
 }

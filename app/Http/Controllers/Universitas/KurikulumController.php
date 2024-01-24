@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Models\ListKurikulum;
-use App\Models\MataKuliah;
+use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Perkuliahan\MataKuliah;
 use App\Services\Feeder\FeederAPI;
 use App\Jobs\ProccessSync;
 use App\Http\Controllers\Controller;
@@ -83,13 +83,29 @@ class KurikulumController extends Controller
     public function sync_kurikulum()
     {
         $act = "GetListKurikulum";
-        $limit = 0;
+        $count = "GetCountKurikulum";
+        $limit = 1000;
         $offset = 0;
         $order = "";
-        $model = \App\Models\ListKurikulum::class;
+        $model = \App\Models\Perkuliahan\ListKurikulum::class;
 
-        $batch = Bus::batch([])->dispatch();
-        $job = new ProccessSync($model, $act, $limit, $offset, $order);
+        $api = new FeederAPI($count,$offset, $limit, $order);
+
+        $result = $api->runWS();
+        // dd($result['data']);
+        $total = $result['data'];
+
+        for($i = 0; $i < $total; $i += $limit) {
+            $api = new FeederAPI($act,$i, $limit, $order);
+            $result = $api->runWS();
+
+            $chunk = array_chunk($result['data'], 100);
+
+            foreach ($chunk as $c) {
+                $model::upsert($c, 'id_kurikulum');
+            }
+
+        }
 
         return redirect()->route('univ.kurikulum')->with('success', 'Data kurikulum berhasil disinkronisasi');
 
@@ -118,7 +134,7 @@ class KurikulumController extends Controller
         $order = 'id_matkul';
 
         for ($i = 0; $i < $total; $i += $limit) {
-            $job = new ProccessSync(\App\Models\MataKuliah::class, $act, $limit, $i, $order);
+            $job = new ProccessSync(\App\Models\Perkuliahan\MataKuliah::class, $act, $limit, $i, $order);
             $batch->add($job);
         }
 
