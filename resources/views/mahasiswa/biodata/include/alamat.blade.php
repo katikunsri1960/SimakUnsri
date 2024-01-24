@@ -54,25 +54,20 @@
                                                 value="{{ $data->nama_wilayah }}">
                                         </div>
                                     </div>
-
-                                    {{-- JIKA kab_kota NULL --}}
-                                    
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label>Kab/Kota</label>
-                                                <input type="name" class="form-control" 
-                                                    value="{{ $kab_kota }}">
-                                            </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Kab/Kota</label>
+                                            <input type="name" class="form-control" 
+                                                value="{{ $kab_kota }}">
                                         </div>
-                                        <div class="col-lg-4">
-                                            <div class="form-group">
-                                                <label>Provinsi</label>
-                                                <input type="name" class="form-control" 
-                                                    value="{{$provinsi}}">
-                                            </div>
+                                    </div>
+                                    <div class="col-lg-4">
+                                        <div class="form-group">
+                                            <label>Provinsi</label>
+                                            <input type="name" class="form-control" 
+                                                value="{{$provinsi}}">
                                         </div>
-                                    
-
+                                    </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Kode Pos</label>
@@ -82,7 +77,7 @@
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="mb-5">Penerima KPS</label>
-                                        <!-- JENIS KELAMIN -->
+                                        <!-- CEK VALUE PENERIMA KPS -->
                                         @if ($data->penerima_kps == 0 )
                                             <div class="form-group ">
                                                 <div class="form-check form-check-inline">
