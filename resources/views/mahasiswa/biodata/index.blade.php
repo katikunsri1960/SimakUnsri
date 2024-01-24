@@ -28,14 +28,14 @@ Biodata
             <div class="box">
 				<!-- Nav tabs -->
                 <ul class="nav nav-tabs rounded10 justify-content-center" role="tablist">
-                    <li class="nav-item"> <a class="nav-link active" data-bs-toggle="tab" href="#data-diri" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ms-15">Data Diri</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#akademik" role="tab"><span><i class="ion-reader"></i></span> <span class="hidden-xs-down ms-15">Akademik</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#alamat" role="tab"><span><i class="ion-home"></i></span> <span class="hidden-xs-down ms-15">Alamat</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#orang-tua" role="tab"><span><i class="ion-family"></i></span> <span class="hidden-xs-down ms-15">Orang Tua</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#wali" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ms-15">Wali</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#data-sekolah" role="tab"><span><i class="ion-camera"></i></span> <span class="hidden-xs-down ms-15">Data Sekolah</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#pt-asal" role="tab"><span><i class="ion-settings"></i></span> <span class="hidden-xs-down ms-15">Perguruan Tinggi Asal</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#riwayat-pendidikan" role="tab"><span><i class="ion-person"></i></span> <span class="hidden-xs-down ms-15">Riwayat Pendidikan</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link active" data-bs-toggle="tab" href="#data-diri" role="tab"><span><i class="fas fa-user-cog"></i></span> <span class="hidden-xs-down ms-15">Data Diri</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#akademik" role="tab"><span><i class="fa fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Akademik</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#alamat" role="tab"><span><i class="fas fa-address-card"></i></span> <span class="hidden-xs-down ms-15">Alamat</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#orang-tua" role="tab"><span><i class="fas fa-users"></i></span> <span class="hidden-xs-down ms-15">Orang Tua</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#wali" role="tab"><span><i class="fas fa-user-friends"></i></span> <span class="hidden-xs-down ms-15">Wali</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#data-sekolah" role="tab"><span><i class="fas fa-school"></i></span> <span class="hidden-xs-down ms-15">Data Sekolah</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#pt-asal" role="tab"><span><i class="fas fa-university"></i></span> <span class="hidden-xs-down ms-15">Perguruan Tinggi Asal</span></a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#riwayat-pendidikan" role="tab"><span><i class="fas fa-tasks"></i></span> <span class="hidden-xs-down ms-15">Riwayat Pendidikan</span></a> </li>
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
