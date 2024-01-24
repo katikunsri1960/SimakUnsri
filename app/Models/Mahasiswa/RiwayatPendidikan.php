@@ -3,6 +3,7 @@
 namespace App\Models\Mahasiswa;
 
 use App\Models\Semester;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\JalurMasuk;
 use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Model;
@@ -42,5 +43,10 @@ class RiwayatPendidikan extends Model
     {
         return $this->belongsTo(JalurMasuk::class, 'id_jalur_daftar', 'id_jalur_masuk');
     }
-    
+
+    public function aktivitas_kuliah()
+    {
+        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_riwayat_pendidikan', 'id_riwayat_pendidikan');
+    }
+
 }

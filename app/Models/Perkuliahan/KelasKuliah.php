@@ -3,7 +3,7 @@
 namespace App\Models\Perkuliahan;
 
 use App\Models\Semester;
-use App\Models\MataKuliah;
+use App\Models\Perkuliahan\MataKuliah;
 use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
