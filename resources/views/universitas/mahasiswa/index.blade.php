@@ -1,6 +1,6 @@
 @extends('layouts.universitas')
 @section('title')
-Matakuliah
+Mahasiswa
 @endsection
 @section('content')
 <div class="content-header">
@@ -56,7 +56,7 @@ Matakuliah
     $(function () {
         // "use strict";
 
-        $('#data').DataTable({
+        //$('#data').DataTable({
             // dom: 'Bfrtip',
             // buttons: [
             //     'copy', 'csv', 'excel', 'pdf', 'print'
@@ -86,7 +86,7 @@ Matakuliah
             //         }
             //     }
             // ],
-        });
+        //});
 
         // sweet alert sync-form
         $('#sync-form').submit(function(e){

@@ -2,7 +2,6 @@
 
 namespace App\Jobs\Mahasiswa;
 
-use App\Models\Dosen\BiodataDosen;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -43,7 +42,7 @@ class BiodataJob implements ShouldQueue
             $chunks = array_chunk($response['data'], 100);
 
             foreach ($chunks as $chunk) {
-                BiodataDosen::upsert($chunk, 'id_mahasiswa');
+                BiodataMahasiswa::upsert($chunk, 'id_mahasiswa');
             }
 
         }
