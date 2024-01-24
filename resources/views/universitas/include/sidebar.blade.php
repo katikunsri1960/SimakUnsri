@@ -61,6 +61,9 @@
                             <li class="{{request()->routeIs('univ.perkuliahan.kelas-kuliah') ? 'active' : ''}}"><a href="{{route('univ.perkuliahan.kelas-kuliah')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Kelas Perkuliahan</a>
                             </li>
+                            <li class="{{request()->routeIs('univ.perkuliahan.aktivitas-kuliah') ? 'active' : ''}}"><a href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Aktivitas Kuliah</a>
+                </li>
                             {{-- <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li> --}}
                         </ul>

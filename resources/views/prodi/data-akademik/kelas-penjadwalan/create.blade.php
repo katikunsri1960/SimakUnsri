@@ -13,25 +13,62 @@
                 <div class="modal-body">
                     <div class="form-group">
                         <div class="mb-3">
-                            <label for="nama_ruang" class="form-label">Nama Ruang Kuliah</label>
+                            <label for="nama_mata_kuliah" class="form-label">Nama Mata Kuliah</label>
                             <input
                                 type="text"
                                 class="form-control"
-                                name="nama_ruang"
-                                id="nama_ruang"
+                                name="nama_mata_kuliah"
+                                id="nama_mata_kuliah"
                                 aria-describedby="helpId"
-                                placeholder="Masukkan Nama Ruang"
+                                placeholder="Masukkan Nama Mata Kuliah"
                                 onkeydown="upperCaseF(this)"
                                 required
                             />
                         </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="lokasi" class="form-label">Lokasi</label>
-                        <select class="form-select" name="lokasi" id="lokasi" required>
-                            <option value="Indralaya">Indralaya</option>
-                            <option value="Palembang">Palembang</option>
-                        </select>
+                    <div class="form-group">
+                        <label for="tanggal_mulai" class="form-label">Tanggal Mulai Efektif</label>
+                        <div class="mb-3">
+                            <input class="form-control" type="date" value="{{date('Y-m-d')}}" id="tanggal_mulai">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="tanggal_akhir" class="form-label">Tanggal Akhir Efektif</label>
+                        <div class="mb-3">
+                            <input class="form-control" type="date" value="{{date('Y-m-d')}}" id="tanggal_akhir">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="mb-3">
+                            <label for="kapasitas_kelas" class="form-label">Kapasitas Kelas Kuliah</label>
+                            <input
+                                type="text"
+                                class="form-control"
+                                name="kapasitas_kelas"
+                                id="kapasitas_kelas"
+                                aria-describedby="helpId"
+                                placeholder="Masukkan Kapasitas Kelas Kuliah"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="mb-3">
+                            <label for="mode_kelas" class="form-label">Mode Kelas Kuliah</label>
+                            <select class="form-select" name="mode_kelas" id="mode_kelas" required>
+                                <option value="Indralaya">Indralaya</option>
+                                <option value="Palembang">Palembang</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="mb-3">
+                            <label for="lingkup_kelas" class="form-label">Lingkup Kelas Kuliah</label>
+                            <select class="form-select" name="mode_kelas" id="mode_kelas" required>
+                                <option value="Indralaya">Indralaya</option>
+                                <option value="Palembang">Palembang</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">

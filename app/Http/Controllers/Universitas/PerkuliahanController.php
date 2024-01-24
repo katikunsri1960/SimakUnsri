@@ -182,4 +182,31 @@ class PerkuliahanController extends Controller
 
         return response()->json($response);
     }
+
+    public function aktivitas_kuliah()
+    {
+        return view('universitas.perkuliahan.aktivitas-kuliah');
+    }
+
+    public function sync_aktivitas_kuliah()
+    {
+        if (ProgramStudi::count() == 0 || Semester::count() == 0) {
+            return redirect()->back()->with('error', 'Data Program Studi atau Semester Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
+        }
+
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $act = 'GetListPerkuliahanMahasiswa';
+        $limit = '';
+        $offset = '';
+        $order = '';
+
+        $job = \App\Jobs\Perkuliahan\PerkuliahanMahasiswaJob::class;
+        $name = 'kelas-kuliah';
+
+        $batch = $this->sync($act, $limit, $offset, $order, $job, $name);
+
+        return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
+    }
 }
