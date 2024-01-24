@@ -155,9 +155,9 @@
                                     </div>
                                 </div>
                                 <div class="box-footer text-end">
-                                    <button type="submit" class="btn btn-primary">
+                                    {{-- <button type="submit" class="btn btn-primary">
                                         <i class="ti-save-alt"></i> Simpan
-                                    </button>
+                                    </button> --}}
                                 </div>
                             </div>
                         </div>
