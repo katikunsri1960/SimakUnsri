@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Universitas;
 
+use App\Models\Perkuliahan\MataKuliah;
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Services\Feeder\FeederAPI;
@@ -50,8 +51,8 @@ class PerkuliahanController extends Controller
 
     public function sync_kelas_kuliah()
     {
-        if (ProgramStudi::count() == 0 || Semester::count() == 0) {
-            return redirect()->back()->with('error', 'Data Program Studi atau Semester Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
+        if (ProgramStudi::count() == 0 || Semester::count() == 0 || MataKuliah::count() == 0) {
+            return redirect()->back()->with('error', 'Data Program Studi, Semester atau MK Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
         }
 
         ini_set('max_execution_time', 0);
@@ -212,6 +213,6 @@ class PerkuliahanController extends Controller
 
     public function aktivitas_kuliah_data(Request $request)
     {
-        
+
     }
 }
