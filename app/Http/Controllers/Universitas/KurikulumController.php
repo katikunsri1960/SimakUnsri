@@ -23,6 +23,15 @@ class KurikulumController extends Controller
         ]);
     }
 
+    public function detail_kurikulum(ListKurikulum $kurikulum)
+    {
+        $data = $kurikulum->load('matkul_kurikulum');
+
+        return view('universitas.kurikulum.detail-kurikulum', [
+            'data' => $data,
+        ]);
+    }
+
     private function sync($act, $limit, $offset, $order, $job, $name, $model, $primary)
     {
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();

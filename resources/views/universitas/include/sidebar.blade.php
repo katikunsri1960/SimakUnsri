@@ -87,7 +87,7 @@
                         </ul>
                     </li>
                     <li
-                        class="treeview {{request()->routeIs('univ.kurikulum') | request()->routeIs('univ.mata-kuliah') ? 'active menu-open' : ''}}">
+                        class="treeview {{request()->routeIs('univ.kurikulum.*') | request()->routeIs('univ.kurikulum') | request()->routeIs('univ.mata-kuliah') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="icon-Library"><span class="path1"></span><span class="path2"></span></i>
                             <span>Kurikulum</span>
@@ -100,7 +100,7 @@
                                 <a href="{{route('univ.mata-kuliah')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Mata Kuliah</a>
                             </li>
-                            <li class="{{request()->routeIs('univ.kurikulum') ? 'active' : ''}}"><a
+                            <li class="{{request()->routeIs('univ.kurikulum.*') | request()->routeIs('univ.kurikulum') ? 'active' : ''}}"><a
                                     href="{{route('univ.kurikulum')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>List Kurikulum</a>
                             </li>
