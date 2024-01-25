@@ -32,11 +32,11 @@ return new class extends Migration
             $table->foreign('id_semester')->references('id_semester')->on('semesters')->onDelete('cascade');
             $table->index(['id_prodi', 'id_semester'], 'idx_prodi_semester');
             $table->string("semester_mulai_berlaku")->nullable();
-            $table->float("sks_mata_kuliah", 2)->nullable();
-            $table->float("sks_tatap_muka", 2)->nullable();
-            $table->float("sks_praktek",2)->nullable();
-            $table->float("sks_praktek_lapangan", 2)->nullable();
-            $table->float("sks_simulasi", 2)->nullable();
+            $table->float("sks_mata_kuliah", 8, 2)->nullable();
+            $table->float("sks_tatap_muka", 8,2)->nullable();
+            $table->float("sks_praktek", 8,2)->nullable();
+            $table->float("sks_praktek_lapangan", 8,2)->nullable();
+            $table->float("sks_simulasi", 8,2)->nullable();
             $table->boolean("apakah_wajib")->nullable();
             $table->string("status_sync")->nullable();
             $table->timestamps();

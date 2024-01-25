@@ -95,10 +95,6 @@ List Kurikulum
         "use strict";
 
         $('#data').DataTable( {
-            dom: 'Bfrtip',
-            buttons: [
-                'copy', 'csv', 'excel', 'pdf', 'print'
-            ],
             columnDefs: [{
                 targets: 1,
                 searchable: false,

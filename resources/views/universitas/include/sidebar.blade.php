@@ -8,8 +8,7 @@
                     <li class="header">Menu Utama</li>
                     <li class="{{request()->routeIs('univ') ? 'active' : ''}}">
                         <a href="{{route('univ')}}">
-                            <i class="icon-Layout-4-blocks"><span class="path1"></span><span
-                                    class="path2"></span></i>
+                            <i class="icon-Layout-4-blocks"><span class="path1"></span><span class="path2"></span></i>
                             <span>Dashboard</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
@@ -26,11 +25,12 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('univ.mahasiswa') ? 'active' : ''}}"><a href="{{route('univ.mahasiswa')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('univ.mahasiswa') ? 'active' : ''}}"><a
+                                    href="{{route('univ.mahasiswa')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Daftar Mahasiswa</a>
                             </li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li>
+                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Input Mahasiswa</a></li>
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.dosen.*') ? 'active menu-open' : ''}}">
@@ -43,67 +43,67 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('univ.dosen') ? 'active' : ''}}"><a href="{{route('univ.dosen')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('univ.dosen') ? 'active' : ''}}"><a
+                                    href="{{route('univ.dosen')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Daftar Dosen</a>
                             </li>
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i span class="fa fa-scroll"><span class="path1"></span><span
-                                    class="path2"></span></i>
+                            <i span class="fa fa-scroll"><span class="path1"></span><span class="path2"></span></i>
                             <span>Perkuliahan</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('univ.perkuliahan.kelas-kuliah') ? 'active' : ''}}"><a href="{{route('univ.perkuliahan.kelas-kuliah')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('univ.perkuliahan.kelas-kuliah') ? 'active' : ''}}"><a
+                                    href="{{route('univ.perkuliahan.kelas-kuliah')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Kelas Perkuliahan</a>
                             </li>
-                            <li class="{{request()->routeIs('univ.perkuliahan.aktivitas-kuliah') ? 'active' : ''}}"><a href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Aktivitas Kuliah</a>
-                </li>
+                            <li class="{{request()->routeIs('univ.perkuliahan.aktivitas-kuliah') ? 'active' : ''}}"><a
+                                    href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Aktivitas Kuliah</a>
+                            </li>
                             {{-- <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li> --}}
+                                            class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li>
+                            --}}
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i span class="icon-Library"><span class="path1"></span><span
-                                    class="path2"></span></i>
+                            <i span class="icon-Library"><span class="path1"></span><span class="path2"></span></i>
                             <span>Referensi</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('univ.referensi.prodi') ? 'active' : ''}}"><a href="{{route('univ.referensi.prodi')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('univ.referensi.prodi') ? 'active' : ''}}"><a
+                                    href="{{route('univ.referensi.prodi')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Program Studi</a>
                             </li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Matkul Kurikulum</a></li>
                         </ul>
                     </li>
-                    <li class="treeview {{request()->routeIs('univ.kurikulum') | request()->routeIs('univ.mata-kuliah') ? 'active menu-open' : ''}}">
+                    <li
+                        class="treeview {{request()->routeIs('univ.kurikulum') | request()->routeIs('univ.mata-kuliah') ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i span class="icon-Library"><span class="path1"></span><span
-                                    class="path2"></span></i>
+                            <i span class="icon-Library"><span class="path1"></span><span class="path2"></span></i>
                             <span>Kurikulum</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('univ.kurikulum') ? 'active' : ''}}"><a href="{{route('univ.kurikulum')}}"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>List Kurikulum</a>
-                            </li>
                             <li class="{{request()->routeIs('univ.mata-kuliah') ? 'active' : ''}}">
                                 <a href="{{route('univ.mata-kuliah')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Mata Kuliah</a>
                             </li>
-                            <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Matkul Kurikulum</a></li>
+                            <li class="{{request()->routeIs('univ.kurikulum') ? 'active' : ''}}"><a
+                                    href="{{route('univ.kurikulum')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>List Kurikulum</a>
+                            </li>
                         </ul>
                     </li>
 
@@ -128,20 +128,20 @@
                                     </span>
                                 </a>
                                 <ul class="treeview-menu">
-                                    <li><a href="box_cards.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span class="path2"></span></i>User
+                                    <li><a href="box_cards.html"><i class="icon-Commit"><span class="path1"></span><span
+                                                    class="path2"></span></i>User
                                             Card</a></li>
                                     <li><a href="box_advanced.html"><i class="icon-Commit"><span
                                                     class="path1"></span><span class="path2"></span></i>Advanced
                                             Card</a></li>
-                                    <li><a href="box_basic.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span class="path2"></span></i>Basic
+                                    <li><a href="box_basic.html"><i class="icon-Commit"><span class="path1"></span><span
+                                                    class="path2"></span></i>Basic
                                             Card</a></li>
-                                    <li><a href="box_color.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span class="path2"></span></i>Card
+                                    <li><a href="box_color.html"><i class="icon-Commit"><span class="path1"></span><span
+                                                    class="path2"></span></i>Card
                                             Color</a></li>
-                                    <li><a href="box_group.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span class="path2"></span></i>Card
+                                    <li><a href="box_group.html"><i class="icon-Commit"><span class="path1"></span><span
+                                                    class="path2"></span></i>Card
                                             Group</a></li>
                                 </ul>
                             </li>
@@ -149,18 +149,18 @@
                                             class="path2"></span></i>Badges</a></li>
                             <li><a href="ui_border_utilities.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Border</a></li>
-                            <li><a href="ui_buttons.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Buttons</a></li>
+                            <li><a href="ui_buttons.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Buttons</a></li>
                             <li><a href="ui_color_utilities.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Color</a></li>
-                            <li><a href="ui_dropdown.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Dropdown</a>
+                            <li><a href="ui_dropdown.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Dropdown</a>
                             </li>
-                            <li><a href="ui_dropdown_grid.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Dropdown
+                            <li><a href="ui_dropdown_grid.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Dropdown
                                     Grid</a></li>
-                            <li><a href="ui_progress_bars.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Progress
+                            <li><a href="ui_progress_bars.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Progress
                                     Bars</a></li>
                             <li class="treeview">
                                 <a href="#">
@@ -175,8 +175,8 @@
                                                     class="path1"></span><span class="path2"></span></i>Font
                                             Awesome</a></li>
                                     <li><a href="icons_glyphicons.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Glyphicons</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Glyphicons</a>
+                                    </li>
                                     <li><a href="icons_material.html"><i class="icon-Commit"><span
                                                     class="path1"></span><span class="path2"></span></i>Material
                                             Icons</a></li>
@@ -187,8 +187,8 @@
                                                     class="path1"></span><span class="path2"></span></i>Simple
                                             Line Icons</a></li>
                                     <li><a href="icons_cryptocoins.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Cryptocoins Icons</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Cryptocoins
+                                            Icons</a></li>
                                     <li><a href="icons_flag.html"><i class="icon-Commit"><span
                                                     class="path1"></span><span class="path2"></span></i>Flag
                                             Icons</a></li>
@@ -197,17 +197,17 @@
                                             Icons</a></li>
                                 </ul>
                             </li>
-                            <li><a href="ui_ribbons.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Ribbons</a></li>
-                            <li><a href="ui_sliders.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Sliders</a></li>
-                            <li><a href="ui_typography.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Typography</a>
+                            <li><a href="ui_ribbons.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Ribbons</a></li>
+                            <li><a href="ui_sliders.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Sliders</a></li>
+                            <li><a href="ui_typography.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Typography</a>
                             </li>
                             <li><a href="ui_tab.html"><i class="icon-Commit"><span class="path1"></span><span
                                             class="path2"></span></i>Tabs</a></li>
-                            <li><a href="ui_timeline.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Timeline</a>
+                            <li><a href="ui_timeline.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Timeline</a>
                             </li>
                             <li><a href="ui_timeline_horizontal.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Horizontal
@@ -222,8 +222,8 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="component_bootstrap_switch.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Bootstrap Switch</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Bootstrap
+                                            Switch</a></li>
                                     <li><a href="component_date_paginator.html"><i class="icon-Commit"><span
                                                     class="path1"></span><span class="path2"></span></i>Date
                                             Paginator</a></li>
@@ -234,23 +234,22 @@
                                                     class="path1"></span><span class="path2"></span></i>Range
                                             Slider</a></li>
                                     <li><a href="component_rating.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Ratings</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Ratings</a></li>
                                     <li><a href="component_animations.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Animations</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Animations</a>
+                                    </li>
                                     <li><a href="extension_fullscreen.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Fullscreen</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Fullscreen</a>
+                                    </li>
                                     <li><a href="extension_pace.html"><i class="icon-Commit"><span
                                                     class="path1"></span><span class="path2"></span></i>Pace</a>
                                     </li>
                                     <li><a href="component_nestable.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Nestable</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Nestable</a>
+                                    </li>
                                     <li><a href="component_portlet_draggable.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Draggable Portlets</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Draggable
+                                            Portlets</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -287,23 +286,22 @@
                                                     class="path1"></span><span class="path2"></span></i>Form
                                             Validation</a></li>
                                     <li><a href="forms_mask.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Formatter</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Formatter</a>
+                                    </li>
                                     <li><a href="forms_xeditable.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Xeditable Editor</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Xeditable
+                                            Editor</a></li>
                                     <li><a href="forms_dropzone.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Dropzone</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Dropzone</a>
+                                    </li>
                                     <li><a href="forms_code_editor.html"><i class="icon-Commit"><span
                                                     class="path1"></span><span class="path2"></span></i>Code
                                             Editor</a></li>
                                     <li><a href="forms_editors.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Editor</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Editor</a></li>
                                     <li><a href="forms_editor_markdown.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Markdown</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Markdown</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="treeview">
@@ -340,31 +338,31 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="charts_chartjs.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>ChartJS</a></li>
-                            <li><a href="charts_flot.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Flot</a></li>
-                            <li><a href="charts_inline.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Inline
+                            <li><a href="charts_chartjs.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>ChartJS</a></li>
+                            <li><a href="charts_flot.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Flot</a></li>
+                            <li><a href="charts_inline.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Inline
                                     charts</a></li>
-                            <li><a href="charts_morris.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Morris</a></li>
-                            <li><a href="charts_peity.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Peity</a></li>
-                            <li><a href="charts_chartist.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Chartist</a>
+                            <li><a href="charts_morris.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Morris</a></li>
+                            <li><a href="charts_peity.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Peity</a></li>
+                            <li><a href="charts_chartist.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Chartist</a>
                             </li>
-                            <li><a href="charts_c3_axis.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Axis Chart</a>
+                            <li><a href="charts_c3_axis.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Axis Chart</a>
                             </li>
-                            <li><a href="charts_c3_bar.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Bar Chart</a>
+                            <li><a href="charts_c3_bar.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Bar Chart</a>
                             </li>
-                            <li><a href="charts_c3_data.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Data Chart</a>
+                            <li><a href="charts_c3_data.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Data Chart</a>
                             </li>
-                            <li><a href="charts_c3_line.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Line Chart</a>
+                            <li><a href="charts_c3_line.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Line Chart</a>
                             </li>
                             <li><a href="charts_echarts_basic.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Basic Charts</a>
@@ -387,23 +385,23 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="widgets_blog.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Blog</a></li>
-                            <li><a href="widgets_chart.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Chart</a></li>
-                            <li><a href="widgets_list.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>List</a></li>
-                            <li><a href="widgets_social.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Social</a></li>
-                            <li><a href="widgets_statistic.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Statistic</a>
+                            <li><a href="widgets_blog.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Blog</a></li>
+                            <li><a href="widgets_chart.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Chart</a></li>
+                            <li><a href="widgets_list.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>List</a></li>
+                            <li><a href="widgets_social.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Social</a></li>
+                            <li><a href="widgets_statistic.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Statistic</a>
                             </li>
-                            <li><a href="widgets_weather.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Weather</a></li>
+                            <li><a href="widgets_weather.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Weather</a></li>
                             <li><a href="widgets.html"><i class="icon-Commit"><span class="path1"></span><span
                                             class="path2"></span></i>Widgets</a></li>
-                            <li><a href="email_index.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Emails</a></li>
+                            <li><a href="email_index.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Emails</a></li>
                             <li class="treeview">
                                 <a href="#">
                                     <i class="icon-Commit"><span class="path1"></span><span
@@ -431,14 +429,12 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     <li><a href="component_modals.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Modals</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Modals</a></li>
                                     <li><a href="component_sweatalert.html"><i class="icon-Commit"><span
                                                     class="path1"></span><span class="path2"></span></i>Sweet
                                             Alert</a></li>
                                     <li><a href="component_notification.html"><i class="icon-Commit"><span
-                                                    class="path1"></span><span
-                                                    class="path2"></span></i>Toastr</a></li>
+                                                    class="path1"></span><span class="path2"></span></i>Toastr</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -455,17 +451,17 @@
                             <li><a href="ecommerce_products.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Products</a>
                             </li>
-                            <li><a href="ecommerce_cart.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Products
+                            <li><a href="ecommerce_cart.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Products
                                     Cart</a></li>
                             <li><a href="ecommerce_products_edit.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Products
                                     Edit</a></li>
-                            <li><a href="ecommerce_details.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Product
+                            <li><a href="ecommerce_details.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Product
                                     Details</a></li>
-                            <li><a href="ecommerce_orders.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Product
+                            <li><a href="ecommerce_orders.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Product
                                     Orders</a></li>
                             <li><a href="ecommerce_checkout.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Products
@@ -483,68 +479,66 @@
                         <ul class="treeview-menu">
                             <li><a href="invoice.html"><i class="icon-Commit"><span class="path1"></span><span
                                             class="path2"></span></i>Invoice</a></li>
-                            <li><a href="invoicelist.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Invoice List</a>
+                            <li><a href="invoicelist.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Invoice List</a>
                             </li>
-                            <li><a href="extra_app_ticket.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Support
+                            <li><a href="extra_app_ticket.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Support
                                     Ticket</a></li>
-                            <li><a href="extra_profile.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>User Profile</a>
+                            <li><a href="extra_profile.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>User Profile</a>
                             </li>
                             <li><a href="contact_userlist_grid.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Userlist
                                     Grid</a></li>
-                            <li><a href="contact_userlist.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Userlist</a>
+                            <li><a href="contact_userlist.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Userlist</a>
                             </li>
-                            <li><a href="sample_faq.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>FAQs</a></li>
-                            <li><a href="sample_blank.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Blank</a></li>
+                            <li><a href="sample_faq.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>FAQs</a></li>
+                            <li><a href="sample_blank.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Blank</a></li>
                             <li><a href="sample_coming_soon.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Coming Soon</a>
                             </li>
                             <li><a href="sample_custom_scroll.html"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Custom
                                     Scrolls</a></li>
-                            <li><a href="sample_gallery.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Gallery</a></li>
-                            <li><a href="sample_lightbox.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Lightbox
+                            <li><a href="sample_gallery.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Gallery</a></li>
+                            <li><a href="sample_lightbox.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Lightbox
                                     Popup</a></li>
-                            <li><a href="sample_pricing.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Pricing</a></li>
+                            <li><a href="sample_pricing.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Pricing</a></li>
                         </ul>
                     </li>
                     <li class="header">LOGIN & ERROR </li>
                     <li class="treeview">
                         <a href="#">
-                            <i class="icon-Chat-locked"><span class="path1"></span><span
-                                    class="path2"></span></i>
+                            <i class="icon-Chat-locked"><span class="path1"></span><span class="path2"></span></i>
                             <span>Authentication</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li><a href="auth_login.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Login</a></li>
-                            <li><a href="auth_register.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Register</a>
+                            <li><a href="auth_login.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Login</a></li>
+                            <li><a href="auth_register.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Register</a>
                             </li>
-                            <li><a href="auth_lockscreen.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Lockscreen</a>
+                            <li><a href="auth_lockscreen.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Lockscreen</a>
                             </li>
-                            <li><a href="auth_user_pass.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Recover
+                            <li><a href="auth_user_pass.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Recover
                                     password</a></li>
                         </ul>
                     </li>
                     <li class="treeview">
                         <a href="#">
-                            <i class="icon-Chat-check"><span class="path1"></span><span
-                                    class="path2"></span></i>
+                            <i class="icon-Chat-check"><span class="path1"></span><span class="path2"></span></i>
                             <span>Miscellaneous</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
@@ -555,8 +549,8 @@
                                             class="path2"></span></i>Error 404</a></li>
                             <li><a href="error_500.html"><i class="icon-Commit"><span class="path1"></span><span
                                             class="path2"></span></i>Error 500</a></li>
-                            <li><a href="error_maintenance.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Maintenance</a>
+                            <li><a href="error_maintenance.html"><i class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Maintenance</a>
                             </li>
                         </ul>
                     </li> --}}
@@ -570,8 +564,8 @@
         {{-- <a href="mailbox.html" class="link" data-bs-toggle="tooltip" title="Email"><span
                 class="icon-Mail"></span></a> --}}
         <a href="{{ route('logout') }}" class="link" data-bs-toggle="tooltip" title="Logout" onclick="event.preventDefault();
-        document.getElementById('logout-form').submit();"><span
-                class="icon-Lock-overturning"><span class="path1"></span><span class="path2"></span></span></a>
+        document.getElementById('logout-form').submit();"><span class="icon-Lock-overturning"><span
+                    class="path1"></span><span class="path2"></span></span></a>
     </div>
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
         @csrf

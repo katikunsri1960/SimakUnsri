@@ -7,6 +7,8 @@ use App\Models\Perkuliahan\MataKuliah;
 use App\Services\Feeder\FeederAPI;
 use App\Jobs\ProccessSync;
 use App\Http\Controllers\Controller;
+use App\Models\ProgramStudi;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 
@@ -19,6 +21,28 @@ class KurikulumController extends Controller
         return view('universitas.kurikulum.list-kurikulum', [
             'data' => $data,
         ]);
+    }
+
+    private function sync($act, $limit, $offset, $order, $job, $name, $model, $primary)
+    {
+        $prodi = ProgramStudi::pluck('id_prodi')->toArray();
+        $semester = Semester::pluck('id_semester')->toArray();
+        $semester = array_chunk($semester, 4);
+        $semester = array_map(function ($value) {
+            return "id_semester IN ('" . implode("','", $value) . "')";
+        }, $semester);
+
+        $batch = Bus::batch([])->name($name)->dispatch();
+
+        foreach ($prodi as $p) {
+            foreach ($semester as $s) {
+                $filter = "id_prodi = '$p' AND $s";
+                // dd($filter);
+                $batch->add(new $job($act, $limit, $offset, $order, $filter, $model, $primary));
+            }
+        }
+
+        return $batch;
     }
 
     public function matkul()
@@ -82,6 +106,13 @@ class KurikulumController extends Controller
 
     public function sync_kurikulum()
     {
+        if (ProgramStudi::count() == 0 || Semester::count() == 0 || MataKuliah::count() == 0) {
+            return redirect()->back()->with('error', 'Data Program Studi, Semester atau Matakuliah Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
+        }
+
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
         $act = "GetListKurikulum";
         $count = "GetCountKurikulum";
         $limit = 1000;
@@ -106,6 +137,8 @@ class KurikulumController extends Controller
             }
 
         }
+
+        $this->sync('GetMatkulKurikulum', '0', '0', '', \App\Jobs\SyncJob::class, 'matkul-kurikulum', \App\Models\Perkuliahan\MatkulKurikulum::class, ['id_kurikulum', 'id_matkul']);
 
         return redirect()->route('univ.kurikulum')->with('success', 'Data kurikulum berhasil disinkronisasi');
 
