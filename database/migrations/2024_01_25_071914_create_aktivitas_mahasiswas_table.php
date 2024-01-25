@@ -30,7 +30,7 @@ return new class extends Migration
             $table->index(['id_semester', 'id_prodi'], 'idx_semester_prodi');
             $table->string("nama_semester")->nullable();
             $table->text("judul")->nullable();
-            $table->string("keterangan")->nullable();
+            $table->text("keterangan")->nullable();
             $table->string("lokasi")->nullable();
             $table->string("sk_tugas")->nullable();
             $table->date("tanggal_sk_tugas")->nullable();
