@@ -19,7 +19,7 @@ Aktivitas Mahasiswa
         </div>
     </div>
 </div>
-
+@include('swal')
 <section class="content">
     <div class="row">
         <div class="col-12">
