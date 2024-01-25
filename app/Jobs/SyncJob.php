@@ -19,7 +19,7 @@ class SyncJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($act, $limit, $offset, $order, $filter, $model, $primary)
+    public function __construct($act, $limit, $offset, $order, $filter = null, $model, $primary)
     {
         $this->act = $act;
         $this->limit = $limit;
@@ -41,14 +41,22 @@ class SyncJob implements ShouldQueue
         if (!empty($response['data'])) {
 
             $result = $response['data'];
-            $result = array_chunk($result, 1000);
+            $result = array_chunk($result, 500);
 
             foreach($result as $r)
             {
+                if ($this->act == 'GetListAktivitasMahasiswa') {
+                    $r = array_map(function ($value) {
+                        $value['tanggal_sk_tugas'] = empty($value['tanggal_sk_tugas']) ? null : date('Y-m-d', strtotime($value['tanggal_sk_tugas']));
+                        $value['tanggal_mulai'] = empty($value['tanggal_mulai']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai']));
+                        $value['tanggal_selesai'] = empty($value['tanggal_selesai']) ? null : date('Y-m-d', strtotime($value['tanggal_selesai']));
+                        return $value;
+                    }, $r);
+                }
+
                 $this->model::upsert($r, $this->primary);
             }
 
-            // PesertaKelasKuliah::upsert($result, ['id_kelas_kuliah', 'id_registrasi_mahasiswa']);
         }
     }
 }
