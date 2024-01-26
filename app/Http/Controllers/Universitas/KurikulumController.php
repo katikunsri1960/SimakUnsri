@@ -14,12 +14,25 @@ use Illuminate\Support\Facades\Bus;
 
 class KurikulumController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = ListKurikulum::all();
+        $query = ListKurikulum::query();
 
+        if ($request->has('id_prodi')) {
+            $validated = $request->validate([
+                'id_prodi' => 'array',
+                'id_prodi.*' => 'exists:program_studis,id_prodi'
+            ]);
+
+            $query->whereIn('id_prodi', $validated['id_prodi']);
+        }
+
+        $data = $query->get();
+
+        $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
         return view('universitas.kurikulum.list-kurikulum', [
             'data' => $data,
+            'prodi' => $prodi,
         ]);
     }
 

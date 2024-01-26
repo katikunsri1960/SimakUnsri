@@ -19,7 +19,7 @@
     <!-- Style-->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/skin_color.css')}}">
-    @stack('css')
+
     <style>
         .centered {
             display: flex;
@@ -28,7 +28,7 @@
         }
     </style>
 
-
+    @stack('css')
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
