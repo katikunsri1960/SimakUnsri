@@ -12,7 +12,7 @@ class ListKurikulum extends Model
 
     public function matkul_kurikulum()
     {
-        return $this->hasMany(MatkulKurikulum::class, 'id_kurikulum', 'id_kurikulum');
+        return $this->hasMany(MatkulKurikulum::class, 'id_kurikulum', 'id_kurikulum')->orderBy('semester', 'asc');
     }
 
 }

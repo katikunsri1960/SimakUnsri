@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Universitas;
 
+use App\Models\Perkuliahan\MataKuliah;
 use App\Http\Controllers\Controller;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Services\Feeder\FeederAPI;
 use App\Models\ProgramStudi;
+use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
@@ -48,10 +51,32 @@ class PerkuliahanController extends Controller
         return $batch;
     }
 
+    private function sync2($act, $limit, $offset, $order, $job, $name, $model, $primary)
+    {
+        $prodi = ProgramStudi::pluck('id_prodi')->toArray();
+        $semester = Semester::pluck('id_semester')->toArray();
+        $semester = array_chunk($semester, 4);
+        $semester = array_map(function ($value) {
+            return "id_semester IN ('" . implode("','", $value) . "')";
+        }, $semester);
+
+        $batch = Bus::batch([])->name($name)->dispatch();
+
+        foreach ($prodi as $p) {
+            foreach ($semester as $s) {
+                $filter = "id_prodi = '$p' AND $s";
+                // dd($filter);
+                $batch->add(new $job($act, $limit, $offset, $order, $filter, $model, $primary));
+            }
+        }
+
+        return $batch;
+    }
+
     public function sync_kelas_kuliah()
     {
-        if (ProgramStudi::count() == 0 || Semester::count() == 0) {
-            return redirect()->back()->with('error', 'Data Program Studi atau Semester Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
+        if (ProgramStudi::count() == 0 || Semester::count() == 0 || MataKuliah::count() == 0) {
+            return redirect()->back()->with('error', 'Data Program Studi, Semester atau MK Kosong, Harap Sinkronkan Terlebih dahulu data Referensi!');
         }
 
         ini_set('max_execution_time', 0);
@@ -212,6 +237,40 @@ class PerkuliahanController extends Controller
 
     public function aktivitas_kuliah_data(Request $request)
     {
+
+    }
+
+    public function aktivitas_mahasiswa()
+    {
+        return view('universitas.perkuliahan.aktivitas-mahasiswa');
+    }
+
+    public function aktivitas_mahasiswa_data(Request $request)
+    {
         
+    }
+
+    public function sync_aktivitas_mahasiswa()
+    {
+        if (ProgramStudi::count() == 0 || Semester::count() == 0 || JenisAktivitasMahasiswa::count() == 0){
+            return redirect()->back()->with('error', 'Harap Sinkronkan Terlebih dahulu data Referensi!');
+        }
+
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $act = 'GetListAktivitasMahasiswa';
+        $limit = '';
+        $offset = '';
+        $order = '';
+
+        $job = \App\Jobs\SyncJob::class;
+        $name = 'aktivitas-mahasiswa';
+        $model = \App\Models\Perkuliahan\AktivitasMahasiswa::class;
+        $primary = 'id_aktivitas';
+
+        $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model,$primary);
+
+        return redirect()->back()->with('success', 'Sinkronisasi Aktivitas Mahasiswa Berhasil!');
     }
 }

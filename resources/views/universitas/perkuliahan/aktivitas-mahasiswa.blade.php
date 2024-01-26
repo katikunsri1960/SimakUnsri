@@ -1,32 +1,32 @@
 @extends('layouts.universitas')
 @section('title')
-Mahasiswa
+Aktivitas Mahasiswa
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Daftar Mahasiswa</h3>
+            <h3 class="page-title">Aktivitas Mahasiswa</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Mahasiswa</li>
-                        <li class="breadcrumb-item active" aria-current="page">Daftar</li>
+                        <li class="breadcrumb-item" aria-current="page">Perkuliahan</li>
+                        <li class="breadcrumb-item active" aria-current="page">List Aktivitas</li>
                     </ol>
                 </nav>
             </div>
         </div>
     </div>
 </div>
-
+@include('swal')
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
-                        <form action="{{route('univ.mahasiswa.sync')}}" method="get" id="sync-form">
+                        <form action="{{route('univ.perkuliahan.aktivitas-mahasiswa.sync')}}" method="get" id="sync-form">
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
@@ -56,7 +56,7 @@ Mahasiswa
     $(function () {
         // "use strict";
 
-        //$('#data').DataTable({
+       // $('#data').DataTable({
             // dom: 'Bfrtip',
             // buttons: [
             //     'copy', 'csv', 'excel', 'pdf', 'print'

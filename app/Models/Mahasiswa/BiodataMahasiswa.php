@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class BiodataMahasiswa extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function riwayat_pendidikan()
@@ -36,13 +37,6 @@ class BiodataMahasiswa extends Model
     {
         return $this->belongsTo(Wilayah::class, 'id_wilayah', 'id_wilayah');
     }
-
-    
-
-
-
-
-    
 
     // public function getUKTAttribute($value)
     // {
