@@ -67,6 +67,25 @@ class KurikulumController extends Controller
         return $batch;
     }
 
+    private function sync3($act, $limit, $offset, $order, $job, $name, $model, $primary, $reference, $id)
+    {
+        $reference = $reference::pluck($id)->toArray();
+        $reference = array_chunk($reference, 40);
+
+        $filter = array_map(function ($value) use ($id) {
+            return "$id IN ('" . implode("','", $value) . "')";
+        }, $reference);
+
+        $batch = Bus::batch([])->name($name)->dispatch();
+
+        foreach ($filter as $f) {
+            $batch->add(new $job($act, $limit, $offset, $order, $f, $model, $primary));
+        }
+
+        return $batch;
+
+    }
+
     public function matkul()
     {
         return view('universitas.mata-kuliah.index');
@@ -194,5 +213,44 @@ class KurikulumController extends Controller
         }
 
         return redirect()->route('univ.mata-kuliah')->with('success', 'Data mata kuliah berhasil disinkronisasi');
+    }
+
+    public function sync_rencana()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $data = [
+            [
+                'act' => 'GetListRencanaPembelajaran',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'rencana-pembelajaran',
+                'model' => \App\Models\Perkuliahan\RencanaPembelajaran::class,
+                'primary' => 'id_rencana_ajar',
+                'reference' => \App\Models\Perkuliahan\MataKuliah::class,
+                'id' => 'id_matkul'
+            ],
+            [
+                'act' => 'GetListRencanaEvaluasi',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'rencana-evaluasi',
+                'model' => \App\Models\Perkuliahan\RencanaEvaluasi::class,
+                'primary' => 'id_rencana_ajar',
+                'reference' => \App\Models\Perkuliahan\MataKuliah::class,
+                'id' => 'id_matkul'
+            ],
+        ];
+
+        foreach ($data as $d) {
+            $batch = $this->sync3($d['act'], $d['limit'], $d['offset'], $d['order'], $d['job'], $d['name'], $d['model'], $d['primary'], $d['reference'], $d['id']);
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Aktivitas Mahasiswa Berhasil!');
     }
 }

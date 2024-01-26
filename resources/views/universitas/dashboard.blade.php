@@ -49,7 +49,7 @@ Dashboard
         </div>
         <div class="col-xl-3 col-md-6 col-12">
             <div class="box bg-secondary-light pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-1.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url(../images/images/svg-icon/color-svg/st-1.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center pe-2 justify-content-between">
@@ -81,7 +81,7 @@ Dashboard
         </div>
         <div class="col-xl-3 col-md-6 col-12">
             <div class="box bg-secondary-light pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-2.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url(../images/images/svg-icon/color-svg/st-2.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center pe-2 justify-content-between">
@@ -111,7 +111,7 @@ Dashboard
         </div>
         <div class="col-xl-3 col-md-6 col-12">
             <div class="box bg-secondary-light pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url(../images/images/svg-icon/color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center pe-2 justify-content-between">
@@ -142,7 +142,7 @@ Dashboard
         </div>
         <div class="col-xl-3 col-md-6 col-12">
             <div class="box bg-secondary-light pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-4.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url(../images/images/svg-icon/color-svg/st-4.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <div class="d-flex align-items-center pe-2 justify-content-between">
