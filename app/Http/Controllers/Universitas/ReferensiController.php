@@ -71,7 +71,8 @@ class ReferensiController extends Controller
             ['act' => 'GetJenisSubstansi', 'primary' => 'id_jenis_substansi', 'model' => \App\Models\JenisSubstansi::class],
             ['act' => 'GetListSubstansiKuliah', 'primary' => 'id_substansi', 'model' => \App\Models\Perkuliahan\SubstansiKuliah::class],
             ['act' => 'GetPembiayaan', 'primary' => 'id_pembiayaan', 'model' => \App\Models\Referensi\Pembiayaan::class],
-            ['act' => 'GetJenisAktivitasMahasiswa', 'primary' => 'id_jenis_aktivitas_mahasiswa', 'model' => \App\Models\Referensi\JenisAktivitasMahasiswa::class]
+            ['act' => 'GetJenisAktivitasMahasiswa', 'primary' => 'id_jenis_aktivitas_mahasiswa', 'model' => \App\Models\Referensi\JenisAktivitasMahasiswa::class],
+            ['act' => 'GetKategoriKegiatan', 'primary' => 'id_kategori_kegiatan', 'model' => \App\Models\Referensi\KategoriKegiatan::class],
         ];
 
         foreach ($ref as $r) {

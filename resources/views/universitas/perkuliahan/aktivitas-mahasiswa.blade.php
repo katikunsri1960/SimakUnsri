@@ -30,6 +30,9 @@ Aktivitas Mahasiswa
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.perkuliahan.aktivitas-mahasiswa.sync-anggota')}}" method="get" id="sync-anggota">
+                            <button class="btn btn-secondary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Anggota</button>
+                        </form>
                         {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
                     </div>
                 </div>
@@ -104,6 +107,25 @@ Aktivitas Mahasiswa
                 if (isConfirm) {
                     $('#spinner').show();
                     $('#sync-form').unbind('submit').submit();
+                }
+            });
+        });
+
+        $('#sync-anggota').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Sinkronisasi Data',
+                text: "Apakah anda yakin ingin melakukan sinkronisasi?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Sinkronkan!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $('#sync-anggota').unbind('submit').submit();
                 }
             });
         });
