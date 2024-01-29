@@ -57,7 +57,7 @@ class MahasiswaController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = RiwayatPendidikan::with('prodi');
+        $query = RiwayatPendidikan::with('prodi', 'biodata');
 
         if ($searchValue) {
             $query = $query->where('nim', 'like', '%' . $searchValue . '%')
@@ -80,16 +80,16 @@ class MahasiswaController extends Controller
             $orderDirection = $request->input('order.0.dir');
 
             // Define the column names that correspond to the DataTables column indices
-            $columns = ['kode_mata_kuliah', 'nama_mata_kuliah', 'sks_mata_kuliah', 'prodi'];
+            $columns = ['nama_mahasiswa', 'nim', 'nama_program_studi', 'id_periode_masuk'];
 
-            if ($columns[$orderColumn] == 'prodi') {
-                $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
-                    ->orderBy('prodi.nama_jenjang_pendidikan', $orderDirection)
-                    ->orderBy('prodi.nama_program_studi', $orderDirection)
-                    ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
-            } else {
+            // if ($columns[$orderColumn] == 'prodi') {
+            //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
+            //         ->orderBy('prodi.nama_jenjang_pendidikan', $orderDirection)
+            //         ->orderBy('prodi.nama_program_studi', $orderDirection)
+            //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
+            // } else {
                 $query = $query->orderBy($columns[$orderColumn], $orderDirection);
-            }
+            // }
         }
 
         $data = $query->skip($offset)->take($limit)->get();

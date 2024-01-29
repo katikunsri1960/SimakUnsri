@@ -36,7 +36,21 @@ Mahasiswa
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table  table-hover margin-top-10 w-p100">
-
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">Status</th>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Nama</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Jenis Kelamin</th>
+                                    <th class="text-center align-middle">Agama</th>
+                                    <th class="text-center align-middle">Total SKS Diambil</th>
+                                    <th class="text-center align-middle">Tanggal Lahir</th>
+                                    <th class="text-center align-middle">Program Studi</th>
+                                    <th class="text-center align-middle">Status</th>
+                                    <th class="text-center align-middle">Angkatan</th>
+                                </tr>
+                            </thead>
                           <tbody>
 
                           </tbody>
@@ -56,37 +70,52 @@ Mahasiswa
     $(function () {
         // "use strict";
 
-        //$('#data').DataTable({
+        $('#data').DataTable({
             // dom: 'Bfrtip',
             // buttons: [
             //     'copy', 'csv', 'excel', 'pdf', 'print'
             // ],
-            // processing: true,
-            // serverSide: true,
-            // ajax: {
-            //     url: '{{route('univ.mata-kuliah.data')}}',
-            //     type: 'GET',
-            //     data: function (d) {
-            //         d.prodi = $('#prodi').val();
-            //     },
-            //     error: function (xhr, error, thrown) {
-            //         alert('An error occurred. ' + thrown);
-            //     }
-            // },
-            // columns: [
-            //     {data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', searchable: true},
-            //     {data: 'nama_mata_kuliah', name: 'nama_mata_kuliah', searchable: true},
-            //     {data: 'sks_mata_kuliah', name: 'sks_mata_kuliah', class: 'text-center'},
-            //     {
-            //         data: null,
-            //         name: 'prodi',
-            //         searchable: true,
-            //         render: function (data, type, row, meta) {
-            //             return data.prodi.nama_jenjang_pendidikan + ' ' + data.prodi.nama_program_studi ;
-            //         }
-            //     }
-            // ],
-        //});
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{route('univ.mahasiswa.data')}}',
+                type: 'GET',
+                data: function (d) {
+                    d.prodi = $('#prodi').val();
+                },
+                error: function (xhr, error, thrown) {
+                    alert('An error occurred. ' + thrown);
+                }
+            },
+            columns: [
+                {data: 'status_sync', name: 'status_sync', class: "text-center align-middle", searchable: false, sortable:false,  render: function(data, type, row) {
+                    if (data == 'sudah sync') {
+                        return '<span class="badge badge-success">' + data + '</span>';
+                    } else {
+                        return '<span class="badge badge-warning">' + data + '</span>';
+                    }
+                }},
+                {
+                    data: null,
+                    searchable: false,
+                    class: "text-center align-middle",
+                    sortable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                }},
+                {data: 'nama_mahasiswa', name: 'nama_mahasiswa', class: 'text-start', searchable: true, orderData: [0]},
+                {data: 'nim', name: 'nim', class: 'text-center', searchable: true, orderData: [1]},
+                {data: 'biodata.jenis_kelamin', name: 'biodata.jenis_kelamin', class: 'text-center', searchable: false, sortable:false},
+                {data: 'biodata.nama_agama', name: 'biodata.nama_agama', class: 'text-center', searchable: false, sortable:false},
+                {data: null, searchable: false, sortable:false, class:"text-center align-middle", render: function(data, type, row, meta) {
+                        return 1;
+                }},
+                {data: 'biodata.tanggal_lahir', name: 'biodata.tanggal_lahir', class: 'text-center', sortable:false, searchable: false},
+                {data: 'nama_program_studi', name: 'nama_program_studi', searchable: true, orderData: [2]},
+                {data: 'keterangan_keluar', name: 'keterangan_keluar', searchable: true, class:"text-center align-middle", sortable:false},
+                {data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [3]},
+            ],
+        });
 
         // sweet alert sync-form
         $('#sync-form').submit(function(e){

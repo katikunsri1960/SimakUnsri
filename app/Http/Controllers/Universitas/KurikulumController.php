@@ -14,12 +14,25 @@ use Illuminate\Support\Facades\Bus;
 
 class KurikulumController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = ListKurikulum::all();
+        $query = ListKurikulum::query();
 
+        if ($request->has('id_prodi')) {
+            $validated = $request->validate([
+                'id_prodi' => 'array',
+                'id_prodi.*' => 'exists:program_studis,id_prodi'
+            ]);
+
+            $query->whereIn('id_prodi', $validated['id_prodi']);
+        }
+
+        $data = $query->get();
+
+        $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
         return view('universitas.kurikulum.list-kurikulum', [
             'data' => $data,
+            'prodi' => $prodi,
         ]);
     }
 
@@ -52,6 +65,25 @@ class KurikulumController extends Controller
         }
 
         return $batch;
+    }
+
+    private function sync3($act, $limit, $offset, $order, $job, $name, $model, $primary, $reference, $id)
+    {
+        $reference = $reference::pluck($id)->toArray();
+        $reference = array_chunk($reference, 40);
+
+        $filter = array_map(function ($value) use ($id) {
+            return "$id IN ('" . implode("','", $value) . "')";
+        }, $reference);
+
+        $batch = Bus::batch([])->name($name)->dispatch();
+
+        foreach ($filter as $f) {
+            $batch->add(new $job($act, $limit, $offset, $order, $f, $model, $primary));
+        }
+
+        return $batch;
+
     }
 
     public function matkul()
@@ -181,5 +213,44 @@ class KurikulumController extends Controller
         }
 
         return redirect()->route('univ.mata-kuliah')->with('success', 'Data mata kuliah berhasil disinkronisasi');
+    }
+
+    public function sync_rencana()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $data = [
+            [
+                'act' => 'GetListRencanaPembelajaran',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'rencana-pembelajaran',
+                'model' => \App\Models\Perkuliahan\RencanaPembelajaran::class,
+                'primary' => 'id_rencana_ajar',
+                'reference' => \App\Models\Perkuliahan\MataKuliah::class,
+                'id' => 'id_matkul'
+            ],
+            [
+                'act' => 'GetListRencanaEvaluasi',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'rencana-evaluasi',
+                'model' => \App\Models\Perkuliahan\RencanaEvaluasi::class,
+                'primary' => 'id_rencana_ajar',
+                'reference' => \App\Models\Perkuliahan\MataKuliah::class,
+                'id' => 'id_matkul'
+            ],
+        ];
+
+        foreach ($data as $d) {
+            $batch = $this->sync3($d['act'], $d['limit'], $d['offset'], $d['order'], $d['job'], $d['name'], $d['model'], $d['primary'], $d['reference'], $d['id']);
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Aktivitas Mahasiswa Berhasil!');
     }
 }

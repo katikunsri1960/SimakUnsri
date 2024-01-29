@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
+    {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
     <link rel="icon" href="{{asset('images/unsri.png')}}">
 
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
@@ -19,7 +19,7 @@
     <!-- Style-->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/skin_color.css')}}">
-    @stack('css')
+
     <style>
         .centered {
             display: flex;
@@ -28,7 +28,7 @@
         }
     </style>
 
-
+    @stack('css')
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
@@ -87,7 +87,7 @@
                     <div class="media-list media-list-hover mt-20">
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-success" href="#">
-                                <img src="images/images/avatar/1.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/1.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -100,7 +100,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-danger" href="#">
-                                <img src="images/images/avatar/2.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/2.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -113,7 +113,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-warning" href="#">
-                                <img src="images/images/avatar/3.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/3.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -126,7 +126,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-primary" href="#">
-                                <img src="images/images/avatar/4.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/4.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -139,7 +139,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-success" href="#">
-                                <img src="images/images/avatar/1.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/1.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -152,7 +152,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-danger" href="#">
-                                <img src="images/images/avatar/2.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/1.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -165,7 +165,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-warning" href="#">
-                                <img src="images/images/avatar/3.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/3.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -178,7 +178,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-primary" href="#">
-                                <img src="images/images/avatar/4.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/4.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Models\Perkuliahan\MataKuliah;
 use App\Http\Controllers\Controller;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Services\Feeder\FeederAPI;
 use App\Models\ProgramStudi;
@@ -72,6 +71,8 @@ class PerkuliahanController extends Controller
 
         return $batch;
     }
+
+
 
     public function sync_kelas_kuliah()
     {
@@ -228,7 +229,7 @@ class PerkuliahanController extends Controller
         $order = '';
 
         $job = \App\Jobs\Perkuliahan\PerkuliahanMahasiswaJob::class;
-        $name = 'kelas-kuliah';
+        $name = 'aktivitas-kuliah-mahasiswa';
 
         $batch = $this->sync($act, $limit, $offset, $order, $job, $name);
 
@@ -247,7 +248,7 @@ class PerkuliahanController extends Controller
 
     public function aktivitas_mahasiswa_data(Request $request)
     {
-        
+
     }
 
     public function sync_aktivitas_mahasiswa()
@@ -273,4 +274,75 @@ class PerkuliahanController extends Controller
 
         return redirect()->back()->with('success', 'Sinkronisasi Aktivitas Mahasiswa Berhasil!');
     }
+
+    public function sync_anggota_aktivitas_mahasiswa()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $data = [
+            [
+                'act' => 'GetListAnggotaAktivitasMahasiswa',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'anggota-aktivitas-mahasiswa',
+                'model' => \App\Models\Perkuliahan\AnggotaAktivitasMahasiswa::class,
+                'primary' => 'id_anggota',
+                'reference' => \App\Models\Perkuliahan\AktivitasMahasiswa::class,
+                'id' => 'id_aktivitas'
+            ],
+            [
+                'act' => 'GetListBimbingMahasiswa',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'bimbing-mahasiswa',
+                'model' => \App\Models\Perkuliahan\BimbingMahasiswa::class,
+                'primary' => 'id_bimbing_mahasiswa',
+                'reference' => \App\Models\Perkuliahan\AktivitasMahasiswa::class,
+                'id' => 'id_aktivitas'
+            ],
+            [
+                'act' => 'GetListUjiMahasiswa',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'uji-mahasiswa',
+                'model' => \App\Models\Perkuliahan\UjiMahasiswa::class,
+                'primary' => 'id_uji',
+                'reference' => \App\Models\Perkuliahan\AktivitasMahasiswa::class,
+                'id' => 'id_aktivitas'
+            ]
+        ];
+
+        foreach ($data as $d) {
+            $batch = $this->sync3($d['act'], $d['limit'], $d['offset'], $d['order'], $d['job'], $d['name'], $d['model'], $d['primary'], $d['reference'], $d['id']);
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Aktivitas Mahasiswa Berhasil!');
+    }
+
+    private function sync3($act, $limit, $offset, $order, $job, $name, $model, $primary, $reference, $id)
+    {
+        $reference = $reference::pluck($id)->toArray();
+        $reference = array_chunk($reference, 40);
+
+        $filter = array_map(function ($value) use ($id) {
+            return "$id IN ('" . implode("','", $value) . "')";
+        }, $reference);
+
+        $batch = Bus::batch([])->name($name)->dispatch();
+
+        foreach ($filter as $f) {
+            $batch->add(new $job($act, $limit, $offset, $order, $f, $model, $primary));
+        }
+
+        return $batch;
+
+    }
+
 }

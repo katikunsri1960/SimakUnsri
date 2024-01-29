@@ -3,18 +3,23 @@
 namespace App\Models\Perkuliahan;
 
 use App\Models\ProgramStudi;
+use App\Models\JenisEvaluasi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MataKuliah extends Model
+class RencanaEvaluasi extends Model
 {
     use HasFactory;
-
     protected $guarded = [];
 
-    public function matkul_kurikulum()
+    public function jenis_evaluasi()
     {
-        return $this->hasMany(MatkulKurikulum::class, 'id_matkul', 'id_matkul');
+        return $this->belongsTo(JenisEvaluasi::class, 'id_jenis_evaluasi', 'id_jenis_evaluasi');
+    }
+
+    public function mata_kuliah()
+    {
+        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');
     }
 
     public function prodi()

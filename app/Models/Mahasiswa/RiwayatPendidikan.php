@@ -13,6 +13,7 @@ class RiwayatPendidikan extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $appends = ['angkatan'];
 
     public function biodata()
     {

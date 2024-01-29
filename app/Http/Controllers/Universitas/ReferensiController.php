@@ -71,7 +71,12 @@ class ReferensiController extends Controller
             ['act' => 'GetJenisSubstansi', 'primary' => 'id_jenis_substansi', 'model' => \App\Models\JenisSubstansi::class],
             ['act' => 'GetListSubstansiKuliah', 'primary' => 'id_substansi', 'model' => \App\Models\Perkuliahan\SubstansiKuliah::class],
             ['act' => 'GetPembiayaan', 'primary' => 'id_pembiayaan', 'model' => \App\Models\Referensi\Pembiayaan::class],
-            ['act' => 'GetJenisAktivitasMahasiswa', 'primary' => 'id_jenis_aktivitas_mahasiswa', 'model' => \App\Models\Referensi\JenisAktivitasMahasiswa::class]
+            ['act' => 'GetJenisAktivitasMahasiswa', 'primary' => 'id_jenis_aktivitas_mahasiswa', 'model' => \App\Models\Referensi\JenisAktivitasMahasiswa::class],
+            ['act' => 'GetKategoriKegiatan', 'primary' => 'id_kategori_kegiatan', 'model' => \App\Models\Referensi\KategoriKegiatan::class],
+            ['act' => 'GetAgama', 'primary' => 'id_agama', 'model' => \App\Models\Referensi\Agama::class],
+            ['act' => 'GetAlatTransportasi' , 'primary' => 'id_alat_transportasi', 'model' => \App\Models\Referensi\AlatTransportasi::class],
+            ['act' => 'GetPekerjaan' , 'primary' => 'id_pekerjaan', 'model' => \App\Models\Referensi\Pekerjaan::class],
+
         ];
 
         foreach ($ref as $r) {
@@ -108,9 +113,23 @@ class ReferensiController extends Controller
                         ['id_status_mahasiswa' => 'U', 'nama_status_mahasiswa' => 'Menunggu Ujian'],
                         ['id_status_mahasiswa' => 'L', 'nama_status_mahasiswa' => 'Lulus'],
                     ];
-
                     array_push($data['data'], ...$newStatusMahasiswa);
+                }
 
+                if($act == 'GetAgama')
+                {
+                    $agama = [
+                        ['id_agama' => 98, 'nama_agama' => 'Tidak Diisi'],
+                    ];
+                    array_push($data['data'], ...$agama);
+                }
+
+                if($act == 'GetAlatTransportasi')
+                {
+                    $at = [
+                        ['id_alat_transportasi' => 2, 'nama_alat_transportasi' => 'Kendaraan Pribadi'],
+                    ];
+                    array_push($data['data'], ...$at);
                 }
 
                 $r['model']::upsert($data['data'], $r['primary']);

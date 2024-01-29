@@ -6,15 +6,14 @@ use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MataKuliah extends Model
+class RencanaPembelajaran extends Model
 {
     use HasFactory;
-
     protected $guarded = [];
 
-    public function matkul_kurikulum()
+    public function mata_kuliah()
     {
-        return $this->hasMany(MatkulKurikulum::class, 'id_matkul', 'id_matkul');
+        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');
     }
 
     public function prodi()

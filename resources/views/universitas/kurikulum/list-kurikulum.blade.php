@@ -21,12 +21,20 @@ List Kurikulum
 
     </div>
 </div>
-
+@include('swal')
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
+                <div class="box-header with-border d-flex justify-content-between">
+                    <div class="d-flex justify-content-start">
+                        <!-- Modal trigger button -->
+                        <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-toggle="modal"
+                            data-bs-target="#filter-button">
+                            <i class="fa fa-filter"></i> Filter
+                        </button>
+                        @include('universitas.kurikulum.filter')
+                    </div>
                     <div class="d-flex justify-content-end">
                         <form action="{{route('univ.kurikulum.sync')}}" method="get" id="sync-form">
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i
@@ -92,7 +100,11 @@ List Kurikulum
     </div>
 </section>
 @endsection
+@push('css')
+    <link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
 @push('js')
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
@@ -133,6 +145,13 @@ List Kurikulum
                     $('#spinner').show();
                 }
             });
+        });
+
+        $('#id_prodi').select2({
+            placeholder: 'Pilih Program Studi',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#filter-button')
         });
 
     });
