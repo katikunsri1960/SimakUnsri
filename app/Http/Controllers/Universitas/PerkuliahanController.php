@@ -229,7 +229,7 @@ class PerkuliahanController extends Controller
         $order = '';
 
         $job = \App\Jobs\Perkuliahan\PerkuliahanMahasiswaJob::class;
-        $name = 'kelas-kuliah';
+        $name = 'aktivitas-kuliah-mahasiswa';
 
         $batch = $this->sync($act, $limit, $offset, $order, $job, $name);
 
