@@ -127,7 +127,7 @@ class PerkuliahanController extends Controller
         }
 
         ini_set('max_execution_time', 0);
-        ini_set('memory_limit', '1G');
+        ini_set('memory_limit', '2G');
 
         $act = 'GetPesertaKelasKuliah';
         $limit = '';
@@ -138,7 +138,7 @@ class PerkuliahanController extends Controller
 
         $kelasKuliahIds = KelasKuliah::select('id_kelas_kuliah')->get()->pluck('id_kelas_kuliah')->toArray();
 
-        $chunks = array_chunk($kelasKuliahIds, 8);
+        $chunks = array_chunk($kelasKuliahIds, 20);
 
         foreach ($chunks as $chunk) {
             $filter = "id_kelas_kuliah IN ('" . implode("','", $chunk) . "')";
