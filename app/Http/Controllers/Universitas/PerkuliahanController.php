@@ -211,7 +211,8 @@ class PerkuliahanController extends Controller
 
     public function aktivitas_kuliah()
     {
-        return view('universitas.perkuliahan.aktivitas-kuliah');
+        $prodi = ProgramStudi::select('nama_program_studi', 'id_prodi')->get();
+        return view('universitas.perkuliahan.aktivitas-kuliah', compact('prodi'));
     }
 
     public function sync_aktivitas_kuliah()
