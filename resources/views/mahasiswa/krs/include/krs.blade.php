@@ -1,4 +1,4 @@
-<div class="tab-pane active" id="krs" role="tabpanel">
+<div class="tab-pane" id="krs" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
         <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
             <div class="row">

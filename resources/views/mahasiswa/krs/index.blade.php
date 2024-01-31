@@ -14,7 +14,7 @@ Kartu Rencana Studi
                         <div class="col-12 col-lg-9">
                             <!-- <h2>Halaman KRS {{auth()->user()->name}}</h2> -->
                             <h2>Kartu Rencana Studi Mahasiswa</h2>
-                            <p class="text-dark mb-0 fs-16">
+                            <p class="text-dark align-middle mb-0 fs-16">
                                 Universitas Sriwijaya
                             </p>
                         </div>
@@ -81,8 +81,8 @@ Kartu Rencana Studi
             <div class="box">
 				<!-- Nav tabs -->
                 <ul class="nav nav-pills justify-content-left" role="tablist">
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
                 <div class="row">
                     <div class="col-12">
@@ -118,6 +118,9 @@ Kartu Rencana Studi
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
                     @include('mahasiswa.krs.include.data-kelas-kuliah')
+
+                    
+                        
                 </div>
 				<!-- /.box-body -->
             </div>
@@ -129,3 +132,15 @@ Kartu Rencana Studi
     	
 </section>
 @endsection
+@push('js')
+<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+<script>
+    $(function () {
+        "use strict";
+
+        $('#matkul-krs').DataTable({
+        });
+
+    });
+</script>
+@endpush
