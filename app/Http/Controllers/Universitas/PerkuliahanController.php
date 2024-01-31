@@ -136,12 +136,12 @@ class PerkuliahanController extends Controller
 
         $batch = Bus::batch([])->name('peserta-kelas-kuliah')->dispatch();
 
-        $kelasKuliahIds = KelasKuliah::select('id_kelas_kuliah')->get()->pluck('id_kelas_kuliah')->toArray();
+        $kelasKuliahIds = MataKuliah::select('id_matkul')->get()->pluck('id_matkul')->toArray();
 
         $chunks = array_chunk($kelasKuliahIds, 20);
 
         foreach ($chunks as $chunk) {
-            $filter = "id_kelas_kuliah IN ('" . implode("','", $chunk) . "')";
+            $filter = "id_matkul IN ('" . implode("','", $chunk) . "')";
             // dd($filter);
             $batch->add(new \App\Jobs\Perkuliahan\PesertaKelasJob($act, $limit, $offset, $order, $filter));
         }
