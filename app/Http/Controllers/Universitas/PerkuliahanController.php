@@ -158,14 +158,12 @@ class PerkuliahanController extends Controller
         $query = KelasKuliah::with('dosen_pengajar', 'prodi', 'semester', 'dosen_pengajar.dosen')
                             ->withCount('peserta_kelas');
 
-        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
-            $filter = $request->id_prodi;
-            $query->whereIn('id_prodi', $filter);
+        if ($request->filled('id_prodi')) {
+            $query->whereIn('id_prodi', $request->id_prodi);
         }
 
-        if ($request->has('id_semester') && !empty($request->id_semester)) {
-            $filter = $request->id_semester;
-            $query->whereIn('id_semester', $filter);
+        if ($request->filled('id_semester')) {
+            $query->whereIn('id_semester', $request->id_semester);
         }
 
         if ($searchValue) {
@@ -187,14 +185,8 @@ class PerkuliahanController extends Controller
             // Define the column names that correspond to the DataTables column indices
             $columns = ['nama_semester', 'kode_mata_kuliah', 'nama_mata_kuliah', 'nama_kelas_kuliah'];
 
-            // if ($columns[$orderColumn] == 'prodi') {
-            //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
-            //         ->orderBy('prodi.nama_jenjang_pendidikan', $orderDirection)
-            //         ->orderBy('prodi.nama_program_studi', $orderDirection)
-            //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
-            // } else {
-                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
-            // }
+            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+
         }
 
         $data = $query->skip($offset)->take($limit)->get()->map(function ($kelasKuliah) {
