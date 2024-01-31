@@ -16,7 +16,9 @@ class PerkuliahanController extends Controller
 {
     public function kelas_kuliah()
     {
-        return view('universitas.perkuliahan.kelas-kuliah');
+        $semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
+        $prodi = ProgramStudi::select('id_prodi', 'kode_program_studi', 'nama_program_studi', 'nama_jenjang_pendidikan')->get();
+        return view('universitas.perkuliahan.kelas-kuliah.index', ['prodi' => $prodi, 'semester' => $semester]);
     }
 
     private function count_value($act)
@@ -153,7 +155,8 @@ class PerkuliahanController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = KelasKuliah::with('dosen_pengajar', 'prodi', 'semester', 'dosen_pengajar.dosen');
+        $query = KelasKuliah::with('dosen_pengajar', 'prodi', 'semester', 'dosen_pengajar.dosen')
+                            ->withCount('peserta_kelas');
 
         if ($searchValue) {
             $query = $query->where('kode_mata_kuliah', 'like', '%' . $searchValue . '%')
@@ -161,9 +164,14 @@ class PerkuliahanController extends Controller
                 ->orWhere('nama_mata_kuliah', 'like', '%' . $searchValue . '%');
         }
 
-        if ($request->has('prodi') && !empty($request->prodi)) {
-            $filter = $request->prodi;
+        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
+            $filter = $request->id_prodi;
             $query->whereIn('id_prodi', $filter);
+        }
+
+        if ($request->has('id_semester') && !empty($request->id_semester)) {
+            $filter = $request->id_semester;
+            $query->whereIn('id_semester', $filter);
         }
 
         $recordsFiltered = $query->count();
@@ -177,7 +185,7 @@ class PerkuliahanController extends Controller
             $orderDirection = $request->input('order.0.dir');
 
             // Define the column names that correspond to the DataTables column indices
-            $columns = ['nama_semester', 'kode_mata_kuliah', 'nama_mata_kuliah'];
+            $columns = ['nama_semester', 'kode_mata_kuliah', 'nama_mata_kuliah', 'nama_kelas_kuliah'];
 
             // if ($columns[$orderColumn] == 'prodi') {
             //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')

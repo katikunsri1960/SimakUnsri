@@ -24,7 +24,15 @@ Kelas Kuliah
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
+                <div class="box-header with-border d-flex justify-content-between">
+                    <div class="d-flex justify-content-start">
+                        <!-- Modal trigger button -->
+                        <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-toggle="modal"
+                            data-bs-target="#filter-button">
+                            <i class="fa fa-filter"></i> Filter
+                        </button>
+                        @include('universitas.perkuliahan.kelas-kuliah.filter')
+                    </div>
                     <div class="d-flex justify-content-end">
                         <form action="{{route('univ.perkuliahan.kelas-kuliah.sync')}}" method="get" id="sync-form">
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
@@ -50,6 +58,7 @@ Kelas Kuliah
                                     <th class="text-center align-middle">Nama Mata Kuliah</th>
                                     <th class="text-center align-middle">Nama Kelas</th>
                                     <th class="text-center align-middle">Dosen Pengajar</th>
+                                    <th class="text-center align-middle">Peserta Kelas</th>
                                 </tr>
                             </thead>
                           <tbody>
@@ -67,9 +76,24 @@ Kelas Kuliah
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(function () {
         // "use strict";
+
+        $('#id_prodi').select2({
+            placeholder: 'Pilih Program Studi',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#filter-button')
+        });
+
+        $('#id_semester').select2({
+            placeholder: 'Pilih Semester',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#filter-button')
+        });
 
         $('#data').DataTable({
             // dom: 'Bfrtip',
@@ -82,7 +106,8 @@ Kelas Kuliah
                 url: '{{route('univ.perkuliahan.kelas-kuliah.data')}}',
                 type: 'GET',
                 data: function (d) {
-                    d.prodi = $('#prodi').val();
+                    d.id_prodi = $('#id_prodi').val();
+                    d.id_semester = $('#id_semester').val();
                 },
                 error: function (xhr, error, thrown) {
                     alert('An error occurred. ' + thrown);
@@ -93,8 +118,15 @@ Kelas Kuliah
                 {data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', class: 'text-center', searchable: true},
                 {data: 'nama_mata_kuliah', name: 'nama_mata_kuliah', class: 'text-start'},
                 {data: 'nama_kelas_kuliah', name: 'nama_kelas_kuliah', class: 'text-center'},
-                {data: 'nama_dosen', name: 'nama_dosen', class: 'text-start'},
+                {data: 'nama_dosen', name: 'nama_dosen', class: 'text-start', searchable: false, orderable: false},
+                {data: 'peserta_kelas_count', name: 'peserta_kelas_count', class: 'text-center', searchable: false, orderable: false},
             ],
+        });
+
+        $('#apply-filter').click(function(e) {
+            e.preventDefault();
+            $('#data').DataTable().ajax.reload();
+            $('#filter-button').modal('hide');
         });
 
         // sweet alert sync-form

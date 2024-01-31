@@ -33,4 +33,9 @@ class KelasKuliah extends Model
     {
         return $this->hasMany(DosenPengajarKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
     }
+
+    public function peserta_kelas()
+    {
+        return $this->hasMany(PesertaKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
+    }
 }
