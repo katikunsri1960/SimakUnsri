@@ -158,12 +158,6 @@ class PerkuliahanController extends Controller
         $query = KelasKuliah::with('dosen_pengajar', 'prodi', 'semester', 'dosen_pengajar.dosen')
                             ->withCount('peserta_kelas');
 
-        if ($searchValue) {
-            $query = $query->where('kode_mata_kuliah', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_kelas_kuliah', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mata_kuliah', 'like', '%' . $searchValue . '%');
-        }
-
         if ($request->has('id_prodi') && !empty($request->id_prodi)) {
             $filter = $request->id_prodi;
             $query->whereIn('id_prodi', $filter);
@@ -172,6 +166,12 @@ class PerkuliahanController extends Controller
         if ($request->has('id_semester') && !empty($request->id_semester)) {
             $filter = $request->id_semester;
             $query->whereIn('id_semester', $filter);
+        }
+
+        if ($searchValue) {
+            $query = $query->where('kode_mata_kuliah', 'like', '%' . $searchValue . '%')
+                ->orWhere('nama_kelas_kuliah', 'like', '%' . $searchValue . '%')
+                ->orWhere('nama_mata_kuliah', 'like', '%' . $searchValue . '%');
         }
 
         $recordsFiltered = $query->count();
