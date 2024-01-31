@@ -11,7 +11,7 @@
     <link rel="icon" href="{{asset('images/unsri.png')}}">
 
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
-
+    @stack('css')
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
     <!-- Vendors Style-->
     <link rel="stylesheet" href="{{asset('assets/css/vendors_css.css')}}">
@@ -26,9 +26,13 @@
             justify-content: center;
             align-items: center;
         }
+
+        .select2-dropdown {
+            z-index: 9999;
+        }
     </style>
 
-    @stack('css')
+
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
@@ -341,7 +345,7 @@
 
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
-    <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script> --}}
 
 
 </body>
