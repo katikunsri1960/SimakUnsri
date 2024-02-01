@@ -47,6 +47,7 @@
 </div>
 
 <!-- Optional: Place to the bottom of scripts -->
+@push('js')
 <script>
     const myModal = new bootstrap.Modal(
                         document.getElementById("editRuangKuliah"),
@@ -59,3 +60,4 @@
         }, 1);
     }
 </script>
+@endpush

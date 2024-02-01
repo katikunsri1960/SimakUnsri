@@ -27,11 +27,9 @@ Kelas Penjadwalan
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
-                        <button type="button" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
-                        data-bs-target="#tambahKelasKuliah"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</button>
+                        <a type="button" class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.tambah')}}"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</a>
                     </div>
                 </div>
-                @include('prodi.data-akademik.kelas-penjadwalan.create')
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover margin-top-10 w-p100">
@@ -57,8 +55,8 @@ Kelas Penjadwalan
                                         <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                         <td class="text-center align-middle">{{$d->nama_mata_kuliah}}</td>
                                         <td class="text-center align-middle">{{$d->nama_kelas_kuliah}}</td>
-                                        <td></td>
-                                        <td></td>
+                                        <td class="text-center align-middle">{{$d->nama_ruang}}</td>
+                                        <td class="text-center align-middle">{{$d->lokasi}}</td>
                                         <td class="text-center align-middle">{{$d->nama_semester}}</td>
                                         <td class="text-center align-middle">
                                             
@@ -77,31 +75,11 @@ Kelas Penjadwalan
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
-<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
     $(function() {
         "use strict";
         
         $('#data').DataTable();
-    });
-
-    $('#tambah-kelas').submit(function(e){
-        e.preventDefault();
-        swal({
-            title: 'Pembuatan Kelas Kuliah',
-            text: "Apakah anda yakin ingin menambahkan kelas?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#tambah-kelas').unbind('submit').submit();
-                $('#spinner').show();
-            }
-        });
-    });
+    });    
 </script>
 @endpush
