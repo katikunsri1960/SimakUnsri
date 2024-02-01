@@ -346,4 +346,48 @@ class PerkuliahanController extends Controller
 
     }
 
+    public function nilai_perkuliahan()
+    {
+        $prodi = ProgramStudi::select('nama_program_studi', 'id_prodi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->get();
+        return view('universitas.perkuliahan.nilai-perkuliahan.index', compact('prodi', 'semester'));
+
+    }
+
+    public function sync_nilai_perkuliahan()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $data = [
+                    'act' => 'GetDetailNilaiPerkuliahanKelas',
+                    'limit' => '',
+                    'offset' => '',
+                    'order' => '',
+                    'job' => \App\Jobs\SyncJob::class,
+                    'name' => 'nilai-perkuliahan',
+                    'model' => \App\Models\Perkuliahan\NilaiPerkuliahan::class,
+                    'primary' => ['id_kelas_kuliah', 'id_registrasi_mahasiswa'],
+                ];
+
+            $prodi = ProgramStudi::pluck('id_prodi')->toArray();
+            $semester = Semester::pluck('id_semester')->toArray();
+            $semester = array_chunk($semester, 3);
+            $semester = array_map(function ($value) {
+                return "id_semester IN ('" . implode("','", $value) . "')";
+            }, $semester);
+
+            $batch = Bus::batch([])->name($data['name'])->dispatch();
+
+            foreach ($prodi as $p) {
+                foreach ($semester as $s) {
+                    $filter = "id_prodi = '$p' AND $s";
+                    // dd($filter);
+                    $batch->add(new $data['job']($data['act'], $data['limit'], $data['offset'], $data['order'], $filter, $data['model'], $data['primary']));
+                }
+            }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Nilai Perkuliahan Berhasil!');
+    }
+
 }

@@ -62,6 +62,10 @@
                                     href="{{route('univ.perkuliahan.kelas-kuliah')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Kelas Perkuliahan</a>
                             </li>
+                            <li class="{{request()->routeIs('univ.perkuliahan.nilai-perkuliahan') ? 'active' : ''}}"><a
+                                href="{{route('univ.perkuliahan.nilai-perkuliahan')}}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Nilai Perkuliahan</a>
+                        </li>
                             <li class="{{request()->routeIs('univ.perkuliahan.aktivitas-kuliah') ? 'active' : ''}}"><a
                                     href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Aktivitas Kuliah</a>
