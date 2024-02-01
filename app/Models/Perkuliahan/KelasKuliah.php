@@ -29,6 +29,11 @@ class KelasKuliah extends Model
         return $this->belongsTo(ProgramStudi::class, 'id_prodi', 'id_prodi');
     }
 
+    // public function ruang_perkuliahan()
+    // {
+    //     return $this->belongsTo(RuangPerkuliahan::class, 'id_prodi', 'ruang_perkuliahan_id');
+    // }
+
     public function dosen_pengajar()
     {
         return $this->hasMany(DosenPengajarKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
