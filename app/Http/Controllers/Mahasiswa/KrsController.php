@@ -14,6 +14,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\MatkulKurikulum;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 
 class KrsController extends Controller
 {
@@ -40,15 +41,29 @@ class KrsController extends Controller
        $kelas_kuliah = KelasKuliah::with(['dosen_pengajar'])
                     ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                     ->where('id_semester',  $semester_aktif->id_semester) 
-                    ->select('id_matkul', 'id_kelas_kuliah', 'nama_mata_kuliah', 'nama_kelas_kuliah', 'tanggal_mulai_efektif', 'id_semester' )
-                    ->groupBy('id_matkul', 'id_kelas_kuliah', 'nama_mata_kuliah', 'nama_kelas_kuliah', 'tanggal_mulai_efektif', 'id_semester' )
+                    ->select('id_matkul', 'id_kelas_kuliah', 'nama_mata_kuliah', 'nama_kelas_kuliah', 'tanggal_mulai_efektif', 'id_semester', 'jadwal_hari', 'jadwal_jam_mulai', 'jadwal_jam_selesai' )
+                    ->groupBy('id_matkul', 'id_kelas_kuliah', 'nama_mata_kuliah', 'nama_kelas_kuliah', 'tanggal_mulai_efektif', 'id_semester', 'jadwal_hari', 'jadwal_jam_mulai', 'jadwal_jam_selesai' )
                     ->orderBy('nama_kelas_kuliah', 'ASC')
                     ->get();
+
+        // $peserta_kelas = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+        //             ->get();
+        //             dd($id_reg);
+
+        $peserta_kelas = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+                    ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    // ->limit(10)
+                    ->get();
+                    // dd($peserta_kelas);
+                
 
         return view('mahasiswa.krs.index', compact(
             'matakuliah', 
             'kelas_kuliah',
             'semester_aktif',
+            'peserta_kelas',
         ));
     }
 }
