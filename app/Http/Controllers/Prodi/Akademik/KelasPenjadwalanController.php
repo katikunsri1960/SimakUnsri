@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\RuangPerkuliahan;
-use App\Models\MataKuliah;
+use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Semester;
 
 
@@ -15,11 +15,13 @@ class KelasPenjadwalanController extends Controller
 {
     public function kelas_penjadwalan()
     {
+        $semester_aktif = '20231'; //Ganti dengan semester aktif yang diambil dari database
         $prodi_id = auth()->user()->fk_id;
         $data = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
                             // ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
                             // ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->where('kelas_kuliahs.id_prodi', $prodi_id)
+                            ->where('kelas_kuliahs.id_semester', $semester_aktif)
                             ->get();
         // dd($data);
         return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data]);
@@ -45,11 +47,11 @@ class KelasPenjadwalanController extends Controller
                   ->orWhere('kode_mata_kuliah', 'like', "%{$search}%")
                   ->where('id_prodi', $prodi_id);
         }
-        
+
         $data = $query->get();
 
-        return response()->json($data); 
-     } 
+        return response()->json($data);
+     }
 
     public function kelas_penjadwalan_store(Request $request)
     {
@@ -84,11 +86,11 @@ class KelasPenjadwalanController extends Controller
             'menit_mulai' => 'required',
             'menit_selesai' => 'required'
         ]);
-        
+
         //Generate tanggal pelaksanaan
         $tanggal_mulai_kelas = $tahun_aktif."-".$request->bulan_mulai."-".$request->tanggal_mulai;
         $tanggal_akhir_kelas = $tahun_aktif."-".$request->bulan_akhir."-".$request->tanggal_akhir;
-        
+
         //Generate jam pelaksanaan
         $jam_mulai_kelas = $request->jam_mulai.":".$request->menit_mulai.":".$detik;
         $jam_selesai_kelas = $request->jam_selesai.":".$request->menit_selesai.":".$detik;
@@ -190,7 +192,7 @@ class KelasPenjadwalanController extends Controller
                 }
             }else{
                 return redirect()->back()->with('error', 'Jumlah kelas sudah melebihi batas');
-            }  
+            }
         }else if(strval($check_lokasi_ruang[0]['lokasi']) == "Palembang"){
             if(count($check_kelas) <= 70){
                 $kode_nama_P = $kode_tahun."P";
@@ -284,13 +286,13 @@ class KelasPenjadwalanController extends Controller
                 }
             }else{
                 return redirect()->back()->with('error', 'Jumlah kelas sudah melebihi batas');
-            } 
+            }
         }else{
             return redirect()->back()->with('error', 'Lokasi tidak ada');
         }
         // dd($nama_kelas_kuliah);
 
-        //Store data to table        
+        //Store data to table
         KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester'], 'id_matkul'=> $request->nama_mata_kuliah, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
 
         return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
