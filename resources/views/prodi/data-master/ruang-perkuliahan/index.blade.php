@@ -54,15 +54,18 @@ Ruang Perkuliahan
                                     <td class="text-center align-middle">{{$d->nama_ruang}}</td>
                                     <td class="text-center align-middle">{{$d->lokasi}}</td>
                                     <td class="text-center align-middle">
-                                        <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editRuangKuliah" onclick="editRuang({{$d}}, {{$d->id}})"> 
+                                        <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editRuangKuliah" onclick="editRuang({{$d}}, {{$d->id}})">
                                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
                                         </button>
-                                        <form action="{{route('prodi.data-master.ruang-perkuliahan.delete', $d)}}" method="POST" id="delete-ruang-{{$d->id}}">
+                                        <button type="button" class="btn btn-rounded bg-danger" title="Delete Data" onclick="deleteRuang({{$d->id}})">
+                                            <i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i>
+                                        </button>
+                                        <form action="{{route('prodi.data-master.ruang-perkuliahan.delete', $d->id)}}" method="POST" id="delete-form-{{$d->id}}">
                                             @csrf
                                             @method('delete')
-                                            <button type="submit" class="btn btn-rounded bg-danger" title="Delete Data">
+                                            {{-- <button type="submit" class="btn btn-rounded bg-danger" title="Delete Data">
                                                 <i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i>
-                                            </button>
+                                            </button> --}}
                                         </form>
                                     </td>
                                 </tr>
@@ -83,15 +86,33 @@ Ruang Perkuliahan
 <script>
      $(function() {
         "use strict";
-        
+
         $('#data').DataTable();
     });
-    
+
     function editRuang(data, id) {
         document.getElementById('edit_nama_ruang').value = data.nama_ruang;
         document.getElementById('edit_lokasi').value = data.lokasi;
         // Populate other fields...
         document.getElementById('edit-ruang').action = '/prodi/data-master/ruang-perkuliahan/' + id + '/update';
+    }
+
+    function deleteRuang(id) {
+        swal({
+            title: 'Delete Data Ruang Kuliah',
+            text: "Apakah anda yakin ingin menghapus ruang?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                document.getElementById('delete-form-' + id).submit();
+                $('#spinner').show();
+            }
+        });
     }
 
     $('#tambah-ruang').submit(function(e){
@@ -132,23 +153,6 @@ Ruang Perkuliahan
         });
     });
 
-    $('#delete-ruang-{{$d->id}}').submit(function(e){
-        e.preventDefault();
-        swal({
-            title: 'Delete Data Ruang Kuliah',
-            text: "Apakah anda yakin ingin menghapus ruang?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#delete-ruang-{{$d->id}}').unbind('submit').submit();
-                $('#spinner').show();
-            }
-        });
-    });
+
 </script>
 @endpush
