@@ -16,7 +16,7 @@
                                         <div class="row">
                                             <div class="col-xl-4 col-lg-12">
                                                 <h3 class="fw-500 text-dark mt-0">Kartu Rencana Studi</h3>
-                                            </div>                             
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="table-responsive">
@@ -25,11 +25,9 @@
                                                         <tr>
                                                             <th>No</th>
                                                             <th>Kode Mata Kuliah</th>
-                                                            <th>Nama Mata Kuliah</th>                                    
-                                                            <th>Kode Kelas</th>
+                                                            <th>Nama Mata Kuliah</th>
                                                             <th>Nama Kelas</th>
                                                             <th>SKS</th>
-                                                            <th>Nama Dosen</th>
                                                             <th>Waktu Kuliah</th>
                                                             <th>Status</th>
                                                             <th><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></th>
@@ -37,136 +35,41 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        <tr>
-                                                            <td>1 </td>
-                                                            <td>FIK39111 </td>
-                                                            <td>KERJA PRAKTEK</td>
-                                                            <td>IDL01</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>2	</td>
-                                                            <td>ADMINISTRATOR.</td>
-                                                            <td>-</td>
-                                                            <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                            <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
-                                                            <!-- <td>
-                                                                <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                                            </td> -->
-                                                        </tr>
-                                                        <tr>
-                                                            <td>2</td>
-                                                            <td>FSK21911</td>
-                                                            <td>PROBABILITAS DAN STATISTIK</td>
-                                                            <td>IDL01</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>3</td>
-                                                            <td>PROF. DR. ERWIN, S.SI, M.SI.</td>
-                                                            <td>Senin, Pukul 08.00 - 10.30 WIB</td>
-                                                            <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                            <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
-                                                            <!-- <td>
-                                                                <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                                            </td> -->
-                                                        </tr>
-                                                        <tr>
-                                                            <td>3</td>
-                                                            <td>FSK34411</td>
-                                                            <td>SISTEM TERDISTRIBUSI</td>
-                                                            <td>IDL01</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>3</td>
-                                                            <td>AHMAD HERYANTO, S.KOM, M.T.</td>
-                                                            <td>Senin, Pukul 13.00 - 15.30 WIB</td>
-                                                            <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                            <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
-                                                            <!-- <td>
-                                                                <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                                            </td> -->
-                                                        </tr>
-                                                        <tr>
-                                                            <td>4</td>
-                                                            <td>FSK34511</td>
-                                                            <td>SISTEM BASIS DATA</td>
-                                                            <td>IDL01</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>3</td>
-                                                            <td>DR. FIRDAUS, M.KOM.</td>
-                                                            <td>Selasa, Pukul 08.00 - 10.30 WIB</td>
-                                                            <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                            <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
-                                                            <!-- <td>
-                                                                <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                                            </td> -->
-                                                        </tr>
-                                                        <tr>
-                                                            <td>5</td>
-                                                            <td>FSK34611</td>
-                                                            <td>PENGOLAHAN SIGNAL DIGITAL</td>
-                                                            <td>IDL01</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>3</td>
-                                                            <td>RENDYANSYAH, S.KOM., M.T.</td>
-                                                            <td>Selasa, Pukul 13.00 - 15.30 WIB</td>
-                                                            <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                            <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
-                                                            <!-- <td>
-                                                                <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                                            </td> -->
-                                                        </tr>
-                                                        <tr>
-                                                            <td>6</td>
-                                                            <td>FSK34711</td>
-                                                            <td>ANTARMUKA DAN PERIPHERAL</td>
-                                                            <td>IDL01</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>3</td>
-                                                            <td>SARMAYANTA SEMBIRING, M.T.</td>
-                                                            <td>Rabu, Pukul 08.00 - 10.30 WIB</td>
-                                                            <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                            <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
-                                                            <!-- <td>
-                                                                <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                                            </td> -->
-                                                        </tr>
-                                                        <tr>
-                                                            <td>7</td>
-                                                            <td>FSK37411</td>
-                                                            <td>PRAKTIKUM ANTARMUKA DAN PERIPHERAL</td>
-                                                            <td>IDL01</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>1</td>
-                                                            <td>
-                                                                SARMAYANTA SEMBIRING, M.T.<br>
-                                                                RICY FIRNANDO, S.KOM.
-                                                            </td>
-                                                            <td>Rabu, Pukul 11.00 - 11.50 WIB</td>
-                                                            <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                            <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
-                                                            <!-- <td>
-                                                                <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                                            </td> -->
-                                                        </tr>
-                                                        <tr>
-                                                            <td>8</td>
-                                                            <td>FSK37511</td>
-                                                            <td>ETIKA PROFESI</td>
-                                                            <td>IDL01</td>
-                                                            <td>Inderalaya A</td>
-                                                            <td>2</td>
-                                                            <td>SUTARNO, S.T., M.T.</td>
-                                                            <td>Kamis, Pukul 08.00 - 10.30 WIB</td>
-                                                            <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                            <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
-                                                            <!-- <td>
-                                                                <a class="btn btn-rounded bg-success-light" href="{{route('mahasiswa.create-krs')}}"><i class="fa fa-line-chart"><span class="path1"></span><span class="path2"></span></i> Ambil</a>
-                                                            </td> -->
-                                                        </tr>
+                                                        @php
+                                                            $no=1;
+                                                            $totalSks = 0;
+                                                        @endphp
+                            
+                                                        @foreach ($peserta_kelas as $d)
+                                                            <tr>
+                                                                <td class="text-center align-middle">{{ $no++ }}</td>
+                                                                <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{$d->nama_kelas_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{$d->sks_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$d->jadwal_hari}}, {{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}</td>
+                                                                <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
+                                                                <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
+                                                            </tr>
+                                                            @php
+                                                                $totalSks += $d->sks_mata_kuliah;
+                                                            @endphp
+                                                        @endforeach
                                                     </tbody>
-                                            </table>
+                                                    <tfoot>
+                                                        <tr>
+                                                            <td class="text-center align-middle" colspan="4"><strong>Total SKS Diambil</strong></td>
+                                                            <td class="text-center align-middle"><strong>{{$totalSks}}</strong></td>
+                                                            <td colspan="3"></td>
+                                                        </tr>
+                                                    </tfoot>
+                                                </table>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>		
+                            </div>
+                            
 
 
                             <div class="row">
