@@ -62,7 +62,7 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('prodi.data-akademik.kelas-penjadwalan.*') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('prodi.data-akademik.kelas-penjadwalan') | request()->routeIs('prodi.data-akademik.kelas-penjadwalan.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kelas dan Penjadwalan</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-akademik.krs') ? 'active' : ''}}">

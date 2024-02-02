@@ -4,9 +4,6 @@ Tambah Kelas Perkuliahan
 @endsection
 @section('content')
 @include('swal')
-@php
-    $id_matkul = $mata_kuliah[0]['id_matkul'];
-@endphp
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
@@ -17,7 +14,6 @@ Tambah Kelas Perkuliahan
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul])}}">Detail Kelas dan Penjadwalan</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Tambah Kelas Perkuliahan</li>
                     </ol>
                 </nav>
@@ -31,7 +27,7 @@ Tambah Kelas Perkuliahan
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('prodi.data-akademik.kelas-penjadwalan.store', ['id_matkul' => $id_matkul])}}" id="tambah-kelas" method="POST">
+                <form class="form" action="{{route('prodi.data-akademik.kelas-penjadwalan.store')}}" id="tambah-kelas" method="POST">
                     @csrf
                     <div class="box-body">
                         <h4 class="text-info mb-0"><i class="fa fa-university"></i> Detail Kelas Kuliah</h4>
@@ -39,16 +35,7 @@ Tambah Kelas Perkuliahan
                         <div class="form-group">
                             <div class=" col-lg-12 mb-3">
                                 <label for="nama_mata_kuliah" class="form-label">Nama Mata Kuliah</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="nama_mata_kuliah"
-                                    id="nama_mata_kuliah"
-                                    aria-describedby="helpId"
-                                    value="{{$mata_kuliah[0]['kode_mata_kuliah'].' - '.$mata_kuliah[0]['nama_mata_kuliah']}}"
-                                    disabled
-                                    required
-                                />
+                                <select class="form-select" name="nama_mata_kuliah" id="mata_kuliah" required></select>
                             </div>
                         </div>
                         <div class="row">
@@ -309,7 +296,36 @@ Tambah Kelas Perkuliahan
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
+    $(document).ready(function(){
+        $("#mata_kuliah").select2({
+            placeholder : '-- Pilih Mata Kuliah --',
+            minimumInputLength: 3,
+            ajax: { 
+                url: "{{route('prodi.data-akademik.kelas-penjadwalan.get-matkul')}}",
+                type: "GET",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // search term
+                    };
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.kode_mata_kuliah + "-" + item.nama_mata_kuliah,
+                                id: item.id_matkul
+                            }
+                        })
+                    };
+                },
+            }
+        });
+    });
 
     $('#tambah-kelas').submit(function(e){
         e.preventDefault();
