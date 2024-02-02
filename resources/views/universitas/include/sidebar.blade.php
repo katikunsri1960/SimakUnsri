@@ -114,6 +114,26 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="treeview {{request()->routeIs('univ.pengaturan.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-cog"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Pengaturan</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('univ.pengaturan.periode-perkuliahan') ? 'active' : ''}}"><a
+                                    href="{{route('univ.pengaturan.periode-perkuliahan')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Periode Perkuliahan</a>
+                            </li>
+                            <li class="{{request()->routeIs('univ.pengaturan.semester-aktif') ? 'active' : ''}}"><a
+                                href="{{route('univ.pengaturan.semester-aktif')}}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Semester Aktif</a>
+                        </li>
+                        </ul>
+                    </li>
                 </ul>
             </div>
         </div>

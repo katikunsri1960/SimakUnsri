@@ -230,6 +230,13 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/aktivitas-mahasiswa/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_aktivitas_mahasiswa'])->name('univ.perkuliahan.aktivitas-mahasiswa.sync');
                 Route::get('/aktivitas-mahasiswa/sync-anggota', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_anggota_aktivitas_mahasiswa'])->name('univ.perkuliahan.aktivitas-mahasiswa.sync-anggota');
             });
+
+            Route::prefix('pengaturan')->group(function () {
+                Route::get('/periode-perkuliahan', [App\Http\Controllers\Universitas\PengaturanController::class, 'periode_perkuliahan'])->name('univ.pengaturan.periode-perkuliahan');
+                Route::get('/periode-perkuliahan/sync', [App\Http\Controllers\Universitas\PengaturanController::class, 'sync_periode_perkuliahan'])->name('univ.pengaturan.periode-perkuliahan.sync');
+
+                Route::get('/semester-aktif', [App\Http\Controllers\Universitas\PengaturanController::class, 'semester_aktif'])->name('univ.pengaturan.semester-aktif');
+            });
         });
     });
 });
