@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Universitas;
 
+use App\Models\SemesterAktif;
 use App\Models\Referensi\PeriodePerkuliahan;
 use App\Http\Controllers\Controller;
 use App\Models\ProgramStudi;
@@ -16,17 +17,15 @@ class PengaturanController extends Controller
         $semester = Semester::orderBy('id_semester', 'desc')->get();
         $prodi = ProgramStudi::all();
 
-        $query = PeriodePerkuliahan::with('prodi', 'semester')->orderBy('id_semester', 'desc');
-
-        if ($request->has('id_semester') && $request->id_semester != '') {
-            $query->whereIn('id_semester', $request->id_semester);
-        }
-
-        if ($request->has('id_prodi') && $request->id_prodi != '') {
-            $query->whereIn('id_prodi', $request->id_prodi);
-        }
-
-        $data = $query->get();
+        $data = PeriodePerkuliahan::with('prodi', 'semester')
+            ->orderBy('id_semester', 'desc')
+            ->when($request->id_semester, function ($query, $id_semester) {
+                return $query->whereIn('id_semester', $id_semester);
+            })
+            ->when($request->id_prodi, function ($query, $id_prodi) {
+                return $query->whereIn('id_prodi', $id_prodi);
+            })
+            ->get();
 
         return view('universitas.pengaturan.periode-perkuliahan.index', [
             'data' => $data,
@@ -68,6 +67,26 @@ class PengaturanController extends Controller
 
     public function semester_aktif()
     {
-        return view('universitas.pengaturan.semester-aktif');
+        $semester = Semester::orderBy('id_semester', 'desc')->get();
+        $data = SemesterAktif::where('id', 1)->first();
+        return view('universitas.pengaturan.semester-aktif', [
+            'semester' => $semester,
+            'data' => $data
+        ]);
+    }
+
+    public function semester_aktif_store(Request $request)
+    {
+        $data = $request->validate([
+            'id_semester' => 'required|exists:semesters,id_semester',
+            'krs_mulai' => 'required',
+            'krs_selesai' => 'required',
+        ]);
+
+        $data['id'] = 1;
+        
+        SemesterAktif::updateOrCreate(['id' => 1], $data);
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 }
