@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Universitas;
 
+use App\Models\SyncError;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa\PrestasiMahasiswa;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\Bus;
@@ -104,5 +106,58 @@ class MahasiswaController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+    public function sync_prestasi_mahasiswa()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $data = [
+            ['act' => 'GetListPrestasiMahasiswa', 'count' => 'GetCountPrestasiMahasiswa', 'order' => 'id_prestasi']
+        ];
+
+        $batch = Bus::batch([])->dispatch();
+
+        foreach ($data as $d) {
+
+            $count = $this->count_value($d['count']);
+
+            $limit = 500;
+            $act = $d['act'];
+            $order = $d['order'];
+
+            for ($i=0; $i < $count; $i+=$limit) {
+                
+                $api = new FeederAPI($act, $i, $limit, $order);
+                $data = $api->runWS();
+
+                try {
+
+                    PrestasiMahasiswa::upsert($data['data'], 'id_prestasi');
+
+                } catch (\Throwable $th) {
+                    // return redirect()->back()->with('error', $th->getMessage());
+                    foreach ($data['data'] as $d) {
+                        try {
+                            PrestasiMahasiswa::updateOrCreate(['id_prestasi' => $d['id_prestasi']], $d);
+                        } catch (\Throwable $th) {
+                            SyncError::create([
+                                'model' => 'PrestasiMahasiswa',
+                                'message' => $th->getMessage()
+                            ]);
+                            continue;
+                        }
+                    }
+
+                    continue;
+
+                }
+
+            }
+
+        }
+
+        return redirect()->back()->with('success', 'Data prestasi mahasiswa berhasil disinkronisasi');
     }
 }

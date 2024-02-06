@@ -7,6 +7,7 @@ use App\Models\Referensi\PeriodePerkuliahan;
 use App\Http\Controllers\Controller;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
+use App\Models\SkalaNilai;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
 
@@ -84,9 +85,47 @@ class PengaturanController extends Controller
         ]);
 
         $data['id'] = 1;
-        
+
         SemesterAktif::updateOrCreate(['id' => 1], $data);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
+
+    public function skala_nilai()
+    {
+        $data = SkalaNilai::with('prodi')->get();
+        return view('universitas.pengaturan.skala-nilai.index', [
+            'data' => $data
+        ]);
+    }
+
+    public function sync_skala_nilai()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
+
+        $act = 'GetListSkalaNilaiProdi';
+
+        $prodi = ProgramStudi::pluck('id_prodi')->toArray();
+
+        foreach ($prodi as $p) {
+
+            $filter = "id_prodi = '".$p."'";
+            $api = new FeederApi($act, 0, 0, '', $filter);
+
+            $response = $api->runWS();
+
+            $data = $response['data'];
+
+            $data = array_map(function ($value) {
+                $value['tanggal_mulai_efektif'] = empty($value['tanggal_mulai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai_efektif']));
+                $value['tanggal_akhir_efektif'] = empty($value['tanggal_akhir_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_akhir_efektif']));
+                return $value;
+            }, $data);
+
+            SkalaNilai::upsert($data, 'id_bobot_nilai');
+        }
+
+        return redirect()->back()->with('success', 'Data berhasil di sinkronisasi');
     }
 }
