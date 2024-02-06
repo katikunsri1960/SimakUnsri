@@ -63,20 +63,18 @@
                                             class="path1"></span><span class="path2"></span></i>Kelas Perkuliahan</a>
                             </li>
                             <li class="{{request()->routeIs('univ.perkuliahan.nilai-perkuliahan') ? 'active' : ''}}"><a
-                                href="{{route('univ.perkuliahan.nilai-perkuliahan')}}"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Nilai Perkuliahan</a>
-                        </li>
+                                    href="{{route('univ.perkuliahan.nilai-perkuliahan')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Nilai Perkuliahan</a>
+                            </li>
                             <li class="{{request()->routeIs('univ.perkuliahan.aktivitas-kuliah') ? 'active' : ''}}"><a
                                     href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Aktivitas Kuliah</a>
                             </li>
-                            <li class="{{request()->routeIs('univ.perkuliahan.aktivitas-mahasiswa') ? 'active' : ''}}"><a
-                                href="{{route('univ.perkuliahan.aktivitas-mahasiswa')}}"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Aktivitas Mahasiswa</a>
-                        </li>
-                            {{-- <li><a href="contact_app_chat.html"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Input Mahasiswa</a></li>
-                            --}}
+                            <li class="{{request()->routeIs('univ.perkuliahan.aktivitas-mahasiswa') ? 'active' : ''}}">
+                                <a href="{{route('univ.perkuliahan.aktivitas-mahasiswa')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Aktivitas Mahasiswa</a>
+                            </li>
+
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">
@@ -108,9 +106,33 @@
                                 <a href="{{route('univ.mata-kuliah')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Mata Kuliah</a>
                             </li>
-                            <li class="{{request()->routeIs('univ.kurikulum.*') | request()->routeIs('univ.kurikulum') ? 'active' : ''}}"><a
-                                    href="{{route('univ.kurikulum')}}"><i class="icon-Commit"><span
+                            <li
+                                class="{{request()->routeIs('univ.kurikulum.*') | request()->routeIs('univ.kurikulum') ? 'active' : ''}}">
+                                <a href="{{route('univ.kurikulum')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>List Kurikulum</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="treeview {{request()->routeIs('univ.pengaturan.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-cog"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Pengaturan</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('univ.pengaturan.periode-perkuliahan') ? 'active' : ''}}"><a
+                                    href="{{route('univ.pengaturan.periode-perkuliahan')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Periode Perkuliahan</a>
+                            </li>
+                            <li class="{{request()->routeIs('univ.pengaturan.skala-nilai') ? 'active' : ''}}"><a
+                                href="{{route('univ.pengaturan.skala-nilai')}}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Skala Nilai</a>
+                        </li>
+                            <li class="{{request()->routeIs('univ.pengaturan.semester-aktif') ? 'active' : ''}}"><a
+                                    href="{{route('univ.pengaturan.semester-aktif')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Semester Aktif</a>
                             </li>
                         </ul>
                     </li>

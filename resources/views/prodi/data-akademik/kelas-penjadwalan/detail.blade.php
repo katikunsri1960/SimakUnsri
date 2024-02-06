@@ -6,13 +6,14 @@ Kelas Penjadwalan
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Kelas dan Penjadwalan</h3>
+            <h3 class="page-title">Detail Kelas dan Penjadwalan</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
-                        <li class="breadcrumb-item active" aria-current="page">Kelas dan Penjadwalan</li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Detail Kelas dan Penjadwalan</li>
                     </ol>
                 </nav>
             </div>
@@ -26,8 +27,17 @@ Kelas Penjadwalan
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    <div class="d-flex">
-                        <h3>Daftar Kelas Mata Kuliah</h3>
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="d-flex">
+                                <a type="button" class="btn btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"><i class="fa fa-arrow-left"></i> Kembali</a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="d-flex justify-content-end">
+                                <a type="button" class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.tambah',['id_matkul' => $id_matkul])}}"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</a>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="box-body">
@@ -38,7 +48,9 @@ Kelas Penjadwalan
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">KODE MATA KULIAH</th>
                                     <th class="text-center align-middle">NAMA MATA KULIAH</th>
-                                    <th class="text-center align-middle">JUMLAH KELAS</th>
+                                    <th class="text-center align-middle">NAMA KELAS</th>
+                                    <th class="text-center align-middle">NAMA RUANG</th>
+                                    <th class="text-center align-middle">LOKASI RUANG</th>
                                     <th class="text-center align-middle">PERIODE PERKULIAHAN</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
@@ -52,10 +64,12 @@ Kelas Penjadwalan
                                         <td class="text-center align-middle">{{$row = $row + 1}}</td>
                                         <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                         <td class="text-center align-middle">{{$d->nama_mata_kuliah}}</td>
-                                        <td class="text-center align-middle">{{$d->jumlah_kelas_kuliah}}</td>
+                                        <td class="text-center align-middle">{{$d->nama_kelas_kuliah}}</td>
+                                        <td class="text-center align-middle">{{$d->nama_ruang}}</td>
+                                        <td class="text-center align-middle">{{$d->lokasi}}</td>
                                         <td class="text-center align-middle">{{$d->nama_semester}}</td>
                                         <td class="text-center align-middle">
-                                            <a type="button" class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
+                                            
                                         </td>
                                     </tr>
                                 @endforeach
