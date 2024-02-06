@@ -76,6 +76,8 @@ class ReferensiController extends Controller
             ['act' => 'GetAgama', 'primary' => 'id_agama', 'model' => \App\Models\Referensi\Agama::class],
             ['act' => 'GetAlatTransportasi' , 'primary' => 'id_alat_transportasi', 'model' => \App\Models\Referensi\AlatTransportasi::class],
             ['act' => 'GetPekerjaan' , 'primary' => 'id_pekerjaan', 'model' => \App\Models\Referensi\Pekerjaan::class],
+            ['act' => 'GetJenisPrestasi' , 'primary' => 'id_jenis_prestasi', 'model' => \App\Models\Referensi\JenisPrestasi::class],
+            ['act' => 'GetTingkatPrestasi' , 'primary' => 'id_tingkat_prestasi', 'model' => \App\Models\Referensi\TingkatPrestasi::class],
 
         ];
 
