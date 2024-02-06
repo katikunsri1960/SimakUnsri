@@ -40,19 +40,19 @@
                                                             $totalSks = 0;
                                                         @endphp
                             
-                                                        @foreach ($peserta_kelas as $d)
+                                                        @foreach ($krs as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle">{{ $no++ }}</td>
-                                                                <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$d->nama_kelas_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$d->sks_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle">{{$d->jadwal_hari}}, {{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}</td>
+                                                                <td class="text-center align-middle">{{$data->kode_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$data->nama_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
                                                                 <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
                                                                 <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
                                                             </tr>
                                                             @php
-                                                                $totalSks += $d->sks_mata_kuliah;
+                                                                $totalSks += $data->sks_mata_kuliah;
                                                             @endphp
                                                         @endforeach
                                                     </tbody>
@@ -82,7 +82,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="table-responsive">
-                                                <table id="example2" class="table table-bordered table-striped text-center">
+                                                <table id="example1" class="table table-bordered table-striped text-center">
                                                     <thead>
                                                         <tr>
                                                             <th>No</th>
@@ -348,7 +348,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="table-responsive">
-                                                <table id="example2" class="table table-bordered table-striped text-center">
+                                                <table id="example1" class="table table-bordered table-striped text-center">
                                                     <thead>
                                                         <tr>
                                                             <th>No</th>
