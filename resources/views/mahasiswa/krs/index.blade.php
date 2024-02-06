@@ -138,7 +138,7 @@ Kartu Rencana Studi
     $(function () {
         "use strict";
 
-        $('#matkul-krs').DataTable({
+        $('#data-matkul').DataTable({
         });
 
     });
