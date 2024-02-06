@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('prestasi_mahasiswas', function (Blueprint $table) {
             $table->id();
-            $table->string("id_prestasi")->unique();
+            $table->string("id_prestasi")->nullable()->unique();
             $table->string("id_mahasiswa")->nullable();
             $table->foreign("id_mahasiswa")->references("id_mahasiswa")->on("biodata_mahasiswas");
             $table->string("nama_mahasiswa")->nullable();
