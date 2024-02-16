@@ -10,7 +10,9 @@ use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\RuangPerkuliahan;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Semester;
+use App\Models\JenisEvaluasi;
 use App\Models\Dosen\PenugasanDosen;
+use Ramsey\Uuid\Uuid;
 
 
 
@@ -81,6 +83,7 @@ class KelasPenjadwalanController extends Controller
         $prodi_id = auth()->user()->fk_id;
         $kelas = KelasKuliah::where('id_prodi',$prodi_id)->get();
         $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        $id_kelas = Uuid::uuid4()->toString();
         $kode_tahun = substr($semester_aktif[0]['id_semester'],-3);
         $tahun_aktif = date('Y');
         $detik = "00";
@@ -314,7 +317,7 @@ class KelasPenjadwalanController extends Controller
         // dd($nama_kelas_kuliah);
 
         //Store data to table
-        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester'], 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester'], 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
 
         return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
@@ -323,7 +326,10 @@ class KelasPenjadwalanController extends Controller
     {
         // dd($id_matkul);
         $prodi_id = auth()->user()->fk_id;
-        $dosen = PenugasanDosen::distinct()->where('id_prodi', $prodi_id)->get();
+        $evaluasi = JenisEvaluasi::get();
+        // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        // $dosen = PenugasanDosen::where('id_prodi', $prodi_id)
+        //                         ->where('id_tahun_ajaran', $tahun_ajaran[0]['id_tahun_ajaran'])->get();
         $kelas = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
                             ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
@@ -333,6 +339,25 @@ class KelasPenjadwalanController extends Controller
                             ->where('kelas_kuliahs.id_prodi', $prodi_id)
                             ->get();
         // dd($kelas);
-        return view('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar', ['dosen' => $dosen, 'kelas' => $kelas]);
+        return view('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar', ['evaluasi' => $evaluasi, 'kelas' => $kelas]);
+    }
+
+    public function get_dosen(Request $request)
+    {
+        $search = $request->get('q');
+        // $prodi_id = auth()->user()->fk_id;
+        $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran[0]['id_tahun_ajaran'])
+                                ->orderby('nama_dosen', 'asc');
+        if ($search) {
+            $query->where('nama_dosen', 'like', "%{$search}%")
+                  ->orWhere('nama_program_studi', 'like', "%{$search}%")
+                  ->where('id_tahun_ajaran', $tahun_ajaran[0]['id_tahun_ajaran']);
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
     }
 }
