@@ -55,7 +55,7 @@ Kelas Penjadwalan
                                         <td class="text-center align-middle">{{$d->jumlah_kelas_kuliah}}</td>
                                         <td class="text-center align-middle">{{$d->nama_semester}}</td>
                                         <td class="text-center align-middle">
-                                            <a type="button" class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
+                                            <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
                                         </td>
                                     </tr>
                                 @endforeach

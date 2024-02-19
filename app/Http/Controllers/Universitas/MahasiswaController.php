@@ -6,7 +6,6 @@ use App\Models\SyncError;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Http\Controllers\Controller;
-use App\Models\Mahasiswa\PrestasiMahasiswa;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\Bus;
@@ -114,10 +113,10 @@ class MahasiswaController extends Controller
         ini_set('memory_limit', '1G');
 
         $data = [
-            ['act' => 'GetListPrestasiMahasiswa', 'count' => 'GetCountPrestasiMahasiswa', 'order' => 'id_prestasi']
+            ['act' => 'GetListPrestasiMahasiswa', 'count' => 'GetCountPrestasiMahasiswa', 'order' => 'id_prestasi', 'model' => \App\Models\Mahasiswa\PrestasiMahasiswa::class],
+            ['act' => 'GetNilaiTransferPendidikanMahasiswa', 'count' => 'GetCountNilaiTransferPendidikanMahasiswa', 'order' => 'id_transfer', 'model' => \App\Models\Perkuliahan\NilaiTransferPendidikan::class],
         ];
 
-        $batch = Bus::batch([])->dispatch();
 
         foreach ($data as $d) {
 
@@ -128,22 +127,22 @@ class MahasiswaController extends Controller
             $order = $d['order'];
 
             for ($i=0; $i < $count; $i+=$limit) {
-                
+
                 $api = new FeederAPI($act, $i, $limit, $order);
                 $data = $api->runWS();
 
                 try {
 
-                    PrestasiMahasiswa::upsert($data['data'], 'id_prestasi');
+                    $d['model']::upsert($data['data'], $order);
 
                 } catch (\Throwable $th) {
                     // return redirect()->back()->with('error', $th->getMessage());
-                    foreach ($data['data'] as $d) {
+                    foreach ($data['data'] as $a) {
                         try {
-                            PrestasiMahasiswa::updateOrCreate(['id_prestasi' => $d['id_prestasi']], $d);
+                            $d['model']::updateOrCreate([$order => $a[$order]], $a);
                         } catch (\Throwable $th) {
                             SyncError::create([
-                                'model' => 'PrestasiMahasiswa',
+                                'model' => $act,
                                 'message' => $th->getMessage()
                             ]);
                             continue;
