@@ -158,46 +158,29 @@ Dosen Kelas Perkuliahan
                         </div>
                         <h4 class="text-info mb-0"><i class="fa fa-user"></i> Dosen Pengajar Kelas</h4>
                         <hr class="my-15">
-                        <div class="row">
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="form-label">Dosen Pengajar 1</label>
-                                    <div class="mb-2">
-                                        <select class="form-select" name="jam_mulai" id="jam_mulai" required>
-                                            <option value="">-- Pilih Dosen 1 --</option>
-                                            @foreach($dosen as $d)
-                                                <option value="{{$d->id_dosen}}">{{$d->nama_dosen}}</option>
+                        <div class="form-group">
+                            <div id="dosen-fields">
+                                <div class="dosen-field row">
+                                    <div class="col-md-6 mb-2">
+                                        <label for="dosen_kelas_kuliah" class="form-label">Nama Dosen</label>
+                                        <select class="form-select" name="dosen_kelas_kuliah" id="dosen_pengajar" required></select>
+                                    </div>
+                                    <div class="col-md-5 mb-2">
+                                        <label for="evaluasi" class="form-label">Jenis Evaluasi</label>
+                                        <select class="form-select" name="evaluasi" id="evaluasi" required>
+                                            <option value="">-- Pilih Jenis Evaluasi --</option>
+                                            @foreach($evaluasi as $e)
+                                                <option value="{{$e->id_jenis_evaluasi}}">{{$e->nama_jenis_evaluasi}}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="form-label">Dosen Pengajar 2</label>
-                                    <div class="mb-2">
-                                        <select class="form-select" name="jam_selesai" id="jam_selesai">
-                                            <option value="">-- Pilih Dosen 2 --</option>
-                                            @foreach($dosen as $d)
-                                                <option value="{{$d->id_dosen}}">{{$d->nama_dosen}}</option>
-                                            @endforeach
-                                        </select>
+                                    <div class="col-md-1 mb-2">
+                                        <label class="form-label">&nbsp;</label>
+                                        <button type="button" class="btn btn-danger btn-rounded btn-sm remove-dosen form-control" style="display: none;" title="Hapus Dosen"><i class="fa fa-user-times" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-sm-4">
-                                <div class="form-group">
-                                    <label class="form-label">Dosen Pengajar 3</label>
-                                    <div class="mb-2">
-                                        <select class="form-select" name="jam_selesai" id="jam_selesai">
-                                            <option value="">-- Pilih Dosen 3 --</option>
-                                            @foreach($dosen as $d)
-                                                <option value="{{$d->id_dosen}}">{{$d->nama_dosen}}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
+                            <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
                         </div>
                     </div>
                     <div class="box-footer">
@@ -215,7 +198,79 @@ Dosen Kelas Perkuliahan
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
+    $(document).ready(function(){
+        function initializeSelect2(selectElement) {
+            return selectElement.select2({
+                placeholder : '-- Pilih Dosen --',
+                minimumInputLength: 3,
+                ajax: { 
+                    url: "{{route('prodi.data-akademik.kelas-penjadwalan.get-dosen')}}",
+                    type: "GET",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term // search term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.nama_dosen + " ( " + item.nama_program_studi + " )",
+                                    id: item.id_registrasi_dosen
+                                }
+                            })
+                        };
+                    },
+                }
+            });
+        }
+
+        // Initialize Select2 for the first select element
+        var initialSelect = initializeSelect2($('#dosen_pengajar'));
+
+        // Event listener for adding a new row
+        $('#add-dosen').click(function() {
+            var newRow = $('<div class="dosen-field row">' +
+                            '<div class="col-md-6 mb-2">' +
+                                '<label for="dosen_kelas_kuliah" class="form-label">Nama Dosen</label>' +
+                                '<select class="form-select select2" name="dosen_kelas_kuliah" required></select>' +
+                            '</div>' +
+                            '<div class="col-md-5 mb-2">' +
+                                '<label for="evaluasi" class="form-label">Jenis Evaluasi</label>' +
+                                '<select class="form-select" name="evaluasi" required>' +
+                                    '<option value="">-- Pilih Jenis Evaluasi --</option>' +
+                                    '@foreach($evaluasi as $e)' +
+                                        '<option value="{{$e->id_jenis_evaluasi}}">{{$e->nama_jenis_evaluasi}}</option>' +
+                                    '@endforeach' +
+                                '</select>' +
+                            '</div>' +
+                            '<div class="col-md-1 mb-2">' +
+                                '<label class="form-label">&nbsp;</label>' +
+                                '<button type="button" class="btn btn-danger btn-rounded btn-sm remove-dosen form-control" style="display: none;" title="Hapus Dosen"><i class="fa fa-user-times" aria-hidden="true"></i></button>' +
+                            '</div>' +
+                        '</div>');
+
+            // Append the new row
+            newRow.appendTo('#dosen-fields');
+
+            // Initialize Select2 for the new select element
+            var newSelect = newRow.find('.select2');
+            initializeSelect2(newSelect);
+            newSelect.val(null).trigger('change');
+
+            // Show the remove button
+            newRow.find('.remove-dosen').show();
+        });
+
+        // Event listener for removing a row
+        $(document).on('click', '.remove-dosen', function() {
+            $(this).closest('.dosen-field').remove();
+        });
+    });
 
     $('#tambah-dosen-pengajar').submit(function(e){
         e.preventDefault();
@@ -230,7 +285,7 @@ Dosen Kelas Perkuliahan
             cancelButtonText: 'Batal'
         }, function(isConfirm){
             if (isConfirm) {
-                $('#tambah-kelas').unbind('submit').submit();
+                $('#tambah-dosen-pengajar').unbind('submit').submit();
                 $('#spinner').show();
             }
         });
