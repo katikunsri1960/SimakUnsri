@@ -39,7 +39,7 @@
                                                         @foreach ($matakuliah as $data)
                                                             <tr class="{{ in_array($data->id_matkul, array_column($krs->toArray(), 'id_matkul')) ? 'bg-success-light' : '' }}">
                                                                 <td class="text-center align-middle">{{ $no_a++ }}</td>
-                                                                <td class="text-center align-middle">{{ $data->kode_mata_kuliah }}</td>
+                                                                <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
                                                                 <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
                                                                 <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                 <td>
