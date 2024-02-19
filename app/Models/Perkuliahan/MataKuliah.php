@@ -31,4 +31,5 @@ class MataKuliah extends Model
     {
         return $this->hasMany(KelasKuliah::class, 'id_matkul', 'id_matkul');
     }
+    
 }
