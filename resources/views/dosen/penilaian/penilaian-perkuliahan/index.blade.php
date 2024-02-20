@@ -3,6 +3,7 @@
 Penilaian Perkuliahan Mahasiswa
 @endsection
 @section('content')
+@include('swal')
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-12">
@@ -20,23 +21,32 @@ Penilaian Perkuliahan Mahasiswa
                     </div>
                 </div>
             </div>
+            <div class="content-header mb-3">
+                <div class="d-flex align-items-center">
+                    <div class="me-auto">
+                        <div class="d-inline-block align-items-center">
+                            <nav>
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="{{route('dosen')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Penilaian Perkuliahan</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
                         <div class="row">
-                            <div class="col-xl-12 col-lg-12">
-                                <h3 class="fw-500 text-dark mt-0">Daftar Perkuliahan Mahasiswa</h3>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="table-responsive">
-                                <table id="example1" class="table table-bordered table-striped text-center">
+                                <table id="data" class="table table-bordered table-striped text-center">
                                     <thead>
                                         <tr>
                                             <th>No</th>
-                                            <th>Program Studi</th>
-                                            <th>Kode Mata Kuliah</th>
-                                            <th>Nama Mata Kuliah</th>
+                                            <th>PRODI</th>
+                                            <th>Kode MK</th>
+                                            <th>Nama MK</th>
                                             <th>Nama Kelas</th>
                                             <th>Dosen Pengajar</th>
                                             <th>Tanggal Akhir Pengisian Nilai</th>
@@ -50,7 +60,9 @@ Penilaian Perkuliahan Mahasiswa
                                             <td class="text-start align-middle">
                                                 {{$d->kelas_kuliah->prodi->nama_jenjang_pendidikan}} - {{$d->kelas_kuliah->prodi->nama_program_studi}}
                                             </td>
-                                            <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
+                                            <td class="text-center align-middle">
+                                                <a href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"> {{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</a>
+                                            </td>
                                             <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
                                             <td class="text-center align-middle">{{$d->kelas_kuliah->nama_kelas_kuliah}}</td>
                                             <td class="text-start align-middle">
@@ -86,3 +98,19 @@ Penilaian Perkuliahan Mahasiswa
             </div>
 </section>
 @endsection
+@push('js')
+
+<script>
+      $(document).ready(function() {
+        $('#data').DataTable({
+            "paging": false,
+            "ordering": true,
+            "searching": true,
+            "scrollCollapse": true,
+            "scrollY": "550px",
+        });
+
+    });
+</script>
+
+@endpush

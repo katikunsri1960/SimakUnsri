@@ -41,9 +41,9 @@
                                     </li>
                                     <li class="{{request()->routeIs('dosen.profile.aktivitas.pengabdian') ? 'active' : ''}}">
                                         <a href="{{route('dosen.profile.aktivitas.pengabdian')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengabdian Dosen</a>
-                                    </li>	
+                                    </li>
                                 </ul>
-                            </li> 
+                            </li>
                             <?php /*<li class="{{request()->routeIs('dosen.profile.aktivitas') ? 'active' : ''}}">
                                 <a href="{{route('dosen.profile.aktivitas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Dosen</a>
                             </li> */?>
@@ -86,23 +86,23 @@
                                 <a href="{{route('dosen.perkuliahan.jadwal-bimbingan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Bimbingan</a>
                             </li>
                         </ul>
-                    </li> 
+                    </li>
                     <li>
                         <a href="https://elearning.unsri.ac.id/" target="_blank">
                             <i class="fa fa-desktop"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>E-Learning UNSRI</span>
                         </a>
-                    </li> 
+                    </li>
                     <li>
                         <a href="https://uscamz.unsri.ac.id/b/signin" target="_blank">
                             <i class="fa fa-video-camera"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>USCAMZ UNSRI</span>
                         </a>
-                    </li> 
+                    </li>
                     <li class="header">Penilaian Mahasiswa</li>
-                    <li class="{{request()->routeIs('dosen.penilaian.penilaian-perkuliahan') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('dosen.penilaian.penilaian-perkuliahan') | request()->routeIs('dosen.penilaian.penilaian-perkuliahan.*')  ? 'active' : ''}}">
                         <a href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Penilaian Perkuliahan</span>
@@ -113,7 +113,7 @@
                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Penilaian Sidang</span>
                         </a>
-                    </li>  
+                    </li>
                     <li class="header">Pembimbing Mahasiswa</li>
                     <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-akademik') ? 'active' : ''}}">
                         <a href="{{route('dosen.pembimbing.bimbingan-akademik')}}">
@@ -132,7 +132,7 @@
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Tugas Akhir</span>
                         </a>
-                    </li> 
+                    </li>
                     <li class="header">Bantuan</li>
                     <li class="{{request()->routeIs('dosen.bantuan.ganti-password') ? 'active' : ''}}">
                         <a href="{{route('dosen.bantuan.ganti-password')}}">
@@ -145,7 +145,7 @@
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
-                    </li>                
+                    </li>
                 </ul>
             </div>
         </div>

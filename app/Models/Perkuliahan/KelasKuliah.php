@@ -43,4 +43,17 @@ class KelasKuliah extends Model
     {
         return $this->hasMany(PesertaKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
     }
+
+    public function nilai_perkuliahan()
+    {
+        return $this->hasMany(NilaiPerkuliahan::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
+    }
+
+    public function detail_penilaian_perkuliahan(string $kelas)
+    {
+        $db = new KelasKuliah;
+        $data = $db->with('peserta_kelas', 'nilai_perkuliahan')->where('id_kelas_kuliah', $kelas)->first();
+
+        return $data;
+    }
 }
