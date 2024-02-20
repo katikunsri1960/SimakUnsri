@@ -23,14 +23,14 @@
                                                 <table id="example1" class="table table-bordered table-striped text-left">
                                                     <thead>
                                                         <tr>
-                                                            <th>No</th>
-                                                            <th>Kode Mata Kuliah</th>
-                                                            <th>Nama Mata Kuliah</th>
-                                                            <th>Nama Kelas</th>
-                                                            <th>SKS</th>
-                                                            <th>Waktu Kuliah</th>
-                                                            <th>Status</th>
-                                                            <th><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></th>
+                                                            <th class="text-center align-middle">No</th>
+                                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                                            <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                            <th class="text-center align-middle">Nama Kelas</th>
+                                                            <th class="text-center align-middle">SKS</th>
+                                                            <th class="text-center align-middle">Waktu Kuliah</th>
+                                                            <th class="text-center align-middle">Status</th>
+                                                            <th class="text-center align-middle"><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></th>
                                                             <!-- <td>Action</td> -->
                                                         </tr>
                                                     </thead>
@@ -43,7 +43,7 @@
                                                         @foreach ($krs as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle">{{ $no++ }}</td>
-                                                                <td class="text-center align-middle">{{$data->kode_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>

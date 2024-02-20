@@ -41,9 +41,11 @@ class KrsController extends Controller
                     {
                         $query
                                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                                // ->withCount('dosen_pengajar')
                                 ;
                     },'kelas_kuliah.dosen_pengajar',  ])
-                    ->leftJoin('kelas_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
+                    
+                    ->Join('kelas_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
                     ->select(
                         'mata_kuliahs.id_matkul',
                         'mata_kuliahs.kode_mata_kuliah',
@@ -51,22 +53,29 @@ class KrsController extends Controller
                         'mata_kuliahs.sks_mata_kuliah',
                         DB::raw("RIGHT(id_semester, 1) AS kode_semester_kelas")
                     )
+                    ->withCount('kelas_kuliah')
                     ->where(DB::raw("RIGHT(id_semester, 1)"), '=', 1)
                     // ->where('kode_semester_kelas',1) 
                     ->where('mata_kuliahs.id_prodi', $riwayat_pendidikan->id_prodi)
                     
                     ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah', 'mata_kuliahs.nama_mata_kuliah', 'mata_kuliahs.sks_mata_kuliah', 'id_semester',)
+                    
+                    // ->where('mata_kuliahs.nama_mata_kuliah', 'PENGUKURAN TEKNIK')
+                    
                     ->whereNotNull('id_semester')
                     ->whereNot('sks_mata_kuliah', [0])
+                    // ->orderBy('kelas_kuliah_count')
                     ->orderBy('sks_mata_kuliah')
                     ->distinct()
-                    ->limit(100) 
+                    // ->limit(100) 
                     ->get();
                     // dd($matakuliah);
 
-       $kelas_kuliah = KelasKuliah::with(['dosen_pengajar'])->withCount('peserta_kelas')
+        $kelas_kuliah = KelasKuliah::with(['dosen_pengajar'])
+                    ->withCount('peserta_kelas')
                     ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                     ->where('id_semester',  $semester_aktif->id_semester) 
+                    // ->where('nama_mata_kuliah', 'PENGUKURAN TEKNIK')
                     ->get();
 
         $krs = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
