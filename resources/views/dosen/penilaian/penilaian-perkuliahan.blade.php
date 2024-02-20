@@ -22,7 +22,7 @@ Penilaian Perkuliahan Mahasiswa
             </div>
             <div class="row">
                 <div class="col-xxl-12">
-                    <div class="box box-body mb-0 bg-light">
+                    <div class="box box-body mb-0 ">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12">
                                 <h3 class="fw-500 text-dark mt-0">Daftar Perkuliahan Mahasiswa</h3>
@@ -34,10 +34,11 @@ Penilaian Perkuliahan Mahasiswa
                                     <thead>
                                         <tr>
                                             <th>No</th>
+                                            <th>Program Studi</th>
                                             <th>Kode Mata Kuliah</th>
                                             <th>Nama Mata Kuliah</th>
                                             <th>Nama Kelas</th>
-                                            <th>Tanggal Akhir Perkuliahan</th>
+                                            <th>Dosen Pengajar</th>
                                             <th>Tanggal Akhir Pengisian Nilai</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -46,10 +47,21 @@ Penilaian Perkuliahan Mahasiswa
                                         @foreach ($data as $d)
                                         <tr>
                                             <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                            <td class="text-start align-middle">
+                                                {{$d->kelas_kuliah->prodi->nama_jenjang_pendidikan}} - {{$d->kelas_kuliah->prodi->nama_program_studi}}
+                                            </td>
                                             <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
-                                            <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
+                                            <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
                                             <td class="text-center align-middle">{{$d->kelas_kuliah->nama_kelas_kuliah}}</td>
-                                            <td class="text-center align-middle"></td>
+                                            <td class="text-start align-middle">
+                                                @if ($d->kelas_kuliah->dosen_pengajar)
+                                                <ul>
+                                                @foreach ($d->kelas_kuliah->dosen_pengajar as $p)
+                                                <li>{{$p->dosen->nama_dosen}}</li>
+                                                @endforeach
+                                            </ul>
+                                                @endif
+                                            </td>
                                             <td class="text-center align-middle"></td>
                                             <td class="text-center align-middle">
                                                 <a class="btn btn-rounded bg-warning-light"

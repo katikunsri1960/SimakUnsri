@@ -68,7 +68,10 @@ class BiodataDosen extends Model
 
         $id_registrasi_dosen = $this->data_dosen($id_dosen)->id_registrasi_dosen;
 
-        return DosenPengajarKelasKuliah::with(['kelas_kuliah','kelas_kuliah.matkul'])->where('id_registrasi_dosen', $id_registrasi_dosen)->where('id_semester', $id_semester)->get();
+        $data = DosenPengajarKelasKuliah::with(['kelas_kuliah','kelas_kuliah.matkul', 'kelas_kuliah.prodi', 'kelas_kuliah.dosen_pengajar', 'kelas_kuliah.dosen_pengajar.dosen'])
+                ->where('id_registrasi_dosen', $id_registrasi_dosen)
+                ->where('id_semester', $id_semester)->get();
 
+        return $data;
     }
 }
