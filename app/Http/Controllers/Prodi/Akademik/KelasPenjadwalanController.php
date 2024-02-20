@@ -20,29 +20,54 @@ class KelasPenjadwalanController extends Controller
 {
     public function kelas_penjadwalan()
     {
-        $semester_aktif = '20231'; //Ganti dengan semester aktif yang diambil dari database
+        $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
         $prodi_id = auth()->user()->fk_id;
-        $data = MataKuliah::leftjoin('kelas_kuliahs','kelas_kuliahs.id_matkul','mata_kuliahs.id_matkul')
-                            ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
-                            ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','semesters.nama_semester')
-                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='$semester_aktif') AS jumlah_kelas_kuliah"))
-                            ->where('mata_kuliahs.id_prodi', $prodi_id)
-                            ->where('kelas_kuliahs.id_semester', $semester_aktif)
-                            ->groupBy('kelas_kuliahs.id_matkul','mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','semesters.nama_semester')
+        $data_univ = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+                            ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
+                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.kode_mata_kuliah=mata_kuliahs.kode_mata_kuliah and kelas_kuliahs.id_prodi='".$prodi_id."' and kelas_kuliahs.id_semester='".$semester_aktif[0]['id_semester']."') AS jumlah_kelas_kuliah"))
+                            ->whereIn('mata_kuliahs.kode_mata_kuliah', array('UNI1001','UNI1002','UNI1003','UNI1004'))
+                            ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
                             ->get();
+        // dd($data_univ);
+        if(substr($semester_aktif[0]['id_semester'],-1) == '1'){
+            $data = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+                            ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
+                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif[0]['id_semester']."') AS jumlah_kelas_kuliah"))
+                            ->where('mata_kuliahs.id_prodi', $prodi_id)
+                            ->where(DB::raw("matkul_kurikulums.semester % 2"),'!=',0)
+                            ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
+                            ->get();
+        }else if(substr($semester_aktif[0]['id_semester'],-1) == '2'){
+            $data = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+                            ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
+                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif[0]['id_semester']."') AS jumlah_kelas_kuliah"))
+                            ->where('mata_kuliahs.id_prodi', $prodi_id)
+                            ->where(DB::raw("matkul_kurikulums.semester % 2"),'=',0)
+                            ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
+                            ->get();
+        }else if(substr($semester_aktif[0]['id_semester'],-1) == '3'){
+            $data = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+                            ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
+                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif[0]['id_semester']."') AS jumlah_kelas_kuliah"))
+                            ->where('mata_kuliahs.id_prodi', $prodi_id)
+                            ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
+                            ->get();
+        }else{
+            return redirect()->back()->with('error', 'Semester tidak terdata');
+        }
         // dd($data);
-        return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data]);
+        return view('prodi.data-akademik.kelas-penjadwalan.index', ['data_univ' => $data_univ,'data' => $data, 'semester_aktif' => $semester_aktif]);
     }
 
     public function detail_kelas_penjadwalan($id_matkul)
     {
-        $semester_aktif = '20231'; //Ganti dengan semester aktif yang diambil dari database
+        $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
         $prodi_id = auth()->user()->fk_id;
         $data = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
                             ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->where('kelas_kuliahs.id_matkul', $id_matkul)
                             ->where('kelas_kuliahs.id_prodi', $prodi_id)
-                            ->where('kelas_kuliahs.id_semester', $semester_aktif)
+                            ->where('kelas_kuliahs.id_semester', $semester_aktif[0]['id_semester'])
                             ->get();
         // dd($data);
         return view('prodi.data-akademik.kelas-penjadwalan.detail', ['data' => $data, 'id_matkul' => $id_matkul]);
@@ -57,24 +82,6 @@ class KelasPenjadwalanController extends Controller
         // dd($mata_kuliah);
         return view('prodi.data-akademik.kelas-penjadwalan.create', ['ruang' => $ruang, 'mata_kuliah' => $mata_kuliah]);
     }
-
-    // public function get_matkul(Request $request)
-    // {
-    //     $search = $request->get('q');
-    //     $prodi_id = auth()->user()->fk_id;
-
-    //     $query = MataKuliah::where('id_prodi', $prodi_id)
-    //                         ->orderby('nama_mata_kuliah', 'asc');
-    //     if ($search) {
-    //         $query->where('nama_mata_kuliah', 'like', "%{$search}%")
-    //               ->orWhere('kode_mata_kuliah', 'like', "%{$search}%")
-    //               ->where('id_prodi', $prodi_id);
-    //     }
-
-    //     $data = $query->get();
-
-    //     return response()->json($data);
-    // }
 
     public function kelas_penjadwalan_store(Request $request, $id_matkul)
     {
@@ -327,9 +334,6 @@ class KelasPenjadwalanController extends Controller
         // dd($id_matkul);
         $prodi_id = auth()->user()->fk_id;
         $evaluasi = JenisEvaluasi::get();
-        // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
-        // $dosen = PenugasanDosen::where('id_prodi', $prodi_id)
-        //                         ->where('id_tahun_ajaran', $tahun_ajaran[0]['id_tahun_ajaran'])->get();
         $kelas = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
                             ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
@@ -359,5 +363,58 @@ class KelasPenjadwalanController extends Controller
         $data = $query->get();
 
         return response()->json($data);
+    }
+
+    public function dosen_pengajar_store(Request $request, $id_matkul, $nama_kelas_kuliah)
+    {
+        dd($request->all());
+        //Define variable
+        $prodi_id = auth()->user()->fk_id;
+        $kelas = KelasKuliah::where('id_prodi',$prodi_id)->get();
+        $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        $id_kelas = Uuid::uuid4()->toString();
+        $kode_tahun = substr($semester_aktif[0]['id_semester'],-3);
+        $tahun_aktif = date('Y');
+        $detik = "00";
+
+        //Validate request data
+        $data = $request->validate([
+            'tanggal_mulai' => 'required',
+            'tanggal_akhir' => 'required',
+            'bulan_mulai' => 'required',
+            'bulan_akhir' => 'required',
+            'kapasitas_kelas' => 'required',
+            'ruang_kelas' => 'required',
+            'mode_kelas' => [
+                'required',
+                Rule::in(['O','F','M'])
+            ],
+            'lingkup_kelas' => [
+                'required',
+                Rule::in(['1','2','3'])
+            ],
+            'jadwal_hari' => 'required',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+            'menit_mulai' => 'required',
+            'menit_selesai' => 'required'
+        ]);
+
+        //Generate tanggal pelaksanaan
+        $tanggal_mulai_kelas = $tahun_aktif."-".$request->bulan_mulai."-".$request->tanggal_mulai;
+        $tanggal_akhir_kelas = $tahun_aktif."-".$request->bulan_akhir."-".$request->tanggal_akhir;
+
+        //Generate jam pelaksanaan
+        $jam_mulai_kelas = $request->jam_mulai.":".$request->menit_mulai.":".$detik;
+        $jam_selesai_kelas = $request->jam_selesai.":".$request->menit_selesai.":".$detik;
+
+        //Generate nama kelas
+        $check_lokasi_ruang = RuangPerkuliahan::where('id', $request->ruang_kelas)->get();
+        $check_kelas = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->get();
+
+        //Store data to table
+        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester'], 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
 }
