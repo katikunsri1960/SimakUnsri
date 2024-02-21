@@ -49,6 +49,7 @@ Penilaian Perkuliahan Mahasiswa
                                             <th>Nama MK</th>
                                             <th>Nama Kelas</th>
                                             <th>Dosen Pengajar</th>
+                                            <th>Peserta Kelas</th>
                                             <th>Tanggal Akhir Pengisian Nilai</th>
                                             <th>Aksi</th>
                                         </tr>
@@ -74,6 +75,7 @@ Penilaian Perkuliahan Mahasiswa
                                             </ul>
                                                 @endif
                                             </td>
+                                            <td class="text-center align-middle">{{$d->peserta_kelas_count}}</td>
                                             <td class="text-center align-middle"></td>
                                             <td class="text-center align-middle">
                                                 <a class="btn btn-rounded bg-warning-light"
