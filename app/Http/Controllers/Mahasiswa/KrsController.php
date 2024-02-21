@@ -16,10 +16,11 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\MatkulKurikulum;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\SemesterAktif;
 
 class KrsController extends Controller
 {
-    public function krs()
+    public function krs_lama()
     {
 
         $id_reg = auth()->user()->fk_id;
@@ -94,6 +95,91 @@ class KrsController extends Controller
             'krs',
             // 'totalPeserta',
         ));
+    }
+
+
+
+    public function krs()
+    {
+        $id_reg = auth()->user()->fk_id;
+
+        $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                            ->first();
+
+        $semester_aktif = SemesterAktif::select('*',DB::raw('RIGHT(id_semester, 1) as kode_semester'))//Ambiil Nilai paling belakang id_semester untuk penentu ganjil genap
+                        ->first();
+                        // dd($semester_aktif);
+        
+        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
+        // dd($semester_aktif);
+
+        //ambil matakuliah ganjil atau genap, dari matakuliah kurikulum where = semester ke
+
+        $matakuliah =  MataKuliah::with(['kelas_kuliah' ,'kelas_kuliah.dosen_pengajar',  ])
+                    
+                    ->leftJoin('matkul_kurikulums', 'matkul_kurikulums.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                    ->where('mata_kuliahs.id_prodi', $riwayat_pendidikan->id_prodi)
+                    ->where(DB::raw('RIGHT(id_semester, 1) % 2'), '=', 1) // Modulus condition
+                    ->whereNot('mata_kuliahs.sks_mata_kuliah', [0])
+                    ->orderBy('semester')
+                    ->orderBy('mata_kuliahs.sks_mata_kuliah')
+                    ->distinct('kode_mata_kuliah')
+                    ->limit(10) 
+                    ->get();
+                    // dd($matakuliah);
+
+        
+        $kelas_kuliah = KelasKuliah::with(['dosen_pengajar'])
+                    ->withCount('peserta_kelas')
+                    ->select('*')
+                    
+                    ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                    ->where('id_semester',  $semester_aktif->id_semester) 
+                    // ->where('nama_mata_kuliah', 'PENGUKURAN TEKNIK')
+                    ->get();
+
+
+        $krs = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+                    ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    // ->limit(10)
+                    ->get();
+                    // dd($peserta_kelas);
+                
+
+        return view('mahasiswa.krs.index', compact(
+            'matakuliah', 
+            'kelas_kuliah',
+            'semester_aktif',
+            'krs',
+            // 'totalPeserta',
+        ));
+    }
+
+    public function get_kelas_kuliah(Request $request)
+    {
+        $search = $request->get('q');
+        // $prodi_id = auth()->user()->fk_id;
+        $semester_aktif = SemesterAktif::select('*',DB::raw('LEFT(id_semester, 4) as id_tahun_ajaran'), DB::raw('RIGHT(id_semester, 1) as kode_semester'))//Ambiil Nilai paling belakang id_semester untuk penentu ganjil genap
+                        ->first();
+                        // dd($semester_aktif);
+
+        // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        // dd($tahun_ajaran);
+
+        $query = KelasKuliah::where(DB::raw("RIGHT(id_semester, 1)"), '=', $semester_aktif->kode_semester)
+                                ->orderby('nama_dosen', 'asc');
+        if ($search) {
+            $query->where('nama_dosen', 'like', "%{$search}%")
+                  ->orWhere('nama_program_studi', 'like', "%{$search}%")
+                //   ->where('id_tahun_ajaran', $tahun_ajaran[0]['id_tahun_ajaran'])
+                  ;
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
     }
 
     public function ambilKrs(Request $request, $id_kelas_kuliah)
