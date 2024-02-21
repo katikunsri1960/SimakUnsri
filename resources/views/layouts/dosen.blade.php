@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="{{asset('images/unsri.png')}}">
-
+    @vite(['resources/sass/app.scss'])
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
 
     <!-- Vendors Style-->
