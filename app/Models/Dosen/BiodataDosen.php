@@ -3,6 +3,8 @@
 namespace App\Models\Dosen;
 
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\SemesterAktif;
 use App\Models\Wilayah;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -69,6 +71,7 @@ class BiodataDosen extends Model
         $id_registrasi_dosen = $this->data_dosen($id_dosen)->id_registrasi_dosen;
 
         $data = DosenPengajarKelasKuliah::with(['kelas_kuliah','kelas_kuliah.matkul', 'kelas_kuliah.prodi', 'kelas_kuliah.dosen_pengajar', 'kelas_kuliah.dosen_pengajar.dosen'])
+                ->withCount(['peserta_kelas'])
                 ->where('id_registrasi_dosen', $id_registrasi_dosen)
                 ->where('id_semester', $id_semester)->get();
 

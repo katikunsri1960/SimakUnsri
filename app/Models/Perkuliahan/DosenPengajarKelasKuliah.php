@@ -32,4 +32,9 @@ class DosenPengajarKelasKuliah extends Model
     {
         return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');
     }
+    
+    public function peserta_kelas()
+    {
+        return $this->hasManyThrough(PesertaKelasKuliah::class, KelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah', 'id_kelas_kuliah', 'id_kelas_kuliah');
+    }
 }
