@@ -26,7 +26,6 @@
                                                             <th class="text-center align-middle">No</th>
                                                             <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                             <th class="text-center align-middle">Nama Mata Kuliah</th>                                    
-                                                            <th class="text-center align-middle">Semester Ke</th>
                                                             <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                             <th class="text-center align-middle">Jadwal Kuliah</th>
                                                             <th class="text-center align-middle">Action</th>
@@ -42,9 +41,7 @@
                                                                 <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                 <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
                                                                 <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
-                                                                <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                 <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
-                                                                
                                                                 <td>
                                                                     <button class="waves-effect rounded waves-light btn btn-success-light mb-5 no-caret" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample{{$data->id_matkul}}" aria-expanded="false" aria-controls="collapseExample">
                                                                         Lihat Kelas Kuliah
