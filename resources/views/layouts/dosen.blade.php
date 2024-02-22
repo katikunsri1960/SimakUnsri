@@ -341,8 +341,8 @@
 
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
-    <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script>
-    <script src="{{asset('assets/js/pages/data-table.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script> --}}
+    {{-- <script src="{{asset('assets/js/pages/data-table.js')}}"></script> --}}
 
 
 </body>
