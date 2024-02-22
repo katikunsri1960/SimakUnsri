@@ -38,6 +38,7 @@ Penilaian Sidang Mahasiswa
                                     <th>Prodi</th>
                                     <th>Jenis Aktivitas</th>
                                     <th>Mahasiswa</th>
+                                    <th>Judul</th>
                                     <th>Penguji</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -59,6 +60,11 @@ Penilaian Sidang Mahasiswa
                                         </ul>
                                     </td>
                                     <td class="text-start align-middle">
+                                        <p style="text-align: justify">
+                                            {{$d->judul}}
+                                        </p>
+                                    </td>
+                                    <td class="text-start align-middle" style="white-space: nowrap">
                                         <ul>
                                         @foreach ($d->uji_mahasiswa as $u)
                                             <li>{{$u->nama_kategori_kegiatan}} : {{$u->dosen->nama_dosen}}</li>
