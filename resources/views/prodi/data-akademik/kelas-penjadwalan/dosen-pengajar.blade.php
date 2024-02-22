@@ -167,7 +167,7 @@ Dosen Kelas Perkuliahan
                                     </div>
                                     <div class="col-md-5 mb-2">
                                         <label for="evaluasi" class="form-label">Jenis Evaluasi</label>
-                                        <select class="form-select" name="evaluasi" id="evaluasi" required>
+                                        <select class="form-select" name="evaluasi[]" id="evaluasi" required>
                                             <option value="">-- Pilih Jenis Evaluasi --</option>
                                             @foreach($evaluasi as $e)
                                                 <option value="{{$e->id_jenis_evaluasi}}">{{$e->nama_jenis_evaluasi}}</option>
@@ -285,7 +285,6 @@ Dosen Kelas Perkuliahan
             console.log(selectedValues);
         }
 
-        // Form submission with confirmation
         $('#tambah-dosen-pengajar').submit(function(e){
             e.preventDefault();
             swal({
@@ -297,127 +296,15 @@ Dosen Kelas Perkuliahan
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Lanjutkan',
                 cancelButtonText: 'Batal'
-            }).then(function(result) {
-                if (result.isConfirmed) {
-                    collectSelectedValues(); // Collect selected values before submission
-                    $('#tambah-dosen-pengajar').unbind('submit').submit(); // Submit the form
+            },function(isConfirmed){
+                if (isConfirmed) {
+                    collectSelectedValues();
+                    $('#tambah-dosen-pengajar').unbind('submit').submit();
                     $('#spinner').show();
                 }
             });
         });
     });
-
-    // $(document).ready(function(){
-
-    //     // Array to store selected values from Select2 inputs
-    //     var selectedValues = [];
-
-    //     function initializeSelect2(selectElement) {
-    //         return selectElement.select2({
-    //             placeholder : '-- Pilih Dosen --',
-    //             minimumInputLength: 3,
-    //             ajax: { 
-    //                 url: "{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-dosen')}}",
-    //                 type: "GET",
-    //                 dataType: 'json',
-    //                 delay: 250,
-    //                 data: function (params) {
-    //                     return {
-    //                         q: params.term // search term
-    //                     };
-    //                 },
-    //                 processResults: function (data) {
-    //                     return {
-    //                         results: $.map(data, function (item) {
-    //                             return {
-    //                                 text: item.nama_dosen + " ( " + item.nama_program_studi + " )",
-    //                                 id: item.id_registrasi_dosen
-    //                             }
-    //                         })
-    //                     };
-    //                 },
-    //             }
-    //         });
-    //     }
-
-    //     // Initialize Select2 for the first select element
-    //     var initialSelect = initializeSelect2($('#dosen_pengajar'));
-
-    //     // Event listener for adding a new row
-    //     $('#add-dosen').click(function() {
-    //         var newRow = $('<div class="dosen-field row">' +
-    //                         '<div class="col-md-6 mb-2">' +
-    //                             '<label for="dosen_kelas_kuliah" class="form-label">Nama Dosen</label>' +
-    //                             '<select class="form-select select2" name="dosen_kelas_kuliah" required></select>' +
-    //                         '</div>' +
-    //                         '<div class="col-md-5 mb-2">' +
-    //                             '<label for="evaluasi" class="form-label">Jenis Evaluasi</label>' +
-    //                             '<select class="form-select" name="evaluasi" required>' +
-    //                                 '<option value="">-- Pilih Jenis Evaluasi --</option>' +
-    //                                 '@foreach($evaluasi as $e)' +
-    //                                     '<option value="{{$e->id_jenis_evaluasi}}">{{$e->nama_jenis_evaluasi}}</option>' +
-    //                                 '@endforeach' +
-    //                             '</select>' +
-    //                         '</div>' +
-    //                         '<div class="col-md-1 mb-2">' +
-    //                             '<label class="form-label">&nbsp;</label>' +
-    //                             '<button type="button" class="btn btn-danger btn-rounded btn-sm remove-dosen form-control" style="display: none;" title="Hapus Dosen"><i class="fa fa-user-times" aria-hidden="true"></i></button>' +
-    //                         '</div>' +
-    //                     '</div>');
-
-    //         // Append the new row
-    //         newRow.appendTo('#dosen-fields');
-
-    //         // Initialize Select2 for the new select element
-    //         var newSelect = newRow.find('.select2');
-    //         initializeSelect2(newSelect);
-    //         newSelect.val(null).trigger('change');
-
-    //         // Show the remove button
-    //         newRow.find('.remove-dosen').show();
-    //     });
-
-    //     // Event listener for removing a row
-    //     $(document).on('click', '.remove-dosen', function() {
-    //         $(this).closest('.dosen-field').remove();
-    //     });
-
-    //     // Example function to collect selected values
-    //     function collectSelectedValues() {
-    //         selectedValues = [];
-    //         $('.select2').each(function() {
-    //             var selectedValue = $(this).val();
-    //             selectedValues.push(selectedValue);
-    //         });
-    //         console.log(selectedValues);
-    //     }
-
-    //     // // Example of using the collectSelectedValues function
-    //     // $('#submit-button').click(function() {
-    //     //     collectSelectedValues();
-    //     //     // Perform further actions, such as submitting a form
-    //     // });
-    // });
-
-    // $('#tambah-dosen-pengajar').submit(function(e){
-    //     e.preventDefault();
-    //     swal({
-    //         title: 'Manajemen Dosen Kelas Kuliah',
-    //         text: "Apakah anda yakin ingin menambahkan dosen pengajar?",
-    //         type: 'warning',
-    //         showCancelButton: true,
-    //         confirmButtonColor: '#3085d6',
-    //         cancelButtonColor: '#d33',
-    //         confirmButtonText: 'Lanjutkan',
-    //         cancelButtonText: 'Batal'
-    //     }, function(isConfirm){
-    //         if (isConfirm) {
-    //             // collectSelectedValues();
-    //             $('#tambah-dosen-pengajar').unbind('submit').submit();
-    //             $('#spinner').show();
-    //         }
-    //     });
-    // });
 
     function upperCaseF(a){
         setTimeout(function(){
