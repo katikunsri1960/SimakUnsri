@@ -161,11 +161,11 @@ Dosen Kelas Perkuliahan
                         <div class="form-group">
                             <div id="dosen-fields">
                                 <div class="dosen-field row">
-                                    <div class="col-md-6 mb-2">
+                                    <div class="col-md-5 mb-2">
                                         <label for="dosen_kelas_kuliah" class="form-label">Nama Dosen</label>
                                         <select class="form-select" name="dosen_kelas_kuliah[]" id="dosen_pengajar" required></select>
                                     </div>
-                                    <div class="col-md-5 mb-2">
+                                    <div class="col-md-4 mb-2">
                                         <label for="evaluasi" class="form-label">Jenis Evaluasi</label>
                                         <select class="form-select" name="evaluasi[]" id="evaluasi" required>
                                             <option value="">-- Pilih Jenis Evaluasi --</option>
@@ -174,12 +174,29 @@ Dosen Kelas Perkuliahan
                                             @endforeach
                                         </select>
                                     </div>
+                                    <!-- <div class="col-md-3 mb-2">
+                                        <label for="substansi_kuliah" class="form-label">Substansi Kuliah</label>
+                                        <select class="form-select" name="substansi_kuliah[]" id="substansi"></select>
+                                    </div> -->
+                                    <div class="col-md-2 mb-2">
+                                        <label for="rencana_minggu_pertemuan" class="form-label">Rencana Minggu Pertemuan</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="rencana_minggu_pertemuan[]"
+                                            id="rencana_minggu_pertemuan"
+                                            aria-describedby="helpId"
+                                            value="0"
+                                            required
+                                        />
+                                    </div>
                                     <div class="col-md-1 mb-2">
                                         <label class="form-label">&nbsp;</label>
                                         <button type="button" class="btn btn-danger btn-rounded btn-sm remove-dosen form-control" style="display: none;" title="Hapus Dosen"><i class="fa fa-user-times" aria-hidden="true"></i></button>
                                     </div>
                                 </div>
                             </div>
+                            <p>*Notes Jumlah total dari seluruh rencana minggu pertemuan dosen harus sama dengan 16 pertemuan</p>
                             <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
                         </div>
                     </div>
@@ -233,17 +250,46 @@ Dosen Kelas Perkuliahan
             });
         }
 
+        // function initializeSelect2Substansi(selectElement) {
+        //     return selectElement.select2({
+        //         placeholder : '-- Pilih Substansi Kuliah --',
+        //         minimumInputLength: 3,
+        //         ajax: { 
+        //             url: "{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-substansi')}}",
+        //             type: "GET",
+        //             dataType: 'json',
+        //             delay: 250,
+        //             data: function (params) {
+        //                 return {
+        //                     q: params.term // search term
+        //                 };
+        //             },
+        //             processResults: function (data) {
+        //                 return {
+        //                     results: $.map(data, function (item) {
+        //                         return {
+        //                             text: item.nama_substansi + " ( " + item.sks_mata_kuliah + " )",
+        //                             id: item.id_substansi
+        //                         }
+        //                     })
+        //                 };
+        //             },
+        //         }
+        //     });
+        // }
+
         // Initialize Select2 for the first select element
         var initialSelect = initializeSelect2($('#dosen_pengajar'));
+        // var initialSelect = initializeSelect2Substansi($('#substansi'));
 
         // Event listener for adding a new row
         $('#add-dosen').click(function() {
             var newRow = $('<div class="dosen-field row">' +
-                            '<div class="col-md-6 mb-2">' +
+                            '<div class="col-md-5 mb-2">' +
                                 '<label for="dosen_kelas_kuliah" class="form-label">Nama Dosen</label>' +
                                 '<select class="form-select select2" name="dosen_kelas_kuliah[]" required></select>' +
                             '</div>' +
-                            '<div class="col-md-5 mb-2">' +
+                            '<div class="col-md-4 mb-2">' +
                                 '<label for="evaluasi" class="form-label">Jenis Evaluasi</label>' +
                                 '<select class="form-select" name="evaluasi[]" required>' +
                                     '<option value="">-- Pilih Jenis Evaluasi --</option>' +
@@ -251,6 +297,14 @@ Dosen Kelas Perkuliahan
                                         '<option value="{{$e->id_jenis_evaluasi}}">{{$e->nama_jenis_evaluasi}}</option>' +
                                     '@endforeach' +
                                 '</select>' +
+                            '</div>' +
+                            // '<div class="col-md-3 mb-2">' +
+                            //     '<label for="substansi_kuliah" class="form-label">Substansi Kuliah</label>' +
+                            //     '<select class="form-select select2-sub" name="substansi_kuliah[]"></select>' +
+                            // '</div>' +
+                            '<div class="col-md-2 mb-2">' +
+                                '<label for="rencana_minggu_pertemuan" class="form-label">Rencana Minggu Pertemuan</label>' +
+                                '<input type="text" class="form-control" name="rencana_minggu_pertemuan[]" aria-describedby="helpId" value="0" required/>' +
                             '</div>' +
                             '<div class="col-md-1 mb-2">' +
                                 '<label class="form-label">&nbsp;</label>' +
@@ -265,6 +319,10 @@ Dosen Kelas Perkuliahan
             var newSelect = newRow.find('.select2');
             initializeSelect2(newSelect);
             newSelect.val(null).trigger('change');
+
+            // var newSelectSubstansi = newRow.find('.select2-sub');
+            // initializeSelect2Substansi(newSelectSubstansi);
+            // newSelectSubstansi.val(null).trigger('change');
 
             // Show the remove button
             newRow.find('.remove-dosen').show();
