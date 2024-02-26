@@ -5,6 +5,7 @@ namespace App\Models\Dosen;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\SemesterAktif;
 use App\Models\Wilayah;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -76,5 +77,12 @@ class BiodataDosen extends Model
                 ->where('id_semester', $id_semester)->get();
 
         return $data;
+    }
+
+    public function uji_aktivitas($id_dosen)
+    {
+        $db = new UjiMahasiswa;
+
+        
     }
 }
