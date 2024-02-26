@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Perkuliahan\SubstansiKuliah;
 use App\Models\RuangPerkuliahan;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Semester;
@@ -365,56 +367,77 @@ class KelasPenjadwalanController extends Controller
         return response()->json($data);
     }
 
+    public function get_substansi(Request $request)
+    {
+        $search = $request->get('q');
+        $prodi_id = auth()->user()->fk_id;
+
+        // $query = SubstansiKuliah::where('id_prodi', $prodi_id)
+                                // ->orderby('nama_substansi', 'asc');
+        $query = SubstansiKuliah::orderby('nama_substansi', 'asc');
+        if ($search) {
+            $query->where('nama_substansi', 'like', "%{$search}%");
+                //   ->where('id_prodi', $prodi_id);
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
     public function dosen_pengajar_store(Request $request, $id_matkul, $nama_kelas_kuliah)
     {
-        dd($request->all());
+        // dd($request->all());
         //Define variable
         $prodi_id = auth()->user()->fk_id;
-        $kelas = KelasKuliah::where('id_prodi',$prodi_id)->get();
+        $kelas = KelasKuliah::where('id_prodi',$prodi_id)->where('id_matkul',$id_matkul)->where('nama_kelas_kuliah',$nama_kelas_kuliah)->get();
         $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
-        $id_kelas = Uuid::uuid4()->toString();
-        $kode_tahun = substr($semester_aktif[0]['id_semester'],-3);
-        $tahun_aktif = date('Y');
-        $detik = "00";
 
         //Validate request data
         $data = $request->validate([
-            'tanggal_mulai' => 'required',
-            'tanggal_akhir' => 'required',
-            'bulan_mulai' => 'required',
-            'bulan_akhir' => 'required',
-            'kapasitas_kelas' => 'required',
-            'ruang_kelas' => 'required',
-            'mode_kelas' => [
+            'dosen_kelas_kuliah.*' => 'required',
+            'rencana_minggu_pertemuan.*' => 'required',
+            'evaluasi.*' => [
                 'required',
-                Rule::in(['O','F','M'])
-            ],
-            'lingkup_kelas' => [
-                'required',
-                Rule::in(['1','2','3'])
-            ],
-            'jadwal_hari' => 'required',
-            'jam_mulai' => 'required',
-            'jam_selesai' => 'required',
-            'menit_mulai' => 'required',
-            'menit_selesai' => 'required'
+                Rule::in(['1','2','3','4'])
+            ]
         ]);
 
-        //Generate tanggal pelaksanaan
-        $tanggal_mulai_kelas = $tahun_aktif."-".$request->bulan_mulai."-".$request->tanggal_mulai;
-        $tanggal_akhir_kelas = $tahun_aktif."-".$request->bulan_akhir."-".$request->tanggal_akhir;
+        //Validasi jumlah total recana minggu pertemuan dosen
+        $jumlah_data_pertemuan=count($request->rencana_minggu_pertemuan);
+        $rencana_pertemuan = 0;
+        for($i=0;$i<$jumlah_data_pertemuan;$i++){
+            $rencana_pertemuan = $rencana_pertemuan + $request->rencana_minggu_pertemuan[$i];
+        }
+        // dd($rencana_pertemuan);
 
-        //Generate jam pelaksanaan
-        $jam_mulai_kelas = $request->jam_mulai.":".$request->menit_mulai.":".$detik;
-        $jam_selesai_kelas = $request->jam_selesai.":".$request->menit_selesai.":".$detik;
+        //Get id dosen pengajar kelas kuliah
+        $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif[0]['id_tahun_ajaran'])->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
 
-        //Generate nama kelas
-        $check_lokasi_ruang = RuangPerkuliahan::where('id', $request->ruang_kelas)->get();
-        $check_kelas = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->get();
+        if($rencana_pertemuan == '16'){
+             //Count jumlah dosen pengajar kelas kuliah
+            $jumlah_dosen=count($request->dosen_kelas_kuliah);
 
-        //Store data to table
-        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester'], 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+            for($i=0;$i<$jumlah_dosen;$i++){
+                //Generate id aktivitas mengajar
+                $id_aktivitas_mengajar = Uuid::uuid4()->toString();
 
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+                if(is_null($request->substansi_kuliah)){
+                    //Store data to table tanpa substansi kuliah
+                    DosenPengajarKelasKuliah::create(['id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester']]);
+
+                }else{
+                    //Get sks substansi total
+                    $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
+
+                    //Store data to table dengan substansi kuliah
+                    DosenPengajarKelasKuliah::create(['id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester']]);
+                }
+                
+            }
+            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+        }else{
+            return redirect()->back()->with('error', 'Total Rencana Minggu Pertemuan Dosen Tidak Berjumlah 16');
+        }
     }
 }
