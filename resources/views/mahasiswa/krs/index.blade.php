@@ -91,15 +91,11 @@ Kartu Rencana Studi
                                 <ul class="box-controls pull-right d-md-flex d-none">
                                     <!-- <li> -->
                                     <div class="clearfix">
-                                        <!-- <a class="waves-effect waves-light btn btn-app btn-info" href="#">
-                                            <i class="fa fa-print"></i> Print
-                                        </a> -->
                                         <a class="waves-effect waves-light btn btn-app btn-success mb-20" href="#">
                                             <i class="fa fa-print"></i> Print
                                         </a>
                                     </div>
                                     <div class="form-group m-10">
-                                        <!-- <label class="form-label">Interested in</label> -->
                                         <select class="form-select">
                                             <option>2023/2024 Genap</option>
                                             <option>2023/2024 Ganjil</option>
@@ -133,26 +129,9 @@ Kartu Rencana Studi
 </section>
 @endsection
 @push('js')
-{{-- <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script> --}}
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-    $(function() {
-        "use strict";
-        
-        $('#data-matkul').DataTable({
-            "paging": true,
-            "ordering": true,
-            "searching": true,
-            // "scrollCollapse": false,
-            // "scrollY": "450px",
-            "columnDefs": [
-                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
-            ]
-        });
-    });
-
-
     $(document).ready(function() {
         // Menggunakan class untuk mendapatkan semua tombol "Lihat Kelas Kuliah"
         $('.lihat-kelas-kuliah').click(function() {
@@ -173,6 +152,9 @@ Kartu Rencana Studi
         });
 
         function displayData(data, resultContainerId) {
+             // Tambahkan pernyataan console.log untuk mencetak data ke konsol
+            console.log('Data dari server:', data);
+
             // Hapus konten sebelumnya dari result-container
             $(resultContainerId).empty();
 
@@ -183,10 +165,17 @@ Kartu Rencana Studi
 
             // Iterasi data dan tambahkan ke tabel
             $.each(data, function(index, kelas) {
+                console.log('peserta_kelas_count:', kelas.peserta_kelas_count);
                 table += '<tr>';
                 table += '<td>' + (index + 1) + '</td>';
                 table += '<td>' + kelas.nama_kelas_kuliah + '</td>';
-                table += '<td class="text-start align-middle">' + formatDosenPengajar(kelas.dosen_pengajar) + '</td>';
+                if (kelas.dosen_pengajar.length > 0) {
+                    // Jika dosen_pengajar tidak kosong, tampilkan nama dosen
+                    table += '<td class="text-start align-middle">' + formatDosenPengajar(kelas.dosen_pengajar) + '</td>';
+                } else {
+                    // Jika dosen_pengajar kosong, tampilkan pesan "Nama Dosen Tidak Diisi"
+                    table += '<td>Nama Dosen Tidak Diisi</td>';
+                }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
                 table += '<td>' + kelas.peserta_kelas_count + '</td>';
                 table += '<td><button class="btn btn-primary">Ambil</button></td>';
@@ -217,6 +206,22 @@ Kartu Rencana Studi
                 return 'Jadwal Tidak Diisi';
             }
         }
+    });
+
+    $(function() {
+        "use strict";
+        
+        $('#data-matkul').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            "pageLength": 10, 
+            // "scrollCollapse": false,
+            // "scrollY": "450px",
+            "columnDefs": [
+                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+            ]
+        });
     });
 
 </script>

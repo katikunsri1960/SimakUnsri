@@ -165,8 +165,8 @@ class KrsController extends Controller
         }else{
             return redirect()->back()->with('error', 'Semester tidak terdata');
         }
-        
-        $krs = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+
+       $krs = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
                     ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $semester_aktif->id_semester)
@@ -177,7 +177,7 @@ class KrsController extends Controller
 
         return view('mahasiswa.krs.index', compact(
             'matakuliah', 
-            // 'kelas_kuliah',
+            // 'kelasKuliah',
             'semester_aktif',
             'krs',
             // 'totalPeserta',
@@ -200,18 +200,18 @@ class KrsController extends Controller
         ->first();
     
         // Ambil data kelas kuliah sesuai dengan kebutuhan Anda
-        $kelasKuliah  = KelasKuliah::with(['dosen_pengajar'])
-                        ->withCount('peserta_kelas')
-                        ->select('*')
-                        ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                        ->where('id_semester',  $semester_aktif->id_semester) 
-                        ->where('id_matkul', $idMatkul)
-                        ->get();
+        $kelasKuliah = KelasKuliah::with(['dosen_pengajar'])
+                    ->withCount('peserta_kelas')
+                    ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                    ->where('id_semester',  $semester_aktif->id_semester) 
+                    ->where('id_matkul', $idMatkul)
+                    ->get();
 
                         // dd($kelasKuliah);
-        $dataKelasKuliah = KelasKuliah::where('id_matkul', $idMatkul)->get();
-        // Kembalikan respons JSON
-        return response()->json($kelasKuliah );
+        
+        
+        // Sertakan data yang ingin Anda kirim ke tampilan
+        return response()->json($kelasKuliah);
     }
 
     public function storePesertaKelas(Request $request)
