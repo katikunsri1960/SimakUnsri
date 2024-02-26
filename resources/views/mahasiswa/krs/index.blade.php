@@ -133,14 +133,91 @@ Kartu Rencana Studi
 </section>
 @endsection
 @push('js')
-<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+{{-- <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script> --}}
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-    $(function () {
+    $(function() {
         "use strict";
-
+        
         $('#data-matkul').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            // "scrollCollapse": false,
+            // "scrollY": "450px",
+            "columnDefs": [
+                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+            ]
+        });
+    });
+
+
+    $(document).ready(function() {
+        // Menggunakan class untuk mendapatkan semua tombol "Lihat Kelas Kuliah"
+        $('.lihat-kelas-kuliah').click(function() {
+            var idMatkul = $(this).data('id-matkul');
+            var resultContainerId = '#result-container_' + idMatkul;
+            // Lakukan AJAX request ke endpoint yang sesuai
+            $.ajax({
+                url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
+                type: 'GET',
+                data: { id_matkul: idMatkul },
+                success: function(data) {
+                    displayData(data, resultContainerId);
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
         });
 
+        function displayData(data, resultContainerId) {
+            // Hapus konten sebelumnya dari result-container
+            $(resultContainerId).empty();
+
+            // Buat tabel untuk menampilkan data
+            var table = '<table class="table table-bordered table-striped text-center">';
+            table += '<thead><tr><th>No</th><th>Kelas Kuliah</th><th>Dosen Pengajar</th><th style="width: 400px;">Jadwal Kuliah</th><th>Peserta</th><th>Action</th></tr></thead>';
+            table += '<tbody>';
+
+            // Iterasi data dan tambahkan ke tabel
+            $.each(data, function(index, kelas) {
+                table += '<tr>';
+                table += '<td>' + (index + 1) + '</td>';
+                table += '<td>' + kelas.nama_kelas_kuliah + '</td>';
+                table += '<td class="text-start align-middle">' + formatDosenPengajar(kelas.dosen_pengajar) + '</td>';
+                table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
+                table += '<td>' + kelas.peserta_kelas_count + '</td>';
+                table += '<td><button class="btn btn-primary">Ambil</button></td>';
+                table += '</tr>';
+            });
+
+            table += '</tbody></table>';
+
+            // Tambahkan tabel ke result-container dan toggle collapse
+            $(resultContainerId).append(table).collapse('toggle');
+        }
+
+        function formatDosenPengajar(dosenPengajar) {
+            // Format dosen pengajar sesuai kebutuhan
+            var formattedString = '<ul>';
+            $.each(dosenPengajar, function(index, dosen) {
+                formattedString += '<li>' + dosen.nama_dosen + '</li>';
+            });
+            formattedString += '</ul>';
+
+            return formattedString;
+        }
+
+        function formatJadwalKuliah(hari, jamMulai, jamSelesai) {
+            if (hari && jamMulai && jamSelesai) {
+                return hari + ', ' + jamMulai + ' - ' + jamSelesai;
+            } else {
+                return 'Jadwal Tidak Diisi';
+            }
+        }
     });
+
 </script>
 @endpush
