@@ -28,6 +28,7 @@
                                                             <th class="text-center align-middle">Nama Mata Kuliah</th>                                    
                                                             <th class="text-center align-middle">Semester Ke</th>
                                                             <th class="text-center align-middle">SKS Mata Kuliah</th>
+                                                            <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
                                                             <th class="text-center align-middle">Jadwal Kuliah</th>
                                                             <th class="text-center align-middle">Action</th>
                                                         </tr>
@@ -38,85 +39,29 @@
                                                         @endphp
 
                                                         @foreach ($matakuliah as $data)
-                                                            <tr class="{{ in_array($data->id_matkul, array_column($krs->toArray(), 'id_matkul')) ? 'bg-success-light' : '' }}">
-                                                                <td class="text-center align-middle">{{ $no_a++ }}</td>
-                                                                <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
-                                                                <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
-                                                                <td class="text-center align-middle">{{ $data->semester }}</td>
-                                                                <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
+                                                        <tr class="{{ in_array($data->id_matkul, array_column($krs->toArray(), 'id_matkul')) ? 'bg-success-light' : '' }}">
+                                                            <td class="text-center align-middle">{{ $no_a++ }}</td>
+                                                            <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
+                                                            <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
+                                                            <td class="text-center align-middle">{{ $data->semester }}</td>
+                                                            <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
+                                                            <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
+                                                            
+                                                            {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
+                                                            <td>
+                                                                <button class="btn btn-primary lihat-kelas-kuliah" data-id-matkul="{{$data->id_matkul}}">
+                                                                    Lihat Kelas Kuliah
+                                                                </button>
                                                                 
-                                                                <td>
-                                                                    <button class="waves-effect rounded waves-light btn btn-success-light mb-5 no-caret" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample{{$data->id_matkul}}" aria-expanded="false" aria-controls="collapseExample">
-                                                                        Lihat Kelas Kuliah
-                                                                    </button>
-                                                                    <div class="collapse" id="collapseExample{{$data->id_matkul}}">
-                                                                        <div class="card card-body">
-                                                                            <table id="example3" class="table table-bordered table-striped text-center">
-                                                                                <thead>
-                                                                                    <tr>
-                                                                                        <th class="text-center align-middle">No</th>
-                                                                                        <th class="text-center align-middle">Kelas Kuliah</th>
-                                                                                        <th class="text-center align-middle">Dosen Pengajar</th>
-                                                                                        <th class="text-center align-middle">Jadwal Kuliah</th>
-                                                                                        <th class="text-center align-middle">Peserta</th>
-                                                                                        <th class="text-center align-middle">Action</th>
-                                                                                    </tr>
-                                                                                </thead>
-                                                                                <tbody>
-                                                                                    @php $no=1; @endphp
-                                                                                    <!-- Penggunaan Variabel Blade -->
-                                                                                    @foreach ($kelas_kuliah as $d)
-                                                                                        @if($d->id_matkul == $data->id_matkul)
-                                                                                            <tr>
-                                                                                                <td class="text-center align-middle">{{ $no++ }}</td>
-                                                                                                <td class="text-center align-middle">{{ $d->nama_kelas_kuliah }}</td>
+                                                                <!-- Gunakan id_matkul dalam atribut id untuk hasil kontainer -->
+                                                                <div class="result-container" id="result-container_{{$data->id_matkul}}" style="margin-top: 20px"></div>
+                                                            </td>
 
-                                                                                                <td class="text-start align-middle w-300">
-                                                                                                    <ul>
-                                                                                                        @foreach ($d->dosen_pengajar as $dosen)
-                                                                                                            <li>{{ $dosen->nama_dosen }}</li>
-                                                                                                        @endforeach
-                                                                                                    </ul>
-                                                                                                </td>
-
-                                                                                                <td class="text-start align-middle">
-                                                                                                    @if($d->jadwal_hari == NULL)
-                                                                                                        Jadwal Tidak Diisi
-                                                                                                    @else
-                                                                                                        {{ $d->jadwal_hari }}, {{ $d->jadwal_jam_mulai }} - {{ $d->jadwal_jam_selesai }}
-                                                                                                    @endif
-                                                                                                </td>
-
-                                                                                                <td class="text-center align-middle">
-                                                                                                    {{ $d->peserta_kelas_count }}
-                                                                                                </td>
-
-                                                                                                <td>
-                                                                                                    <div class="box-footer text-end">
-                                                                                                        <form method="post" action="{{ route('ambil-krs', $d->id_kelas_kuliah) }}">
-                                                                                                            @csrf
-                                                                                                            <input type="hidden" name="id_matkul" value="{{ $data->id_matkul }}">
-                                                                                                            <button type="submit" class="btn btn-primary-light">
-                                                                                                                <i class="ti-save-alt"></i> Ambil
-                                                                                                            </button>
-                                                                                                        </form>
-                                                                                                    </div>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        @endif
-                                                                                    @endforeach
-                                                                                </tbody>
-                                                                            </table>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <!-- Checkbox dicentang jika kelas sudah diambil -->
-                                                                    <input type="checkbox" id="md_checkbox_{{ $no_a }}" class="filled-in chk-col-success" {{ in_array($data->id_matkul, array_column($krs->toArray(), 'id_matkul')) ? 'checked' : '' }} />
-                                                                    <label for="md_checkbox_{{ $no_a }}"></label>
-                                                                </td>
-                                                            </tr>
-                                                        
+                                                            <td>
+                                                                <input type="checkbox" id="md_checkbox_{{ $no_a }}" class="filled-in chk-col-success" {{ in_array($data->id_matkul, array_column($krs->toArray(), 'id_matkul')) ? 'checked' : '' }} />
+                                                                <label for="md_checkbox_{{ $no_a }}"></label>
+                                                            </td>
+                                                        </tr>
                                                         @endforeach
                                                     </tbody>
                                                 </table>
