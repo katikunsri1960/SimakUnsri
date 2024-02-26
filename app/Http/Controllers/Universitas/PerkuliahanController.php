@@ -390,4 +390,30 @@ class PerkuliahanController extends Controller
         return redirect()->back()->with('success', 'Sinkronisasi Nilai Perkuliahan Berhasil!');
     }
 
+    public function konversi_aktivitas()
+    {
+        return view('universitas.perkuliahan.konversi-aktivitas.index');
+    }
+
+    public function sync_konversi_aktivitas()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $act = 'GetListKonversiKampusMerdeka';
+        $count = $this->count_value('GetCountKonversiKampusMerdeka');
+        $limit = 500;
+        $order = 'id_konversi_aktivitas';
+
+        $job = \App\Jobs\SyncJob::class;
+        $name = 'konversi-aktivitas';
+        $batch = Bus::batch([])->name($name)->dispatch();
+        
+        for ($i = 0; $i < $count; $i += 500) {
+            $batch->add(new $job($act, $limit, $i, $order,'', \App\Models\Perkuliahan\KonversiAktivitas::class, 'id_konversi_aktivitas'));
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Konversi Aktivitas Berhasil!');
+    }
+
 }

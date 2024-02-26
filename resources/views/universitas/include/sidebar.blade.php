@@ -74,8 +74,8 @@
                                 <a href="{{route('univ.perkuliahan.aktivitas-mahasiswa')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Aktivitas Mahasiswa</a>
                             </li>
-                            <li class="{{request()->routeIs('univ.perkuliahan.aktivitas-mahasiswa') ? 'active' : ''}}">
-                                <a href="{{route('univ.perkuliahan.aktivitas-mahasiswa')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('univ.perkuliahan.konversi-aktivitas') ? 'active' : ''}}">
+                                <a href="{{route('univ.perkuliahan.konversi-aktivitas')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Konversi Aktivitas</a>
                             </li>
                         </ul>
