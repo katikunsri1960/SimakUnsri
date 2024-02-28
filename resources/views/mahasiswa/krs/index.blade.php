@@ -137,6 +137,7 @@ Kartu Rencana Studi
         $('.lihat-kelas-kuliah').click(function() {
             var idMatkul = $(this).data('id-matkul');
             var resultContainerId = '#result-container_' + idMatkul;
+
             // Lakukan AJAX request ke endpoint yang sesuai
             $.ajax({
                 url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
@@ -152,7 +153,7 @@ Kartu Rencana Studi
         });
 
         function displayData(data, resultContainerId) {
-             // Tambahkan pernyataan console.log untuk mencetak data ke konsol
+            // Tambahkan pernyataan console.log untuk mencetak data ke konsol
             console.log('Data dari server:', data);
 
             // Hapus konten sebelumnya dari result-container
@@ -178,7 +179,7 @@ Kartu Rencana Studi
                 }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
                 table += '<td>' + kelas.peserta_kelas_count + '</td>';
-                table += '<td><button class="btn btn-primary">Ambil</button></td>';
+                table += '<td><button class="btn btn-primary" onclick="ambilKelas(' + kelas.id_kelas_kuliah + ')">Ambil</button></td>';
                 table += '</tr>';
             });
 
@@ -206,7 +207,25 @@ Kartu Rencana Studi
                 return 'Jadwal Tidak Diisi';
             }
         }
+
+        // Fungsi untuk menyimpan data ke dalam tabel peserta_kelas_kuliah
+        function ambilKelas(idKelasKuliah) {
+            // Lakukan AJAX request untuk menyimpan data ke dalam tabel peserta_kelas_kuliah
+            $.ajax({
+                url: '{{ route("mahasiswa.krs.ambil_kelas") }}',
+                type: 'POST',
+                data: { id_kelas_kuliah: idKelasKuliah },
+                success: function(response) {
+                    // Tampilkan pesan sukses atau error
+                    console.log(response);
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        }
     });
+
 
     $(function() {
         "use strict";

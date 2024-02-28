@@ -53,7 +53,7 @@
                                                             
                                                             {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
                                                             <td>
-                                                                <button class="btn btn-primary lihat-kelas-kuliah" data-id-matkul="{{$data->id_matkul}}" {{ $isDisabled ? 'disabled' : '' }}>
+                                                                <button class="btn btn-success-light lihat-kelas-kuliah" data-id-matkul="{{$data->id_matkul}}" {{ $isDisabled ? 'disabled' : '' }}>
                                                                     Lihat Kelas Kuliah
                                                                 </button>
 
