@@ -200,7 +200,7 @@ class KrsController extends Controller
         ->first();
     
         // Ambil data kelas kuliah sesuai dengan kebutuhan Anda
-        $kelasKuliah = KelasKuliah::with(['dosen_pengajar'])
+        $kelasKuliah = KelasKuliah::with(['dosen_pengajar.dosen'])
                     ->withCount('peserta_kelas')
                     ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                     ->where('id_semester',  $semester_aktif->id_semester) 
@@ -215,45 +215,56 @@ class KrsController extends Controller
         return response()->json($kelasKuliah);
     }
 
-    public function ambilKelas(Request $request)
+    public function storeKelasKuliah(Request $request)
     {
+        $idKelas = $request->input('id_kelas_kuliah');
+        $idMahasiswa = Auth::user()->fk_id; // Sesuaikan dengan cara Anda mendapatkan ID mahasiswa
+
+        // Lakukan logika penyimpanan ke tabel peserta_kelas_kuliah
         try {
-            // Ambil data yang diperlukan dari request
-            $idKelasKuliah = $request->input('id_kelas_kuliah');
-            $id_reg = auth()->user()->fk_id; // Sesuaikan dengan cara Anda mendapatkan ID mahasiswa
+            PesertaKelasKuliah::create([
+                'id_kelas_kuliah' => $idKelas,
+                'id_mahasiswa' => $idMahasiswa,
+                // Sesuaikan dengan kolom-kolom lain yang diperlukan
+            ]);
 
-            // Cek apakah mahasiswa sudah mengambil kelas ini sebelumnya
-            $pesertaKelasExist = PesertaKelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)
-                ->where('id_mahasiswa', $id_reg)
-                ->exists();
-
-            if (!$pesertaKelasExist) {
-                // Jika belum, tambahkan data ke dalam tabel peserta_kelas_kuliah
-                PesertaKelasKuliah::create([
-                    'id_kelas_kuliah' => $request->id_kelas_kuliah,
-                    'id_registrasi_mahasiswa' => $request->id_reg,
-                    // 'nama_kelas_kuliah' => $request->nama_kelas_kuliah,
-                    // 'id_mahasiswa' => $request->id_mahasiswa,
-                    // 'nim' => $request->nim,
-                    // 'nama_mahasiswa' => $request->nama_mahasiswa,
-                    // 'id_matkul' => $request->id_matkul,
-                    // 'kode_mata_kuliah' => $request->kode_mata_kuliah,
-                    // 'nama_mata_kuliah' => $request->nama_mata_kuliah,
-                    // 'id_prodi' => $request->id_prodi,
-                    // 'nama_program_studi' => $request->nama_program_studi,
-                    // 'angkatan' => $request->angkatan,
-                ]);
-
-                return response()->json(['success' => true, 'message' => 'Kelas berhasil diambil.']);
-            } else {
-                return response()->json(['success' => false, 'message' => 'Anda sudah mengambil kelas ini sebelumnya.']);
-            }
+            return response()->json(['message' => 'Kelas berhasil diambil'], 200);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan.']);
+            return response()->json(['message' => 'Gagal mengambil kelas. Error: ' . $e->getMessage()], 500);
         }
     }
 
-    public function storePesertaKelas(Request $request)
+    public function ambilKelasKuliah(Request $request)
+    {
+        try {
+            $idKelasKuliah = $request->input('id_kelas_kuliah');
+            $idReg = auth()->user()->fk_id;
+
+            // Lakukan validasi atau logika bisnis lainnya jika diperlukan
+
+            // Lakukan penyimpanan data
+            DB::beginTransaction();
+
+            PesertaKelasKuliah::create([
+                'id_kelas_kuliah' => $idKelasKuliah,
+                'id_registrasi_mahasiswa' => $idReg,
+                // ... (Tambahkan kolom lain jika diperlukan)
+            ]);
+
+            // Selesaikan transaksi
+            DB::commit();
+
+            // Respon sesuai kebutuhan
+            return response()->json(['message' => 'Data berhasil disimpan'], 200);
+        } catch (\Exception $e) {
+            // Tangani kesalahan
+            DB::rollback();
+
+            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
+        }
+    }
+
+    public function storePesertaKelasss(Request $request)
     {
         // Validasi request jika diperlukan
 

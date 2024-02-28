@@ -58,7 +58,8 @@
                                                                 </button>
 
                                                                 <!-- Gunakan id_matkul dalam atribut id untuk hasil kontainer -->
-                                                                <div class="result-container" id="result-container_{{$data->id_matkul}}" style="margin-top: 20px"></div>
+                                                                <div class="result-container" id="result-container_{{$data->id_matkul}}" style="margin-top: 20px">
+                                                                </div>
                                                             </td>
 
                                                             <td>

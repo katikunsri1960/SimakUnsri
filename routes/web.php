@@ -32,8 +32,9 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('/kartu-rencana-studi', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs'])->name('mahasiswa.krs');
             // web.php atau routes.php
             Route::get('/get-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'get_kelas_kuliah'])->name('mahasiswa.krs.get_kelas_kuliah');
-            Route::post('/store-peserta-kelas', [App\Http\Controllers\Mahasiswa\KrsController::class, 'storePesertaKelas'])->name('store-peserta-kelas');
-            Route::post('/ambil-kelas', [App\Http\Controllers\Mahasiswa\KrsController::class, 'ambilKelas'])->name('mahasiswa.krs.ambil_kelas');
+            Route::post('/mahasiswa/krs/ambil', [App\Http\Controllers\Mahasiswa\KrsController::class, 'ambilKelasKuliah'])->name('mahasiswa.krs.ambil');
+            Route::post('store-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'storeKelasKuliah'])->name('mahasiswa.krs.store_kelas_kuliah');
+
             Route::get('/ambil-krs', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'create_krs'])->name('mahasiswa.create-krs');
             Route::post('/ambil-krs/{id_kelas_kuliah}', [KrsController::class, 'ambilKrs'])->name('ambil-krs');
 
