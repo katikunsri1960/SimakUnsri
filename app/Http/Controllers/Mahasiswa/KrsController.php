@@ -165,8 +165,8 @@ class KrsController extends Controller
         }else{
             return redirect()->back()->with('error', 'Semester tidak terdata');
         }
-        
-        $krs = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+
+       $krs = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
                     ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $semester_aktif->id_semester)
@@ -177,7 +177,7 @@ class KrsController extends Controller
 
         return view('mahasiswa.krs.index', compact(
             'matakuliah', 
-            // 'kelas_kuliah',
+            // 'kelasKuliah',
             'semester_aktif',
             'krs',
             // 'totalPeserta',
@@ -200,18 +200,57 @@ class KrsController extends Controller
         ->first();
     
         // Ambil data kelas kuliah sesuai dengan kebutuhan Anda
-        $kelasKuliah  = KelasKuliah::with(['dosen_pengajar'])
-                        ->withCount('peserta_kelas')
-                        ->select('*')
-                        ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                        ->where('id_semester',  $semester_aktif->id_semester) 
-                        ->where('id_matkul', $idMatkul)
-                        ->get();
+        $kelasKuliah = KelasKuliah::with(['dosen_pengajar'])
+                    ->withCount('peserta_kelas')
+                    ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                    ->where('id_semester',  $semester_aktif->id_semester) 
+                    ->where('id_matkul', $idMatkul)
+                    ->orderBy('nama_kelas_kuliah')
+                    ->get();
 
                         // dd($kelasKuliah);
-        $dataKelasKuliah = KelasKuliah::where('id_matkul', $idMatkul)->get();
-        // Kembalikan respons JSON
-        return response()->json($kelasKuliah );
+        
+        
+        // Sertakan data yang ingin Anda kirim ke tampilan
+        return response()->json($kelasKuliah);
+    }
+
+    public function ambilKelas(Request $request)
+    {
+        try {
+            // Ambil data yang diperlukan dari request
+            $idKelasKuliah = $request->input('id_kelas_kuliah');
+            $id_reg = auth()->user()->fk_id; // Sesuaikan dengan cara Anda mendapatkan ID mahasiswa
+
+            // Cek apakah mahasiswa sudah mengambil kelas ini sebelumnya
+            $pesertaKelasExist = PesertaKelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)
+                ->where('id_mahasiswa', $id_reg)
+                ->exists();
+
+            if (!$pesertaKelasExist) {
+                // Jika belum, tambahkan data ke dalam tabel peserta_kelas_kuliah
+                PesertaKelasKuliah::create([
+                    'id_kelas_kuliah' => $request->id_kelas_kuliah,
+                    'id_registrasi_mahasiswa' => $request->id_reg,
+                    // 'nama_kelas_kuliah' => $request->nama_kelas_kuliah,
+                    // 'id_mahasiswa' => $request->id_mahasiswa,
+                    // 'nim' => $request->nim,
+                    // 'nama_mahasiswa' => $request->nama_mahasiswa,
+                    // 'id_matkul' => $request->id_matkul,
+                    // 'kode_mata_kuliah' => $request->kode_mata_kuliah,
+                    // 'nama_mata_kuliah' => $request->nama_mata_kuliah,
+                    // 'id_prodi' => $request->id_prodi,
+                    // 'nama_program_studi' => $request->nama_program_studi,
+                    // 'angkatan' => $request->angkatan,
+                ]);
+
+                return response()->json(['success' => true, 'message' => 'Kelas berhasil diambil.']);
+            } else {
+                return response()->json(['success' => false, 'message' => 'Anda sudah mengambil kelas ini sebelumnya.']);
+            }
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan.']);
+        }
     }
 
     public function storePesertaKelas(Request $request)
