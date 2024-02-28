@@ -78,6 +78,10 @@
                                 <a href="{{route('univ.perkuliahan.konversi-aktivitas')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Konversi Aktivitas</a>
                             </li>
+                            <li class="{{request()->routeIs('univ.perkuliahan.transkrip') ? 'active' : ''}}">
+                                <a href="{{route('univ.perkuliahan.transkrip')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Transkrip</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">

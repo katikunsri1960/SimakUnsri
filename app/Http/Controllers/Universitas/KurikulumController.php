@@ -192,6 +192,9 @@ class KurikulumController extends Controller
 
     public function sync_mata_kuliah()
     {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
         $act = "GetDetailMataKuliah";
         $count = "GetCountMataKuliah";
         $limit = 1000;
@@ -201,15 +204,17 @@ class KurikulumController extends Controller
         $api = new FeederAPI($count,$offset, $limit, $order);
 
         $result = $api->runWS();
-        // dd($result['data']);
         $total = $result['data'];
+        $job = \App\Jobs\SyncJob::class;
 
         $batch = Bus::batch([])->dispatch();
         $order = 'id_matkul';
+        $filter = '';
+        $model = \App\Models\Perkuliahan\MataKuliah::class;
+        $primary = 'id_matkul';
 
         for ($i = 0; $i < $total; $i += $limit) {
-            $job = new ProccessSync(\App\Models\Perkuliahan\MataKuliah::class, $act, $limit, $i, $order);
-            $batch->add($job);
+            $batch->add(new $job($act, $limit, $i, $order, $filter,$model, $primary));
         }
 
         return redirect()->route('univ.mata-kuliah')->with('success', 'Data mata kuliah berhasil disinkronisasi');

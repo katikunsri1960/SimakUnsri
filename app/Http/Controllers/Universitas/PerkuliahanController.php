@@ -90,10 +90,12 @@ class PerkuliahanController extends Controller
         $offset = '';
         $order = '';
 
-        $job = \App\Jobs\Perkuliahan\Kelas\GetKelasJob::class;
+        $job = \App\Jobs\SyncJob::class;
         $name = 'kelas-kuliah';
+        $model = \App\Models\Perkuliahan\KelasKuliah::class;
+        $primary = 'id_kelas_kuliah';
 
-        $batch = $this->sync($act, $limit, $offset, $order, $job, $name);
+        $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model,$primary);
 
         return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
 
@@ -408,12 +410,49 @@ class PerkuliahanController extends Controller
         $job = \App\Jobs\SyncJob::class;
         $name = 'konversi-aktivitas';
         $batch = Bus::batch([])->name($name)->dispatch();
-        
+
         for ($i = 0; $i < $count; $i += 500) {
             $batch->add(new $job($act, $limit, $i, $order,'', \App\Models\Perkuliahan\KonversiAktivitas::class, 'id_konversi_aktivitas'));
         }
 
         return redirect()->back()->with('success', 'Sinkronisasi Konversi Aktivitas Berhasil!');
+    }
+
+    public function transkrip()
+    {
+        return view('universitas.perkuliahan.transkrip.index');
+    }
+
+    public function sync_transkrip()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $act = 'GetTranskripMahasiswa';
+
+        $matkul = MataKuliah::pluck('id_matkul')->toArray();
+        $matkul = array_chunk($matkul, 12);
+        $matkul = array_map(function ($value) {
+            return "id_matkul IN ('" . implode("','", $value) . "')";
+        }, $matkul);
+        $name = 'transkrip-mahasiswa';
+        $job = \App\Jobs\SyncJob::class;
+        $limit = '';
+        $offset = '';
+        $order = '';
+        $primary = ['id_registrasi_mahasiswa', 'id_matkul'];
+        $model = \App\Models\Perkuliahan\TranskripMahasiswa::class;
+
+        $batch = Bus::batch([])->name($name)->dispatch();
+
+        foreach ($matkul as $s) {
+            $filter = $s;
+            $batch->add(new $job($act, $limit, $offset, $order, $filter, $model, $primary));
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Transkrip Mahasiswa Berhasil!');
+
+
     }
 
 }

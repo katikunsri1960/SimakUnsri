@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\SyncError;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
@@ -54,7 +55,51 @@ class SyncJob implements ShouldQueue
                     }, $r);
                 }
 
-                $this->model::upsert($r, $this->primary);
+                if ($this->act == 'GetDetailKelasKuliah') {
+                    $r = array_map(function ($value) {
+                        $value['tanggal_mulai_efektif'] = empty($value['tanggal_mulai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai_efektif']));
+                        $value['tanggal_akhir_efektif'] = empty($value['tanggal_akhir_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_akhir_efektif']));
+                        return $value;
+                    }, $r);
+                }
+
+                if ($this->act == 'GetDetailMataKuliah') {
+                    $r = array_map(function ($value) {
+                        $value['tanggal_mulai_efektif'] = empty($value['tanggal_mulai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai_efektif']));
+                        $value['tanggal_selesai_efektif'] = empty($value['tanggal_selesai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_selesai_efektif']));
+                        return $value;
+                    }, $r);
+                }
+
+                try {
+
+                    $this->model::upsert($r, $this->primary);
+
+                } catch (\Throwable $th) {
+
+                    foreach($r as $row)
+                    {
+                        try {
+                            $conditions = is_array($this->primary)
+                                ? array_combine($this->primary, array_map(fn($key) => $row[$key], $this->primary))
+                                : [$this->primary => $row[$this->primary]];
+
+                            $this->model::updateOrCreate($conditions, $row);
+
+                        } catch (\Throwable $th) {
+
+                            SyncError::create([
+                                'model' => $this->model,
+                                'message' => $th->getMessage()
+                            ]);
+
+                            continue;
+                        }
+                    }
+
+                    continue;
+                }
+
             }
 
         }
