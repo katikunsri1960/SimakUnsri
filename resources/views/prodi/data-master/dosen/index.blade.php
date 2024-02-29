@@ -43,11 +43,26 @@ Dosen
                                 <th class="text-center align-middle">NIDK/NIDN</th>
                                 <th class="text-center align-middle">NIP</th>
                                 <th class="text-center align-middle">NAMA</th>
-                                <th class="text-center align-middle">AKSI</th>
+                                <th class="text-center align-middle">E-MAIL</th>
+                                <th class="text-center align-middle">HOMEBASE</th>
                              </tr>
                           </thead>
                           <tbody>
+                            @foreach ($data as $d)
+                                <tr>
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{$d->nidn}}</td>
+                                    <td class="text-center align-middle">{{$d->nip}}</td>
+                                    <td class="text-start align-middle">{{$d->nama_dosen}}</td>
+                                    <td class="text-start align-middle">{{$d->email}}</td>
+                                    <td class="text-center align-middle">
+                                        @if($d->homebase == 1)
+                                            <i class="fa-regular fa-circle-check "></i>
+                                        @endif
+                                    </td>
 
+                                </tr>
+                            @endforeach
                           </tbody>
                       </table>
                       </div>
@@ -64,8 +79,15 @@ Dosen
 <script>
     $(function() {
         "use strict";
-        
-        $('#data').DataTable();
+
+        $('#data').DataTable({
+            "paging": false,
+            "ordering": true,
+            "searching": true,
+            "scrollCollapse": false,
+            "scrollX": true,
+            "scrollY": window.innerHeight * 0.6 + "px",
+        });
     });
 </script>
 @endpush
