@@ -45,6 +45,10 @@ Kelas Kuliah
                         <form action="{{route('univ.perkuliahan.kelas-kuliah.sync-peserta-kelas')}}" method="get" id="sync-peserta">
                             <button class="btn btn-secondary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Peserta</button>
                         </form>
+                        <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.perkuliahan.kelas-kuliah.sync-komponen-evaluasi')}}" method="get" id="sync-komponen">
+                            <button class="btn btn-warning waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Komponen Evaluasi</button>
+                        </form>
                         {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
                     </div>
                 </div>
@@ -76,6 +80,7 @@ Kelas Kuliah
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/js/confirmSubmit.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(function () {
@@ -168,24 +173,9 @@ Kelas Kuliah
             });
         });
 
-        $('#sync-peserta').submit(function(e){
-            e.preventDefault();
-            swal({
-                title: 'Sinkronisasi Data',
-                text: "Apakah anda yakin ingin melakukan sinkronisasi?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ya, Sinkronkan!',
-                cancelButtonText: 'Batal'
-            }, function(isConfirm){
-                if (isConfirm) {
-                    $('#spinner').show();
-                    $('#sync-peserta').unbind('submit').submit();
-                }
-            });
-        });
+        confirmSubmit('sync-peserta', 'Sinkronisasi Data', 'Apakah anda yakin ingin melakukan sinkronisasi?', 'Ya, Sinkronkan!', 'Batal');
+
+        confirmSubmit('sync-komponen', 'Sinkronisasi Data', 'Apakah anda yakin ingin melakukan sinkronisasi?', 'Ya, Sinkronkan!', 'Batal');
 
     });
 </script>
