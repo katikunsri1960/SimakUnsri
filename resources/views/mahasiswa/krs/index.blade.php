@@ -138,11 +138,17 @@ Kartu Rencana Studi
             var idMatkul = $(this).data('id-matkul');
             var resultContainerId = '#result-container_' + idMatkul;
 
-            // Lakukan AJAX request ke endpoint yang sesuai
+             // Dapatkan CSRF token dari meta tag
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
             $.ajax({
                 url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
                 type: 'GET',
-                data: { id_matkul: idMatkul },
+                data: {
+                    id_matkul: idMatkul,
+                    _token: csrfToken  // Sertakan CSRF token di sini
+                },
                 success: function(data) {
                     displayData(data, resultContainerId);
                 },
@@ -163,7 +169,13 @@ Kartu Rencana Studi
                 table += '<tr>';
                 table += '<td>' + (index + 1) + '</td>';
                 table += '<td>' + kelas.nama_kelas_kuliah + '</td>';
-                table += '<td class="text-start align-middle">' + formatDosenPengajar(kelas.dosen_pengajar) + '</td>';
+                if (kelas.dosen_pengajar.length > 0) {
+                    // Jika dosen_pengajar tidak kosong, tampilkan nama dosen
+                    table += '<td class="text-start align-middle">' + formatDosenPengajar(kelas.dosen_pengajar) + '</td>';
+                } else {
+                    // Jika dosen_pengajar kosong, tampilkan pesan "Nama Dosen Tidak Diisi"
+                    table += '<td>Nama Dosen Tidak Diisi</td>';
+                }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
                 table += '<td>' + kelas.peserta_kelas_count + '</td>';
                 table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '">Ambil</button></td>';
@@ -177,11 +189,17 @@ Kartu Rencana Studi
             $('.btn-ambil-kelas').click(function() {
                 var idKelas = $(this).data('id-kelas');
 
+                // Dapatkan CSRF token dari meta tag
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
                 // Lakukan AJAX request untuk menyimpan kelas kuliah
                 $.ajax({
                     url: '{{ route("mahasiswa.krs.store_kelas_kuliah") }}',
                     type: 'POST',
-                    data: { id_kelas_kuliah: idKelas },
+                    data: {
+                        id_kelas_kuliah: idKelas,
+                        _token: csrfToken  // Sertakan CSRF token di sini
+                    },
                     success: function(response) {
                         console.log(response.message);
                         // Tambahkan logika atau feedback sesuai kebutuhan
@@ -194,9 +212,10 @@ Kartu Rencana Studi
         }
 
         function formatDosenPengajar(dosenPengajar) {
+            // Format dosen pengajar sesuai kebutuhan
             var formattedString = '<ul>';
             $.each(dosenPengajar, function(index, dosen) {
-                formattedString += '<li>' + dosen.nama_dosen + '</li>';
+                formattedString += '<li>' + dosen.dosen.nama_dosen + '</li>';
             });
             formattedString += '</ul>';
 

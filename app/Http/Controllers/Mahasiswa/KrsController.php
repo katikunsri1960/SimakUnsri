@@ -215,41 +215,42 @@ class KrsController extends Controller
         return response()->json($kelasKuliah);
     }
 
-    public function storeKelasKuliah(Request $request)
-    {
-        $idKelas = $request->input('id_kelas_kuliah');
-        $idMahasiswa = Auth::user()->fk_id; // Sesuaikan dengan cara Anda mendapatkan ID mahasiswa
-
-        // Lakukan logika penyimpanan ke tabel peserta_kelas_kuliah
-        try {
-            PesertaKelasKuliah::create([
-                'id_kelas_kuliah' => $idKelas,
-                'id_mahasiswa' => $idMahasiswa,
-                // Sesuaikan dengan kolom-kolom lain yang diperlukan
-            ]);
-
-            return response()->json(['message' => 'Kelas berhasil diambil'], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Gagal mengambil kelas. Error: ' . $e->getMessage()], 500);
-        }
-    }
-
     public function ambilKelasKuliah(Request $request)
     {
         try {
             $idKelasKuliah = $request->input('id_kelas_kuliah');
-            $idReg = auth()->user()->fk_id;
+            $id_reg = auth()->user()->fk_id;
+
+            $riwayat_pendidikan = RiwayatPendidikan::with(['periode_masuk'])
+                            ->where('id_registrasi_mahasiswa', $id_reg)
+                            ->first();
+
+            // Dapatkan data kelas kuliah berdasarkan ID
+            $kelas_kuliah = KelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)->first();
 
             // Lakukan validasi atau logika bisnis lainnya jika diperlukan
 
             // Lakukan penyimpanan data
             DB::beginTransaction();
 
-            PesertaKelasKuliah::create([
+            $pesertaKelasKuliah = PesertaKelasKuliah::create([
                 'id_kelas_kuliah' => $idKelasKuliah,
-                'id_registrasi_mahasiswa' => $idReg,
+                'id_registrasi_mahasiswa' => $id_reg,
+                'nim' => $riwayat_pendidikan->nim, 
+                'id_mahasiswa' => $riwayat_pendidikan->id_mahasiswa, // Gantilah sesuai model Mahasiswa Anda
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, // Gantilah sesuai model Mahasiswa Anda
+                'nama_program_studi' => $riwayat_pendidikan->nama_program_studi, // Gantilah sesuai model Mahasiswa Anda
+                'id_prodi' => $riwayat_pendidikan->id_prodi, // Gantilah sesuai model Mahasiswa Anda
+                // 'semester' => $semester,
+                'nama_kelas_kuliah' => $kelas_kuliah->nama_kelas_kuliah,
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, // Gantilah sesuai model Mahasiswa Anda
+                'id_matkul' => $kelas_kuliah->id_matkul,
+                'kode_mata_kuliah' => $kelas_kuliah->kode_mata_kuliah, // Sesuaikan dengan relasi di model KelasKuliah
+                'nama_mata_kuliah' => $kelas_kuliah->nama_mata_kuliah, // Sesuaikan dengan relasi di model KelasKuliah
+                'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran, // Gantilah sesuai model Mahasiswa Anda
                 // ... (Tambahkan kolom lain jika diperlukan)
             ]);
+            // dd($pesertaKelasKuliah);
 
             // Selesaikan transaksi
             DB::commit();
@@ -284,6 +285,27 @@ class KrsController extends Controller
             'angkatan' => $request->angkatan,
             // Sesuaikan dengan kolom-kolom lainnya
         ]);
+
+
+
+        // PesertaKelasKuliah::create([
+        //     'id_kelas_kuliah' => $idKelasKuliah,
+        //     'id_registrasi_mahasiswa' => $id_reg,
+        //     // 'semester' => $semester,
+        //     'nama_kelas_kuliah' => $kelasKuliah->nama_kelas_kuliah,
+        //     'id_mahasiswa' => $riwayat_pendidikan->id, // Gantilah sesuai model Mahasiswa Anda
+        //     'nim' => $riwayat_pendidikan->nim, // Gantilah sesuai model Mahasiswa Anda
+        //     // 'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, // Gantilah sesuai model Mahasiswa Anda
+        //     // 'id_matkul' => $kelasKuliah->id_matkul,
+        //     // 'kode_mata_kuliah' => $kelasKuliah->matakuliah->kode_mata_kuliah, // Sesuaikan dengan relasi di model KelasKuliah
+        //     // 'nama_mata_kuliah' => $kelasKuliah->matakuliah->nama_mata_kuliah, // Sesuaikan dengan relasi di model KelasKuliah
+        //     // 'id_prodi' => $riwayat_pendidikan->prodi_id, // Gantilah sesuai model Mahasiswa Anda
+        //     // 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi, // Gantilah sesuai model Mahasiswa Anda
+        //     // 'angkatan' => auth()->user()->angkatan, // Gantilah sesuai model Mahasiswa Anda
+        //     // ... (Tambahkan kolom lain jika diperlukan)
+        // ]);
+
+
 
         // Berikan respons sesuai kebutuhan
         return response()->json(['message' => 'Kelas berhasil diambil']);
