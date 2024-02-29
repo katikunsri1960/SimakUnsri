@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::table('mata_kuliahs', function (Blueprint $table) {
             $table->string('nama_program_studi')->nullable()->after('id_prodi');
             // change tanggal akhir efektif to tanggal selesai efektif
-            $table->renameColumn('tanggal_akhir_efektif', 'tanggal_selesai_efektif');
+            $table->dropColumn('tanggal_akhir_efektif');
+            $table->date('tanggal_selesai_efektif')->nullable()->after('tanggal_mulai_efektif');
             $table->unique('id_matkul');
         });
     }
@@ -27,8 +28,9 @@ return new class extends Migration
         Schema::table('mata_kuliahs', function (Blueprint $table) {
             $table->dropColumn('nama_program_studi');
             // change tanggal selesai efektif to tanggal akhir efektif
-            $table->renameColumn('tanggal_selesai_efektif', 'tanggal_akhir_efektif');
-            $table->dropUnique('id_matkul');
+            $table->dropColumn('tanggal_selesai_efektif');
+            $table->date('tanggal_akhir_efektif')->nullable()->after('tanggal_mulai_efektif');
+            $table->dropUnique('mata_kuliahs_id_matkul_unique');
         });
     }
 };
