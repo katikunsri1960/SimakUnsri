@@ -54,6 +54,19 @@ class BiodataDosen extends Model
                     ->get();
     }
 
+    public function list_dosen_prodi($tahun_ajaran = null, $id_prodi)
+    {
+
+        $tahun_ajaran = $tahun_ajaran ?? SemesterAktif::where('id', 1)->first()->semester->id_tahun_ajaran ?? (date('m') >= 8 ? date('Y') : date('Y') - 1);
+
+        return $this->leftJoin('penugasan_dosens as p', 'p.id_dosen', '=', 'biodata_dosens.id_dosen')
+                    ->select('biodata_dosens.*', 'p.nama_program_studi as prodi', 'p.a_sp_homebase as homebase')
+                    ->where('id_jenis_sdm', 12)
+                    ->where('p.id_tahun_ajaran', $tahun_ajaran)
+                    ->where('p.id_prodi', $id_prodi)
+                    ->get();
+    }
+
     public function data_dosen($id_dosen)
     {
         $tahun_ajaran = SemesterAktif::join('semesters', 'semester_aktifs.id_semester', 'semesters.id_semester')->pluck('id_tahun_ajaran')->first() ??
@@ -83,6 +96,6 @@ class BiodataDosen extends Model
     {
         $db = new UjiMahasiswa;
 
-        
+
     }
 }
