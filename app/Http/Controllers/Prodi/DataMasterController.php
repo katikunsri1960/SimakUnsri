@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Prodi;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dosen\BiodataDosen;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
@@ -11,7 +12,12 @@ class DataMasterController extends Controller
 {
     public function dosen()
     {
-        return view('prodi.data-master.dosen.index');
+        $db = new BiodataDosen();
+        $data = $db->list_dosen_prodi(null, auth()->user()->fk_id);
+
+        return view('prodi.data-master.dosen.index', [
+            'data' => $data
+        ]);
     }
 
     public function mahasiswa()
@@ -78,7 +84,7 @@ class DataMasterController extends Controller
     public function ruang_perkuliahan_destroy(RuangPerkuliahan $ruang_perkuliahan)
     {
         $ruang_perkuliahan->delete();
-        
+
         return redirect()->back()->with('success', 'Data Berhasil di Hapus');
     }
 

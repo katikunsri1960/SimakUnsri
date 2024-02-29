@@ -451,6 +451,36 @@ class PerkuliahanController extends Controller
         }
 
         return redirect()->back()->with('success', 'Sinkronisasi Transkrip Mahasiswa Berhasil!');
+    }
+
+    public function sync_komponen_evaluasi_kelas()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $act = 'GetListKomponenEvaluasiKelas';
+        $limit = '';
+        $offset = '';
+        $order = '';
+        $job = \App\Jobs\SyncJob::class;
+        $name = 'komponen-evaluasi-kelas';
+        $model = \App\Models\Perkuliahan\KomponenEvaluasiKelas::class;
+        $primary = 'id_komponen_evaluasi';
+
+        $kelas = KelasKuliah::where('id_semester', '>=', '20221')->pluck('id_kelas_kuliah')->toArray();
+        $kelas = array_chunk($kelas, 15);
+        $kelas = array_map(function ($value) {
+            return "id_kelas_kuliah IN ('" . implode("','", $value) . "')";
+        }, $kelas);
+
+        $batch = Bus::batch([])->name($name)->dispatch();
+
+        foreach ($kelas as $s) {
+            $filter = $s;
+            $batch->add(new $job($act, $limit, $offset, $order, $filter, $model, $primary));
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Komponen Evaluasi Kelas Berhasil!');
 
 
     }
