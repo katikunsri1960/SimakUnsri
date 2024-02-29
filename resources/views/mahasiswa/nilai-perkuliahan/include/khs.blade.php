@@ -34,7 +34,7 @@
                                                                 <td class="text-center align-middle">{{$d->ips}}</td>
                                                                 <td class="text-center align-middle">{{$d->ipk}}</td>
                                                                 <td class="text-center align-middle">
-                                                                    <a type="button" href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs', ['id_prodi' => $d->id_prodi, 'id_semester' => $d->id_semester])}}" class="btn btn-success waves-effect waves-light">
+                                                                    <a type="button" href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs', ['id_semester' => $d->id_semester])}}" class="btn btn-success waves-effect waves-light">
                                                                     <i class="fa-solid fa-eye"></i> Lihat KHS
                                                                     </a>
                                                                 </td>
