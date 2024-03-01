@@ -121,9 +121,26 @@ class KrsController extends Controller
 
                         // dd($kelasKuliah);
         
-        
+        // Tambahkan is_kelas_ambil berdasarkan logika yang sesuai
+        foreach ($kelasKuliah as $kelas) {
+            $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->id, $kelas->id_matkul);
+        }
+
         // Sertakan data yang ingin Anda kirim ke tampilan
         return response()->json($kelasKuliah);
+    }
+
+    // Fungsi untuk mengecek apakah kelas sudah diambil oleh mahasiswa tertentu
+    private function cekApakahKelasSudahDiambil($id_registrasi_mahasiswa, $id_matkul)
+    {
+        // ... (tambahkan logika pengecekan di sini, misalnya dengan menggunakan model PesertaKelasKuliah)
+
+        // Contoh menggunakan Eloquent
+        $kelasDiambil = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
+            ->where('id_matkul', $id_matkul)
+            ->exists();
+
+        return $kelasDiambil;
     }
 
     public function ambilKelasKuliah(Request $request)
@@ -170,4 +187,79 @@ class KrsController extends Controller
             return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
         }
     }
+
+
+    public function updateKelasKuliah(Request $request)
+    {
+        try {
+            $idMatkul = $request->input('id_matkul');
+            $idReg = auth()->user()->fk_id;
+
+            // Lakukan penyimpanan data
+            DB::beginTransaction();
+
+            // Hapus data peserta_kelas_kuliah yang memiliki id_matkul yang sama
+            PesertaKelasKuliah::where('id_matkul', $idMatkul)
+                ->where('id_registrasi_mahasiswa', $idReg)
+                ->delete();
+
+            // Cek apakah peserta_kelas_kuliah sudah ada untuk id_matkul ini
+            $existingRecord = PesertaKelasKuliah::where('id_matkul', $idMatkul)
+                ->where('id_registrasi_mahasiswa', $idReg)
+                ->first();
+
+            if ($existingRecord) {
+                // Lakukan update jika sudah ada
+                $existingRecord->update([
+                    // Tambahkan field yang perlu di-update
+                    // Misalnya, jika ada kolom yang perlu di-update, contoh:
+                    // 'field1' => $request->input('field1'),
+                    // 'field2' => $request->input('field2'),
+                ]);
+            } else {
+                // Lakukan penyimpanan baru jika belum ada
+                PesertaKelasKuliah::create([
+                    'id_kelas_kuliah' => $request->input('id_kelas_kuliah'),
+                    'id_registrasi_mahasiswa' => $idReg,
+                    'id_matkul' => $idMatkul,
+                    // ... Tambahan field lainnya ...
+                ]);
+            }
+
+            // Selesaikan transaksi
+            DB::commit();
+
+            // Respon sesuai kebutuhan
+            return response()->json(['message' => 'Data berhasil di-update'], 200);
+        } catch (\Exception $e) {
+            // Tangani kesalahan
+            DB::rollback();
+
+            return response()->json(['message' => 'Terjadi kesalahan saat meng-update data'], 500);
+        }
+    }
+  
+    public function hapus_kelas_kuliah(Request $request)
+    {
+        try {
+            $idReg = auth()->user()->fk_id;
+
+            // Ambil data peserta kelas kuliah berdasarkan id_kelas_kuliah dan id_registrasi_mahasiswa
+            $pesertaKelas = PesertaKelasKuliah::where('id_kelas_kuliah', $request->id_kelas_kuliah)
+                ->where('id_registrasi_mahasiswa', $idReg)
+                ->firstOrFail();
+
+            // Lakukan proses penghapusan peserta kelas kuliah
+            $pesertaKelas->delete();
+
+            // Redirect atau tampilkan pesan sesuai kebutuhan
+            return redirect()->route('mahasiswa.krs')->with('success', 'Mata kuliah berhasil dihapus dari KRS.');
+        } catch (\Exception $e) {
+            // Redirect atau tampilkan pesan kesalahan sesuai kebutuhan
+            return redirect()->route('mahasiswa.krs')->with('error', 'Gagal menghapus mata kuliah dari KRS.');
+        }
+    }
+
+
+
 }
