@@ -231,10 +231,12 @@ class PerkuliahanController extends Controller
         $offset = '';
         $order = '';
 
-        $job = \App\Jobs\Perkuliahan\PerkuliahanMahasiswaJob::class;
+        $job = \App\Jobs\SyncJob::class;
+        $model = \App\Models\Perkuliahan\AktivitasKuliahMahasiswa::class;
         $name = 'aktivitas-kuliah-mahasiswa';
+        $primary = ['id_registrasi_mahasiswa', 'id_semester'];
 
-        $batch = $this->sync($act, $limit, $offset, $order, $job, $name);
+        $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model, $primary);
 
         return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
     }
