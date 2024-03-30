@@ -192,39 +192,55 @@ class KrsController extends Controller
     public function updateKelasKuliah(Request $request)
     {
         try {
-            $idMatkul = $request->input('id_matkul');
-            $idReg = auth()->user()->fk_id;
+            $idKelasKuliah = $request->input('id_kelas_kuliah');
+            $id_reg = auth()->user()->fk_id;
+
+            $riwayat_pendidikan = RiwayatPendidikan::with(['periode_masuk'])
+                            ->where('id_registrasi_mahasiswa', $id_reg)
+                            ->first();
+
+            $kelas_kuliah = KelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)->first();
+
 
             // Lakukan penyimpanan data
             DB::beginTransaction();
 
             // Hapus data peserta_kelas_kuliah yang memiliki id_matkul yang sama
-            PesertaKelasKuliah::where('id_matkul', $idMatkul)
-                ->where('id_registrasi_mahasiswa', $idReg)
+            PesertaKelasKuliah::where('id_matkul', $idKelasKuliah)
+                ->where('id_registrasi_mahasiswa', $id_reg)
                 ->delete();
 
-            // Cek apakah peserta_kelas_kuliah sudah ada untuk id_matkul ini
-            $existingRecord = PesertaKelasKuliah::where('id_matkul', $idMatkul)
-                ->where('id_registrasi_mahasiswa', $idReg)
-                ->first();
+            // // Cek apakah peserta_kelas_kuliah sudah ada untuk id_matkul ini
+            // $existingRecord = PesertaKelasKuliah::where('id_matkul', $idKelasKuliah)
+            //     ->where('id_registrasi_mahasiswa', $idReg)
+            //     ->first();
 
-            if ($existingRecord) {
-                // Lakukan update jika sudah ada
-                $existingRecord->update([
-                    // Tambahkan field yang perlu di-update
-                    // Misalnya, jika ada kolom yang perlu di-update, contoh:
-                    // 'field1' => $request->input('field1'),
-                    // 'field2' => $request->input('field2'),
-                ]);
-            } else {
+            // if ($existingRecord) {
+            //     // Lakukan update jika sudah ada
+            //     $existingRecord->update([
+            //         // Tambahkan field yang perlu di-update
+            //         // Misalnya, jika ada kolom yang perlu di-update, contoh:
+            //         // 'field1' => $request->input('field1'),
+            //         // 'field2' => $request->input('field2'),
+            //     ]);
+            // } else {
                 // Lakukan penyimpanan baru jika belum ada
                 PesertaKelasKuliah::create([
                     'id_kelas_kuliah' => $request->input('id_kelas_kuliah'),
-                    'id_registrasi_mahasiswa' => $idReg,
-                    'id_matkul' => $idMatkul,
-                    // ... Tambahan field lainnya ...
+                    'id_registrasi_mahasiswa' => $id_reg,
+                    'nim' => $riwayat_pendidikan->nim, 
+                    'id_mahasiswa' => $riwayat_pendidikan->id_mahasiswa, 
+                    'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, 
+                    'nama_program_studi' => $riwayat_pendidikan->nama_program_studi, 
+                    'id_prodi' => $riwayat_pendidikan->id_prodi, 
+                    'nama_kelas_kuliah' => $kelas_kuliah->nama_kelas_kuliah,
+                    'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, 
+                    'id_matkul' => $kelas_kuliah->id_matkul,
+                    'kode_mata_kuliah' => $kelas_kuliah->kode_mata_kuliah, 
+                    'nama_mata_kuliah' => $kelas_kuliah->nama_mata_kuliah, 
+                    'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran, 
                 ]);
-            }
+            // }
 
             // Selesaikan transaksi
             DB::commit();

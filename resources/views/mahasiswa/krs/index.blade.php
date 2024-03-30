@@ -81,8 +81,8 @@ Kartu Rencana Studi
             <div class="box">
 				<!-- Nav tabs -->
                 <ul class="nav nav-pills justify-content-left" role="tablist">
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
                 <div class="row">
                     <div class="col-12">
@@ -128,6 +128,9 @@ Kartu Rencana Studi
     	
 </section>
 @endsection
+@push('css')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
@@ -236,45 +239,6 @@ Kartu Rencana Studi
                         console.error('Error updating data:', error);
                     }});
             });
-
-
-            // $('.btn-hapus-kelas').click(function() {
-            //     var idKelas = $(this).data('id-kelas');
-
-            //     // Tampilkan konfirmasi SweetAlert
-            //     swal({
-            //         title: 'Konfirmasi',
-            //         text: 'Apakah Anda yakin ingin menghapus kelas ini dari KRS?',
-            //         icon: 'warning',
-            //         buttons: {
-            //             cancel: 'Batal',
-            //             confirm: 'Ya, Hapus'
-            //         },
-            //         dangerMode: true,
-            //     }).then((willDelete) => {
-            //         if (willDelete) {
-            //             // Jika pengguna mengklik "Ya, Hapus", lakukan AJAX request untuk menghapus kelas dari KRS
-            //             $.ajax({
-            //                 url: '{{ route("mahasiswa.krs.hapus_kelas_kuliah") }}',
-            //                 type: 'POST',
-            //                 data: {
-            //                     id_kelas_kuliah: idKelas,
-            //                     _token: csrfToken  // Sertakan CSRF token di sini
-            //                 },
-            //                 success: function(response) {
-            //                     console.log(response.message);
-            //                     // Tambahkan logika atau feedback sesuai kebutuhan
-
-            //                     // Refresh halaman setelah berhasil menghapus kelas kuliah dari KRS
-            //                     location.reload();
-            //                 },
-            //                 error: function(error) {
-            //                     console.error('Error deleting data:', error);
-            //                 }
-            //             });
-            //         }
-            //     });
-            // });
         }
 
         function formatDosenPengajar(dosenPengajar) {

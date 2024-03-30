@@ -1,4 +1,4 @@
-<div class="tab-pane active" id="krs" role="tabpanel">
+<div class="tab-pane " id="krs" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
         <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
             <div class="row">
@@ -30,7 +30,7 @@
                                                             <th class="text-center align-middle">SKS</th>
                                                             <th class="text-center align-middle">Waktu Kuliah</th>
                                                             <th class="text-center align-middle">Status</th>
-                                                            <th class="text-center align-middle"><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></th>
+                                                            <th class="text-center align-middle">Action</th>
                                                             <!-- <td>Action</td> -->
                                                         </tr>
                                                     </thead>
