@@ -2,103 +2,18 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
-use App\Models\Wilayah;
-use App\Models\Semester;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
-use App\Models\Perkuliahan\ListKurikulum;
-use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\MatkulKurikulum;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\SemesterAktif;
 
 class KrsController extends Controller
 {
-    // public function krs_lama()
-    // {
-
-    //     $id_reg = auth()->user()->fk_id;
-
-    //     $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-    //                         ->first();
-
-    //     $semester_aktif = Semester::select('*',DB::raw('RIGHT(id_semester, 1) as kode_semester'))//Ambiil Nilai apling belakang id_semester
-    //                     ->where('id_semester', '20231')
-    //                     // ->pluck('kode_semester')
-    //                     // ->limit(50)
-    //                     ->first();
-        
-    //     $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
-    //     // dd($riwayat_pendidikan);
-
-    //     $matakuliah =  MataKuliah::with(['kelas_kuliah' => function ($query) 
-    //                 use ($riwayat_pendidikan) 
-    //                 {
-    //                     $query
-    //                             ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-    //                             // ->withCount('dosen_pengajar')
-    //                             ;
-    //                 },'kelas_kuliah.dosen_pengajar',  ])
-                    
-    //                 ->Join('kelas_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
-    //                 ->select(
-    //                     'mata_kuliahs.id_matkul',
-    //                     'mata_kuliahs.kode_mata_kuliah',
-    //                     'mata_kuliahs.nama_mata_kuliah',
-    //                     'mata_kuliahs.sks_mata_kuliah',
-    //                     DB::raw("RIGHT(id_semester, 1) AS kode_semester_kelas")
-    //                 )
-    //                 ->withCount('kelas_kuliah')
-    //                 ->where(DB::raw("RIGHT(id_semester, 1)"), '=', 1)
-    //                 // ->where('kode_semester_kelas',1) 
-    //                 ->where('mata_kuliahs.id_prodi', $riwayat_pendidikan->id_prodi)
-                    
-    //                 ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah', 'mata_kuliahs.nama_mata_kuliah', 'mata_kuliahs.sks_mata_kuliah', 'id_semester',)
-                    
-    //                 // ->where('mata_kuliahs.nama_mata_kuliah', 'PENGUKURAN TEKNIK')
-                    
-    //                 ->whereNotNull('id_semester')
-    //                 ->whereNot('sks_mata_kuliah', [0])
-    //                 // ->orderBy('kelas_kuliah_count')
-    //                 ->orderBy('sks_mata_kuliah')
-    //                 ->distinct()
-    //                 // ->limit(100) 
-    //                 ->get();
-    //                 // dd($matakuliah);
-
-    //     $kelas_kuliah = KelasKuliah::with(['dosen_pengajar'])
-    //                 ->withCount('peserta_kelas')
-    //                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-    //                 ->where('id_semester',  $semester_aktif->id_semester) 
-    //                 // ->where('nama_mata_kuliah', 'PENGUKURAN TEKNIK')
-    //                 ->get();
-
-    //     $krs = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
-    //                 ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-    //                 ->where('id_registrasi_mahasiswa', $id_reg)
-    //                 ->where('id_semester', $semester_aktif->id_semester)
-    //                 // ->limit(10)
-    //                 ->get();
-    //                 // dd($peserta_kelas);
-                
-
-    //     return view('mahasiswa.krs.index', compact(
-    //         'matakuliah', 
-    //         'kelas_kuliah',
-    //         'semester_aktif',
-    //         'krs',
-    //         // 'totalPeserta',
-    //     ));
-    // }
-
-
-
     public function krs()
     {
         $id_reg = auth()->user()->fk_id;
@@ -109,18 +24,14 @@ class KrsController extends Controller
         $prodi_id = $riwayat_pendidikan->id_prodi;
         // dd($prodi_id);
 
-        $semester_aktif = SemesterAktif::select('*',DB::raw('RIGHT(id_semester, 1) as kode_semester'))//Ambiil Nilai paling belakang id_semester untuk penentu ganjil genap
+        $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
                         // dd($semester_aktif);
         
         $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
         // dd($semester_aktif);
 
-        //ambil matakuliah ganjil atau genap, dari matakuliah kurikulum where = semester ke
-
-        // $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
-        
-        $data_univ = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+       $data_univ = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                             ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                             ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.kode_mata_kuliah=mata_kuliahs.kode_mata_kuliah and kelas_kuliahs.id_prodi='".$prodi_id."' and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
                             ->whereIn('mata_kuliahs.kode_mata_kuliah', array('UNI1001','UNI1002','UNI1003','UNI1004'))
@@ -200,7 +111,7 @@ class KrsController extends Controller
         ->first();
     
         // Ambil data kelas kuliah sesuai dengan kebutuhan Anda
-        $kelasKuliah = KelasKuliah::with(['dosen_pengajar'])
+        $kelasKuliah = KelasKuliah::with(['dosen_pengajar.dosen'])
                     ->withCount('peserta_kelas')
                     ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                     ->where('id_semester',  $semester_aktif->id_semester) 
@@ -210,72 +121,161 @@ class KrsController extends Controller
 
                         // dd($kelasKuliah);
         
-        
+        // Tambahkan is_kelas_ambil berdasarkan logika yang sesuai
+        foreach ($kelasKuliah as $kelas) {
+            $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->id, $kelas->id_matkul);
+        }
+
         // Sertakan data yang ingin Anda kirim ke tampilan
         return response()->json($kelasKuliah);
     }
 
-    public function ambilKelas(Request $request)
+    // Fungsi untuk mengecek apakah kelas sudah diambil oleh mahasiswa tertentu
+    private function cekApakahKelasSudahDiambil($id_registrasi_mahasiswa, $id_matkul)
+    {
+        // ... (tambahkan logika pengecekan di sini, misalnya dengan menggunakan model PesertaKelasKuliah)
+
+        // Contoh menggunakan Eloquent
+        $kelasDiambil = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
+            ->where('id_matkul', $id_matkul)
+            ->exists();
+
+        return $kelasDiambil;
+    }
+
+    public function ambilKelasKuliah(Request $request)
     {
         try {
-            // Ambil data yang diperlukan dari request
             $idKelasKuliah = $request->input('id_kelas_kuliah');
-            $id_reg = auth()->user()->fk_id; // Sesuaikan dengan cara Anda mendapatkan ID mahasiswa
+            $id_reg = auth()->user()->fk_id;
 
-            // Cek apakah mahasiswa sudah mengambil kelas ini sebelumnya
-            $pesertaKelasExist = PesertaKelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)
-                ->where('id_mahasiswa', $id_reg)
-                ->exists();
+            $riwayat_pendidikan = RiwayatPendidikan::with(['periode_masuk'])
+                            ->where('id_registrasi_mahasiswa', $id_reg)
+                            ->first();
 
-            if (!$pesertaKelasExist) {
-                // Jika belum, tambahkan data ke dalam tabel peserta_kelas_kuliah
-                PesertaKelasKuliah::create([
-                    'id_kelas_kuliah' => $request->id_kelas_kuliah,
-                    'id_registrasi_mahasiswa' => $request->id_reg,
-                    // 'nama_kelas_kuliah' => $request->nama_kelas_kuliah,
-                    // 'id_mahasiswa' => $request->id_mahasiswa,
-                    // 'nim' => $request->nim,
-                    // 'nama_mahasiswa' => $request->nama_mahasiswa,
-                    // 'id_matkul' => $request->id_matkul,
-                    // 'kode_mata_kuliah' => $request->kode_mata_kuliah,
-                    // 'nama_mata_kuliah' => $request->nama_mata_kuliah,
-                    // 'id_prodi' => $request->id_prodi,
-                    // 'nama_program_studi' => $request->nama_program_studi,
-                    // 'angkatan' => $request->angkatan,
-                ]);
+            $kelas_kuliah = KelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)->first();
 
-                return response()->json(['success' => true, 'message' => 'Kelas berhasil diambil.']);
-            } else {
-                return response()->json(['success' => false, 'message' => 'Anda sudah mengambil kelas ini sebelumnya.']);
-            }
+            // Lakukan penyimpanan data
+            DB::beginTransaction();
+
+            $pesertaKelasKuliah = PesertaKelasKuliah::create([
+                'id_kelas_kuliah' => $idKelasKuliah,
+                'id_registrasi_mahasiswa' => $id_reg,
+                'nim' => $riwayat_pendidikan->nim, 
+                'id_mahasiswa' => $riwayat_pendidikan->id_mahasiswa, 
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, 
+                'nama_program_studi' => $riwayat_pendidikan->nama_program_studi, 
+                'id_prodi' => $riwayat_pendidikan->id_prodi, 
+                'nama_kelas_kuliah' => $kelas_kuliah->nama_kelas_kuliah,
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, 
+                'id_matkul' => $kelas_kuliah->id_matkul,
+                'kode_mata_kuliah' => $kelas_kuliah->kode_mata_kuliah, 
+                'nama_mata_kuliah' => $kelas_kuliah->nama_mata_kuliah, 
+                'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran, 
+            ]);
+            // dd($pesertaKelasKuliah);
+
+            // Selesaikan transaksi
+            DB::commit();
+
+            // Respon sesuai kebutuhan
+            return response()->json(['message' => 'Data berhasil disimpan'], 200);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => 'Terjadi kesalahan.']);
+            // Tangani kesalahan
+            DB::rollback();
+
+            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
         }
     }
 
-    public function storePesertaKelas(Request $request)
+
+    public function updateKelasKuliah(Request $request)
     {
-        // Validasi request jika diperlukan
+        try {
+            $idKelasKuliah = $request->input('id_kelas_kuliah');
+            $id_reg = auth()->user()->fk_id;
 
-        // Simpan data ke tabel peserta_kelas_kuliah
-        PesertaKelasKuliah::create([
-            'id_kelas_kuliah' => $request->id_kelas_kuliah,
-            'nama_kelas_kuliah' => $request->nama_kelas_kuliah,
-            'id_registrasi_mahasiswa' => $request->id_registrasi_mahasiswa,
-            'id_mahasiswa' => $request->id_mahasiswa,
-            'nim' => $request->nim,
-            'nama_mahasiswa' => $request->nama_mahasiswa,
-            'id_matkul' => $request->id_matkul,
-            'kode_mata_kuliah' => $request->kode_mata_kuliah,
-            'nama_mata_kuliah' => $request->nama_mata_kuliah,
-            'id_prodi' => $request->id_prodi,
-            'nama_program_studi' => $request->nama_program_studi,
-            'angkatan' => $request->angkatan,
-            // Sesuaikan dengan kolom-kolom lainnya
-        ]);
+            $riwayat_pendidikan = RiwayatPendidikan::with(['periode_masuk'])
+                            ->where('id_registrasi_mahasiswa', $id_reg)
+                            ->first();
 
-        // Berikan respons sesuai kebutuhan
-        return response()->json(['message' => 'Kelas berhasil diambil']);
+            $kelas_kuliah = KelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)->first();
+
+
+            // Lakukan penyimpanan data
+            DB::beginTransaction();
+
+            // Hapus data peserta_kelas_kuliah yang memiliki id_matkul yang sama
+            PesertaKelasKuliah::where('id_matkul', $idKelasKuliah)
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->delete();
+
+            // // Cek apakah peserta_kelas_kuliah sudah ada untuk id_matkul ini
+            // $existingRecord = PesertaKelasKuliah::where('id_matkul', $idKelasKuliah)
+            //     ->where('id_registrasi_mahasiswa', $idReg)
+            //     ->first();
+
+            // if ($existingRecord) {
+            //     // Lakukan update jika sudah ada
+            //     $existingRecord->update([
+            //         // Tambahkan field yang perlu di-update
+            //         // Misalnya, jika ada kolom yang perlu di-update, contoh:
+            //         // 'field1' => $request->input('field1'),
+            //         // 'field2' => $request->input('field2'),
+            //     ]);
+            // } else {
+                // Lakukan penyimpanan baru jika belum ada
+                PesertaKelasKuliah::create([
+                    'id_kelas_kuliah' => $request->input('id_kelas_kuliah'),
+                    'id_registrasi_mahasiswa' => $id_reg,
+                    'nim' => $riwayat_pendidikan->nim, 
+                    'id_mahasiswa' => $riwayat_pendidikan->id_mahasiswa, 
+                    'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, 
+                    'nama_program_studi' => $riwayat_pendidikan->nama_program_studi, 
+                    'id_prodi' => $riwayat_pendidikan->id_prodi, 
+                    'nama_kelas_kuliah' => $kelas_kuliah->nama_kelas_kuliah,
+                    'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa, 
+                    'id_matkul' => $kelas_kuliah->id_matkul,
+                    'kode_mata_kuliah' => $kelas_kuliah->kode_mata_kuliah, 
+                    'nama_mata_kuliah' => $kelas_kuliah->nama_mata_kuliah, 
+                    'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran, 
+                ]);
+            // }
+
+            // Selesaikan transaksi
+            DB::commit();
+
+            // Respon sesuai kebutuhan
+            return response()->json(['message' => 'Data berhasil di-update'], 200);
+        } catch (\Exception $e) {
+            // Tangani kesalahan
+            DB::rollback();
+
+            return response()->json(['message' => 'Terjadi kesalahan saat meng-update data'], 500);
+        }
     }
+  
+    public function hapus_kelas_kuliah(Request $request)
+    {
+        try {
+            $idReg = auth()->user()->fk_id;
+
+            // Ambil data peserta kelas kuliah berdasarkan id_kelas_kuliah dan id_registrasi_mahasiswa
+            $pesertaKelas = PesertaKelasKuliah::where('id_kelas_kuliah', $request->id_kelas_kuliah)
+                ->where('id_registrasi_mahasiswa', $idReg)
+                ->firstOrFail();
+
+            // Lakukan proses penghapusan peserta kelas kuliah
+            $pesertaKelas->delete();
+
+            // Redirect atau tampilkan pesan sesuai kebutuhan
+            return redirect()->route('mahasiswa.krs')->with('success', 'Mata kuliah berhasil dihapus dari KRS.');
+        } catch (\Exception $e) {
+            // Redirect atau tampilkan pesan kesalahan sesuai kebutuhan
+            return redirect()->route('mahasiswa.krs')->with('error', 'Gagal menghapus mata kuliah dari KRS.');
+        }
+    }
+
+
 
 }
