@@ -22,17 +22,16 @@ Mata Kuliah
 </div>
 
 <section class="content">
+    @include('swal')
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    {{-- <div class="d-flex justify-content-end">
-                        <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form>
-                        <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button>
-                    </div> --}}
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-success waves-effect waves-light"  data-bs-toggle="modal"
+                        data-bs-target="#kampusMerdeka"><i class="fa fa-plus"></i> Tambah MK Kampus Merdeka</button>
+                    </div>
+                    @include('prodi.data-master.matkul-merdeka.create')
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -47,7 +46,15 @@ Mata Kuliah
                              </tr>
                           </thead>
                           <tbody>
-
+                            @foreach ($data as $d)
+                            <tr>
+                                <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                <td class="text-center align-middle">{{$d->matkul->kode_mata_kuliah}}</td>
+                                <td class="text-center align-middle">{{$d->matkul->nama_mata_kuliah}}</td>
+                                <td class="text-center align-middle">{{$d->matkul->sks_mata_kuliah}}</td>
+                                <td class="text-center align-middle"></td>
+                            </tr>
+                            @endforeach
                           </tbody>
                       </table>
                       </div>
@@ -61,11 +68,36 @@ Mata Kuliah
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
     $(function() {
         "use strict";
-
         $('#data').DataTable();
+        $('#matkulTambah').select2({
+            placeholder: "-- Pilih Mata Kuliah --",
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#kampusMerdeka')
+        });
+
+        $('#masukForm').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Apakah Anda Yakin??',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#masukForm').unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
+        });
+
     });
 </script>
 @endpush

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('matkul_merdekas', function (Blueprint $table) {
             $table->id();
             $table->string('id_prodi');
-            $table->string('id_matkul');
+            $table->string('id_matkul')->unique();
             $table->timestamps();
         });
     }

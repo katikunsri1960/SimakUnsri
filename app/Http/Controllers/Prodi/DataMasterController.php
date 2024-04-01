@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Prodi;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\MatkulMerdeka;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
@@ -38,7 +39,34 @@ class DataMasterController extends Controller
 
     public function matkul_merdeka()
     {
-        return view('prodi.data-master.matkul-merdeka.index');
+        $matkul = MataKuliah::where('id_prodi', auth()->user()->fk_id)->orderBy('kode_mata_kuliah')->get();
+        $data = MatkulMerdeka::with(['matkul'])->where('id_prodi', auth()->user()->fk_id)->get();
+
+        return view('prodi.data-master.matkul-merdeka.index', [
+            'matkul' => $matkul,
+            'data' => $data,
+        ]);
+    }
+
+    public function matkul_merdeka_store(Request $request)
+    {
+
+        $data = $request->validate([
+                    'id_matkul' => 'required',
+                ]);
+
+        $data['id_prodi'] = auth()->user()->fk_id;
+
+        MatkulMerdeka::create($data);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+    public function matkul_merdeka_destroy(MatkulMerdeka $matkul_merdeka)
+    {
+        $matkul_merdeka->delete();
+
+        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
     }
 
     public function ruang_perkuliahan()

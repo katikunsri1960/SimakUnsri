@@ -135,6 +135,8 @@ Route::group(['middleware' => ['auth']], function() {
 
                 Route::prefix('matkul-merdeka')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul_merdeka'])->name('prodi.data-master.matkul-merdeka');
+                    Route::post('/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul_merdeka_store'])->name('prodi.data-master.matkul-merdeka.store');
+                    Route::delete('/{matkul_merdeka}/delete', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul_merdeka_destroy'])->name('prodi.data-master.matkul-merdeka.delete');
                 });
 
                 //Ruang Perkuliahan
