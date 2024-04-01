@@ -56,7 +56,7 @@ class PerkuliahanController extends Controller
     {
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();
         $semester = Semester::pluck('id_semester')->toArray();
-        $semester = array_chunk($semester, 4);
+        $semester = array_chunk($semester, 6);
         $semester = array_map(function ($value) {
             return "id_semester IN ('" . implode("','", $value) . "')";
         }, $semester);

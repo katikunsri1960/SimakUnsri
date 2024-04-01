@@ -130,6 +130,10 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/mahasiswa', [App\Http\Controllers\Prodi\DataMasterController::class, 'mahasiswa'])->name('prodi.data-master.mahasiswa');
                 Route::get('/mata-kuliah', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul'])->name('prodi.data-master.mata-kuliah');
 
+                Route::prefix('matkul-merdeka')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul_merdeka'])->name('prodi.data-master.matkul-merdeka');
+                });
+
                 //Ruang Perkuliahan
                 Route::get('/ruang-perkuliahan', [App\Http\Controllers\Prodi\DataMasterController::class, 'ruang_perkuliahan'])->name('prodi.data-master.ruang-perkuliahan');
                 Route::post('/ruang-perkuliahan', [App\Http\Controllers\Prodi\DataMasterController::class, 'ruang_perkuliahan_store'])->name('prodi.data-master.ruang-perkuliahan.store');

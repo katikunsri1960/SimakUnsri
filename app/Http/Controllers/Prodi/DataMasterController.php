@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Prodi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
+use App\Models\Perkuliahan\MataKuliah;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
@@ -22,12 +23,22 @@ class DataMasterController extends Controller
 
     public function mahasiswa()
     {
+
         return view('prodi.data-master.mahasiswa.index');
     }
 
     public function matkul()
     {
-        return view('prodi.data-master.mata-kuliah.index');
+        $data = MataKuliah::where('id_prodi', auth()->user()->fk_id)->get();
+
+        return view('prodi.data-master.mata-kuliah.index', [
+            'data' => $data
+        ]);
+    }
+
+    public function matkul_merdeka()
+    {
+        return view('prodi.data-master.matkul-merdeka.index');
     }
 
     public function ruang_perkuliahan()
