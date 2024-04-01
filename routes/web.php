@@ -30,10 +30,13 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('/biodata', [App\Http\Controllers\Mahasiswa\BiodataController::class, 'index'])->name('mahasiswa.biodata');
 
             Route::get('/kartu-rencana-studi', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs'])->name('mahasiswa.krs');
-            // web.php atau routes.php
             Route::get('/get-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'get_kelas_kuliah'])->name('mahasiswa.krs.get_kelas_kuliah');
-            Route::post('/store-peserta-kelas', [App\Http\Controllers\Mahasiswa\KrsController::class, 'storePesertaKelas'])->name('store-peserta-kelas');
-            Route::post('/ambil-kelas', [App\Http\Controllers\Mahasiswa\KrsController::class, 'ambilKelas'])->name('mahasiswa.krs.ambil_kelas');
+            Route::post('/krs/store-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KRSController::class, 'ambilKelasKuliah'])->name('mahasiswa.krs.store_kelas_kuliah');
+            Route::post('/krs/update-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KRSController::class, 'update_kelas_kuliah'])->name('mahasiswa.krs.update_kelas_kuliah');
+            Route::delete('/krs/hapus-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'hapus_kelas_kuliah'])->name('mahasiswa.krs.hapus_kelas_kuliah');
+            Route::get('/krs/check-kelas-diambil', [App\Http\Controllers\Mahasiswa\KRSController::class, 'checkKelasDiambil'])->name('mahasiswa.krs.check_kelas_diambil');
+
+
             Route::get('/ambil-krs', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'create_krs'])->name('mahasiswa.create-krs');
             Route::post('/ambil-krs/{id_kelas_kuliah}', [KrsController::class, 'ambilKrs'])->name('ambil-krs');
 

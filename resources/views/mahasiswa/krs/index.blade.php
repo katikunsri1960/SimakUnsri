@@ -128,23 +128,33 @@ Kartu Rencana Studi
     	
 </section>
 @endsection
+@push('css')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
     $(document).ready(function() {
         // Menggunakan class untuk mendapatkan semua tombol "Lihat Kelas Kuliah"
-        $('.lihat-kelas-kuliah').click(function() {
+            $('.lihat-kelas-kuliah').click(function() {
             var idMatkul = $(this).data('id-matkul');
             var resultContainerId = '#result-container_' + idMatkul;
 
-            // Lakukan AJAX request ke endpoint yang sesuai
+             // Dapatkan CSRF token dari meta tag
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
             $.ajax({
                 url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
                 type: 'GET',
-                data: { id_matkul: idMatkul },
+                data: {
+                    id_matkul: idMatkul,
+                    _token: csrfToken  // Sertakan CSRF token di sini
+                },
                 success: function(data) {
                     displayData(data, resultContainerId);
+
                 },
                 error: function(error) {
                     console.error('Error fetching data:', error);
@@ -153,20 +163,13 @@ Kartu Rencana Studi
         });
 
         function displayData(data, resultContainerId) {
-            // Tambahkan pernyataan console.log untuk mencetak data ke konsol
-            console.log('Data dari server:', data);
-
-            // Hapus konten sebelumnya dari result-container
             $(resultContainerId).empty();
 
-            // Buat tabel untuk menampilkan data
             var table = '<table class="table table-bordered table-striped text-center">';
             table += '<thead><tr><th>No</th><th>Kelas Kuliah</th><th>Dosen Pengajar</th><th style="width: 400px;">Jadwal Kuliah</th><th>Peserta</th><th>Action</th></tr></thead>';
             table += '<tbody>';
 
-            // Iterasi data dan tambahkan ke tabel
             $.each(data, function(index, kelas) {
-                console.log('peserta_kelas_count:', kelas.peserta_kelas_count);
                 table += '<tr>';
                 table += '<td>' + (index + 1) + '</td>';
                 table += '<td>' + kelas.nama_kelas_kuliah + '</td>';
@@ -179,21 +182,70 @@ Kartu Rencana Studi
                 }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
                 table += '<td>' + kelas.peserta_kelas_count + '</td>';
-                table += '<td><button class="btn btn-primary" onclick="ambilKelas(' + kelas.id_kelas_kuliah + ')">Ambil</button></td>';
+                table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '">Ambil</button></td>';
                 table += '</tr>';
             });
 
             table += '</tbody></table>';
-
-            // Tambahkan tabel ke result-container dan toggle collapse
             $(resultContainerId).append(table).collapse('toggle');
+
+            // Tambahkan event listener untuk tombol "Ambil"
+            $('.btn-ambil-kelas').click(function() {
+                var idKelas = $(this).data('id-kelas');
+
+                // Dapatkan CSRF token dari meta tag
+                var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                // Lakukan AJAX request untuk menyimpan kelas kuliah
+                $.ajax({
+                    url: '{{ route("mahasiswa.krs.store_kelas_kuliah") }}',
+                    type: 'POST',
+                    data: {
+                        id_kelas_kuliah: idKelas,
+                        _token: csrfToken  // Sertakan CSRF token di sini
+                    },
+                    success: function(response) {
+                        console.log(response.message);
+                        // Tambahkan logika atau feedback sesuai kebutuhan
+
+                        // Refresh halaman setelah berhasil mengambil atau mengubah kelas kuliah
+                        location.reload();
+                    },
+                    error: function(error) {
+                        console.error('Error storing data:', error);
+                    }
+                });
+            });
+
+
+            // Tambahkan event listener untuk tombol "Ubah Kelas Kuliah"
+            $('.btn-ubah-kelas').click(function() {
+                var idKelas = $(this).data('id-kelas');
+
+                // Lakukan AJAX request untuk meng-update kelas kuliah
+                $.ajax({
+                    url: '{{ route("mahasiswa.krs.update_kelas_kuliah") }}',
+                    type: 'POST',
+                    data: {
+                        id_matkul: idMatkul,
+                        id_kelas_kuliah: idKelas,
+                        _token: csrfToken  // Sertakan CSRF token di sini
+                    },
+                    success: function(response) {
+                        console.log(response.message);
+                        // Tambahkan logika atau feedback sesuai kebutuhan
+                    },
+                    error: function(error) {
+                        console.error('Error updating data:', error);
+                    }});
+            });
         }
 
         function formatDosenPengajar(dosenPengajar) {
             // Format dosen pengajar sesuai kebutuhan
             var formattedString = '<ul>';
             $.each(dosenPengajar, function(index, dosen) {
-                formattedString += '<li>' + dosen.nama_dosen + '</li>';
+                formattedString += '<li>' + dosen.dosen.nama_dosen + '</li>';
             });
             formattedString += '</ul>';
 
@@ -207,25 +259,7 @@ Kartu Rencana Studi
                 return 'Jadwal Tidak Diisi';
             }
         }
-
-        // Fungsi untuk menyimpan data ke dalam tabel peserta_kelas_kuliah
-        function ambilKelas(idKelasKuliah) {
-            // Lakukan AJAX request untuk menyimpan data ke dalam tabel peserta_kelas_kuliah
-            $.ajax({
-                url: '{{ route("mahasiswa.krs.ambil_kelas") }}',
-                type: 'POST',
-                data: { id_kelas_kuliah: idKelasKuliah },
-                success: function(response) {
-                    // Tampilkan pesan sukses atau error
-                    console.log(response);
-                },
-                error: function(error) {
-                    console.error('Error fetching data:', error);
-                }
-            });
-        }
     });
-
 
     $(function() {
         "use strict";

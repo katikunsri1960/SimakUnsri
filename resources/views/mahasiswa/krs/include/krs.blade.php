@@ -1,4 +1,4 @@
-<div class="tab-pane" id="krs" role="tabpanel">
+<div class="tab-pane " id="krs" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
         <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
             <div class="row">
@@ -30,7 +30,7 @@
                                                             <th class="text-center align-middle">SKS</th>
                                                             <th class="text-center align-middle">Waktu Kuliah</th>
                                                             <th class="text-center align-middle">Status</th>
-                                                            <th class="text-center align-middle"><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></th>
+                                                            <th class="text-center align-middle">Action</th>
                                                             <!-- <td>Action</td> -->
                                                         </tr>
                                                     </thead>
@@ -49,7 +49,16 @@
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
                                                                 <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
-                                                                <td><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></td>
+                                                                <td>
+                                                                    <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
+                                                                        @csrf
+                                                                        @method('DELETE')
+                                                                        <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
+                                                                        <button type="submit" class="btn btn-danger btn-hapus-kelas" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
+                                                                            Hapus Mata Kuliah
+                                                                        </button>
+                                                                    </form>
+                                                                </td>
                                                             </tr>
                                                             @php
                                                                 $totalSks += $data->sks_mata_kuliah;
