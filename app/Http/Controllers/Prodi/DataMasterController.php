@@ -39,13 +39,22 @@ class DataMasterController extends Controller
 
     public function matkul_merdeka()
     {
-        $matkul = MataKuliah::where('id_prodi', auth()->user()->fk_id)->orderBy('kode_mata_kuliah')->get();
-        $data = MatkulMerdeka::with(['matkul'])->where('id_prodi', auth()->user()->fk_id)->get();
+        $id_prodi = auth()->user()->fk_id;
 
-        return view('prodi.data-master.matkul-merdeka.index', [
-            'matkul' => $matkul,
-            'data' => $data,
-        ]);
+        $data = MatkulMerdeka::with('matkul')
+            ->where('id_prodi', $id_prodi)
+            ->get();
+
+        $matkul = MataKuliah::where('id_prodi', $id_prodi)
+            ->whereNotIn('id_matkul', function($query) use ($id_prodi) {
+                $query->select('id_matkul')
+                    ->from(with(new MatkulMerdeka)->getTable())
+                    ->where('id_prodi', $id_prodi);
+            })
+            ->orderBy('kode_mata_kuliah')
+            ->get();
+
+        return view('prodi.data-master.matkul-merdeka.index', compact('matkul', 'data'));
     }
 
     public function matkul_merdeka_store(Request $request)

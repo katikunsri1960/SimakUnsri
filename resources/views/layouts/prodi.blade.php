@@ -7,18 +7,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
+    @vite(['resources/sass/app.scss'])
     <link rel="icon" href="images/unsri.png">
 
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
 
-    <!-- Vendors Style-->
+    @stack('css')
+        <!-- Vendors Style-->
     <link rel="stylesheet" href="{{asset('assets/css/vendors_css.css')}}">
     <link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
-    @stack('css')
+
+
 
     <!-- Style-->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/skin_color.css')}}">
+    <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 
@@ -52,18 +56,16 @@
 
 
     <!-- Vendor JS -->
-    <script src="{{asset('assets/js/vendors.min.js')}}"></script>
-    <script src="{{asset('assets/js/pages/chat-popup.js')}}"></script>
-    <script src="{{asset('assets/icons/feather-icons/feather.min.js')}}"></script>
 
-    <script src="{{asset('assets/vendor_components/apexcharts-bundle/dist/apexcharts.js')}}"></script>
+
+    <script src="{{asset('assets/js/vendors.min.js')}}"></script>
+    <script src="{{asset('assets/js/template.js')}}"></script>
+    <script src="{{asset('assets/icons/feather-icons/feather.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
-    <script src="{{asset('assets/vendor_components/fullcalendar/fullcalendar.js')}}"></script>
     @stack('js')
     <!-- EduAdmin App -->
-    <script src="{{asset('assets/js/template.js')}}"></script>
-    <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script>
-    <script src="{{asset('assets/js/pages/calendar.js')}}"></script>
+
+
 
 </body>
 
