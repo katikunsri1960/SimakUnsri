@@ -12,6 +12,11 @@ class MataKuliah extends Model
 
     protected $guarded = [];
 
+    public function prasyarat_matkul()
+    {
+        return $this->hasMany(PrasyaratMatkul::class, 'id_matkul', 'id_matkul');
+    }
+
     public function matkul_kurikulum()
     {
         return $this->hasMany(MatkulKurikulum::class, 'id_matkul', 'id_matkul');
@@ -31,5 +36,12 @@ class MataKuliah extends Model
     {
         return $this->hasMany(KelasKuliah::class, 'id_matkul', 'id_matkul');
     }
-    
+
+    public function matkul_prodi()
+    {
+        $result = $this->where('id_prodi', auth()->user()->fk_id)->orderBy('kode_mata_kuliah')->get();
+
+        return $result;
+    }
+
 }

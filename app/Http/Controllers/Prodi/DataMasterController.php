@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\MatkulMerdeka;
+use App\Models\Perkuliahan\PrasyaratMatkul;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
@@ -30,7 +31,7 @@ class DataMasterController extends Controller
 
     public function matkul()
     {
-        $data = MataKuliah::where('id_prodi', auth()->user()->fk_id)->get();
+        $data = MataKuliah::with(['prasyarat_matkul', 'prasyarat_matkul.matkul_prasyarat'])->where('id_prodi', auth()->user()->fk_id)->get();
 
         return view('prodi.data-master.mata-kuliah.index', [
             'data' => $data
@@ -139,5 +140,28 @@ class DataMasterController extends Controller
     public function kurikulum()
     {
         return view('prodi.data-master.kurikulum.index');
+    }
+
+    public function tambah_prasyarat(MataKuliah $matkul)
+    {
+        $db = new MataKuliah();
+        $prasyarat = $db->matkul_prodi();
+        return view('prodi.data-master.mata-kuliah.tambah-prasyarat', [
+            'matkul' => $matkul,
+            'prasyarat' => $prasyarat
+        ]);
+    }
+
+    public function tambah_prasyarat_store(Request $request, MataKuliah $matkul)
+    {
+        $data = $request->validate([
+            'prasyarat' => 'required',
+            'prasyarat.*' => 'required|exists:mata_kuliahs,id_matkul'
+        ]);
+        $db = new PrasyaratMatkul();
+
+        $store = $db->prasyarat_store($matkul->id_matkul, $data['prasyarat']);
+
+        return redirect()->route('prodi.data-master.mata-kuliah')->with($store['status'], $store['message']);
     }
 }

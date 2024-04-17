@@ -131,7 +131,12 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('data-master')->group(function(){
                 Route::get('/dosen', [App\Http\Controllers\Prodi\DataMasterController::class, 'dosen'])->name('prodi.data-master.dosen');
                 Route::get('/mahasiswa', [App\Http\Controllers\Prodi\DataMasterController::class, 'mahasiswa'])->name('prodi.data-master.mahasiswa');
-                Route::get('/mata-kuliah', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul'])->name('prodi.data-master.mata-kuliah');
+
+                Route::prefix('mata-kuliah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul'])->name('prodi.data-master.mata-kuliah');
+                    Route::get('/{matkul}/tambah-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'tambah_prasyarat'])->name('prodi.data-master.mata-kuliah.tambah-prasyarat');
+                    Route::post('/{matkul}/store-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'tambah_prasyarat_store'])->name('prodi.data-master.mata-kuliah.store-prasyarat');
+                });
 
                 Route::prefix('matkul-merdeka')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul_merdeka'])->name('prodi.data-master.matkul-merdeka');

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('id_matkul');
             $table->string('id_matkul_prasyarat');
+            $table->unique(['id_matkul', 'id_matkul_prasyarat']);
             $table->timestamps();
         });
     }
