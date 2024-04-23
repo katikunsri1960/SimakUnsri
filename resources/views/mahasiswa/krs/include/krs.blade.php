@@ -48,7 +48,8 @@
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td>
+                                                                {{-- <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td> --}}
+                                                                <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
                                                                 <td>
                                                                     <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
                                                                         @csrf
@@ -81,7 +82,7 @@
                             
 
 
-                            <div class="row">
+                            {{-- <div class="row">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
                                         <div class="row">
@@ -204,14 +205,15 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>		
+                            </div>	 --}}
+
                         </div>
                     </div>
                 </div>  
             </div>
         </div>
 
-        <div class="bg-primary-light rounded20 big-side-section">
+        {{-- <div class="bg-primary-light rounded20 big-side-section">
             <div class="row">
                 <div class="row">
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
@@ -476,5 +478,6 @@
                 </div>  
             </div>
         </div>
+         --}}
     </div>
 </div>
