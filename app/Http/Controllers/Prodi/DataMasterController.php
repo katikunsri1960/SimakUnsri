@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Prodi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
+use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\MatkulMerdeka;
+use App\Models\Perkuliahan\PrasyaratMatkul;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
@@ -22,12 +25,58 @@ class DataMasterController extends Controller
 
     public function mahasiswa()
     {
+
         return view('prodi.data-master.mahasiswa.index');
     }
 
     public function matkul()
     {
-        return view('prodi.data-master.mata-kuliah.index');
+        $data = MataKuliah::with(['prasyarat_matkul', 'prasyarat_matkul.matkul_prasyarat'])->where('id_prodi', auth()->user()->fk_id)->get();
+
+        return view('prodi.data-master.mata-kuliah.index', [
+            'data' => $data
+        ]);
+    }
+
+    public function matkul_merdeka()
+    {
+        $id_prodi = auth()->user()->fk_id;
+
+        $data = MatkulMerdeka::with('matkul')
+            ->where('id_prodi', $id_prodi)
+            ->get();
+
+        $matkul = MataKuliah::where('id_prodi', $id_prodi)
+            ->whereNotIn('id_matkul', function($query) use ($id_prodi) {
+                $query->select('id_matkul')
+                    ->from(with(new MatkulMerdeka)->getTable())
+                    ->where('id_prodi', $id_prodi);
+            })
+            ->orderBy('kode_mata_kuliah')
+            ->get();
+
+        return view('prodi.data-master.matkul-merdeka.index', compact('matkul', 'data'));
+    }
+
+    public function matkul_merdeka_store(Request $request)
+    {
+
+        $data = $request->validate([
+                    'id_matkul' => 'required',
+                ]);
+
+        $data['id_prodi'] = auth()->user()->fk_id;
+
+        MatkulMerdeka::create($data);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+    public function matkul_merdeka_destroy(MatkulMerdeka $matkul_merdeka)
+    {
+        $matkul_merdeka->delete();
+
+        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
     }
 
     public function ruang_perkuliahan()
@@ -91,5 +140,28 @@ class DataMasterController extends Controller
     public function kurikulum()
     {
         return view('prodi.data-master.kurikulum.index');
+    }
+
+    public function tambah_prasyarat(MataKuliah $matkul)
+    {
+        $db = new MataKuliah();
+        $prasyarat = $db->matkul_prodi();
+        return view('prodi.data-master.mata-kuliah.tambah-prasyarat', [
+            'matkul' => $matkul,
+            'prasyarat' => $prasyarat
+        ]);
+    }
+
+    public function tambah_prasyarat_store(Request $request, MataKuliah $matkul)
+    {
+        $data = $request->validate([
+            'prasyarat' => 'required',
+            'prasyarat.*' => 'required|exists:mata_kuliahs,id_matkul'
+        ]);
+        $db = new PrasyaratMatkul();
+
+        $store = $db->prasyarat_store($matkul->id_matkul, $data['prasyarat']);
+
+        return redirect()->route('prodi.data-master.mata-kuliah')->with($store['status'], $store['message']);
     }
 }

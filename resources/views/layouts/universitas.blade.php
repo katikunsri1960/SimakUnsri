@@ -195,7 +195,7 @@
 
                     </div>
 
-               
+
             </div>
         </aside>
         <!-- /.control-sidebar -->
@@ -211,10 +211,9 @@
     <script src="{{asset('assets/js/vendors.min.js')}}"></script>
     <script src="{{asset('assets/icons/feather-icons/feather.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
-    @stack('js')
-
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
+    @stack('js')
     {{-- <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script> --}}
 
 

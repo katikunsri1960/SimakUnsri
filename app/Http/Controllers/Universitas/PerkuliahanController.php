@@ -56,7 +56,7 @@ class PerkuliahanController extends Controller
     {
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();
         $semester = Semester::pluck('id_semester')->toArray();
-        $semester = array_chunk($semester, 4);
+        $semester = array_chunk($semester, 6);
         $semester = array_map(function ($value) {
             return "id_semester IN ('" . implode("','", $value) . "')";
         }, $semester);
@@ -231,10 +231,12 @@ class PerkuliahanController extends Controller
         $offset = '';
         $order = '';
 
-        $job = \App\Jobs\Perkuliahan\PerkuliahanMahasiswaJob::class;
+        $job = \App\Jobs\SyncJob::class;
+        $model = \App\Models\Perkuliahan\AktivitasKuliahMahasiswa::class;
         $name = 'aktivitas-kuliah-mahasiswa';
+        $primary = ['id_registrasi_mahasiswa', 'id_semester'];
 
-        $batch = $this->sync($act, $limit, $offset, $order, $job, $name);
+        $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model, $primary);
 
         return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
     }

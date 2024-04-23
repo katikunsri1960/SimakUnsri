@@ -38,9 +38,13 @@
                                 <a href="{{route('prodi.data-master.kurikulum')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Kurikulum</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-master.mata-kuliah') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('prodi.data-master.mata-kuliah') || request()->routeIs('prodi.data-master.mata-kuliah.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.mata-kuliah')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Mata Kuliah</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-master.matkul-merdeka') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.matkul-merdeka')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Kampus Merdeka</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-master.ruang-perkuliahan') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
@@ -160,7 +164,7 @@
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
-                    </li>  
+                    </li>
                 </ul>
             </div>
         </div>
