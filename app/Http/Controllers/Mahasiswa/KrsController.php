@@ -56,7 +56,6 @@ class KrsController extends Controller
                             ->where(DB::raw("matkul_kurikulums.semester % 2"),'!=',0)
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                             ->orderBy('jumlah_kelas_kuliah', 'DESC')
-                            // ->orderByRaw("FIELD(id_matkul, " . implode(',', $krs) . ")") // Urutkan berdasarkan keberadaan di KRS
                             ->orderBy('matkul_kurikulums.semester')
                             ->orderBy('matkul_kurikulums.sks_mata_kuliah')
                             
@@ -70,7 +69,6 @@ class KrsController extends Controller
                             ->where(DB::raw("matkul_kurikulums.semester % 2"),'=',0)
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                             ->orderBy('jumlah_kelas_kuliah', 'DESC')
-                            // ->orderByRaw("FIELD(id_matkul, " . implode(',', $krs) . ")") // Urutkan berdasarkan keberadaan di KRS
                             ->orderBy('matkul_kurikulums.semester')
                             ->orderBy('matkul_kurikulums.sks_mata_kuliah')
                             
@@ -83,7 +81,6 @@ class KrsController extends Controller
                             ->where('mata_kuliahs.id_prodi', $prodi_id)
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                             ->orderBy('jumlah_kelas_kuliah', 'DESC')
-                            // ->orderByRaw("FIELD(id_matkul, " . implode(',', $krs) . ")") // Urutkan berdasarkan keberadaan di KRS
                             ->orderBy('matkul_kurikulums.semester')
                             ->orderBy('matkul_kurikulums.sks_mata_kuliah')
                             
