@@ -68,7 +68,7 @@ class KelasPenjadwalanController extends Controller
     {
         $semester_aktif = SemesterAktif::first();
         $prodi_id = auth()->user()->fk_id;
-        $data = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
+        $data = KelasKuliah::with(['dosen_pengajar', 'dosen_pengajar.dosen'])->leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
                             ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->where('kelas_kuliahs.id_matkul', $id_matkul)
                             ->where('kelas_kuliahs.id_prodi', $prodi_id)
