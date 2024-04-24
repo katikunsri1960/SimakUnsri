@@ -1,4 +1,4 @@
-<div class="tab-pane active" id="data-kelas-kuliah" role="tabpanel">
+<div class="tab-pane " id="data-kelas-kuliah" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
         <div class="bg-primary-light rounded20 big-side-section">
             <div class="row">
@@ -18,6 +18,14 @@
                                                 <h3 class="fw-500 text-dark mt-0">Semester 6</h3>
                                             </div>                             
                                         </div>
+                                        @php
+                                            $no=1;
+                                            $totalSks = 0;
+                                            
+                                            $today = \Carbon\Carbon::now();
+                                            $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
+                                        @endphp
+                                        @if(!$today->greaterThan($deadline))
                                         <div class="row">
                                             <div class="table-responsive">
                                                 <table id="data-matkul" class="table table-bordered text-center">
@@ -106,6 +114,26 @@
                                                 </table>
                                             </div>
                                         </div>
+                                        @elseif ($today->greaterThan($deadline))
+                                        <div class="row ">
+                                            <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
+                                                <div class="box box-body bg-warning-light">
+                                                    <div class="row" style="align-items: center;">
+                                                        <div class="col-lg-1 text-right" style="text-align-last: end;">
+                                                            <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
+                                                        </div>
+                                                        <div class="col-lg-10 text-left text-danger">
+                                                            <label>
+                                                                Periode Pengisian KRS Telah Berakhir!
+                                                            </label>
+                                                        </div>
+                                                        
+                                                    </div>                       
+                                                </div>
+                                            </div>
+                                        </div>  
+                                        @endif
+                                        
                                     </div>
                                 </div>
                             </div>		

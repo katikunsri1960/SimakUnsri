@@ -1,4 +1,4 @@
-<div class="tab-pane " id="krs" role="tabpanel">
+<div class="tab-pane active" id="krs" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
         <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
             <div class="row">
@@ -38,6 +38,9 @@
                                                         @php
                                                             $no=1;
                                                             $totalSks = 0;
+                                                            
+                                                            $today = \Carbon\Carbon::now();
+                                                            $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                                                         @endphp
                             
                                                         @foreach ($krs as $data)
@@ -51,14 +54,25 @@
                                                                 {{-- <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td> --}}
                                                                 <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
                                                                 <td>
-                                                                    <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                        <button type="submit" class="btn btn-danger btn-hapus-kelas" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                            Hapus Mata Kuliah
-                                                                        </button>
-                                                                    </form>
+                                                                    @if(!$today->greaterThan($deadline))
+                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
+                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
+                                                                                Hapus Mata Kuliah
+                                                                            </button>
+                                                                        </form>
+                                                                    @elseif ($today->greaterThan($deadline))
+                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
+                                                                            @csrf
+                                                                            @method('DELETE')
+                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
+                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas disabled" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
+                                                                                Hapus Mata Kuliah
+                                                                            </button>
+                                                                        </form>
+                                                                    @endif
                                                                 </td>
                                                             </tr>
                                                             @php

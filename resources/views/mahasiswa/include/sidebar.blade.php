@@ -20,13 +20,7 @@
                             <span>Biodata</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.krs') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.krs')}}">
-                            <i class="fa fa-newspaper-o"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Kartu Rencana Studi</span>
-                        </a>
-                    </li>
+                    
                     <!-- <li class="treeview">
                         <a href="#">
                             <i span class="fa fa-newspaper-o"><span class="path1"></span><span
@@ -54,16 +48,23 @@
                             </li>
                         </ul>
                     </li> -->
-                    <li class="{{request()->routeIs('mahasiswa.biaya-kuliah') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('mahasiswa.biaya-kuliah') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.biaya-kuliah')}}">
                             <i class="fa fa-money"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Biaya Kuliah</span>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li class="header">PERKULIAHAN</li>
-                    <li class="{{request()->routeIs('mahasiswa.bahan-tugas') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('mahasiswa.krs') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.krs')}}">
+                            <i class="fa fa-newspaper-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Kartu Rencana Studi</span>
+                        </a>
+                    </li>
+                    {{-- <li class="{{request()->routeIs('mahasiswa.bahan-tugas') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.bahan-tugas')}}">
                             <i class="fa fa-tasks"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -76,8 +77,8 @@
                                     class="path2"></span></i>
                             <span>Jadwal & Presensi</span>
                         </a>
-                    </li>
-                    <li class="{{request()->routeIs('mahasiswa.pa-online') ? 'active' : ''}}">
+                    </li> --}}
+                    {{-- <li class="{{request()->routeIs('mahasiswa.pa-online') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.pa-online')}}">
                             <i class="fa fa-users"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -90,7 +91,7 @@
                                     class="path2"></span></i>
                             <span>Kuisioner</span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan')}}">
                             <i class="fa fa-line-chart"><span class="path1"></span><span
@@ -98,7 +99,7 @@
                             <span>Nilai Perkuliahan</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.skpi') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('mahasiswa.skpi') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.skpi')}}">
                             <i class="fa fa-trophy"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -149,7 +150,7 @@
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
-                    </li>  
+                    </li>   --}}
                 </ul>
             </div>
         </div>

@@ -59,7 +59,7 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">SKS Maksimum</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">21</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">24</h4>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">Dosen PA/Wali</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">Prof. Dr. Erwin, S.Si,. M.Si</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">AMIR ARIFIN</h4>
                     </div>
                 </div>
             </div>
@@ -81,8 +81,8 @@ Kartu Rencana Studi
             <div class="box">
 				<!-- Nav tabs -->
                 <ul class="nav nav-pills justify-content-left" role="tablist">
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
                 <div class="row">
                     <div class="col-12">
@@ -110,6 +110,7 @@ Kartu Rencana Studi
                         </div>
                     </div>
                 </div>
+                
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
@@ -132,7 +133,8 @@ Kartu Rencana Studi
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
 @push('js')
-<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+{{-- <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
     $(document).ready(function() {
@@ -275,6 +277,26 @@ Kartu Rencana Studi
                 { "width": "700px", "targets": 6 }, // Kolom lebar 700px
             ]
         });
+    });
+
+    $(document).ready(function() {
+        // Pengecekan tanggal
+        @php
+            $today = \Carbon\Carbon::now();
+            $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
+        @endphp
+
+        // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
+        @if($today->greaterThan($deadline))
+            Swal.fire({
+                icon: 'warning',
+                title: 'Peringatan',
+                text: 'Periode pengisian KRS telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah',
+                showCancelButton: false,
+                showConfirmButton: true,
+                timer: false // Set waktu tampilan SweetAlert
+            });
+        @endif
     });
 
 </script>
