@@ -10,6 +10,7 @@ use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\SemesterAktif;
 
 class KrsController extends Controller
@@ -37,6 +38,14 @@ class KrsController extends Controller
                     ->where('id_semester', $semester_aktif->id_semester)
                     // ->limit(10)
                     ->get();
+                    // dd($peserta_kelas);
+
+        // $aktivitas_mahasiswa = AktivitasMahasiswa::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+        //             ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+        //             ->where('id_registrasi_mahasiswa', $id_reg)
+        //             ->where('id_semester', $semester_aktif->id_semester)
+        //             // ->limit(10)
+        //             ->get();
                     // dd($peserta_kelas);
                 
 

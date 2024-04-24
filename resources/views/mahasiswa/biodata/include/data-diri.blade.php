@@ -18,7 +18,7 @@
                                             </a>
                                             
                                         </div>
-                                        <button type="button" class="waves-effect waves-light btn btn-outline btn-primary btn-xs mb-5 mt-70"><i class="fa fa-pen"> </i> Ganti Foto Profil</button>
+                                        {{-- <button type="button" class="waves-effect waves-light btn btn-outline btn-primary btn-xs mb-5 mt-70"><i class="fa fa-pen"> </i> Ganti Foto Profil</button> --}}
                                     <!-- </div> -->
                                     <div class="ms-30 mb-15">
                                         <h5 class="my-10 mb-0 text-dark fw-500 fs-18">{{$data->nama_mahasiswa}}</h5>
@@ -91,14 +91,6 @@
                                             <label>No. Telpon</label>
                                             <input type="name" class="form-control"
                                                 value="{{$data->telepon}}">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-lg-6">
-                                        <div class="form-group">
-                                            <!-- <label>Jenis Kelamin</label>
-                                            <input type="name" class="form-control" disabled
-                                                value="{{$data->jenis_kelamin}}"> -->
                                         </div>
                                     </div>
 
@@ -212,7 +204,7 @@
                                         </div>
                                     </div>
 
-                                    <div class="col-lg-6">
+                                    {{-- <div class="col-lg-6">
                                         <label class="mb-5">Ukuran Baju</label>
                                         <div class="form-group ">
                                             <div class="form-check form-check-inline">
@@ -252,7 +244,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="row">
                                     <h4 class="box-title text-info mt-50 mb-0"><i class="ti-user me-15"></i> Kontak Mahasiswa</h4>
