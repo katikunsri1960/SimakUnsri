@@ -48,11 +48,10 @@ Kelas Penjadwalan
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">NAMA KELAS</th>
                                     <th class="text-center align-middle">NAMA RUANG</th>
-                                    <th class="text-center align-middle">LOKASI RUANG</th>
-                                    <th class="text-center align-middle">PERIODE PERKULIAHAN</th>
+                                    <th class="text-center align-middle">PERIODE</th>
                                     <th class="text-center align-middle">JADWAL HARI</th>
-                                    <th class="text-center align-middle">JAM MULAI</th>
-                                    <th class="text-center align-middle">JAM SELESAI</th>
+                                    <th class="text-center align-middle">JAM KULIAH</th>
+                                    <th class="text-center align-middle">DOSEN</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -64,12 +63,19 @@ Kelas Penjadwalan
                                     <tr>
                                         <td class="text-center align-middle">{{$row = $row + 1}}</td>
                                         <td class="text-center align-middle">{{$d->nama_kelas_kuliah}}</td>
-                                        <td class="text-center align-middle">{{$d->nama_ruang}}</td>
-                                        <td class="text-center align-middle">{{$d->lokasi}}</td>
+                                        <td class="text-center align-middle">{{$d->nama_ruang}}<br>({{$d->lokasi}})</td>
                                         <td class="text-center align-middle">{{$d->nama_semester}}</td>
                                         <td class="text-center align-middle">{{$d->jadwal_hari}}</td>
-                                        <td class="text-center align-middle">{{$d->jadwal_jam_mulai}}</td>
-                                        <td class="text-center align-middle">{{$d->jadwal_jam_selesai}}</td>
+                                        <td class="text-center align-middle">{{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}</td>
+                                        <td class="text-start align-middle">
+                                            <ul>
+                                            @if ($d->dosen_pengajar)
+                                                @foreach ($d->dosen_pengajar as $i)
+                                                    <li>{{$i->dosen->nama_dosen}}</li>
+                                                @endforeach
+                                            @endif
+                                            </ul>
+                                        </td>
                                         <td class="text-center align-middle">
                                             <a type="button" class="btn btn-rounded btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar', ['id_matkul' => $d->id_matkul, 'nama_kelas_kuliah' => $d->nama_kelas_kuliah])}}" title="Manajemen Dosen Kelas"><i class="fa fa-user"></i></a>
                                         </td>
@@ -90,8 +96,8 @@ Kelas Penjadwalan
 <script>
     $(function() {
         "use strict";
-        
+
         $('#data').DataTable();
-    });    
+    });
 </script>
 @endpush
