@@ -26,4 +26,9 @@ class SemesterAktif extends Model
             set: fn(string $value) => date('Y-m-d', strtotime($value))
         );
     }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');
+    }
 }

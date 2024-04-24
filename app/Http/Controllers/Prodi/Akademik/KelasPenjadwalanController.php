@@ -14,6 +14,7 @@ use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Semester;
 use App\Models\JenisEvaluasi;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\SemesterAktif;
 use Ramsey\Uuid\Uuid;
 
 
@@ -22,35 +23,37 @@ class KelasPenjadwalanController extends Controller
 {
     public function kelas_penjadwalan()
     {
-        $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        // $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        $semester_aktif = SemesterAktif::first();
+        // dd($semester_aktif);
         $prodi_id = auth()->user()->fk_id;
         $data_univ = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                             ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
-                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.kode_mata_kuliah=mata_kuliahs.kode_mata_kuliah and kelas_kuliahs.id_prodi='".$prodi_id."' and kelas_kuliahs.id_semester='".$semester_aktif[0]['id_semester']."') AS jumlah_kelas_kuliah"))
+                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.kode_mata_kuliah=mata_kuliahs.kode_mata_kuliah and kelas_kuliahs.id_prodi='".$prodi_id."' and kelas_kuliahs.id_semester='".$semester_aktif->id_semester."') AS jumlah_kelas_kuliah"))
                             ->whereIn('mata_kuliahs.kode_mata_kuliah', array('UNI1001','UNI1002','UNI1003','UNI1004'))
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
                             ->get();
         // dd($data_univ);
-        if(substr($semester_aktif[0]['id_semester'],-1) == '1'){
+        if(substr($semester_aktif->id_semester,-1) == '1'){
             $data = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                             ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
-                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif[0]['id_semester']."') AS jumlah_kelas_kuliah"))
+                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif->id_semester."') AS jumlah_kelas_kuliah"))
                             ->where('mata_kuliahs.id_prodi', $prodi_id)
                             ->where(DB::raw("matkul_kurikulums.semester % 2"),'!=',0)
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
                             ->get();
-        }else if(substr($semester_aktif[0]['id_semester'],-1) == '2'){
+        }else if(substr($semester_aktif->id_semester,-1) == '2'){
             $data = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                             ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
-                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif[0]['id_semester']."') AS jumlah_kelas_kuliah"))
+                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif->id_semester."') AS jumlah_kelas_kuliah"))
                             ->where('mata_kuliahs.id_prodi', $prodi_id)
                             ->where(DB::raw("matkul_kurikulums.semester % 2"),'=',0)
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
                             ->get();
-        }else if(substr($semester_aktif[0]['id_semester'],-1) == '3'){
+        }else if(substr($semester_aktif->id_semester,-1) == '3'){
             $data = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                             ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
-                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif[0]['id_semester']."') AS jumlah_kelas_kuliah"))
+                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif->id_semester."') AS jumlah_kelas_kuliah"))
                             ->where('mata_kuliahs.id_prodi', $prodi_id)
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester')
                             ->get();
@@ -63,13 +66,13 @@ class KelasPenjadwalanController extends Controller
 
     public function detail_kelas_penjadwalan($id_matkul)
     {
-        $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        $semester_aktif = SemesterAktif::first();
         $prodi_id = auth()->user()->fk_id;
         $data = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
                             ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->where('kelas_kuliahs.id_matkul', $id_matkul)
                             ->where('kelas_kuliahs.id_prodi', $prodi_id)
-                            ->where('kelas_kuliahs.id_semester', $semester_aktif[0]['id_semester'])
+                            ->where('kelas_kuliahs.id_semester', $semester_aktif->id_semester)
                             ->get();
         // dd($data);
         return view('prodi.data-akademik.kelas-penjadwalan.detail', ['data' => $data, 'id_matkul' => $id_matkul]);
@@ -91,9 +94,9 @@ class KelasPenjadwalanController extends Controller
         //Define variable
         $prodi_id = auth()->user()->fk_id;
         $kelas = KelasKuliah::where('id_prodi',$prodi_id)->get();
-        $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        $semester_aktif = SemesterAktif::first();
         $id_kelas = Uuid::uuid4()->toString();
-        $kode_tahun = substr($semester_aktif[0]['id_semester'],-3);
+        $kode_tahun = substr($semester_aktif->id_semester,-3);
         $tahun_aktif = date('Y');
         $detik = "00";
 
@@ -130,12 +133,12 @@ class KelasPenjadwalanController extends Controller
 
         //Generate nama kelas
         $check_lokasi_ruang = RuangPerkuliahan::where('id', $request->ruang_kelas)->get();
-        $check_kelas = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->get();
+        $check_kelas = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->get();
         // dd(count($check_kelas));
         if(strval($check_lokasi_ruang[0]['lokasi']) == "Indralaya"){
             if(count($check_kelas) <= 70){
                 $kode_nama_L = $kode_tahun."L";
-                $check_kelas_L = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_L}%")->get();
+                $check_kelas_L = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_L}%")->get();
                 if(count($check_kelas_L) < 10){
                     if(count($check_kelas_L) < 9){
                         $nama_kelas_kuliah = $kode_nama_L.count($check_kelas_L)+1;
@@ -144,7 +147,7 @@ class KelasPenjadwalanController extends Controller
                     }
                 }else{
                     $kode_nama_A = $kode_tahun."A";
-                    $check_kelas_A = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_A}%")->get();
+                    $check_kelas_A = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_A}%")->get();
                     if(count($check_kelas_A) < 10){
                         if(count($check_kelas_A) < 9){
                             $nama_kelas_kuliah = $kode_nama_A.count($check_kelas_A)+1;
@@ -153,7 +156,7 @@ class KelasPenjadwalanController extends Controller
                         }
                     }else{
                         $kode_nama_B = $kode_tahun."B";
-                        $check_kelas_B = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_B}%")->get();
+                        $check_kelas_B = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_B}%")->get();
                         if(count($check_kelas_B) < 10){
                             if(count($check_kelas_B) < 9){
                                 $nama_kelas_kuliah = $kode_nama_B.count($check_kelas_B)+1;
@@ -162,7 +165,7 @@ class KelasPenjadwalanController extends Controller
                             }
                         }else{
                             $kode_nama_C = $kode_tahun."C";
-                            $check_kelas_C = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_C}%")->get();
+                            $check_kelas_C = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_C}%")->get();
                             if(count($check_kelas_C) < 10){
                                 if(count($check_kelas_C) < 9){
                                     $nama_kelas_kuliah = $kode_nama_C.count($check_kelas_C)+1;
@@ -171,7 +174,7 @@ class KelasPenjadwalanController extends Controller
                                 }
                             }else{
                                 $kode_nama_D = $kode_tahun."D";
-                                $check_kelas_D = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $request->nama_mata_kuliah)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_D}%")->get();
+                                $check_kelas_D = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $request->nama_mata_kuliah)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_D}%")->get();
                                 if(count($check_kelas_D) < 10){
                                     if(count($check_kelas_D) < 9){
                                         $nama_kelas_kuliah = $kode_nama_D.count($check_kelas_D)+1;
@@ -180,7 +183,7 @@ class KelasPenjadwalanController extends Controller
                                     }
                                 }else{
                                     $kode_nama_E = $kode_tahun."E";
-                                    $check_kelas_E = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_E}%")->get();
+                                    $check_kelas_E = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_E}%")->get();
                                     if(count($check_kelas_E) < 10){
                                         if(count($check_kelas_E) < 9){
                                             $nama_kelas_kuliah = $kode_nama_E.count($check_kelas_E)+1;
@@ -189,7 +192,7 @@ class KelasPenjadwalanController extends Controller
                                         }
                                     }else{
                                         $kode_nama_F = $kode_tahun."F";
-                                        $check_kelas_F = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_F}%")->get();
+                                        $check_kelas_F = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_F}%")->get();
                                         if(count($check_kelas_F) < 10){
                                             if(count($check_kelas_F) < 9){
                                                 $nama_kelas_kuliah = $kode_nama_F.count($check_kelas_F)+1;
@@ -198,7 +201,7 @@ class KelasPenjadwalanController extends Controller
                                             }
                                         }else{
                                             $kode_nama_G = $kode_tahun."G";
-                                            $check_kelas_G = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_G}%")->get();
+                                            $check_kelas_G = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_G}%")->get();
                                             if(count($check_kelas_G) < 10){
                                                 if(count($check_kelas_G) < 9){
                                                     $nama_kelas_kuliah = $kode_nama_G.count($check_kelas_G)+1;
@@ -207,7 +210,7 @@ class KelasPenjadwalanController extends Controller
                                                 }
                                             }else{
                                                 $kode_nama_H = $kode_tahun."H";
-                                                $check_kelas_H = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_H}%")->get();
+                                                $check_kelas_H = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_H}%")->get();
                                                 if(count($check_kelas_H) < 10){
                                                     if(count($check_kelas_H) < 9){
                                                         $nama_kelas_kuliah = $kode_nama_H.count($check_kelas_H)+1;
@@ -229,7 +232,7 @@ class KelasPenjadwalanController extends Controller
         }else if(strval($check_lokasi_ruang[0]['lokasi']) == "Palembang"){
             if(count($check_kelas) <= 70){
                 $kode_nama_P = $kode_tahun."P";
-                $check_kelas_P = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_P}%")->get();
+                $check_kelas_P = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_P}%")->get();
                 if(count($check_kelas_P) < 10){
                     if(count($check_kelas_P) < 9){
                         $nama_kelas_kuliah = $kode_nama_P.count($check_kelas_P)+1;
@@ -238,7 +241,7 @@ class KelasPenjadwalanController extends Controller
                     }
                 }else{
                     $kode_nama_M = $kode_tahun."M";
-                    $check_kelas_M = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_M}%")->get();
+                    $check_kelas_M = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_M}%")->get();
                     if(count($check_kelas_M) < 10){
                         if(count($check_kelas_M) < 9){
                             $nama_kelas_kuliah = $kode_nama_M.count($check_kelas_M)+1;
@@ -247,7 +250,7 @@ class KelasPenjadwalanController extends Controller
                         }
                     }else{
                         $kode_nama_N = $kode_tahun."N";
-                        $check_kelas_N = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_N}%")->get();
+                        $check_kelas_N = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_N}%")->get();
                         if(count($check_kelas_N) < 10){
                             if(count($check_kelas_N) < 9){
                                 $nama_kelas_kuliah = $kode_nama_N.count($check_kelas_N)+1;
@@ -256,7 +259,7 @@ class KelasPenjadwalanController extends Controller
                             }
                         }else{
                             $kode_nama_R = $kode_tahun."R";
-                            $check_kelas_R = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_R}%")->get();
+                            $check_kelas_R = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_R}%")->get();
                             if(count($check_kelas_R) < 10){
                                 if(count($check_kelas_R) < 9){
                                     $nama_kelas_kuliah = $kode_nama_R.count($check_kelas_R)+1;
@@ -265,7 +268,7 @@ class KelasPenjadwalanController extends Controller
                                 }
                             }else{
                                 $kode_nama_S = $kode_tahun."S";
-                                $check_kelas_S = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_S}%")->get();
+                                $check_kelas_S = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_S}%")->get();
                                 if(count($check_kelas_S) < 10){
                                     if(count($check_kelas_S) < 9){
                                         $nama_kelas_kuliah = $kode_nama_S.count($check_kelas_S)+1;
@@ -274,7 +277,7 @@ class KelasPenjadwalanController extends Controller
                                     }
                                 }else{
                                     $kode_nama_T = $kode_tahun."T";
-                                    $check_kelas_T = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_T}%")->get();
+                                    $check_kelas_T = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_T}%")->get();
                                     if(count($check_kelas_T) < 10){
                                         if(count($check_kelas_T) < 9){
                                             $nama_kelas_kuliah = $kode_nama_T.count($check_kelas_T)+1;
@@ -283,7 +286,7 @@ class KelasPenjadwalanController extends Controller
                                         }
                                     }else{
                                         $kode_nama_U = $kode_tahun."U";
-                                        $check_kelas_U = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_U}%")->get();
+                                        $check_kelas_U = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_U}%")->get();
                                         if(count($check_kelas_U) < 10){
                                             if(count($check_kelas_U) < 9){
                                                 $nama_kelas_kuliah = $kode_nama_U.count($check_kelas_U)+1;
@@ -292,7 +295,7 @@ class KelasPenjadwalanController extends Controller
                                             }
                                         }else{
                                             $kode_nama_V = $kode_tahun."V";
-                                            $check_kelas_V = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_V}%")->get();
+                                            $check_kelas_V = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_V}%")->get();
                                             if(count($check_kelas_V) < 10){
                                                 if(count($check_kelas_V) < 9){
                                                     $nama_kelas_kuliah = $kode_nama_V.count($check_kelas_V)+1;
@@ -301,7 +304,7 @@ class KelasPenjadwalanController extends Controller
                                                 }
                                             }else{
                                                 $kode_nama_W = $kode_tahun."W";
-                                                $check_kelas_W = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif[0]['id_semester'])->where('nama_kelas_kuliah','LIKE', "{$kode_nama_W}%")->get();
+                                                $check_kelas_W = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_W}%")->get();
                                                 if(count($check_kelas_W) < 10){
                                                     if(count($check_kelas_W) < 9){
                                                         $nama_kelas_kuliah = $kode_nama_W.count($check_kelas_W)+1;
@@ -326,7 +329,7 @@ class KelasPenjadwalanController extends Controller
         // dd($nama_kelas_kuliah);
 
         //Store data to table
-        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester'], 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester, 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
 
         return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
@@ -391,7 +394,7 @@ class KelasPenjadwalanController extends Controller
         //Define variable
         $prodi_id = auth()->user()->fk_id;
         $kelas = KelasKuliah::where('id_prodi',$prodi_id)->where('id_matkul',$id_matkul)->where('nama_kelas_kuliah',$nama_kelas_kuliah)->get();
-        $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        $semester_aktif = SemesterAktif::first();
 
         //Validate request data
         $data = $request->validate([
@@ -412,7 +415,7 @@ class KelasPenjadwalanController extends Controller
         // dd($rencana_pertemuan);
 
         //Get id dosen pengajar kelas kuliah
-        $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif[0]['id_tahun_ajaran'])->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
+        $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
 
         if($rencana_pertemuan == '16'){
              //Count jumlah dosen pengajar kelas kuliah
@@ -424,16 +427,16 @@ class KelasPenjadwalanController extends Controller
 
                 if(is_null($request->substansi_kuliah)){
                     //Store data to table tanpa substansi kuliah
-                    DosenPengajarKelasKuliah::create(['id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester']]);
+                    DosenPengajarKelasKuliah::create(['id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
 
                 }else{
                     //Get sks substansi total
                     $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
 
                     //Store data to table dengan substansi kuliah
-                    DosenPengajarKelasKuliah::create(['id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif[0]['id_semester']]);
+                    DosenPengajarKelasKuliah::create(['id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
                 }
-                
+
             }
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         }else{

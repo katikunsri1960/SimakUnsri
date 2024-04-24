@@ -30,7 +30,7 @@ Kelas Penjadwalan
                         <h3>Daftar Kelas Mata Kuliah</h3>
                     </div>
                     <div class="pull-right">
-                        <p class="mb-0 text-fade fs-18">Semester - {{$semester_aktif[0]['nama_semester']}}</p>
+                        <p class="mb-0 text-fade fs-18">Semester - {{$semester_aktif->semester->nama_semester}}</p>
                     </div>
                 </div>
                 <div class="box-body">
@@ -54,7 +54,7 @@ Kelas Penjadwalan
                                     <tr>
                                         <td class="text-center align-middle">{{$row = $row + 1}}</td>
                                         <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
-                                        <td class="text-center align-middle">{{$d->nama_mata_kuliah}}</td>
+                                        <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
                                         <td class="text-center align-middle">{{$d->jumlah_kelas_kuliah}}</td>
                                         <td class="text-center align-middle">{{$d->semester}}</td>
                                         <td class="text-center align-middle">
@@ -89,7 +89,7 @@ Kelas Penjadwalan
 <script>
     $(function() {
         "use strict";
-        
+
         $('#data').DataTable({
             "paging": false,
             "ordering": true,
@@ -97,6 +97,6 @@ Kelas Penjadwalan
             "scrollCollapse": true,
             "scrollY": "450px",
         });
-    });    
+    });
 </script>
 @endpush
