@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SkalaNilai;
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
 
@@ -127,5 +128,29 @@ class PengaturanController extends Controller
         }
 
         return redirect()->back()->with('success', 'Data berhasil di sinkronisasi');
+    }
+
+    public function akun()
+    {
+        $data = User::all();
+
+        return view('universitas.pengaturan.akun.index', [
+            'data' => $data
+        ]);
+    }
+
+    public function akun_store(Request $request)
+    {
+
+    }
+
+    public function akun_update(User $user, Request $request)
+    {
+
+    }
+
+    public function akun_destroy(User $user)
+    {
+
     }
 }
