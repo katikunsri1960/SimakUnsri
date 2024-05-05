@@ -22,50 +22,89 @@
                                                             <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                             <th class="text-center align-middle">Nama Mata Kuliah</th>
                                                             <th class="text-center align-middle">SKS</th>
-                                                            <th class="text-center align-middle">Semester Di Ambil</th>
+                                                            <th class="text-center align-middle">Semester</th>
                                                             <th class="text-center align-middle">Nilai Angka</th>
                                                             <th class="text-center align-middle">Nilai Huruf</th>
                                                             <th class="text-center align-middle">Nilai Indeks</th>
-                                                            <!-- <th class="text-center align-middle"><input type="checkbox" id="md_checkbox_23" class="filled-in chk-col-success" /><label for="md_checkbox_23"></label></th> -->
+                                                            <th class="text-center align-middle">Action</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @php
 
                                                             $no=1;
-
+        
                                                         @endphp
 
+                                                        @if(!empty($transkrip))
+                                                        <tr>
+                                                            <td class="text-center align-middle bg-dark" colspan="9">Nilai Perkuliahan</td>
+                                                        </tr>
                                                         @foreach($transkrip as $d)
                                                             <tr>
                                                                 <td class="text-center align-middle">{{$no++}}</td>
                                                                 <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                                                 <td>{{$d->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$d->sks_mata_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$d->smt_diambil}}</td>
-                                                                <td class="text-center align-middle">{{$d->nilai_angka}}</td>
-                                                                <td class="text-center align-middle">{{$d->nilai_huruf}}</td>
-                                                                <td class="text-center align-middle">{{$d->nilai_indeks}}</td>
+                                                                <td class="text-center align-middle">{{$d->nama_semester}}</td>
+                                                                <td class="text-center align-middle">{{empty($d->nilai_angka) ? 'Nilai Belum Diisi' : $d->nilai_angka}}</td>
+                                                                <td class="text-center align-middle">{{empty($d->nilai_huruf) ? 'Nilai Belum Diisi' : $d->nilai_huruf}}</td>
+                                                                <td class="text-center align-middle">{{empty($d->nilai_indeks) ? 'Nilai Belum Diisi' : $d->nilai_indeks}}</td>
+                                                                <td class="text-center align-middle">
+                                                                    <a type="button" href="" class="btn btn-success waves-effect waves-light" title="Lihat Histori">
+                                                                    <i class="fa-solid fa-eye"></i>
+                                                                    </a>
+                                                                </td>
                                                             </tr>
-                                                        @endforeach       
-                                                    </tbody>
-                                                    <!-- <tfoot>
+                                                        @endforeach 
+                                                        @endif 
+
+                                                        @if(!empty($nilai_konversi))
                                                         <tr>
-                                                            <td class="text-center align-middle" colspan="3"><strong>Total SKS Diambil</strong></td>
-                                                            <td class="text-center align-middle">
-                                                                <strong>
-                                                                    @php
-                                                                        $total_sks=0;
-                                                                        foreach($transkrip as $t){
-                                                                            $total_sks += $t->sks_mata_kuliah;
-                                                                        }
-                                                                    @endphp
-                                                                    
-                                                                    {{$total_sks}}
-                                                                </strong>
-                                                            </td>
+                                                            <td class="text-center align-middle bg-dark" colspan="9">Nilai Konversi Aktivitas</td>
                                                         </tr>
-                                                    </tfoot> -->
+                                                        @foreach($nilai_konversi as $n)
+                                                            <tr>
+                                                                <td class="text-center align-middle">{{$no++}}</td>
+                                                                <td class="text-center align-middle">{{$n->kode_mata_kuliah}}</td>
+                                                                <td>{{$n->nama_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{$n->sks_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{$n->nama_semester}}</td>
+                                                                <td class="text-center align-middle">{{empty($n->nilai_angka) ? 'Nilai Belum Diisi' : $n->nilai_angka}}</td>
+                                                                <td class="text-center align-middle">{{empty($n->nilai_huruf) ? 'Nilai Belum Diisi' : $n->nilai_huruf}}</td>
+                                                                <td class="text-center align-middle">{{empty($n->nilai_indeks) ? 'Nilai Belum Diisi' : $n->nilai_indeks}}</td>
+                                                                <td class="text-center align-middle">
+                                                                    <a type="button" href="" class="btn btn-success waves-effect waves-light" title="Lihat Histori">
+                                                                    <i class="fa-solid fa-eye"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach 
+                                                        @endif  
+
+                                                        @if(!empty($nilai_transfer))
+                                                        <tr>
+                                                            <td class="text-center align-middle bg-dark" colspan="9">Nilai Transfer Pendidikan</td>
+                                                        </tr>
+                                                        @foreach($nilai_transfer as $nt)
+                                                            <tr>
+                                                                <td class="text-center align-middle">{{$no++}}</td>
+                                                                <td class="text-center align-middle">{{$nt->kode_mata_kuliah}}</td>
+                                                                <td>{{$nt->nama_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{$nt->sks_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{$nt->nama_semester}}</td>
+                                                                <td class="text-center align-middle">{{empty($nt->nilai_angka) ? 'Nilai Belum Diisi' : $nt->nilai_angka}}</td>
+                                                                <td class="text-center align-middle">{{empty($nt->nilai_huruf) ? 'Nilai Belum Diisi' : $nt->nilai_huruf}}</td>
+                                                                <td class="text-center align-middle">{{empty($nt->nilai_indeks) ? 'Nilai Belum Diisi' : $nt->nilai_indeks}}</td>
+                                                                <td class="text-center align-middle">
+                                                                    <a type="button" href="" class="btn btn-success waves-effect waves-light" title="Lihat Histori">
+                                                                    <i class="fa-solid fa-eye"></i>
+                                                                    </a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach 
+                                                        @endif      
+                                                    </tbody>
                                                 </table>
                                             </div>
                                         </div>
