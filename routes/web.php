@@ -290,7 +290,15 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::post('/semester-aktif', [App\Http\Controllers\Universitas\PengaturanController::class, 'semester_aktif_store'])->name('univ.pengaturan.semester-aktif.store');
 
                 Route::get('/skala-nilai', [App\Http\Controllers\Universitas\PengaturanController::class, 'skala_nilai'])->name('univ.pengaturan.skala-nilai');
-                Route::Get('/skala-nilai/sync', [App\Http\Controllers\Universitas\PengaturanController::class, 'sync_skala_nilai'])->name('univ.pengaturan.skala-nilai.sync');
+                Route::get('/skala-nilai/sync', [App\Http\Controllers\Universitas\PengaturanController::class, 'sync_skala_nilai'])->name('univ.pengaturan.skala-nilai.sync');
+
+                // Route Pengaturan akun
+                Route::prefix('akun')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun'])->name('univ.pengaturan.akun');
+                    Route::post('/store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_store'])->name('univ.pengaturan.akun.store');
+                    Route::patch('/update/{user}', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_update'])->name('univ.pengaturan.akun.update');
+                    Route::delete('/delete/{user}', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_destroy'])->name('univ.pengaturan.akun.delete');
+                });
             });
         });
     });

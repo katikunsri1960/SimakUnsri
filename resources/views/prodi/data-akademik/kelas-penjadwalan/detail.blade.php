@@ -21,7 +21,6 @@ Kelas Penjadwalan
 
     </div>
 </div>
-
 <section class="content">
     <div class="row">
         <div class="col-12">
