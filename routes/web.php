@@ -52,6 +52,7 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('perkuliahan')->group(function () {
                 Route::get('/nilai-perkuliahan', [App\Http\Controllers\Mahasiswa\NilaiController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-perkuliahan');
                 Route::get('/nilai-perkuliahan/{id_semester}/lihat-khs', [App\Http\Controllers\Mahasiswa\NilaiController::class, 'lihat_khs'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs');
+                Route::get('/nilai-perkuliahan/{id_matkul}/histori-nilai', [App\Http\Controllers\Mahasiswa\NilaiController::class, 'histori_nilai'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai');
             });
 
             Route::get('/skpi', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.skpi');
