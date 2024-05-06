@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Universitas;
 use App\Models\SemesterAktif;
 use App\Models\Referensi\PeriodePerkuliahan;
 use App\Http\Controllers\Controller;
+use App\Models\Dosen\BiodataDosen;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SkalaNilai;
@@ -132,25 +133,71 @@ class PengaturanController extends Controller
 
     public function akun()
     {
-        $data = User::all();
+        $data = User::orderBy('role')->get();
+        $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
 
         return view('universitas.pengaturan.akun.index', [
-            'data' => $data
+            'data' => $data,
+            'prodi' => $prodi,
         ]);
     }
 
     public function akun_store(Request $request)
     {
+        $data = $request->validate([
+            'username' => 'required',
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+            'role' => 'required',
+            'fk_id' => 'required',
+        ]);
 
-    }
+        $data['password'] = bcrypt($data['password']);
 
-    public function akun_update(User $user, Request $request)
-    {
+        User::create($data);
 
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
     public function akun_destroy(User $user)
     {
+        $user->delete();
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
+    }
 
+    public function get_dosen(Request $request)
+    {
+        $db = new BiodataDosen();
+
+        $data = $db->where('id_jenis_sdm', 12)
+                    ->where('nama_dosen', 'like', '%'.$request->q.'%')
+                    ->orWhere('nidn', 'like', '%'.$request->q.'%')->get();
+
+        return response()->json($data);
+
+    }
+
+    public function akun_dosen_create(Request $request)
+    {
+        $data = $request->validate([
+            'username' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+            'id_dosen' => 'required',
+        ]);
+
+        $data['password'] = bcrypt($data['password']);
+        $data['role'] = 'dosen';
+        $data['fk_id'] = $data['id_dosen'];
+
+        $nama = BiodataDosen::where('id_dosen', $data['id_dosen'])->pluck('nama_dosen')->first();
+        $data['name'] = $nama;
+
+        unset($data['id_dosen']);
+
+        User::create($data);
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 }
