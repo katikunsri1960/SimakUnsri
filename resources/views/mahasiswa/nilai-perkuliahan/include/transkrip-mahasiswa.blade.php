@@ -51,7 +51,7 @@
                                                                 <td class="text-center align-middle">{{empty($d->nilai_huruf) ? 'Nilai Belum Diisi' : $d->nilai_huruf}}</td>
                                                                 <td class="text-center align-middle">{{empty($d->nilai_indeks) ? 'Nilai Belum Diisi' : $d->nilai_indeks}}</td>
                                                                 <td class="text-center align-middle">
-                                                                    <a type="button" href="" class="btn btn-success waves-effect waves-light" title="Lihat Histori">
+                                                                    <a type="button" href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai', ['id_matkul' => $d->id_matkul])}}" class="btn btn-success waves-effect waves-light" title="Lihat Histori">
                                                                     <i class="fa-solid fa-eye"></i>
                                                                     </a>
                                                                 </td>
