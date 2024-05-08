@@ -50,7 +50,7 @@ Dashboard
                                                                             <a type="button" href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
                                                                             <i class="fa-solid fa-arrow-left"></i>
                                                                             </a>
-                                                                            <h3 class="box-title px-3">{{$data_aktivitas[0]['nama_semester']}}</h3>
+                                                                            <h3 class="box-title px-3">{{empty($data_aktivitas[0]['nama_semester']) ? 'Data Tidak Ada' : $data_aktivitas[0]['nama_semester']}}</h3>
                                                                         </div>
                                                                     </div>
                                                                 </div>
@@ -59,7 +59,7 @@ Dashboard
                                                                         <div class="box-body">
                                                                             <div class="flex-grow-1">
                                                                                 <p class="mt-5 mb-5 text-fade fs-12">SKS Semester</p>
-                                                                                <h4 class="mt-5 mb-0" style="color:#0052cc">{{$data_aktivitas[0]['sks_semester']}}</h4>
+                                                                                <h4 class="mt-5 mb-0" style="color:#0052cc">{{empty($data_aktivitas[0]['sks_semester']) ? 'Data Tidak Ada' : $data_aktivitas[0]['sks_semester']}}</h4>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -69,7 +69,7 @@ Dashboard
                                                                         <div class="box-body">
                                                                             <div class="flex-grow-1">
                                                                                 <p class="mt-5 mb-5 text-fade fs-12">IP Semester</p>
-                                                                                <h4 class="mt-5 mb-0" style="color:#0052cc">{{$data_aktivitas[0]['ips']}}</h4>
+                                                                                <h4 class="mt-5 mb-0" style="color:#0052cc">{{empty($data_aktivitas[0]['ips']) ? 'Data Tidak Ada' : $data_aktivitas[0]['ips']}}</h4>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -79,7 +79,7 @@ Dashboard
                                                                         <div class="box-body">
                                                                             <div class="flex-grow-1">
                                                                                 <p class="mt-5 mb-5 text-fade fs-12">IP Komulatif</p>
-                                                                                <h4 class="mt-5 mb-0" style="color:#0052cc">{{$data_aktivitas[0]['ipk']}}</h4>
+                                                                                <h4 class="mt-5 mb-0" style="color:#0052cc">{{empty($data_aktivitas[0]['ipk']) ? 'Data Tidak Ada' : $data_aktivitas[0]['ipk']}}</h4>
                                                                             </div>
                                                                         </div>
                                                                     </div>
@@ -103,10 +103,10 @@ Dashboard
                                                                                 <tr>
                                                                                     <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                                                                     <td class="text-center align-middle">{{$d->nama_mata_kuliah}}</td>
-                                                                                    <td class="text-center align-middle">{{$d->nilai_angka}}</td>
-                                                                                    <td class="text-center align-middle">{{$d->nilai_indeks}}</td>
+                                                                                    <td class="text-center align-middle">{{empty($d->nilai_angka) ? 'Nilai Belum Diisi' : $d->nilai_angka}}</td>
+                                                                                    <td class="text-center align-middle">{{empty($d->nilai_indeks) ? 'Nilai Belum Diisi' : $d->nilai_indeks}}</td>
                                                                                     <td class="text-center align-middle">
-                                                                                    {{$d->nilai_huruf}}</td>
+                                                                                    {{empty($d->nilai_huruf) ? 'Nilai Belum Diisi' : $d->nilai_huruf}}</td>
                                                                                     <td class="text-start align-middle w-300">
                                                                                         <ul>
                                                                                             @foreach($d->dosen_pengajar as $dd)

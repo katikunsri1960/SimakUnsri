@@ -1,15 +1,14 @@
-function confirmSubmit(formId, title, text, confirmText, cancelText) {
+function confirmSubmit(formId) {
     $(`#${formId}`).submit(function(e){
         e.preventDefault();
         swal({
-            title: title,
-            text: text,
+            title: 'Apakah Anda Yakin?',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText
+            confirmButtonText: 'Simpan',
+            cancelButtonText: 'Batal'
         }, function(isConfirm){
             if (isConfirm) {
                 $('#spinner').show();

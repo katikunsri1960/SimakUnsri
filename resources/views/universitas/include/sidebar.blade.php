@@ -134,13 +134,17 @@
                                             class="path1"></span><span class="path2"></span></i>Periode Perkuliahan</a>
                             </li>
                             <li class="{{request()->routeIs('univ.pengaturan.skala-nilai') ? 'active' : ''}}"><a
-                                href="{{route('univ.pengaturan.skala-nilai')}}"><i class="icon-Commit"><span
-                                        class="path1"></span><span class="path2"></span></i>Skala Nilai</a>
-                        </li>
+                                    href="{{route('univ.pengaturan.skala-nilai')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Skala Nilai</a>
+                            </li>
                             <li class="{{request()->routeIs('univ.pengaturan.semester-aktif') ? 'active' : ''}}"><a
                                     href="{{route('univ.pengaturan.semester-aktif')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Semester Aktif</a>
                             </li>
+                            <li class="{{request()->routeIs('univ.pengaturan.akun') ? 'active' : ''}}"><a
+                                href="{{route('univ.pengaturan.akun')}}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Akun</a>
+                        </li>
                         </ul>
                     </li>
                 </ul>
