@@ -11,6 +11,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\SemesterAktif;
 
 class KrsController extends Controller
@@ -32,7 +33,13 @@ class KrsController extends Controller
         $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
         // dd($semester_aktif);
 
-        $krs = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $semester_aktif->id_semester)
+                // ->limit(10)
+                ->get();
+                // dd($akm);
+
+        $krs_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
                     ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $semester_aktif->id_semester)
@@ -40,13 +47,33 @@ class KrsController extends Controller
                     ->get();
                     // dd($peserta_kelas);
 
-        // $aktivitas_mahasiswa = AktivitasMahasiswa::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
-        //             ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-        //             ->where('id_registrasi_mahasiswa', $id_reg)
-        //             ->where('id_semester', $semester_aktif->id_semester)
-        //             // ->limit(10)
-        //             ->get();
-                    // dd($peserta_kelas);
+        $krs_merdeka = PesertaKelasKuliah::Join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
+                    ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                    ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+                    // ->where('id_status_mahasiswa', 'M')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    // ->where('id_semester', $semester_aktif->id_semester)
+                    // ->limit(10)
+                    ->get();
+                    // dd($krs_merdeka);
+
+        $mk_merdeka = MatkulMerdeka::leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                    ->where('matkul_merdekas.id_prodi', $prodi_id)
+                    ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+                    ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+                    ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+                    // ->where(DB::raw("matkul_kurikulums.semester % 2"),'!=',0)
+                    // ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+                    // ->orderBy('jumlah_kelas_kuliah', 'DESC')
+                    // ->orderBy('matkul_kurikulums.semester')
+                    // ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+                    
+                    // ->limit(10)
+                    ->get();
+                    // dd($mk_merdeka);
+        
+
+        
                 
 
        $data_univ = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
@@ -106,8 +133,11 @@ class KrsController extends Controller
             'matakuliah', 
             // 'kelasKuliah',
             'semester_aktif',
-            'krs',
-            // 'totalPeserta',
+            'krs_regular',
+            'akm',
+            'mk_merdeka',
+            'krs_merdeka',
+
         ));
     }
 
@@ -118,13 +148,14 @@ class KrsController extends Controller
         // dd($idMatkul);
 
         $id_reg = auth()->user()->fk_id;
-        // $prodi_id = auth()->user()->fk_id;
+                // $prodi_id = auth()->user()->fk_id;
+        
         $semester_aktif = SemesterAktif::select('*',DB::raw('LEFT(id_semester, 4) as id_tahun_ajaran'), DB::raw('RIGHT(id_semester, 1) as kode_semester'))//Ambiil Nilai paling belakang id_semester untuk penentu ganjil genap
                         ->first();
                         // dd($semester_aktif);
 
         $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-        ->first();
+                        ->first();
     
         // Ambil data kelas kuliah sesuai dengan kebutuhan Anda
         $kelasKuliah = KelasKuliah::with(['dosen_pengajar.dosen'])
