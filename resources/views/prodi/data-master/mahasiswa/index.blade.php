@@ -10,7 +10,8 @@ Mahasiswa Prodi
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i
+                                    class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Master</li>
                         <li class="breadcrumb-item active" aria-current="page">Mahasiswa</li>
                     </ol>
@@ -28,32 +29,58 @@ Mahasiswa Prodi
                 <div class="box-header with-border">
                     {{-- <div class="d-flex justify-content-end">
                         <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
+                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i
+                                    class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button>
+                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i>
+                            Tambah Kurikulum</button>
                     </div> --}}
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-hover margin-top-10 w-p100">
-                          <thead>
-                             <tr>
-                                <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">FOTO</th>
-                                <th class="text-center align-middle">NIM</th>
-                                <th class="text-center align-middle">NAMA</th>
-                                <th class="text-center align-middle">DOSEN P.A.</th>
-                                <th class="text-center align-middle">STATUS</th>
-                                <th class="text-center align-middle">STATUS PEMBAYARAN</th>
-                                <th class="text-center align-middle">AKSI</th>
-                             </tr>
-                          </thead>
-                          <tbody>
+                        <table id="data" class="table table-hover margin-top-10 w-p100 table-bordered">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">FOTO</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">NAMA</th>
+                                    <th class="text-center align-middle">DOSEN P.A.</th>
+                                    <th class="text-center align-middle">STATUS</th>
+                                    <th class="text-center align-middle">STATUS PEMBAYARAN</th>
+                                    <th class="text-center align-middle">AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $d)
+                                <tr>
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle"></td>
+                                    <td class="text-center align-middle">
+                                        {{$d->nim}}
+                                    </td>
+                                    <td class="text-start align-middle">
+                                        {{$d->nama_mahasiswa}}
+                                    </td>
+                                    <td class="text-center align-middle">
 
-                          </tbody>
-                      </table>
-                      </div>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$d->keterangan_keluar ?? 'Aktif'}}
+                                    </td>
+                                    <td class="text-center align-middle">
+
+                                    </td>
+                                    <td class="text-center align-middle">
+
+                                    </td>
+                                </tr>
+                                @endforeach
+
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>

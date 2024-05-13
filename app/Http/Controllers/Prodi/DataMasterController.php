@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Prodi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Perkuliahan\PrasyaratMatkul;
@@ -25,8 +26,11 @@ class DataMasterController extends Controller
 
     public function mahasiswa()
     {
+        $data = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)->get();
 
-        return view('prodi.data-master.mahasiswa.index');
+        return view('prodi.data-master.mahasiswa.index', [
+            'data' => $data
+        ]);
     }
 
     public function matkul()
