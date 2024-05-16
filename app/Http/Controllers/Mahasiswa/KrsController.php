@@ -3,21 +3,24 @@
 namespace App\Http\Controllers\Mahasiswa;
 
 use Illuminate\Http\Request;
+use App\Models\SemesterAktif;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\BimbingMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\MatkulMerdeka;
-use App\Models\SemesterAktif;
 
 class KrsController extends Controller
 {
     public function krs()
     {
+        
+
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
@@ -38,6 +41,22 @@ class KrsController extends Controller
                 // ->limit(10)
                 ->get();
                 // dd($akm);
+
+        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
+        // dd($jumlah_smt);
+            
+
+        $pembimbing_akademik = BimbingMahasiswa::select('nama_dosen', 'id_semester')
+            ->leftJoin('kategori_kegiatans as kk', 'bimbing_mahasiswas.id_kategori_kegiatan', '=', 'kk.id_kategori_kegiatan')
+            ->leftJoin('anggota_aktivitas_mahasiswas as aam', 'bimbing_mahasiswas.id_aktivitas', '=', 'aam.id_aktivitas')
+            ->leftJoin('aktivitas_mahasiswas as am', 'bimbing_mahasiswas.id_aktivitas', '=', 'am.id_aktivitas')
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->where('id_jenis_aktivitas', '7')
+            ->orderBy('id_semester','DESC')
+            ->limit(1)
+            ->get();
+
+            // dd($pembimbing_akademik);
 
         $krs_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
                     ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
@@ -131,10 +150,12 @@ class KrsController extends Controller
 
         return view('mahasiswa.krs.index', compact(
             'matakuliah', 
+            'pembimbing_akademik',
             // 'kelasKuliah',
             'semester_aktif',
             'krs_regular',
             'akm',
+            'semester_ke',
             'mk_merdeka',
             'krs_merdeka',
 

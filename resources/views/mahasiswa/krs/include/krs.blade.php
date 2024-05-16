@@ -1,4 +1,4 @@
-<div class="tab-pane " id="krs" role="tabpanel">
+<div class="tab-pane active" id="krs" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
         <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
             <div class="row">
@@ -175,6 +175,34 @@
                                                     </table>
                                                 </div>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @else
+                                <div class="row mb-20">
+                                    <div class="col-xxl-12">
+                                        <div class="box box-body mb-0 bg-white">
+                                            <div class="row">
+                                                <div class="col-xl-4 col-lg-12">
+                                                    <h3 class="fw-500 text-dark mt-0">Kartu Rencana Studi</h3>
+                                                </div>
+                                            </div>
+                                            <div class="row ">
+                                                <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
+                                                    <div class="box box-body bg-warning-light">
+                                                        <div class="row" style="align-items: center;">
+                                                            <div class="col-lg-1 text-right" style="text-align-last: end;">
+                                                                <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
+                                                            </div>
+                                                            <div class="col-lg-10 text-left text-danger">
+                                                                <label>
+                                                                    Anda tidak bisa melakukan pengisian KRS!
+                                                                </label>
+                                                            </div>
+                                                        </div>                       
+                                                    </div>
+                                                </div>
+                                            </div>  
                                         </div>
                                     </div>
                                 </div>

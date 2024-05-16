@@ -1,4 +1,4 @@
-<div class="tab-pane active" id="data-kelas-kuliah" role="tabpanel">
+<div class="tab-pane" id="data-kelas-kuliah" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
         <div class="bg-primary-light rounded20 big-side-section">
             <div class="row">
@@ -15,7 +15,7 @@
                                     <div class="box box-body mb-0">
                                         <div class="row">
                                             <div class="col-xl-4 col-lg-12">
-                                                <h3 class="fw-500 text-dark mt-0">Semester 6</h3>
+                                                <h3 class="fw-500 text-dark mt-0">Semester {{$semester_ke}}</h3>
                                             </div>                             
                                         </div>
                                         @php
@@ -218,7 +218,6 @@
                                                                     Periode Pengisian KRS Telah Berakhir!
                                                                 </label>
                                                             </div>
-                                                            
                                                         </div>                       
                                                     </div>
                                                 </div>
