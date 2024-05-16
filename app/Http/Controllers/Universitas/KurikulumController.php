@@ -258,4 +258,12 @@ class KurikulumController extends Controller
 
         return redirect()->back()->with('success', 'Sinkronisasi Aktivitas Mahasiswa Berhasil!');
     }
+
+    public function is_active(ListKurikulum $kurikulum)
+    {
+        $kurikulum->is_active = !$kurikulum->is_active;
+        $kurikulum->save();
+
+        return redirect()->back()->with('success', 'Status Kurikulum Berhasil Diubah');
+    }
 }
