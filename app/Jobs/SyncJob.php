@@ -36,6 +36,8 @@ class SyncJob implements ShouldQueue
      */
     public function handle(): void
     {
+        ini_set('memory_limit', '2048M');
+
         $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
         $response = $data->runWS();
 

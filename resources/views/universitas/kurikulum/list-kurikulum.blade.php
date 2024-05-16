@@ -47,7 +47,7 @@ List Kurikulum
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table  table-hover margin-top-10 w-p100">
+                        <table id="data" class="table  table-hover margin-top-10 w-p100" style="font-size: 12px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle" rowspan="2">Status</th>
@@ -58,6 +58,7 @@ List Kurikulum
                                     <th class="text-center align-middle" colspan="3">Aturan Jumlah sks</th>
                                     <th class="text-center align-middle" colspan="2">Jumlah sks Matakuliah</th>
                                     <th class="text-center align-middle" rowspan="2">SK Kurikulum</th>
+                                    <th class="text-center align-middle" rowspan="2">Aktif</th>
                                 </tr>
                                 <tr>
                                     <th class="text-center align-middle">Lulus</th>
@@ -72,7 +73,6 @@ List Kurikulum
                                 <tr>
                                     <td class="text-center align-middle">
                                         <span class="badge badge-success">{{$d->status_sync}}</span>
-
                                     </td>
                                     <td class="text-center align-middle"></td>
                                     <td>
@@ -87,6 +87,13 @@ List Kurikulum
                                     <td class="text-center align-middle">{{$d->jumlah_sks_mata_kuliah_pilihan}}</td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_kurikulum}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <form action="{{ route('univ.kurikulum.is-active', ['kurikulum' => $d->id]) }}" method="post" id="activeForm{{ $d->id }}"
+                                            class="active-form" data-id="{{ $d->id }}">
+                                            @csrf
+                                            <button type="submit" class="btn btn-sm btn-{{$d->is_active == 1 ? 'success' : 'danger'}}"> {{$d->is_active == 1 ? 'Aktif' : 'Tidak Aktif'}}</button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -152,6 +159,25 @@ List Kurikulum
             allowClear: true,
             width: '100%',
             dropdownParent: $('#filter-button')
+        });
+
+        $('.active-form').submit(function(e){
+            e.preventDefault();
+            var formId = $(this).data('id');
+            swal({
+                title: 'Apakah Anda Yakin?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal',
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $(`#activeForm${formId}`).unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
         });
 
     });

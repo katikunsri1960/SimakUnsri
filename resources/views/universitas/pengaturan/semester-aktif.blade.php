@@ -53,6 +53,13 @@ Semester Aktif
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 mb-3">
+                                <label for="batas_isi_nilai" class="form-label">Batas Pengisian Nilai</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="batas_isi_nilai" id="batas_isi_nilai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->batas_isi_nilai : '' }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-3">
                                 <label class="form-label" style="opacity: 0;">Submit</label> <!-- Invisible label for alignment -->
                                 <button type="submit" class="form-control btn btn-sm btn-primary waves-effect waves-light">Simpan</button>
                             </div>
@@ -88,6 +95,10 @@ Semester Aktif
         });
 
         flatpickr("#krs_mulai", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#batas_isi_nilai", {
             dateFormat: "d-m-Y",
         });
 

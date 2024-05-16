@@ -84,6 +84,7 @@ class PengaturanController extends Controller
             'id_semester' => 'required|exists:semesters,id_semester',
             'krs_mulai' => 'required',
             'krs_selesai' => 'required',
+            'batas_isi_nilai' => 'required',
         ]);
 
         $data['id'] = 1;
