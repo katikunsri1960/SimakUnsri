@@ -17,11 +17,6 @@ class MataKuliah extends Model
         return $this->hasMany(PrasyaratMatkul::class, 'id_matkul', 'id_matkul');
     }
 
-    public function matkul_kurikulum()
-    {
-        return $this->hasMany(MatkulKurikulum::class, 'id_matkul', 'id_matkul');
-    }
-
     public function prodi()
     {
         return $this->belongsTo(ProgramStudi::class, 'id_prodi', 'id_prodi');
