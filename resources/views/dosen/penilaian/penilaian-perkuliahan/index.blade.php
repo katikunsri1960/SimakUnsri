@@ -50,7 +50,7 @@ Penilaian Perkuliahan Mahasiswa
                                             <th>Nama Kelas</th>
                                             <th>Dosen Pengajar</th>
                                             <th>Peserta Kelas</th>
-                                            <th>Tanggal Akhir Pengisian Nilai</th>
+                                            <th>Batas Pengisian Nilai</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -105,11 +105,11 @@ Penilaian Perkuliahan Mahasiswa
 <script>
       $(document).ready(function() {
         $('#data').DataTable({
-            "paging": false,
+            "paging": true,
             "ordering": true,
             "searching": true,
-            "scrollCollapse": true,
-            "scrollY": "550px",
+            // "scrollCollapse": true,
+            // "scrollY": "550px",
         });
 
     });
