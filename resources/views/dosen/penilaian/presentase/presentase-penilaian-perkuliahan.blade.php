@@ -1,6 +1,6 @@
 @extends('layouts.dosen')
 @section('title')
-Presentase Penilaian Perkuliahan
+Komponen Evaluasi Kelas Perkuliahan
 @endsection
 @section('content')
 <section class="content bg-white">
@@ -12,7 +12,7 @@ Presentase Penilaian Perkuliahan
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Presentase Penilaian Perkuliahan</h2>
+								<h2 class="mb-10">Komponen Evaluasi Kelas Perkuliahan</h2>
 								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
 							</div>
 						</div>
@@ -32,7 +32,8 @@ Presentase Penilaian Perkuliahan
                     </div>
                     <div class="row">
                         <div class="col-xl-4 col-lg-12">
-                            <h3 class="fw-500 text-dark mt-0">Presentase Penilaian</h3>
+                            <h3 class="fw-500 text-dark mt-0">Komponen Evaluasi Kelas</h3>
+                            <p class="mb-0 text-fade fs-18">Total Keseluruhan Komponen Evaluasi Sama Dengan 100 %</p>
                         </div>                             
                     </div>
                 </div>
@@ -41,31 +42,44 @@ Presentase Penilaian Perkuliahan
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-6">
-
-                            <div class="form-group">
-                                <label class="form-label">First Name</label>
-                                <input type="text" class="form-control" placeholder="First Name">
-                            </div>
+                                <div class="form-group">
+                                    <label class="form-label">Participatory Activity</label>
+                                    <input type="number" class="form-control" placeholder="Bobot Presentase Penilaian">
+                                </div>
                             </div>
                             <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Last Name</label>
-                                <input type="text" class="form-control" placeholder="Last Name">
-                            </div>
+                                <div class="form-group">
+                                    <label class="form-label">Project Outcomes</label>
+                                    <input type="number" class="form-control" placeholder="Bobot Presentase Penilaian">
+                                </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">E-mail</label>
-                                <input type="text" class="form-control" placeholder="E-mail">
-                            </div>
+                                <div class="form-group">
+                                    <label class="form-label">Assignment</label>
+                                    <input type="number" class="form-control" placeholder="Bobot Presentase Penilaian">
+                                </div>
                             </div>
                             <div class="col-md-6">
-                            <div class="form-group">
-                                <label class="form-label">Contact Number</label>
-                                <input type="text" class="form-control" placeholder="Phone">
+                                <div class="form-group">
+                                    <label class="form-label">Quiz</label>
+                                    <input type="number" class="form-control" placeholder="Bobot Presentase Penilaian">
+                                </div>
                             </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Midterm Exam</label>
+                                    <input type="number" class="form-control" placeholder="Bobot Presentase Penilaian">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label class="form-label">Finalterm Exam</label>
+                                    <input type="number" class="form-control" placeholder="Bobot Presentase Penilaian">
+                                </div>
                             </div>
                         </div>
                     </div>
