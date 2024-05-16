@@ -4,27 +4,41 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
+
 
 class SemesterAktif extends Model
 {
     use HasFactory;
     protected $guarded = [];
 
-    public function krsMulai(): Attribute
+    public function getKrsMulaiAttribute($value)
     {
-        return Attribute::make(
-            get: fn(string $value) => date('d-m-Y', strtotime($value)),
-            set: fn(string $value) => date('Y-m-d', strtotime($value))
-        );
+        return date('d-m-Y', strtotime($value)) ?? '';
     }
 
-    public function krsSelesai(): Attribute
+    public function setKrsMulaiAttribute($value)
     {
-        return Attribute::make(
-            get: fn(string $value) => date('d-m-Y', strtotime($value)),
-            set: fn(string $value) => date('Y-m-d', strtotime($value))
-        );
+        $this->attributes['krs_mulai'] = date('Y-m-d', strtotime($value));
+    }
+
+    public function getKrsSelesaiAttribute($value)
+    {
+        return date('d-m-Y', strtotime($value)) ?? '';
+    }
+
+    public function setKrsSelesaiAttribute($value)
+    {
+        $this->attributes['krs_selesai'] = date('Y-m-d', strtotime($value));
+    }
+
+    public function getBatasIsiNilaiAttribute($value)
+    {
+        return date('d-m-Y', strtotime($value)) ?? '';
+    }
+
+    public function setBatasIsiNilaiAttribute($value)
+    {
+        $this->attributes['batas_isi_nilai'] = date('Y-m-d', strtotime($value));
     }
 
     public function semester()

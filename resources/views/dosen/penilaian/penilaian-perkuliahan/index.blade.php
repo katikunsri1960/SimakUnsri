@@ -39,6 +39,12 @@ Penilaian Perkuliahan Mahasiswa
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
                         <div class="row">
+                            <div class="col-xl-4 col-lg-12">
+                                <h3 class="fw-500 text-dark mt-0">2023/2024</h3>
+                                <p class="mb-0 text-fade fs-18">Batas Pengisian Nilai, 2024-05-11</p>
+                            </div> 
+                        </div><hr>
+                        <div class="row">
                             <div class="table-responsive">
                                 <table id="data" class="table table-bordered table-striped text-center">
                                     <thead>
@@ -50,7 +56,6 @@ Penilaian Perkuliahan Mahasiswa
                                             <th>Nama Kelas</th>
                                             <th>Dosen Pengajar</th>
                                             <th>Peserta Kelas</th>
-                                            <th>Tanggal Akhir Pengisian Nilai</th>
                                             <th>Aksi</th>
                                         </tr>
                                     </thead>
@@ -62,7 +67,7 @@ Penilaian Perkuliahan Mahasiswa
                                                 {{$d->kelas_kuliah->prodi->nama_jenjang_pendidikan}} - {{$d->kelas_kuliah->prodi->nama_program_studi}}
                                             </td>
                                             <td class="text-center align-middle">
-                                                <a href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"> {{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</a>
+                                                {{$d->kelas_kuliah->matkul->kode_mata_kuliah}}
                                             </td>
                                             <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
                                             <td class="text-center align-middle">{{$d->kelas_kuliah->nama_kelas_kuliah}}</td>
@@ -76,18 +81,18 @@ Penilaian Perkuliahan Mahasiswa
                                                 @endif
                                             </td>
                                             <td class="text-center align-middle">{{$d->peserta_kelas_count}}</td>
-                                            <td class="text-center align-middle"></td>
                                             <td class="text-center align-middle">
                                                 <a class="btn btn-rounded bg-warning-light"
                                                 href="{{route('dosen.penilaian.presentase-penilaian-perkuliahan')}}"
-                                                title="Presentase Nilai"><i class="fa fa-percent"><span
+                                                title="Komponen Evaluasi"><i class="fa fa-clipboard-list"><span
                                                         class="path1"></span><span class="path2"></span></i></a>
-                                            <a class="btn btn-rounded bg-success-light" href="#"
-                                                title="Download DPNA"><i class="fa fa-download"><span
-                                                        class="path1"></span><span class="path2"></span></i></a>
-                                            <a class="btn btn-rounded bg-primary-light" href="#"
-                                                title="Upload DPNA"><i class="fa fa-upload"><span
-                                                        class="path1"></span><span class="path2"></span></i></a>
+                                                <a class="btn btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-users"></i></a>
+                                                <!-- <a class="btn btn-rounded bg-success-light" href="#"
+                                                    title="Download DPNA"><i class="fa fa-download"><span
+                                                            class="path1"></span><span class="path2"></span></i></a>
+                                                <a class="btn btn-rounded bg-primary-light" href="#"
+                                                    title="Upload DPNA"><i class="fa fa-upload"><span
+                                                            class="path1"></span><span class="path2"></span></i></a> -->
                                             </td>
                                         </tr>
                                         @endforeach
