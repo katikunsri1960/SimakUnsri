@@ -23,7 +23,7 @@
                                     <div class="form-group">
                                         <label>Dosen PA/Wali</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Prof. Dr. Erwin, M.Si">
+                                            value="DEWI PUSPITASARI">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -66,7 +66,7 @@
                                     <div class="form-group">
                                         <label>UKT</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Rp  {{number_format($data->biaya_masuk, 2, ',', '.') }}">
+                                            value="Rp  {{number_format($data->biaya_kuliah_smt, 2, ',', '.') }}">
                                     </div>
                                 </div>
 

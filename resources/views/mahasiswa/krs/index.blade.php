@@ -31,18 +31,18 @@ Kartu Rencana Studi
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 col-12">
+        <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-primary rounded mb-10 pull-up"
                 style="background-image: url(../images/svg-icon/color-svg/st-1.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">3.3 | 3.06</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$akm[0]->ips}} | {{$akm[0]->ipk}}</h4>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 col-12">
+        {{-- <div class="col-xl-3 col-md-6 col-12">
             <div class="box bs-5 border-danger rounded mb-10 pull-up"
                 style="background-image: url(../images/svg-icon/color-svg/st-2.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
@@ -52,8 +52,8 @@ Kartu Rencana Studi
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-3 col-md-6 col-12">
+        </div> --}}
+        <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-warning rounded mb-10 pull-up"
                 style="background-image: url(../images/svg-icon/color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
@@ -64,13 +64,17 @@ Kartu Rencana Studi
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 col-12">
+        <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-success rounded mb-10 pull-up"
                 style="background-image: url(../images/svg-icon/color-svg/st-4.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">Dosen PA/Wali</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">AMIR ARIFIN</h4>
+                        @if (!empty($pembimbing_akademik[0]->nama_dosen))
+                            <h4 class="mt-5 mb-0" style="color:#0052cc">{{ $pembimbing_akademik[0]->nama_dosen }}</h4>
+                        @else
+                            <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -81,8 +85,8 @@ Kartu Rencana Studi
             <div class="box">
 				<!-- Nav tabs -->
                 <ul class="nav nav-pills justify-content-left" role="tablist">
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
                 <div class="row">
                     <div class="col-12">
@@ -110,14 +114,10 @@ Kartu Rencana Studi
                         </div>
                     </div>
                 </div>
-                
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
-                    @include('mahasiswa.krs.include.data-kelas-kuliah')
-
-                    
-                        
+                    @include('mahasiswa.krs.include.data-kelas-kuliah')                        
                 </div>
 				<!-- /.box-body -->
             </div>
