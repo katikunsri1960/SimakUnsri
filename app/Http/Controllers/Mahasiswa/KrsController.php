@@ -42,7 +42,7 @@ class KrsController extends Controller
                 ->get();
                 // dd($akm);
 
-        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
+        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereNotIn('id_status_mahasiswa', ['N'])->count();
         // dd($jumlah_smt);
             
 

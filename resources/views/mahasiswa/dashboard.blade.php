@@ -78,7 +78,7 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        @if (!empty($akm[0]->biaya_kuliah_smt))
+                        @if (!empty($akm[0]->biaya_kuliah_smt))||
                             <h2 class="mb-5">Rp  {{number_format($akm[0]->biaya_kuliah_smt, 0, ',', '.') }}</h2>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
