@@ -42,17 +42,6 @@ Kartu Rencana Studi
                 </div>
             </div>
         </div>
-        {{-- <div class="col-xl-3 col-md-6 col-12">
-            <div class="box bs-5 border-danger rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-2.svg); background-position: right bottom; background-repeat: no-repeat;">
-                <div class="box-body">
-                    <div class="flex-grow-1">
-                        <p class="mt-5 mb-5 text-fade fs-12">Jenis Kelas</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">Regular</h4>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-warning rounded mb-10 pull-up"
                 style="background-image: url(../images/svg-icon/color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
@@ -88,32 +77,6 @@ Kartu Rencana Studi
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="box no-shadow">
-                            <div class="box-header no-border px-0 mb-40">
-                                <ul class="box-controls pull-right d-md-flex d-none">
-                                    <!-- <li> -->
-                                    <div class="clearfix">
-                                        <a class="waves-effect waves-light btn btn-app btn-success mb-20" href="#">
-                                            <i class="fa fa-print"></i> Print
-                                        </a>
-                                    </div>
-                                    <div class="form-group m-10">
-                                        <select class="form-select">
-                                            <option>2023/2024 Genap</option>
-                                            <option>2023/2024 Ganjil</option>
-                                            <option>2022/2023 Genap</option>
-                                            <option>2022/2023 Ganjil</option>
-                                            <option>2021/2022 Genap</option>
-                                            <option>2021/2022 Ganjil</option>
-                                        </select>
-                                    </div>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
@@ -265,8 +228,43 @@ Kartu Rencana Studi
 
     $(function() {
         "use strict";
-        
-        $('#data-matkul').DataTable({
+        $('#krs-regular').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            "pageLength": 10, 
+            // "scrollCollapse": false,
+            // "scrollY": "450px",
+            "columnDefs": [
+                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+            ]
+        });
+
+        $('#krs-merdeka').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            "pageLength": 10, 
+            // "scrollCollapse": false,
+            // "scrollY": "450px",
+            "columnDefs": [
+                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+            ]
+        });
+
+        $('#data-matkul-regular').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            "pageLength": 10, 
+            // "scrollCollapse": false,
+            // "scrollY": "450px",
+            "columnDefs": [
+                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+            ]
+        });
+
+        $('#data-matkul-merdeka').DataTable({
             "paging": true,
             "ordering": true,
             "searching": true,
