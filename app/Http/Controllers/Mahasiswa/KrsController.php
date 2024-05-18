@@ -37,10 +37,25 @@ class KrsController extends Controller
         // dd($semester_aktif);
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $semester_aktif->id_semester)
-                // ->limit(10)
-                ->get();
+                // ->where('id_semester', $semester_aktif->id_semester)
+                ->whereNotIn('id_status_mahasiswa', ['N'])
+                ->orderBy('id_semester', 'DESC')
+                ->first();
                 // dd($akm);
+        
+        $status_mahasiswa = AktivitasKuliahMahasiswa::select
+        ('id_status_mahasiswa')
+        // ('*')
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->orderBy('id_semester', 'DESC')
+                // ->get();
+                ->pluck('id_status_mahasiswa');
+            
+            
+            // $id_status_mahasiswa = $status_mahasiswa ? $status_mahasiswa->id_status_mahasiswa : null;
+            
+                // dd($status_mahasiswa);
 
         $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereNotIn('id_status_mahasiswa', ['N'])->count();
         // dd($jumlah_smt);
@@ -155,6 +170,7 @@ class KrsController extends Controller
             'semester_aktif',
             'krs_regular',
             'akm',
+            'status_mahasiswa',
             'semester_ke',
             'mk_merdeka',
             'krs_merdeka',

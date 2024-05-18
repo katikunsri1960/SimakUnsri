@@ -14,7 +14,7 @@
                             $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                         @endphp
                         @if(!$today->greaterThan($deadline))
-                            @if ($akm[0]->id_status_mahasiswa == 'A' )
+                            @if ($status_mahasiswa == 'A' )
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">
@@ -115,7 +115,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @elseif ($akm[0]->id_status_mahasiswa == 'M' )
+                            @elseif ($status_mahasiswa == 'M' )
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">

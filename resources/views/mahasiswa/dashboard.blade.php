@@ -57,8 +57,8 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        @if (!empty($akm[0]->ipk))
-                            <h2 class="mb-5">{{$akm[0]->ipk}}</h2>
+                        @if (!empty($akm->ipk))
+                            <h2 class="mb-5">{{$akm->ipk}}</h2>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
@@ -78,8 +78,8 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        @if (!empty($akm[0]->biaya_kuliah_smt))||
-                            <h2 class="mb-5">Rp  {{number_format($akm[0]->biaya_kuliah_smt, 0, ',', '.') }}</h2>
+                        @if (!empty($akm->biaya_kuliah_smt))
+                            <h2 class="mb-5">Rp  {{number_format($akm->biaya_kuliah_smt, 0, ',', '.') }}</h2>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
@@ -114,13 +114,13 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        @if (!empty($akm[0]->sks_total))
-                        <h2 class="mb-5">{{$akm[0]->sks_total}} SKS</h2>
+                        @if (!empty($akm->sks_total))
+                        <h2 class="mb-5">{{$akm->sks_total}} SKS</h2>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
                         
-                        <p class="text-fade mb-0 fs-12 text-white">28 SKS lagi untuk lulus</p>
+                        {{-- <p class="text-fade mb-0 fs-12 text-white">28 SKS lagi untuk lulus</p> --}}
                     </div>
                 </div>
             </div>
