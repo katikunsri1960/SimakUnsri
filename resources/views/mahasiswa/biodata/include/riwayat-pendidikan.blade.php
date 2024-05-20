@@ -48,8 +48,14 @@
                                                         @else
                                                             <td class="text-center">{{$data->keterangan_keluar}}</td>
                                                         @endif
+
+                                                        @if ($data->id_jenis_keluar == NULL)
+                                                            <td class="text-center">Tidak Diisi</td>
+                                                        @else
+                                                            <td class="text-center">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
+                                                        @endif
                                                         
-                                                        <td class="text-center">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
+                                                        <td class="text-center"></td>
                                                         <td class="text-center">{{$data->sks_diakui}}</td>
                                                         <td class="text-center"></td>
                                                         <td class="text-center">

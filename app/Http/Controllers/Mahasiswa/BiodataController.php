@@ -70,12 +70,12 @@ class BiodataController extends Controller
                 ->leftJoin('aktivitas_mahasiswas', 'aktivitas_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas',)
                 ->leftJoin('bimbing_mahasiswas', 'bimbing_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas',)
                 ->select('riwayat_pendidikans.id_registrasi_mahasiswa', 'id_mahasiswa', 'riwayat_pendidikans.nim', 'riwayat_pendidikans.nama_mahasiswa', 'id_jenis_daftar', 'nama_jenis_daftar', 'id_jalur_daftar', 'riwayat_pendidikans.id_periode_masuk',
-                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 
+                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 'riwayat_pendidikans.tanggal_daftar',
                         'riwayat_pendidikans.id_prodi', 'riwayat_pendidikans.nama_program_studi', 'sks_diakui', 'status', 'id_jenjang_pendidikan', 'nama_jenjang_pendidikan', 'fakultas_id','biaya_kuliah_smt', 'aktivitas_kuliah_mahasiswas.id_semester', 
-                        'aktivitas_kuliah_mahasiswas.sks_total', 'anggota_aktivitas_mahasiswas.id_aktivitas', 'bimbing_mahasiswas.nama_dosen', 'aktivitas_mahasiswas.id_jenis_aktivitas')
+                        'aktivitas_kuliah_mahasiswas.sks_total', 'anggota_aktivitas_mahasiswas.id_aktivitas', 'bimbing_mahasiswas.nama_dosen', 'aktivitas_mahasiswas.id_jenis_aktivitas', 'aktivitas_kuliah_mahasiswas.id_status_mahasiswa', 'aktivitas_kuliah_mahasiswas.nama_status_mahasiswa')
                 
                 ->where('riwayat_pendidikans.id_registrasi_mahasiswa', $id_reg)//Default
-                // ->where('id_jenis_aktivitas', '7')
+                ->whereNotIn('id_status_mahasiswa', ['N'])
                 
 
                 // ->where('id_registrasi_mahasiswa', '55f28aa8-168c-432e-b553-e64d150c423d')//PT Asal
@@ -85,9 +85,9 @@ class BiodataController extends Controller
                 // ->where('id_registrasi_mahasiswa', '3979bafc-4e64-4dca-8290-c2dc25ac9c3d')//Penerima KPS
 
                 ->groupBy('riwayat_pendidikans.id_registrasi_mahasiswa', 'id_mahasiswa', 'riwayat_pendidikans.nim', 'riwayat_pendidikans.nama_mahasiswa', 'id_jenis_daftar', 'nama_jenis_daftar', 'id_jalur_daftar', 'riwayat_pendidikans.id_periode_masuk',
-                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 
+                        'nama_periode_masuk', 'id_jenis_keluar', 'keterangan_keluar', 'tanggal_keluar', 'id_perguruan_tinggi', 'nama_perguruan_tinggi', 'nama_perguruan_tinggi_asal', 'nama_program_studi_asal', 'riwayat_pendidikans.tanggal_daftar',
                         'riwayat_pendidikans.id_prodi', 'riwayat_pendidikans.nama_program_studi', 'sks_diakui', 'status', 'id_jenjang_pendidikan', 'nama_jenjang_pendidikan', 'fakultas_id','biaya_kuliah_smt', 'aktivitas_kuliah_mahasiswas.id_semester', 
-                        'aktivitas_kuliah_mahasiswas.sks_total', 'anggota_aktivitas_mahasiswas.id_aktivitas', 'bimbing_mahasiswas.nama_dosen', 'aktivitas_mahasiswas.id_jenis_aktivitas')
+                        'aktivitas_kuliah_mahasiswas.sks_total', 'anggota_aktivitas_mahasiswas.id_aktivitas', 'bimbing_mahasiswas.nama_dosen', 'aktivitas_mahasiswas.id_jenis_aktivitas', 'aktivitas_kuliah_mahasiswas.id_status_mahasiswa', 'aktivitas_kuliah_mahasiswas.nama_status_mahasiswa')
                 ->orderBy('id_jenjang_pendidikan', 'DESC')
                 ->orderBy('aktivitas_kuliah_mahasiswas.id_semester', 'DESC')
                 ->limit(1)

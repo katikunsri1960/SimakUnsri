@@ -103,7 +103,7 @@
                                         @else
                                         
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->keterangan_keluar}}">
+                                                value="{{$data->nama_status_mahasiswa}}">
                                         @endif
                                     </div>
                                 </div>
