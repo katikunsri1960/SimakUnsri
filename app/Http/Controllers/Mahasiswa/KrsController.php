@@ -212,7 +212,7 @@ class KrsController extends Controller
     
         $kelasKuliah = KelasKuliah::with(['dosen_pengajar.dosen'])
                     ->withCount('peserta_kelas')
-                    ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                    // ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                     ->where('id_semester',  $semester_aktif->id_semester) 
                     ->where('id_matkul', $idMatkul)
                     ->orderBy('nama_kelas_kuliah')

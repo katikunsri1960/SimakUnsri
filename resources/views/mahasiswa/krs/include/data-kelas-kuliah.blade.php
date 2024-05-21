@@ -288,7 +288,7 @@
                                                                     <tr class="{{ $isDisabled ? 'disabled-row' : '' }}">
                                                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                         <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
-                                                                        <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
+                                                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                         <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                         <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                         <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
