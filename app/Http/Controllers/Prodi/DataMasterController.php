@@ -173,4 +173,11 @@ class DataMasterController extends Controller
 
         return redirect()->route('prodi.data-master.mata-kuliah')->with($store['status'], $store['message']);
     }
+
+    public function kurikulum_angkatan()
+    {
+        $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+
+        return view('prodi.data-master.kurikulum-angkatan.index',);
+    }
 }

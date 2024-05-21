@@ -38,13 +38,17 @@
                                 <a href="{{route('prodi.data-master.kurikulum')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Kurikulum</a>
                             </li>
+                            <li class="{{request()->routeIs('prodi.data-master.kurikulum-angkatan') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.kurikulum-angkatan')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Kurikulum Angkatan</a>
+                            </li>
                             <li class="{{request()->routeIs('prodi.data-master.mata-kuliah') || request()->routeIs('prodi.data-master.mata-kuliah.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.mata-kuliah')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Mata Kuliah</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-master.matkul-merdeka') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.matkul-merdeka')}}"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Kampus Merdeka</a>
+                                class="path1"></span><span class="path2"></span></i>MK MBKM</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-master.ruang-perkuliahan') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
