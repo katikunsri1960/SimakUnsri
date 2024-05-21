@@ -133,7 +133,7 @@
                                                                 <tr>
                                                                     <th class="text-center align-middle">No</th>
                                                                     <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                                    <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                                    <th class="text-center align-middle" style="width: 100%">Nama Mata Kuliah</th>
                                                                     <th class="text-center align-middle">Semester Ke</th>
                                                                     <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                                     <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
@@ -234,7 +234,7 @@
                                                                 <tr>
                                                                     <th class="text-center align-middle">No</th>
                                                                     <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                                    <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                                    <th class="text-center align-middle" style="width: 100%">Nama Mata Kuliah</th>
                                                                     <th class="text-center align-middle">Semester Ke</th>
                                                                     <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                                     <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
