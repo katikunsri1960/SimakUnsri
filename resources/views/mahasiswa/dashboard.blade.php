@@ -57,7 +57,12 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        <h2 class="mb-5">3.06</h2>
+                        @if (!empty($akm->ipk))
+                            <h2 class="mb-5">{{$akm->ipk}}</h2>
+                        @else
+                            <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
+                        @endif
+                        
                         <p class="text-fade mb-0 fs-12 text-white">Tetap dari semester lalu</p>
                     </div>
                 </div>
@@ -73,7 +78,11 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        <h2 class="mb-5">Rp. 3.375.000</h2>
+                        @if (!empty($akm->biaya_kuliah_smt))
+                            <h2 class="mb-5">Rp  {{number_format($akm->biaya_kuliah_smt, 0, ',', '.') }}</h2>
+                        @else
+                            <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
+                        @endif
                         <p class="text-fade mb-0 fs-12 text-white">Nominal UKT</p>
                     </div>
                 </div>
@@ -89,7 +98,7 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        <h2 class="mb-5 text-center">6</h2>
+                        <h2 class="mb-5 text-center">{{$semester_ke}}</h2>
                         <p class="text-fade mb-0 fs-12 text-white">Batas Studi : 10 Semester</p>
                     </div>
                 </div>
@@ -105,8 +114,13 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        <h2 class="mb-5">120 SKS</h2>
-                        <p class="text-fade mb-0 fs-12 text-white">28 SKS lagi untuk lulus</p>
+                        @if (!empty($akm->sks_total))
+                        <h2 class="mb-5">{{$akm->sks_total}} SKS</h2>
+                        @else
+                            <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
+                        @endif
+                        
+                        {{-- <p class="text-fade mb-0 fs-12 text-white">28 SKS lagi untuk lulus</p> --}}
                     </div>
                 </div>
             </div>

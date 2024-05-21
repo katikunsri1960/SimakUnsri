@@ -22,8 +22,15 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Dosen PA/Wali</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="Prof. Dr. Erwin, M.Si">
+                                        @if (!empty($data->nama_dosen))
+                                            <input type="name" class="form-control" disabled
+                                            value="{{$data->nama_dosen}}">
+                                        @else
+                                            <input type="name" class="form-control" disabled
+                                            value="Tidak diisi">
+                                        @endif
+                                        
+                                        
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -66,7 +73,7 @@
                                     <div class="form-group">
                                         <label>UKT</label>
                                         <input type="name" class="form-control" disabled
-                                            value="Rp  {{number_format($data->biaya_masuk, 2, ',', '.') }}">
+                                            value="Rp  {{number_format($data->biaya_kuliah_smt, 2, ',', '.') }}">
                                     </div>
                                 </div>
 
@@ -96,7 +103,7 @@
                                         @else
                                         
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->keterangan_keluar}}">
+                                                value="{{$data->nama_status_mahasiswa}}">
                                         @endif
                                     </div>
                                 </div>
