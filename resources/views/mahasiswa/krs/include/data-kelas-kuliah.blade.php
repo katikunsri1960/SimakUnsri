@@ -12,7 +12,7 @@
                             $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                         @endphp
                         @if(!$today->greaterThan($deadline))
-                            @if($status_mahasiswa[0] == "A" )
+                            @if($data_status_mahasiswa == "A" )
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">
@@ -41,6 +41,8 @@
                                                             @php
                                                                 $no_a=1;
                                                                 $isEnrolled = array_column($krs_regular->toArray(), 'id_matkul');
+                                                                $kelas_Enrolled = array_column($krs_regular->toArray(), 'id_kelas_kuliah');
+                                                                
                                                             @endphp
         
                                                             {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
@@ -113,7 +115,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @elseif ($status_mahasiswa[0] == "M" )
+                            @elseif ($data_status_mahasiswa == "M" )
                                 <div>
                                     <div class="row mb-20">
                                         <div class="col-xxl-12">
@@ -143,6 +145,7 @@
                                                                 @php
                                                                     $no_a=1;
                                                                     $isEnrolled = array_column($krs_regular->toArray(), 'id_matkul');
+                                                                    $kelas_Enrolled = array_column($krs_regular->toArray(), 'id_kelas_kuliah');
                                                                 @endphp
             
                                                                 {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
