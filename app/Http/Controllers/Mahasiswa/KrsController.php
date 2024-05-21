@@ -35,12 +35,20 @@ class KrsController extends Controller
                     ->whereNotIn('id_status_mahasiswa', ['N'])
                     ->orderBy('id_semester', 'DESC')
                     ->first();       
-        
+                    
         $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $semester_aktif->id_semester)
+                    ->where('id_status_mahasiswa', ['O'])
                     ->orderBy('id_semester', 'DESC')
-                    ->pluck('id_status_mahasiswa')->values()->toArray();
+                    ->pluck('id_status_mahasiswa')->first();
+
+            if ($status_mahasiswa !== null) {
+                $data_status_mahasiswa = $status_mahasiswa;
+            } else {
+                $data_status_mahasiswa = 'X';
+            }
+        // dd($data_status_mahasiswa);
             
         $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereNotIn('id_status_mahasiswa', ['N'])->count();
         
@@ -51,8 +59,9 @@ class KrsController extends Controller
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_jenis_aktivitas', '7')
                     ->orderBy('id_semester','DESC')
-                    ->limit(1)
-                    ->get();
+                    // ->limit(1)
+                    ->first();
+                    // dd($pembimbing_akademik);
 
         $krs_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
                     ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
@@ -141,10 +150,10 @@ class KrsController extends Controller
             'krs_regular',
             'akm',
             'status_mahasiswa',
+            'data_status_mahasiswa',
             'semester_ke',
             'mk_merdeka',
             'krs_merdeka',
-
         ));
     }
 

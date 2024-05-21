@@ -4,8 +4,7 @@
             <div class="row">
                 <div class="row">
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
-                    
-                        @if($status_mahasiswa[0] == "A" )
+                        @if($data_status_mahasiswa == "A" )
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -89,7 +88,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif ($status_mahasiswa[0] == "M" )
+                        @elseif ($data_status_mahasiswa == "M" )
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">

@@ -97,7 +97,6 @@ Kartu Rencana Studi
 @endpush
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-{{-- <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script> --}}
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
     $(document).ready(function() {
@@ -147,7 +146,13 @@ Kartu Rencana Studi
                 }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
                 table += '<td>' + kelas.peserta_kelas_count + '</td>';
-                table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '">Ambil</button></td>';
+                if (kelas.is_enrolled) {
+                    // Jika sudah terdaftar, tombol "Ambil" dinonaktifkan
+                    table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
+                } else {
+                    // Jika belum terdaftar, tombol "Ambil" aktif
+                    table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '">Ambil</button></td>';
+                }
                 table += '</tr>';
             });
 
