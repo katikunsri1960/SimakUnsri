@@ -136,9 +136,6 @@ class KrsController extends Controller
         //     return redirect()->back()->with('error', 'Semester tidak terdata');
         // }
 
-
-
-
         return view('mahasiswa.krs.index', compact(
             'matakuliah',
             'pembimbing_akademik',
