@@ -32,16 +32,16 @@
                                                         @php
                                                             $no=1;
                                                             $totalSks = 0;
-
+                                                            
                                                             $today = \Carbon\Carbon::now();
                                                             $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                                                         @endphp
-
+                            
                                                         @foreach ($krs_regular as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle">{{ $no++ }}</td>
                                                                 <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$data->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
@@ -114,16 +114,16 @@
                                                         @php
                                                             $no=1;
                                                             $totalSks = 0;
-
+                                                            
                                                             $today = \Carbon\Carbon::now();
                                                             $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                                                         @endphp
-
+                            
                                                         @foreach ($krs_regular as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle">{{ $no++ }}</td>
                                                                 <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$data->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
@@ -195,16 +195,16 @@
                                                         @php
                                                             $no=1;
                                                             $totalSks = 0;
-
+                                                            
                                                             $today = \Carbon\Carbon::now();
                                                             $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                                                         @endphp
-
+                            
                                                         @foreach ($krs_merdeka as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle">{{ $no++ }}</td>
                                                                 <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$data->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
@@ -270,17 +270,17 @@
                                                                 Anda tidak dapat melakukan pengisian KRS!
                                                             </label>
                                                         </div>
-                                                    </div>
+                                                    </div>                       
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>  
                                     </div>
                                 </div>
                             </div>
                         @endif
-
+                        
                     </div>
-                </div>
+                </div>  
             </div>
         </div>
     </div>
