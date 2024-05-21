@@ -47,7 +47,7 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">SKS Maksimum</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">24</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$sks_max}}</h4>
                     </div>
                 </div>
             </div>
@@ -103,6 +103,7 @@ Kartu Rencana Studi
             $('.lihat-kelas-kuliah').click(function() {
             var idMatkul = $(this).data('id-matkul');
             var resultContainerId = '#result-container_' + idMatkul;
+            
 
              // Dapatkan CSRF token dari meta tag
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -127,7 +128,7 @@ Kartu Rencana Studi
 
         function displayData(data, resultContainerId) {
             $(resultContainerId).empty();
-
+            var idKelas = $(this).data('id-kelas');
             var table = '<table class="table table-bordered table-striped text-center">';
             table += '<thead><tr><th>No</th><th>Kelas Kuliah</th><th>Dosen Pengajar</th><th style="width: 400px;">Jadwal Kuliah</th><th>Peserta</th><th>Action</th></tr></thead>';
             table += '<tbody>';
@@ -145,7 +146,8 @@ Kartu Rencana Studi
                 }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
                 table += '<td>' + kelas.peserta_kelas_count + '</td>';
-                if (kelas.kelas_Enrolled) {
+                
+                if (kelas.id_kelas_kuliah == idKelas) {
                     // Jika sudah terdaftar, tombol "Ambil" dinonaktifkan
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
                 } else {
@@ -153,7 +155,11 @@ Kartu Rencana Studi
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '">Ambil</button></td>';
                 }
                 table += '</tr>';
+                
             });
+            // console.log(kelas.id_kelas_kuliah);
+            
+            
 
             table += '</tbody></table>';
             $(resultContainerId).append(table).collapse('toggle');
@@ -185,6 +191,7 @@ Kartu Rencana Studi
                     }
                 });
             });
+            // console.log(idKelas);
 
 
             // Tambahkan event listener untuk tombol "Ubah Kelas Kuliah"

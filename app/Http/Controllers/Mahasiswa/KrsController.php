@@ -35,6 +35,34 @@ class KrsController extends Controller
                     ->whereNotIn('id_status_mahasiswa', ['N'])
                     ->orderBy('id_semester', 'DESC')
                     ->first();       
+
+        $ips = AktivitasKuliahMahasiswa::select('ips')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    // ->where('id_status_mahasiswa', ['O'])
+                    ->orderBy('id_semester', 'DESC')
+                    ->pluck('ips')->first();
+
+            if ($ips !== null) {
+                if($ips >= 3.00){
+                    $sks_max = 24;
+                }elseif($ips >= 2.50 && $ips <= 2.99){
+                    $sks_max = 21;
+                }elseif($ips >= 2.00 && $ips <= 2.49){
+                    $sks_max = 18;
+                }elseif($ips >= 1.50 && $ips <= 1.99){
+                    $sks_max = 15;
+                }elseif($ips < 1.50){
+                    $sks_max = 12;
+                }else{
+                    $sks_max = "Tidak Diisi";
+                }
+            } else {
+                $sks_max = "Tidak Diisi";
+            }
+
+            
+            // dd($ips);
                     
         $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa')
                     ->where('id_registrasi_mahasiswa', $id_reg)
@@ -60,18 +88,36 @@ class KrsController extends Controller
                     ->where('id_jenis_aktivitas', '7')
                     ->orderBy('id_semester','DESC')
                     ->first();
-                    
+
         $krs_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
-                    ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->where('id_semester', $semester_aktif->id_semester)
-                    ->get();
-                    
-        $krs_merdeka = PesertaKelasKuliah::Join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
-                    ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-                    ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->get();
+            ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->get();    
+
+            $total_sks_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+            ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->sum('mata_kuliahs.sks_mata_kuliah');
+        
+        
+        
+        $krs_merdeka = PesertaKelasKuliah::join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
+            ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->get();
+            
+            $total_sks_merdeka = PesertaKelasKuliah::join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
+                ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->sum('mata_kuliahs.sks_mata_kuliah');
+                
+                
+        $total_sks = $total_sks_regular + $total_sks_merdeka;
+        // dd($total_sks);
 
         $mk_merdeka = MatkulMerdeka::leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
                     ->where('matkul_merdekas.id_prodi', $prodi_id)
@@ -144,7 +190,8 @@ class KrsController extends Controller
             'pembimbing_akademik',
             'semester_aktif',
             'krs_regular',
-            'akm',
+            'akm', 'sks_max', 
+            'total_sks',
             'status_mahasiswa',
             'data_status_mahasiswa',
             'semester_ke',
