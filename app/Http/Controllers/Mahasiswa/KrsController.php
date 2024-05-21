@@ -89,6 +89,19 @@ class KrsController extends Controller
                     ->orderBy('id_semester','DESC')
                     ->first();
 
+
+        $krs_merdeka = PesertaKelasKuliah::join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
+            ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->get();
+                    
+            $total_sks_merdeka = PesertaKelasKuliah::join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
+                ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->sum('mata_kuliahs.sks_mata_kuliah');
+
         $krs_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
             ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
             ->where('id_registrasi_mahasiswa', $id_reg)
@@ -96,31 +109,16 @@ class KrsController extends Controller
             ->get();    
 
             $total_sks_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
-            ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-            ->where('id_registrasi_mahasiswa', $id_reg)
-            ->where('id_semester', $semester_aktif->id_semester)
-            ->sum('mata_kuliahs.sks_mata_kuliah');
-        
-        
-        
-        $krs_merdeka = PesertaKelasKuliah::join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
-            ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-            ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
-            ->where('id_registrasi_mahasiswa', $id_reg)
-            ->get();
-            
-            $total_sks_merdeka = PesertaKelasKuliah::join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
                 ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-                ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
                 ->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $semester_aktif->id_semester)
                 ->sum('mata_kuliahs.sks_mata_kuliah');
-                
                 
         $total_sks = $total_sks_regular + $total_sks_merdeka;
         // dd($total_sks);
 
+
         $mk_merdeka = MatkulMerdeka::leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
-                    ->where('matkul_merdekas.id_prodi', $prodi_id)
                     ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                     ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
