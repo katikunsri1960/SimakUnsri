@@ -5,7 +5,7 @@
                 <div class="row">
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
                     
-                        @if($akm[0]->id_status_mahasiswa == 'A' )
+                        @if($status_mahasiswa[0] == "A" )
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -89,8 +89,7 @@
                                     </div>
                                 </div>
                             </div>
-
-                        @elseif ($akm[0]->id_status_mahasiswa == 'M' )
+                        @elseif ($status_mahasiswa[0] == "M" )
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">

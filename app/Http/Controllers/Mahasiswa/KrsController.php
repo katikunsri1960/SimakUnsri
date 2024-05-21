@@ -19,131 +19,116 @@ class KrsController extends Controller
 {
     public function krs()
     {
-        
-
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
                             ->first();
         
         $prodi_id = $riwayat_pendidikan->id_prodi;
-        // dd($prodi_id);
-
+        
         $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
-                        // dd($semester_aktif);
         
         $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
-        // dd($semester_aktif);
-
+        
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $semester_aktif->id_semester)
-                // ->limit(10)
-                ->get();
-                // dd($akm);
-
-        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereNotIn('id_status_mahasiswa', ['N'])->count();
-        // dd($jumlah_smt);
+                    ->whereNotIn('id_status_mahasiswa', ['N'])
+                    ->orderBy('id_semester', 'DESC')
+                    ->first();       
+        
+        $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->orderBy('id_semester', 'DESC')
+                    ->pluck('id_status_mahasiswa')->values()->toArray();
             
-
+        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereNotIn('id_status_mahasiswa', ['N'])->count();
+        
         $pembimbing_akademik = BimbingMahasiswa::select('nama_dosen', 'id_semester')
-            ->leftJoin('kategori_kegiatans as kk', 'bimbing_mahasiswas.id_kategori_kegiatan', '=', 'kk.id_kategori_kegiatan')
-            ->leftJoin('anggota_aktivitas_mahasiswas as aam', 'bimbing_mahasiswas.id_aktivitas', '=', 'aam.id_aktivitas')
-            ->leftJoin('aktivitas_mahasiswas as am', 'bimbing_mahasiswas.id_aktivitas', '=', 'am.id_aktivitas')
-            ->where('id_registrasi_mahasiswa', $id_reg)
-            ->where('id_jenis_aktivitas', '7')
-            ->orderBy('id_semester','DESC')
-            ->limit(1)
-            ->get();
-
-            // dd($pembimbing_akademik);
+                    ->leftJoin('kategori_kegiatans as kk', 'bimbing_mahasiswas.id_kategori_kegiatan', '=', 'kk.id_kategori_kegiatan')
+                    ->leftJoin('anggota_aktivitas_mahasiswas as aam', 'bimbing_mahasiswas.id_aktivitas', '=', 'aam.id_aktivitas')
+                    ->leftJoin('aktivitas_mahasiswas as am', 'bimbing_mahasiswas.id_aktivitas', '=', 'am.id_aktivitas')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_jenis_aktivitas', '7')
+                    ->orderBy('id_semester','DESC')
+                    ->limit(1)
+                    ->get();
 
         $krs_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
                     ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $semester_aktif->id_semester)
-                    // ->limit(10)
                     ->get();
-                    // dd($peserta_kelas);
-
+                    
         $krs_merdeka = PesertaKelasKuliah::Join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
                     ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
                     ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
-                    // ->where('id_status_mahasiswa', 'M')
                     ->where('id_registrasi_mahasiswa', $id_reg)
-                    // ->where('id_semester', $semester_aktif->id_semester)
-                    // ->limit(10)
                     ->get();
-                    // dd($krs_merdeka);
 
         $mk_merdeka = MatkulMerdeka::leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
                     ->where('matkul_merdekas.id_prodi', $prodi_id)
                     ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                     ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
-                    // ->where(DB::raw("matkul_kurikulums.semester % 2"),'!=',0)
-                    // ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
-                    // ->orderBy('jumlah_kelas_kuliah', 'DESC')
-                    // ->orderBy('matkul_kurikulums.semester')
-                    // ->orderBy('matkul_kurikulums.sks_mata_kuliah')
-                    
-                    // ->limit(10)
                     ->get();
-                    // dd($mk_merdeka);
-        
-
-        
-                
-
+                    
        $data_univ = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
-                            ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
-                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.kode_mata_kuliah=mata_kuliahs.kode_mata_kuliah and kelas_kuliahs.id_prodi='".$prodi_id."' and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
-                            ->whereIn('mata_kuliahs.kode_mata_kuliah', array('UNI1001','UNI1002','UNI1003','UNI1004'))
-                            ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
-                            // ->orderBy('jumlah_kelas_kuliah','ASC')
-                            ->get();
-        // dd($data_univ);
-        if(substr($semester_aktif['id_semester'],-1) == '1'){
-            $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+                    ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+                    ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.kode_mata_kuliah=mata_kuliahs.kode_mata_kuliah and kelas_kuliahs.id_prodi='".$prodi_id."' and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+                    ->whereIn('mata_kuliahs.kode_mata_kuliah', array('UNI1001','UNI1002','UNI1003','UNI1004'))
+                    ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+                    ->get();
+        
+        // MATAKULIAH TANPA GANJIL GENAP
+        $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                             ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                             ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
                             ->where('mata_kuliahs.id_prodi', $prodi_id)
-                            ->where(DB::raw("matkul_kurikulums.semester % 2"),'!=',0)
+                            // ->where(DB::raw("matkul_kurikulums.semester % 2"),'!=',0)
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                             ->orderBy('jumlah_kelas_kuliah', 'DESC')
                             ->orderBy('matkul_kurikulums.semester')
                             ->orderBy('matkul_kurikulums.sks_mata_kuliah')
-                            
-                            // ->limit(10)
                             ->get();
-        }else if(substr($semester_aktif['id_semester'],-1) == '2'){
-            $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
-                            ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
-                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
-                            ->where('mata_kuliahs.id_prodi', $prodi_id)
-                            ->where(DB::raw("matkul_kurikulums.semester % 2"),'=',0)
-                            ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
-                            ->orderBy('jumlah_kelas_kuliah', 'DESC')
-                            ->orderBy('matkul_kurikulums.semester')
-                            ->orderBy('matkul_kurikulums.sks_mata_kuliah')
-                            
-                            // ->limit(10)
-                            ->get();
-        }else if(substr($semester_aktif['id_semester'],-1) == '3'){
-            $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
-                            ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
-                            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
-                            ->where('mata_kuliahs.id_prodi', $prodi_id)
-                            ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
-                            ->orderBy('jumlah_kelas_kuliah', 'DESC')
-                            ->orderBy('matkul_kurikulums.semester')
-                            ->orderBy('matkul_kurikulums.sks_mata_kuliah')
-                            
-                            // ->limit(10)
-                            ->get();
-        }else{
-            return redirect()->back()->with('error', 'Semester tidak terdata');
-        }
+
+
+        // MATAKULIAH GANJIL GENAP
+        // if(substr($semester_aktif['id_semester'],-1) == '1'){
+        //     $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+        //                     ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+        //                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+        //                     ->where('mata_kuliahs.id_prodi', $prodi_id)
+        //                     ->where(DB::raw("matkul_kurikulums.semester % 2"),'!=',0)
+        //                     ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+        //                     ->orderBy('jumlah_kelas_kuliah', 'DESC')
+        //                     ->orderBy('matkul_kurikulums.semester')
+        //                     ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+        //                     ->get();
+        // }else if(substr($semester_aktif['id_semester'],-1) == '2'){
+        //     $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+        //                     ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+        //                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+        //                     ->where('mata_kuliahs.id_prodi', $prodi_id)
+        //                     ->where(DB::raw("matkul_kurikulums.semester % 2"),'=',0)
+        //                     ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+        //                     ->orderBy('jumlah_kelas_kuliah', 'DESC')
+        //                     ->orderBy('matkul_kurikulums.semester')
+        //                     ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+        //                     ->get();
+        // }else if(substr($semester_aktif['id_semester'],-1) == '3'){
+        //     $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+        //                     ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+        //                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+        //                     ->where('mata_kuliahs.id_prodi', $prodi_id)
+        //                     ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+        //                     ->orderBy('jumlah_kelas_kuliah', 'DESC')
+        //                     ->orderBy('matkul_kurikulums.semester')
+        //                     ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+        //                     ->get();
+        // }else{
+        //     return redirect()->back()->with('error', 'Semester tidak terdata');
+        // }
 
        
                 
@@ -155,6 +140,7 @@ class KrsController extends Controller
             'semester_aktif',
             'krs_regular',
             'akm',
+            'status_mahasiswa',
             'semester_ke',
             'mk_merdeka',
             'krs_merdeka',
