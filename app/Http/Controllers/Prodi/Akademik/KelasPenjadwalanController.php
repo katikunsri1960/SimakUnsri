@@ -23,7 +23,7 @@ class KelasPenjadwalanController extends Controller
 {
     public function kelas_penjadwalan()
     {
-        // $semester_aktif = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+
         $semester_aktif = SemesterAktif::first();
         // dd($semester_aktif);
         $prodi_id = auth()->user()->fk_id;

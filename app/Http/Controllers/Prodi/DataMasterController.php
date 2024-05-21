@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Prodi;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Perkuliahan\PrasyaratMatkul;
@@ -35,8 +36,12 @@ class DataMasterController extends Controller
 
     public function matkul()
     {
-        $data = MataKuliah::with(['prasyarat_matkul', 'prasyarat_matkul.matkul_prasyarat'])->where('id_prodi', auth()->user()->fk_id)->get();
+        // $data = MataKuliah::with(['prasyarat_matkul', 'prasyarat_matkul.matkul_prasyarat', 'kurikulum'])->whereHas('kurikulum', function($query){
+        //     $query->where('is_active', 1);
+        // })->where('id_prodi', auth()->user()->fk_id)->get();
 
+        $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.prasyarat_matkul', 'mata_kuliah.prasyarat_matkul.matkul_prasyarat'])->where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+            // dd($data);
         return view('prodi.data-master.mata-kuliah.index', [
             'data' => $data
         ]);

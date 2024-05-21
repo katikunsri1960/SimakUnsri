@@ -8,7 +8,7 @@
             </div> --}}
             <div class="box-body">
                 <div class="table-responsive">
-                    <table id="data" class="table  table-hover margin-top-10 w-p100">
+                    <table id="data" class="table table-hover margin-top-10 w-p100" style="font-size:12px">
                         <thead>
                             <tr>
                                 <th class="text-center align-middle" rowspan="2">Status</th>

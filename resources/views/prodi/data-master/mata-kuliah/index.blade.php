@@ -31,10 +31,11 @@ Mata Kuliah
                 </div> --}}
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-hover margin-top-10 w-p100">
+                        <table id="data" class="table table-hover margin-top-10 w-p100" style="font-size: 12px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Kurikulum</th>
                                     <th class="text-center align-middle">KODE MK</th>
                                     <th class="text-center align-middle">NAMA MK</th>
                                     {{-- <th class="text-center align-middle">NAMA MK (ENGLISH)</th> --}}
@@ -44,9 +45,12 @@ Mata Kuliah
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $d)
+                                @foreach ($data as $a)
+                                @if ($a->mata_kuliah)
+                                @foreach ($a->mata_kuliah as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{$a->nama_kurikulum}}</td>
                                     <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
                                     {{-- <td class="text-center align-middle">{{$d->nama_mata_kuliah_english}}</td> --}}
@@ -55,17 +59,21 @@ Mata Kuliah
                                         @if ($d->prasyarat_matkul)
                                         <ul>
                                             @foreach ($d->prasyarat_matkul as $item)
-                                            <li>{{$item->matkul_prasyarat->kode_mata_kuliah}} - {{$item->matkul_prasyarat->nama_mata_kuliah}}</li>
+                                            <li>{{$item->matkul_prasyarat->kode_mata_kuliah}} -
+                                                {{$item->matkul_prasyarat->nama_mata_kuliah}}</li>
                                             @endforeach
                                         </ul>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a class="btn btn-primary" href="{{route('prodi.data-master.mata-kuliah.tambah-prasyarat', ['matkul' => $d])}}">
+                                        <a class="btn btn-primary"
+                                            href="{{route('prodi.data-master.mata-kuliah.tambah-prasyarat', ['matkul' => $d])}}">
                                             <i class="fa fa-plus"></i>Prasyarat
                                         </a>
                                     </td>
                                 </tr>
+                                @endforeach
+                                @endif
                                 @endforeach
                             </tbody>
                         </table>
