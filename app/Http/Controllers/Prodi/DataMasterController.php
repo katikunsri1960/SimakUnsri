@@ -59,8 +59,6 @@ class DataMasterController extends Controller
             ->where('is_active', 1)
             ->pluck('id_kurikulum');
 
-
-
         $matkul = MataKuliah::with(['kurikulum'])->where('id_prodi', $id_prodi)
             ->whereNotIn('id_matkul', function($query) use ($id_prodi) {
                 $query->select('id_matkul')
