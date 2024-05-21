@@ -32,6 +32,18 @@ class MataKuliah extends Model
         return $this->hasMany(KelasKuliah::class, 'id_matkul', 'id_matkul');
     }
 
+    public function kurikulum()
+    {
+        return $this->hasOneThrough(
+            ListKurikulum::class,
+            MatkulKurikulum::class,
+            'id_matkul', // Foreign key on MatkulKurikulum table...
+            'id_kurikulum', // Foreign key on Kurikulum table...
+            'id_matkul', // Local key on MataKuliah table...
+            'id_kurikulum' // Local key on MatkulKurikulum table...
+        );
+    }
+
     public function matkul_prodi()
     {
         $result = $this->where('id_prodi', auth()->user()->fk_id)->orderBy('kode_mata_kuliah')->get();
