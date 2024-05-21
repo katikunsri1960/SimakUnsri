@@ -91,7 +91,7 @@ class KrsController extends Controller
         $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
                             ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                             ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
-                            // ->where('mata_kuliahs.id_prodi', $prodi_id)
+                            ->where('mata_kuliahs.id_prodi', $prodi_id)
                             ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
                             ->orderBy('jumlah_kelas_kuliah', 'DESC')
                             ->orderBy('matkul_kurikulums.semester')
@@ -167,7 +167,7 @@ class KrsController extends Controller
 
         $kelasKuliah = KelasKuliah::with(['dosen_pengajar.dosen'])
                     ->withCount('peserta_kelas')
-                    ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                    // ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                     ->where('id_semester',  $semester_aktif->id_semester)
                     ->where('id_matkul', $idMatkul)
                     ->orderBy('nama_kelas_kuliah')
