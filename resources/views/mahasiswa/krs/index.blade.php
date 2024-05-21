@@ -79,16 +79,16 @@ Kartu Rencana Studi
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
-                    @include('mahasiswa.krs.include.data-kelas-kuliah')                        
+                    @include('mahasiswa.krs.include.data-kelas-kuliah')
                 </div>
 				<!-- /.box-body -->
             </div>
             <!-- /.box -->
         </div>
         <!-- /.col -->
-    </div>		
-    
-    	
+    </div>
+
+
 </section>
 @endsection
 @push('css')
@@ -236,7 +236,7 @@ Kartu Rencana Studi
             "paging": true,
             "ordering": true,
             "searching": true,
-            "pageLength": 10, 
+            "pageLength": 10,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [
@@ -248,7 +248,7 @@ Kartu Rencana Studi
             "paging": true,
             "ordering": true,
             "searching": true,
-            "pageLength": 10, 
+            "pageLength": 10,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [
@@ -260,7 +260,7 @@ Kartu Rencana Studi
             "paging": true,
             "ordering": true,
             "searching": true,
-            "pageLength": 10, 
+            "pageLength": 10,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [
@@ -272,7 +272,7 @@ Kartu Rencana Studi
             "paging": true,
             "ordering": true,
             "searching": true,
-            "pageLength": 10, 
+            "pageLength": 10,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [

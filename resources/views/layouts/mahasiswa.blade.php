@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    
+
     <link rel="icon" href="{{asset('images/unsri.png')}}">
 
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
@@ -20,9 +20,14 @@
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/skin_color.css')}}">
 
-    
+
 
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+    <style>
+        .dt-body-nowrap {
+            white-space: nowrap;
+        }
+    </style>
 
 </head>
 
@@ -35,7 +40,7 @@
 
         @include('mahasiswa.include.sidebar')
 
-        
+
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             <div class="container-full">
@@ -474,9 +479,9 @@
     <script src="{{asset('assets/vendor_components/fullcalendar/fullcalendar.js')}}"></script>
     <script src="{{asset('assets/assets/vendor_components/chart.js-master/Chart.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/easypiechart/dist/jquery.easypiechart.js')}}"></script>
-    
+
     @stack('js')
-    
+
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script>

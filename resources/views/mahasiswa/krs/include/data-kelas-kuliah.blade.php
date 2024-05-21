@@ -29,7 +29,7 @@
                                                             <tr>
                                                                 <th class="text-center align-middle">No</th>
                                                                 <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                                <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                                <th class="text-center align-middle" style="width: 100%">Nama Mata Kuliah</th>
                                                                 <th class="text-center align-middle">Semester Ke</th>
                                                                 <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                                 <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
@@ -53,7 +53,7 @@
                                                                 <tr class="bg-success-light {{ $isDisabled ? 'disabled-row' : '' }}">
                                                                     <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                     <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
-                                                                    <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
+                                                                    <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                     <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
@@ -85,7 +85,7 @@
                                                                 <tr class="{{ $isDisabled ? 'disabled-row' : '' }}">
                                                                     <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                     <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
-                                                                    <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
+                                                                    <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                     <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
@@ -156,7 +156,7 @@
                                                                     <tr class="bg-success-light {{ $isDisabled ? 'disabled-row' : '' }}">
                                                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                         <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
-                                                                        <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
+                                                                        <td class="text-start align-middle" style="width: 100%; white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                         <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                         <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                         <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
@@ -188,7 +188,7 @@
                                                                     <tr class="{{ $isDisabled ? 'disabled-row' : '' }}">
                                                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                         <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
-                                                                        <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
+                                                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                         <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                         <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                         <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
@@ -256,7 +256,7 @@
                                                                     <tr class="bg-success-light {{ $isDisabled ? 'disabled-row' : '' }}">
                                                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                         <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
-                                                                        <td class="text-start align-middle">{{ $data->nama_mata_kuliah }}</td>
+                                                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                         <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                         <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                         <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
