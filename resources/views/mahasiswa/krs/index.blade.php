@@ -274,6 +274,7 @@ Kartu Rencana Studi
             "ordering": true,
             "searching": true,
             "pageLength": 10,
+            "autoWidth": false,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [
