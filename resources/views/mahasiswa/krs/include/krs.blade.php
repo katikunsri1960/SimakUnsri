@@ -26,7 +26,6 @@
                                                             <th class="text-center align-middle">Waktu Kuliah</th>
                                                             <th class="text-center align-middle">Status</th>
                                                             <th class="text-center align-middle">Action</th>
-                                                            <!-- <td>Action</td> -->
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -46,7 +45,6 @@
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                {{-- <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td> --}}
                                                                 <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
                                                                 <td>
                                                                     @if(!$today->greaterThan($deadline))
@@ -110,7 +108,6 @@
                                                             <th class="text-center align-middle">Waktu Kuliah</th>
                                                             <th class="text-center align-middle">Status</th>
                                                             <th class="text-center align-middle">Action</th>
-                                                            <!-- <td>Action</td> -->
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -130,7 +127,6 @@
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                {{-- <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td> --}}
                                                                 <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
                                                                 <td>
                                                                     @if(!$today->greaterThan($deadline))
@@ -193,7 +189,6 @@
                                                             <th class="text-center align-middle">Waktu Kuliah</th>
                                                             <th class="text-center align-middle">Status</th>
                                                             <th class="text-center align-middle">Action</th>
-                                                            <!-- <td>Action</td> -->
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -213,7 +208,6 @@
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                {{-- <td><button type="button" class="waves-effect waves-light btn btn-danger-light mb-5">Belum Disetujui</button></td> --}}
                                                                 <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
                                                                 <td>
                                                                     @if(!$today->greaterThan($deadline))

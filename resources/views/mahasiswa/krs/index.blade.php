@@ -12,7 +12,6 @@ Kartu Rencana Studi
                         <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <!-- <h2>Halaman KRS {{auth()->user()->name}}</h2> -->
                             <h2>Kartu Rencana Studi Mahasiswa</h2>
                             <p class="text-dark align-middle mb-0 fs-16">
                                 Universitas Sriwijaya
@@ -146,7 +145,7 @@ Kartu Rencana Studi
                 }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
                 table += '<td>' + kelas.peserta_kelas_count + '</td>';
-                if (kelas.is_enrolled) {
+                if (kelas.kelas_Enrolled) {
                     // Jika sudah terdaftar, tombol "Ambil" dinonaktifkan
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
                 } else {

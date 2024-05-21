@@ -41,6 +41,8 @@
                                                             @php
                                                                 $no_a=1;
                                                                 $isEnrolled = array_column($krs_regular->toArray(), 'id_matkul');
+                                                                $kelas_Enrolled = array_column($krs_regular->toArray(), 'id_kelas_kuliah');
+                                                                
                                                             @endphp
         
                                                             {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
@@ -143,6 +145,7 @@
                                                                 @php
                                                                     $no_a=1;
                                                                     $isEnrolled = array_column($krs_regular->toArray(), 'id_matkul');
+                                                                    $kelas_Enrolled = array_column($krs_regular->toArray(), 'id_kelas_kuliah');
                                                                 @endphp
             
                                                                 {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
