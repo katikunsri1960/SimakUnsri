@@ -38,6 +38,9 @@ Nilai Perkuliahan
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.perkuliahan.nilai-perkuliahan.sync-nilai-komponen')}}" method="get" id="sync-nilai">
+                            <button class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Nilai Komponen</button>
+                        </form>
                         {{-- <form action="{{route('univ.perkuliahan.kelas-kuliah.sync-pengajar-kelas')}}" method="get" id="sync-pengajar">
                             <button class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Pengajar</button>
                         </form>
@@ -166,7 +169,7 @@ Nilai Perkuliahan
             });
         });
 
-        $('#sync-peserta').submit(function(e){
+        $('#sync-nilai').submit(function(e){
             e.preventDefault();
             swal({
                 title: 'Sinkronisasi Data',
@@ -180,7 +183,7 @@ Nilai Perkuliahan
             }, function(isConfirm){
                 if (isConfirm) {
                     $('#spinner').show();
-                    $('#sync-peserta').unbind('submit').submit();
+                    $('#sync-nilai').unbind('submit').submit();
                 }
             });
         });

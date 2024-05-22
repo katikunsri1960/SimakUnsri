@@ -257,8 +257,12 @@ Route::group(['middleware' => ['auth']], function() {
             });
 
             Route::prefix('perkuliahan')->group(function () {
-                Route::get('/nilai-perkuliahan', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'nilai_perkuliahan'])->name('univ.perkuliahan.nilai-perkuliahan');
-                Route::get('/nilai-perkuliahan/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_nilai_perkuliahan'])->name('univ.perkuliahan.nilai-perkuliahan.sync');
+
+                Route::prefix('nilai-perkuliahan')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'nilai_perkuliahan'])->name('univ.perkuliahan.nilai-perkuliahan');
+                    Route::get('/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_nilai_perkuliahan'])->name('univ.perkuliahan.nilai-perkuliahan.sync');
+                    Route::get('/sync-nilai-komponen', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_nilai_komponen'])->name('univ.perkuliahan.nilai-perkuliahan.sync-nilai-komponen');
+                });
 
                 Route::prefix('kelas-kuliah')->group(function () {
                     Route::get('/', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'kelas_kuliah'])->name('univ.perkuliahan.kelas-kuliah');

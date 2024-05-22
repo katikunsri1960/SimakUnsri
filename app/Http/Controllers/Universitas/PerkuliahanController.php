@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Universitas;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Services\Feeder\FeederAPI;
 use App\Models\ProgramStudi;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
@@ -485,6 +486,36 @@ class PerkuliahanController extends Controller
         return redirect()->back()->with('success', 'Sinkronisasi Komponen Evaluasi Kelas Berhasil!');
 
 
+    }
+
+    public function sync_nilai_komponen()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $act = 'GetRiwayatNilaiMahasiswaKomponenEvaluasi';
+        $limit = '';
+        $offset = '';
+        $order = '';
+        $job = \App\Jobs\SyncJob::class;
+        $name = 'nilai-komponen-evaluasi';
+        $model = \App\Models\Perkuliahan\NilaiKomponenEvaluasi::class;
+        $primary = ['id_registrasi_mahasiswa', 'id_komponen_evaluasi'];
+
+        $data = KomponenEvaluasiKelas::pluck('id_komponen_evaluasi')->toArray();
+        $data = array_chunk($data, 10);
+        $data = array_map(function ($value) {
+            return "id_komponen_evaluasi IN ('" . implode("','", $value) . "')";
+        }, $data);
+
+        $batch = Bus::batch([])->name($name)->dispatch();
+
+        foreach ($data as $s) {
+            $filter = $s;
+            $batch->add(new $job($act, $limit, $offset, $order, $filter, $model, $primary));
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Nilai Komponen Evaluasi Berhasil!');
     }
 
 }
