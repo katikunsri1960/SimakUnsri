@@ -91,7 +91,7 @@ Penilaian Perkuliahan Mahasiswa
                                                 </div>
                                                 <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-6 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-success-light" href="#"
+                                                        <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
                                                     title="Download DPNA"><i class="fa fa-download"></i> Download DPNA</a>
                                                     </div>
                                                     <div class="col-md-6 mb-2">

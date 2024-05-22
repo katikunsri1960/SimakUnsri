@@ -107,6 +107,8 @@ Route::group(['middleware' => ['auth']], function() {
 
                 //Detail Fitur
                 Route::get('/presentase-penilaian-perkuliahan', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'presentase_penilaian_perkuliahan'])->name('dosen.penilaian.presentase-penilaian-perkuliahan');
+                Route::get('/penilaian-perkuliahan/download-dpna/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'download_dpna'])->name('dosen.penilaian.penilaian-perkuliahan.download-dpna');
+                
                 // Route::get('/kesediaan-waktu-kuliah', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_kuliah'])->name('dosen.perkuliahan.kesediaan-waktu-kuliah');
             });
 
