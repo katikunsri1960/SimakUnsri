@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\SemesterAktif;
+use App\Exports\ExportDPNA;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 
 class PenilaianPerkuliahanController extends Controller
@@ -29,5 +31,10 @@ class PenilaianPerkuliahanController extends Controller
         return view('dosen.penilaian.penilaian-perkuliahan.detail', [
             'data' => $data
         ]);
+    }
+
+    public function download_dpna(string $kelas)
+    {
+        return Excel::download(new ExportDPNA($kelas), 'DPNA_"'.$kelas.'".xlsx');
     }
 }
