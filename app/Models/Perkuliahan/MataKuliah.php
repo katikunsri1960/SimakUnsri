@@ -46,7 +46,20 @@ class MataKuliah extends Model
 
     public function matkul_prodi()
     {
-        $result = $this->where('id_prodi', auth()->user()->fk_id)->orderBy('kode_mata_kuliah')->get();
+        $id_prodi = auth()->user()->fk_id;
+
+        $kurikulum = ListKurikulum::where('id_prodi', $id_prodi)
+                ->where('is_active', 1)
+                ->pluck('id_kurikulum');
+
+        $result = $this->with(['kurikulum'])->where('id_prodi', $id_prodi)
+            ->whereHas('kurikulum', function($query) use ($kurikulum){
+                $query->whereIn('list_kurikulums.id_kurikulum', $kurikulum);
+            })
+            ->orderBy('kode_mata_kuliah')
+            ->get();
+
+        // $result = $this->where('id_prodi', auth()->user()->fk_id)->orderBy('kode_mata_kuliah')->get();
 
         return $result;
     }

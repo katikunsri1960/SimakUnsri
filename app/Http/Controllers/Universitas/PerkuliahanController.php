@@ -353,8 +353,8 @@ class PerkuliahanController extends Controller
 
     public function nilai_perkuliahan()
     {
-        $prodi = ProgramStudi::select('nama_program_studi', 'id_prodi')->get();
-        $semester = Semester::select('nama_semester', 'id_semester')->get();
+        $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->orderBy('id_semester', 'desc')->get();
         return view('universitas.perkuliahan.nilai-perkuliahan.index', compact('prodi', 'semester'));
 
     }
