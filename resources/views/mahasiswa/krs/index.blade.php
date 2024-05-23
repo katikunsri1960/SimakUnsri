@@ -47,7 +47,7 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">SKS Maksimum</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">24</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$sks_max}}</h4>
                     </div>
                 </div>
             </div>
@@ -57,9 +57,9 @@ Kartu Rencana Studi
                 style="background-image: url(../images/svg-icon/color-svg/st-4.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        <p class="mt-5 mb-5 text-fade fs-12">Dosen PA/Wali</p>
-                        @if (!empty($pembimbing_akademik[0]->nama_dosen))
-                            <h4 class="mt-5 mb-0" style="color:#0052cc">{{ $pembimbing_akademik[0]->nama_dosen }}</h4>
+                        <p class="mt-5 mb-5 text-fade fs-12">Dosen PA</p>
+                        @if (!empty($riwayat_pendidikan->nama_dosen))
+                            <h4 class="mt-5 mb-0" style="color:#0052cc">{{ $riwayat_pendidikan->nama_dosen }}</h4>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
@@ -76,6 +76,24 @@ Kartu Rencana Studi
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
+                <ul class="box-controls pull-right d-md-flex d-none">
+                    <!-- <li> -->
+                    <div class="clearfix">
+                        <a class="waves-effect waves-light btn btn-app btn-success mb-20" href="#">
+                            <i class="fa fa-print"></i> Print
+                        </a>
+                    </div>
+                    <div class="form-group m-10">
+                        <select class="form-select">
+                            <option>2023/2024 Genap</option>
+                            <option>2023/2024 Ganjil</option>
+                            <option>2022/2023 Genap</option>
+                            <option>2022/2023 Ganjil</option>
+                            <option>2021/2022 Genap</option>
+                            <option>2021/2022 Ganjil</option>
+                        </select>
+                    </div>
+                </ul>
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
@@ -88,14 +106,14 @@ Kartu Rencana Studi
         <!-- /.col -->
     </div>
 
-
 </section>
 @endsection
 @push('css')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
 @push('js')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> --}}
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
     $(document).ready(function() {
@@ -174,14 +192,28 @@ Kartu Rencana Studi
                         _token: csrfToken  // Sertakan CSRF token di sini
                     },
                     success: function(response) {
-                        console.log(response.message);
-                        // Tambahkan logika atau feedback sesuai kebutuhan
+                        swal({
+                            title: 'Berhasil!',
+                            text: response.message,
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        },function(result){
+                            if(result){
+                                console.log(response.message);
+                                // Lakukan refresh halaman atau aksi lainnya jika diperlukan
+                                location.reload();
+                            }
+                        });
 
-                        // Refresh halaman setelah berhasil mengambil atau mengubah kelas kuliah
-                        location.reload();
                     },
-                    error: function(error) {
-                        console.error('Error storing data:', error);
+                    error: function(response) {
+                        var errorMessage = response.responseJSON.message;
+                        swal({
+                            title: 'Gagal!',
+                            text: errorMessage,
+                            icon: 'warning',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 });
             });
@@ -229,6 +261,26 @@ Kartu Rencana Studi
             }
         }
     });
+
+    // Event listener for all delete buttons
+    $('.delete-form').submit(function(e){
+            e.preventDefault();
+            var formId = $(this).data('id');
+            swal({
+                title: 'Apakah Anda Yakin??',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $(`#deleteForm${formId}`).unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
+        });
 
     $(function() {
         "use strict";
@@ -292,7 +344,7 @@ Kartu Rencana Studi
 
         // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
         @if($today->greaterThan($deadline))
-            Swal.fire({
+            swal({
                 icon: 'warning',
                 title: 'Peringatan',
                 text: 'Periode pengisian KRS telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah',
