@@ -12,6 +12,7 @@ use App\Models\Perkuliahan\PrasyaratMatkul;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
+use Illuminate\Support\Facades\DB;
 
 class DataMasterController extends Controller
 {
@@ -25,12 +26,25 @@ class DataMasterController extends Controller
         ]);
     }
 
-    public function mahasiswa()
+    public function mahasiswa(Request $request)
     {
-        $data = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)->get();
+        $data = RiwayatPendidikan::with(['kurikulum'])->where('id_prodi', auth()->user()->fk_id);
 
+        if ($request->has('angkatan')) {
+            $data = $data->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $request->input('angkatan'));
+        }
+
+        $data = $data->orderBy('id_periode_masuk', 'desc')->get();
+
+        $angkatan = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)
+                ->select('id_periode_masuk')
+                ->distinct()
+                ->orderBy('id_periode_masuk', 'desc')
+                ->get();
+        // dd($angkatan);
         return view('prodi.data-master.mahasiswa.index', [
-            'data' => $data
+            'data' => $data,
+            'angkatan' => $angkatan
         ]);
     }
 
@@ -154,7 +168,24 @@ class DataMasterController extends Controller
 
     public function kurikulum()
     {
-        return view('prodi.data-master.kurikulum.index');
+        $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+        return view('prodi.data-master.kurikulum.index',
+        [
+            'data' => $data
+        ]);
+    }
+
+    public function detail_kurikulum(ListKurikulum $kurikulum)
+    {
+        if ($kurikulum->id_prodi != auth()->user()->fk_id) {
+            abort(403);
+        }
+
+        $data = $kurikulum->load('matkul_kurikulum');
+
+        return view('prodi.data-master.kurikulum.detail-kurikulum', [
+            'data' => $data,
+        ]);
     }
 
     public function tambah_prasyarat(MataKuliah $matkul)

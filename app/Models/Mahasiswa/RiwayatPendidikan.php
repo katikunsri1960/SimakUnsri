@@ -5,6 +5,7 @@ namespace App\Models\Mahasiswa;
 use App\Models\Semester;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\JalurMasuk;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +16,11 @@ class RiwayatPendidikan extends Model
     protected $guarded = [];
 
     protected $appends = ['angkatan'];
+
+    public function kurikulum()
+    {
+        return $this->belongsTo(ListKurikulum::class, 'id_kurikulum', 'id_kurikulum');
+    }
 
     public function biodata()
     {

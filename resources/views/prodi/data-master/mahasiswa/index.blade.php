@@ -26,24 +26,33 @@ Mahasiswa Prodi
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
-                    {{-- <div class="d-flex justify-content-end">
-                        <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
+                <div class="box-header with-border d-flex justify-content-between">
+                    <div class="d-flex justify-content-start">
+                        <!-- Modal trigger button -->
+                        <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-toggle="modal"
+                            data-bs-target="#filter-button">
+                            <i class="fa fa-filter"></i> Filter
+                        </button>
+                        @include('prodi.data-master.mahasiswa.filter')
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        {{-- <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i
                                     class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form>
+                        </form> --}}
                         <span class="divider-line mx-1"></span>
                         <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i>
-                            Tambah Kurikulum</button>
-                    </div> --}}
+                            Set Kurikulum Angkatan</button>
+                    </div>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-hover margin-top-10 w-p100 table-bordered">
+                        <table id="data" class="table table-hover margin-top-10 w-p100 table-bordered" style="font-size: 11px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">FOTO</th>
+                                    <th class="text-center align-middle">ANGKATAN</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">DOSEN P.A.</th>
@@ -57,6 +66,9 @@ Mahasiswa Prodi
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle"></td>
+                                    <td class="text-center align-middle">
+                                        {{$d->angkatan}}
+                                    </td>
                                     <td class="text-center align-middle">
                                         {{$d->nim}}
                                     </td>
