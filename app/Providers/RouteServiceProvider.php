@@ -22,7 +22,8 @@ class RouteServiceProvider extends ServiceProvider
     public const UNIVERSITAS = '/universitas';
     public const FAKULTAS = '/fakultas';
     public const PRODI = '/prodi';
-    public const MAHASISWA = '/mahasiswa';
+    public const MAHASISWA = '/mahasiswa/dashboard';
+    public const BAK = '/bak';
 
     /**
      * Define your route model bindings, pattern filters, and other route configuration.

@@ -44,9 +44,8 @@ class MataKuliah extends Model
         );
     }
 
-    public function matkul_prodi()
+    public function matkul_prodi($id_prodi)
     {
-        $id_prodi = auth()->user()->fk_id;
 
         $kurikulum = ListKurikulum::where('id_prodi', $id_prodi)
                 ->where('is_active', 1)

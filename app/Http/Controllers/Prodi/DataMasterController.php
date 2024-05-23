@@ -28,9 +28,9 @@ class DataMasterController extends Controller
 
     public function mahasiswa(Request $request)
     {
-        $data = RiwayatPendidikan::with(['kurikulum'])->where('id_prodi', auth()->user()->fk_id);
+        $data = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik'])->where('id_prodi', auth()->user()->fk_id);
 
-        if ($request->has('angkatan')) {
+        if ($request->has('angkatan') && $request->input('angkatan') != ''){
             $data = $data->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $request->input('angkatan'));
         }
 
@@ -41,19 +41,51 @@ class DataMasterController extends Controller
                 ->distinct()
                 ->orderBy('id_periode_masuk', 'desc')
                 ->get();
-        // dd($angkatan);
+
+        $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+
+        $dosDb = new BiodataDosen();
+        $dosen = $dosDb->list_dosen_prodi(null, auth()->user()->fk_id);
+
         return view('prodi.data-master.mahasiswa.index', [
             'data' => $data,
-            'angkatan' => $angkatan
+            'angkatan' => $angkatan,
+            'kurikulum' => $kurikulum,
+            'dosen' => $dosen,
         ]);
+    }
+
+    public function set_pa(RiwayatPendidikan $mahasiswa, Request $request)
+    {
+        $data = $request->validate([
+            'id_dosen' => 'required',
+        ]);
+
+        $mahasiswa->update([
+            'dosen_pa' => $data['id_dosen']
+        ]);
+
+        return redirect()->back()->with('success', "Data Berhasil di tambahkan");
+    }
+
+    public function set_kurikulum_angkatan(Request $request)
+    {
+        $data = $request->validate([
+            'tahun_angkatan' => 'required',
+            'id_kurikulum' => 'required',
+        ]);
+
+        $prodi = auth()->user()->fk_id;
+        $db = new RiwayatPendidikan();
+
+        $store = $db->set_kurikulum_angkatan($data['tahun_angkatan'], $data['id_kurikulum'], $prodi);
+
+        return redirect()->back()->with($store['status'], $store['message']);
+
     }
 
     public function matkul()
     {
-        // $data = MataKuliah::with(['prasyarat_matkul', 'prasyarat_matkul.matkul_prasyarat', 'kurikulum'])->whereHas('kurikulum', function($query){
-        //     $query->where('is_active', 1);
-        // })->where('id_prodi', auth()->user()->fk_id)->get();
-
         $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.prasyarat_matkul', 'mata_kuliah.prasyarat_matkul.matkul_prasyarat'])->where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
             // dd($data);
         return view('prodi.data-master.mata-kuliah.index', [
@@ -190,8 +222,11 @@ class DataMasterController extends Controller
 
     public function tambah_prasyarat(MataKuliah $matkul)
     {
+        $id_prodi = auth()->user()->fk_id;
+
         $db = new MataKuliah();
-        $prasyarat = $db->matkul_prodi();
+        $prasyarat = $db->matkul_prodi($id_prodi);
+        
         return view('prodi.data-master.mata-kuliah.tambah-prasyarat', [
             'matkul' => $matkul,
             'prasyarat' => $prasyarat
@@ -209,6 +244,15 @@ class DataMasterController extends Controller
         $store = $db->prasyarat_store($matkul->id_matkul, $data['prasyarat']);
 
         return redirect()->route('prodi.data-master.mata-kuliah')->with($store['status'], $store['message']);
+    }
+
+    public function hapus_prasyarat(MataKuliah $matkul)
+    {
+        $db = new PrasyaratMatkul();
+
+        $data = $db->prasyarat_destroy($matkul->id_matkul);
+
+        return redirect()->back()->with($data['status'], $data['message']);
     }
 
     public function kurikulum_angkatan()

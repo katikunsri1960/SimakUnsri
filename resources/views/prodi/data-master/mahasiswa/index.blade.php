@@ -18,10 +18,10 @@ Mahasiswa Prodi
                 </nav>
             </div>
         </div>
-
     </div>
 </div>
-
+@include('swal')
+@include('prodi.data-master.mahasiswa.set-pa')
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -36,13 +36,10 @@ Mahasiswa Prodi
                         @include('prodi.data-master.mahasiswa.filter')
                     </div>
                     <div class="d-flex justify-content-end">
-                        {{-- <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i
-                                    class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form> --}}
                         <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i>
+                        <button class="btn btn-success waves-effect waves-light" href="#" data-bs-toggle="modal" data-bs-target="#setAngkatanModal"><i class="fa fa-plus"></i>
                             Set Kurikulum Angkatan</button>
+                        @include('prodi.data-master.mahasiswa.set-angkatan')
                     </div>
                 </div>
                 <div class="box-body">
@@ -50,9 +47,9 @@ Mahasiswa Prodi
                         <table id="data" class="table table-hover margin-top-10 w-p100 table-bordered" style="font-size: 11px">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle" style="width: 5%">No</th>
                                     <th class="text-center align-middle">FOTO</th>
-                                    <th class="text-center align-middle">ANGKATAN</th>
+                                    <th class="text-center align-middle">AKT</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">KURIKULUM</th>
@@ -76,13 +73,15 @@ Mahasiswa Prodi
                                     <td class="text-start align-middle">
                                         {{$d->nama_mahasiswa}}
                                     </td>
-                                    <td class="text-start align-middle">
+                                    <td class="text-start align-middle" style="width: 15%">
                                         @if ($d->kurikulum)
-                                            {{$d->kurikulum->mana_kurikulum}}
+                                            {{$d->kurikulum->nama_kurikulum}}
                                         @endif
                                     </td>
-                                    <td class="text-center align-middle">
-
+                                    <td class="text-start align-middle text-nowrap">
+                                        @if ($d->dosen_pa)
+                                            {{$d->pembimbing_akademik->nama_dosen}}
+                                        @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->keterangan_keluar ?? 'Aktif'}}
@@ -91,7 +90,8 @@ Mahasiswa Prodi
 
                                     </td>
                                     <td class="text-center align-middle">
-
+                                        <button class="btn btn-sm btn-rounded btn-{{$d->dosen_pa ? 'warning' : 'primary'}} text-nowrap" data-bs-toggle="modal"
+                                        data-bs-target="#assignDosenPa" onclick="setDosenPa({{$d}}, {{$d->id}})"><i class="fa fa-user-graduate"></i> {{$d->dosen_pa ? 'Ubah' : 'Assign'}} PA</button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -106,10 +106,20 @@ Mahasiswa Prodi
     </div>
 </section>
 @endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
-<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
+
+    function setDosenPa(data, id) {
+        $('#edit_id_dosen').val(data.dosen_pa).trigger('change');
+        // Populate other fields...
+        document.getElementById('editForm').action = '/prodi/data-master/mahasiswa/set-pa/' + id;
+    }
+
     $(function() {
         "use strict";
 
