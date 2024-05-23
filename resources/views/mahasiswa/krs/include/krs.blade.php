@@ -46,27 +46,19 @@
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
-                                                                <td>
-                                                                    @if(!$today->greaterThan($deadline))
-                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                Hapus Mata Kuliah
-                                                                            </button>
-                                                                        </form>
-                                                                    @elseif ($today->greaterThan($deadline))
-                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas disabled" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                Hapus Mata Kuliah
-                                                                            </button>
-                                                                        </form>
-                                                                    @endif
+                                                                <td class="text-center align-middle">
+                                                                    <div>
+                                                                        {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
+                                                                    </div>
+                                                                </td>
+                                                                <td class="text-center align-middle">
+                                                                    <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
+                                                                        @csrf
+                                                                        @method('delete')
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button>
+                                                                    </form>
                                                                 </td>
                                                             </tr>
                                                         @endforeach
@@ -84,6 +76,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             @if ($data_status_mahasiswa == "M" )
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
@@ -121,27 +114,19 @@
                                                                     <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                     <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                     <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                    <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
-                                                                    <td>
-                                                                        @if(!$today->greaterThan($deadline))
-                                                                            <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                                @csrf
-                                                                                @method('DELETE')
-                                                                                <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                                <button type="submit" class="btn btn-danger btn-hapus-kelas" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                    Hapus Mata Kuliah
-                                                                                </button>
-                                                                            </form>
-                                                                        @elseif ($today->greaterThan($deadline))
-                                                                            <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                                @csrf
-                                                                                @method('DELETE')
-                                                                                <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                                <button type="submit" class="btn btn-danger btn-hapus-kelas disabled" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                    Hapus Mata Kuliah
-                                                                                </button>
-                                                                            </form>
-                                                                        @endif
+                                                                    <td class="text-center align-middle">
+                                                                        <div>
+                                                                            {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center align-middle">
+                                                                        <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
+                                                                            @csrf
+                                                                            @method('delete')
+                                                                            <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </button>
+                                                                        </form>
                                                                     </td>
                                                                 </tr>
                                                             @endforeach

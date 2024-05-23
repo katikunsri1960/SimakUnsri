@@ -86,16 +86,18 @@ class KrsController extends Controller
         $total_sks_regular=0;
         $total_sks_merdeka=0;
         
-        $krs_merdeka = PesertaKelasKuliah::join('matkul_merdekas', 'peserta_kelas_kuliahs.id_matkul', '=', 'matkul_merdekas.id_matkul')
-                ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-                ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+        $krs_merdeka = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'mata_kuliahs.sks_mata_kuliah')
+                ->join('matkul_merdekas', 'matkul_merdekas.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+                ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+                ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
                 ->where('id_registrasi_mahasiswa', $id_reg)
                 ->get();
 
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
 
-        $krs_regular = PesertaKelasKuliah::leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
-                ->leftJoin('mata_kuliahs', 'peserta_kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+        $krs_regular = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'mata_kuliahs.sks_mata_kuliah')
+                ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+                ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->where('kelas_kuliahs.id_prodi', $prodi_id)
                 ->where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $semester_aktif->id_semester)
@@ -104,7 +106,7 @@ class KrsController extends Controller
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
         $total_sks = $total_sks_regular + $total_sks_merdeka;
-        // dd($total_sks_regular);
+        // dd($krs_merdeka);
 
 
         $mk_merdeka = MatkulMerdeka::leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
@@ -113,6 +115,7 @@ class KrsController extends Controller
                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
                     ->orderBy('jumlah_kelas_kuliah', 'DESC')
                     ->orderBy('matkul_kurikulums.semester')
+                    ->whereNot('mata_kuliahs.id_prodi', $prodi_id)
                     ->orderBy('matkul_kurikulums.sks_mata_kuliah')
                     ->get();
 
@@ -126,10 +129,7 @@ class KrsController extends Controller
                     ->orderBy('jumlah_kelas_kuliah', 'DESC')
                     ->orderBy('matkul_kurikulums.semester')
                     ->orderBy('matkul_kurikulums.sks_mata_kuliah')
-                    // ->limit(10)
                     ->get();
-                    // dd($matakuliah);
-
 
         return view('mahasiswa.krs.index', compact(
             'riwayat_pendidikan',
@@ -145,7 +145,6 @@ class KrsController extends Controller
             'data_status_mahasiswa',
             'semester_ke',
             'mk_merdeka',
-            
         ));
     }
 
@@ -184,17 +183,76 @@ class KrsController extends Controller
     {
         try {
             $idKelasKuliah = $request->input('id_kelas_kuliah');
+            
             $id_reg = auth()->user()->fk_id;
 
-            $riwayat_pendidikan = RiwayatPendidikan::with(['periode_masuk'])
-                            ->where('id_registrasi_mahasiswa', $id_reg)
-                            ->first();
+            $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+                    ->first();
+
+            $prodi_id = $riwayat_pendidikan->id_prodi;
+
+            $semester_aktif = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')
+                    ->first();
+
+            $ips = AktivitasKuliahMahasiswa::select('ips')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->orderBy('id_semester', 'DESC')
+                    ->pluck('ips')
+                    ->first();
+
+            if ($ips !== null) {
+                if ($ips >= 3.00) {
+                    $sks_max = 24;
+                } elseif ($ips >= 2.50 && $ips <= 2.99) {
+                    $sks_max = 21;
+                } elseif ($ips >= 2.00 && $ips <= 2.49) {
+                    $sks_max = 18;
+                } elseif ($ips >= 1.50 && $ips <= 1.99) {
+                    $sks_max = 15;
+                } elseif ($ips < 1.50) {
+                    $sks_max = 12;
+                } else {
+                    $sks_max = "Tidak Diisi";
+                }
+            } else {
+                $sks_max = "Tidak Diisi";
+            }
+
+            $krs_merdeka = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*', 'kelas_kuliahs.id_prodi', 'mata_kuliahs.sks_mata_kuliah')
+                    ->join('matkul_merdekas', 'matkul_merdekas.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+                    ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+                    ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->get();
+
+            $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
+
+            $krs_regular = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*', 'kelas_kuliahs.id_prodi', 'mata_kuliahs.sks_mata_kuliah')
+                    ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+                    ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+                    ->where('kelas_kuliahs.id_prodi', $prodi_id)
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->get();
+
+            $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
+
+            $total_sks = $total_sks_regular + $total_sks_merdeka;
+
+            // Check if the total SKS exceeds the maximum allowed SKS
+            if ($total_sks > $sks_max) {
+                return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum.', 'sks_max' => $sks_max], 400);
+            }
 
             $kelas_kuliah = KelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)->first();
 
             DB::beginTransaction();
 
             $pesertaKelasKuliah = PesertaKelasKuliah::create([
+                'approved' => 0,
                 'id_kelas_kuliah' => $idKelasKuliah,
                 'id_registrasi_mahasiswa' => $id_reg,
                 'nim' => $riwayat_pendidikan->nim,
@@ -203,7 +261,6 @@ class KrsController extends Controller
                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                 'nama_kelas_kuliah' => $kelas_kuliah->nama_kelas_kuliah,
-                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
                 'id_matkul' => $kelas_kuliah->id_matkul,
                 'kode_mata_kuliah' => $kelas_kuliah->kode_mata_kuliah,
                 'nama_mata_kuliah' => $kelas_kuliah->nama_mata_kuliah,
@@ -212,13 +269,14 @@ class KrsController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Data berhasil disimpan'], 200);
+            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max], 200);
         } catch (\Exception $e) {
             DB::rollback();
 
-            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
+            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data', 'error' => $e->getMessage()], 500);
         }
     }
+
 
 
     public function updateKelasKuliah(Request $request)
@@ -273,21 +331,12 @@ class KrsController extends Controller
         }
     }
 
-    public function hapus_kelas_kuliah(Request $request)
+    public function hapus_kelas_kuliah(PesertaKelasKuliah $pesertaKelas)
     {
-        try {
-            $idReg = auth()->user()->fk_id;
+        // dd($pesertaKelas);
+        $pesertaKelas->delete();
 
-            $pesertaKelas = PesertaKelasKuliah::where('id_kelas_kuliah', $request->id_kelas_kuliah)
-                ->where('id_registrasi_mahasiswa', $idReg)
-                ->firstOrFail();
-
-            $pesertaKelas->delete();
-
-            return redirect()->route('mahasiswa.krs')->with('success', 'Mata kuliah berhasil dihapus dari KRS.');
-        } catch (\Exception $e) {
-            return redirect()->route('mahasiswa.krs')->with('error', 'Gagal menghapus mata kuliah dari KRS.');
-        }
+        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
     }
 
 
