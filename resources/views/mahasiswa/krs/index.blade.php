@@ -57,9 +57,9 @@ Kartu Rencana Studi
                 style="background-image: url(../images/svg-icon/color-svg/st-4.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        <p class="mt-5 mb-5 text-fade fs-12">Dosen PA/Wali</p>
-                        @if (!empty($pembimbing_akademik[0]->nama_dosen))
-                            <h4 class="mt-5 mb-0" style="color:#0052cc">{{ $pembimbing_akademik[0]->nama_dosen }}</h4>
+                        <p class="mt-5 mb-5 text-fade fs-12">Dosen PA</p>
+                        @if (!empty($riwayat_pendidikan->nama_dosen))
+                            <h4 class="mt-5 mb-0" style="color:#0052cc">{{ $riwayat_pendidikan->nama_dosen }}</h4>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
@@ -76,6 +76,24 @@ Kartu Rencana Studi
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
+                <ul class="box-controls pull-right d-md-flex d-none">
+                    <!-- <li> -->
+                    <div class="clearfix">
+                        <a class="waves-effect waves-light btn btn-app btn-success mb-20" href="#">
+                            <i class="fa fa-print"></i> Print
+                        </a>
+                    </div>
+                    <div class="form-group m-10">
+                        <select class="form-select">
+                            <option>2023/2024 Genap</option>
+                            <option>2023/2024 Ganjil</option>
+                            <option>2022/2023 Genap</option>
+                            <option>2022/2023 Ganjil</option>
+                            <option>2021/2022 Genap</option>
+                            <option>2021/2022 Ganjil</option>
+                        </select>
+                    </div>
+                </ul>
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
@@ -87,7 +105,6 @@ Kartu Rencana Studi
         </div>
         <!-- /.col -->
     </div>
-
 
 </section>
 @endsection
