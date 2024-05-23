@@ -55,9 +55,10 @@ Mahasiswa Prodi
                                     <th class="text-center align-middle">ANGKATAN</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
+                                    <th class="text-center align-middle">KURIKULUM</th>
                                     <th class="text-center align-middle">DOSEN P.A.</th>
                                     <th class="text-center align-middle">STATUS</th>
-                                    <th class="text-center align-middle">STATUS PEMBAYARAN</th>
+                                    <th class="text-center align-middle">STATUS<br>PEMBAYARAN</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -74,6 +75,11 @@ Mahasiswa Prodi
                                     </td>
                                     <td class="text-start align-middle">
                                         {{$d->nama_mahasiswa}}
+                                    </td>
+                                    <td class="text-start align-middle">
+                                        @if ($d->kurikulum)
+                                            {{$d->kurikulum->mana_kurikulum}}
+                                        @endif
                                     </td>
                                     <td class="text-center align-middle">
 
