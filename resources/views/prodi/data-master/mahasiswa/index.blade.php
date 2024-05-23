@@ -18,10 +18,9 @@ Mahasiswa Prodi
                 </nav>
             </div>
         </div>
-
     </div>
 </div>
-
+@include('swal')
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -36,13 +35,10 @@ Mahasiswa Prodi
                         @include('prodi.data-master.mahasiswa.filter')
                     </div>
                     <div class="d-flex justify-content-end">
-                        {{-- <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i
-                                    class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form> --}}
                         <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i>
+                        <button class="btn btn-success waves-effect waves-light" href="#" data-bs-toggle="modal" data-bs-target="#setAngkatanModal"><i class="fa fa-plus"></i>
                             Set Kurikulum Angkatan</button>
+                        @include('prodi.data-master.mahasiswa.set-angkatan')
                     </div>
                 </div>
                 <div class="box-body">
@@ -52,7 +48,7 @@ Mahasiswa Prodi
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">FOTO</th>
-                                    <th class="text-center align-middle">ANGKATAN</th>
+                                    <th class="text-center align-middle">AKT</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">KURIKULUM</th>
@@ -76,9 +72,9 @@ Mahasiswa Prodi
                                     <td class="text-start align-middle">
                                         {{$d->nama_mahasiswa}}
                                     </td>
-                                    <td class="text-start align-middle">
+                                    <td class="text-start align-middle" style="width: 15%">
                                         @if ($d->kurikulum)
-                                            {{$d->kurikulum->mana_kurikulum}}
+                                            {{$d->kurikulum->nama_kurikulum}}
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">

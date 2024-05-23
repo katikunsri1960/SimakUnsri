@@ -9,6 +9,7 @@ use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class RiwayatPendidikan extends Model
 {
@@ -55,6 +56,33 @@ class RiwayatPendidikan extends Model
     public function aktivitas_kuliah()
     {
         return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_riwayat_pendidikan', 'id_riwayat_pendidikan');
+    }
+
+    public function set_kurikulum_angkatan($tahun_angkatan, $id_kurikulum, $prodi)
+    {
+        try {
+            DB::beginTransaction();
+            $this->where(DB::raw('LEFT(id_periode_masuk, 4)'), $tahun_angkatan)->where('id_prodi', $prodi)
+                ->update(['id_kurikulum' => $id_kurikulum]);
+
+            DB::commit();
+
+            $result = [
+                'status' => 'success',
+                'message' => 'Kurikulum berhasil diubah'
+            ];
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            $result = [
+                'status' => 'error',
+                'message' => 'Kurikulum gagal diubah'
+            ];
+
+            return $result;
+        }
+
+        return $result;
     }
 
 }

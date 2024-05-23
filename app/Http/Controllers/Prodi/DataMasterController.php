@@ -30,7 +30,7 @@ class DataMasterController extends Controller
     {
         $data = RiwayatPendidikan::with(['kurikulum'])->where('id_prodi', auth()->user()->fk_id);
 
-        if ($request->has('angkatan')) {
+        if ($request->has('angkatan') && $request->input('angkatan') != null){
             $data = $data->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $request->input('angkatan'));
         }
 
@@ -41,19 +41,34 @@ class DataMasterController extends Controller
                 ->distinct()
                 ->orderBy('id_periode_masuk', 'desc')
                 ->get();
-        // dd($angkatan);
+
+        $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+
         return view('prodi.data-master.mahasiswa.index', [
             'data' => $data,
-            'angkatan' => $angkatan
+            'angkatan' => $angkatan,
+            'kurikulum' => $kurikulum
         ]);
+    }
+
+    public function set_kurikulum_angkatan(Request $request)
+    {
+        $data = $request->validate([
+            'tahun_angkatan' => 'required',
+            'id_kurikulum' => 'required',
+        ]);
+
+        $prodi = auth()->user()->fk_id;
+        $db = new RiwayatPendidikan();
+
+        $store = $db->set_kurikulum_angkatan($data['tahun_angkatan'], $data['id_kurikulum'], $prodi);
+
+        return redirect()->back()->with($store['status'], $store['message']);
+
     }
 
     public function matkul()
     {
-        // $data = MataKuliah::with(['prasyarat_matkul', 'prasyarat_matkul.matkul_prasyarat', 'kurikulum'])->whereHas('kurikulum', function($query){
-        //     $query->where('is_active', 1);
-        // })->where('id_prodi', auth()->user()->fk_id)->get();
-
         $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.prasyarat_matkul', 'mata_kuliah.prasyarat_matkul.matkul_prasyarat'])->where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
             // dd($data);
         return view('prodi.data-master.mata-kuliah.index', [
