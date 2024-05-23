@@ -67,6 +67,7 @@ Mata Kuliah
                                     </td>
                                     <td class="text-center align-middle text-nowrap">
                                         <div class="row">
+                                            @if ($d->prasyarat_matkul->count() > 0)
                                             <div class="col-md-12 mb-2">
                                                 <form
                                                     action="{{route('prodi.data-master.mata-kuliah.delete-prasyarat', ['matkul' => $d] )}}"
@@ -78,12 +79,17 @@ Mata Kuliah
                                                     </button>
                                                 </form>
                                             </div>
+                                            @else
                                             <div class="col-md-12">
                                                 <a class="btn btn-primary btn-sm w-100"
                                                     href="{{route('prodi.data-master.mata-kuliah.tambah-prasyarat', ['matkul' => $d])}}">
                                                     <i class="fa fa-plus"></i> Prasyarat
                                                 </a>
                                             </div>
+                                            @endif
+
+
+
                                         </div>
                                     </td>
                                 </tr>
