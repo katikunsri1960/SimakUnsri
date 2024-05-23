@@ -222,8 +222,11 @@ class DataMasterController extends Controller
 
     public function tambah_prasyarat(MataKuliah $matkul)
     {
+        $id_prodi = auth()->user()->fk_id;
+
         $db = new MataKuliah();
-        $prasyarat = $db->matkul_prodi();
+        $prasyarat = $db->matkul_prodi($id_prodi);
+        
         return view('prodi.data-master.mata-kuliah.tambah-prasyarat', [
             'matkul' => $matkul,
             'prasyarat' => $prasyarat
