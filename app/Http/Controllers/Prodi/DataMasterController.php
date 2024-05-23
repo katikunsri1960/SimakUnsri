@@ -28,9 +28,9 @@ class DataMasterController extends Controller
 
     public function mahasiswa(Request $request)
     {
-        $data = RiwayatPendidikan::with(['kurikulum'])->where('id_prodi', auth()->user()->fk_id);
+        $data = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik'])->where('id_prodi', auth()->user()->fk_id);
 
-        if ($request->has('angkatan') && $request->input('angkatan') != null){
+        if ($request->has('angkatan') && $request->input('angkatan') != ''){
             $data = $data->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $request->input('angkatan'));
         }
 
@@ -44,11 +44,28 @@ class DataMasterController extends Controller
 
         $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
 
+        $dosDb = new BiodataDosen();
+        $dosen = $dosDb->list_dosen_prodi(null, auth()->user()->fk_id);
+
         return view('prodi.data-master.mahasiswa.index', [
             'data' => $data,
             'angkatan' => $angkatan,
-            'kurikulum' => $kurikulum
+            'kurikulum' => $kurikulum,
+            'dosen' => $dosen,
         ]);
+    }
+
+    public function set_pa(RiwayatPendidikan $mahasiswa, Request $request)
+    {
+        $data = $request->validate([
+            'id_dosen' => 'required',
+        ]);
+
+        $mahasiswa->update([
+            'dosen_pa' => $data['id_dosen']
+        ]);
+
+        return redirect()->back()->with('success', "Data Berhasil di tambahkan");
     }
 
     public function set_kurikulum_angkatan(Request $request)
@@ -224,6 +241,15 @@ class DataMasterController extends Controller
         $store = $db->prasyarat_store($matkul->id_matkul, $data['prasyarat']);
 
         return redirect()->route('prodi.data-master.mata-kuliah')->with($store['status'], $store['message']);
+    }
+
+    public function hapus_prasyarat(MataKuliah $matkul)
+    {
+        $db = new PrasyaratMatkul();
+
+        $data = $db->prasyarat_destroy($matkul->id_matkul);
+
+        return redirect()->back()->with($data['status'], $data['message']);
     }
 
     public function kurikulum_angkatan()

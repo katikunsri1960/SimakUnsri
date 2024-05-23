@@ -36,12 +36,8 @@
         </div>
     </div>
 </div>
-
-@push('css')
-<link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
-@endpush
 @push('js')
-<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
+
 <script>
     $(document).ready(function () {
         $('#angkatan').select2({

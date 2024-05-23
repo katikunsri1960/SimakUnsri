@@ -31,7 +31,7 @@ Mata Kuliah
                 </div> --}}
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-hover margin-top-10 w-p100" style="font-size: 12px">
+                        <table id="data" class="table table-hover margin-top-10 w-p100" style="font-size: 11px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
@@ -41,7 +41,7 @@ Mata Kuliah
                                     {{-- <th class="text-center align-middle">NAMA MK (ENGLISH)</th> --}}
                                     <th class="text-center align-middle">SKS</th>
                                     <th class="text-center align-middle">PRASYARAT</th>
-                                    <th class="text-center align-middle">AKSI</th>
+                                    <th class="text-center align-middle" style="width: 10%">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -50,7 +50,7 @@ Mata Kuliah
                                 @foreach ($a->mata_kuliah as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-center align-middle">{{$a->nama_kurikulum}}</td>
+                                    <td class="text-start align-middle" style="width: 15%">{{$a->nama_kurikulum}}</td>
                                     <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
                                     {{-- <td class="text-center align-middle">{{$d->nama_mata_kuliah_english}}</td> --}}
@@ -65,13 +65,47 @@ Mata Kuliah
                                         </ul>
                                         @endif
                                     </td>
-                                    <td class="text-center align-middle">
-                                        <a class="btn btn-primary"
-                                            href="{{route('prodi.data-master.mata-kuliah.tambah-prasyarat', ['matkul' => $d])}}">
-                                            <i class="fa fa-plus"></i>Prasyarat
-                                        </a>
+                                    <td class="text-center align-middle text-nowrap">
+                                        <div class="row">
+                                            <div class="col-md-12 mb-2">
+                                                <form
+                                                    action="{{route('prodi.data-master.mata-kuliah.delete-prasyarat', ['matkul' => $d] )}}"
+                                                    method="post" id="delete-prasyarat-{{$d->id}}">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <button type="submit" class="btn btn-warning btn-sm">
+                                                        <i class="fa fa-trash"></i> Hapus Prasyarat
+                                                    </button>
+                                                </form>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <a class="btn btn-primary btn-sm w-100"
+                                                    href="{{route('prodi.data-master.mata-kuliah.tambah-prasyarat', ['matkul' => $d])}}">
+                                                    <i class="fa fa-plus"></i> Prasyarat
+                                                </a>
+                                            </div>
+                                        </div>
                                     </td>
                                 </tr>
+                                <script>
+                                    $('#delete-prasyarat-{{$d->id}}').submit(function(e){
+                                        e.preventDefault();
+                                        swal({
+                                            title: 'Apakah Anda Yakin?',
+                                            type: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Simpan',
+                                            cancelButtonText: 'Batal'
+                                        }, function(isConfirm){
+                                            if (isConfirm) {
+                                                $('#spinner').show();
+                                                $('#delete-prasyarat-{{$d->id}}').unbind('submit').submit();
+                                            }
+                                        });
+                                    });
+                                </script>
                                 @endforeach
                                 @endif
                                 @endforeach
@@ -85,7 +119,7 @@ Mata Kuliah
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
-<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+
 <script>
     $(function() {
         "use strict";

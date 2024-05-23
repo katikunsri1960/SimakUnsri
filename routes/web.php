@@ -142,6 +142,7 @@ Route::group(['middleware' => ['auth']], function() {
 
                 Route::prefix('mahasiswa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'mahasiswa'])->name('prodi.data-master.mahasiswa');
+                    Route::post('/set-pa/{mahasiswa}', [App\Http\Controllers\Prodi\DataMasterController::class, 'set_pa'])->name('prodi.data-master.mahasiswa.set-pa');
                     Route::post('/set-kurikulum-angkatan', [App\Http\Controllers\Prodi\DataMasterController::class, 'set_kurikulum_angkatan'])->name('prodi.data-master.mahasiswa.set-kurikulum-angkatan');
                 });
 
@@ -149,6 +150,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'matkul'])->name('prodi.data-master.mata-kuliah');
                     Route::get('/{matkul}/tambah-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'tambah_prasyarat'])->name('prodi.data-master.mata-kuliah.tambah-prasyarat');
                     Route::post('/{matkul}/store-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'tambah_prasyarat_store'])->name('prodi.data-master.mata-kuliah.store-prasyarat');
+                    Route::delete('/{matkul}/delete-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'hapus_prasyarat'])->name('prodi.data-master.mata-kuliah.delete-prasyarat');
                 });
 
                 Route::prefix('matkul-merdeka')->group(function(){
@@ -168,11 +170,6 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::prefix('kurikulum')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'kurikulum'])->name('prodi.data-master.kurikulum');
                     Route::get('/detail/{kurikulum}', [App\Http\Controllers\Prodi\DataMasterController::class, 'detail_kurikulum'])->name('prodi.data-master.kurikulum.detail');
-                });
-
-
-                Route::prefix('kurikulum-angkatan')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'kurikulum_angkatan'])->name('prodi.data-master.kurikulum-angkatan');
                 });
             });
 

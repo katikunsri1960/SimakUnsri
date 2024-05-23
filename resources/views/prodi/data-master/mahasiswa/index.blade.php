@@ -21,6 +21,7 @@ Mahasiswa Prodi
     </div>
 </div>
 @include('swal')
+@include('prodi.data-master.mahasiswa.set-pa')
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -46,7 +47,7 @@ Mahasiswa Prodi
                         <table id="data" class="table table-hover margin-top-10 w-p100 table-bordered" style="font-size: 11px">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle" style="width: 5%">No</th>
                                     <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">AKT</th>
                                     <th class="text-center align-middle">NIM</th>
@@ -77,8 +78,10 @@ Mahasiswa Prodi
                                             {{$d->kurikulum->nama_kurikulum}}
                                         @endif
                                     </td>
-                                    <td class="text-center align-middle">
-
+                                    <td class="text-start align-middle text-nowrap">
+                                        @if ($d->dosen_pa)
+                                            {{$d->pembimbing_akademik->nama_dosen}}
+                                        @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->keterangan_keluar ?? 'Aktif'}}
@@ -87,7 +90,8 @@ Mahasiswa Prodi
 
                                     </td>
                                     <td class="text-center align-middle">
-
+                                        <button class="btn btn-sm btn-rounded btn-{{$d->dosen_pa ? 'warning' : 'primary'}} text-nowrap" data-bs-toggle="modal"
+                                        data-bs-target="#assignDosenPa" onclick="setDosenPa({{$d}}, {{$d->id}})"><i class="fa fa-user-graduate"></i> {{$d->dosen_pa ? 'Ubah' : 'Assign'}} PA</button>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -102,10 +106,20 @@ Mahasiswa Prodi
     </div>
 </section>
 @endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
-<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
+
+    function setDosenPa(data, id) {
+        $('#edit_id_dosen').val(data.dosen_pa).trigger('change');
+        // Populate other fields...
+        document.getElementById('editForm').action = '/prodi/data-master/mahasiswa/set-pa/' + id;
+    }
+
     $(function() {
         "use strict";
 

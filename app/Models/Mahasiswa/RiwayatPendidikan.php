@@ -2,6 +2,7 @@
 
 namespace App\Models\Mahasiswa;
 
+use App\Models\Dosen\BiodataDosen;
 use App\Models\Semester;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\JalurMasuk;
@@ -17,6 +18,11 @@ class RiwayatPendidikan extends Model
     protected $guarded = [];
 
     protected $appends = ['angkatan'];
+
+    public function pembimbing_akademik()
+    {
+        return $this->belongsTo(BiodataDosen::class, 'dosen_pa', 'id_dosen');
+    }
 
     public function kurikulum()
     {
