@@ -59,6 +59,12 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('/kegiatan-akademik', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'akademik'])->name('mahasiswa.akademik');
             Route::get('/kegiatan-seminar', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'seminar'])->name('mahasiswa.seminar');
             Route::get('/pengajuan-cuti', [App\Http\Controllers\Mahasiswa\CutiController::class, 'index'])->name('mahasiswa.pengajuan-cuti');
+
+            //Route Bantuan
+            Route::prefix('bantuan')->group(function () {
+                Route::get('/ganti-password', [App\Http\Controllers\Mahasiswa\Bantuan\GantiPasswordController::class, 'ganti_password'])->name('mahasiswa.bantuan.ganti-password');
+                Route::post('/proses-ganti-password', [App\Http\Controllers\Mahasiswa\Bantuan\GantiPasswordController::class, 'proses_ganti_password'])->name('mahasiswa.bantuan.proses-ganti-password');
+            });
         });
     });
 
@@ -107,6 +113,8 @@ Route::group(['middleware' => ['auth']], function() {
 
                 //Detail Fitur
                 Route::get('/presentase-penilaian-perkuliahan', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'presentase_penilaian_perkuliahan'])->name('dosen.penilaian.presentase-penilaian-perkuliahan');
+                Route::get('/penilaian-perkuliahan/download-dpna/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'download_dpna'])->name('dosen.penilaian.penilaian-perkuliahan.download-dpna');
+                
                 // Route::get('/kesediaan-waktu-kuliah', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_kuliah'])->name('dosen.perkuliahan.kesediaan-waktu-kuliah');
             });
 

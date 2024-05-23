@@ -136,16 +136,16 @@
                                     class="path2"></span></i>
                             <span>Pengajuan Cuti</span>
                         </a>
-                    </li>
+                    </li> --}}
 
                     <li class="header">BANTUAN</li>
-                    <li class="{{request()->routeIs('mahasiswa.ganti-password') ? 'active' : ''}}">
-                        <a href="#">
+                    <li class="{{request()->routeIs('mahasiswa.bantuan.ganti-password') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.bantuan.ganti-password')}}">
                             <i class="fa fa-key"><span class="path1"></span><span class="path2"></span></i>
                             <span>Ganti Password</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.panduan-aplikasi') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('mahasiswa.panduan-aplikasi') ? 'active' : ''}}">
                         <a href="#">
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>

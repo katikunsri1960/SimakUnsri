@@ -39,6 +39,11 @@ Detail Penilaian Perkuliahan Mahasiswa
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
                         <div class="row">
+                            <div class="col-xl-4 col-lg-12">
+                                <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
+                            </div>                             
+                        </div>
+                        <div class="row">
                             <div class="table-responsive">
                                 <table id="data" class="table table-bordered table-striped text-center">
                                     <thead>
@@ -46,6 +51,7 @@ Detail Penilaian Perkuliahan Mahasiswa
                                             <th rowspan="2">No</th>
                                             <th rowspan="2">NIM</th>
                                             <th rowspan="2">Nama Mahasiswa</th>
+                                            <th rowspan="2">Nama Kelas Kuliah</th>
                                             <th rowspan="2">Angkatan</th>
                                             <th colspan="2">Nilai</th>
                                         </tr>
@@ -60,6 +66,7 @@ Detail Penilaian Perkuliahan Mahasiswa
                                                 <td class="text-center align-middle">{{$loop->iteration}}</td>
                                                 <td class="text-center align-middle">{{$d->nim}}</td>
                                                 <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
+                                                <td class="text-start align-middle">{{$d->nama_kelas_kuliah}}</td>
                                                 <td class="text-center align-middle">{{$d->angkatan}}</td>
                                                 <td class="text-center align-middle">{{$d->nilai_angka}}</td>
                                                 <td class="text-center align-middle">{{$d->nilai_huruf}}</td>
@@ -68,7 +75,7 @@ Detail Penilaian Perkuliahan Mahasiswa
                                     </tbody>
                                 </table>
                             </div>
-                        </div>
+                        </div>                             
                     </div>
                 </div>
             </div>

@@ -40,7 +40,7 @@ Penilaian Perkuliahan Mahasiswa
                     <div class="box box-body mb-0 ">
                         <div class="row">
                             <div class="col-xl-4 col-lg-12">
-                                <h3 class="fw-500 text-dark mt-0">2023/2024</h3>
+                                <h3 class="fw-500 text-dark mt-0">{{$data[0]->kelas_kuliah->nama_semester}}</h3>
                                 <p class="mb-0 text-fade fs-18">Batas Pengisian Nilai, 2024-05-11</p>
                             </div> 
                         </div><hr>
@@ -66,33 +66,39 @@ Penilaian Perkuliahan Mahasiswa
                                             <td class="text-start align-middle">
                                                 {{$d->kelas_kuliah->prodi->nama_jenjang_pendidikan}} - {{$d->kelas_kuliah->prodi->nama_program_studi}}
                                             </td>
-                                            <td class="text-center align-middle">
-                                                {{$d->kelas_kuliah->matkul->kode_mata_kuliah}}
-                                            </td>
+                                            <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
                                             <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
-                                            <td class="text-center align-middle">{{$d->kelas_kuliah->nama_kelas_kuliah}}</td>
+                                            <td class="text-center align-middle">
+                                                <a href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas">{{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
+                                            </td>
                                             <td class="text-start align-middle">
                                                 @if ($d->kelas_kuliah->dosen_pengajar)
-                                                <ul>
-                                                @foreach ($d->kelas_kuliah->dosen_pengajar as $p)
-                                                <li>{{$p->dosen->nama_dosen}}</li>
-                                                @endforeach
-                                            </ul>
+                                                    <ul>
+                                                        @foreach ($d->kelas_kuliah->dosen_pengajar as $p)
+                                                            <li>{{$p->dosen->nama_dosen}}</li>
+                                                        @endforeach
+                                                    </ul>
                                                 @endif
                                             </td>
                                             <td class="text-center align-middle">{{$d->peserta_kelas_count}}</td>
                                             <td class="text-center align-middle">
-                                                <a class="btn btn-rounded bg-warning-light"
+                                                <div class="row" style="white-space:nowrap;">
+                                                    <div class="col-md-12 mb-2">
+                                                        <a class="btn btn-sm btn-rounded bg-warning-light"
                                                 href="{{route('dosen.penilaian.presentase-penilaian-perkuliahan')}}"
-                                                title="Komponen Evaluasi"><i class="fa fa-clipboard-list"><span
-                                                        class="path1"></span><span class="path2"></span></i></a>
-                                                <a class="btn btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-users"></i></a>
-                                                <!-- <a class="btn btn-rounded bg-success-light" href="#"
-                                                    title="Download DPNA"><i class="fa fa-download"><span
-                                                            class="path1"></span><span class="path2"></span></i></a>
-                                                <a class="btn btn-rounded bg-primary-light" href="#"
-                                                    title="Upload DPNA"><i class="fa fa-upload"><span
-                                                            class="path1"></span><span class="path2"></span></i></a> -->
+                                                title="Komponen Evaluasi"><i class="fa fa-clipboard-list"></i> Komponen Evaluasi</a>
+                                                    </div>
+                                                </div>
+                                                <div class="row" style="white-space:nowrap;">
+                                                    <div class="col-md-6 mb-2">
+                                                        <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
+                                                    title="Download DPNA"><i class="fa fa-download"></i> Download DPNA</a>
+                                                    </div>
+                                                    <div class="col-md-6 mb-2">
+                                                        <a class="btn btn-sm btn-rounded bg-primary-light" href="#"
+                                                    title="Upload DPNA"><i class="fa fa-upload"></i> Upload DPNA</a>
+                                                    </div>
+                                                </div>
                                             </td>
                                         </tr>
                                         @endforeach
