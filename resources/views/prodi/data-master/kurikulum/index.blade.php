@@ -26,13 +26,9 @@ Kurikulum
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    {{-- <div class="d-flex justify-content-end">
-                        <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form>
-                        <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button>
-                    </div> --}}
+                    <div class="d-flex justify-content-end">
+                        <span class="badge badge-info">Silahkan menghubungi Admin Tingkat Universitas untuk mengaktifkan kurikulum!!</span>
+                    </div>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -43,7 +39,7 @@ Kurikulum
                                 <th rowspan="2" class="text-center align-middle">NAMA</th>
                                 <th rowspan="2" class="text-center align-middle">MULAI BERLAKU</th>
                                 <th colspan="3" class="text-center align-middle">ATURAN JUMLAH SKS</th>
-                                <th colspan="3" class="text-center align-middle">JUMLAH SKS MK</th>
+                                <th colspan="2" class="text-center align-middle">JUMLAH SKS MK</th>
                              </tr>
                              <tr>
                                 <th class="text-center align-middle">LULUS</th>
@@ -54,7 +50,22 @@ Kurikulum
                              </tr>
                           </thead>
                           <tbody>
-
+                            @foreach ($data as $d)
+                            <tr>
+                                <td class="text-center align-middle">
+                                    <span class="badge badge-success">{{$d->status_sync}}</span>
+                                </td>
+                                <td class="text-start align-middle">
+                                    <a href="{{route('prodi.data-master.kurikulum.detail', $d)}}">{{$d->nama_kurikulum}}</a>
+                                </td>
+                                <td class="text-center align-middle">{{$d->semester_mulai_berlaku}}</td>
+                                <td class="text-center align-middle">{{$d->jumlah_sks_lulus}}</td>
+                                <td class="text-center align-middle">{{$d->jumlah_sks_wajib}}</td>
+                                <td class="text-center align-middle">{{$d->jumlah_sks_pilihan}}</td>
+                                <td class="text-center align-middle">{{$d->jumlah_sks_mata_kuliah_wajib}}</td>
+                                <td class="text-center align-middle">{{$d->jumlah_sks_mata_kuliah_pilihan}}</td>
+                            </tr>
+                            @endforeach
                           </tbody>
                       </table>
                       </div>

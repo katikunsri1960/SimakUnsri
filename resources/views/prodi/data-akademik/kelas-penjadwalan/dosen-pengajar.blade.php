@@ -178,7 +178,7 @@ Dosen Kelas Perkuliahan
                                         <label for="substansi_kuliah" class="form-label">Substansi Kuliah</label>
                                         <select class="form-select" name="substansi_kuliah[]" id="substansi"></select>
                                     </div> -->
-                                    <div class="col-md-2 mb-2">
+                                    <div class="col-md-3 mb-2">
                                         <label for="rencana_minggu_pertemuan" class="form-label">Rencana Minggu Pertemuan</label>
                                         <input
                                             type="text"
@@ -226,7 +226,7 @@ Dosen Kelas Perkuliahan
             return selectElement.select2({
                 placeholder : '-- Pilih Dosen --',
                 minimumInputLength: 3,
-                ajax: { 
+                ajax: {
                     url: "{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-dosen')}}",
                     type: "GET",
                     dataType: 'json',
@@ -254,7 +254,7 @@ Dosen Kelas Perkuliahan
         //     return selectElement.select2({
         //         placeholder : '-- Pilih Substansi Kuliah --',
         //         minimumInputLength: 3,
-        //         ajax: { 
+        //         ajax: {
         //             url: "{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-substansi')}}",
         //             type: "GET",
         //             dataType: 'json',
@@ -302,7 +302,7 @@ Dosen Kelas Perkuliahan
                             //     '<label for="substansi_kuliah" class="form-label">Substansi Kuliah</label>' +
                             //     '<select class="form-select select2-sub" name="substansi_kuliah[]"></select>' +
                             // '</div>' +
-                            '<div class="col-md-2 mb-2">' +
+                            '<div class="col-md-3 mb-2">' +
                                 '<label for="rencana_minggu_pertemuan" class="form-label">Rencana Minggu Pertemuan</label>' +
                                 '<input type="text" class="form-control" name="rencana_minggu_pertemuan[]" aria-describedby="helpId" value="0" required/>' +
                             '</div>' +
@@ -369,6 +369,6 @@ Dosen Kelas Perkuliahan
             a.value = a.value.toUpperCase();
         }, 1);
     }
-    
+
 </script>
 @endpush

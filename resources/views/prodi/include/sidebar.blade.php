@@ -34,7 +34,7 @@
                                 <a href="{{route('prodi.data-master.mahasiswa')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Mahasiswa</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-master.kurikulum') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('prodi.data-master.kurikulum') || request()->routeIs('prodi.data-master.kurikulum.*') ?  'active' : ''}}">
                                 <a href="{{route('prodi.data-master.kurikulum')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Kurikulum</a>
                             </li>
