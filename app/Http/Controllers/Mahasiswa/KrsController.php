@@ -184,6 +184,7 @@ class KrsController extends Controller
         try {
             $idKelasKuliah = $request->input('id_kelas_kuliah');
             
+            
             $id_reg = auth()->user()->fk_id;
 
             $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
@@ -242,8 +243,14 @@ class KrsController extends Controller
 
             $total_sks = $total_sks_regular + $total_sks_merdeka;
 
+            $sks_mk = KelasKuliah::select('sks_mata_kuliah')
+                    ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
+                    ->where('id_kelas_kuliah', $idKelasKuliah)
+                    ->pluck('sks_mata_kuliah')
+                    ->first();
+
             // Check if the total SKS exceeds the maximum allowed SKS
-            if ($total_sks > $sks_max) {
+            if (($total_sks + $sks_mk) > $sks_max) {
                 return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum.', 'sks_max' => $sks_max], 400);
             }
 
@@ -269,7 +276,7 @@ class KrsController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max], 200);
+            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk'=>$sks_mk], 200);
         } catch (\Exception $e) {
             DB::rollback();
 
