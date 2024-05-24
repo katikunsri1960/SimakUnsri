@@ -48,6 +48,7 @@ Kartu Rencana Studi
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">SKS Maksimum</p>
                         <h4 class="mt-5 mb-0" style="color:#0052cc">{{$sks_max}}</h4>
+                        {{-- <p class="text-fade mb-0 fs-12 text-white">Sisa SKS : ({{$sks_max}}-{{$sks_mk}})</p> --}}
                     </div>
                 </div>
             </div>
