@@ -41,7 +41,7 @@ Penilaian Perkuliahan Mahasiswa
                         <div class="row">
                             <div class="col-xl-4 col-lg-12">
                                 <h3 class="fw-500 text-dark mt-0">{{$data[0]->kelas_kuliah->nama_semester}}</h3>
-                                <p class="mb-0 text-fade fs-18">Batas Pengisian Nilai, 2024-05-11</p>
+                                <p class="mb-0 text-fade fs-18">Batas Pengisian Nilai, {{$semester_aktif ? $semester_aktif['batas_isi_nilai'] : 'Data Belum Terisi'}}</p>
                             </div> 
                         </div><hr>
                         <div class="row">
@@ -69,7 +69,7 @@ Penilaian Perkuliahan Mahasiswa
                                             <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
                                             <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
                                             <td class="text-center align-middle">
-                                                <a href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas">{{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
+                                                <a class="btn btn-sm btn-rounded btn-info-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
                                             </td>
                                             <td class="text-start align-middle">
                                                 @if ($d->kelas_kuliah->dosen_pengajar)
@@ -85,7 +85,7 @@ Penilaian Perkuliahan Mahasiswa
                                                 <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-12 mb-2">
                                                         <a class="btn btn-sm btn-rounded bg-warning-light"
-                                                href="{{route('dosen.penilaian.presentase-penilaian-perkuliahan')}}"
+                                                href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
                                                 title="Komponen Evaluasi"><i class="fa fa-clipboard-list"></i> Komponen Evaluasi</a>
                                                     </div>
                                                 </div>
