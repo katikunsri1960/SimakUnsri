@@ -5,7 +5,10 @@ namespace App\Http\Controllers\Dosen\Penilaian;
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Ramsey\Uuid\Uuid;
 
 class PresentasePenilaianController extends Controller
 {
@@ -23,9 +26,7 @@ class PresentasePenilaianController extends Controller
     public function komponen_evaluasi_store(Request $request, string $kelas)
     {
         // dd($request->all());
-        //Define variable
-        $prodi_id = auth()->user()->fk_id;
-        $kelas = KelasKuliah::where('id_prodi',$prodi_id)->where('id_matkul',$id_matkul)->where('nama_kelas_kuliah',$nama_kelas_kuliah)->get();
+        //Define variable;
         $semester_aktif = SemesterAktif::first();
 
         //Validate request data
@@ -38,33 +39,54 @@ class PresentasePenilaianController extends Controller
             'finalterm_exam' => 'required'
         ]);
 
-        //Get id dosen pengajar kelas kuliah
-        $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
+        //Check komponen kelas kuliah masih kosong
+        $komponen_kelas = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
 
-        if($rencana_pertemuan == '16'){
-             //Count jumlah dosen pengajar kelas kuliah
-            $jumlah_dosen=count($request->dosen_kelas_kuliah);
+        //Check batas pengisian nilai
+        $hari_proses = Carbon::now();
+        $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
+        $interval = $hari_proses->diffInDays($batas_nilai);
 
-            for($i=0;$i<$jumlah_dosen;$i++){
-                //Generate id aktivitas mengajar
-                $id_aktivitas_mengajar = Uuid::uuid4()->toString();
+        // dd($interval);
 
-                if(is_null($request->substansi_kuliah)){
-                    //Store data to table tanpa substansi kuliah
-                    DosenPengajarKelasKuliah::create(['id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+        if($komponen_kelas->isEmpty() && $interval >= 0){
+            //Generate id aktivitas mengajar
+            $id_komp_eval1 = Uuid::uuid4()->toString();
+            $id_komp_eval2 = Uuid::uuid4()->toString();
+            $id_komp_eval3 = Uuid::uuid4()->toString();
+            $id_komp_eval4 = Uuid::uuid4()->toString();
+            $id_komp_eval5 = Uuid::uuid4()->toString();
+            $id_komp_eval6 = Uuid::uuid4()->toString();
 
-                }else{
-                    //Get sks substansi total
-                    $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
+            //Penyesuaian format bobot komponen evaluasi
+            $bobot_participatory = $request->participatory/100;
+            $bobot_project = $request->project_outcomes/100;
+            $bobot_assignment = $request->assignment/100;
+            $bobot_quiz = $request->quiz/100;
+            $bobot_midterm = $request->midterm_exam/100;
+            $bobot_finalterm = $request->finalterm_exam/100;
 
-                    //Store data to table dengan substansi kuliah
-                    DosenPengajarKelasKuliah::create(['id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
-                }
+            //Store data participatory
+            KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval1, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 2,  'nama'=> '-', 'nama_inggris'=> 'Participatory Activity', 'nomor_urut'=> 1, 'bobot_evaluasi'=> $bobot_participatory]);
 
-            }
+            //Store data project
+            KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval2, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 3,  'nama'=> '-', 'nama_inggris'=> 'Project Outcomes', 'nomor_urut'=> 2, 'bobot_evaluasi'=> $bobot_project]);
+
+            //Store data assignment
+            KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval3, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'TGS', 'nama_inggris'=> 'Assigment', 'nomor_urut'=> 3, 'bobot_evaluasi'=> $bobot_assignment]);
+
+            //Store data quiz
+            KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval4, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'QIZ', 'nama_inggris'=> 'Quiz', 'nomor_urut'=> 4, 'bobot_evaluasi'=> $bobot_quiz]);
+
+            //Store data midterm
+            KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval5, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'UTS', 'nama_inggris'=> 'Midterm Exam', 'nomor_urut'=> 5, 'bobot_evaluasi'=> $bobot_quiz]);
+
+            //Store data finalterm
+            KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval6, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'UAS', 'nama_inggris'=> 'Finalterm Exam', 'nomor_urut'=> 6, 'bobot_evaluasi'=> $bobot_quiz]);
+            
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         }else{
-            return redirect()->back()->with('error', 'Total Rencana Minggu Pertemuan Dosen Tidak Berjumlah 16');
+            return redirect()->back()->with('error', 'Komponen Evaluasi Telah di Buat / Cek Batas Pengisian Nilai');
         }
     }
 }

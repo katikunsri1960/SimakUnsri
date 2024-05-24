@@ -116,13 +116,13 @@ Komponen Evaluasi Kelas Perkuliahan
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">Assignment</label>
-                                            <input name="assignment" type="number" class="form-control" value="{{ $d->id_jenis_evaluasi == '2' && $d->nomor_urut == '3' ? $d->bobot_evaluasi : '0' }}">
+                                            <input name="assignment" type="number" class="form-control" value="{{ $d->id_jenis_evaluasi == '4' && $d->nomor_urut == '3' ? $d->bobot_evaluasi : '0' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">Quiz</label>
-                                            <input name="quiz" type="number" class="form-control" value="{{ $d->id_jenis_evaluasi == '2' && $d->nomor_urut == '4' ? $d->bobot_evaluasi : '0' }}">
+                                            <input name="quiz" type="number" class="form-control" value="{{ $d->id_jenis_evaluasi == '4' && $d->nomor_urut == '4' ? $d->bobot_evaluasi : '0' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -130,13 +130,13 @@ Komponen Evaluasi Kelas Perkuliahan
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">Midterm Exam</label>
-                                            <input name="midterm_exam" type="number" class="form-control" value="{{ $d->id_jenis_evaluasi == '2' && $d->nomor_urut == '5' ? $d->bobot_evaluasi : '0' }}">
+                                            <input name="midterm_exam" type="number" class="form-control" value="{{ $d->id_jenis_evaluasi == '4' && $d->nomor_urut == '5' ? $d->bobot_evaluasi : '0' }}">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="form-label">Finalterm Exam</label>
-                                            <input name="finalterm_exam" type="number" class="form-control" value="{{ $d->id_jenis_evaluasi == '2' && $d->nomor_urut == '6' ? $d->bobot_evaluasi : '0' }}">
+                                            <input name="finalterm_exam" type="number" class="form-control" value="{{ $d->id_jenis_evaluasi == '4' && $d->nomor_urut == '6' ? $d->bobot_evaluasi : '0' }}">
                                         </div>
                                     </div>
                                 </div>
