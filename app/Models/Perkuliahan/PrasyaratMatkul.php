@@ -55,4 +55,28 @@ class PrasyaratMatkul extends Model
         return $result;
     }
 
+    public function prasyarat_destroy($id_matkul)
+    {
+        DB::beginTransaction();
+
+        try {
+            $this->where('id_matkul', $id_matkul)->delete();
+            DB::commit();
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            $result = [
+                'status' => 'error',
+                'message' => "Data gagal dihapus"
+            ];
+            return $result;
+        }
+
+        $result = [
+            'status' => 'success',
+            'message' => 'Data berhasil dihapus'
+        ];
+
+        return $result;
+    }
+
 }

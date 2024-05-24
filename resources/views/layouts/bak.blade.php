@@ -31,9 +31,9 @@
     <div class="wrapper">
         <div id="loader"></div>
 
-        @include('prodi.include.header')
+        @include('bak.include.header')
 
-        @include('prodi.include.sidebar')
+        @include('bak.include.sidebar')
 
 
         <!-- Content Wrapper. Contains page content -->
@@ -51,11 +51,7 @@
 
     </div>
     <!-- ./wrapper -->
-
-
-    <!-- Vendor JS -->
-
-
+    
     <script src="{{asset('assets/js/vendors.min.js')}}"></script>
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/icons/feather-icons/feather.min.js')}}"></script>

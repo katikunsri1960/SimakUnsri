@@ -35,6 +35,7 @@ class PenilaianPerkuliahanController extends Controller
 
     public function download_dpna(string $kelas)
     {
-        return Excel::download(new ExportDPNA($kelas), 'DPNA_"'.$kelas.'".xlsx');
+        $data_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->get();
+        return Excel::download(new ExportDPNA($kelas), 'DPNA_'.$data_kelas[0]['nama_program_studi'].'_'.$data_kelas[0]['kode_mata_kuliah'].'_'.$data_kelas[0]['nama_kelas_kuliah'].'.xlsx');
     }
 }
