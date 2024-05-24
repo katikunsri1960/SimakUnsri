@@ -3,8 +3,13 @@
         <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
             <div class="row">
                 <div class="row">
+                    @php
+                        $today = \Carbon\Carbon::now();
+                        $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
+                    @endphp
+
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
-                        @if($data_status_mahasiswa == "A" )
+                        @if($data_status_mahasiswa == "A" || $data_status_mahasiswa == "M" )
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -31,10 +36,6 @@
                                                     <tbody>
                                                         @php
                                                             $no=1;
-                                                            $totalSks = 0;
-
-                                                            $today = \Carbon\Carbon::now();
-                                                            $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                                                         @endphp
 
                                                         @foreach ($krs_regular as $data)
@@ -45,38 +46,27 @@
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
-                                                                <td>
-                                                                    @if(!$today->greaterThan($deadline))
-                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                Hapus Mata Kuliah
-                                                                            </button>
-                                                                        </form>
-                                                                    @elseif ($today->greaterThan($deadline))
-                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas disabled" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                Hapus Mata Kuliah
-                                                                            </button>
-                                                                        </form>
-                                                                    @endif
+                                                                <td class="text-center align-middle">
+                                                                    <div>
+                                                                        {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
+                                                                    </div>
+                                                                </td>
+                                                                <td class="text-center align-middle">
+                                                                    <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
+                                                                        @csrf
+                                                                        @method('delete')
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button>
+                                                                    </form>
                                                                 </td>
                                                             </tr>
-                                                            @php
-                                                                $totalSks += $data->sks_mata_kuliah;
-                                                            @endphp
                                                         @endforeach
                                                     </tbody>
                                                     <tfoot>
                                                         <tr>
                                                             <td class="text-center align-middle" colspan="4"><strong>Total SKS Diambil</strong></td>
-                                                            <td class="text-center align-middle"><strong>{{$totalSks}}</strong></td>
+                                                            <td class="text-center align-middle"><strong>{{$total_sks_regular}}</strong></td>
                                                             <td colspan="3"></td>
                                                         </tr>
                                                     </tfoot>
@@ -86,169 +76,75 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif ($data_status_mahasiswa == "M" )
-                            <div class="row mb-20">
-                                <div class="col-xxl-12">
-                                    <div class="box box-body mb-0 bg-white">
-                                        <div class="row">
-                                            <div class="col-xl-12 col-lg-12">
-                                                <h3 class="fw-500 text-dark mb-20">Kartu Rencana Studi Reguler</h3>
+                            
+                            @if ($data_status_mahasiswa == "M" )
+                                <div class="row mb-20">
+                                    <div class="col-xxl-12">
+                                        <div class="box box-body mb-0 bg-white">
+                                            <div class="row">
+                                                <div class="col-xl-12 col-lg-12">
+                                                    <h3 class="fw-500 text-dark mb-20">Kartu Rencana Studi Kampus Merdeka</h3>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="table-responsive">
-                                                <table id="krs-regular" class="table table-bordered table-striped text-left">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-center align-middle">No</th>
-                                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                            <th class="text-center align-middle">Nama Mata Kuliah</th>
-                                                            <th class="text-center align-middle">Nama Kelas</th>
-                                                            <th class="text-center align-middle">SKS</th>
-                                                            <th class="text-center align-middle">Waktu Kuliah</th>
-                                                            <th class="text-center align-middle">Status</th>
-                                                            <th class="text-center align-middle">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @php
-                                                            $no=1;
-                                                            $totalSks = 0;
-
-                                                            $today = \Carbon\Carbon::now();
-                                                            $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
-                                                        @endphp
-
-                                                        @foreach ($krs_regular as $data)
+                                            <div class="row">
+                                                <div class="table-responsive">
+                                                    <table id="krs-merdeka" class="table table-bordered table-striped text-left">
+                                                        <thead>
                                                             <tr>
-                                                                <td class="text-center align-middle">{{ $no++ }}</td>
-                                                                <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
-                                                                <td>
-                                                                    @if(!$today->greaterThan($deadline))
-                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                Hapus Mata Kuliah
-                                                                            </button>
-                                                                        </form>
-                                                                    @elseif ($today->greaterThan($deadline))
-                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas disabled" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                Hapus Mata Kuliah
-                                                                            </button>
-                                                                        </form>
-                                                                    @endif
-                                                                </td>
+                                                                <th class="text-center align-middle">No</th>
+                                                                <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                                                <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                                <th class="text-center align-middle">Nama Kelas</th>
+                                                                <th class="text-center align-middle">SKS</th>
+                                                                <th class="text-center align-middle">Waktu Kuliah</th>
+                                                                <th class="text-center align-middle">Status</th>
+                                                                <th class="text-center align-middle">Action</th>
                                                             </tr>
+                                                        </thead>
+                                                        <tbody>
                                                             @php
-                                                                $totalSks += $data->sks_mata_kuliah;
+                                                                $no=1;
                                                             @endphp
-                                                        @endforeach
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td class="text-center align-middle" colspan="4"><strong>Total SKS Diambil</strong></td>
-                                                            <td class="text-center align-middle"><strong>{{$totalSks}}</strong></td>
-                                                            <td colspan="3"></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row mb-20">
-                                <div class="col-xxl-12">
-                                    <div class="box box-body mb-0 bg-white">
-                                        <div class="row">
-                                            <div class="col-xl-12 col-lg-12">
-                                                <h3 class="fw-500 text-dark mb-20">Kartu Rencana Studi Kampus Merdeka</h3>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="table-responsive">
-                                                <table id="krs-merdeka" class="table table-bordered table-striped text-left">
-                                                    <thead>
-                                                        <tr>
-                                                            <th class="text-center align-middle">No</th>
-                                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                            <th class="text-center align-middle">Nama Mata Kuliah</th>
-                                                            <th class="text-center align-middle">Nama Kelas</th>
-                                                            <th class="text-center align-middle">SKS</th>
-                                                            <th class="text-center align-middle">Waktu Kuliah</th>
-                                                            <th class="text-center align-middle">Status</th>
-                                                            <th class="text-center align-middle">Action</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                        @php
-                                                            $no=1;
-                                                            $totalSks = 0;
 
-                                                            $today = \Carbon\Carbon::now();
-                                                            $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
-                                                        @endphp
-
-                                                        @foreach ($krs_merdeka as $data)
+                                                            @foreach ($krs_merdeka as $data)
+                                                                <tr>
+                                                                    <td class="text-center align-middle">{{ $no++ }}</td>
+                                                                    <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
+                                                                    <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
+                                                                    <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
+                                                                    <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
+                                                                    <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
+                                                                    <td class="text-center align-middle">
+                                                                        <div>
+                                                                            {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
+                                                                        </div>
+                                                                    </td>
+                                                                    <td class="text-center align-middle">
+                                                                        <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
+                                                                            @csrf
+                                                                            @method('delete')
+                                                                            <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                                <i class="fa fa-trash"></i>
+                                                                            </button>
+                                                                        </form>
+                                                                    </td>
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                        <tfoot>
                                                             <tr>
-                                                                <td class="text-center align-middle">{{ $no++ }}</td>
-                                                                <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                <td><div class="px-25 py-10"><span class="badge badge-danger-light mb-5">Belum Disetujui</span></div></td>
-                                                                <td>
-                                                                    @if(!$today->greaterThan($deadline))
-                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                Hapus Mata Kuliah
-                                                                            </button>
-                                                                        </form>
-                                                                    @elseif ($today->greaterThan($deadline))
-                                                                        <form action="{{ route('mahasiswa.krs.hapus_kelas_kuliah') }}" method="post">
-                                                                            @csrf
-                                                                            @method('DELETE')
-                                                                            <input type="hidden" name="id_kelas_kuliah" value="{{ $data->id_kelas_kuliah }}">
-                                                                            <button type="submit" class="btn btn-danger btn-hapus-kelas disabled" onclick="return confirm('Apakah Anda yakin ingin menghapus mata kuliah ini dari KRS?')">
-                                                                                Hapus Mata Kuliah
-                                                                            </button>
-                                                                        </form>
-                                                                    @endif
-                                                                </td>
+                                                                <td class="text-center align-middle" colspan="4"><strong>Total SKS Diambil</strong></td>
+                                                                <td class="text-center align-middle"><strong>{{$total_sks_merdeka}}</strong></td>
+                                                                <td colspan="3"></td>
                                                             </tr>
-                                                            @php
-                                                                $totalSks += $data->sks_mata_kuliah;
-                                                            @endphp
-                                                        @endforeach
-                                                    </tbody>
-                                                    <tfoot>
-                                                        <tr>
-                                                            <td class="text-center align-middle" colspan="4"><strong>Total SKS Diambil</strong></td>
-                                                            <td class="text-center align-middle"><strong>{{$totalSks}}</strong></td>
-                                                            <td colspan="3"></td>
-                                                        </tr>
-                                                    </tfoot>
-                                                </table>
+                                                        </tfoot>
+                                                    </table>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                         @else
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
