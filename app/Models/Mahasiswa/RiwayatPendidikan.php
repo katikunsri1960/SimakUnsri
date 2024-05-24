@@ -61,7 +61,7 @@ class RiwayatPendidikan extends Model
 
     public function aktivitas_kuliah()
     {
-        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_riwayat_pendidikan', 'id_riwayat_pendidikan');
+        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function set_kurikulum_angkatan($tahun_angkatan, $id_kurikulum, $prodi)
