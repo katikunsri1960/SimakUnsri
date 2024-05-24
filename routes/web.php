@@ -120,7 +120,10 @@ Route::group(['middleware' => ['auth']], function() {
 
             //Route Pembimbing Mahasiswa
             Route::prefix('pembimbing')->group(function () {
-                Route::get('/bimbingan-akademik', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_akademik'])->name('dosen.pembimbing.bimbingan-akademik');
+                Route::prefix('bimbingan-akademik')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_akademik'])->name('dosen.pembimbing.bimbingan-akademik');
+                });
+
                 Route::get('/bimbingan-non-akademik', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_non_akademik'])->name('dosen.pembimbing.bimbingan-non-akademik');
                 Route::get('/bimbingan-tugas-akhir', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_tugas_akhir'])->name('dosen.pembimbing.bimbingan-tugas-akhir');
             });
