@@ -7,21 +7,30 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PembimbingMahasiswaController extends Controller
 {
     public function bimbingan_akademik()
     {
-        $semester = SemesterAktif::first()->id_semester;
+        $semester = SemesterAktif::with(['semester'])->first();
 
-        $data = RiwayatPendidikan::with(['aktivitas_kuliah', 'prodi'])->whereHas('aktivitas_kuliah', function($query) use ($semester) {
-                    $query->where('id_semester', $semester);
-                })->where('dosen_pa', auth()->user()->fk_id)
+        $data = RiwayatPendidikan::with(['aktivitas_kuliah', 'prodi', 'peserta_kelas'])
+                    ->withCount(['peserta_kelas' => function($query) use ($semester) {
+                        $query->whereHas('kelas_kuliah', function($query) use ($semester) {
+                            $query->where('id_semester', $semester->id_semester)
+                                ->where('approved', 0);
+                        });
+                    }])
+                    // $query->where('id_semester', $semester->id_semester);
+                    ->whereHas('aktivitas_kuliah', function($query) use ($semester) {
+                        $query->where('id_semester', $semester->id_semester);
+                    })->where('dosen_pa', auth()->user()->fk_id)
                 ->get();
 
-        // dd($data);
         return view('dosen.pembimbing.akademik.index', [
-            'data' => $data
+            'data' => $data,
+            'semester' => $semester,
         ]);
     }
 
@@ -33,12 +42,27 @@ class PembimbingMahasiswaController extends Controller
                 ->whereHas('kelas_kuliah', function($query) use ($semester) {
                     $query->where('id_semester', $semester);
                 })
-                ->where('id_registrasi_mahasiswa', $id)->get();
+                ->where('id_registrasi_mahasiswa', $id)
+                ->orderBy('kode_mata_kuliah')
+                ->get();
+
+        // dd($data);
 
         return view('dosen.pembimbing.akademik.detail', [
             'riwayat' => $riwayat,
             'data' => $data,
         ]);
+    }
+
+    public function bimbingan_akademik_approve_all(RiwayatPendidikan $riwayat)
+    {
+        $id = $riwayat->id_registrasi_mahasiswa;
+
+        $db = new PesertaKelasKuliah();
+
+        $store = $db->approve_all($id);
+        // dd($store);
+        return redirect()->back()->with($store['status'], $store['message']);
     }
 
     public function bimbingan_non_akademik()
