@@ -12,8 +12,8 @@ Bimbingan Akademik Dosen
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Bimbingan Akademik Dosen</h2>
-								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
+                                <h2 class="mb-10">KRS</h2>
+								<p class="mb-0 text-fade fs-18">{{$riwayat->nama_mahasiswa}}</p>
 							</div>
 						</div>
 					<div>
@@ -26,33 +26,38 @@ Bimbingan Akademik Dosen
             <div class="box box-body mb-0 bg-light">
                 <div class="row">
                     <div class="col-xl-12 col-lg-12">
-                        <h3 class="fw-500 text-dark mt-0">Daftar Bimbingan Akademik Dosen</h3>
+                        <table>
+                            <tr>
+                                <td>Nama</td>
+                                <td>:</td>
+                                <td>{{$riwayat->nama_mahasiswa}}</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="table-responsive">
                         <table id="example1" class="table table-bordered table-striped" style="font-size: 12px">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">AKT</th>
-                                    <th class="text-center align-middle">NIM</th>
-                                    <th class="text-center align-middle">NAMA</th>
-                                    <th class="text-center align-middle">PRODI</th>
+                                    <th class="text-center align-middle">NO</th>
+                                    <th class="text-center align-middle">MK</th>
+                                    <th class="text-center align-middle">SKS</th>
+                                    <th class="text-center align-middle">KELAS</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
-                              @foreach ($data as $d)
+                                @foreach ($data as $d)
                                 <tr>
-                                    <td class="text-center align-middle">{{$d->angkatan}}</td>
-                                    <td class="text-center align-middle">{{$d->nim}}</td>
-                                    <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
-                                    <td class="text-center align-middle">{{$d->prodi->nama_jenjang_pendidikan}} {{$d->prodi->nama_program_studi}}</td>
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}} - {{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
+                                    <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->sks_mata_kuliah}}</td>
+                                    <td class="text-center align-middle">{{$d->kelas_kuliah->nama_kelas}}</td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('dosen.pembimbing.bimbingan-akademik.detail', ['riwayat' => $d])}}" class="btn btn-primary btn-rounded btn-sm">Detail</a>
+                                        {{-- <a href="{{route('dosen.pembimbing.krs.detail', ['riwayat' => $d])}}" class="btn btn-primary btn-rounded btn-sm">Detail</a> --}}
                                     </td>
-                                </tr>
-                              @endforeach
+                                @endforeach
                             </tbody>
 					  </table>
                     </div>

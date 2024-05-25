@@ -122,6 +122,7 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('pembimbing')->group(function () {
                 Route::prefix('bimbingan-akademik')->group(function(){
                     Route::get('/', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_akademik'])->name('dosen.pembimbing.bimbingan-akademik');
+                    Route::get('/detail/{riwayat}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_akademik_detail'])->name('dosen.pembimbing.bimbingan-akademik.detail');
                 });
 
                 Route::get('/bimbingan-non-akademik', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_non_akademik'])->name('dosen.pembimbing.bimbingan-non-akademik');
