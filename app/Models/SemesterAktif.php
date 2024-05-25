@@ -31,10 +31,10 @@ class SemesterAktif extends Model
         $this->attributes['krs_selesai'] = date('Y-m-d', strtotime($value));
     }
 
-    public function getBatasIsiNilaiAttribute($value)
-    {
-        return date('d-m-Y', strtotime($value)) ?? '';
-    }
+    // public function getBatasIsiNilaiAttribute($value)
+    // {
+    //     return date('d-m-Y', strtotime($value)) ?? '';
+    // }
 
     public function setBatasIsiNilaiAttribute($value)
     {
