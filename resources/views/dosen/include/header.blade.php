@@ -18,7 +18,7 @@
     <!-- Header Navbar -->
     <nav class="navbar navbar-static-top">
         <!-- Sidebar toggle button-->
-        <div class="app-menu">
+        <div class="app-menu d-flex">
             <ul class="header-megamenu nav">
                 <li class="btn-group nav-item d-md-none">
                     <a href="#" class="waves-effect waves-light nav-link push-btn" data-toggle="push-menu"
@@ -28,6 +28,7 @@
                     </a>
                 </li>
             </ul>
+            @stack('header')
         </div>
 
         <div class="navbar-custom-menu r-side">

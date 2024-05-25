@@ -16,10 +16,11 @@ class PenilaianPerkuliahanController extends Controller
     {
         $db = new BiodataDosen;
 
+        $semester_aktif = SemesterAktif::first();
         $data = $db->dosen_pengajar_kelas(auth()->user()->fk_id);
 
         return view('dosen.penilaian.penilaian-perkuliahan.index', [
-            'data' => $data
+            'data' => $data, 'semester_aktif' => $semester_aktif
         ]);
     }
 

@@ -52,7 +52,7 @@
                             </li> --}}
                         </ul>
                     </li>
-                    <li class="{{request()->routeIs('dosen.kalender_akademik') ? 'active' : ''}}">
+                    <!-- <li class="{{request()->routeIs('dosen.kalender_akademik') ? 'active' : ''}}">
                         <a href="{{route('dosen.kalender_akademik')}}">
                             <i class="fa fa-calendar-o"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -65,7 +65,7 @@
                                     class="path2"></span></i>
                             <span>Pengumuman</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="header">Perkuliahan</li>
                     <li class="treeview {{request()->routeIs('dosen.perkuliahan.*') ? 'active menu-open' : ''}}">
                         <a href="#">
@@ -79,9 +79,9 @@
                             <li class="{{request()->routeIs('dosen.perkuliahan.jadwal-kuliah') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-kuliah') ? 'active' : ''}}">
                                 <a href="{{route('dosen.perkuliahan.jadwal-kuliah')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Kuliah</a>
                             </li>
-                            <li class="{{request()->routeIs('dosen.perkuliahan.jadwal-bimbingan') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-bimbingan') ? 'active' : ''}}">
+                            <!-- <li class="{{request()->routeIs('dosen.perkuliahan.jadwal-bimbingan') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-bimbingan') ? 'active' : ''}}">
                                 <a href="{{route('dosen.perkuliahan.jadwal-bimbingan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Bimbingan</a>
-                            </li>
+                            </li> -->
                         </ul>
                     </li>
                     <li>

@@ -56,7 +56,7 @@ Semester Aktif
                                 <label for="batas_isi_nilai" class="form-label">Batas Pengisian Nilai</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="batas_isi_nilai" id="batas_isi_nilai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->batas_isi_nilai : '' }}"/>
+                                    <input type="text" class="form-control" name="batas_isi_nilai" id="batas_isi_nilai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_batas_isi_nilai : '' }}"/>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 mb-3">

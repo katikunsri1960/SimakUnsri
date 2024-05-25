@@ -7,6 +7,7 @@ use App\Models\Semester;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\JalurMasuk;
 use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -19,6 +20,11 @@ class RiwayatPendidikan extends Model
 
     protected $appends = ['angkatan'];
 
+    public function peserta_kelas()
+    {
+        return $this->hasMany(PesertaKelasKuliah::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+    
     public function pembimbing_akademik()
     {
         return $this->belongsTo(BiodataDosen::class, 'dosen_pa', 'id_dosen');
@@ -61,7 +67,7 @@ class RiwayatPendidikan extends Model
 
     public function aktivitas_kuliah()
     {
-        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_riwayat_pendidikan', 'id_riwayat_pendidikan');
+        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function set_kurikulum_angkatan($tahun_angkatan, $id_kurikulum, $prodi)
