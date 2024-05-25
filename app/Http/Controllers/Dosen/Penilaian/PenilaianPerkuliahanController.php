@@ -8,6 +8,7 @@ use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\SemesterAktif;
 use App\Exports\ExportDPNA;
 use Maatwebsite\Excel\Facades\Excel;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class PenilaianPerkuliahanController extends Controller
@@ -19,8 +20,13 @@ class PenilaianPerkuliahanController extends Controller
         $semester_aktif = SemesterAktif::first();
         $data = $db->dosen_pengajar_kelas(auth()->user()->fk_id);
 
+        //Check batas pengisian nilai
+        $hari_proses = Carbon::now();
+        $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
+        $interval = $hari_proses->diffInDays($batas_nilai);
+
         return view('dosen.penilaian.penilaian-perkuliahan.index', [
-            'data' => $data, 'semester_aktif' => $semester_aktif
+            'data' => $data, 'semester_aktif' => $semester_aktif, 'batas_pengisian' => $interval
         ]);
     }
 
