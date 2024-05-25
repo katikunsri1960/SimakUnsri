@@ -12,5 +12,14 @@ class Fakultas extends Model
     protected $fillable = [
         'nama_fakultas',
     ];
+
+    public function jurusan()
+    {
+        return $this->hasMany(Jurusan::class, 'id_fakultas', 'id');
+    }
+
+    public function prodi()
+    {
+        $this->hasMany(ProgramStudi::class, 'id_fakultas', 'id');
+    }
 }
-   

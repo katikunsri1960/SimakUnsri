@@ -23,21 +23,23 @@ Bimbingan Akademik Dosen
     </div>
     <div class="row">
         <div class="col-xxl-12">
-            <div class="box box-body mb-0 bg-light">
+            <div class="box box-body mb-0 bg-white">
                 <div class="row">
                     <div class="col-xl-12 col-lg-12">
-                        <h3 class="fw-500 text-dark mt-0">Daftar Bimbingan Akademik Dosen</h3>
+                        <h3 class="fw-500 text-dark mt-0">
+                            Tahun Ajaran - {{$semester->semester->nama_semester}}</h3>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="table-responsive">
-                        <table id="example1" class="table table-bordered table-striped" style="font-size: 12px">
+                        <table id="dt" class="table table-bordered table-striped" style="font-size: 12px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">AKT</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">PRODI</th>
+                                    <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -49,7 +51,14 @@ Bimbingan Akademik Dosen
                                     <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
                                     <td class="text-center align-middle">{{$d->prodi->nama_jenjang_pendidikan}} {{$d->prodi->nama_program_studi}}</td>
                                     <td class="text-center align-middle">
-                                        <a href="" class="btn btn-primary btn-rounded btn-sm">Detail</a>
+                                        @if ($d->peserta_kelas_count > 0)
+                                            <span class="badge bg-warning">Belum Disetujui</span>
+                                        @else
+                                            <span class="badge bg-success">Sudah Disetujui</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('dosen.pembimbing.bimbingan-akademik.detail', ['riwayat' => $d])}}" class="btn btn-primary btn-rounded btn-sm">Proses KRS <i class="fa fa-file"></i></a>
                                     </td>
                                 </tr>
                               @endforeach
@@ -62,4 +71,19 @@ Bimbingan Akademik Dosen
     </div>
 </section>
 @endsection
+@push('js')
+<script>
+    $(function () {
+        $('#dt').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "responsive": true,
+        });
+    });
+</script>
+@endpush
 
