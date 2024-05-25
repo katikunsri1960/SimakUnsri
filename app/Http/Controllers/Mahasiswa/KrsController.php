@@ -2,24 +2,26 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
+use App\Models\Fakultas;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
+use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
+use Illuminate\Cache\RateLimiting\Limit;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use Illuminate\Cache\RateLimiting\Limit;
 
 class KrsController extends Controller
 {
-    public function krs()
+    public function krs(Request $request)
     {
         $id_reg = auth()->user()->fk_id;
 
@@ -103,33 +105,45 @@ class KrsController extends Controller
                 ->where('id_semester', $semester_aktif->id_semester)
                 ->get();
 
+            // return response()->json(['isEnrolled_merdeka' => $krs_regular]);
+
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
         $total_sks = $total_sks_regular + $total_sks_merdeka;
         // dd($krs_merdeka);
 
+        $fakultas=Fakultas::all();
+
+        $selectedFakultasId = $request->input('fakultas_id');
+
+        $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
 
         $mk_merdeka = MatkulMerdeka::leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
-                    ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
-                    ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
-                    ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
-                    ->orderBy('jumlah_kelas_kuliah', 'DESC')
-                    ->orderBy('matkul_kurikulums.semester')
-                    ->whereNot('mata_kuliahs.id_prodi', $prodi_id)
-                    ->orderBy('matkul_kurikulums.sks_mata_kuliah')
-                    ->get();
+                ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+                ->select('mata_kuliahs.id_matkul', 'mata_kuliahs.kode_mata_kuliah', 'mata_kuliahs.nama_mata_kuliah', 'matkul_kurikulums.semester', 'matkul_kurikulums.sks_mata_kuliah')
+                ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+                ->orderBy('jumlah_kelas_kuliah', 'DESC')
+                ->orderBy('matkul_kurikulums.semester')
+                ->whereIn('mata_kuliahs.id_prodi', $prodi->pluck('id')) // Hanya mengambil mata kuliah yang termasuk dalam program studi yang dipilih
+                ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+                ->get();
 
        // MATAKULIAH TANPA GANJIL GENAP
         $matakuliah = MataKuliah::leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
-                    ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+                    ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                    ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','mata_kuliahs.sks_mata_kuliah', 'kelas_kuliahs.id_prodi as id_prodi_kelas' )            
                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+                    // ->where('kelas_kuliahs.id_prodi', $prodi_id)
                     ->where('mata_kuliahs.id_prodi', $prodi_id)
                     ->where('matkul_kurikulums.id_kurikulum', $riwayat_pendidikan->id_kurikulum)
-                    ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','matkul_kurikulums.sks_mata_kuliah')
+                    // ->whereIn('mata_kuliahs.kode_mata_kuliah', ['UNI1001','UNI1002','UNI1003','UNI1004'])
+                    ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','mata_kuliahs.sks_mata_kuliah', 'kelas_kuliahs.id_prodi')
                     ->orderBy('jumlah_kelas_kuliah', 'DESC')
                     ->orderBy('matkul_kurikulums.semester')
                     ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+                    // ->limit(10)
                     ->get();
+                    // dd($matakuliah);
 
         return view('mahasiswa.krs.index', compact(
             'riwayat_pendidikan',
@@ -144,8 +158,47 @@ class KrsController extends Controller
             'status_mahasiswa',
             'data_status_mahasiswa',
             'semester_ke',
+            'fakultas', 'prodi',
             'mk_merdeka',
         ));
+    }
+    public function pilih_prodi(Request $request)
+    {
+        $fakultasId = $request->input('id');
+
+        $prodi = ProgramStudi::where('fakultas_id', $fakultasId)->get();
+
+        return response()->json(['prodi' => $prodi]);
+    }
+
+    public function pilihMataKuliahMerdeka(Request $request)
+    {
+        $id_reg = auth()->user()->fk_id;
+
+        $semester_aktif = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')
+                ->first();
+        // Ambil id_prodi dari request
+        $idProdi = $request->input('id_prodi');
+        
+        // Query untuk mengambil data mata kuliah merdeka berdasarkan id_prodi yang dipilih
+        $mkMerdeka = MatkulMerdeka::leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->leftJoin('matkul_kurikulums', 'matkul_kurikulums.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->select('mata_kuliahs.id_matkul', 'mata_kuliahs.kode_mata_kuliah', 'mata_kuliahs.nama_mata_kuliah', 'matkul_kurikulums.semester', 'matkul_kurikulums.sks_mata_kuliah')
+            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul = mata_kuliahs.id_matkul and kelas_kuliahs.id_semester = '".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+            ->where('mata_kuliahs.id_prodi', $idProdi)
+            ->orderBy('jumlah_kelas_kuliah', 'DESC')
+            ->orderBy('matkul_kurikulums.semester')
+            ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+            ->get();
+
+        $krs_merdeka = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'mata_kuliahs.sks_mata_kuliah')
+            ->join('matkul_merdekas', 'matkul_merdekas.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+            ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+            ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->get();
+
+        return response()->json(['mk_merdeka' => $mkMerdeka, 'krs_merdeka'=>$krs_merdeka]);
     }
 
     public function get_kelas_kuliah(Request $request)
@@ -249,6 +302,7 @@ class KrsController extends Controller
                     ->pluck('sks_mata_kuliah')
                     ->first();
 
+
             // Check if the total SKS exceeds the maximum allowed SKS
             if (($total_sks + $sks_mk) > $sks_max) {
                 return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum.', 'sks_max' => $sks_max], 400);
@@ -283,6 +337,8 @@ class KrsController extends Controller
             return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data', 'error' => $e->getMessage()], 500);
         }
     }
+
+    
 
 
 
@@ -324,7 +380,6 @@ class KrsController extends Controller
                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
             ]);
 
-
             // Selesaikan transaksi
             DB::commit();
 
@@ -345,7 +400,4 @@ class KrsController extends Controller
 
         return redirect()->back()->with('success', 'Data Berhasil di Hapus');
     }
-
-
-
 }

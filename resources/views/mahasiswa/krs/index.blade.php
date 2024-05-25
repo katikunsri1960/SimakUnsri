@@ -117,32 +117,111 @@ Kartu Rencana Studi
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
+
     $(document).ready(function() {
-        // Menggunakan class untuk mendapatkan semua tombol "Lihat Kelas Kuliah"
-            $('.lihat-kelas-kuliah').click(function() {
-            var idMatkul = $(this).data('id-matkul');
-            var resultContainerId = '#result-container_' + idMatkul;
 
-             // Dapatkan CSRF token dari meta tag
-            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+        // Misalkan select fakultas memiliki id="select-fakultas"
+        $('#select-fakultas').change(function() {
+            // Ambil nilai fakultas_id yang dipilih
+            var selectedFakultasId = $(this).val();
 
-            // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
+            // Kirim permintaan Ajax untuk mengambil program studi berdasarkan fakultas_id yang dipilih
             $.ajax({
-                url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
-                type: 'GET',
+                url: '{{ route("mahasiswa.krs.pilih_prodi") }}',
+                method: 'GET',
                 data: {
-                    id_matkul: idMatkul,
-                    _token: csrfToken  // Sertakan CSRF token di sini
+                    id: selectedFakultasId
                 },
-                success: function(data) {
-                    displayData(data, resultContainerId);
-
+                success: function(response) {
+                    // console.log(response.prodi);
+                    // Update select prodi dengan opsi baru
+                    $('#select-prodi').empty(); // Kosongkan opsi yang ada sebelumnya
+                    $.each(response.prodi, function(index, prodi) {
+                        $('#select-prodi').append('<option value="' + prodi.id_prodi + '">' + prodi.nama_program_studi + '</option>');
+                    });
                 },
-                error: function(error) {
-                    console.error('Error fetching data:', error);
+                error: function(xhr, status, error) {
+                    // Tangani kesalahan jika ada
+                    console.error(error);
                 }
             });
         });
+
+        $('#select-prodi').change(function() {
+            var selectedProdiId = $(this).val();
+
+            $.ajax({
+                url: '{{ route("mahasiswa.krs.pilih_mk_merdeka") }}',
+                method: 'GET',
+                data: {
+                    id_prodi: selectedProdiId
+                },
+                success: function(response) {
+                    var mkMerdeka = response.mk_merdeka;
+                    var krsMerdeka = response.krs_merdeka.map(krs => krs.id_matkul); // Extract id_matkul from krs_merdeka
+                    var tbody = $('#mk-merdeka-tbody');
+                    tbody.empty(); // Kosongkan tabel sebelum menambahkan data baru
+
+                    if (mkMerdeka.length > 0) {
+                        $.each(mkMerdeka, function(index, data) {
+                            var isDisabled = krsMerdeka.includes(data.id_matkul);
+                            var isEmpty = data.jumlah_kelas_kuliah == 0
+                            var row = '<tr class="' + (isDisabled ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
+                                '<td class="text-center align-middle">' + (index + 1) + '</td>' +
+                                '<td class="text-start align-middle">' + data.kode_mata_kuliah + '</td>' +
+                                '<td class="text-start align-middle" style="white-space: nowrap;">' + data.nama_mata_kuliah + '</td>' +
+                                '<td class="text-center align-middle">' + data.semester + '</td>' +
+                                '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
+                                '<td class="text-center align-middle">' + data.jumlah_kelas_kuliah + '</td>' +
+                                '<td>' +
+                                    '<button class="btn btn-success-light lihat-kelas-kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmpty || isDisabled ? ' disabled' : '') + '>Lihat Kelas Kuliah</button>' +
+                                    '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 20px"></div>' +
+                                '</td>' +
+                                '<td>' +
+                                    '<input type="checkbox" id="md_checkbox_' + (index + 1) + '" class="filled-in chk-col-success"' + (isEmpty || isDisabled ? ' disabled' : '') + ' />' +
+                                    '<label for="md_checkbox_' + (index + 1) + '"></label>' +
+                                '</td>' +
+                                '</tr>';
+                            tbody.append(row);
+                        });
+
+                        // Tambahkan event listener untuk tombol "Lihat Kelas Kuliah"
+                        $('.lihat-kelas-kuliah').click(function() {
+                            var idMatkul = $(this).data('id-matkul');
+                            var resultContainerId = '#result-container_' + idMatkul;
+
+                            // Dapatkan CSRF token dari meta tag
+                            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+                            // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
+                            $.ajax({
+                                url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
+                                type: 'GET',
+                                data: {
+                                    id_matkul: idMatkul,
+                                    _token: csrfToken  // Sertakan CSRF token di sini
+                                },
+                                success: function(data) {
+                                    displayData(data, resultContainerId);
+                                },
+                                error: function(error) {
+                                    console.error('Error fetching data:', error);
+                                }
+                            });
+                        });
+                    } else {
+                        var row = '<tr><td colspan="8" class="text-center">Tidak ada data mata kuliah merdeka yang tersedia.</td></tr>';
+                        tbody.append(row);
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+
+
+
 
         function displayData(data, resultContainerId) {
             $(resultContainerId).empty();
@@ -265,23 +344,24 @@ Kartu Rencana Studi
 
     // Event listener for all delete buttons
     $('.delete-form').submit(function(e){
-            e.preventDefault();
-            var formId = $(this).data('id');
-            swal({
-                title: 'Apakah Anda Yakin??',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Lanjutkan',
-                cancelButtonText: 'Batal'
-            }, function(isConfirm){
-                if (isConfirm) {
-                    $(`#deleteForm${formId}`).unbind('submit').submit();
-                    $('#spinner').show();
-                }
-            });
+        e.preventDefault();
+        var formId = $(this).data('id');
+        swal({
+            title: 'Apakah Anda Yakin??',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $(`#deleteForm${formId}`).unbind('submit').submit();
+                $('#spinner').show();
+            }
         });
+    });
+
 
     $(function() {
         "use strict";
