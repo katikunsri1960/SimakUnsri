@@ -35,6 +35,9 @@ Route::group(['middleware' => ['auth']], function() {
             Route::post('/krs/update-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'update_kelas_kuliah'])->name('mahasiswa.krs.update_kelas_kuliah');
             Route::delete('/{pesertaKelas}/hapus-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'hapus_kelas_kuliah'])->name('mahasiswa.krs.hapus_kelas_kuliah');
             Route::get('/krs/check-kelas-diambil', [App\Http\Controllers\Mahasiswa\KrsController::class, 'checkKelasDiambil'])->name('mahasiswa.krs.check_kelas_diambil');
+            Route::get('/krs/pilih-prodi', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilih_prodi'])->name('mahasiswa.krs.pilih_prodi');
+            Route::get('/krs/pilih-mk-merdeka', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilihMataKuliahMerdeka'])->name('mahasiswa.krs.pilih_mk_merdeka');
+
 
 
             Route::get('/ambil-krs', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'create_krs'])->name('mahasiswa.create-krs');
@@ -114,6 +117,7 @@ Route::group(['middleware' => ['auth']], function() {
                 //Detail Fitur
                 Route::get('/komponen-evaluasi/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'komponen_evaluasi'])->name('dosen.penilaian.komponen-evaluasi');
                 Route::post('/komponen-evaluasi/store/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'komponen_evaluasi_store'])->name('dosen.penilaian.komponen-evaluasi.store');
+                Route::post('/komponen-evaluasi/update/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'komponen_evaluasi_update'])->name('dosen.penilaian.komponen-evaluasi.update');
                 Route::get('/penilaian-perkuliahan/download-dpna/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'download_dpna'])->name('dosen.penilaian.penilaian-perkuliahan.download-dpna');
 
                 // Route::get('/kesediaan-waktu-kuliah', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_kuliah'])->name('dosen.perkuliahan.kesediaan-waktu-kuliah');
