@@ -18,7 +18,7 @@ Bimbingan Tugas Akhir Dosen
 						</div>
 					<div>
 				</div>
-			</div>							
+			</div>
 		</div>
     </div>
     <div class="row">
@@ -27,7 +27,7 @@ Bimbingan Tugas Akhir Dosen
                 <div class="row">
                     <div class="col-xl-12 col-lg-12">
                         <h3 class="fw-500 text-dark mt-0">Daftar Bimbingan Tugas Akhir Dosen</h3>
-                    </div>                             
+                    </div>
                 </div>
                 <div class="row">
                     <div class="table-responsive">
@@ -57,7 +57,7 @@ Bimbingan Tugas Akhir Dosen
                 </div>
             </div>
         </div>
-    </div>			
+    </div>
 </section>
 @endsection
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dosen\Pembimbing;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -72,6 +73,11 @@ class PembimbingMahasiswaController extends Controller
 
     public function bimbingan_tugas_akhir()
     {
-        return view('dosen.pembimbing.bimbingan-tugas-akhir');
+        $db = new AktivitasMahasiswa();
+        $data = $db->uji_dosen(auth()->user()->fk_id);
+        dd($data);
+        return view('dosen.pembimbing.tugas-akhir.index', [
+            'data' => $data,
+        ]);
     }
 }
