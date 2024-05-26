@@ -137,7 +137,7 @@ Kartu Rencana Studi
                     // Update select prodi dengan opsi baru
                     $('#select-prodi').empty(); // Kosongkan opsi yang ada sebelumnya
                     $.each(response.prodi, function(index, prodi) {
-                        $('#select-prodi').append('<option value="' + prodi.id_prodi + '">' + prodi.nama_program_studi + '</option>');
+                        $('#select-prodi').append('<option value="' + prodi.id_prodi + '">' + prodi.nama_program_studi +' - '+ prodi.nama_program_studi + '</option>');
                     });
                 },
                 error: function(xhr, status, error) {
@@ -147,6 +147,8 @@ Kartu Rencana Studi
             });
         });
 
+
+        // Event handler untuk saat pergantian prodi dipilih
         $('#select-prodi').change(function() {
             var selectedProdiId = $(this).val();
 
@@ -174,40 +176,11 @@ Kartu Rencana Studi
                                 '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle">' + data.jumlah_kelas_kuliah + '</td>' +
                                 '<td>' +
-                                    '<button class="btn btn-success-light lihat-kelas-kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmpty || isDisabled ? ' disabled' : '') + '>Lihat Kelas Kuliah</button>' +
+                                    '<button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmpty || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
                                     '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 20px"></div>' +
-                                '</td>' +
-                                '<td>' +
-                                    '<input type="checkbox" id="md_checkbox_' + (index + 1) + '" class="filled-in chk-col-success"' + (isEmpty || isDisabled ? ' disabled' : '') + ' />' +
-                                    '<label for="md_checkbox_' + (index + 1) + '"></label>' +
                                 '</td>' +
                                 '</tr>';
                             tbody.append(row);
-                        });
-
-                        // Tambahkan event listener untuk tombol "Lihat Kelas Kuliah"
-                        $('.lihat-kelas-kuliah').click(function() {
-                            var idMatkul = $(this).data('id-matkul');
-                            var resultContainerId = '#result-container_' + idMatkul;
-
-                            // Dapatkan CSRF token dari meta tag
-                            var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
-                            // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
-                            $.ajax({
-                                url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
-                                type: 'GET',
-                                data: {
-                                    id_matkul: idMatkul,
-                                    _token: csrfToken  // Sertakan CSRF token di sini
-                                },
-                                success: function(data) {
-                                    displayData(data, resultContainerId);
-                                },
-                                error: function(error) {
-                                    console.error('Error fetching data:', error);
-                                }
-                            });
                         });
                     } else {
                         var row = '<tr><td colspan="8" class="text-center">Tidak ada data mata kuliah merdeka yang tersedia.</td></tr>';
@@ -220,6 +193,30 @@ Kartu Rencana Studi
             });
         });
 
+        // Event listener untuk tombol "Lihat Kelas Kuliah"
+        $(document).on('click', '.lihat-kelas-kuliah', function() {
+            var idMatkul = $(this).data('id-matkul');
+            var resultContainerId = '#result-container_' + idMatkul;
+
+            // Dapatkan CSRF token dari meta tag
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
+            $.ajax({
+                url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
+                type: 'GET',
+                data: {
+                    id_matkul: idMatkul,
+                    _token: csrfToken  // Sertakan CSRF token di sini
+                },
+                success: function(data) {
+                    displayData(data, resultContainerId);
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
 
 
 
@@ -414,6 +411,19 @@ Kartu Rencana Studi
                 { "width": "700px", "targets": 6 }, // Kolom lebar 700px
             ]
         });
+
+        $('#data-matkul-aktivitas').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            "pageLength": 10,
+            "autoWidth": false,
+            // "scrollCollapse": false,
+            // "scrollY": "450px",
+            "columnDefs": [
+                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+            ]
+        });
     });
 
     $(document).ready(function() {
@@ -435,6 +445,11 @@ Kartu Rencana Studi
             });
         @endif
     });
+
+    $('.ambil-aktivitas').click(function() {
+    var idMatkul = $(this).data('id-matkul');
+    window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
+});
 
 </script>
 @endpush
