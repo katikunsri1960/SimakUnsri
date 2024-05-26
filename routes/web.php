@@ -35,6 +35,9 @@ Route::group(['middleware' => ['auth']], function() {
             Route::post('/krs/update-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'update_kelas_kuliah'])->name('mahasiswa.krs.update_kelas_kuliah');
             Route::delete('/{pesertaKelas}/hapus-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'hapus_kelas_kuliah'])->name('mahasiswa.krs.hapus_kelas_kuliah');
             Route::get('/krs/check-kelas-diambil', [App\Http\Controllers\Mahasiswa\KrsController::class, 'checkKelasDiambil'])->name('mahasiswa.krs.check_kelas_diambil');
+            Route::get('/krs/pilih-prodi', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilih_prodi'])->name('mahasiswa.krs.pilih_prodi');
+            Route::get('/krs/pilih-mk-merdeka', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilihMataKuliahMerdeka'])->name('mahasiswa.krs.pilih_mk_merdeka');
+
 
 
             Route::get('/ambil-krs', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'create_krs'])->name('mahasiswa.create-krs');
