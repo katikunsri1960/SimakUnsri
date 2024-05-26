@@ -88,30 +88,48 @@ class DosenController extends Controller
 
     public function sync_dosen_all()
     {
-        $data = [
-            'act' => 'GetRiwayatPendidikanDosen',
-            'limit' => '',
-            'offset' => '',
-            'order' => '',
-            'job' => \App\Jobs\SyncJob::class,
-            'name' => 'pendidikan-dosen',
-            'model' => \App\Models\Dosen\RiwayatPendidikanDosen::class,
-            'primary' => ['id_dosen', 'id_jenjang_pendidikan', 'id_bidang_studi'],
+        ini_set('max_execution_time', 600);
+        ini_set('memory_limit', '1G');
+
+        $ref = [
+            [
+                'act' => 'GetRiwayatPendidikanDosen',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'pendidikan-dosen',
+                'model' => \App\Models\Dosen\RiwayatPendidikanDosen::class,
+                'primary' => ['id_dosen', 'id_jenjang_pendidikan', 'id_bidang_studi'],
+            ],
+            [
+                'act' => 'GetRiwayatFungsionalDosen',
+                'limit' => '',
+                'offset' => '',
+                'order' => '',
+                'job' => \App\Jobs\SyncJob::class,
+                'name' => 'fungsional-dosen',
+                'model' => \App\Models\Dosen\RiwayatFungsionalDosen::class,
+                'primary' => ['id_dosen', 'id_jabatan_fungsional'],
+            ]
         ];
 
         $dosen = BiodataDosen::pluck('id_dosen')->toArray();
-        $dosen = array_chunk($dosen, 8);
+        $dosen = array_chunk($dosen, 10);
         $dosen = array_map(function ($value) {
             return "id_dosen IN ('" . implode("','", $value) . "')";
         }, $dosen);
 
-        $batch = Bus::batch([])->name($data['name'])->dispatch();
+        $batch = Bus::batch([])->name('riwayat-dosen')->dispatch();
 
-        foreach ($dosen as $s) {
-            $filter = "$s";
-            // dd($filter);
-            $batch->add(new $data['job']($data['act'], $data['limit'], $data['offset'], $data['order'], $filter, $data['model'], $data['primary']));
+        foreach ($ref as $data) {
+            foreach ($dosen as $s) {
+                $filter = "$s";
+                // dd($filter);
+                $batch->add(new $data['job']($data['act'], $data['limit'], $data['offset'], $data['order'], $filter, $data['model'], $data['primary']));
+            }
         }
+
 
         return redirect()->back()->with('success', 'Sinkronisasi Nilai Perkuliahan Berhasil!');
     }

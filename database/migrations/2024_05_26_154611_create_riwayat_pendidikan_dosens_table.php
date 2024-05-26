@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer("id_bidang_studi")->nullable();
             $table->text("nama_bidang_studi")->nullable();
             $table->string("id_jenjang_pendidikan")->nullable();
+            $table->unique(['id_dosen', 'id_jenjang_pendidikan', 'id_bidang_studi'], 'idx_id_dosen_id_jenjang_pendidikan');
             $table->string("nama_jenjang_pendidikan")->nullable();
             $table->integer("id_gelar_akademik")->nullable();
             $table->string("nama_gelar_akademik")->nullable();
