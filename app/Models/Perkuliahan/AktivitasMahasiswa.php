@@ -14,11 +14,21 @@ class AktivitasMahasiswa extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['id_tanggal_sk_tugas'];
+    protected $appends = ['id_tanggal_sk_tugas', 'id_tanggal_mulai', 'id_tanggal_selesai'];
 
     public function getIdTanggalSkTugasAttribute()
     {
         return date('d-m-Y', strtotime($this->tanggal_sk_tugas));
+    }
+
+    public function getIdTanggalMulaiAttribute()
+    {
+        return date('d-m-Y', strtotime($this->tanggal_mulai));
+    }
+
+    public function getIdTanggalSelesaiAttribute()
+    {
+        return date('d-m-Y', strtotime($this->tanggal_selesai));
     }
 
     public function jenis_aktivitas_mahasiswa()

@@ -26,7 +26,17 @@ Bimbingan Tugas Akhir Dosen
             <div class="box box-body mb-0">
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 d-flex justify-content-between">
-                        <h4 class="fw-500 text-dark mt-0">Daftar Bimbingan Tugas Akhir Dosen</h4>
+                        <div class="d-flex justify-content-start">
+                            <h4 class="fw-500 text-dark mt-0">Daftar Bimbingan Tugas Akhir Dosen</h4>
+                        </div>
+                        <div class="d-flex justify-content-end px-3">
+                            <select name="semester" id="semester_select" class="form-select">
+                                <option value="">-- Pilih Semester --</option>
+                                @foreach ($semester as $s)
+                                <option value="{{$s->id_semester}}" @if ($s->id_semester == $id_semester) selected @endif>{{$s->nama_semester}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -38,6 +48,8 @@ Bimbingan Tugas Akhir Dosen
                                     <th class="text-center align-middle">PRODI</th>
                                     <th class="text-center align-middle">MAHASISWA</th>
                                     <th class="text-center align-middle">NO SK<br>(Tanggal SK)</th>
+                                    <th class="text-center align-middle">Tanggal Mulai</th>
+                                    <th class="text-center align-middle">Tanggal Selesai</th>
                                     <th class="text-center align-middle">Pembimbing</th>
                                 </tr>
                             </thead>
@@ -45,10 +57,16 @@ Bimbingan Tugas Akhir Dosen
                                 @foreach ($data as $d)
                                 <tr>
                                     <td class="text-start align-middle" style="width: 25%">{{$d->judul}}</td>
-                                    <td class="text-center align-middle" style="width: 15%">{{$d->nama_prodi}}</td>
+                                    <td class="text-center align-middle" style="width: 10%">{{$d->nama_prodi}}</td>
                                     <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal->nim}}<br>{{$d->anggota_aktivitas_personal->nama_mahasiswa}}</td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$d->tanggal_mulai ? $d->id_tanggal_mulai : '-'}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$d->tanggal_selesai ? $d->id_tanggal_selesai : '-'}}
                                     </td>
                                     <td class="text-start align-middle text-nowrap">
                                         <ul>
@@ -68,7 +86,11 @@ Bimbingan Tugas Akhir Dosen
     </div>
 </section>
 @endsection
+@push('css')
+    <link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
 @push('js')
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(function () {
         $('#dt').DataTable({
@@ -79,6 +101,16 @@ Bimbingan Tugas Akhir Dosen
             "info": true,
             "autoWidth": true,
             "responsive": true,
+        });
+
+        $('#semester_select').select2({
+            placeholder: '-- Pilih Semester --',
+            width: '100%',
+        });
+
+        $('#semester_select').on('change', function (e) {
+            var id = $(this).val();
+            window.location.href = "{{route('dosen.pembimbing.bimbingan-tugas-akhir')}}?semester=" + id;
         });
     });
 </script>
