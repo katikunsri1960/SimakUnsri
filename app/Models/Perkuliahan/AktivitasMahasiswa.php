@@ -14,6 +14,22 @@ class AktivitasMahasiswa extends Model
 {
     use HasFactory;
     protected $guarded = [];
+    protected $appends = ['id_tanggal_sk_tugas', 'id_tanggal_mulai', 'id_tanggal_selesai'];
+
+    public function getIdTanggalSkTugasAttribute()
+    {
+        return date('d-m-Y', strtotime($this->tanggal_sk_tugas));
+    }
+
+    public function getIdTanggalMulaiAttribute()
+    {
+        return date('d-m-Y', strtotime($this->tanggal_mulai));
+    }
+
+    public function getIdTanggalSelesaiAttribute()
+    {
+        return date('d-m-Y', strtotime($this->tanggal_selesai));
+    }
 
     public function jenis_aktivitas_mahasiswa()
     {
@@ -25,9 +41,19 @@ class AktivitasMahasiswa extends Model
         return $this->hasMany(UjiMahasiswa::class, 'id_aktivitas', 'id_aktivitas')->orderBy('id_kategori_kegiatan');
     }
 
+    public function bimbing_mahasiswa()
+    {
+        return $this->hasMany(BimbingMahasiswa::class, 'id_aktivitas', 'id_aktivitas')->orderBy('id_kategori_kegiatan');
+    }
+
     public function anggota_aktivitas()
     {
         return $this->hasMany(AnggotaAktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
+    }
+
+    public function anggota_aktivitas_personal()
+    {
+        return $this->hasOne(AnggotaAktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
     }
 
     public function prodi()
@@ -50,6 +76,19 @@ class AktivitasMahasiswa extends Model
                     ->whereHas('uji_mahasiswa', function ($query) use ($id_dosen) {
                         $query->whereIn('id_dosen', [$id_dosen]);
                     })->get();
+    }
+
+    public function bimbing_ta($id_dosen, $semester)
+    {
+        // $kategori = [110403,110407,110402,110406,110401,110405];
+
+        return $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+                    ->whereHas('bimbing_mahasiswa', function($query) use ($semester, $id_dosen) {
+                        $query->where('id_dosen', $id_dosen);
+                    })
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
+                    ->get();
     }
 
 

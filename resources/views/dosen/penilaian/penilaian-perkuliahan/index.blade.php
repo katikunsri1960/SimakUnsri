@@ -86,17 +86,17 @@ Penilaian Perkuliahan Mahasiswa
                                                     <div class="col-md-12 mb-2">
                                                         <a class="btn btn-sm btn-rounded bg-warning-light"
                                                 href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
-                                                title="Komponen Evaluasi"><i class="fa fa-clipboard-list"></i> Komponen Evaluasi</a>
+                                                title="Komponen Evaluasi" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-clipboard-list"></i> Komponen Evaluasi</a>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-6 mb-2">
                                                         <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
-                                                    title="Download DPNA"><i class="fa fa-download"></i> Download</a>
+                                                    title="Download DPNA" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-download"></i> Download</a>
                                                     </div>
                                                     <div class="col-md-6 mb-2">
                                                         <a class="btn btn-sm btn-rounded bg-primary-light" href="#"
-                                                    title="Upload DPNA"><i class="fa fa-upload"></i> Upload</a>
+                                                    title="Upload DPNA" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-upload"></i> Upload</a>
                                                     </div>
                                                 </div>
                                             </td>

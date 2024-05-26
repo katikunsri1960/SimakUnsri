@@ -57,6 +57,13 @@ class SyncJob implements ShouldQueue
                     }, $r);
                 }
 
+                if ($this->act == 'GetRiwayatFungsionalDosen') {
+                    $r = array_map(function ($value) {
+                        $value['mulai_sk_jabatan'] = empty($value['mulai_sk_jabatan']) ? null : date('Y-m-d', strtotime($value['mulai_sk_jabatan']));
+                        return $value;
+                    }, $r);
+                }
+
                 if ($this->act == 'GetDetailKelasKuliah') {
                     $r = array_map(function ($value) {
                         $value['tanggal_mulai_efektif'] = empty($value['tanggal_mulai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai_efektif']));
