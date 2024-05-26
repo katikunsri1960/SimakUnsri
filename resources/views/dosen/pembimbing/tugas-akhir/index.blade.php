@@ -23,34 +23,42 @@ Bimbingan Tugas Akhir Dosen
     </div>
     <div class="row">
         <div class="col-xxl-12">
-            <div class="box box-body mb-0 bg-light">
+            <div class="box box-body mb-0">
                 <div class="row">
-                    <div class="col-xl-12 col-lg-12">
-                        <h3 class="fw-500 text-dark mt-0">Daftar Bimbingan Tugas Akhir Dosen</h3>
+                    <div class="col-xl-12 col-lg-12 d-flex justify-content-between">
+                        <h4 class="fw-500 text-dark mt-0">Daftar Bimbingan Tugas Akhir Dosen</h4>
                     </div>
                 </div>
-                <div class="row">
+                <div class="row mt-2">
                     <div class="table-responsive">
-                        <table id="example1" class="table table-bordered table-striped">
+                        <table id="dt" class="table table-bordered table-striped" style="font-size: 11px">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Position</th>
-                                    <th>Office</th>
-                                    <th>Age</th>
-                                    <th>Start date</th>
-                                    <th>Salary</th>
+                                    <th class="text-center align-middle">JUDUL</th>
+                                    <th class="text-center align-middle">PRODI</th>
+                                    <th class="text-center align-middle">MAHASISWA</th>
+                                    <th class="text-center align-middle">NO SK<br>(Tanggal SK)</th>
+                                    <th class="text-center align-middle">Pembimbing</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($data as $d)
                                 <tr>
-                                    <td>Donna Snider</td>
-                                    <td>Customer Support</td>
-                                    <td>New York</td>
-                                    <td>27</td>
-                                    <td>2011/01/25</td>
-                                    <td>$112,000</td>
+                                    <td class="text-start align-middle" style="width: 25%">{{$d->judul}}</td>
+                                    <td class="text-center align-middle" style="width: 15%">{{$d->nama_prodi}}</td>
+                                    <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal->nim}}<br>{{$d->anggota_aktivitas_personal->nama_mahasiswa}}</td>
+                                    <td class="text-center align-middle">
+                                        {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
+                                    </td>
+                                    <td class="text-start align-middle text-nowrap">
+                                        <ul>
+                                        @foreach ($d->bimbing_mahasiswa as $p)
+                                            <li>Pembimbing {{$p->pembimbing_ke}} :<br>{{$p->nama_dosen}}</li>
+                                        @endforeach
+                                        </ul>
+                                    </td>
                                 </tr>
+                                @endforeach
                             </tbody>
 					  </table>
                     </div>
@@ -60,4 +68,19 @@ Bimbingan Tugas Akhir Dosen
     </div>
 </section>
 @endsection
+@push('js')
+<script>
+    $(function () {
+        $('#dt').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "responsive": true,
+        });
+    });
+</script>
+@endpush
 

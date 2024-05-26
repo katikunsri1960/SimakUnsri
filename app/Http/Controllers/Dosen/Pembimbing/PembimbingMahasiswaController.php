@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Dosen\Pembimbing;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -71,13 +73,17 @@ class PembimbingMahasiswaController extends Controller
         return view('dosen.pembimbing.bimbingan-non-akademik');
     }
 
-    public function bimbingan_tugas_akhir()
+    public function bimbingan_tugas_akhir(Request $request)
     {
+        $semester = SemesterAktif::first()->id_semester;
         $db = new AktivitasMahasiswa();
-        $data = $db->uji_dosen(auth()->user()->fk_id);
-        dd($data);
+        $data = $db->bimbing_ta(auth()->user()->fk_id, $semester);
+
+        $semester = Semester::orderBy('id_semester', 'desc')->get();
+        // dd($data);
         return view('dosen.pembimbing.tugas-akhir.index', [
             'data' => $data,
+            'semester' => $semester,
         ]);
     }
 }

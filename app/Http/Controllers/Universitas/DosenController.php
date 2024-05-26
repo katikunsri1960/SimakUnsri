@@ -85,4 +85,34 @@ class DosenController extends Controller
 
         return redirect()->back()->with('success', 'Sinkronisasi Data Penugasan Dosen Berhasil!');
     }
+
+    public function sync_dosen_all()
+    {
+        $data = [
+            'act' => 'GetRiwayatPendidikanDosen',
+            'limit' => '',
+            'offset' => '',
+            'order' => '',
+            'job' => \App\Jobs\SyncJob::class,
+            'name' => 'pendidikan-dosen',
+            'model' => \App\Models\Dosen\RiwayatPendidikanDosen::class,
+            'primary' => ['id_dosen', 'id_jenjang_pendidikan', 'id_bidang_studi'],
+        ];
+
+        $dosen = BiodataDosen::pluck('id_dosen')->toArray();
+        $dosen = array_chunk($dosen, 8);
+        $dosen = array_map(function ($value) {
+            return "id_dosen IN ('" . implode("','", $value) . "')";
+        }, $dosen);
+
+        $batch = Bus::batch([])->name($data['name'])->dispatch();
+
+        foreach ($dosen as $s) {
+            $filter = "$s";
+            // dd($filter);
+            $batch->add(new $data['job']($data['act'], $data['limit'], $data['offset'], $data['order'], $filter, $data['model'], $data['primary']));
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Nilai Perkuliahan Berhasil!');
+    }
 }
