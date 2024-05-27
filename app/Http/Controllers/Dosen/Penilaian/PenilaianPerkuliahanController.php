@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\SemesterAktif;
 use App\Exports\ExportDPNA;
 use App\Imports\ImportDPNA;
@@ -64,7 +65,26 @@ class PenilaianPerkuliahanController extends Controller
         }
     }
 
-    public function upload_dpna(Request $request, string $kelas)
+    public function upload_dpna(string $kelas)
+    {
+        $semester_aktif = SemesterAktif::first();
+        $data_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->get();
+        $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->get();
+
+         //Check batas pengisian nilai
+         $hari_proses = Carbon::now();
+         $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
+         $interval = $hari_proses->diffInDays($batas_nilai);
+
+        // dd($data_komponen);
+        return view('dosen.penilaian.penilaian-perkuliahan.upload-dpna', [
+            'data' => $nilai_komponen,
+            'kelas' => $data_kelas,
+            'batas_pengisian' => $interval
+        ]);
+    }
+
+    public function upload_dpna_store(Request $request, string $kelas)
     {
         $validator = Validator::make($request->all(), [
             'file' => 'required|mimes:xlsx|max:2048', // Validate the file type and size
