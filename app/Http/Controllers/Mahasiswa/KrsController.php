@@ -58,6 +58,7 @@ class KrsController extends Controller
         // Ekstrak nilai 'id_matkul' dari sub-array 'data'
         $data_akt_ids = array_column($data_akt_data, 'id_matkul');
 
+        $total_sks_akt = 0;
         // Ambil data KRS untuk nilai 'id_matkul' yang diperoleh
         $krs_akt = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*', 'mata_kuliahs.sks_mata_kuliah')
             ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
@@ -69,6 +70,7 @@ class KrsController extends Controller
             // ->limit(1)
             ->get();
         // dd($krs_akt);
+        $total_sks_akt = $krs_akt->sum('sks_mata_kuliah');
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->whereNotIn('id_status_mahasiswa', ['N'])
@@ -190,6 +192,7 @@ class KrsController extends Controller
             'semester_ke',
             'fakultas', 'prodi',
             'krs_akt','data_akt', 'data_akt_data',
+            'total_sks_akt',
             'mk_merdeka',
             'matakuliah',
         ));
