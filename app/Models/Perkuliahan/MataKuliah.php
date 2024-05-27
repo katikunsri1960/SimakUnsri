@@ -98,7 +98,7 @@ class MataKuliah extends Model
                         [
                             "id_matkul"=>"4f915940-8835-4ae1-ab57-83bdc9978447",
                             "kode_mata_kuliah"=>"TKM490514",
-                            "nama_mata_kuliah"=>"TKM490514",
+                            "nama_mata_kuliah"=>"SKRIPSI",
                             "id_jenis_mata_kuliah"=>"S",
                             "sks_mata_kuliah"=>5.00,
                             "semester"=>8,

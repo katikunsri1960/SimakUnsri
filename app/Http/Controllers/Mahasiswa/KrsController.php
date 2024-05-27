@@ -64,6 +64,7 @@ class KrsController extends Controller
             ->whereIn('peserta_kelas_kuliahs.id_matkul', $data_akt_ids)
             ->where('id_registrasi_mahasiswa', $id_reg)
             ->get();
+        // dd($data_akt_data);
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->whereNotIn('id_status_mahasiswa', ['N'])
