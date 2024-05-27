@@ -71,25 +71,46 @@ class MataKuliah extends Model
                 "id_prodi"=> "f371d293-c602-4b1b-afc5-222081477091",
                 "data"=>
                 [
-                    "id_kurikulum"=>"5f0173e8-8f43-4819-be60-41dcb73f9449",
+                    // "id_kurikulum"=>"5f0173e8-8f43-4819-be60-41dcb73f9449",
+                    // "data"=>
+                    // [
+                    //     [
+                    //         "id_matkul"=>"b010c3b4-b4e3-4369-80a5-f8ddc9fc3529",
+                    //         "kode_mata_kuliah"=>"TKM4001",
+                    //         "nama_mata_kuliah"=>"KERJA PRAKTEK",
+                    //         "id_jenis_mata_kuliah"=>"A",
+                    //         "sks_mata_kuliah"=>2.00,
+                    //         "semester"=>7,
+                    //     ],
+                    //     [
+                    //         "id_matkul"=>"bff65f45-ee5d-4f6f-bf5f-eddf00fe6d9c",
+                    //         "kode_mata_kuliah"=>"TKM4002",
+                    //         "nama_mata_kuliah"=>"TUGAS AKHIR",
+                    //         "id_jenis_mata_kuliah"=>"S",
+                    //         "sks_mata_kuliah"=>5.00,
+                    //         "semester"=>8,
+                    //     ],
+                    // ]
+
+                    "id_kurikulum"=>"7699c236-04ae-4c63-974a-b47f29b03091",
                     "data"=>
                     [
                         [
-                            "id_matkul"=>"b010c3b4-b4e3-4369-80a5-f8ddc9fc3529",
-                            "kode_mata_kuliah"=>"TKM4001",
-                            "nama_mata_kuliah"=>"KERJA PRAKTEK",
-                            "id_jenis_mata_kuliah"=>"A",
-                            "sks_mata_kuliah"=>2.00,
-                            "semester"=>7,
-                        ],
-                        [
-                            "id_matkul"=>"bff65f45-ee5d-4f6f-bf5f-eddf00fe6d9c",
-                            "kode_mata_kuliah"=>"TKM4002",
-                            "nama_mata_kuliah"=>"TUGAS AKHIR",
+                            "id_matkul"=>"4f915940-8835-4ae1-ab57-83bdc9978447",
+                            "kode_mata_kuliah"=>"TKM490514",
+                            "nama_mata_kuliah"=>"TKM490514",
                             "id_jenis_mata_kuliah"=>"S",
                             "sks_mata_kuliah"=>5.00,
                             "semester"=>8,
                         ],
+                        // [
+                        //     "id_matkul"=>"bff65f45-ee5d-4f6f-bf5f-eddf00fe6d9c",
+                        //     "kode_mata_kuliah"=>"TKM4002",
+                        //     "nama_mata_kuliah"=>"TUGAS AKHIR",
+                        //     "id_jenis_mata_kuliah"=>"S",
+                        //     "sks_mata_kuliah"=>5.00,
+                        //     "semester"=>8,
+                        // ],
                     ]
                 ]
             ],
