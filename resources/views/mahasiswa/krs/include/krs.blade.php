@@ -156,7 +156,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="table-responsive">
-                                                <table id="aktivitas" class="table table-bordered table-striped text-left">
+                                                <table id="krs-akt" class="table table-bordered table-striped text-left">
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center align-middle">No</th>
@@ -202,7 +202,7 @@
                                                     <tfoot>
                                                         <tr>
                                                             <td class="text-center align-middle" colspan="4"><strong>Total SKS Diambil</strong></td>
-                                                            <td class="text-center align-middle"><strong>{{$total_sks_regular}}</strong></td>
+                                                            <td class="text-center align-middle"><strong>{{$total_sks_akt}}</strong></td>
                                                             <td colspan="3"></td>
                                                         </tr>
                                                     </tfoot>

@@ -362,7 +362,20 @@ Kartu Rencana Studi
 
     $(function() {
         "use strict";
+        
         $('#krs-regular').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            "pageLength": 10,
+            // "scrollCollapse": false,
+            // "scrollY": "450px",
+            "columnDefs": [
+                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+            ]
+        });
+
+        $('#krs-akt').DataTable({
             "paging": true,
             "ordering": true,
             "searching": true,
