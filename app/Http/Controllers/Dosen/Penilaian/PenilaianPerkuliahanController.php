@@ -5,8 +5,11 @@ namespace App\Http\Controllers\Dosen\Penilaian;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\SemesterAktif;
 use App\Exports\ExportDPNA;
+use App\Imports\ImportDPNA;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -43,6 +46,57 @@ class PenilaianPerkuliahanController extends Controller
     public function download_dpna(string $kelas)
     {
         $data_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->get();
-        return Excel::download(new ExportDPNA($kelas), 'DPNA_'.$data_kelas[0]['nama_program_studi'].'_'.$data_kelas[0]['kode_mata_kuliah'].'_'.$data_kelas[0]['nama_kelas_kuliah'].'.xlsx');
+        $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
+        $semester_aktif = SemesterAktif::first();
+
+         //Check batas pengisian nilai
+         $hari_proses = Carbon::now();
+         $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
+         $interval = $hari_proses->diffInDays($batas_nilai);
+
+        if(!$data_komponen->isEmpty()){
+            if($interval >= 0){
+                return Excel::download(new ExportDPNA($kelas), 'DPNA_'.$data_kelas[0]['nama_program_studi'].'_'.$data_kelas[0]['kode_mata_kuliah'].'_'.$data_kelas[0]['nama_kelas_kuliah'].'.xlsx');
+            }else{
+                return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Telah Berakhir');
+            }
+        }else{
+            return redirect()->back()->with('error', 'Silahkan Melakukan Pengaturan Bobot Komponen Evaluasi');
+        }
+    }
+
+    public function upload_dpna(string $kelas)
+    {
+        $semester_aktif = SemesterAktif::first();
+        $data_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->get();
+        $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->get();
+
+         //Check batas pengisian nilai
+         $hari_proses = Carbon::now();
+         $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
+         $interval = $hari_proses->diffInDays($batas_nilai);
+
+        // dd($data_komponen);
+        return view('dosen.penilaian.penilaian-perkuliahan.upload-dpna', [
+            'data' => $nilai_komponen,
+            'kelas' => $data_kelas,
+            'batas_pengisian' => $interval
+        ]);
+    }
+
+    public function upload_dpna_store(Request $request, string $kelas)
+    {
+        $validator = Validator::make($request->all(), [
+            'file' => 'required|mimes:xlsx|max:2048', // Validate the file type and size
+        ]);
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+        }
+
+        $file = $request->file('file');
+        Excel::import(new ImportDPNA($kelas), $file);
+
+        return back()->with('success', 'Users imported successfully.');
     }
 }

@@ -24,7 +24,7 @@ class RiwayatPendidikan extends Model
     {
         return $this->hasMany(PesertaKelasKuliah::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
-    
+
     public function pembimbing_akademik()
     {
         return $this->belongsTo(BiodataDosen::class, 'dosen_pa', 'id_dosen');
@@ -68,6 +68,11 @@ class RiwayatPendidikan extends Model
     public function aktivitas_kuliah()
     {
         return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function mahasiswaProdi($id_prodi)
+    {
+        return $this->where('id_prodi', $id_prodi);
     }
 
     public function set_kurikulum_angkatan($tahun_angkatan, $id_kurikulum, $prodi)

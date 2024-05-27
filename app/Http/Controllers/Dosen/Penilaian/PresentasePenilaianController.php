@@ -23,29 +23,39 @@ class PresentasePenilaianController extends Controller
          $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
          $interval = $hari_proses->diffInDays($batas_nilai);
 
-        foreach($data_komponen as $d){
-            if($d->id_jenis_evaluasi == '2'){
-                $bobot_participatory = $d->bobot_evaluasi;
+        if(!$data_komponen->isEmpty()){
+            foreach($data_komponen as $d){
+                if($d->id_jenis_evaluasi == '2'){
+                    $bobot_participatory = $d->bobot_evaluasi;
+                }
+                else if($d->id_jenis_evaluasi == '3'){
+                    $bobot_project = $d->bobot_evaluasi;
+                }
+                elseif($d->id_jenis_evaluasi == '4' && $d->nomor_urut == '3'){
+                    $bobot_assignment = $d->bobot_evaluasi;
+                }
+                elseif($d->id_jenis_evaluasi == '4' && $d->nomor_urut == '4'){
+                    $bobot_quiz = $d->bobot_evaluasi;
+                }
+                elseif($d->id_jenis_evaluasi == '4' && $d->nomor_urut == '5'){
+                    $bobot_midterm = $d->bobot_evaluasi;
+                }
+                elseif($d->id_jenis_evaluasi == '4' && $d->nomor_urut == '6'){
+                    $bobot_finalterm = $d->bobot_evaluasi;
+                }
+                else{
+                    return redirect()->back()->with('error', 'ID Jenis Evaluasi Tidak Sesuai');
+                }
             }
-            else if($d->id_jenis_evaluasi == '3'){
-                $bobot_project = $d->bobot_evaluasi;
-            }
-            elseif($d->id_jenis_evaluasi == '4' && $d->nomor_urut == '3'){
-                $bobot_assignment = $d->bobot_evaluasi;
-            }
-            elseif($d->id_jenis_evaluasi == '4' && $d->nomor_urut == '4'){
-                $bobot_quiz = $d->bobot_evaluasi;
-            }
-            elseif($d->id_jenis_evaluasi == '4' && $d->nomor_urut == '5'){
-                $bobot_midterm = $d->bobot_evaluasi;
-            }
-            elseif($d->id_jenis_evaluasi == '4' && $d->nomor_urut == '6'){
-                $bobot_finalterm = $d->bobot_evaluasi;
-            }
-            else{
-                return redirect()->back()->with('error', 'ID Jenis Evaluasi Tidak Sesuai');
-            }
+        }else{
+            $bobot_participatory = 0; 
+            $bobot_project = 0;
+            $bobot_assignment = 0;
+            $bobot_quiz = 0;
+            $bobot_midterm = 0;
+            $bobot_finalterm = 0;
         }
+        
         
         // dd($data_komponen);
         return view('dosen.penilaian.presentase.komponen-evaluasi', [
@@ -121,10 +131,10 @@ class PresentasePenilaianController extends Controller
                 KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval4, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'QIZ', 'nama_inggris'=> 'Quiz', 'nomor_urut'=> 4, 'bobot_evaluasi'=> $bobot_quiz]);
 
                 //Store data midterm
-                KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval5, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'UTS', 'nama_inggris'=> 'Midterm Exam', 'nomor_urut'=> 5, 'bobot_evaluasi'=> $bobot_quiz]);
+                KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval5, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'UTS', 'nama_inggris'=> 'Midterm Exam', 'nomor_urut'=> 5, 'bobot_evaluasi'=> $bobot_midterm]);
 
                 //Store data finalterm
-                KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval6, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'UAS', 'nama_inggris'=> 'Finalterm Exam', 'nomor_urut'=> 6, 'bobot_evaluasi'=> $bobot_quiz]);
+                KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval6, 'id_kelas_kuliah'=> $kelas, 'id_jenis_evaluasi'=> 4,  'nama'=> 'UAS', 'nama_inggris'=> 'Finalterm Exam', 'nomor_urut'=> 6, 'bobot_evaluasi'=> $bobot_finalterm]);
                 
                 return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
             }else{
