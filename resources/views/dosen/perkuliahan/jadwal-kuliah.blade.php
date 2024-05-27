@@ -25,7 +25,7 @@ Jadwal Kuliah Dosen
         <div class="col-xxl-12">
             <div class="box box-body mb-0">
                 <div class="row">
-                    <div class="col-xl-4 col-lg-12">
+                    <div class="col-xl-6 col-lg-12">
                         <h3 class="fw-500 text-dark mt-0">Daftar Jadwal Mengajar Dosen</h3>
                     </div>                             
                 </div>
@@ -48,10 +48,10 @@ Jadwal Kuliah Dosen
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td>{{$d->kode_mata_kuliah}}</td>
-                                        <td>{{$d->nama_mata_kuliah}}</td>
+                                        <td class="text-start align-left" style="white-space:nowrap;">{{$d->nama_mata_kuliah}}</td>
                                         <td>{{$d->nama_kelas_kuliah}}</td>
                                         <td>{{$d->nama_ruang}}</td>
-                                        <td>{{$d->nama_semester}}</td>
+                                        <td style="white-space:nowrap;">{{$d->nama_semester}}</td>
                                         <td>{{$d->jadwal_hari}}, {{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}</td>
                                     </tr>
                                 @endforeach
