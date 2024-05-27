@@ -83,9 +83,14 @@ class AktivitasMahasiswa extends Model
         // $kategori = [110403,110407,110402,110406,110401,110405];
 
         return $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
-                    ->whereHas('bimbing_mahasiswa', function($query) use ($semester, $id_dosen) {
-                        $query->where('id_dosen', $id_dosen);
-                    })
+                    ->whereHas('bimbing_mahasiswa', function($query) use ($id_dosen) {
+                        $query->where('id_dosen', $id_dosen)
+                                ->where('approved', 1);
+                    })->withCount([
+                        'bimbing_mahasiswa as approved' => function($query) use ($id_dosen) {
+                            $query->where('id_dosen', $id_dosen)->where('approved_dosen', 0);
+                        },
+                    ])
                     ->where('id_semester', $semester)
                     ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
                     ->get();
