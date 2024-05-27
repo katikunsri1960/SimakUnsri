@@ -19,7 +19,7 @@ class DataMasterController extends Controller
     public function dosen()
     {
         $db = new BiodataDosen();
-        $data = $db->list_dosen_prodi(null, auth()->user()->fk_id);
+        $data = $db->get();
 
         return view('prodi.data-master.dosen.index', [
             'data' => $data
@@ -226,7 +226,7 @@ class DataMasterController extends Controller
 
         $db = new MataKuliah();
         $prasyarat = $db->matkul_prodi($id_prodi);
-        
+
         return view('prodi.data-master.mata-kuliah.tambah-prasyarat', [
             'matkul' => $matkul,
             'prasyarat' => $prasyarat
