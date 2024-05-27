@@ -358,6 +358,33 @@ Kartu Rencana Studi
             }
         });
     });
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-button');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const form = document.getElementById(`deleteForm${id}`);
+
+                swal({
+                    title: "Apakah Anda yakin?",
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        form.submit();
+                    } else {
+                        swal("Data aman!");
+                    }
+                });
+            });
+        });
+    });
+
 
 
     $(function() {

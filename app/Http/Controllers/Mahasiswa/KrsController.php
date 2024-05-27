@@ -24,6 +24,18 @@ use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 
 class KrsController extends Controller
 {
+    private function formatDosenPengajar($dosen_bimbing)
+    {
+        // Mengembalikan daftar dosen dalam format ul li
+        $output = '<ul>';
+        foreach ($dosen_bimbing as $dosen) {
+            $output .= '<li>' . htmlspecialchars($dosen, ENT_QUOTES, 'UTF-8') . '</li>';
+        }
+        $output .= '</ul>';
+
+        return $output;
+    }
+
     public function krs(Request $request)
     {
         $id_reg = auth()->user()->fk_id;
@@ -61,17 +73,20 @@ class KrsController extends Controller
 
         $total_sks_akt = 0;
         // Ambil data KRS untuk nilai 'id_matkul' yang diperoleh
-        $krs_akt = AnggotaAktivitasMahasiswa::select(
-            // 'anggota_aktivitas_mahasiswas.id_aktivitas', 
-            // 'anggota_aktivitas_mahasiswas.nim', 
-            // 'anggota_aktivitas_mahasiswas.judul', 
-            // 'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', 
-            // 'aktivitas_mahasiswas.nama_jenis_aktivitas', 
-            // 'aktivitas_mahasiswas.nama_jenis_anggota',
-            // 'aktivitas_mahasiswas.nama_semester',
-            // 'aktivitas_mahasiswas.id_prodi',
-            // 'bimbing_mahasiswas.approved',
-            'anggota_aktivitas_mahasiswas.*','aktivitas_mahasiswas.*', 'bimbing_mahasiswas.*'
+        $krs_akt = AnggotaAktivitasMahasiswa::with(['aktivitas_mahasiswa.bimbing_mahasiswa'])
+        ->select(
+            'aktivitas_mahasiswas.id', 
+            'aktivitas_mahasiswas.nama_jenis_aktivitas', 
+            'aktivitas_mahasiswas.nama_jenis_anggota',
+            'aktivitas_mahasiswas.nama_semester',
+            'aktivitas_mahasiswas.id_prodi',
+            'aktivitas_mahasiswas.lokasi',
+            'anggota_aktivitas_mahasiswas.id_aktivitas', 
+            'anggota_aktivitas_mahasiswas.nim', 
+            'anggota_aktivitas_mahasiswas.judul', 
+            'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', 
+            'bimbing_mahasiswas.approved',
+            // 'anggota_aktivitas_mahasiswas.*','aktivitas_mahasiswas.*', 'bimbing_mahasiswas.*'
          )
             ->leftJoin('aktivitas_mahasiswas', 'aktivitas_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas')
             ->leftJoin('bimbing_mahasiswas', 'bimbing_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas')
@@ -82,6 +97,19 @@ class KrsController extends Controller
             ->whereNot('bimbing_mahasiswas.id_bimbing_mahasiswa', NUll)
             // ->orderBy('nama_kelas_kuliah', 'DESC')
             // ->limit(10)
+            ->groupBy(
+                'aktivitas_mahasiswas.id', 
+                'aktivitas_mahasiswas.nama_jenis_aktivitas', 
+                'aktivitas_mahasiswas.nama_jenis_anggota',
+                'aktivitas_mahasiswas.nama_semester',
+                'aktivitas_mahasiswas.id_prodi',
+                'aktivitas_mahasiswas.lokasi',
+                'anggota_aktivitas_mahasiswas.id_aktivitas', 
+                'anggota_aktivitas_mahasiswas.nim', 
+                'anggota_aktivitas_mahasiswas.judul', 
+                'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', 
+                'bimbing_mahasiswas.approved',
+            )
             ->get();
         // dd($krs_akt);
         
@@ -193,7 +221,11 @@ class KrsController extends Controller
                     ->get();
                     // dd($matakuliah);
 
-        return view('mahasiswa.krs.index', compact(
+        return view('mahasiswa.krs.index',[
+            'formatDosenPengajar' => function($dosenPengajar) {
+                return $this->formatDosenPengajar($dosenPengajar);
+            }
+        ], compact(
             'riwayat_pendidikan',
             'semester_aktif',
             'krs_regular',

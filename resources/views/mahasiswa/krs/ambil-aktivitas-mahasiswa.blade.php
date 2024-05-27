@@ -143,8 +143,8 @@ Ambil Aktivitas Mahasiswa
                                                                             <div id="dosen-fields">
                                                                                 <div class="dosen-field row">
                                                                                     <div class="col-md-5 mb-2">
-                                                                                        <label for="dosen_kelas_kuliah" class="form-label">Nama Dosen Pembimbing {{ $no_a++ }}</label>
-                                                                                        <select class="form-select" name="dosen_kelas_kuliah[]" id="dosen_pengajar" required></select>
+                                                                                        <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen Pembimbing {{ $no_a++ }}</label>
+                                                                                        <select class="form-select" name="dosen_bimbing_aktivitas[]" id="dosen_bimbing" required></select>
                                                                                     </div>
                                                                                     
                                                                                     <div class="col-md-1 mb-2">
@@ -232,7 +232,7 @@ Ambil Aktivitas Mahasiswa
         }
 
         // Initialize Select2 for the first select element
-        var initialSelect = initializeSelect2($('#dosen_pengajar'));
+        var initialSelect = initializeSelect2($('#dosen_bimbing'));
         // var initialSelect = initializeSelect2Substansi($('#substansi'));
 
         var dosenCounter = 2; // Inisialisasi counter
@@ -241,8 +241,8 @@ Ambil Aktivitas Mahasiswa
         $('#add-dosen').click(function() {
             var newRow = $('<div class="dosen-field row">' +
                                 '<div class="col-md-5 mb-2">' +
-                                    '<label for="dosen_kelas_kuliah_' + dosenCounter + '" class="form-label">Nama Dosen Pembimbing ' + dosenCounter + '</label>' +
-                                    '<select id="dosen_kelas_kuliah_' + dosenCounter + '" class="form-select select2" name="dosen_kelas_kuliah[]" required></select>' +
+                                    '<label for="dosen_bimbing_aktivitas_' + dosenCounter + '" class="form-label">Nama Dosen Pembimbing ' + dosenCounter + '</label>' +
+                                    '<select id="dosen_bimbing_aktivitas_' + dosenCounter + '" class="form-select select2" name="dosen_bimbing_aktivitas[]" required></select>' +
                                 '</div>' +
                                 '<div class="col-md-1 mb-2">' +
                                     '<label class="form-label">&nbsp;</label>' +

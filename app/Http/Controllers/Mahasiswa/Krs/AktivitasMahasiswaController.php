@@ -51,6 +51,8 @@ class AktivitasMahasiswaController extends Controller
             ->whereNotNull('bimbing_mahasiswas.id_bimbing_mahasiswa')
             ->get();
 
+        dd($krs_akt);
+
         return response()->json($krs_akt);
     }
 
@@ -108,7 +110,7 @@ class AktivitasMahasiswaController extends Controller
             'id_matkul' => $id_matkul, 
             'akm'=>$akm, 
             'sks_max'=>$sks_max,
-            'dosen_pembimbing'=>$dosen_pembimbing
+            'dosen_bimbing_aktivitas'=>$dosen_pembimbing
 
         ]);
     }
@@ -129,9 +131,11 @@ class AktivitasMahasiswaController extends Controller
         }
 
         $data = $query->get();
+        // dd($data);
 
         return response()->json($data);
     }
+    
 
     public function simpanAktivitas(Request $request)
     {
@@ -140,8 +144,8 @@ class AktivitasMahasiswaController extends Controller
             'judul' => 'required|string|max:255',
             // 'keterangan' => 'required|string|max:255', // tambahkan validasi untuk Keterangan
             'lokasi' => 'required|string|max:255',
-            // 'dosen_pembimbing_*' => 'required|string|max:255',
-            // 'id_matkul' => 'required',
+            'dosen_bimbing_aktivitas.*' => 'required',
+            'id_matkul' => 'required',
         ]);
         
         try {
@@ -161,9 +165,7 @@ class AktivitasMahasiswaController extends Controller
             
             $now = Carbon::now();
 
-            $id_anggota = Uuid::uuid4()->toString();
             $id_aktivitas = Uuid::uuid4()->toString();
-            $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
             
                 // Simpan data ke tabel aktivitas_mahasiswas
                 $aktivitas=AktivitasMahasiswa::create([
@@ -176,7 +178,7 @@ class AktivitasMahasiswaController extends Controller
                     'jenis_anggota'=>0,
                     'nama_jenis_anggota'=>'Personal',
                     'id_jenis_aktivitas'=>2,
-                    'nama_jenis_aktivitas'=>'Tugas Akhir',
+                    'nama_jenis_aktivitas'=>'Skripsi',
                     'id_prodi' => $riwayat_pendidikan->id_prodi,
                     'nama_prodi'=>$riwayat_pendidikan->nama_program_studi,
                     'id_semester' => $semester_aktif->id_semester,
@@ -193,10 +195,13 @@ class AktivitasMahasiswaController extends Controller
                     'asal_data'=>9,
                     'nm_asaldata'=>'',
                     'status_sync'=>'belum sync',
+                    'mk_konversi'=>$request->id_matkul,
                     'created_at'=>$now,
                     'updated_at'=>$now,
                     // tambahkan field lain yang diperlukan
                 ]);
+
+                $id_anggota = Uuid::uuid4()->toString();
 
                 // Simpan data ke tabel anggota_aktivitas_mahasiswas
                 AnggotaAktivitasMahasiswa::create([
@@ -216,13 +221,43 @@ class AktivitasMahasiswaController extends Controller
                 ]);          
 
                 // // Simpan data ke tabel bimbingan_mahasiswas untuk setiap dosen pembimbing
-                // foreach ($request->dosen_kelas_kuliah as $dosen) {
+                // foreach ($request->dosen_bimbing_aktivitas as $dosen) {
                 //     BimbingMahasiswa::create([
                 //         'id_aktivitas' => $aktivitas->id,
                 //         'nama_dosen' => $dosen,
                 //         // tambahkan field lain yang diperlukan
                 //     ]);
                 // }
+                $dosen_bimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_bimbing_aktivitas)->get();
+
+                $jumlah_dosen=count($request->dosen_bimbing_aktivitas);
+                // dd($jumlah_dosen);
+
+                for($i=1;$i<$jumlah_dosen;$i++){
+                    //Generate id aktivitas mengajar
+                    $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
+
+                    BimbingMahasiswa::create([
+                        'feeder'=>0,
+                        'approved'=>0,
+                        'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
+                        'id_aktivitas'=>$aktivitas->id_aktivitas,
+                        'judul'=>$aktivitas->judul,
+                        'id_kategori_kegiatan'=>110403,
+                        'nama_kategori_kegiatan'=>'Skripsi (pembimbing utama)',
+                        'id_dosen'=>$dosen_bimbing[$i]['id_dosen'], 
+                        'nidn'=>$dosen_bimbing[$i]['nidn'],
+                        'nama_dosen'=>$dosen_bimbing[$i]['nama_dosen'],
+                        'pembimbing_ke'=>$i,
+                        'status_sync'=>'belum sync',
+                        'created_at'=>$now,
+                        'updated_at'=>$now,
+
+                    ]);
+                }
+                // $bimbing=BimbingMahasiswa::get();
+                // dd($dosen_bimbing[$i]);
+                
             });
 
             // Jika berhasil, kembalikan respons sukses
@@ -238,12 +273,16 @@ class AktivitasMahasiswaController extends Controller
     public function hapusAktivitas($id_aktivitas)
     {
         try {
-            $aktivitas = AnggotaAktivitasMahasiswa::findOrFail($id_aktivitas);
+            $aktivitas = AktivitasMahasiswa::findOrFail($id_aktivitas);
             $aktivitas->delete();
+            $anggota = AnggotaAktivitasMahasiswa::findOrFail($id_aktivitas);
+            $anggota->delete();
+            $bimbing = BimbingMahasiswa::findOrFail($id_aktivitas);
+            $bimbing->delete();
 
-            return redirect()->route('mahasiswa.krs.index')->with('success', 'Aktivitas berhasil dihapus.');
+            return redirect()->route('mahasiswa.krs')->with('success', 'Aktivitas berhasil dihapus.');
         } catch (\Exception $e) {
-            return redirect()->route('mahasiswa.krs.index')->with('error', 'Terjadi kesalahan saat menghapus aktivitas.');
+            return redirect()->route('mahasiswa.krs')->with('error', $e->getMessage());
         }
     }
 }
