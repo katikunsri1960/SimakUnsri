@@ -33,7 +33,7 @@
                                                                 <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                                 <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
                                                                 <th class="text-center align-middle">Jadwal Kuliah</th>
-                                                                <th class="text-center align-middle">Action</th>
+                                                                {{-- <th class="text-center align-middle">Action</th> --}}
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -61,20 +61,20 @@
                                                                     {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
                                                                     <td>
 
-                                                                        <button class="btn btn-success-light lihat-kelas-kuliah" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                        <button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="{{ $data->id_matkul }}" 
                                                                             {{ $isDisabled || $isEnrolledMatkul ? 'disabled' : '' }}>
-                                                                            Lihat Kelas Kuliah
+                                                                            <i class="fa fa-eye"></i>
                                                                         </button>
 
                                                                         <!-- Gunakan id_matkul dalam atribut id untuk hasil kontainer -->
                                                                         <div class="result-container" id="result-container_{{ $data->id_matkul }}" style="margin-top: 20px"></div>
                                                                     </td>
-                                                                    <td>
+                                                                    {{-- <td>
                                                                         <input type="checkbox" id="md_checkbox_{{ $no_a }}" class="filled-in chk-col-success" 
                                                                             {{ in_array($data->id_matkul, array_column($krs_regular->toArray(), 'id_matkul')) ? 'checked' : '' }} 
                                                                             {{ $isDisabled ? 'disabled' : '' }} />
                                                                         <label for="md_checkbox_{{ $no_a }}"></label>
-                                                                    </td>
+                                                                    </td> --}}
 
                                                                 </tr>
                                                             @endforeach
@@ -95,18 +95,18 @@
                                                                     {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
                                                                     <td>
 
-                                                                        <button class="btn btn-success-light lihat-kelas-kuliah" data-id-matkul="{{ $data->id_matkul }}" {{ $isDisabled ? 'disabled' : '' }}>
-                                                                            Lihat Kelas Kuliah
+                                                                        <button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="{{ $data->id_matkul }}" {{ $isDisabled ? 'disabled' : '' }}>
+                                                                            <i class="fa fa-eye"></i>
                                                                         </button>
 
                                                                         <!-- Gunakan id_matkul dalam atribut id untuk hasil kontainer -->
                                                                         <div class="result-container" id="result-container_{{ $data->id_matkul }}" style="margin-top: 20px"></div>
                                                                     </td>
 
-                                                                    <td>
+                                                                    {{-- <td>
                                                                         <input type="checkbox" id="md_checkbox_{{ $no_a }}" class="filled-in chk-col-success" {{ in_array($data->id_matkul, array_column($krs_regular->toArray(), 'id_matkul')) ? 'checked' : '' }} {{ $isDisabled ? 'disabled' : '' }} />
                                                                         <label for="md_checkbox_{{ $no_a }}"></label>
-                                                                    </td>
+                                                                    </td> --}}
 
                                                                 </tr>
                                                             @endforeach
@@ -148,7 +148,7 @@
                                                     </div>
                                                 </div>
                                                 {{-- Tabel Mata Kuliah Merdeka --}}
-               
+                
 
                                                 {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
                                                 <div class="row">
@@ -162,7 +162,7 @@
                                                                     <th class="text-center align-middle">Semester Ke</th>
                                                                     <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                                     <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
-                                                                    <th class="text-center align-middle">Action</th>
+                                                                    {{-- <th class="text-center align-middle">Action</th> --}}
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="mk-merdeka-tbody">
@@ -174,35 +174,79 @@
                                                         </table>
                                                     </div>
                                                 </div>
-
-                                                {{-- Tampilkan mata kuliah yang tidak ada di $isEnrolled --}}
-                                                {{-- @foreach ($mk_merdeka->whereNotIn('id_matkul', $isEnrolled) as $data)
-                                                    @php
-                                                        $isDisabled = $data->jumlah_kelas_kuliah == 0;
-                                                    @endphp
-                                                    <tr class="{{ $isDisabled ? 'disabled-row' : '' }}">
-                                                        <td class="text-center align-middle">{{ $no_a++ }}</td>
-                                                        <td class="text-start align-middle">{{ $data->kode_mata_kuliah }}</td>
-                                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
-                                                        <td class="text-center align-middle">{{ $data->semester }}</td>
-                                                        <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
-                                                        <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
-                                                        <td>
-                                                            <button class="btn btn-success-light lihat-kelas-kuliah" data-id-matkul="{{ $data->id_matkul }}" {{ $isDisabled ? 'disabled' : '' }}>
-                                                                Lihat Kelas Kuliah
-                                                            </button>
-                                                            <div class="result-container" id="result-container_{{ $data->id_matkul }}" style="margin-top: 20px"></div>
-                                                        </td>
-                                                        <td>
-                                                            <input type="checkbox" id="md_checkbox_{{ $no_a }}" class="filled-in chk-col-success" {{ in_array($data->id_matkul, array_column($krs_merdeka->toArray(), 'id_matkul')) ? 'checked' : '' }} {{ $isDisabled ? 'disabled' : '' }} />
-                                                            <label for="md_checkbox_{{ $no_a }}"></label>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach --}}
-                                            </tbody>
-                                        </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 @endif
+
+                                {{-- DATA AKTIVITAS KULIAH --}}
+                                <div class="row mb-20">
+                                    <div class="col-xxl-12">
+                                        <div class="box box-body mb-0 bg-white">
+                                            <div class="row">
+                                                <div class="col-xl-12 col-lg-12">
+                                                    <h3 class="fw-500 text-dark mb-20">Daftar Aktivitas Mahasiswa</h3>
+                                                </div>
+                                            </div>
+                                            {{-- COPY DISINI --}}
+                                            <div class="row">
+                                                <div class="">
+                                                    <table id="data-matkul-aktivitas" class="table table-bordered table-striped text-left">
+                                                        <thead>
+                                                            <tr>
+                                                                <th class="text-center align-middle">No</th>
+                                                                <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                                                <th class="text-center align-middle" style="width: 100%">Nama Mata Kuliah</th>
+                                                                <th class="text-center align-middle">Semester Ke</th>
+                                                                <th class="text-center align-middle">SKS Mata Kuliah</th>
+                                                                <th class="text-center align-middle">Jadwal Kuliah</th>
+                                                                {{-- <th class="text-center align-middle">Action</th> --}}
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @php
+                                                                $no_a=1;
+                                                                $isEnrolled = array_column($krs_akt->toArray(), 'id_matkul');
+                                                                $kelas_Enrolled = array_column($krs_akt->toArray(), 'id_kelas_kuliah');
+
+                                                            @endphp
+
+                                                            {{-- ->whereIn('id_matkul', $isEnrolled)
+                                                            ->whereNotIn('id_matkul', $isEnrolled) --}}
+
+                                                            {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
+                                                            @foreach ($data_akt_data as $data)
+                                                                @php
+                                                                    $isEnrolledMatkul = in_array($data['id_matkul'], $isEnrolled);
+                                                                @endphp
+                                                                <tr class="{{ $isEnrolledMatkul ? 'bg-success-light' : '' }}">
+                                                                {{-- <tr class="bg-success-light"> --}}
+                                                                    <td class="text-center align-middle">{{ $no_a++ }}</td>
+                                                                    <td class="text-start align-middle">{{ $data['kode_mata_kuliah'] }}</td>
+                                                                    <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['nama_mata_kuliah'] }}</td>
+                                                                    <td class="text-center align-middle">{{ $data['semester'] }}</td>
+                                                                    <td class="text-center align-middle">{{ $data['sks_mata_kuliah'] }}</td>
+                                                                    {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
+                                                                    {{-- <td>
+                                                                        <button class="btn btn-primary-light ambil-aktivitas" data-toggle="modal" data-target="#modal-skripsi" data-id-matkul="{{ $data['id_matkul'] }}" {{ $isEnrolledMatkul ? 'disabled' : '' }}>
+                                                                            Ambil
+                                                                        </button>
+                                                                    </td> --}}
+                                                                    <td>
+                                                                        <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas" {{ $isEnrolledMatkul ? 'disabled' : '' }}>
+                                                                            Ambil
+                                                                        </a>
+                                                                    </td>
+                                                                    
+                                                                </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @else
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">

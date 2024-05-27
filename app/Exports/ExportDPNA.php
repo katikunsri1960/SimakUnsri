@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithEvents;
@@ -23,12 +24,42 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
     public function __construct(string $kelas)
     {
         $this->kelas = $kelas;
+
+        // Get bobot komponen evaluasi kelas
+        $this->bobot_participatory = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
+            ->where('id_jenis_evaluasi', 2)
+            ->first()->bobot_evaluasi;
+        
+        $this->bobot_project = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
+            ->where('id_jenis_evaluasi', 3)
+            ->first()->bobot_evaluasi;
+        
+        $this->bobot_assignment = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
+            ->where('id_jenis_evaluasi', 4)
+            ->where('nomor_urut', 3)
+            ->first()->bobot_evaluasi;
+        
+        $this->bobot_quiz = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
+            ->where('id_jenis_evaluasi', 4)
+            ->where('nomor_urut', 4)
+            ->first()->bobot_evaluasi;
+        
+        $this->bobot_midterm = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
+            ->where('id_jenis_evaluasi', 4)
+            ->where('nomor_urut', 5)
+            ->first()->bobot_evaluasi;
+        
+        $this->bobot_finalterm = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
+            ->where('id_jenis_evaluasi', 4)
+            ->where('nomor_urut', 6)
+            ->first()->bobot_evaluasi;
     }  
     /**
     * @return \Illuminate\Support\Collection
     */
     public function collection()
     {
+        //Get kelas information (kelas, peserta kelas, nilai komponen evaluasi)
         $data_kelas = KelasKuliah::select([
             'kelas_kuliahs.kode_mata_kuliah',
             'kelas_kuliahs.nama_mata_kuliah',
@@ -50,25 +81,25 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
                       WHERE nilai_komponen_evaluasis.id_registrasi_mahasiswa = peserta_kelas_kuliahs.id_registrasi_mahasiswa 
                         AND nilai_komponen_evaluasis.id_kelas = kelas_kuliahs.id_kelas_kuliah 
                         AND nilai_komponen_evaluasis.id_jns_eval = '4' 
-                        AND nilai_komponen_evaluasis.nama = 'TGS') AS nilai_tugas"),
+                        AND nilai_komponen_evaluasis.urutan = '3') AS nilai_tugas"),
             DB::raw("(SELECT nilai_komponen_evaluasis.nilai_komp_eval 
                       FROM nilai_komponen_evaluasis 
                       WHERE nilai_komponen_evaluasis.id_registrasi_mahasiswa = peserta_kelas_kuliahs.id_registrasi_mahasiswa 
                         AND nilai_komponen_evaluasis.id_kelas = kelas_kuliahs.id_kelas_kuliah 
                         AND nilai_komponen_evaluasis.id_jns_eval = '4' 
-                        AND nilai_komponen_evaluasis.nama = 'QIZ') AS nilai_kuis"),
+                        AND nilai_komponen_evaluasis.urutan = '4') AS nilai_kuis"),
             DB::raw("(SELECT nilai_komponen_evaluasis.nilai_komp_eval 
                       FROM nilai_komponen_evaluasis 
                       WHERE nilai_komponen_evaluasis.id_registrasi_mahasiswa = peserta_kelas_kuliahs.id_registrasi_mahasiswa 
                         AND nilai_komponen_evaluasis.id_kelas = kelas_kuliahs.id_kelas_kuliah 
                         AND nilai_komponen_evaluasis.id_jns_eval = '4' 
-                        AND nilai_komponen_evaluasis.nama = 'UTS') AS nilai_uts"),
+                        AND nilai_komponen_evaluasis.urutan = '5') AS nilai_uts"),
             DB::raw("(SELECT nilai_komponen_evaluasis.nilai_komp_eval 
                       FROM nilai_komponen_evaluasis 
                       WHERE nilai_komponen_evaluasis.id_registrasi_mahasiswa = peserta_kelas_kuliahs.id_registrasi_mahasiswa 
                         AND nilai_komponen_evaluasis.id_kelas = kelas_kuliahs.id_kelas_kuliah 
                         AND nilai_komponen_evaluasis.id_jns_eval = '4' 
-                        AND nilai_komponen_evaluasis.nama = 'UAS') AS nilai_uas"),
+                        AND nilai_komponen_evaluasis.urutan = '6') AS nilai_uas"),
         ])
         ->LeftJoin('peserta_kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
         ->where('kelas_kuliahs.id_kelas_kuliah', $this->kelas)
@@ -95,6 +126,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             'Nilai Kuis',
             'Nilai UTS',
             'Nilai UAS',
+            'Nilai Angka'
         ];
     }
 
@@ -119,12 +151,21 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         ];
     }
 
+    public function registerEvents(): array
+    {
+        return [
+            AfterSheet::class => function(AfterSheet $event) {
+                $this->afterSheet($event);
+            },
+        ];
+    }
+
     /**
      * Register events to manipulate the sheet after it has been created.
      *
      * @return array
      */
-    public static function afterSheet(AfterSheet $event)
+    private function afterSheet(AfterSheet $event)
     {
         $sheet = $event->sheet->getDelegate();
         $highestRow = $sheet->getHighestRow();
@@ -141,9 +182,10 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         $sheet->setCellValue('I1', 'Nilai Kuis');
         $sheet->setCellValue('J1', 'Nilai UTS');
         $sheet->setCellValue('K1', 'Nilai UAS');
+        $sheet->setCellValue('L1', 'Nilai Angka');
 
         // Apply styles to header cells
-        $sheet->getStyle('A1:K1')->applyFromArray([
+        $sheet->getStyle('A1:L1')->applyFromArray([
             'font' => [
                 'bold' => true,
             ],
@@ -164,7 +206,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         ]);
 
         // Apply borders and alignment to all data cells
-        $sheet->getStyle('A2:K' . $highestRow)->applyFromArray([
+        $sheet->getStyle('A2:L' . $highestRow)->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_LEFT,
                 'vertical' => Alignment::VERTICAL_CENTER,
@@ -177,8 +219,16 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             ],
         ]);
 
+        // Add formula in the column (L) for each row
+        for ($row = 2; $row <= $highestRow; $row++) {
+            $cell = 'L' . $row;
+            $formula = "=F{$row}*{$this->bobot_participatory} + G{$row}*{$this->bobot_project} + H{$row}*{$this->bobot_assignment} + I{$row}*{$this->bobot_quiz} + J{$row}*{$this->bobot_midterm} + K{$row}*{$this->bobot_finalterm}";
+
+            $sheet->setCellValue($cell, $formula);
+        }
+
         // Lock specific columns
-        $columnsToLock = ['A', 'B', 'C', 'D', 'E'];
+        $columnsToLock = ['A', 'B', 'C', 'D', 'E', 'L'];
         foreach ($columnsToLock as $column) {
             $sheet->getStyle($column . '1:' . $column . $highestRow)
                 ->getProtection()
@@ -206,12 +256,6 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         $sheet->getColumnDimension('I')->setWidth(15);
         $sheet->getColumnDimension('J')->setWidth(15);
         $sheet->getColumnDimension('K')->setWidth(15);
-    }
-
-    public function registerEvents(): array
-    {
-        return [
-            AfterSheet::class => [self::class, 'afterSheet'],
-        ];
+        $sheet->getColumnDimension('L')->setWidth(15);
     }
 }
