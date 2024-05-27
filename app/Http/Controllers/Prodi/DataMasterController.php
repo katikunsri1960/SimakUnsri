@@ -45,7 +45,7 @@ class DataMasterController extends Controller
         $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
 
         $dosDb = new BiodataDosen();
-        $dosen = $dosDb->list_dosen_prodi(null, auth()->user()->fk_id);
+        $dosen = $dosDb->get();
 
         return view('prodi.data-master.mahasiswa.index', [
             'data' => $data,
