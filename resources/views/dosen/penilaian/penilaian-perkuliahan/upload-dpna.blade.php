@@ -38,7 +38,7 @@ Pengisian Nilai Perkuliahan
                     </div>
                 </div>
                 <!-- /.box-header -->
-                <form class="form" method="POST" id="upload-dpna-store" action="{{ route('dosen.penilaian.penilaian-perkuliahan.upload-dpna.store', ['kelas' => $kelas[0]['id_kelas_kuliah']]) }}">
+                <form class="form" method="POST" id="upload-dpna-store" action="{{ route('dosen.penilaian.penilaian-perkuliahan.upload-dpna.store', ['kelas' => $kelas[0]['id_kelas_kuliah'], 'matkul' => $kelas[0]['id_matkul']]) }}" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body">
                         <div class="row">
@@ -54,7 +54,7 @@ Pengisian Nilai Perkuliahan
                         <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
                             <i class="ti-trash"></i> Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}>
+                        <button type="submit" class="btn btn-primary" @if($batas_pengisian) disabled @endif>
                             <i class="ti-save-alt"></i> Save
                         </button>
                     </div> 
