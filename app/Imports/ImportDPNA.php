@@ -2,21 +2,17 @@
 
 namespace App\Imports;
 
-use Illuminate\Support\Collection;
-use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportDPNA implements ToCollection
+class ImportDPNA implements ToModel, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
-    public function collection(Collection $rows)
+    public function model(array $row)
     {
-        foreach ($rows as $row) 
-        {
-            NilaiKomponenEvaluasi::create([
-                'name' => $row[0],
-            ]);
-        }
+        return new NilaiKomponenEvaluasi([
+            'name' => $row['name'],
+            'email' => $row['email'],
+            'password' => bcrypt($row['password']),
+        ]);
     }
 }
