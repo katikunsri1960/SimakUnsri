@@ -77,7 +77,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li class="{{request()->routeIs('dosen.perkuliahan.jadwal-kuliah') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-kuliah') ? 'active' : ''}}">
-                                <a href="{{route('dosen.perkuliahan.jadwal-kuliah')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Kuliah</a>
+                                <a href="{{route('dosen.perkuliahan.jadwal-kuliah')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Mengajar</a>
                             </li>
                             <!-- <li class="{{request()->routeIs('dosen.perkuliahan.jadwal-bimbingan') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-bimbingan') ? 'active' : ''}}">
                                 <a href="{{route('dosen.perkuliahan.jadwal-bimbingan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Bimbingan</a>
