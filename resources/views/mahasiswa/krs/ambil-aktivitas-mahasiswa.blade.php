@@ -3,6 +3,7 @@
 Ambil Aktivitas Mahasiswa
 @endsection
 @section('content')
+@include('swal')
 <section class="content">
     <div class="row align-items-end">
         <div class="col-xl-12 col-12">
@@ -107,20 +108,33 @@ Ambil Aktivitas Mahasiswa
                                                                     <form action="{{ route('mahasiswa.krs.simpan-aktivitas') }}" method="POST">
                                                                         @csrf
 
-                                                                        <h4 class="text-info mb-0"><i class="fa fa-book"></i> Judul Skripsi / Tugas Akhir</h4>
-                                                                        <hr class="my-15">
-                                                                        <div class="form-group mb-20">
+                                                                        <h4 class="text-info mb-20"><i class="fa fa-book"></i>  Judul</h4>
+                                                                        {{-- <hr class="my-15"> --}}
+                                                                        <div class="form-group mb-40">
                                                                             <div id="judul-fields">
                                                                                 <div class="judul-field row">
                                                                                     <div class="col-md-12 mb-2">
-                                                                                        <label for="judul_skripsi" class="form-label">Judul Skripsi</label>
-                                                                                        <input type="text" id="judul_skripsi" class="form-control" name="judul_skripsi" required>
+                                                                                        {{-- <label for="judul" class="form-label">Judul</label> --}}
+                                                                                        <input type="text" id="judul" class="form-control" name="judul" required>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+
+                                                                        <h4 class="text-info mb-20"><i class="fa fa-map"></i>  Lokasi</h4>
+                                                                        {{-- <hr class="my-15"> --}}
+                                                                        <div class="form-group mb-40">
+                                                                            <div id="lokasi-fields">
+                                                                                <div class="lokasi-field row">
+                                                                                    <div class="col-md-6 mb-2">
+                                                                                        {{-- <label for="lokasi" class="form-label">Lokasi</label> --}}
+                                                                                        <input type="text" id="lokasi" class="form-control" name="lokasi" required>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         
-                                                                        <h4 class="text-info mb-0"><i class="fa fa-user"></i> Dosen Pembimbing Skripsi</h4>
+                                                                        <h4 class="text-info mb-0"><i class="fa fa-user"></i>  Dosen Pembimbing</h4>
                                                                         <hr class="my-15">
                                                                         @php
                                                                             $no_a=1;
@@ -142,7 +156,7 @@ Ambil Aktivitas Mahasiswa
                                                                             <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
                                                                         </div>
                                                                         
-                                                                        <div class="row mt-4">
+                                                                        <div class="row mt-20">
                                                                             <div class="col-12 text-end">
                                                                                 <input type="hidden" name="id_matkul" value="{{ $id_matkul }}">
                                                                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -179,10 +193,10 @@ Ambil Aktivitas Mahasiswa
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-$('.ambil-aktivitas').click(function() {
-    var idMatkul = $(this).data('id-matkul');
-    window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
-});
+    $('.ambil-aktivitas').click(function() {
+        var idMatkul = $(this).data('id-matkul');
+        window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
+    });
 
     $(document).ready(function(){
 

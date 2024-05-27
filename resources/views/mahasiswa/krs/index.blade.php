@@ -375,17 +375,17 @@ Kartu Rencana Studi
             ]
         });
 
-        $('#krs-akt').DataTable({
-            "paging": true,
-            "ordering": true,
-            "searching": true,
-            "pageLength": 10,
-            // "scrollCollapse": false,
-            // "scrollY": "450px",
-            "columnDefs": [
-                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
-            ]
-        });
+        // $('#krs-akt').DataTable({
+        //     "paging": true,
+        //     "ordering": true,
+        //     "searching": true,
+        //     "pageLength": 10,
+        //     // "scrollCollapse": false,
+        //     // "scrollY": "450px",
+        //     "columnDefs": [
+        //         { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+        //     ]
+        // });
 
         $('#krs-merdeka').DataTable({
             "paging": true,
@@ -459,10 +459,14 @@ Kartu Rencana Studi
         @endif
     });
 
+    
+
+    
+
     $('.ambil-aktivitas').click(function() {
-    var idMatkul = $(this).data('id-matkul');
-    window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
-});
+        var idMatkul = $(this).data('id-matkul');
+        window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
+    });
 
 </script>
 @endpush
