@@ -128,7 +128,7 @@ Route::group(['middleware' => ['auth']], function() {
                 //Upload DPNA
                 Route::get('/upload-dpna/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'upload_dpna'])->name('dosen.penilaian.penilaian-perkuliahan.upload-dpna');
                 Route::get('/upload-dpna/store/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'upload_dpna_store'])->name('dosen.penilaian.penilaian-perkuliahan.upload-dpna.store');
-                
+
 
                 // Route::get('/kesediaan-waktu-kuliah', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_kuliah'])->name('dosen.perkuliahan.kesediaan-waktu-kuliah');
             });
@@ -213,6 +213,12 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/sidang-mahasiswa', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'sidang_mahasiswa'])->name('prodi.data-akademik.sidang-mahasiswa');
                 Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('prodi.data-akademik.transkrip-mahasiswa');
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
+
+                Route::prefix('tugas-akhir')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'index'])->name('prodi.data-akademik.tugas-akhir');
+                    Route::post('/approve-pembimbing/{aktivitasMahasiswa}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'approve_pembimbing'])->name('prodi.data-akademik.tugas-akhir.approve-pembimbing');
+                    Route::get('/edit-pembimbing/{aktivitasMahasiswa}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'edit_pembimbing'])->name('prodi.data-akademik.tugas-akhir.edit-pembimbing');
+                });
             });
 
 
