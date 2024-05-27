@@ -61,10 +61,12 @@ class KrsController extends Controller
         // Ambil data KRS untuk nilai 'id_matkul' yang diperoleh
         $krs_akt = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*', 'mata_kuliahs.sks_mata_kuliah')
             ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+            ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
             ->whereIn('peserta_kelas_kuliahs.id_matkul', $data_akt_ids)
             ->where('id_registrasi_mahasiswa', $id_reg)
+            ->where('id_semester', $semester_aktif->id_semester)
             ->orderBy('nama_kelas_kuliah', 'DESC')
-            ->limit(1)
+            // ->limit(1)
             ->get();
         // dd($krs_akt);
 
