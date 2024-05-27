@@ -88,9 +88,9 @@ Komponen Evaluasi Kelas Perkuliahan
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer text-end">
-                            <button type="button" class="btn btn-warning me-1">
+                            <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
                                 <i class="ti-trash"></i> Cancel
-                            </button>
+                            </a>
                             <button type="submit" class="btn btn-primary" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}>
                                 <i class="ti-save-alt"></i> Save
                             </button>
@@ -145,9 +145,9 @@ Komponen Evaluasi Kelas Perkuliahan
                         </div>
                         <!-- /.box-body -->
                         <div class="box-footer text-end">
-                            <button type="button" class="btn btn-warning me-1">
+                            <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
                                 <i class="ti-trash"></i> Cancel
-                            </button>
+                            </a>
                             <button type="submit" class="btn btn-primary" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}>
                                 <i class="ti-save-alt"></i> Save
                             </button>

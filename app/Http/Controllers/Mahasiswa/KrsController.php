@@ -27,11 +27,11 @@ class KrsController extends Controller
     {
         $id_reg = auth()->user()->fk_id;
 
-        $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
+        $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa' )
+                    // ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa' )
                     ->first();
-                    // dd($riwayat_pendidikan);
+                    // dd($riwayat_pendidikan->id_kurikulum);
 
         $prodi_id = $riwayat_pendidikan->id_prodi;
 
@@ -157,8 +157,9 @@ class KrsController extends Controller
                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
                     // ->where('kelas_kuliahs.id_prodi', $prodi_id)
                     ->where('mata_kuliahs.id_prodi', $prodi_id)
-                    // ->where('matkul_kurikulums.id_kurikulum', $riwayat_pendidikan->id_kurikulum)
-                    ->where('list_kurikulums.is_active', '1')
+                    ->where('matkul_kurikulums.id_kurikulum', $riwayat_pendidikan->id_kurikulum)
+                    // ->where('list_kurikulums.is_active', '1')
+                    // ->where('list_kurikulums.id_kurikulum', $riwayat_pendidikan->id_kurikulum)
                     // ->whereIn('mata_kuliahs.kode_mata_kuliah', ['UNI1001','UNI1002','UNI1003','UNI1004'])
                     ->whereNotIn('mata_kuliahs.id_matkul', $data_akt_ids)
                     ->groupBy('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','mata_kuliahs.sks_mata_kuliah', 'kelas_kuliahs.id_prodi', 'list_kurikulums.nama_kurikulum', 'is_active')
