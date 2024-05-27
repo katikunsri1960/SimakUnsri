@@ -103,14 +103,14 @@ class MataKuliah extends Model
                             "sks_mata_kuliah"=>5.00,
                             "semester"=>8,
                         ],
-                        // [
-                        //     "id_matkul"=>"bff65f45-ee5d-4f6f-bf5f-eddf00fe6d9c",
-                        //     "kode_mata_kuliah"=>"TKM4002",
-                        //     "nama_mata_kuliah"=>"TUGAS AKHIR",
-                        //     "id_jenis_mata_kuliah"=>"S",
-                        //     "sks_mata_kuliah"=>5.00,
-                        //     "semester"=>8,
-                        // ],
+                        [
+                            "id_matkul"=>"b5981e2b-061b-4c6f-ac45-1cca1f180a89",
+                            "kode_mata_kuliah"=>"TKM490314",
+                            "nama_mata_kuliah"=>"PROPOSAL SKRIPSI",
+                            "id_jenis_mata_kuliah"=>"S",
+                            "sks_mata_kuliah"=>1.00,
+                            "semester"=>8,
+                        ],
                     ]
                 ]
             ],

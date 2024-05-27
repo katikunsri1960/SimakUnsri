@@ -59,12 +59,14 @@ class KrsController extends Controller
         $data_akt_ids = array_column($data_akt_data, 'id_matkul');
 
         // Ambil data KRS untuk nilai 'id_matkul' yang diperoleh
-        $krs_akt = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*', 'peserta_kelas_kuliahs.id_prodi', 'mata_kuliahs.sks_mata_kuliah')
+        $krs_akt = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*', 'mata_kuliahs.sks_mata_kuliah')
             ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
             ->whereIn('peserta_kelas_kuliahs.id_matkul', $data_akt_ids)
             ->where('id_registrasi_mahasiswa', $id_reg)
+            ->orderBy('nama_kelas_kuliah', 'DESC')
+            ->limit(1)
             ->get();
-        // dd($data_akt_data);
+        // dd($krs_akt);
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->whereNotIn('id_status_mahasiswa', ['N'])
@@ -130,6 +132,7 @@ class KrsController extends Controller
                 ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->where('kelas_kuliahs.id_prodi', $prodi_id)
                 ->where('id_registrasi_mahasiswa', $id_reg)
+                ->whereNotIn('peserta_kelas_kuliahs.id_matkul', $data_akt_ids)
                 ->where('id_semester', $semester_aktif->id_semester)
                 ->get();
 
