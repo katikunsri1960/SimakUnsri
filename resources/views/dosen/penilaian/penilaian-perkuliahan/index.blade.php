@@ -95,7 +95,7 @@ Penilaian Perkuliahan Mahasiswa
                                                     title="Download DPNA" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-download"></i> Download</a>
                                                     </div>
                                                     <div class="col-md-6 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-primary-light" href="#"
+                                                        <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
                                                     title="Upload DPNA" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-upload"></i> Upload</a>
                                                     </div>
                                                 </div>
