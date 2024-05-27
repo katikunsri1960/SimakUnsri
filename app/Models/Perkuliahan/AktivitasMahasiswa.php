@@ -91,5 +91,32 @@ class AktivitasMahasiswa extends Model
                     ->get();
     }
 
+    public function ta($id_prodi, $semester)
+    {
+        $data = $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+                    ->withCount([
+                        'bimbing_mahasiswa as approved' => function($query) {
+                            $query->where('approved', 0);
+                        },
+                        'bimbing_mahasiswa as approved_dosen' => function($query) {
+                            $query->where('approved_dosen', 0);
+                        },
+                    ])
+                    ->where('id_prodi', $id_prodi)
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
+                    ->get();
+
+        return $data;
+    }
+
+    public function approve_pembimbing($id_aktivitas)
+    {
+        $data = $this->where('id_aktivitas', $id_aktivitas)->first();
+        $data->bimbing_mahasiswa()->update(['approved' => 1]);
+
+        return $data;
+    }
+
 
 }
