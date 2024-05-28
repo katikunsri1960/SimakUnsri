@@ -119,11 +119,13 @@ class AktivitasMahasiswaController extends Controller
     public function get_dosen(Request $request)
     {
         $search = $request->get('q');
+
        
         $tahun_ajaran = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
         
-        $query = BiodataDosen::orderby('nama_dosen', 'asc');
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran)
+                                ->orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
                   ->orWhere('nama_program_studi', 'like', "%{$search}%")
