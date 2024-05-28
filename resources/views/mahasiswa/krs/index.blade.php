@@ -175,7 +175,7 @@ Kartu Rencana Studi
                                 '<td class="text-center align-middle">' + data.semester + '</td>' +
                                 '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle">' + data.jumlah_kelas_kuliah + '</td>' +
-                                '<td>' +
+                                '<td class="text-center align-middle">' +
                                     '<button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmpty || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
                                     '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 20px"></div>' +
                                 '</td>' +
@@ -239,7 +239,7 @@ Kartu Rencana Studi
                     table += '<td>Nama Dosen Tidak Diisi</td>';
                 }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
-                table += '<td>' + kelas.peserta_kelas_count + '</td>';
+                table += '<td>' + kelas.peserta_kelas_count +'/'+ kelas.kapasitas +'</td>';
                 if (kelas.kelas_Enrolled) {
                     // Jika sudah terdaftar, tombol "Ambil" dinonaktifkan
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
@@ -284,6 +284,7 @@ Kartu Rencana Studi
 
                     },
                     error: function(response) {
+                        console.log(response);
                         var errorMessage = response.responseJSON.message;
                         swal({
                             title: 'Gagal!',
@@ -396,23 +397,23 @@ Kartu Rencana Studi
             "searching": true,
             "pageLength": 10,
             // "scrollCollapse": false,
-            // "scrollY": "450px",
+            // "scrollX": true,
             "columnDefs": [
                 { "width": "700px", "targets": 6 }, // Kolom lebar 700px
             ]
         });
 
-        // $('#krs-akt').DataTable({
-        //     "paging": true,
-        //     "ordering": true,
-        //     "searching": true,
-        //     "pageLength": 10,
-        //     // "scrollCollapse": false,
-        //     // "scrollY": "450px",
-        //     "columnDefs": [
-        //         { "width": "700px", "targets": 6 }, // Kolom lebar 700px
-        //     ]
-        // });
+        $('#krs-akt').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            "pageLength": 10,
+            // "scrollCollapse": false,
+            // "scrollY": "450px",
+            "columnDefs": [
+                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+            ]
+        });
 
         $('#krs-merdeka').DataTable({
             "paging": true,
@@ -439,7 +440,7 @@ Kartu Rencana Studi
             ]
         });
 
-        $('#data-matkul-merdeka').DataTable({
+        $('#data-matkul-aktivitas').DataTable({
             "paging": true,
             "ordering": true,
             "searching": true,
@@ -452,7 +453,7 @@ Kartu Rencana Studi
             ]
         });
 
-        $('#data-matkul-aktivitas').DataTable({
+        $('#data-matkul-merdeka').DataTable({
             "paging": true,
             "ordering": true,
             "searching": true,
