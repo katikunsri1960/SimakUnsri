@@ -215,13 +215,13 @@
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
-                                                    <tfoot>
+                                                    {{-- <tfoot>
                                                         <tr>
                                                             <td class="text-center align-middle" colspan="4"><strong>Total SKS Diambil</strong></td>
                                                             <td class="text-center align-middle"><strong>{{ $total_sks_akt }}</strong></td>
                                                             <td colspan="3"></td>
                                                         </tr>
-                                                    </tfoot>
+                                                    </tfoot> --}}
                                                 </table>
                                             </div>
                                         </div>

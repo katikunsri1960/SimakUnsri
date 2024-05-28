@@ -47,7 +47,9 @@ class KrsController extends Controller
                     // dd($riwayat_pendidikan->id_kurikulum);
 
         $prodi_id = $riwayat_pendidikan->id_prodi;
-
+        
+        $id_kurikulum = $riwayat_pendidikan->id_kurikulum;
+        
         $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
 
@@ -63,7 +65,7 @@ class KrsController extends Controller
         //DATA AKTIVITAS 
         $db = new MataKuliah();
 
-        $data_akt = $db->getMKAktivitas($prodi_id);
+        $data_akt = $db->getMKAktivitas($prodi_id, $id_kurikulum);
 
         // Ekstrak sub-array 'data' dari $data_akt
         $data_akt_data = $data_akt['data']['data'];
@@ -81,6 +83,7 @@ class KrsController extends Controller
             'aktivitas_mahasiswas.nama_semester',
             'aktivitas_mahasiswas.id_prodi',
             'aktivitas_mahasiswas.lokasi',
+            'aktivitas_mahasiswas.mk_konversi',
             'anggota_aktivitas_mahasiswas.id_aktivitas', 
             'anggota_aktivitas_mahasiswas.nim', 
             'anggota_aktivitas_mahasiswas.judul', 
@@ -104,6 +107,7 @@ class KrsController extends Controller
                 'aktivitas_mahasiswas.nama_semester',
                 'aktivitas_mahasiswas.id_prodi',
                 'aktivitas_mahasiswas.lokasi',
+            'aktivitas_mahasiswas.mk_konversi',
                 'anggota_aktivitas_mahasiswas.id_aktivitas', 
                 'anggota_aktivitas_mahasiswas.nim', 
                 'anggota_aktivitas_mahasiswas.judul', 
@@ -206,10 +210,10 @@ class KrsController extends Controller
                     ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
                     ->select('mata_kuliahs.id_matkul','mata_kuliahs.kode_mata_kuliah','mata_kuliahs.nama_mata_kuliah','matkul_kurikulums.semester','mata_kuliahs.sks_mata_kuliah', 'kelas_kuliahs.id_prodi as id_prodi_kelas' , 'list_kurikulums.nama_kurikulum', 'is_active')            
                     ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
-                    // ->where('kelas_kuliahs.id_prodi', $prodi_id)
+                    ->where('kelas_kuliahs.id_prodi', $prodi_id)
                     ->where('mata_kuliahs.id_prodi', $prodi_id)
-                    ->where('matkul_kurikulums.id_kurikulum', $riwayat_pendidikan->id_kurikulum)
-                    // ->where('list_kurikulums.is_active', '1')
+                    // ->where('matkul_kurikulums.id_kurikulum', $riwayat_pendidikan->id_kurikulum)
+                    ->where('list_kurikulums.is_active', '1')
                     // ->where('list_kurikulums.id_kurikulum', $riwayat_pendidikan->id_kurikulum)
                     // ->whereIn('mata_kuliahs.kode_mata_kuliah', ['UNI1001','UNI1002','UNI1003','UNI1004'])
                     ->whereNotIn('mata_kuliahs.id_matkul', $data_akt_ids)

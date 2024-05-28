@@ -114,13 +114,13 @@ Ambil Aktivitas Mahasiswa
                                                                             <div id="judul-fields">
                                                                                 <div class="judul-field row">
                                                                                     <div class="col-md-12 mb-2">
-                                                                                        {{-- <label for="judul" class="form-label">Judul</label> --}}
-                                                                                        <input type="text" id="judul" class="form-control" name="judul" required>
+                                                                                        <label>Judul</label>
+                                                                                        <textarea id="judul" class="form-control" name="judul" required></textarea>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-
+                                                                        
                                                                         <h4 class="text-info mb-20"><i class="fa fa-map"></i>  Lokasi</h4>
                                                                         {{-- <hr class="my-15"> --}}
                                                                         <div class="form-group mb-40">
@@ -143,8 +143,8 @@ Ambil Aktivitas Mahasiswa
                                                                             <div id="dosen-fields">
                                                                                 <div class="dosen-field row">
                                                                                     <div class="col-md-5 mb-2">
-                                                                                        <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen Pembimbing {{ $no_a++ }}</label>
-                                                                                        <select class="form-select" name="dosen_bimbing_aktivitas[]" id="dosen_bimbing" required></select>
+                                                                                        {{-- <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen Pembimbing {{ $no_a++ }}</label> --}}
+                                                                                        {{-- <select class="form-select" name="dosen_bimbing_aktivitas[]" id="dosen_bimbing" required></select> --}}
                                                                                     </div>
                                                                                     
                                                                                     <div class="col-md-1 mb-2">
@@ -222,7 +222,7 @@ Ambil Aktivitas Mahasiswa
                             results: $.map(data, function (item) {
                                 return {
                                     text: item.nama_dosen + " ( " + item.nama_program_studi + " )",
-                                    id: item.id_registrasi_dosen
+                                    id: item.id_dosen
                                 }
                             })
                         };
@@ -235,7 +235,7 @@ Ambil Aktivitas Mahasiswa
         var initialSelect = initializeSelect2($('#dosen_bimbing'));
         // var initialSelect = initializeSelect2Substansi($('#substansi'));
 
-        var dosenCounter = 2; // Inisialisasi counter
+        var dosenCounter = 1; // Inisialisasi counter
 
         // Event listener untuk menambahkan baris baru
         $('#add-dosen').click(function() {

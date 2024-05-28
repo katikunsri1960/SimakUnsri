@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa\Krs;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Models\Dosen\BiodataDosen;
@@ -51,7 +52,7 @@ class AktivitasMahasiswaController extends Controller
             ->whereNotNull('bimbing_mahasiswas.id_bimbing_mahasiswa')
             ->get();
 
-        dd($krs_akt);
+        // dd($krs_akt);
 
         return response()->json($krs_akt);
     }
@@ -118,12 +119,11 @@ class AktivitasMahasiswaController extends Controller
     public function get_dosen(Request $request)
     {
         $search = $request->get('q');
-        // $prodi_id = auth()->user()->fk_id;
+       
         $tahun_ajaran = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
         
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran)
-                                ->orderby('nama_dosen', 'asc');
+        $query = BiodataDosen::orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
                   ->orWhere('nama_program_studi', 'like', "%{$search}%")
@@ -158,7 +158,8 @@ class AktivitasMahasiswaController extends Controller
             ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
             ->first();
 
-            // $prodi_id = $riwayat_pendidikan->id_prodi;
+            $prodi = ProgramStudi::where('id_prodi', $riwayat_pendidikan->id_prodi)->get();
+    
             
             $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
@@ -228,35 +229,65 @@ class AktivitasMahasiswaController extends Controller
                 //         // tambahkan field lain yang diperlukan
                 //     ]);
                 // }
-                $dosen_bimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_bimbing_aktivitas)->get();
+                $dosen_bimbing = BiodataDosen::whereIn('id_dosen', $request->dosen_bimbing_aktivitas)->get();
 
                 $jumlah_dosen=count($request->dosen_bimbing_aktivitas);
                 // dd($jumlah_dosen);
 
-                for($i=1;$i<$jumlah_dosen;$i++){
+                $prodi = ProgramStudi::where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
+
+                
+
+                for($i=0;$i<$jumlah_dosen;$i++){
                     //Generate id aktivitas mengajar
                     $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
 
-                    BimbingMahasiswa::create([
+                    if($prodi->nama_jenjang_pendidikan == 'S1'){
+                        if($i+1==1){
+                            $id_kategori_kegiatan=110403;
+                            $nama_kategori_kegiatan='Skripsi (pembimbing utama)';
+                        }else{
+                            $id_kategori_kegiatan=110407;
+                            $nama_kategori_kegiatan='Skripsi (pembimbing pendamping)';
+                        }
+                    }elseif($prodi->nama_jenjang_pendidikan == 'S2'){
+                        if($i+1==1){
+                            $id_kategori_kegiatan=110402;
+                            $nama_kategori_kegiatan='Tesis (pembimbing utama)';
+                        }else{
+                            $id_kategori_kegiatan=110406;
+                            $nama_kategori_kegiatan='Tesis (pembimbing pendamping)';
+                        }
+                    }elseif($prodi->nama_jenjang_pendidikan == 'S3'){
+                        if($i+1==1){
+                            $id_kategori_kegiatan=110401;
+                            $nama_kategori_kegiatan='Disertasi (pembimbing utama)';
+                        }else{
+                            $id_kategori_kegiatan=110405;
+                            $nama_kategori_kegiatan='Disertasi (pembimbing pendamping)';
+                        }
+                    }
+
+                    $bimbing=BimbingMahasiswa::create([
                         'feeder'=>0,
                         'approved'=>0,
                         'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
                         'id_aktivitas'=>$aktivitas->id_aktivitas,
                         'judul'=>$aktivitas->judul,
-                        'id_kategori_kegiatan'=>110403,
-                        'nama_kategori_kegiatan'=>'Skripsi (pembimbing utama)',
+                        'id_kategori_kegiatan'=>$id_kategori_kegiatan,
+                        'nama_kategori_kegiatan'=>$nama_kategori_kegiatan,
                         'id_dosen'=>$dosen_bimbing[$i]['id_dosen'], 
                         'nidn'=>$dosen_bimbing[$i]['nidn'],
                         'nama_dosen'=>$dosen_bimbing[$i]['nama_dosen'],
-                        'pembimbing_ke'=>$i,
+                        'pembimbing_ke'=>$i+1,
                         'status_sync'=>'belum sync',
                         'created_at'=>$now,
                         'updated_at'=>$now,
-
                     ]);
+                    
                 }
-                // $bimbing=BimbingMahasiswa::get();
-                // dd($dosen_bimbing[$i]);
+                // $bimbing_urut=$bimbing->orderBy('pembimbing_ke', 'ASC')->get();
+                // dd($bimbing);
                 
             });
 
@@ -272,17 +303,33 @@ class AktivitasMahasiswaController extends Controller
     
     public function hapusAktivitas($id_aktivitas)
     {
+        DB::beginTransaction();
+
         try {
+            // Menghapus bimbingan mahasiswa
+            $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
+            if ($bimbing) {
+                $bimbing->delete();
+            }
+
+            // Menghapus anggota aktivitas mahasiswa
+            $anggota = AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas);
+            if ($anggota) {
+                $anggota->delete();
+            }
+
+            // Menghapus aktivitas mahasiswa
             $aktivitas = AktivitasMahasiswa::findOrFail($id_aktivitas);
             $aktivitas->delete();
-            $anggota = AnggotaAktivitasMahasiswa::findOrFail($id_aktivitas);
-            $anggota->delete();
-            $bimbing = BimbingMahasiswa::findOrFail($id_aktivitas);
-            $bimbing->delete();
+
+            DB::commit();
 
             return redirect()->route('mahasiswa.krs')->with('success', 'Aktivitas berhasil dihapus.');
         } catch (\Exception $e) {
+            DB::rollback();
+
             return redirect()->route('mahasiswa.krs')->with('error', $e->getMessage());
         }
     }
+
 }

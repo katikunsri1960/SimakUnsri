@@ -63,7 +63,7 @@ class MataKuliah extends Model
         return $result;
     }
 
-    public function getMKAktivitas($id_prodi)
+    public function getMKAktivitas($id_prodi, $id_kurikulum)
     {
         $data=
         [
@@ -90,7 +90,7 @@ class MataKuliah extends Model
                     //         "sks_mata_kuliah"=>5.00,
                     //         "semester"=>8,
                     //     ],
-                    // ]
+                    // ],
 
                     "id_kurikulum"=>"7699c236-04ae-4c63-974a-b47f29b03091",
                     "data"=>
@@ -154,6 +154,16 @@ class MataKuliah extends Model
                 return $prodi;
             }
         }
+
+        // foreach ($data as $prodi) {
+        //     if ($prodi['id_prodi'] == $id_prodi) {
+        //         foreach ($prodi['data'] as $kurikulum) {
+        //             if ($kurikulum['id_kurikulum'] == $id_kurikulum) {
+        //                 return $kurikulum;
+        //             }
+        //         }
+        //     }
+        // }
 
         return [];
     }
