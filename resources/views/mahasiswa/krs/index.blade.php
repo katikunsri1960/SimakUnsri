@@ -358,6 +358,33 @@ Kartu Rencana Studi
             }
         });
     });
+    
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-button');
+
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', function () {
+                const id = this.getAttribute('data-id');
+                const form = document.getElementById(`deleteForm${id}`);
+
+                swal({
+                    title: "Apakah Anda yakin?",
+                    text: "Data yang dihapus tidak dapat dikembalikan!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        form.submit();
+                    } else {
+                        swal("Data aman!");
+                    }
+                });
+            });
+        });
+    });
+
 
 
     $(function() {
@@ -375,17 +402,17 @@ Kartu Rencana Studi
             ]
         });
 
-        $('#krs-akt').DataTable({
-            "paging": true,
-            "ordering": true,
-            "searching": true,
-            "pageLength": 10,
-            // "scrollCollapse": false,
-            // "scrollY": "450px",
-            "columnDefs": [
-                { "width": "700px", "targets": 6 }, // Kolom lebar 700px
-            ]
-        });
+        // $('#krs-akt').DataTable({
+        //     "paging": true,
+        //     "ordering": true,
+        //     "searching": true,
+        //     "pageLength": 10,
+        //     // "scrollCollapse": false,
+        //     // "scrollY": "450px",
+        //     "columnDefs": [
+        //         { "width": "700px", "targets": 6 }, // Kolom lebar 700px
+        //     ]
+        // });
 
         $('#krs-merdeka').DataTable({
             "paging": true,
@@ -459,10 +486,14 @@ Kartu Rencana Studi
         @endif
     });
 
+    
+
+    
+
     $('.ambil-aktivitas').click(function() {
-    var idMatkul = $(this).data('id-matkul');
-    window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
-});
+        var idMatkul = $(this).data('id-matkul');
+        window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
+    });
 
 </script>
 @endpush

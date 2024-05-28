@@ -37,9 +37,13 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('/krs/check-kelas-diambil', [App\Http\Controllers\Mahasiswa\KrsController::class, 'checkKelasDiambil'])->name('mahasiswa.krs.check_kelas_diambil');
             Route::get('/krs/pilih-prodi', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilih_prodi'])->name('mahasiswa.krs.pilih_prodi');
             Route::get('/krs/pilih-mk-merdeka', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilihMataKuliahMerdeka'])->name('mahasiswa.krs.pilih_mk_merdeka');
-            Route::post('/krs/simpan-aktivitas', [App\Http\Controllers\Mahasiswa\KrsController::class, 'simpanAktivitas'])->name('mahasiswa.krs.simpan-aktivitas');
-            Route::get('/krs/ambil-aktivitas/{id_matkul}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'ambilAktivitas'])->name('mahasiswa.krs.ambil-aktivitas');
-            Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\KrsController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
+            
+            Route::get('/krs/get-aktivitas', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'getAktivitas'])->name('mahasiswa.krs.get-aktivitas');
+            Route::get('/krs/ambil-aktivitas/{id_matkul}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'ambilAktivitas'])->name('mahasiswa.krs.ambil-aktivitas');
+            Route::post('/krs/simpan-aktivitas', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'simpanAktivitas'])->name('mahasiswa.krs.simpan-aktivitas');
+            Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
+            Route::delete('/krs/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
+
 
 
 

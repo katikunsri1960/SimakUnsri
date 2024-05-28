@@ -206,7 +206,7 @@
                                                         <tbody>
                                                             @php
                                                                 $no_a=1;
-                                                                $isEnrolled = array_column($krs_akt->toArray(), 'id_matkul');
+                                                                $isEnrolled = array_column($krs_akt->toArray(), 'mk_konversi');
                                                                 $kelas_Enrolled = array_column($krs_akt->toArray(), 'id_kelas_kuliah');
 
                                                             @endphp
@@ -233,7 +233,7 @@
                                                                         </button>
                                                                     </td> --}}
                                                                     <td>
-                                                                        <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas" {{ $isEnrolledMatkul ? 'disabled' : '' }}>
+                                                                        <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas {{ $isEnrolledMatkul ? 'disabled' : '' }}" >
                                                                             Ambil
                                                                         </a>
                                                                     </td>

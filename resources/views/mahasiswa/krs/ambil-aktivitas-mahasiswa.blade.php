@@ -3,6 +3,7 @@
 Ambil Aktivitas Mahasiswa
 @endsection
 @section('content')
+@include('swal')
 <section class="content">
     <div class="row align-items-end">
         <div class="col-xl-12 col-12">
@@ -107,20 +108,33 @@ Ambil Aktivitas Mahasiswa
                                                                     <form action="{{ route('mahasiswa.krs.simpan-aktivitas') }}" method="POST">
                                                                         @csrf
 
-                                                                        <h4 class="text-info mb-0"><i class="fa fa-book"></i> Judul Skripsi / Tugas Akhir</h4>
-                                                                        <hr class="my-15">
-                                                                        <div class="form-group mb-20">
+                                                                        <h4 class="text-info mb-20"><i class="fa fa-book"></i>  Judul</h4>
+                                                                        {{-- <hr class="my-15"> --}}
+                                                                        <div class="form-group mb-40">
                                                                             <div id="judul-fields">
                                                                                 <div class="judul-field row">
                                                                                     <div class="col-md-12 mb-2">
-                                                                                        <label for="judul_skripsi" class="form-label">Judul Skripsi</label>
-                                                                                        <input type="text" id="judul_skripsi" class="form-control" name="judul_skripsi" required>
+                                                                                        <label>Judul</label>
+                                                                                        <textarea id="judul" class="form-control" name="judul" required></textarea>
                                                                                     </div>
                                                                                 </div>
                                                                             </div>
                                                                         </div>
                                                                         
-                                                                        <h4 class="text-info mb-0"><i class="fa fa-user"></i> Dosen Pembimbing Skripsi</h4>
+                                                                        <h4 class="text-info mb-20"><i class="fa fa-map"></i>  Lokasi</h4>
+                                                                        {{-- <hr class="my-15"> --}}
+                                                                        <div class="form-group mb-40">
+                                                                            <div id="lokasi-fields">
+                                                                                <div class="lokasi-field row">
+                                                                                    <div class="col-md-6 mb-2">
+                                                                                        {{-- <label for="lokasi" class="form-label">Lokasi</label> --}}
+                                                                                        <input type="text" id="lokasi" class="form-control" name="lokasi" required>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        
+                                                                        <h4 class="text-info mb-0"><i class="fa fa-user"></i>  Dosen Pembimbing</h4>
                                                                         <hr class="my-15">
                                                                         @php
                                                                             $no_a=1;
@@ -129,8 +143,8 @@ Ambil Aktivitas Mahasiswa
                                                                             <div id="dosen-fields">
                                                                                 <div class="dosen-field row">
                                                                                     <div class="col-md-5 mb-2">
-                                                                                        <label for="dosen_kelas_kuliah" class="form-label">Nama Dosen Pembimbing {{ $no_a++ }}</label>
-                                                                                        <select class="form-select" name="dosen_kelas_kuliah[]" id="dosen_pengajar" required></select>
+                                                                                        {{-- <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen Pembimbing {{ $no_a++ }}</label> --}}
+                                                                                        {{-- <select class="form-select" name="dosen_bimbing_aktivitas[]" id="dosen_bimbing" required></select> --}}
                                                                                     </div>
                                                                                     
                                                                                     <div class="col-md-1 mb-2">
@@ -142,7 +156,7 @@ Ambil Aktivitas Mahasiswa
                                                                             <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
                                                                         </div>
                                                                         
-                                                                        <div class="row mt-4">
+                                                                        <div class="row mt-20">
                                                                             <div class="col-12 text-end">
                                                                                 <input type="hidden" name="id_matkul" value="{{ $id_matkul }}">
                                                                                 <button type="submit" class="btn btn-primary">Simpan</button>
@@ -179,10 +193,10 @@ Ambil Aktivitas Mahasiswa
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-$('.ambil-aktivitas').click(function() {
-    var idMatkul = $(this).data('id-matkul');
-    window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
-});
+    $('.ambil-aktivitas').click(function() {
+        var idMatkul = $(this).data('id-matkul');
+        window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
+    });
 
     $(document).ready(function(){
 
@@ -208,7 +222,7 @@ $('.ambil-aktivitas').click(function() {
                             results: $.map(data, function (item) {
                                 return {
                                     text: item.nama_dosen + " ( " + item.nama_program_studi + " )",
-                                    id: item.id_registrasi_dosen
+                                    id: item.id_dosen
                                 }
                             })
                         };
@@ -218,17 +232,17 @@ $('.ambil-aktivitas').click(function() {
         }
 
         // Initialize Select2 for the first select element
-        var initialSelect = initializeSelect2($('#dosen_pengajar'));
+        var initialSelect = initializeSelect2($('#dosen_bimbing'));
         // var initialSelect = initializeSelect2Substansi($('#substansi'));
 
-        var dosenCounter = 2; // Inisialisasi counter
+        var dosenCounter = 1; // Inisialisasi counter
 
         // Event listener untuk menambahkan baris baru
         $('#add-dosen').click(function() {
             var newRow = $('<div class="dosen-field row">' +
                                 '<div class="col-md-5 mb-2">' +
-                                    '<label for="dosen_kelas_kuliah_' + dosenCounter + '" class="form-label">Nama Dosen Pembimbing ' + dosenCounter + '</label>' +
-                                    '<select id="dosen_kelas_kuliah_' + dosenCounter + '" class="form-select select2" name="dosen_kelas_kuliah[]" required></select>' +
+                                    '<label for="dosen_bimbing_aktivitas_' + dosenCounter + '" class="form-label">Nama Dosen Pembimbing ' + dosenCounter + '</label>' +
+                                    '<select id="dosen_bimbing_aktivitas_' + dosenCounter + '" class="form-select select2" name="dosen_bimbing_aktivitas[]" required></select>' +
                                 '</div>' +
                                 '<div class="col-md-1 mb-2">' +
                                     '<label class="form-label">&nbsp;</label>' +
