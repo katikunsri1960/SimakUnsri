@@ -75,7 +75,7 @@ Tugas Akhir
                                         {{$d->anggota_aktivitas_personal->nim}}
                                     </td>
                                     <td class="text-start align-middle" style="width: 15%">
-                                     {{$d->anggota_aktivitas_personal->nama_mahasiswa}}
+                                        {{$d->anggota_aktivitas_personal->nama_mahasiswa}}
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
@@ -99,20 +99,22 @@ Tugas Akhir
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center">
                                             @if ($d->approved > 0)
-                                            <div class="col">
-                                                <form
-                                                    action="{{route('prodi.data-akademik.tugas-akhir.approve-pembimbing', $d)}}"
-                                                    method="post" id="approveForm{{$d->id}}" data-id="{{$d->id}}"
-                                                    class="approve-class">
-                                                    @csrf
+                                            <form
+                                                action="{{route('prodi.data-akademik.tugas-akhir.approve-pembimbing', $d)}}"
+                                                method="post" id="approveForm{{$d->id}}" data-id="{{$d->id}}"
+                                                class="approve-class">
+                                                @csrf
+                                                <div class="row">
                                                     <button type="submit" class="btn btn-sm my-2 btn-success ">Approve
                                                         pembimbing</button>
-                                                </form>
-                                            </div>
+                                                </div>
+                                            </form>
                                             <a href="" class="btn btn-warning btn-sm my-2" title="Edit"><i
                                                     class="fa fa-edit"></i> Edit</a>
                                             @endif
-                                            <a href="#" class="btn btn-info btn-sm my-2" title="Detail" data-bs-toggle="modal"data-bs-target="#detailModal" onclick="detailFunc({{$d}})">
+                                            <a href="#" class="btn btn-info btn-sm my-2" title="Detail"
+                                                data-bs-toggle="modal" data-bs-target="#detailModal"
+                                                onclick="detailFunc({{$d}})">
                                                 <i class="fa fa-eye"></i> Detail
                                             </a>
                                         </div>
@@ -133,7 +135,6 @@ Tugas Akhir
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-
     function detailFunc(data) {
         $('#detail_judul').val(data.judul);
         $('#edit_tanggal_mulai').val(data.id_tanggal_mulai);
