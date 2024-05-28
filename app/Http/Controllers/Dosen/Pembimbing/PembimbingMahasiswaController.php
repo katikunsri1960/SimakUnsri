@@ -92,4 +92,15 @@ class PembimbingMahasiswaController extends Controller
             'id_semester' => $id_semester,
         ]);
     }
+
+    public function approve_pembimbing(AktivitasMahasiswa $aktivitas)
+    {
+        // dd($aktivitas);
+        $id_dosen = auth()->user()->fk_id;
+        $aktivitas->bimbing_mahasiswa()->where('id_dosen', $id_dosen)->update([
+            'approved_dosen' => 1,
+        ]);
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
 }
