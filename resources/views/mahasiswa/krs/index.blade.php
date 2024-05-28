@@ -137,7 +137,7 @@ Kartu Rencana Studi
                     // Update select prodi dengan opsi baru
                     $('#select-prodi').empty(); // Kosongkan opsi yang ada sebelumnya
                     $.each(response.prodi, function(index, prodi) {
-                        $('#select-prodi').append('<option value="' + prodi.id_prodi + '">' + prodi.nama_program_studi +' - '+ prodi.nama_program_studi + '</option>');
+                        $('#select-prodi').append('<option value="' + prodi.id_prodi + '">' + prodi.nama_jenjang_pendidikan +' - '+ prodi.nama_program_studi + '</option>');
                     });
                 },
                 error: function(xhr, status, error) {
