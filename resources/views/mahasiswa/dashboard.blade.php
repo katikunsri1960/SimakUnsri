@@ -99,7 +99,11 @@ Dashboard
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <h2 class="mb-5 text-center">{{$semester_ke}}</h2>
-                        <p class="text-fade mb-0 fs-12 text-white">Batas Studi : 10 Semester</p>
+                        @if((int) substr($riwayat_pendidikan->id_periode_masuk, 0, 4) >= 2014)
+                            <p class="text-fade mb-0 fs-12 text-white">Batas Studi : 10 Semester</p>
+                        @else
+                            <p class="text-fade mb-0 fs-12 text-white">Batas Studi : 14 Semester</p>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -130,12 +134,13 @@ Dashboard
         <div class="col-xl-12">
             <div class="box">
                 <div class="box-header">
-                    <h4 class="box-title">Grafik Masa Studi</h4>
+                    <h4 class="box-title">Grafik SKS Semester</h4>
                 </div>
                 <div class="box-body">
                     <div class="row">
                         <div class="col-lg-12 col-12">
-                            <div id="charts_widget_2_chart"></div>
+                            <div id="sks-diambil"></div>
+
                         </div>
                     </div>
                 </div>
@@ -146,7 +151,7 @@ Dashboard
         <div class="col-xl-12 col-12">
             <div class="box">
                 <div class="box-header">
-                    <h4 class="box-title">Grafik IPS</h4>
+                    <h4 class="box-title">Grafik IPS </h4>
                 </div>
                 <div class="box-body">
                     <!-- <p class="text-fade">Grafik IPK</p> -->
@@ -158,3 +163,103 @@ Dashboard
     </div>
 </section>
 @endsection
+@push('css')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
+@push('js')
+{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> --}}
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/chartist-js-develop/chartist.js')}}"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="{{asset('assets/js/pages/widget-chartist.js')}}"></script>
+<script>
+    $(document).ready(function() {
+        // Data SKS yang diambil
+        // Ambil data dari PHP dan ubah menjadi format JSON
+        var sksData = {!! json_encode($smt->map(function($item) {
+                return $item->sks_semester;
+            })) !!};
+
+        var smt_ke = {!! json_encode($semester_ke) !!};
+
+        // let smt = "Semester "
+        // let text = "";
+        // for (let i = 0; i < smt_ke; i++) {
+        //     text += "'"+(i+1)+"'";
+        // }
+
+        // smt_ke = array.from(text)
+
+        // var categories = smt_ke.map(i => 'Semester ' + i);
+        
+
+        let categories = [];
+        for (let i = 0; i < smt_ke; i++) {
+            categories.push("Semester " + (i+1));
+        }
+        // var sksSeriesData = [];
+        
+            // Tampilkan data di konsol
+        console.log("Data SKS:", sksData);
+        console.log(categories);
+
+        var options = {
+            series: [{
+                name: 'SKS',
+                data: sksData
+            }],
+            chart: {
+                    foreColor:"#bac0c7",
+                    type: 'bar',
+                    height: 350,
+                    stacked: true,
+                    toolbar: {
+                        show: false
+                    },
+                    zoom: {
+                        enabled: true
+                    }
+                },
+                responsive: [{
+                    breakpoint: 480,
+                    options: {
+                        legend: {
+                            position: 'bottom',
+                            offsetX: -10,
+                            offsetY: 0
+                        }
+                    }
+                }],		
+                grid: {
+                    show: true,
+                    borderColor: '#f7f7f7',      
+                },
+                colors:['#6993ff', '#f64e60'],
+                plotOptions: {
+                    bar: {
+                        horizontal: false,
+                        columnWidth: '10%',
+                        endingShape: 'rounded'
+                    },
+                },
+                dataLabels: {
+                    enabled: false
+                },
+                xaxis: {
+                    type: 'data',
+                    categories: categories,
+                },
+                legend: {
+                    show: false,
+                },
+                fill: {
+                    opacity: 1
+                }
+            };
+
+            var chart = new ApexCharts(document.querySelector("#sks-diambil"), options);
+            chart.render();
+        });
+
+</script>
