@@ -82,11 +82,18 @@ Penilaian Perkuliahan Mahasiswa
                                             </td>
                                             <td class="text-center align-middle">{{$d->peserta_kelas_count}}</td>
                                             <td class="text-center align-middle">
-                                                <div class="row" style="white-space:nowrap;">
+                                                <!-- <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-12 mb-2">
                                                         <a class="btn btn-sm btn-rounded bg-warning-light"
                                                 href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
-                                                title="Komponen Evaluasi" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-clipboard-list"></i> Komponen Evaluasi</a>
+                                                title="Komponen Evaluasi" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-clipboard-list"></i> Rencana Pembelajaran</a>
+                                                    </div>
+                                                </div> -->
+                                                <div class="row" style="white-space:nowrap;">
+                                                    <div class="col-md-12 mb-2">
+                                                        <a class="btn btn-sm btn-rounded bg-warning-light "
+                                                href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
+                                                title="Komponen Evaluasi" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</a>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="white-space:nowrap;">
