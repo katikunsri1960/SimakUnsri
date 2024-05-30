@@ -45,7 +45,7 @@
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
+                                                                <td class="text-center align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
                                                                 <td class="text-center align-middle">
                                                                     <div>
                                                                         {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}

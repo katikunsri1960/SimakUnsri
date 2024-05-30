@@ -29,21 +29,25 @@ class DashboardController extends Controller
                         // dd($semester_aktif);
         
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                // ->where('id_semester', $semester_aktif->id_semester)
                 ->whereNotIn('id_status_mahasiswa', ['N'])
                 ->orderBy('id_semester', 'DESC')
                 ->first();
-                // dd($akm);
 
+        $smt = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+                ->whereNotIn('id_status_mahasiswa', ['N'])
+                ->orderBy('id_semester', 'ASC')
+                ->get();
+                // dd($akm);
+        
         $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                 ->whereNotIn('id_status_mahasiswa', ['N'])
                 ->count();
-        
-                
+
         return view('mahasiswa.dashboard', compact(
+            'riwayat_pendidikan',
             'semester_aktif',
             'akm',
-            'semester_ke'
+            'semester_ke', 'smt'
         ));
     }
 }
