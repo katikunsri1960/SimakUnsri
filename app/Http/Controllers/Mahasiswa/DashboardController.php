@@ -29,18 +29,18 @@ class DashboardController extends Controller
                         // dd($semester_aktif);
         
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->whereNotIn('id_status_mahasiswa', ['N'])
+                ->whereRaw("RIGHT(id_semester, 1) != 3")
                 ->orderBy('id_semester', 'DESC')
                 ->first();
 
         $smt = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->whereNotIn('id_status_mahasiswa', ['N'])
+                ->whereRaw("RIGHT(id_semester, 1) != 3")
                 ->orderBy('id_semester', 'ASC')
                 ->get();
-                // dd($akm);
+                // dd($smt);
         
         $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->whereNotIn('id_status_mahasiswa', ['N'])
+                ->whereRaw("RIGHT(id_semester, 1) != 3")
                 ->count();
 
         return view('mahasiswa.dashboard', compact(

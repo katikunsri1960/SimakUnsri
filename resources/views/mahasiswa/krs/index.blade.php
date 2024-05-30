@@ -487,10 +487,6 @@ Kartu Rencana Studi
         @endif
     });
 
-    
-
-    
-
     $('.ambil-aktivitas').click(function() {
         var idMatkul = $(this).data('id-matkul');
         window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;

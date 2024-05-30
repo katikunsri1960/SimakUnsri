@@ -8,8 +8,7 @@
                     <li class="header">MENU UTAMA</li>
                     <li class="{{request()->routeIs('mahasiswa.dashboard') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.dashboard')}}">
-                            <i class="fa fa-dashboard"><span class="path1"></span><span
-                                    class="path2"></span></i>
+                            <i class="icon-Layout-4-blocks"><span class="path1"></span><span class="path2"></span></i>
                             <span>Dashboard</span>
                         </a>
                     </li>
@@ -161,8 +160,8 @@
         {{-- <a href="mailbox.html" class="link" data-bs-toggle="tooltip" title="Email"><span
                 class="icon-Mail"></span></a> --}}
         <a href="{{ route('logout') }}" class="link" data-bs-toggle="tooltip" title="Logout" onclick="event.preventDefault();
-        document.getElementById('logout-form').submit();"><span
-                class="icon-Lock-overturning"><span class="path1"></span><span class="path2"></span></span></a>
+        document.getElementById('logout-form').submit();"><span class="icon-Lock-overturning"><span
+                    class="path1"></span><span class="path2"></span></span></a>
     </div>
     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
         @csrf
