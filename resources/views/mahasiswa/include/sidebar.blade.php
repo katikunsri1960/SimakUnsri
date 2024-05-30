@@ -98,14 +98,14 @@
                             <span>Nilai Perkuliahan</span>
                         </a>
                     </li>
-                    {{-- <li class="{{request()->routeIs('mahasiswa.skpi') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.skpi')}}">
-                            <i class="fa fa-trophy"><span class="path1"></span><span
+                    <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-suliet') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.perkuliahan.nilai-suliet')}}">
+                            <i class="fa fa-chart-line"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>SKPI</span>
+                            <span>Nilai Suliet</span>
                         </a>
                     </li>
-                    <li class="treeview">
+                    {{-- <li class="treeview">
                         <a href="#">
                             <i span class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>
