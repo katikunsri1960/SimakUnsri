@@ -64,9 +64,10 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/nilai-perkuliahan', [App\Http\Controllers\Mahasiswa\NilaiController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-perkuliahan');
                 Route::get('/nilai-perkuliahan/{id_semester}/lihat-khs', [App\Http\Controllers\Mahasiswa\NilaiController::class, 'lihat_khs'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs');
                 Route::get('/nilai-perkuliahan/{id_matkul}/histori-nilai', [App\Http\Controllers\Mahasiswa\NilaiController::class, 'histori_nilai'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai');
+                Route::get('/krs/nilai-suliet', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-suliet');
             });
 
-            Route::get('/skpi', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.skpi');
+            // Route::get('/krs/nilai-suliet', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.nilai-suliet');
             Route::get('/kegiatan-akademik', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'akademik'])->name('mahasiswa.akademik');
             Route::get('/kegiatan-seminar', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'seminar'])->name('mahasiswa.seminar');
             Route::get('/pengajuan-cuti', [App\Http\Controllers\Mahasiswa\CutiController::class, 'index'])->name('mahasiswa.pengajuan-cuti');
