@@ -3,20 +3,22 @@
         <div class="bg-primary-light rounded20 big-side-section">
             <div class="row">
                 <div class="col-xxl-12 col-xl-12 col-lg-12 pt-20 px-20">
-                    <div class="box">		
-                        <div class="text-white box-body bg-img text-center m-20 py-65" 
+                    <div class="box">
+                        <div class="text-white box-body bg-img text-center m-20 py-65"
                         style="background-image: url({{asset('images/images/gallery/creative/img-12.jpg')}});">
                         </div>
-                        <div class="box-body up-mar100 pb-0">	
+                        <div class="box-body up-mar100 pb-0">
                             <div class=" justify-content-center">
                                 <div class="align-bottom">
                                     <!-- <div class="row"> -->
                                         <div class="bg-white px-10 text-center pt-15 w-120 ms-20 mb-0 rounded20 mb-20" style="display:inline-block">
                                             <a href="#" class="w-80">
-                                                <img class="avatar avatar-xxl rounded20 bg-light img-fluid" src="{{asset('images/images/avatar/avatar-15.png')}}" alt="">
-                                                
+                                                @php
+                                                    $imagePath = public_path('storage/'.$data->angkatan.'/'.$data->nim.'.jpg');
+                                                @endphp
+                                                <img class=" rounded20 bg-light img-fluid" src="{{file_exists($imagePath) ? asset('storage/'.$data->angkatan.'/'.$data->nim.'.jpg') : asset('images/images/avatar/avatar-15.png')}}" alt="">
                                             </a>
-                                            
+
                                         </div>
                                         {{-- <button type="button" class="waves-effect waves-light btn btn-outline btn-primary btn-xs mb-5 mt-70"><i class="fa fa-pen"> </i> Ganti Foto Profil</button> --}}
                                     <!-- </div> -->
@@ -26,7 +28,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>			
+                        </div>
                     </div>
                 </div>
                 <div class="row">
@@ -48,54 +50,54 @@
                                         <div class="form-group">
                                             <label>NIK</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->nik}}">
+                                                value="{{$data->biodata ? $data->biodata->nik : ''}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>NPWP</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->npwp}}">
+                                                value="{{$data->biodata ? $data->biodata->npwp : ''}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Tempat Lahir</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->tempat_lahir}}">
+                                                value="{{$data->biodata ? $data->biodata->tempat_lahir : ''}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Tanggal Lahir</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->tanggal_lahir}}">
+                                                value="{{$data->biodata ? $data->biodata->tanggal_lahir : ''}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Agama</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->nama_agama}}">
+                                                value="{{$data->biodata ? $data->biodata->nama_agama : ''}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Kewarganegaraan</label>
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->kewarganegaraan}}">
+                                                value="{{$data->biodata ? $data->biodata->kewarganegaraan : ''}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>No. Telpon</label>
                                             <input type="name" class="form-control"
-                                                value="{{$data->telepon}}">
+                                                value="{{$data->biodata ? $data->biodata->telepon : ''}}">
                                         </div>
                                     </div>
 
                                     <!-- JENIS KELAMIN -->
-                                    @if ($data->jenis_kelamin == "Laki-laki" )
+                                    @if ($data->biodata->jenis_kelamin == "Laki-laki" )
                                         <div class="col-lg-6">
                                             <label class="mb-5">Jenis Kelamin</label>
                                             <div class="form-group ">
@@ -119,7 +121,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    @elseif ($data->jenis_kelamin == "Perempuan" )
+                                    @elseif ($data->biodata->jenis_kelamin == "Perempuan" )
                                         <div class="col-lg-6">
                                             <label class="mb-5">Jenis Kelamin</label>
                                             <div class="form-group ">
@@ -187,17 +189,17 @@
                                         <div class="form-group">
                                             <label>Tinggi Badan</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" 
+                                                <input type="text" class="form-control"
                                                 value="172">
                                                 <span class="input-group-addon">cm</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-lg-6"> 
+                                    <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Berat Badan</label>
                                             <div class="input-group">
-                                                <input type="text" class="form-control" 
+                                                <input type="text" class="form-control"
                                                 value="80">
                                                 <span class="input-group-addon">kg</span>
                                             </div>
@@ -253,27 +255,27 @@
                                         <div class="form-group">
                                             <label>Email</label>
                                             <input type="name" class="form-control"
-                                                value="{{$data->email}}">
+                                                value="{{$data->biodata ? $data->biodata->email : ''}}">
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>No. HP</label>
                                             <input type="name" class="form-control"
-                                                value="{{$data->handphone}}">
+                                                value="{{$data->biodata ? $data->biodata->handphone : ''}}">
                                         </div>
                                     </div>
                                 </div>
-                            </div>       
+                            </div>
                             <div class="box-footer text-end">
                                 {{-- <button type="submit" class="btn btn-primary">
                                 <i class="ti-save-alt"></i> Simpan
                             </button> --}}
-                        </div>		                   
+                        </div>
                         </div>
                         <!-- </div> -->
                     </div>
-                </div>  
+                </div>
             </div>
         </div>
     </div>

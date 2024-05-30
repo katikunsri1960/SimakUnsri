@@ -53,6 +53,6 @@ Biodata
             <!-- /.box -->
         </div>
         <!-- /.col -->
-    </div>		
+    </div>
 </section>
 @endsection

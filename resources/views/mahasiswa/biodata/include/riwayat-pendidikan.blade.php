@@ -9,7 +9,7 @@
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12">
                                         <h3 class="fw-500 text-dark mt-0 mb-20">Riwayat Pendidikan</h3>
-                                    </div>                             
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="table-responsive">
@@ -34,7 +34,7 @@
                                                     $no=1;
                                                 @endphp
 
-                                                @foreach ($data->riwayat_pendidikan as $data)
+                                                @foreach ($riwayat_pendidikan as $data)
                                                     <tr>
                                                         <td class="text-center">{{ $no++ }}</td>
                                                         <td class="text-center">{{$data->prodi->nama_jenjang_pendidikan}}</td>
@@ -42,7 +42,7 @@
                                                         <td class="text-start">{{$data->nama_perguruan_tinggi}}</td>
                                                         <td class="text-start">{{$data->prodi->nama_program_studi}}</td>
                                                         <td class="text-start">{{$data->nm_bidang_minat}}</td>
-                                                        
+
                                                         @if ($data->id_jenis_keluar == NULL)
                                                             <td class="text-center">Aktif</td>
                                                         @else
@@ -54,7 +54,7 @@
                                                         @else
                                                             <td class="text-center">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
                                                         @endif
-                                                        
+
                                                         <td class="text-center"></td>
                                                         <td class="text-center">{{$data->sks_diakui}}</td>
                                                         <td class="text-center"></td>
@@ -75,7 +75,7 @@
                             </div>   -->
                         </div>
                     </div>
-                </div>  
+                </div>
             </div>
         </div>
     </div>
