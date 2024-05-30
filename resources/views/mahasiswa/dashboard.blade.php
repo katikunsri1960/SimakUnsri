@@ -99,7 +99,7 @@ Dashboard
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <h2 class="mb-5 text-center">{{$semester_ke}}</h2>
-                        <p class="text-fade mb-0 fs-12 text-white">Anda berada pada Semester ke- {{$semester_ke}}</p>
+                        <p class="text-fade mb-0 fs-12 text-white">Semester yang telah ditempuh</p>
                     </div>
                 </div>
             </div>

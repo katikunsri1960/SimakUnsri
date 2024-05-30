@@ -221,7 +221,7 @@ Ambil Aktivitas Mahasiswa
                         return {
                             results: $.map(data, function (item) {
                                 return {
-                                    text: item.nama_dosen + " ( " + item.nama_program_studi + " )",
+                                    text: item.nidn + " - "+item.nama_dosen + " ( " + item.nama_program_studi + " )",
                                     id: item.id_dosen
                                 }
                             })
