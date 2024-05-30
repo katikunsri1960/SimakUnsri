@@ -13,7 +13,7 @@ Dashboard
                         <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Hello {{auth()->user()->name}}, Welcome Back!</h2>
+                            <h2>Halo {{$riwayat_pendidikan->nama_mahasiswa}}, Selamat datang!</h2>
                             <p class="text-dark mb-0 fs-16">
                             Selamat Datang di SIAKAD (Sistem Informasi Akademik) Universitas Sriwijaya
                             </p>
@@ -28,7 +28,7 @@ Dashboard
             <div class="box no-shadow mb-0 bg-transparent">
                 <div class="box-header no-border px-0">
                     <h4 class="box-title">Dashboard</h4>
-                    <ul class="box-controls pull-right d-md-flex d-none">
+                    {{-- <ul class="box-controls pull-right d-md-flex d-none">
                         <li>
                             <button class="btn btn-primary-light px-10">View All</button>
                         </li>
@@ -43,7 +43,7 @@ Dashboard
                                 <a class="dropdown-item" href="#">Last month</a>
                             </div>
                         </li>
-                    </ul>
+                    </ul> --}}
                 </div>
             </div>
         </div>
@@ -63,7 +63,7 @@ Dashboard
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
                         
-                        <p class="text-fade mb-0 fs-12 text-white">Tetap dari semester lalu</p>
+                        <p class="text-fade mb-0 fs-12 text-white">Indeks Prestasi Kumulatif</p>
                     </div>
                 </div>
             </div>
@@ -99,11 +99,7 @@ Dashboard
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <h2 class="mb-5 text-center">{{$semester_ke}}</h2>
-                        @if((int) substr($riwayat_pendidikan->id_periode_masuk, 0, 4) >= 2014)
-                            <p class="text-fade mb-0 fs-12 text-white">Batas Studi : 10 Semester</p>
-                        @else
-                            <p class="text-fade mb-0 fs-12 text-white">Batas Studi : 14 Semester</p>
-                        @endif
+                        <p class="text-fade mb-0 fs-12 text-white">Anda berada pada Semester ke- {{$semester_ke}}</p>
                     </div>
                 </div>
             </div>
@@ -124,7 +120,7 @@ Dashboard
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
                         
-                        {{-- <p class="text-fade mb-0 fs-12 text-white">28 SKS lagi untuk lulus</p> --}}
+                        <p class="text-fade mb-0 fs-12 text-white">Total SKS yang telah ditempuh</p>
                     </div>
                 </div>
             </div>
