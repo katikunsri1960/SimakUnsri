@@ -86,7 +86,8 @@ class DataMasterController extends Controller
 
     public function matkul()
     {
-        $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.prasyarat_matkul', 'mata_kuliah.prasyarat_matkul.matkul_prasyarat'])->where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+        $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.prasyarat_matkul', 'mata_kuliah.prasyarat_matkul.matkul_prasyarat'])
+                            ->where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
             // dd($data);
         return view('prodi.data-master.mata-kuliah.index', [
             'data' => $data
@@ -257,7 +258,8 @@ class DataMasterController extends Controller
 
     public function kurikulum_angkatan()
     {
-        $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+        $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)
+                    ->where('is_active', 1)->get();
 
         return view('prodi.data-master.kurikulum-angkatan.index',);
     }

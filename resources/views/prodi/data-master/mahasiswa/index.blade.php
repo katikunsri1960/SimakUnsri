@@ -63,7 +63,16 @@ Mahasiswa Prodi
                                 @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-center align-middle"></td>
+                                    <td class="text-center align-middle">
+                                        <div class="bg-white text-center w-80  rounded20" style="display:inline-block">
+                                            <a href="#" class="w-80">
+                                                @php
+                                                    $imagePath = public_path('storage/'.$d->angkatan.'/'.$d->nim.'.jpg');
+                                                @endphp
+                                                <img class=" rounded20 bg-light img-fluid" src="{{file_exists($imagePath) ? asset('storage/'.$d->angkatan.'/'.$d->nim.'.jpg') : asset('images/images/avatar/avatar-15.png')}}" alt="">
+                                            </a>
+                                        </div>
+                                    </td>
                                     <td class="text-center align-middle">
                                         {{$d->angkatan}}
                                     </td>
