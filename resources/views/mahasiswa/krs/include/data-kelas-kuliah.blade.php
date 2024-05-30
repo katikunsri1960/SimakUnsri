@@ -200,12 +200,14 @@
                                                             @php
                                                                 $no_a=1;
                                                                 $isEnrolled = array_column($krs_akt->toArray(), 'mk_konversi');
+                                                                
                                                             @endphp
 
                                                             {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
                                                             @foreach ($data_akt_data as $data)
                                                                 @php
                                                                     $isEnrolledMatkul = in_array($data['id_matkul'], $isEnrolled);
+                                                                    $isLower = $semester_ke < $data['semester'] ;
                                                                 @endphp
                                                                 <tr class="{{ $isEnrolledMatkul ? 'bg-success-light' : '' }}">
                                                                 {{-- <tr class="bg-success-light"> --}}
@@ -216,7 +218,7 @@
                                                                     <td class="text-center align-middle">{{ $data['sks_mata_kuliah'] }}</td>
                                                                     {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
                                                                     <td>
-                                                                        <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas {{ $isEnrolledMatkul ? 'disabled' : '' }}" >
+                                                                        <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas {{ $isEnrolledMatkul || $isLower ? 'disabled' : '' }}" >
                                                                             Ambil
                                                                         </a>
                                                                     </td>
