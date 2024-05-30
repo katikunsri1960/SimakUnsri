@@ -7,7 +7,7 @@
                         <div class="text-white box-body bg-img text-center m-20 py-65"
                         style="background-image: url({{asset('images/images/gallery/creative/img-12.jpg')}});">
                         </div>
-                        <div class="box-body up-mar100 pb-0">
+                        <div class="box-body pb-0" style="margin-top: -150px; z-index: 50">
                             <div class=" justify-content-center">
                                 <div class="align-bottom">
                                     <!-- <div class="row"> -->
@@ -18,10 +18,8 @@
                                                 @endphp
                                                 <img class=" rounded20 bg-light img-fluid" src="{{file_exists($imagePath) ? asset('storage/'.$data->angkatan.'/'.$data->nim.'.jpg') : asset('images/images/avatar/avatar-15.png')}}" alt="">
                                             </a>
-
                                         </div>
                                         {{-- <button type="button" class="waves-effect waves-light btn btn-outline btn-primary btn-xs mb-5 mt-70"><i class="fa fa-pen"> </i> Ganti Foto Profil</button> --}}
-                                    <!-- </div> -->
                                     <div class="ms-30 mb-15">
                                         <h5 class="my-10 mb-0 text-dark fw-500 fs-18">{{$data->nama_mahasiswa}}</h5>
                                         <span class="text-fade mt-5">{{$data->nama_program_studi}}</span>
