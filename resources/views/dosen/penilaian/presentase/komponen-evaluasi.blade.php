@@ -44,43 +44,91 @@ Komponen Evaluasi Kelas Perkuliahan
                         @csrf
                         <div class="box-body">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Participatory Activity</label>
-                                        <input name="participatory" type="number" class="form-control" value="0">
-                                    </div>
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>No</h4>
+                                </div>
+                                <div class="col-md-5 text-center align-middle">
+                                    <h4>Nama Komponen Evaluasi</h4>
+                                </div>
+                                <div class="col-md-6 text-center align-middle">
+                                    <h4>Bobot %</h4>
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>1.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Aktivitas Partisipatif (Participatory Activity)</h4>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Project Outcomes</label>
+                                        <input name="participatory" type="number" class="form-control" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>2.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Hasil Proyek (Project Outcomes)</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <input name="project_outcomes" type="number" class="form-control" value="0">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Assignment</label>
-                                        <input name="assignment" type="number" class="form-control" value="0">
-                                    </div>
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>3.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Tugas (Assignment)</h4>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Quiz</label>
+                                        <input name="assignment" type="number" class="form-control" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>4.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Kuis (Quiz)</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <input name="quiz" type="number" class="form-control" value="0">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Midterm Exam</label>
-                                        <input name="midterm_exam" type="number" class="form-control" value="0">
-                                    </div>
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>5.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Ujian Tengah Semester (Midterm Exam)</h4>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Finalterm Exam</label>
+                                        <input name="midterm_exam" type="number" class="form-control" value="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>6.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Ujian Akhir Semester (Finalterm Exam)</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <input name="finalterm_exam" type="number" class="form-control" value="0">
                                     </div>
                                 </div>
@@ -100,45 +148,93 @@ Komponen Evaluasi Kelas Perkuliahan
                     <form class="form" method="POST" id="komponen-evaluasi-update" action="{{ route('dosen.penilaian.komponen-evaluasi.update', ['kelas' => $kelas[0]['id_kelas_kuliah']]) }}">
                         @csrf
                         <div class="box-body">
+                        <div class="row">
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>No</h4>
+                                </div>
+                                <div class="col-md-5 text-center align-middle">
+                                    <h4>Nama Komponen Evaluasi</h4>
+                                </div>
+                                <div class="col-md-6 text-center align-middle">
+                                    <h4>Bobot %</h4>
+                                </div>
+                            </div>
+                            <hr>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Participatory Activity</label>
-                                        <input name="participatory" type="number" class="form-control" value="{{ $participatory * 100 }}">
-                                    </div>
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>1.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Aktivitas Partisipatif (Participatory Activity)</h4>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Project Outcomes</label>
-                                        <input name="project_outcomes" type="number" class="form-control" value="{{ $project_outcomes * 100 }}">
+                                    <input name="participatory" type="number" class="form-control" value="{{ $participatory * 100 }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Assignment</label>
-                                        <input name="assignment" type="number" class="form-control" value="{{ $assignment * 100 }}">
-                                    </div>
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>2.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Hasil Proyek (Project Outcomes)</h4>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Quiz</label>
-                                        <input name="quiz" type="number" class="form-control" value="{{ $quiz * 100 }}">
+                                    <input name="project_outcomes" type="number" class="form-control" value="{{ $project_outcomes * 100 }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="form-label">Midterm Exam</label>
-                                        <input name="midterm_exam" type="number" class="form-control" value="{{ $midterm_exam * 100 }}">
-                                    </div>
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>3.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Tugas (Assignment)</h4>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="form-label">Finalterm Exam</label>
-                                        <input name="finalterm_exam" type="number" class="form-control" value="{{ $finalterm_exam * 100 }}">
+                                    <input name="assignment" type="number" class="form-control" value="{{ $assignment * 100 }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>4.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Kuis (Quiz)</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <input name="quiz" type="number" class="form-control" value="{{ $quiz * 100 }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>5.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Ujian Tengah Semester (Midterm Exam)</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <input name="midterm_exam" type="number" class="form-control" value="{{ $midterm_exam * 100 }}">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-1 text-center align-middle">
+                                    <h4>6.</h4>
+                                </div>
+                                <div class="col-md-5">
+                                    <h4>Ujian Akhir Semester (Finalterm Exam)</h4>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <input name="finalterm_exam" type="number" class="form-control" value="{{ $finalterm_exam * 100 }}">
                                     </div>
                                 </div>
                             </div>

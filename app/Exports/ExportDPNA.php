@@ -222,8 +222,8 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         $sheet->setCellValue('C1', 'Nama Kelas Kuliah');
         $sheet->setCellValue('D1', 'NIM');
         $sheet->setCellValue('E1', 'Nama Mahasiswa');
-        $sheet->setCellValue('F1', 'Nilai Keaktifan Mahasiswa');
-        $sheet->setCellValue('G1', 'Nilai Proyek');
+        $sheet->setCellValue('F1', 'Nilai Aktivitas Partisipatif');
+        $sheet->setCellValue('G1', 'Nilai Hasil Proyek');
         $sheet->setCellValue('H1', 'Nilai Tugas');
         $sheet->setCellValue('I1', 'Nilai Kuis');
         $sheet->setCellValue('J1', 'Nilai UTS');
