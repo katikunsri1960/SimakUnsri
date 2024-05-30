@@ -18,7 +18,7 @@ class RiwayatPendidikan extends Model
     use HasFactory;
     protected $guarded = [];
 
-    protected $appends = ['angkatan'];
+    protected $appends = ['angkatan', 'gelombang_masuk'];
 
     public function peserta_kelas()
     {
