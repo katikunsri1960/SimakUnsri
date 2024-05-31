@@ -16,6 +16,11 @@ class AktivitasMahasiswa extends Model
     protected $guarded = [];
     protected $appends = ['id_tanggal_sk_tugas', 'id_tanggal_mulai', 'id_tanggal_selesai'];
 
+    public function konversi()
+    {
+        return $this->belongsTo(MataKuliah::class, 'mk_konversi', 'id_matkul');
+    }
+
     public function getIdTanggalSkTugasAttribute()
     {
         return date('d-m-Y', strtotime($this->tanggal_sk_tugas));
