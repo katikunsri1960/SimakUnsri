@@ -29,10 +29,11 @@
                                                                 <th class="text-center align-middle">No</th>
                                                                 <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                                 <th class="text-center align-middle" style="width: 100%">Nama Mata Kuliah</th>
+                                                                <th class="text-center align-middle">RPS</th>
                                                                 <th class="text-center align-middle">Semester Ke</th>
                                                                 <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                                 <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
-                                                                <th class="text-center align-middle">Jadwal Kuliah</th>
+                                                                <th class="text-center align-middle">Lihat Kelas</th>
                                                                 {{-- <th class="text-center align-middle">Action</th> --}}
                                                             </tr>
                                                         </thead>
@@ -54,6 +55,12 @@
                                                                     <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->kode_mata_kuliah }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
+                                                                    <td class="text-center align-middle" style="white-space: nowrap;">
+                                                                        <button class="btn btn-warning-light lihat-kelas-kuliah" title="Lihat RPS" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                            {{ $isDisabled || $isEnrolledMatkul ? 'disabled' : '' }}>
+                                                                            <i class="fa fa-newspaper-o"></i> Lihat RPS
+                                                                        </button>
+                                                                    </td>
                                                                     <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                     <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
@@ -80,11 +87,18 @@
                                                             @foreach ($matakuliah->whereNotIn('id_matkul', $isEnrolled) as $data)
                                                                 @php
                                                                     $isDisabled = $data->jumlah_kelas_kuliah == 0;
+                                                                    $isEnrolledMatkul = in_array($data->id_matkul, $isEnrolled);
                                                                 @endphp
                                                                 <tr class="{{ $isDisabled ? 'disabled-row' : '' }}">
                                                                     <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->kode_mata_kuliah }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
+                                                                    <td class="text-center align-middle" style="white-space: nowrap;">
+                                                                        <button class="btn btn-warning-light lihat-kelas-kuliah" title="Lihat RPS" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                            {{ $isDisabled || $isEnrolledMatkul ? 'disabled' : '' }}>
+                                                                            <i class="fa fa-newspaper-o"></i> Lihat RPS
+                                                                        </button>
+                                                                    </td>
                                                                     <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                     <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
@@ -94,7 +108,7 @@
                                                                             <i class="fa fa-eye"></i>
                                                                         </button>
                                                                         <!-- Gunakan id_matkul dalam atribut id untuk hasil kontainer -->
-                                                                        <div class="result-container" id="result-container_{{ $data->id_matkul }}" style="margin-top: 20px"></div>
+                                                                        <div class="result-container" id="result-container_{{ $data->id_matkul }}" style="margin-top: 5px"></div>
                                                                     </td>
 
                                                                     {{-- <td>
@@ -204,7 +218,7 @@
                                                             @endphp
 
                                                             {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
-                                                            @foreach ($data_akt_data as $data)
+                                                            @foreach ($mk_akt as $data)
                                                                 @php
                                                                     $isEnrolledMatkul = in_array($data['id_matkul'], $isEnrolled);
                                                                     $isLower = $semester_ke < $data['semester'] ;
