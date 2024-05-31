@@ -160,8 +160,10 @@
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center align-middle">No</th>
+                                                            <th class="text-center align-middle">Jenis Aktivitas</th>
                                                             <th class="text-center align-middle">Judul</th>
-                                                            <th class="text-center align-middle">Semester</th>
+                                                            <th class="text-center align-middle">SKS Mata Kuliah Konversi</th>
+                                                            {{-- <th class="text-center align-middle">Semester</th> --}}
                                                             <th class="text-center align-middle">Lokasi</th>
                                                             <th class="text-center align-middle">Dosen Pembimbing</th>
                                                             <th class="text-center align-middle">Status</th>
@@ -176,8 +178,10 @@
                                                         @foreach ($krs_akt as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle">{{ $no++ }}</td>
+                                                                <td class="text-center align-middle">{{ $data->nama_jenis_aktivitas }}</td>
                                                                 <td class="text-start align-middle">{{ $data->judul }}</td>
-                                                                <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->nama_semester }}</td>
+                                                                <td class="text-start align-middle">{{ $data->sks_mata_kuliah }}</td>
+                                                                {{-- <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->nama_semester }}</td> --}}
                                                                 <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->lokasi }}</td>
                                                                 <td class="text-start align-middle"  style="white-space: nowrap;">
                                                                     @foreach($data->aktivitas_mahasiswa->bimbing_mahasiswa as $dosen_bimbing)
