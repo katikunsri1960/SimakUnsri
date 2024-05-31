@@ -24,19 +24,7 @@ use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 
 class KrsController extends Controller
 {
-    private function formatDosenPengajar($dosen_bimbing)
-    {
-        // Mengembalikan daftar dosen dalam format ul li
-        $output = '<ul>';
-        foreach ($dosen_bimbing as $dosen) {
-            $output .= '<li>' . htmlspecialchars($dosen, ENT_QUOTES, 'UTF-8') . '</li>';
-        }
-        $output .= '</ul>';
-
-        return $output;
-    }
-
-    public function krs(Request $request)
+    public function index(Request $request)
     {
         $id_reg = auth()->user()->fk_id;
 
@@ -53,7 +41,7 @@ class KrsController extends Controller
         $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
 
-        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
+        // $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
 
         // DATA MK_MERDEKA
         $fakultas=Fakultas::all();
@@ -115,14 +103,23 @@ class KrsController extends Controller
                 'bimbing_mahasiswas.approved',
             )
             ->get();
-        // dd($krs_akt);
+        // dd($data_akt_data);
         
         $total_sks_akt = $krs_akt->sum('sks_mata_kuliah');
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->whereNotIn('id_status_mahasiswa', ['N'])
+                    ->whereRaw("RIGHT(id_semester, 1) != 3")
                     ->orderBy('id_semester', 'DESC')
                     ->first();
+                    // dd($akm);
+
+        $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+                    // ->whereRaw("RIGHT(id_semester, 1) != 3")
+                    ->orderBy('id_semester', 'DESC')
+                    ->get();
+                    // dd($akm);
+
+        
 
         $ips = AktivitasKuliahMahasiswa::select('ips')
                     ->where('id_registrasi_mahasiswa', $id_reg)
@@ -131,7 +128,7 @@ class KrsController extends Controller
                     ->orderBy('id_semester', 'DESC')
                     ->pluck('ips')->first();
 
-        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereNotIn('id_status_mahasiswa', ['N'])->count();
+        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
 
         if($semester_ke == 1 || $semester_ke == 2 ){
             $sks_max = 20;
@@ -169,7 +166,7 @@ class KrsController extends Controller
             }
             // dd($data_status_mahasiswa);
 
-        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereNotIn('id_status_mahasiswa', ['N'])->count();
+        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
 
         $total_sks_regular=0;
         $total_sks_merdeka=0;
@@ -242,7 +239,7 @@ class KrsController extends Controller
             'krs_merdeka',
             'total_sks_merdeka',
             'total_sks_regular',
-            'akm', 'sks_max',
+            'akm', 'sks_max', 'semester',
             'total_sks',
             'status_mahasiswa',
             'data_status_mahasiswa',
@@ -349,7 +346,7 @@ class KrsController extends Controller
                     ->pluck('ips')
                     ->first();
             
-            $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereNotIn('id_status_mahasiswa', ['N'])->count();
+            $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
 
             if($semester_ke == 1 || $semester_ke == 2 ){
                 $sks_max = 20;

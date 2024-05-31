@@ -86,12 +86,9 @@ Kartu Rencana Studi
                     </div>
                     <div class="form-group m-10">
                         <select class="form-select">
-                            <option>2023/2024 Genap</option>
-                            <option>2023/2024 Ganjil</option>
-                            <option>2022/2023 Genap</option>
-                            <option>2022/2023 Ganjil</option>
-                            <option>2021/2022 Genap</option>
-                            <option>2021/2022 Ganjil</option>
+                            @foreach($semester as $data)
+                                <option>{{$data->nama_semester}}</option>
+                            @endforeach
                         </select>
                     </div>
                 </ul>
