@@ -130,7 +130,7 @@ Dashboard
         <div class="col-xl-12">
             <div class="box">
                 <div class="box-header">
-                    <h4 class="box-title">Grafik SKS Semester</h4>
+                    <h4 class="box-title">Grafik Satuan Kredit Semester</h4>
                 </div>
                 <div class="box-body">
                     <div class="row">
@@ -147,12 +147,12 @@ Dashboard
         <div class="col-xl-12 col-12">
             <div class="box">
                 <div class="box-header">
-                    <h4 class="box-title">Grafik IPS </h4>
+                    <h4 class="box-title">Grafik Indeks Prestasi Semester </h4>
                 </div>
                 <div class="box-body">
                     <!-- <p class="text-fade">Grafik IPK</p> -->
                     <!-- <h3 class="mt-0 mb-20">21 h 30 min <small class="text-danger"><i class="fa fa-arrow-down ms-25 me-5"></i> 15%</small></h3> -->
-                    <div id="charts_widget_1_chart"></div>
+                    <div id="ips-diambil"></div>
                 </div>
             </div>
         </div>
@@ -161,6 +161,8 @@ Dashboard
 @endsection
 @push('css')
 <meta name="csrf-token" content="{{ csrf_token() }}">
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/skin_color.css">
 @endpush
 @push('js')
 {{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> --}}
@@ -169,93 +171,189 @@ Dashboard
 <script src="{{asset('assets/vendor_components/chartist-js-develop/chartist.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="{{asset('assets/js/pages/widget-chartist.js')}}"></script>
+<script src="{{asset('assets/js/pages/echart-bar.js')}}"></script>
 <script>
     $(document).ready(function() {
-        // Data SKS yang diambil
-        // Ambil data dari PHP dan ubah menjadi format JSON
-        var sksData = {!! json_encode($smt->map(function($item) {
+        // Data Grafik SKS
+        var data = {!! json_encode($smt->map(function($item) {
                 return $item->sks_semester;
             })) !!};
 
         var smt_ke = {!! json_encode($semester_ke) !!};
 
-        // let smt = "Semester "
-        // let text = "";
-        // for (let i = 0; i < smt_ke; i++) {
-        //     text += "'"+(i+1)+"'";
-        // }
-
-        // smt_ke = array.from(text)
-
-        // var categories = smt_ke.map(i => 'Semester ' + i);
+        let categories = [];
+        for (let i = 0; i < smt_ke; i++) {
+            categories.push("Semester " + (i+1));
+        }
         
+        // Tampilkan data di konsol
+        console.log("Data SKS:", data);
+        console.log(categories);
+
+
+        var options = {
+            series: [{
+                name: 'SKS',
+                data: data
+                // labels: data,
+            }],
+            chart: {
+                foreColor:"#bac0c7",
+                type: 'bar',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                    show: false
+                },
+                zoom: {
+                    enabled: true
+                }
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    legend: {
+                        position: 'bottom',
+                        offsetX: -10,
+                        offsetY: 0
+                    }
+                }
+            }],		
+            colors:['#f64e60', '#f64e60'],
+            plotOptions: {
+                bar: {
+                    borderRadius: 10,
+                    dataLabels: {
+                        position: 'top', // top, center, bottom
+                    },
+                    columnWidth: '40%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (data) {
+                    return data + " SKS" ;
+                },
+                offsetY: -20,
+                style: {
+                    fontSize: '12px',
+                    colors: ["#6c757d"]
+                }
+            },
+            yaxis: {
+                max:24,
+                tickAmount: 6,
+                title: {
+                    text: 'Satuan Kredit Semester (SKS)',
+                },
+                labels: {
+                    formatter: function (data) {
+                    return data.toFixed(0) ;
+                    }
+                },
+            },
+            xaxis: {
+                type: 'data',
+                categories: categories,
+                axisBorder: {
+                    show: false
+                },
+            },
+        };
+
+        var chart = new ApexCharts(document.querySelector("#sks-diambil"), options);
+        chart.render();
+    });
+
+    $(document).ready(function() {
+        // Data Grafik IPS
+        var data = {!! json_encode($smt->map(function($item) {
+                return $item->ips;
+            })) !!};
+
+        var smt_ke = {!! json_encode($semester_ke) !!};
 
         let categories = [];
         for (let i = 0; i < smt_ke; i++) {
             categories.push("Semester " + (i+1));
         }
-        // var sksSeriesData = [];
         
-            // Tampilkan data di konsol
-        console.log("Data SKS:", sksData);
-        console.log(categories);
-
         var options = {
             series: [{
-                name: 'SKS',
-                data: sksData
+                name: 'IPS',
+                data: data
+                // labels: data,
             }],
             chart: {
-                    foreColor:"#bac0c7",
-                    type: 'bar',
-                    height: 350,
-                    stacked: true,
-                    toolbar: {
-                        show: false
-                    },
-                    zoom: {
-                        enabled: true
-                    }
+                foreColor:"#bac0c7",
+                type: 'bar',
+                height: 350,
+                stacked: true,
+                toolbar: {
+                    show: false
                 },
-                responsive: [{
-                    breakpoint: 480,
-                    options: {
-                        legend: {
-                            position: 'bottom',
-                            offsetX: -10,
-                            offsetY: 0
-                        }
-                    }
-                }],		
-                grid: {
-                    show: true,
-                    borderColor: '#f7f7f7',      
-                },
-                colors:['#6993ff', '#f64e60'],
-                plotOptions: {
-                    bar: {
-                        horizontal: false,
-                        columnWidth: '10%',
-                        endingShape: 'rounded'
-                    },
-                },
-                dataLabels: {
-                    enabled: false
-                },
-                xaxis: {
-                    type: 'data',
-                    categories: categories,
-                },
-                legend: {
-                    show: false,
-                },
-                fill: {
-                    opacity: 1
+                zoom: {
+                    enabled: true
                 }
-            };
+            },
+            responsive: [{
+                breakpoint: 480,
+                options: {
+                    legend: {
+                        position: 'bottom',
+                        offsetX: -10,
+                        offsetY: 0
+                    }
+                }
+            }],		
+            colors:['#04a08b', '#f64e60'],
+            plotOptions: {
+                bar: {
+                    borderRadius: 10,
+                    dataLabels: {
+                        position: 'top', // top, center, bottom
+                    },
+                    columnWidth: '40%',
+                    endingShape: 'rounded'
+                },
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (data) {
+                    return data;
+                },
+                offsetY: -20,
+                style: {
+                    fontSize: '12px',
+                    colors: ["#6c757d"]
+                }
+            },
+            yaxis: {
+                max:4,
+                tickAmount: 4,
+                title: {
+                    text: 'Indeks Prestasi Semester (IPS)',
+                },
+                labels: {
+                    formatter: function (data) {
+                    return data.toFixed(2) ;
+                    }
+                },
+            },
+            xaxis: {
+                type: 'data',
+                categories: categories,
+                axisBorder: {
+                    show: false
+                },
+            },
+            fill: {
+                opacity: 1
+            }
+        };
 
-            var chart = new ApexCharts(document.querySelector("#sks-diambil"), options);
-            chart.render();
-        });
-
+        var chart = new ApexCharts(document.querySelector("#ips-diambil"), options);
+        chart.render();
+    });
 </script>
