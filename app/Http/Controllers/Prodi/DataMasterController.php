@@ -26,15 +26,74 @@ class DataMasterController extends Controller
         ]);
     }
 
-    public function mahasiswa(Request $request)
+    public function mahasiswa_data(Request $request)
     {
-        $data = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik'])->where('id_prodi', auth()->user()->fk_id);
+        $searchValue = $request->input('search.value');
 
-        if ($request->has('angkatan') && $request->input('angkatan') != ''){
-            $data = $data->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $request->input('angkatan'));
+        $query = RiwayatPendidikan::with('kurikulum', 'pembimbing_akademik')
+            ->where('id_prodi', auth()->user()->fk_id)
+            ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
+
+        if ($searchValue) {
+            $query = $query->where(function($q) use ($searchValue) {
+                $q->where('nim', 'like', '%' . $searchValue . '%')
+                ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
+            });
         }
 
-        $data = $data->orderBy('id_periode_masuk', 'desc')->get();
+        if ($request->has('angkatan') && !empty($request->angkatan)) {
+            $filter = $request->angkatan;
+            $query->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $filter);
+        }
+
+        $limit = $request->input('length');
+        $offset = $request->input('start');
+
+        $data = $query->get();
+
+        if ($request->has('order')) {
+            $orderColumn = $request->input('order.0.column');
+            $orderDirection = $request->input('order.0.dir');
+
+            $columns = ['angkatan', 'nim', 'nama_mahasiswa'];
+
+            if ($columns[$orderColumn] == 'angkatan') {
+                if ($orderDirection == 'asc') {
+                    $data = $data->sortBy(function($item) {
+                        return substr($item->id_periode_masuk, 0, 4);
+                    })->values();
+                } else {
+                    $data = $data->sortByDesc(function($item) {
+                        return substr($item->id_periode_masuk, 0, 4);
+                    })->values();
+                }
+            } else {
+                if ($orderDirection == 'asc') {
+                    $data = $data->sortBy($columns[$orderColumn])->values();
+                } else {
+                    $data = $data->sortByDesc($columns[$orderColumn])->values();
+                }
+            }
+        }
+
+        $recordsFiltered = $data->count();
+
+        $data = $data->slice($offset, $limit)->values();
+
+        $recordsTotal = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)->count();
+
+        $response = [
+            'draw' => $request->input('draw'),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ];
+
+        return response()->json($response);
+    }
+
+    public function mahasiswa(Request $request)
+    {
 
         $angkatan = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)
                 ->select('id_periode_masuk')
@@ -48,7 +107,6 @@ class DataMasterController extends Controller
         $dosen = $dosDb->get();
 
         return view('prodi.data-master.mahasiswa.index', [
-            'data' => $data,
             'angkatan' => $angkatan,
             'kurikulum' => $kurikulum,
             'dosen' => $dosen,
