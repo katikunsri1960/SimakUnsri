@@ -40,18 +40,18 @@
 
                                                         @foreach ($krs_regular as $data)
                                                             <tr>
-                                                                <td class="text-center align-middle">{{ $no++ }}</td>
-                                                                <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
+                                                                <td class="text-start align-middle" style="width:5%">{{$data->kode_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                <td class="text-center align-middle">
+                                                                <td class="text-center align-middle" style="width:5%">{{$data->sks_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle" style="white-space: nowrap; width:20%">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
+                                                                <td class="text-center align-middle" style="width:10%">
                                                                     <div>
                                                                         {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
                                                                     </div>
                                                                 </td>
-                                                                <td class="text-center align-middle">
+                                                                <td class="text-center align-middle" style="width:3%">
                                                                     <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
@@ -108,18 +108,18 @@
 
                                                             @foreach ($krs_merdeka as $data)
                                                                 <tr>
-                                                                    <td class="text-center align-middle">{{ $no++ }}</td>
-                                                                    <td class="text-start align-middle">{{$data->kode_mata_kuliah}}</td>
+                                                                    <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
+                                                                    <td class="text-start align-middle" style="width:5%">{{$data->kode_mata_kuliah}}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
                                                                     <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
-                                                                    <td class="text-center align-middle">{{$data->sks_mata_kuliah}}</td>
-                                                                    <td class="text-start align-middle">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
-                                                                    <td class="text-center align-middle">
+                                                                    <td class="text-center align-middle" style="width:5%">{{$data->sks_mata_kuliah}}</td>
+                                                                    <td class="text-start align-middle" style="white-space: nowrap; width:20%">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
+                                                                    <td class="text-center align-middle" style="width:10%">
                                                                         <div>
                                                                             {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
                                                                         </div>
                                                                     </td>
-                                                                    <td class="text-center align-middle">
+                                                                    <td class="text-center align-middle" style="width:3%">
                                                                         <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                             @csrf
                                                                             @method('delete')
@@ -162,9 +162,9 @@
                                                             <th class="text-center align-middle">No</th>
                                                             <th class="text-center align-middle">Jenis Aktivitas</th>
                                                             <th class="text-center align-middle">Judul</th>
-                                                            <th class="text-center align-middle">SKS Mata Kuliah Konversi</th>
                                                             {{-- <th class="text-center align-middle">Semester</th> --}}
                                                             <th class="text-center align-middle">Lokasi</th>
+                                                            <th class="text-center align-middle">SKS</th>
                                                             <th class="text-center align-middle">Dosen Pembimbing</th>
                                                             <th class="text-center align-middle">Status</th>
                                                             <th class="text-center align-middle">Action</th>
@@ -177,13 +177,13 @@
                                         
                                                         @foreach ($krs_akt as $data)
                                                             <tr>
-                                                                <td class="text-center align-middle">{{ $no++ }}</td>
-                                                                <td class="text-center align-middle">{{ $data->nama_jenis_aktivitas }}</td>
-                                                                <td class="text-start align-middle">{{ $data->judul }}</td>
-                                                                <td class="text-start align-middle">{{ $data->sks_mata_kuliah }}</td>
+                                                                <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
+                                                                <td class="text-center align-middle" style="width:5%" style="white-space: nowrap;">{{ $data->nama_jenis_aktivitas }}</td>
+                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->judul }}</td>
                                                                 {{-- <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->nama_semester }}</td> --}}
                                                                 <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->lokasi }}</td>
-                                                                <td class="text-start align-middle"  style="white-space: nowrap;">
+                                                                <td class="text-center align-middle" style="width:5%">{{ $data->aktivitas_mahasiswa->konversi->sks_mata_kuliah }}</td>
+                                                                <td class="text-start align-middle"  style="white-space: nowrap; width:20%">
                                                                     @foreach($data->aktivitas_mahasiswa->bimbing_mahasiswa as $dosen_bimbing)
                                                                         <ul>
                                                                             <li>
@@ -192,7 +192,7 @@
                                                                         </ul> 
                                                                     @endforeach
                                                                 </td>
-                                                                <td class="text-center align-middle">
+                                                                <td class="text-center align-middle" style="width:10%">
                                                                     <div>
                                                                         {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
                                                                     </div>
@@ -207,7 +207,7 @@
                                                                     </form>
                                                                 </td> --}}
                                                                 
-                                                                <td class="text-center align-middle">
+                                                                <td class="text-center align-middle" style="width:3%">
                                                                     <form action="{{ route('mahasiswa.krs.hapus-aktivitas', ['id' => $data->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus aktivitas ini?');" >
                                                                         @csrf
                                                                         @method('DELETE')
@@ -219,13 +219,13 @@
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
-                                                    {{-- <tfoot>
+                                                    <tfoot>
                                                         <tr>
                                                             <td class="text-center align-middle" colspan="4"><strong>Total SKS Diambil</strong></td>
                                                             <td class="text-center align-middle"><strong>{{ $total_sks_akt }}</strong></td>
                                                             <td colspan="3"></td>
                                                         </tr>
-                                                    </tfoot> --}}
+                                                    </tfoot>
                                                 </table>
                                             </div>
                                         </div>
