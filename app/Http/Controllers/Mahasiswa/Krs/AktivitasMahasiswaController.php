@@ -169,7 +169,7 @@ class AktivitasMahasiswaController extends Controller
             
             $now = Carbon::now();
 
-            $mk_konversi = MataKuliah::where('id_matkul', $request->id_matkul)->get;
+            $mk_konversi = MataKuliah::where('id_matkul', $request->id_matkul)->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
             // dd($mk_konversi);
 
             $id_aktivitas = Uuid::uuid4()->toString();

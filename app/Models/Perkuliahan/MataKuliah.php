@@ -3,8 +3,12 @@
 namespace App\Models\Perkuliahan;
 
 use App\Models\ProgramStudi;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+
+use function PHPUnit\Framework\isEmpty;
 
 class MataKuliah extends Model
 {
@@ -61,6 +65,210 @@ class MataKuliah extends Model
         // $result = $this->where('id_prodi', auth()->user()->fk_id)->orderBy('kode_mata_kuliah')->get();
 
         return $result;
+    }
+
+    public function getSksMax($id_reg, $semester_aktif)
+    {
+        $ips = AktivitasKuliahMahasiswa::select('ips')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    // ->where('id_status_mahasiswa', ['O'])
+                    ->orderBy('id_semester', 'DESC')
+                    ->pluck('ips')->first();
+
+        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
+
+        if($semester_ke == 1 || $semester_ke == 2 ){
+            $sks_max = 20;
+        }else{
+            if ($ips !== null) {
+                if ($ips >= 3.00) {
+                    $sks_max = 24;
+                } elseif ($ips >= 2.50 && $ips <= 2.99) {
+                    $sks_max = 21;
+                } elseif ($ips >= 2.00 && $ips <= 2.49) {
+                    $sks_max = 18;
+                } elseif ($ips >= 1.50 && $ips <= 1.99) {
+                    $sks_max = 15;
+                } elseif ($ips < 1.50) {
+                    $sks_max = 12;
+                } else {
+                    $sks_max = "Tidak Diisi";
+                }
+            } else {
+                $sks_max = "Tidak Diisi";
+            }
+        }
+        return $sks_max;
+    }
+
+    public function getKrsAkt($id_reg, $semester_aktif)
+    {
+         //DATA AKTIVITAS 
+         $id_reg = auth()->user()->fk_id;
+
+        $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->first();
+                    
+         $db = new MataKuliah();
+
+         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
+        //  dd($data_akt);
+ 
+        if(isEmpty($data_akt))
+        {
+            $mk_akt=NULL;
+            $data_akt_ids = NULL;
+
+        }
+        else
+        {
+            $mk_akt = $data_akt['data']['data'];
+            $data_akt_ids = array_column($mk_akt, 'id_matkul');
+        }
+        // dd($mk_akt);
+         // Ekstrak sub-array 'data' dari $data_akt
+         
+        
+ 
+         // Ekstrak nilai 'id_matkul' dari sub-array 'data'
+         
+ 
+        // AKTIVITAS MAHASISWA YG DIAMBIL
+        $krs_akt = AnggotaAktivitasMahasiswa::with(['aktivitas_mahasiswa.bimbing_mahasiswa', 'aktivitas_mahasiswa.konversi'])
+        ->select(
+            'aktivitas_mahasiswas.id', 
+            'aktivitas_mahasiswas.nama_jenis_aktivitas', 
+            'aktivitas_mahasiswas.nama_jenis_anggota',
+            'aktivitas_mahasiswas.nama_semester',
+            'aktivitas_mahasiswas.id_prodi',
+            'aktivitas_mahasiswas.lokasi',
+            'aktivitas_mahasiswas.mk_konversi',
+            'anggota_aktivitas_mahasiswas.id_aktivitas', 
+            'anggota_aktivitas_mahasiswas.nim', 
+            'anggota_aktivitas_mahasiswas.judul', 
+            'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', 
+            'bimbing_mahasiswas.nama_kategori_kegiatan',
+            'bimbing_mahasiswas.approved',
+            // 'anggota_aktivitas_mahasiswas.*','aktivitas_mahasiswas.*', 'bimbing_mahasiswas.*'
+            )
+            ->leftJoin('aktivitas_mahasiswas', 'aktivitas_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas')
+            ->leftJoin('bimbing_mahasiswas', 'bimbing_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas')
+            ->where('anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', $id_reg)
+            ->where('aktivitas_mahasiswas.id_semester', $semester_aktif->id_semester)
+            ->where('aktivitas_mahasiswas.id_prodi', $riwayat_pendidikan->id_prodi)
+            ->whereIn('aktivitas_mahasiswas.id_jenis_aktivitas', ['1','2', '3', '4','6','15', '22'])
+            ->whereNot('bimbing_mahasiswas.id_bimbing_mahasiswa', NUll)
+            // ->orderBy('nama_kelas_kuliah', 'DESC')
+            // ->limit(10)
+            ->groupBy(
+                'aktivitas_mahasiswas.id', 
+                'aktivitas_mahasiswas.nama_jenis_aktivitas', 
+                'aktivitas_mahasiswas.nama_jenis_anggota',
+                'aktivitas_mahasiswas.nama_semester',
+                'aktivitas_mahasiswas.id_prodi',
+                'aktivitas_mahasiswas.lokasi',
+                'aktivitas_mahasiswas.mk_konversi',
+                'anggota_aktivitas_mahasiswas.id_aktivitas', 
+                'anggota_aktivitas_mahasiswas.nim', 
+                'anggota_aktivitas_mahasiswas.judul', 
+                'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', 
+                'bimbing_mahasiswas.nama_kategori_kegiatan',
+                'bimbing_mahasiswas.approved',
+            )
+            ->get();
+        
+            return [$krs_akt, $data_akt_ids, $mk_akt];
+    }
+
+    public function getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids)
+    {
+        $krs_regular = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'kelas_kuliahs.jadwal_hari', 'kelas_kuliahs.jadwal_jam_mulai', 'kelas_kuliahs.jadwal_jam_selesai', 'mata_kuliahs.sks_mata_kuliah')
+                ->leftJoin('kelas_kuliahs', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kelas_kuliahs.id_kelas_kuliah')
+                ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+                ->where('kelas_kuliahs.id_prodi', $riwayat_pendidikan->id_prodi)
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->get();
+
+        if (!empty($data_akt_ids)) {
+            $krs_regular->whereNotIn('peserta_kelas_kuliahs.id_matkul', $data_akt_ids);
+        }
+        
+        return $krs_regular;
+    }
+
+    public function getKrsMerdeka($id_reg)
+    {
+        $krs_merdeka = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'kelas_kuliahs.jadwal_hari', 'kelas_kuliahs.jadwal_jam_mulai', 'kelas_kuliahs.jadwal_jam_selesai', 'mata_kuliahs.sks_mata_kuliah')
+                ->join('matkul_merdekas', 'matkul_merdekas.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+                ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
+                ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->get();
+
+        return $krs_merdeka;
+
+    }
+
+    public function getMKMerdeka($prodi, $semester_aktif)
+    {
+        $mk_merdeka = MatkulMerdeka::leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
+                ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+                ->select('mata_kuliahs.id_matkul', 'mata_kuliahs.kode_mata_kuliah', 'mata_kuliahs.nama_mata_kuliah', 'matkul_kurikulums.semester', 'matkul_kurikulums.sks_mata_kuliah')
+                ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$semester_aktif['id_semester']."') AS jumlah_kelas_kuliah"))
+                ->orderBy('jumlah_kelas_kuliah', 'DESC')
+                ->orderBy('matkul_kurikulums.semester')
+                ->whereIn('mata_kuliahs.id_prodi', $prodi->pluck('id')) // Hanya mengambil mata kuliah yang termasuk dalam program studi yang dipilih
+                ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+                ->get();
+
+        return $mk_merdeka;
+    }
+
+    public function getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_aktif)
+    {
+        $matakuliah = MataKuliah::leftJoin('matkul_kurikulums', 'matkul_kurikulums.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->leftJoin('list_kurikulums', 'list_kurikulums.id_kurikulum', '=', 'matkul_kurikulums.id_kurikulum')
+            ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->select(
+                'mata_kuliahs.id_matkul',
+                'mata_kuliahs.kode_mata_kuliah',
+                'mata_kuliahs.nama_mata_kuliah',
+                'matkul_kurikulums.semester',
+                'mata_kuliahs.sks_mata_kuliah',
+                'kelas_kuliahs.id_prodi as id_prodi_kelas',
+                'list_kurikulums.nama_kurikulum',
+                'list_kurikulums.is_active'
+            )
+            ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul = mata_kuliahs.id_matkul and kelas_kuliahs.id_semester = '{$semester_aktif['id_semester']}') as jumlah_kelas_kuliah"))
+            ->where('mata_kuliahs.id_prodi', $riwayat_pendidikan->id_prodi)
+            ->where('matkul_kurikulums.id_kurikulum', $riwayat_pendidikan->id_kurikulum)
+            ->where('list_kurikulums.is_active', '1');
+
+        if (!empty($data_akt_ids)) {
+            $matakuliah->whereNotIn('mata_kuliahs.id_matkul', $data_akt_ids);
+        }
+
+        $matakuliah = $matakuliah->groupBy(
+                'mata_kuliahs.id_matkul',
+                'mata_kuliahs.kode_mata_kuliah',
+                'mata_kuliahs.nama_mata_kuliah',
+                'matkul_kurikulums.semester',
+                'mata_kuliahs.sks_mata_kuliah',
+                'kelas_kuliahs.id_prodi',
+                'list_kurikulums.nama_kurikulum',
+                'list_kurikulums.is_active'
+            )
+            ->orderBy('jumlah_kelas_kuliah', 'DESC')
+            ->orderBy('matkul_kurikulums.semester')
+            ->orderBy('matkul_kurikulums.sks_mata_kuliah')
+            ->get();
+
+        return $matakuliah;
+
     }
 
     public function getMKAktivitas($id_prodi, $id_kurikulum)
@@ -167,4 +375,7 @@ class MataKuliah extends Model
 
         return [];
     }
+
+
+
 }
