@@ -60,51 +60,6 @@ Mahasiswa Prodi
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $d)
-                                <tr>
-                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-center align-middle">
-                                        <div class="bg-white text-center w-80  rounded20" style="display:inline-block">
-                                            <a href="#" class="w-80">
-                                                @php
-                                                    $imagePath = public_path('storage/'.$d->angkatan.'/'.$d->nim.'.jpg');
-                                                @endphp
-                                                <img class=" rounded20 bg-light img-fluid" src="{{file_exists($imagePath) ? asset('storage/'.$d->angkatan.'/'.$d->nim.'.jpg') : asset('images/images/avatar/avatar-15.png')}}" alt="">
-                                            </a>
-                                        </div>
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        {{$d->angkatan}}
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        {{$d->nim}}
-                                    </td>
-                                    <td class="text-start align-middle">
-                                        {{$d->nama_mahasiswa}}
-                                    </td>
-                                    <td class="text-start align-middle" style="width: 15%">
-                                        @if ($d->kurikulum)
-                                            {{$d->kurikulum->nama_kurikulum}}
-                                        @endif
-                                    </td>
-                                    <td class="text-start align-middle text-nowrap">
-                                        @if ($d->dosen_pa)
-                                            {{$d->pembimbing_akademik->nama_dosen}}
-                                        @endif
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        {{$d->keterangan_keluar ?? 'Aktif'}}
-                                    </td>
-                                    <td class="text-center align-middle">
-
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <button class="btn btn-sm btn-rounded btn-{{$d->dosen_pa ? 'warning' : 'primary'}} text-nowrap" data-bs-toggle="modal"
-                                        data-bs-target="#assignDosenPa" onclick="setDosenPa({{$d}}, {{$d->id}})"><i class="fa fa-user-graduate"></i> {{$d->dosen_pa ? 'Ubah' : 'Assign'}} PA</button>
-                                    </td>
-                                </tr>
-                                @endforeach
-
                             </tbody>
                         </table>
                     </div>
@@ -123,16 +78,106 @@ Mahasiswa Prodi
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
 
-    function setDosenPa(data, id) {
-        $('#edit_id_dosen').val(data.dosen_pa).trigger('change');
-        // Populate other fields...
-        document.getElementById('editForm').action = '/prodi/data-master/mahasiswa/set-pa/' + id;
-    }
+
 
     $(function() {
         "use strict";
 
-        $('#data').DataTable();
+        $('#data').DataTable({
+            // dom: 'Bfrtip',
+            // buttons: [
+            //     'copy', 'csv', 'excel', 'pdf', 'print'
+            // ],
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{route('prodi.data-master.mahasiswa.data')}}',
+                type: 'GET',
+                data: function (d) {
+                    d.angkatan = $('#angkatan').val();
+                },
+                error: function (xhr, error, thrown) {
+                    alert('An error occurred. ' + thrown);
+                }
+            },
+            order: [[2, 'desc']],
+            columns: [
+                {
+                    data: null,
+                    searchable: false,
+                    class: "text-center align-middle",
+                    sortable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                }},
+                {
+                    data: null,
+                    name: 'image',
+                    render: function(data, type, row) {
+                        var imagePath = '{{ asset('storage') }}' + '/' + data.angkatan + '/' + data.nim + '.jpg';
+                        return '<img class="rounded20 bg-light img-fluid w-80" src="' + imagePath + '" alt="" onerror="this.onerror=null;this.src=\'{{ asset('images/images/avatar/avatar-15.png') }}\';">';
+                    },
+                    orderable: false,
+                    searchable: false
+                },
+                {data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [0]},
+                {data: 'nim', name: 'nim', class: 'text-center', searchable: true, orderData: [1]},
+                {data: 'nama_mahasiswa', name: 'nama_mahasiswa', class: 'text-start', searchable: true, orderData: [2]},
+                {
+                    data: 'kurikulum.nama_kurikulum',
+                    name: 'kurikulum.nama_kurikulum',
+                    class: 'text-start',
+                    searchable: false,
+                    sortable:false,
+                    render: function(data, type, row) {
+                        return data ? data : '-';
+                    }
+                },
+                {
+                    data: 'pembimbing_akademik.nama_dosen',
+                    name: 'pembimbing_akademik.nama_dosen',
+                    class: 'text-start',
+                    searchable: false,
+                    sortable:false,
+                    render: function(data, type, row) {
+                        return data ? data : '-';
+                    }
+                },
+                {
+                    data: 'keterangan_keluar',
+                    name: 'keterangan_keluar',
+                    searchable: true,
+                    class: "text-center align-middle",
+                    sortable: false,
+                    render: function(data, type, row) {
+                        return data ? data : 'Aktif';
+                    }
+                },
+                {data: null, searchable: false, sortable:false, class:"text-center align-middle", render: function(data, type, row, meta) {
+                        return "";
+                }},
+                {
+                    data: null,
+                    render: function(data, type, row) {
+                        var buttonClass = data.dosen_pa ? 'warning' : 'primary';
+                        var buttonText = data.dosen_pa ? 'Ubah' : 'Assign';
+                        var jsonData = encodeURIComponent(JSON.stringify(data));
+                        return '<button class="btn btn-sm btn-rounded btn-' + buttonClass + ' text-nowrap" data-bs-toggle="modal" data-bs-target="#assignDosenPa" onclick="setDosenPa(decodeURIComponent(\'' + jsonData + '\'), ' + data.id + ')"><i class="fa fa-user-graduate"></i> ' + buttonText + ' PA</button>';
+                    },
+                    orderable: false,
+                    searchable: false
+                }
+            ],
+        });
+
+
     });
+
+    function setDosenPa(data, id) {
+        console.log('setDosenPa called with data:', data, 'and id:', id);
+        $('#edit_id_dosen').val(data.dosen_pa).trigger('change');
+        // Populate other fields...
+        document.getElementById('editForm').action = '/prodi/data-master/mahasiswa/set-pa/' + id;
+    }
 </script>
 @endpush
