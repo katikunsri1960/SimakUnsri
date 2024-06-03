@@ -230,7 +230,8 @@ class MataKuliah extends Model
 
     public function getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_aktif)
     {
-        $matakuliah = MataKuliah::leftJoin('matkul_kurikulums', 'matkul_kurikulums.id_matkul', '=', 'mata_kuliahs.id_matkul')
+        $matakuliah = MataKuliah::with('rencana_pembelajaran')
+            ->leftJoin('matkul_kurikulums', 'matkul_kurikulums.id_matkul', '=', 'mata_kuliahs.id_matkul')
             ->leftJoin('list_kurikulums', 'list_kurikulums.id_kurikulum', '=', 'matkul_kurikulums.id_kurikulum')
             ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
             ->select(
