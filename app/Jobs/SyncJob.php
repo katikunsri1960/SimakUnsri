@@ -48,6 +48,17 @@ class SyncJob implements ShouldQueue
 
             foreach($result as $r)
             {
+                if($this->act == 'GetListMahasiswaLulusDO')
+                {
+                    $r = array_map(function ($value) {
+                        $value['tgl_masuk_sp'] = empty($value['tgl_masuk_sp']) ? null : date('Y-m-d', strtotime($value['tgl_masuk_sp']));
+                        $value['tgl_keluar'] = empty($value['tgl_keluar']) ? null : date('Y-m-d', strtotime($value['tgl_keluar']));
+                        $value['tgl_create'] = empty($value['tgl_create']) ? null : date('Y-m-d', strtotime($value['tgl_create']));
+                        $value['tgl_sk_yudisium'] = empty($value['tgl_sk_yudisium']) ? null : date('Y-m-d', strtotime($value['tgl_sk_yudisium']));
+                        return $value;
+                    }, $r);
+                }
+
                 if ($this->act == 'GetListAktivitasMahasiswa') {
                     $r = array_map(function ($value) {
                         $value['tanggal_sk_tugas'] = empty($value['tanggal_sk_tugas']) ? null : date('Y-m-d', strtotime($value['tanggal_sk_tugas']));

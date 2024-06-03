@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="{{asset('{{asset('images/unsri.png')}}')}}">
+    <link rel="icon" href="{{asset('images/unsri.png')}}">
     @vite(['resources/sass/app.scss'])
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
 
