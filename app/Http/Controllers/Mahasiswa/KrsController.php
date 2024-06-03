@@ -48,6 +48,7 @@ class KrsController extends Controller
         list($krs_akt, $data_akt_ids, $mk_akt) = $db->getKrsAkt($id_reg, $semester_aktif);
         // dd($data_akt_ids);     
 
+        // PK GUNAKAN SMETER 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->whereRaw("RIGHT(id_semester, 1) != 3")
                     ->orderBy('id_semester', 'DESC')
@@ -61,6 +62,8 @@ class KrsController extends Controller
         $sks_max = $db->getSksMax($id_reg, $semester_aktif);
         // dd($sks_max);
 
+
+        // PK GUNAKAN SMETER 
         $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $semester_aktif->id_semester)
@@ -75,6 +78,7 @@ class KrsController extends Controller
             }
             // dd($data_status_mahasiswa);
 
+        // PK GUNAKAN SMETER 
         $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);

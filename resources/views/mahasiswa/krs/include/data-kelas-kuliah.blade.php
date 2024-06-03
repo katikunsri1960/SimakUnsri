@@ -46,7 +46,7 @@
                                                             @endphp
 
                                                             {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
-                                                            @foreach ($matakuliah->whereIn('id_matkul', $isEnrolled) as $data)
+                                                            @foreach ($mk_regular->whereIn('id_matkul', $isEnrolled) as $data)
                                                                 @php
                                                                     $isDisabled = $data->jumlah_kelas_kuliah == 0;
                                                                     $isEnrolledMatkul = in_array($data->id_matkul, $isEnrolled);
@@ -84,7 +84,7 @@
                                                             @endforeach
 
                                                             {{-- Tampilkan mata kuliah yang tidak ada di $isEnrolled --}}
-                                                            @foreach ($matakuliah->whereNotIn('id_matkul', $isEnrolled) as $data)
+                                                            @foreach ($mk_regular->whereNotIn('id_matkul', $isEnrolled) as $data)
                                                                 @php
                                                                     $isDisabled = $data->jumlah_kelas_kuliah == 0;
                                                                     $isEnrolledMatkul = in_array($data->id_matkul, $isEnrolled);
@@ -216,28 +216,29 @@
                                                                 $isEnrolled = array_column($krs_akt->toArray(), 'mk_konversi');
                                                                 
                                                             @endphp
-
-                                                            {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
-                                                            @foreach ($mk_akt as $data)
-                                                                @php
-                                                                    $isEnrolledMatkul = in_array($data['id_matkul'], $isEnrolled);
-                                                                    $isLower = $semester_ke < $data['semester'] ;
-                                                                @endphp
-                                                                <tr class="{{ $isEnrolledMatkul ? 'bg-success-light' : '' }}">
-                                                                {{-- <tr class="bg-success-light"> --}}
-                                                                    <td class="text-center align-middle">{{ $no_a++ }}</td>
-                                                                    <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['kode_mata_kuliah'] }}</td>
-                                                                    <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['nama_mata_kuliah'] }}</td>
-                                                                    <td class="text-center align-middle">{{ $data['semester'] }}</td>
-                                                                    <td class="text-center align-middle">{{ $data['sks_mata_kuliah'] }}</td>
-                                                                    {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
-                                                                    <td>
-                                                                        <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas {{ $isEnrolledMatkul || $isLower ? 'disabled' : '' }}" >
-                                                                            Ambil
-                                                                        </a>
-                                                                    </td>
-                                                                </tr>
-                                                            @endforeach
+                                                            @if (!empty($mk_akt)) 
+                                                                {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
+                                                                @foreach ($mk_akt as $data)
+                                                                    @php
+                                                                        $isEnrolledMatkul = in_array($data['id_matkul'], $isEnrolled);
+                                                                        $isLower = $semester_ke < $data['semester'] ;
+                                                                    @endphp
+                                                                    <tr class="{{ $isEnrolledMatkul ? 'bg-success-light' : '' }}">
+                                                                    {{-- <tr class="bg-success-light"> --}}
+                                                                        <td class="text-center align-middle">{{ $no_a++ }}</td>
+                                                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['kode_mata_kuliah'] }}</td>
+                                                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['nama_mata_kuliah'] }}</td>
+                                                                        <td class="text-center align-middle">{{ $data['semester'] }}</td>
+                                                                        <td class="text-center align-middle">{{ $data['sks_mata_kuliah'] }}</td>
+                                                                        {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
+                                                                        <td>
+                                                                            <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas {{ $isEnrolledMatkul || $isLower ? 'disabled' : '' }}" >
+                                                                                Ambil
+                                                                            </a>
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                            @endif
                                                         </tbody>
                                                     </table>
                                                 </div>
