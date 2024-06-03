@@ -29,8 +29,9 @@ class MahasiswaController extends Controller
     public function sync_mahasiswa()
     {
         $data = [
-            ['act' => 'GetBiodataMahasiswa', 'count' => 'GetCountBiodataMahasiswa', 'order' => 'id_mahasiswa', 'job' => \App\Jobs\Mahasiswa\BiodataJob::class],
-            ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class]
+            // ['act' => 'GetBiodataMahasiswa', 'count' => 'GetCountBiodataMahasiswa', 'order' => 'id_mahasiswa', 'job' => \App\Jobs\Mahasiswa\BiodataJob::class],
+            // ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class],
+            ['act' => 'GetListMahasiswaLulusDO', 'count' => 'GetCountMahasiswaLulusDO', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\SyncJob::class]
         ];
 
         $batch = Bus::batch([])->dispatch();
@@ -43,10 +44,20 @@ class MahasiswaController extends Controller
             $act = $d['act'];
             $order = $d['order'];
 
-            for ($i=0; $i < $count; $i+=$limit) {
-                $job = new $d['job']($act, $limit, $i, $order);
-                $batch->add($job);
+            if ($d['act'] == 'GetListMahasiswaLulusDO') {
+
+                for ($i=0; $i < $count; $i+=$limit) {
+                    $job = new $d['job']($act, $limit, $i, $order, null, \App\Models\Mahasiswa\LulusDo::class, 'id_registrasi_mahasiswa');
+                    $batch->add($job);
+                }
+
+            } else {
+                for ($i=0; $i < $count; $i+=$limit) {
+                    $job = new $d['job']($act, $limit, $i, $order);
+                    $batch->add($job);
+                }
             }
+
 
         }
 
