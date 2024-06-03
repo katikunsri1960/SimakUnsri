@@ -32,7 +32,7 @@ Rencana Pembelajaran Semester
                 </div>
                 <div class="row">
                     <div class="table-responsive">
-                        <table id="example1" class="table table-bordered table-striped text-center">
+                        <table id="data" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -44,17 +44,27 @@ Rencana Pembelajaran Semester
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>1</td>
-                                    <td>Customer Support</td>
-                                    <td>New York</td>
-                                    <td>New York</td>
-                                    <td>10</td>
-                                    <td>
-                                        <a class="btn btn-rounded bg-success-light" href=""><i class="fa fa-eye"></i> Lihat RPS</a>
-                                        <a class="btn btn-rounded bg-success-light" href=""><i class="fa fa-calendar-plus-o"></i> Update RPS</a>
-                                    </td>
-                                </tr>
+                                @foreach($data as $d)
+                                    <tr>
+                                        <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                        <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
+                                        <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
+                                        <td class="text-center align-middle">{{$d->matkul->kurikulum ? $d->matkul->kurikulum->nama_kurikulum : '-'}}</td>
+                                        <td>@if($d->jumlah_rps == 0 && $d->jumlah_approved == 0)
+                                                <span class="badge badge-secondary">Belum di Isi<span>
+                                            @elseif($d->jumlah_rps > 0 && $d->jumlah_approved >= 0 && $d->jumlah_rps != $d->jumlah_approved)
+                                                <span class="badge badge-danger">Belum di Setujui<span>
+                                            @elseif($d->jumlah_rps > 0 && $d->jumlah_approved > 0 && $d->jumlah_rps == $d->jumlah_approved)
+                                                <span class="badge badge-success">Sudah di Setujui<span>
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
+                                        <td>
+                                            <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $d->id_matkul])}}"><i class="fa fa-search"></i> Lihat RPS</a>
+                                        </td>
+                                    </tr>
+                                @endforeach                                
                             </tbody>
 					  </table>
                     </div>
@@ -64,4 +74,20 @@ Rencana Pembelajaran Semester
     </div>				
 </section>
 @endsection
+@push('js')
+
+<script>
+      $(document).ready(function() {
+        $('#data').DataTable({
+            "paging": false,
+            "ordering": true,
+            "searching": true,
+            "scrollCollapse": true,
+            "scrollY": "550px",
+        });
+
+    });
+</script>
+
+@endpush
 
