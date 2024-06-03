@@ -59,8 +59,8 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">Dosen PA</p>
-                        @if (!empty($riwayat_pendidikan->nama_dosen))
-                            <h4 class="mt-5 mb-0" style="color:#0052cc">{{ $riwayat_pendidikan->nama_dosen }}</h4>
+                        @if (!empty($riwayat_pendidikan->pembimbing_akademik->nama_dosen))
+                            <h4 class="mt-5 mb-0" style="color:#0052cc">{{ $riwayat_pendidikan->pembimbing_akademik->nama_dosen }}</h4>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
@@ -488,6 +488,60 @@ Kartu Rencana Studi
         var idMatkul = $(this).data('id-matkul');
         window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
     });
+
+
+// LIHAT RPS
+    $(document).on('click', '.lihat-rps', function() {
+        var idMatkul = $(this).data('id-matkul');
+        var resultContainerId = '#data-rencana-pembelajaran tbody';
+
+        // Dapatkan CSRF token dari meta tag
+        var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+        // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
+        $.ajax({
+            url: '{{ route("mahasiswa.lihat-rps", ["id_matkul" => ":id_matkul"]) }}'.replace(':id_matkul', idMatkul),
+            type: 'GET',
+            data: {
+                _token: csrfToken  // Sertakan CSRF token di sini
+            },
+            success: function(data) {
+                if (data.length === 0) {
+                    // Tampilkan pesan error jika data RPS kosong
+                    swal({
+                        icon: "warning",
+                        title: 'Tidak ada data RPS',
+                        text: 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.',
+                    });
+                    
+                } else {
+                    displayData(data, resultContainerId);
+                    $('#rpsModal').modal('show'); // Tampilkan modal setelah data dimuat
+                }
+            },
+            error: function(error) {
+                console.error('Error fetching data:', error);
+                swal({
+                    icon: 'error',
+                    title: 'Terjadi kesalahan',
+                    text: 'Tidak dapat mengambil data RPS. Silakan coba lagi nanti.',
+                });
+            }
+        });
+    });
+
+    function displayData(data, resultContainerId) {
+        $(resultContainerId).empty();
+
+        $.each(data, function(index, rps) {
+            var row = '<tr>';
+            row += '<td class="text-center align-middle">' + rps.pertemuan + '</td>';
+            row += '<td class="text-start align-middle">' + rps.materi_indonesia + '</td>';
+            row += '<td class="text-start align-middle">' + rps.materi_inggris + '</td>';
+            row += '</tr>';
+            $(resultContainerId).append(row);
+        });
+    }
 
 </script>
 @endpush

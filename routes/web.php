@@ -44,7 +44,15 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::post('/simpan-aktivitas', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'simpanAktivitas'])->name('mahasiswa.krs.simpan-aktivitas');
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
                 Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
+
+                
+
             });
+
+            // Route::get('/rps/lihat-rps', [App\Http\Controllers\Mahasiswa\RencanaPembelajaranController::class, 'index'])->name('mahasiswa.lihat-rps');
+            Route::get('/krs/rps/{id_matkul}', [App\Http\Controllers\Mahasiswa\RencanaPembelajaranController::class, 'getRPSData'])->name('mahasiswa.lihat-rps');
+            
+
 
 
 

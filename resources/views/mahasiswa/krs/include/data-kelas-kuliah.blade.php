@@ -4,6 +4,45 @@
             <div class="row">
                 <div class="row">
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
+                        <!-- Modal -->
+                        <div class="modal fade" id="rpsModal" tabindex="-1" aria-labelledby="rpsModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                                <div class="row mb-20">
+                                    <div class="col-xxl-12">
+                                        <div class="box box-body mb-0 bg-white">
+                                            <div class="row">
+                                            
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h3 class="modal-title" id="rpsModalLabel">Rencana Pembelajaran Semester {{$rps[0]->nama_mata_kuliah}}</h3>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="row">
+                                                            <div class="table-responsive">
+                                                                <table id="data-rencana-pembelajaran" class="table table-bordered table-striped text-left">
+                                                                    <thead>
+                                                                        <tr>
+                                                                            <th class="text-center align-middle" style="width: 4%">Pertemuan</th>
+                                                                            <th class="text-center align-middle" style="width: 45%">Materi Indonesia</th>
+                                                                            <th class="text-center align-middle" style="width: 45%">Materi Inggris</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
+                                                                        <!-- Data RPS akan dimasukkan di sini oleh jQuery -->
+                                                                    </tbody>
+                                                                </table>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                                    
                         @php
                             $no=1;
                             
@@ -50,13 +89,15 @@
                                                                 @php
                                                                     $isDisabled = $data->jumlah_kelas_kuliah == 0;
                                                                     $isEnrolledMatkul = in_array($data->id_matkul, $isEnrolled);
+                                                                    $noRPS = empty($data->rencana_pembelajaran); // Assume $data->rps is a boolean or check if RPS is available
                                                                 @endphp
                                                                 <tr class="bg-success-light {{ $isDisabled ? 'disabled-row' : '' }}">
                                                                     <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->kode_mata_kuliah }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle" style="white-space: nowrap;">
-                                                                        <button class="btn btn-warning-light lihat-kelas-kuliah" title="Lihat RPS" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                        <button class="btn btn-warning-light lihat-rps" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                            data-toggle="modal" data-target="#rpsModal"
                                                                             {{ $isDisabled || $isEnrolledMatkul ? 'disabled' : '' }}>
                                                                             <i class="fa fa-newspaper-o"></i> Lihat RPS
                                                                         </button>
@@ -64,22 +105,13 @@
                                                                     <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                     <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
-                                                                    {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
                                                                     <td class="text-center align-middle">
                                                                         <button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="{{ $data->id_matkul }}" 
-                                                                            {{ $isDisabled || $isEnrolledMatkul ? 'disabled' : '' }}>
+                                                                            {{ $isDisabled || $isEnrolledMatkul || $noRPS ? 'disabled' : '' }}>
                                                                             <i class="fa fa-eye"></i>
                                                                         </button>
-                                                                        <!-- Gunakan id_matkul dalam atribut id untuk hasil kontainer -->
                                                                         <div class="result-container" id="result-container_{{ $data->id_matkul }}" style="margin-top: 20px"></div>
                                                                     </td>
-                                                                    {{-- <td>
-                                                                        <input type="checkbox" id="md_checkbox_{{ $no_a }}" class="filled-in chk-col-success" 
-                                                                            {{ in_array($data->id_matkul, array_column($krs_regular->toArray(), 'id_matkul')) ? 'checked' : '' }} 
-                                                                            {{ $isDisabled ? 'disabled' : '' }} />
-                                                                        <label for="md_checkbox_{{ $no_a }}"></label>
-                                                                    </td> --}}
-
                                                                 </tr>
                                                             @endforeach
 
@@ -88,27 +120,36 @@
                                                                 @php
                                                                     $isDisabled = $data->jumlah_kelas_kuliah == 0;
                                                                     $isEnrolledMatkul = in_array($data->id_matkul, $isEnrolled);
+                                                                    $noRPS = empty($data->rencana_pembelajaran);
                                                                 @endphp
                                                                 <tr class="{{ $isDisabled ? 'disabled-row' : '' }}">
                                                                     <td class="text-center align-middle">{{ $no_a++ }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->kode_mata_kuliah }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
-                                                                    <td class="text-center align-middle" style="white-space: nowrap;">
-                                                                        <button class="btn btn-warning-light lihat-kelas-kuliah" title="Lihat RPS" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                    {{-- <td class="text-center align-middle" style="white-space: nowrap;">
+                                                                        <button type="button" class="btn btn-warning-light" data-bs-toggle="modal" data-bs-target="#rpsModal"
                                                                             {{ $isDisabled || $isEnrolledMatkul ? 'disabled' : '' }}>
                                                                             <i class="fa fa-newspaper-o"></i> Lihat RPS
                                                                         </button>
+                                                                    </td> --}}
+
+                                                                    <td class="text-center align-middle" style="white-space: nowrap;">
+                                                                        <button type="button" class="btn btn-warning-light lihat-rps" data-bs-toggle="modal" data-id-matkul="{{ $data['id_matkul'] }}">
+                                                                            <i class="fa fa-newspaper-o"></i> Lihat RPS
+                                                                        </button>
                                                                     </td>
+                                                                    
+
                                                                     <td class="text-center align-middle">{{ $data->semester }}</td>
                                                                     <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
                                                                     {{-- TABEL BERHASIL DAN TERBUKA SESUAI POSISI --}}
                                                                     <td class="text-center align-middle">
-                                                                        <button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="{{ $data->id_matkul }}" {{ $isDisabled ? 'disabled' : '' }}>
+                                                                        <button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                            {{ $isDisabled || $isEnrolledMatkul || $noRPS ? 'disabled' : '' }}>
                                                                             <i class="fa fa-eye"></i>
                                                                         </button>
-                                                                        <!-- Gunakan id_matkul dalam atribut id untuk hasil kontainer -->
-                                                                        <div class="result-container" id="result-container_{{ $data->id_matkul }}" style="margin-top: 5px"></div>
+                                                                        <div class="result-container" id="result-container_{{ $data->id_matkul }}" style="margin-top: 20px"></div>
                                                                     </td>
 
                                                                     {{-- <td>
