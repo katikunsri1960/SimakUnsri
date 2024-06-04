@@ -67,7 +67,7 @@
                         </a>
                     </li> -->
                     <li class="header">Perkuliahan</li>
-                    <li class="treeview {{request()->routeIs('dosen.perkuliahan.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('dosen.perkuliahan.jadwal-kuliah') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-kuliah') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i class="fa fa-calendar-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Jadwal Dosen</span>
@@ -83,6 +83,12 @@
                                 <a href="{{route('dosen.perkuliahan.jadwal-bimbingan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Bimbingan</a>
                             </li> -->
                         </ul>
+                    </li>
+                    <li class="{{request()->routeIs('dosen.perkuliahan.rencana-pembelajaran') ? 'active' : ''}}">
+                        <a href="{{route('dosen.perkuliahan.rencana-pembelajaran')}}">
+                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
+                            <span>RPS</span>
+                        </a>
                     </li>
                     <li>
                         <a href="https://elearning.unsri.ac.id/" target="_blank">
