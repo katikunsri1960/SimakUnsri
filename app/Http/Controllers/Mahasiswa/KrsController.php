@@ -334,7 +334,7 @@ class KrsController extends Controller
         $nim = $riwayat_pendidikan->nim;
         $nama_smt = Semester::where('id_semester', $semester_select)->first()->nama_semester;
         $dosen_pa = BiodataDosen::where('id_dosen', $riwayat_pendidikan->dosen_pa)->first();
-        dd($request->semester);
+        // dd($request->semester);
 
 
         //DATA AKTIVITAS 
