@@ -28,62 +28,30 @@ Pengisian Nilai Perkuliahan
                 <div class="box-header with-border">
                     <div class="row">
                         <div class="col-xl-4 col-lg-12 pb-20">
-                            <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $rps->id_matkul])}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
+                            <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $matkul->id_matkul])}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
                         </div>                             
                     </div>
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
-                            <h3 class="fw-500 text-dark mt-0">Update Rencana Pembelajaran Semester</h3>
+                            <h3 class="fw-500 text-dark mt-0">Update Link Repository Rencana Pembelajaran Semester</h3>
                         </div>                             
                     </div>
                 </div>
                 <!-- /.box-header -->
-                <form class="form" method="POST" id="update-rps" action="{{ route('dosen.perkuliahan.rencana-pembelajaran.update', ['rencana_ajar' => $rps->id_rencana_ajar]) }}">
+                <form class="form" method="POST" id="update-link-rps" action="{{ route('dosen.perkuliahan.rencana-pembelajaran.update-link', ['matkul' => $matkul->id_matkul]) }}">
                     @csrf
                     <div class="box-body">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label for="pertemuan" class="form-label">Pertemuan Ke-</label>
+                                    <label for="link_rps" class="form-label">Link Repository RPS</label>
                                     <input
                                         type="text"
                                         class="form-control"
-                                        name="pertemuan"
-                                        id="pertemuan"
+                                        name="link_rps"
+                                        id="link_rps"
                                         aria-describedby="helpId"
-                                        value="{{$rps->pertemuan}}"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="materi_indo" class="form-label">Materi Indonesia</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="materi_indo"
-                                        id="materi_indo"
-                                        aria-describedby="helpId"
-                                        value="{{$rps->materi_indonesia}}"
-                                        required
-                                    />
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label for="materi_inggris" class="form-label">Materi Inggris</label>
-                                    <input
-                                        type="text"
-                                        class="form-control"
-                                        name="materi_inggris"
-                                        id="materi_inggris"
-                                        aria-describedby="helpId"
-                                        value="{{$rps->materi_inggris}}"
+                                        value="{{$matkul->link_rps}}"
                                         required
                                     />
                                 </div>
@@ -92,10 +60,10 @@ Pengisian Nilai Perkuliahan
                     </div>
                     <!-- /.box-body -->
                     <div class="box-footer text-end">
-                        <a class="btn btn-warning me-1" href="{{route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $rps->id_matkul])}}">
+                        <a class="btn btn-warning me-1" href="{{route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $matkul->id_matkul])}}">
                             <i class="ti-trash"></i> Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary" {{$rps->approved == 1 ? 'disabled' : ''}}>
+                        <button type="submit" class="btn btn-primary">
                             <i class="ti-save-alt"></i> Save
                         </button>
                     </div> 
@@ -110,10 +78,10 @@ Pengisian Nilai Perkuliahan
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
 
-    $('#update-rps').submit(function(e){
+    $('#update-link-rps').submit(function(e){
         e.preventDefault();
         swal({
-            title: 'Perubahan Rencana Pembelajaran Semester',
+            title: 'Perubahan Link Repository Rencana Pembelajaran Semester',
             text: "Apakah anda yakin ingin?",
             type: 'warning',
             showCancelButton: true,
@@ -123,7 +91,7 @@ Pengisian Nilai Perkuliahan
             cancelButtonText: 'Batal'
         }, function(isConfirm){
             if (isConfirm) {
-                $('#update-rps').unbind('submit').submit();
+                $('#update-link-rps').unbind('submit').submit();
                 $('#spinner').show();
             }
         });

@@ -134,6 +134,8 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/rencana-pembelajaran/ubah/{rencana_ajar}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'ubah_rencana_pembelajaran'])->name('dosen.perkuliahan.rencana-pembelajaran.ubah');
                     Route::post('/rencana-pembelajaran/update/{rencana_ajar}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran_update'])->name('dosen.perkuliahan.rencana-pembelajaran.update');
                     Route::get('/rencana-pembelajaran/delete/{rencana_ajar}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran_delete'])->name('dosen.perkuliahan.rencana-pembelajaran.delete');
+                    Route::get('/rencana-pembelajaran/ubah-link/{matkul}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'ubah_link_rencana_pembelajaran'])->name('dosen.perkuliahan.rencana-pembelajaran.ubah-link');
+                    Route::post('/rencana-pembelajaran/update-link/{matkul}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran_update_link'])->name('dosen.perkuliahan.rencana-pembelajaran.update-link');
                 });
             });
 

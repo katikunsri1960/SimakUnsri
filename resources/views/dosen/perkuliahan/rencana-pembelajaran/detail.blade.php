@@ -49,7 +49,7 @@ $id_matkul = $matkul->id_matkul;
                             <div class="col-xl-6 col-lg-6 text-end">
                                 <div class="btn-group">
                                     <a class="btn btn-rounded bg-success-light " href="{{route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul])}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah RPS</a>
-                                    <a class="btn btn-rounded bg-warning-light " href=""><i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i> Edit Link RPS</a>
+                                    <a class="btn btn-rounded bg-warning-light " href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah-link', ['matkul' => $id_matkul])}}"><i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i> Edit Link RPS</a>
                                 </div>   
                             </div>                           
                         </div><br>

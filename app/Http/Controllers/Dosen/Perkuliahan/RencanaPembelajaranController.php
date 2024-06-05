@@ -186,4 +186,42 @@ class RencanaPembelajaranController extends Controller
             return redirect()->back()->with('error', 'RPS Sudah di Setujui Kaprodi');
         }
     }
+
+    public function ubah_link_rencana_pembelajaran(string $matkul)
+    {
+        // dd($semester_aktif->id_semester);
+        $matkul = MataKuliah::where('id_matkul', $matkul)->first();
+
+        return view('dosen.perkuliahan.rencana-pembelajaran.update-link', ['matkul' => $matkul]);
+    }
+
+    public function rencana_pembelajaran_update_link(Request $request, string $matkul)
+    {
+        // dd($request->all());
+        //Define variable
+        $id_dosen = auth()->user()->fk_id;
+        $semester_aktif = SemesterAktif::with(['semester'])->first();
+
+        //Validate request data
+        $data = $request->validate([
+            'link_rps' => 'required',
+        ]);
+
+        $data_dosen = DosenPengajarKelasKuliah::with('kelas_kuliah')->whereHas('kelas_kuliah', function ($query) use ($matkul, $semester_aktif){
+            $query->where('id_matkul', $matkul)->where('id_semester', $semester_aktif->id_semester);
+        })
+        ->where('id_dosen', $id_dosen)
+        ->where('urutan', '1')
+        ->first();
+
+        // dd($data_dosen);
+        if($data_dosen){
+
+            MataKuliah::where('id_matkul', $matkul)->update(['link_rps'=> $request->link_rps]);
+
+        }else{
+            return redirect()->back()->with('error', 'Anda Bukan Koordinator Mata Kuliah');
+        }
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+    }
 }
