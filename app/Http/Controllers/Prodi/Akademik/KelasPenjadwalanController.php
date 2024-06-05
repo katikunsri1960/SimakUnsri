@@ -417,7 +417,7 @@ class KelasPenjadwalanController extends Controller
         //Get id dosen pengajar kelas kuliah
         $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
 
-        if($rencana_pertemuan == '16'){
+        if($rencana_pertemuan >= '16'){
              //Count jumlah dosen pengajar kelas kuliah
             $jumlah_dosen=count($request->dosen_kelas_kuliah);
 

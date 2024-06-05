@@ -4,6 +4,9 @@ Rencana Pembelajaran Semester
 @endsection
 @section('content')
 @include('swal')
+@php
+$id_matkul = $matkul->id_matkul;
+@endphp
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-12">
@@ -44,7 +47,7 @@ Rencana Pembelajaran Semester
                                 <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.rencana-pembelajaran')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
                             </div>  
                             <div class="col-xl-6 col-lg-6 text-end">
-                                <a class="btn btn-rounded bg-success-light " href="{{route('dosen.perkuliahan.rencana-pembelajaran')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah RPS</a>
+                                <a class="btn btn-rounded bg-success-light " href="{{route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul])}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah RPS</a>
                             </div>                           
                         </div><br>
                         <div class="row">
