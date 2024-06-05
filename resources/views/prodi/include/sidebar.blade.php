@@ -23,9 +23,6 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            {{-- <li class="{{request()->routeIs('prodi.referensi.prodi') ? 'active' : ''}}"><a href="{{route('prodi.referensi.prodi')}}"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Program Studi</a>
-                            </li> --}}
                             <li class="{{request()->routeIs('prodi.data-master.dosen') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.dosen')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Dosen</a>
@@ -76,15 +73,10 @@
                                 <a href="{{route('prodi.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-akademik.tugas-akhir') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-akademik.tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-                                        Skripsi
-                                    @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-                                        Tesis
-                                    @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-                                        Disertasi
-                                    @else
-                                        Tugas Akhir
+                                <a href="{{route('prodi.data-akademik.tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>@if(Auth::user()->fk->nama_jenjang_pendidikan == 'S1')Skripsi
+                                    @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')Tesis
+                                    @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')Disertasi
+                                    @else Tugas Akhir
                                     @endif
                                      Mahasiswa</a>
                             </li>
