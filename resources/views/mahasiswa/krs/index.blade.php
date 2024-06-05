@@ -3,6 +3,7 @@
 Kartu Rencana Studi
 @endsection
 @section('content')
+@include('swal')
 <section class="content">
     <div class="row align-items-end">
         <div class="col-xl-12 col-12">
@@ -72,26 +73,35 @@ Kartu Rencana Studi
     <div class="row mt-20">
         <div class="col-lg-12 col-xl-12 mt-5">
             <div class="box">
-				<!-- Nav tabs -->
-                <ul class="nav nav-pills justify-content-left" role="tablist">
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
-                </ul>
-                <ul class="box-controls pull-right d-md-flex d-none">
-                    <!-- <li> -->
-                    <div class="clearfix">
-                        <a class="waves-effect waves-light btn btn-app btn-success mb-20" href="#">
-                            <i class="fa fa-print"></i> Print
-                        </a>
+                <div class="row">
+                    <div class="col-xl-12 col-lg-12 d-flex justify-content-between mb-10">
+                        <div class="d-flex justify-content-start px-3">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-pills justify-content-start" role="tablist">
+                                <li class="nav-item rounded10 mb-0"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
+                                <li class="nav-item rounded10 mb-0"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
+                            </ul>
+                        </div>
+                        <div class="d-flex justify-content-end px-3">
+                            <div class="row">
+                                <div class="col-xl-8 mt-10">
+                                    <select name="semester" id="semester_select" class="form-select form-select-lg mb-5">
+                                        <option value="">-- Pilih Semester --</option>
+                                        @foreach ($semester as $s)
+                                        <option value="{{$s->id_semester}}" @if ($s->id_semester == $semester_select) selected @endif>{{$s->nama_semester}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-xl-2 mt-5">
+                                    <button type="button" class="waves-effect waves-light btn btn-success mx-10" title="Cetak KRS">
+                                        <i class="fa fa-print"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group m-10">
-                        <select class="form-select">
-                            @foreach($semester as $data)
-                                <option>{{$data->nama_semester}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </ul>
+                </div>
+				
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
@@ -110,14 +120,21 @@ Kartu Rencana Studi
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
 @push('js')
-{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> --}}
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
 
     $(document).ready(function() {
+        $('#semester_select').select2({
+            placeholder: '-- Pilih Semester --',
+        });
 
-        // Misalkan select fakultas memiliki id="select-fakultas"
+        $('#semester_select').on('change', function (e) {
+            var id = $(this).val();
+            window.location.href = "{{route('mahasiswa.krs')}}?semester=" + id;
+        });
+
+        // Select Fakultas Kampus Merdeka
         $('#select-fakultas').change(function() {
             // Ambil nilai fakultas_id yang dipilih
             var selectedFakultasId = $(this).val();
@@ -130,7 +147,6 @@ Kartu Rencana Studi
                     id: selectedFakultasId
                 },
                 success: function(response) {
-                    // console.log(response.prodi);
                     // Update select prodi dengan opsi baru
                     $('#select-prodi').empty(); // Kosongkan opsi yang ada sebelumnya
                     $.each(response.prodi, function(index, prodi) {
@@ -236,7 +252,14 @@ Kartu Rencana Studi
                     table += '<td>Nama Dosen Tidak Diisi</td>';
                 }
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
-                table += '<td>' + kelas.peserta_kelas_count +'/'+ kelas.kapasitas +'</td>';
+                if (kelas.kapasitas == null) {
+                    // Jika Kapasitas Kelas = 0, tampilkan "-"
+                    table += '<td>' + kelas.peserta_kelas_count +'/'+ '-' +'</td>';;
+                } else {
+                    // Jika Kapasitas Kelas !=  0, tampilkan Kapasitas peserta
+                    table += '<td>' + kelas.peserta_kelas_count +'/'+ kelas.kapasitas +'</td>';;
+                }
+                
                 if (kelas.kelas_Enrolled) {
                     // Jika sudah terdaftar, tombol "Ambil" dinonaktifkan
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
@@ -472,14 +495,12 @@ Kartu Rencana Studi
         @endphp
 
         // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
-        @if($today->greaterThan($deadline))
+        @if($today->greaterThan($deadline) || $semester_aktif->id_semester > $semester_select)
             swal({
                 icon: 'warning',
                 title: 'Peringatan',
-                text: 'Periode pengisian KRS telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah',
-                showCancelButton: false,
+                text: 'Periode pengisian KRS pada Semester yang Anda pilih telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah',
                 showConfirmButton: true,
-                timer: false // Set waktu tampilan SweetAlert
             });
         @endif
     });
@@ -509,7 +530,7 @@ Kartu Rencana Studi
                 if (data.length === 0) {
                     // Tampilkan pesan error jika data RPS kosong
                     swal({
-                        icon: "warning",
+                        icon: 'warning',
                         title: 'Tidak ada data RPS',
                         text: 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.',
                     });
