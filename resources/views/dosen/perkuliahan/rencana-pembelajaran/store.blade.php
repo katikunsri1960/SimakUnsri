@@ -30,7 +30,7 @@ Rencana Pembelajaran Semester
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="" id="tambah-rencana-pembelajaran" method="POST">
+                <form class="form" action="{{route('dosen.perkuliahan.rencana-pembelajaran.store', ['matkul' => $id_matkul])}}" id="tambah-rencana-pembelajaran" method="POST">
                     @csrf
                     <div class="box-body">
                         <h4 class="text-info mb-0"><i class="fa fa-book"></i> Detail Mata Kuliah</h4>
@@ -93,7 +93,7 @@ Rencana Pembelajaran Semester
                                             name="pertemuan[]"
                                             id="pertemuan"
                                             aria-describedby="helpId"
-                                            value="0"
+                                            value=""
                                             required
                                         />
                                     </div>
@@ -133,7 +133,7 @@ Rencana Pembelajaran Semester
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $id_matkul])}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
@@ -156,7 +156,7 @@ Rencana Pembelajaran Semester
             var newRow = $('<div class="rps-field row">' +
                                 '<div class="col-md-1 mb-2">' +
                                     '<label for="pertemuan" class="form-label">Pertemuan Ke -</label>' +
-                                    '<input type="text" class="form-control" name="pertemuan[]" id="pertemuan" aria-describedby="helpId" value="0" required/>' +
+                                    '<input type="text" class="form-control" name="pertemuan[]" id="pertemuan" aria-describedby="helpId" value="" required/>' +
                                 '</div>' +
                                 '<div class="col-md-5 mb-2">' +
                                    ' <label for="materi_indo" class="form-label">Materi Indonesia</label>' +

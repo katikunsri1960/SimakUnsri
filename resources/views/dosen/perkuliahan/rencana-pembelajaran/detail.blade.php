@@ -47,7 +47,10 @@ $id_matkul = $matkul->id_matkul;
                                 <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.rencana-pembelajaran')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
                             </div>  
                             <div class="col-xl-6 col-lg-6 text-end">
-                                <a class="btn btn-rounded bg-success-light " href="{{route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul])}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah RPS</a>
+                                <div class="btn-group">
+                                    <a class="btn btn-rounded bg-success-light " href="{{route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul])}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah RPS</a>
+                                    <a class="btn btn-rounded bg-warning-light " href=""><i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i> Edit Link RPS</a>
+                                </div>   
                             </div>                           
                         </div><br>
                         <div class="row">
@@ -56,8 +59,9 @@ $id_matkul = $matkul->id_matkul;
                                     <thead>
                                         <tr>
                                             <th>Pertemuan</th>
-                                            <th>Materi (Indonesia)</th>
-                                            <th>Materi (Inggris)</th>
+                                            <th>Materi Indonesia</th>
+                                            <th>Materi Inggris</th>
+                                            <th>Status</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -67,8 +71,17 @@ $id_matkul = $matkul->id_matkul;
                                                 <td class="text-center align-middle">{{$d->pertemuan}}</td>
                                                 <td class="text-start align-middle">{{$d->materi_indonesia}}</td>
                                                 <td class="text-start align-middle">{{$d->materi_inggris}}</td>
+                                                <td class="text-center align-middle">@if($d->approved == 0)
+                                                    <span class="badge badge-danger">Belum di Setujui<span>
+                                                    @elseif($d->approved == 1)
+                                                        <span class="badge badge-success">Sudah di Setujui<span>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
                                                 <td>
-                                                    <a class="btn btn-sm btn-rounded bg-warning" href=""><i class="fa fa-pencil-o"></i> Update RPS</a>
+                                                    <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-pencil-square-o"></i> Update RPS</a>
+                                                    <a class="btn btn-sm btn-rounded bg-danger" href="{{route('dosen.perkuliahan.rencana-pembelajaran.delete', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -82,17 +95,35 @@ $id_matkul = $matkul->id_matkul;
 </section>
 @endsection
 @push('js')
-
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-      $(document).ready(function() {
+    $(document).ready(function() {
         $('#data').DataTable({
             "paging": true,
             "ordering": true,
             "searching": true,
-            "scrollCollapse": true,
+            // "scrollCollapse": true,
             // "scrollY": "550px",
         });
+    });
 
+    $('#delete-rps').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Perubahan Rencana Pembelajaran Semester',
+            text: "Apakah anda yakin ingin?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#delete-rps').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
     });
 </script>
 

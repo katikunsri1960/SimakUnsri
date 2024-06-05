@@ -7,8 +7,10 @@ use App\Models\SemesterAktif;
 use App\Models\Perkuliahan\RencanaPembelajaran;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Ramsey\Uuid\Uuid;
 
 class RencanaPembelajaranController extends Controller
 {
@@ -61,8 +63,10 @@ class RencanaPembelajaranController extends Controller
     {
         // dd($request->all());
         //Define variable
+        $id_dosen = auth()->user()->fk_id;
         $semester_aktif = SemesterAktif::with(['semester'])->first();
-        $matkul = MataKuliah::where('id_matkul',$id_matkul)->get();
+        $matkul = MataKuliah::where('id_matkul',$id_matkul)->first();
+        $rps = RencanaPembelajaran::where('id_matkul',$id_matkul)->first();
 
         //Validate request data
         $data = $request->validate([
@@ -72,34 +76,114 @@ class RencanaPembelajaranController extends Controller
             'materi_inggris.*' => 'required'
         ]);
 
-        MataKuliah::update();
+        //Update link RPS
+        MataKuliah::where('id_matkul', $id_matkul)->update(['link_rps' => $request->link_rps]);
 
+        //Hitung jumlah RPS yang di buat
         $jumlah_pertemuan=count($request->pertemuan);
 
-        if($rencana_pertemuan >= '16'){
-             //Count jumlah dosen pengajar kelas kuliah
-            $jumlah_dosen=count($request->dosen_kelas_kuliah);
-
-            for($i=0;$i<$jumlah_dosen;$i++){
-                //Generate id aktivitas mengajar
-                $id_aktivitas_mengajar = Uuid::uuid4()->toString();
-
-                if(is_null($request->substansi_kuliah)){
-                    //Store data to table tanpa substansi kuliah
-                    DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
-
+        if($rps->approved != 1){
+            if($jumlah_pertemuan > 0){
+                $data_dosen = DosenPengajarKelasKuliah::with('kelas_kuliah')->whereHas('kelas_kuliah', function ($query) use ($id_matkul, $semester_aktif){
+                    $query->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester);
+                })
+                ->where('id_dosen', $id_dosen)
+                ->where('urutan', '1')
+                ->first();
+    
+                // dd($data_dosen);
+                if($data_dosen){
+                    for($i=0;$i<$jumlah_pertemuan;$i++){
+                        //Generate id rencana ajar
+                        $id_rencana_ajar = Uuid::uuid4()->toString();
+    
+                        //Store data to table tanpa substansi kuliah
+                        RencanaPembelajaran::create(['feeder'=> 0, 'approved'=> 0, 'id_rencana_ajar'=> $id_rencana_ajar, 'id_matkul'=> $id_matkul, 'nama_mata_kuliah'=> $matkul->nama_mata_kuliah, 'kode_mata_kuliah' => $matkul->kode_mata_kuliah, 'sks_mata_kuliah'=> $matkul->sks_mata_kuliah, 'id_prodi'=> $matkul->id_prodi, 'nama_program_studi'=> $matkul->nama_program_studi, 'pertemuan'=> $request->pertemuan[$i], 'materi_indonesia'=> $request->materi_indo[$i], 'materi_inggris'=> $request->materi_inggris[$i], 'status_sync'=> 'belum sync']);
+                    }
                 }else{
-                    //Get sks substansi total
-                    $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
-
-                    //Store data to table dengan substansi kuliah
-                    DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    return redirect()->back()->with('error', 'Anda Bukan Koordinator Mata Kuliah');
                 }
+                return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+            }else{
+                return redirect()->back()->with('error', 'Silahkan Mengisi RPS Terlebih Dahulu');
+            }
+        }else{
+            return redirect()->back()->with('error', 'RPS Sudah di Setujui Kaprodi');
+        }
+    }
 
+    public function ubah_rencana_pembelajaran(string $id_rencana_ajar)
+    {
+        // dd($semester_aktif->id_semester);
+        $rps = RencanaPembelajaran::where('id_rencana_ajar', $id_rencana_ajar)->first();
+
+        return view('dosen.perkuliahan.rencana-pembelajaran.update', ['rps' => $rps]);
+    }
+
+    public function rencana_pembelajaran_update(Request $request, string $id_rencana_ajar)
+    {
+        // dd($request->all());
+        //Define variable
+        $id_dosen = auth()->user()->fk_id;
+        $rps = RencanaPembelajaran::where('id_rencana_ajar',$id_rencana_ajar)->first();
+        $semester_aktif = SemesterAktif::with(['semester'])->first();
+
+        //Validate request data
+        $data = $request->validate([
+            'pertemuan' => 'required',
+            'materi_indo' => 'required',
+            'materi_inggris' => 'required'
+        ]);
+
+        if($rps->approved != 1){
+            $data_dosen = DosenPengajarKelasKuliah::with('kelas_kuliah')->whereHas('kelas_kuliah', function ($query) use ($rps, $semester_aktif){
+                $query->where('id_matkul', $rps->id_matkul)->where('id_semester', $semester_aktif->id_semester);
+            })
+            ->where('id_dosen', $id_dosen)
+            ->where('urutan', '1')
+            ->first();
+
+            // dd($data_dosen);
+            if($data_dosen){
+
+                RencanaPembelajaran::where('id_rencana_ajar', $id_rencana_ajar)->update(['pertemuan'=> $request->pertemuan, 'materi_indonesia'=> $request->materi_indo, 'materi_inggris'=> $request->materi_inggris]);
+
+            }else{
+                return redirect()->back()->with('error', 'Anda Bukan Koordinator Mata Kuliah');
             }
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         }else{
-            return redirect()->back()->with('error', 'Total Rencana Minggu Pertemuan Dosen Tidak Berjumlah 16');
+            return redirect()->back()->with('error', 'RPS Sudah di Setujui Kaprodi');
+        }
+    }
+
+    public function rencana_pembelajaran_delete(string $id_rencana_ajar)
+    {
+        // dd($request->all());
+        //Define variable
+        $id_dosen = auth()->user()->fk_id;
+        $rps = RencanaPembelajaran::where('id_rencana_ajar',$id_rencana_ajar)->first();
+        $semester_aktif = SemesterAktif::with(['semester'])->first();
+
+        if($rps->approved != 1){
+            $data_dosen = DosenPengajarKelasKuliah::with('kelas_kuliah')->whereHas('kelas_kuliah', function ($query) use ($rps, $semester_aktif){
+                $query->where('id_matkul', $rps->id_matkul)->where('id_semester', $semester_aktif->id_semester);
+            })
+            ->where('id_dosen', $id_dosen)
+            ->where('urutan', '1')
+            ->first();
+
+            // dd($data_dosen);
+            if($data_dosen){
+
+                RencanaPembelajaran::where('id_rencana_ajar', $id_rencana_ajar)->delete();
+
+            }else{
+                return redirect()->back()->with('error', 'Anda Bukan Koordinator Mata Kuliah');
+            }
+            return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+        }else{
+            return redirect()->back()->with('error', 'RPS Sudah di Setujui Kaprodi');
         }
     }
 }
