@@ -23,6 +23,6 @@ class ProgramStudi extends Model
 
     public function fakultas()
     {
-        return $this->belongsTo(Fakultas::class, 'id_fakultas', 'id');
+        return $this->belongsTo(Fakultas::class, 'fakultas_id', 'id');
     }
 }

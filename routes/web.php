@@ -45,6 +45,9 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
                 Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
 
+                Route::get('/print/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print');
+                Route::get('/print-1/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print-1');
+
                 
 
             });
