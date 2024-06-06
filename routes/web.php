@@ -45,6 +45,9 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
                 Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
 
+                Route::get('/print/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print');
+                Route::get('/print-1/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print-1');
+
                 
 
             });
@@ -129,6 +132,13 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::prefix('rencana-pembelajaran')->group(function () {
                     Route::get('/', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran'])->name('dosen.perkuliahan.rencana-pembelajaran');
                     Route::get('/rencana-pembelajaran/detail/{matkul}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'detail_rencana_pembelajaran'])->name('dosen.perkuliahan.rencana-pembelajaran.detail');
+                    Route::get('/rencana-pembelajaran/tambah/{matkul}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'tambah_rencana_pembelajaran'])->name('dosen.perkuliahan.rencana-pembelajaran.tambah');
+                    Route::post('/rencana-pembelajaran/store/{matkul}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran_store'])->name('dosen.perkuliahan.rencana-pembelajaran.store');
+                    Route::get('/rencana-pembelajaran/ubah/{rencana_ajar}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'ubah_rencana_pembelajaran'])->name('dosen.perkuliahan.rencana-pembelajaran.ubah');
+                    Route::post('/rencana-pembelajaran/update/{rencana_ajar}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran_update'])->name('dosen.perkuliahan.rencana-pembelajaran.update');
+                    Route::get('/rencana-pembelajaran/delete/{rencana_ajar}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran_delete'])->name('dosen.perkuliahan.rencana-pembelajaran.delete');
+                    Route::get('/rencana-pembelajaran/ubah-link/{matkul}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'ubah_link_rencana_pembelajaran'])->name('dosen.perkuliahan.rencana-pembelajaran.ubah-link');
+                    Route::post('/rencana-pembelajaran/update-link/{matkul}', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran_update_link'])->name('dosen.perkuliahan.rencana-pembelajaran.update-link');
                 });
             });
 

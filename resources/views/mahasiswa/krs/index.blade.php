@@ -92,10 +92,13 @@ Kartu Rencana Studi
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-xl-2 mt-5">
-                                    <button type="button" class="waves-effect waves-light btn btn-success mx-10" title="Cetak KRS">
+                                <div class="col-xl-4 mt-5">
+                                    {{-- <button href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}" type="button" class="waves-effect waves-light btn btn-success mx-10" title="Cetak KRS">
                                         <i class="fa fa-print"></i>
-                                    </button>
+                                    </button> --}}
+                                    <td>
+                                        <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}" class="waves-effect waves-light btn btn-sm btn-success mx-10" target="_blank"> PRINT PDF <i class="fa fa-print"></i></a> 
+                                    </td>
                                 </div>
                             </div>
                         </div>
