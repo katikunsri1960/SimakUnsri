@@ -107,17 +107,17 @@ class MataKuliah extends Model
 
     public function getKrsAkt($id_reg, $id_semester)
     {
-        //DATA AKTIVITAS 
+        //DATA AKTIVITAS
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
-                    
+
         $db = new MataKuliah();
 
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
-        
+
         if(isEmpty($data_akt))
         {
             $mk_akt=NULL;
@@ -129,21 +129,21 @@ class MataKuliah extends Model
             $mk_akt = $data_akt['data']['data'];
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
-        
+
         // AKTIVITAS MAHASISWA YG DIAMBIL
         $krs_akt = AnggotaAktivitasMahasiswa::with(['aktivitas_mahasiswa.bimbing_mahasiswa', 'aktivitas_mahasiswa.konversi'])
         ->select(
-            'aktivitas_mahasiswas.id', 
-            'aktivitas_mahasiswas.nama_jenis_aktivitas', 
+            'aktivitas_mahasiswas.id',
+            'aktivitas_mahasiswas.nama_jenis_aktivitas',
             'aktivitas_mahasiswas.nama_jenis_anggota',
             'aktivitas_mahasiswas.nama_semester',
             'aktivitas_mahasiswas.id_prodi',
             'aktivitas_mahasiswas.lokasi',
             'aktivitas_mahasiswas.mk_konversi',
-            'anggota_aktivitas_mahasiswas.id_aktivitas', 
-            'anggota_aktivitas_mahasiswas.nim', 
-            'anggota_aktivitas_mahasiswas.judul', 
-            'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', 
+            'anggota_aktivitas_mahasiswas.id_aktivitas',
+            'anggota_aktivitas_mahasiswas.nim',
+            'anggota_aktivitas_mahasiswas.judul',
+            'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa',
             'bimbing_mahasiswas.nama_kategori_kegiatan',
             'bimbing_mahasiswas.approved',
             )
@@ -155,22 +155,22 @@ class MataKuliah extends Model
             ->whereIn('aktivitas_mahasiswas.id_jenis_aktivitas', ['1','2', '3', '4','6','15', '22'])
             ->whereNot('bimbing_mahasiswas.id_bimbing_mahasiswa', NUll)
             ->groupBy(
-                'aktivitas_mahasiswas.id', 
-                'aktivitas_mahasiswas.nama_jenis_aktivitas', 
+                'aktivitas_mahasiswas.id',
+                'aktivitas_mahasiswas.nama_jenis_aktivitas',
                 'aktivitas_mahasiswas.nama_jenis_anggota',
                 'aktivitas_mahasiswas.nama_semester',
                 'aktivitas_mahasiswas.id_prodi',
                 'aktivitas_mahasiswas.lokasi',
                 'aktivitas_mahasiswas.mk_konversi',
-                'anggota_aktivitas_mahasiswas.id_aktivitas', 
-                'anggota_aktivitas_mahasiswas.nim', 
-                'anggota_aktivitas_mahasiswas.judul', 
-                'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', 
+                'anggota_aktivitas_mahasiswas.id_aktivitas',
+                'anggota_aktivitas_mahasiswas.nim',
+                'anggota_aktivitas_mahasiswas.judul',
+                'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa',
                 'bimbing_mahasiswas.nama_kategori_kegiatan',
                 'bimbing_mahasiswas.approved',
             )
             ->get();
-        
+
             return [$krs_akt, $data_akt_ids, $mk_akt];
     }
 
@@ -181,14 +181,14 @@ class MataKuliah extends Model
                 ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->where('kelas_kuliahs.id_prodi', $riwayat_pendidikan->id_prodi)
                 ->where('id_registrasi_mahasiswa', $id_reg)
-                
+
                 ->where('id_semester', $id_semester)
                 ->get();
 
         if (!empty($data_akt_ids)) {
             $krs_regular->whereNotIn('peserta_kelas_kuliahs.id_matkul', $data_akt_ids);
         }
-        
+
         return $krs_regular;
     }
 
@@ -229,8 +229,8 @@ class MataKuliah extends Model
         $kurikulum = $riwayat->id_kurikulum;
 
         $data_akt = $this->getMKAktivitas($prodi, $kurikulum);
-        
-        
+
+
         if($data_akt == NULL)
         {
             $mk_akt=NULL;
@@ -242,7 +242,7 @@ class MataKuliah extends Model
             $mk_akt = $data_akt['data']['data'];
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
-        
+
 
         $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 'kelas_kuliah', 'rencana_pembelajaran'])
                         ->whereHas('kurikulum' , function($query) use($kurikulum) {
@@ -250,16 +250,20 @@ class MataKuliah extends Model
                         })
                         ->withCount(['kelas_kuliah as jumlah_kelas' => function ($q) use($id_semester){
                             $q->where('id_semester', $id_semester->id_semester);
-                        }, 
+                        },
                         'rencana_pembelajaran as jumlah_rps' => function ($q) {
                             $q->where('approved', 0);
                         }])
-                        ->where('id_prodi', $prodi)
-                        ->whereNotIn('id_matkul', $data_akt_ids)
-                        ->orderBy('jumlah_kelas', 'DESC')
-                        ->orderBy('jumlah_rps', 'ASC')
-                        ->get();
+                        ->where('id_prodi', $prodi);
                         
+        if ($data_akt_ids != NULL) {
+            $matakuliah->whereNotIn('id_matkul', $data_akt_ids);
+        }
+
+        $matakuliah->orderBy('jumlah_kelas', 'DESC')
+                    ->orderBy('jumlah_rps', 'ASC')
+                    ->get();
+
         return $matakuliah;
     }
 
@@ -346,7 +350,7 @@ class MataKuliah extends Model
                             "semester"=>8,
                         ],
                     ]
-                ]        
+                ]
             ]
         ];
         foreach ($data as $prodi) {
