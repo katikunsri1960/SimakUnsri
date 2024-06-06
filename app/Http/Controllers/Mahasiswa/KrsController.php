@@ -2,19 +2,21 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
+use Carbon\Carbon;
 use App\Models\Fakultas;
-use App\Models\Semester;
 // use Barryvdh\DomPDF\PDF;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
+use function PHPUnit\Framework\isEmpty;
 use Illuminate\Cache\RateLimiting\Limit;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
@@ -24,7 +26,6 @@ use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\RencanaPembelajaran;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
-use function PHPUnit\Framework\isEmpty;
 
 class KrsController extends Controller
 {
@@ -277,13 +278,14 @@ class KrsController extends Controller
     {
         $pesertaKelas->delete();
 
-        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+        return redirect()->back()->with('success', 'Mata Kuliah Berhasil di Hapus');
     }
 
 
     public function krs_print(Request $request, $id_semester)
     {
-
+        
+    
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
@@ -293,9 +295,14 @@ class KrsController extends Controller
         $prodi = ProgramStudi::with(['fakultas', 'jurusan'])
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
 
+        $fakultas_pdf = (str_replace("Fakultas ","",$prodi->fakultas->nama_fakultas));
+        // dd($fakultas_pdf);
 
         $semester_aktif = SemesterAktif::first();
-        
+
+        $today = Carbon::now();
+        $deadline = Carbon::parse($semester_aktif->krs_selesai);
+
         $db = new MataKuliah();
 
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
@@ -335,6 +342,9 @@ class KrsController extends Controller
         $nama_smt = Semester::where('id_semester', $id_semester)->first()->nama_semester;
         $dosen_pa = BiodataDosen::where('id_dosen', $riwayat_pendidikan->dosen_pa)->first();
         // dd($request->semester);
+        if (empty($dosen_pa)) {
+            return response()->json(['error' => 'Dosen PA tidak ditemukan.']);
+        }
 
 
         //DATA AKTIVITAS 
@@ -391,11 +401,14 @@ class KrsController extends Controller
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
         $pdf = PDF::loadview('mahasiswa.krs.pdf', [
+            'today'=> $today,
+            'deadline'=> $deadline,
             'data' => $data,
             'nim' => $nim,
             'nama_mhs' => $nama_mhs,
             'dosen_pa' => $dosen_pa,
             'prodi' => $prodi,
+            'fakultas_pdf' => $fakultas_pdf,
             'nama_smt' => $nama_smt,
             'semester_aktif' => $semester_aktif,
             'id_semester' => $id_semester,
@@ -410,13 +423,26 @@ class KrsController extends Controller
             'total_sks_regular' => $total_sks_regular,
             'total_sks' => $total_sks,
 
-
         ])->setPaper('a4', 'portrait');
 
         return $pdf->stream('KRS_' . $nim . '_' . $nama_smt . '.pdf');
     }
 
+    public function checkDosenPA($id_semester)
+    {
+        $id_reg = auth()->user()->fk_id;
 
-    
+        $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->first();
+
+        $dosen_pa = BiodataDosen::where('id_dosen', $riwayat_pendidikan->dosen_pa)->first();
+
+        if (empty($dosen_pa)) {
+            return response()->json(['error' => 'Dosen PA belum ditentukan, Silahkan Hubungi Koor. Program Studi.']);
+        }
+
+        return response()->json(['success' => true]);
+    }
 
 }

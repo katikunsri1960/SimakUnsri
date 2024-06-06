@@ -263,6 +263,7 @@ class MataKuliah extends Model
         $matakuliah->orderBy('jumlah_kelas', 'DESC')
                     ->orderBy('jumlah_rps', 'ASC')
                     ->get();
+                    dd($matakuliah);
 
         return $matakuliah;
     }

@@ -4,10 +4,6 @@ Kartu Rencana Studi
 @endsection
 @section('content')
 <div style="text-transform: uppercase; font-family: Arial, Helvetica, sans-serif" style="margin-left: 2%">
-    @php
-        $today = \Carbon\Carbon::now();
-        $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
-    @endphp
     <div class="container-fluid" >
         <table style="width: 70%" class="table-pdf">
             <tr>
@@ -18,7 +14,9 @@ Kartu Rencana Studi
             </tr>
         </table>
     </div>
-    <table class="text-10" style="width: 100%">
+    <table class="text-10" 
+    {{-- border="1" rules="all"  --}}
+        style="width: 100%">
         <tr>
             <td height="20"></td>
         </tr>
@@ -28,50 +26,42 @@ Kartu Rencana Studi
             </td>
         </tr>
         <tr>
-            <td class="text-pdf text-10 text-upper" style="width: 20%">NIM</td>
+            <td class="text-pdf text-10 text-upper" style="width: 12%">NIM</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 30%">{{$nim}}</td>
-            <td width="30"></td>
-            <td class="text-pdf text-10 text-upper" style="width: 20%">FAKULTAS</td>
+            <td class="text-pdf text-10 text-upper" style="width: 35%">{{$nim}}</td>
+            <td width="5"></td>
+            <td class="text-pdf text-10 text-upper" style="width: 18%">FAKULTAS</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 30%">{{$prodi->fakultas->nama_fakultas}}</td>
+            <td class="text-pdf text-10 text-upper" style="width: 30%">{{$fakultas_pdf}}</td>
         </tr>
         <tr>
-            <td class="text-pdf text-10 text-upper" style="width: 20%">NAMA MAHASISWA</td>
+            <td class="text-pdf text-10 text-upper" style="width: 12%">NAMA </td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 30%">{{$nama_mhs}}</td>
-            <td width="30"></td>
-            <td class="text-pdf text-10 text-upper" style="width: 20%">JURUSAN</td>
+            <td class="text-pdf text-10 text-upper" style="width: 35%">{{$nama_mhs}}</td>
+            <td width="5"></td>
+            <td class="text-pdf text-10 text-upper" style="width: 18%">JURUSAN</td>
             <td width="3"> : </td>
             <td class="text-pdf text-10 text-upper" style="width: 30%">{{$prodi->jurusan->nama_jurusan_id}}</td>
         </tr>
         <tr>
-            <td class="text-pdf text-10 text-upper" style="width: 20%">NIP PA</td>
+            <td class="text-pdf text-10 text-upper" style="width: 10%">NIP PA</td>
             <td width="3"> : </td>
-            @if($dosen_pa->nip == NULL)
-            {
-                <td class="text-pdf text-10 text-upper" style="width: 30%">Tidak Diisi</td>
-            }@else{
-                <td class="text-pdf text-10 text-upper" style="width: 30%">{{$dosen_pa->nip}}</td>
-            }
-            @endif
-            <td width="30"></td>
-            <td class="text-pdf text-10 text-upper" style="width: 20%">PROGRAM STUDI</td>
+            <td class="text-pdf text-10 text-upper" style="width: 35%">
+                {!! $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip !!}
+            </td>
+            <td width="5"></td>
+            <td class="text-pdf text-10 text-upper" style="width: 18%">PROGRAM STUDI</td>
             <td width="3"> : </td>
             <td class="text-pdf text-10 text-upper" style="width: 30%">{{$prodi->nama_jenjang_pendidikan}} - {{$prodi->nama_program_studi}}</td>
         </tr>
         <tr>
-            <td class="text-pdf text-10 text-upper" style="width: 20%">DOSEN PA</td>
+            <td class="text-pdf text-10 text-upper" style="width: 10%">DOSEN PA</td>
             <td width="3"> : </td>
-            @if($dosen_pa->nama_dosen == NULL)
-            {
-                <td class="text-pdf text-10 text-upper" style="width: 30%">Tidak Diisi</td>
-            }@else{
-                <td class="text-pdf text-10 text-upper" style="width: 30%">{{$dosen_pa->nama_dosen}}</td>
-            }
-            @endif
-            <td width="30"></td>
-            <td class="text-pdf text-10 text-upper" style="width: 20%">SEMESTER</td>
+            <td class="text-pdf text-10 text-upper" style="width: 35%">
+                {!! $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nama_dosen !!}
+            </td>
+            <td width="5"></td>
+            <td class="text-pdf text-10 text-upper" style="width: 18%">SEMESTER</td>
             <td width="3"> : </td>
             <td class="text-pdf text-10 text-upper" style="width: 30%">{{$nama_smt}}</td>
         </tr>
@@ -79,7 +69,7 @@ Kartu Rencana Studi
             <td height="10"></td>
         </tr>
     </table>
-    @if($data_status_mahasiswa == "A" || $data_status_mahasiswa == "M" )
+    @if($krs_regular->isNotEmpty())
         <table style="width: 100%">
             <tr>
                 <td class="text-upper text-center text-12" height="30" colspan="4">
@@ -122,104 +112,104 @@ Kartu Rencana Studi
                 </table>
             </div>
         </div>
-        @if ($data_status_mahasiswa == "M" )
-            <table style="width: 100%">
-                <tr>
-                    <td class="text-upper text-center text-12" height="30" colspan="4">
-                        <strong>Kartu Rencana Studi Kampus Merdeka</strong> 
-                    </td>
-                </tr>
-            </table>
-            <div class="row">
-                <div class="table-responsive">
-                    <table id="krs-merdeka" class="text-10" border="1" rules="all" style="width: 100%;" >
-                        <thead>
-                            
-                            <tr>
-                                <th width="30" class="text-thead">NO.</th>
-                                <th width="150" class="text-thead">KODE MK</th>
-                                <th width="250" class="text-thead">NAMA MATA KULIAH</th>
-                                <th width="50" class="text-thead">SKS (K)</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $no=1;
-                            @endphp
+    @endif
+    @if($krs_merdeka->isNotEmpty())
+        <table style="width: 100%">
+            <tr>
+                <td class="text-upper text-center text-12" height="30" colspan="4">
+                    <strong>Kartu Rencana Studi Kampus Merdeka</strong> 
+                </td>
+            </tr>
+        </table>
+        <div class="row">
+            <div class="table-responsive">
+                <table id="krs-merdeka" class="text-10" border="1" rules="all" style="width: 100%;" >
+                    <thead>
+                        
+                        <tr>
+                            <th width="30" class="text-thead">NO.</th>
+                            <th width="150" class="text-thead">KODE MK</th>
+                            <th width="250" class="text-thead">NAMA MATA KULIAH</th>
+                            <th width="50" class="text-thead">SKS (K)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $no=1;
+                        @endphp
 
-                            @foreach ($krs_merdeka as $data)
-                                <tr>
-                                    <td class="text-td text-center">{{ $no++ }}.</td>
-                                    <td class="text-td text-center">{{$data->kode_mata_kuliah}}</td>
-                                    <td class="text-td">{{$data->nama_mata_kuliah}}</td>
-                                    <td class="text-td text-center">{{$data->sks_mata_kuliah}}</td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
+                        @foreach ($krs_merdeka as $data)
                             <tr>
-                                <td colspan="3"><center><strong>JUMLAH</strong></center></td>
-                                <td><center><strong>{{$total_sks_merdeka}}</strong></center></td>
-                            </tr> 
-                        </tfoot>
-                    </table>
-                </div>
-            </div>
-        @endif
-        @if($krs_akt->isNotEmpty())
-            <br>
-            <table style="width: 100%">
-                <tr>
-                    <td class="text-upper text-center text-12" height="30" colspan="4">
-                        <strong>Kartu Rencana Aktivitas Mahasiswa</strong> 
-                    </td>
-                </tr>
-            </table>
-            <div class="row" >
-                <div class="table-responsive">
-                    <table id="krs-akt" class="text-10" border="1" rules="all" style="width: 100%">
-                        <thead>
-                            
-                            <tr>
-                                <th width="30" class="text-thead">No.</th>
-                                <th width="150" class="text-thead">Jenis Aktivitas</th>
-                                <th width="250" class="text-thead">Dosen Pembimbing</th>
-                                <th width="50" class="text-thead">SKS (K)</th>
+                                <td class="text-td text-center">{{ $no++ }}.</td>
+                                <td class="text-td text-center">{{$data->kode_mata_kuliah}}</td>
+                                <td class="text-td">{{$data->nama_mata_kuliah}}</td>
+                                <td class="text-td text-center">{{$data->sks_mata_kuliah}}</td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            @php
-                                $no=1;
-                            @endphp
-
-                            @foreach ($krs_akt as $data)
-                                <tr>
-                                    <td  class="text-td text-center">{{ $no++ }}.</td>
-                                    <td  class="text-td">{{ $data->nama_jenis_aktivitas }}</td>
-                                    <td  class="text-td">
-                                        @foreach($data->aktivitas_mahasiswa->bimbing_mahasiswa as $dosen_bimbing)
-                                            <ul class="my-0">
-                                                <li class="my-0">
-                                                    {{$dosen_bimbing->nama_dosen}}
-                                                </li>
-                                            </ul> 
-                                        @endforeach
-                                    </td>
-                                    <td  class="text-td text-center">{{ $data->aktivitas_mahasiswa->konversi->sks_mata_kuliah }}</td>
-                                    
-                                </tr>
-                            @endforeach
-                        </tbody>
-                        <tfoot>
-                            <tr>
-                                <td class="text-thead" colspan="3"><strong>JUMLAH</strong></td>
-                                <td class="text-thead"><strong>{{$total_sks_akt}}</strong></td>
-                            </tr> 
-                        </tfoot>
-                    </table>
-                </div>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3"><center><strong>JUMLAH</strong></center></td>
+                            <td><center><strong>{{$total_sks_merdeka}}</strong></center></td>
+                        </tr> 
+                    </tfoot>
+                </table>
             </div>
-        @endif
+        </div>
+    @endif
+    @if($krs_akt->isNotEmpty())
+        <br>
+        <table style="width: 100%">
+            <tr>
+                <td class="text-upper text-center text-12" height="30" colspan="4">
+                    <strong>Kartu Rencana Aktivitas Mahasiswa</strong> 
+                </td>
+            </tr>
+        </table>
+        <div class="row" >
+            <div class="table-responsive">
+                <table id="krs-akt" class="text-10" border="1" rules="all" style="width: 100%">
+                    <thead>
+                        
+                        <tr>
+                            <th width="30" class="text-thead">No.</th>
+                            <th width="150" class="text-thead">Jenis Aktivitas</th>
+                            <th width="250" class="text-thead">Dosen Pembimbing</th>
+                            <th width="50" class="text-thead">SKS (K)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $no=1;
+                        @endphp
+
+                        @foreach ($krs_akt as $data)
+                            <tr>
+                                <td  class="text-td text-center">{{ $no++ }}.</td>
+                                <td  class="text-td">{{ $data->nama_jenis_aktivitas }}</td>
+                                <td  class="text-td">
+                                    @foreach($data->aktivitas_mahasiswa->bimbing_mahasiswa as $dosen_bimbing)
+                                        <ul class="my-0">
+                                            <li class="my-0">
+                                                {{$dosen_bimbing->nama_dosen}}
+                                            </li>
+                                        </ul> 
+                                    @endforeach
+                                </td>
+                                <td  class="text-td text-center">{{ $data->aktivitas_mahasiswa->konversi->sks_mata_kuliah }}</td>
+                                
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-thead" colspan="3"><strong>JUMLAH</strong></td>
+                            <td class="text-thead"><strong>{{$total_sks_akt}}</strong></td>
+                        </tr> 
+                    </tfoot>
+                </table>
+            </div>
+        </div>
     @endif
     <table style="width: 100%">
         <tbody>
@@ -246,26 +236,17 @@ Kartu Rencana Studi
             </tr>
             <tr>
                 <td width="60%"></td>
-                @if($dosen_pa->nip == NULL)
-                {
-                    <td width="40%" class="text-right text-10" >Tidak Diisi</td>
-                }@else{
-                    <td width="40%" class="text-right text-10" >{{$dosen_pa->nama_dosen}}</td>
-                }
-                @endif
+                <td width="40%" class="text-right text-10" >
+                    {!! $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip!!}
+                </td>
             </tr>
             <tr>
                 <td class="text-left text-10" width="60%" style="font-style: italic; ">
                     {{-- Lembar untuk mahasiswa --}}
                 </td>
-                
-                @if($dosen_pa->nama_dosen == NULL)
-                {
-                    <td width="40%" class="text-right text-10" >Tidak Diisi</td>
-                }@else{
-                    <td width="40%" class="text-right text-10" >NIP. {{$dosen_pa->nip}}</td>
-                }
-                @endif
+                <td width="40%" class="text-right text-10" >
+                    {!! $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nama_dosen!!}
+                </td>
             </tr>
         </tbody>
     </table>
