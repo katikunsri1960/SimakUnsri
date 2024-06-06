@@ -5,7 +5,8 @@ Bimbingan Tugas Akhir Dosen
 @section('content')
 @push('header')
 <div class="mx-4">
-    <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+    <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir')}}"
+        class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush
 <section class="content bg-white">
@@ -15,13 +16,16 @@ Bimbingan Tugas Akhir Dosen
                 <div class="widget-user-header bg-gradient-secondary">
                     <div class="widget-user-image">
                         @php
-                            $imagePath = public_path('storage/'.$aktivitas->anggota_aktivitas_personal->mahasiswa->angkatan.'/'.$aktivitas->anggota_aktivitas_personal->mahasiswa->nim.'.jpg');
+                        $imagePath =
+                        public_path('storage/'.$aktivitas->anggota_aktivitas_personal->mahasiswa->angkatan.'/'.$aktivitas->anggota_aktivitas_personal->mahasiswa->nim.'.jpg');
                         @endphp
-                        <img class="rounded bg-success-light" src="{{file_exists($imagePath) ? asset('storage/'.$aktivitas->anggota_aktivitas_personal->mahasiswa->angkatan.'/'.$aktivitas->anggota_aktivitas_personal->mahasiswa->nim.'.jpg') : asset('images/images/avatar/avatar-15.png')}}"
+                        <img class="rounded bg-success-light"
+                            src="{{file_exists($imagePath) ? asset('storage/'.$aktivitas->anggota_aktivitas_personal->mahasiswa->angkatan.'/'.$aktivitas->anggota_aktivitas_personal->mahasiswa->nim.'.jpg') : asset('images/images/avatar/avatar-15.png')}}"
                             alt="User Avatar">
                     </div>
                     <h3 class="widget-user-username">{{$aktivitas->anggota_aktivitas_personal->nama_mahasiswa}} </h3>
-                    <h4 class="widget-user-desc">NIM: {{$aktivitas->anggota_aktivitas_personal->nim}}<br class="mb-1">ANGKATAN: {{$aktivitas->anggota_aktivitas_personal->mahasiswa->angkatan}}</h4>
+                    <h4 class="widget-user-desc">NIM: {{$aktivitas->anggota_aktivitas_personal->nim}}<br
+                            class="mb-1">ANGKATAN: {{$aktivitas->anggota_aktivitas_personal->mahasiswa->angkatan}}</h4>
                 </div>
             </div>
         </div>
@@ -29,10 +33,32 @@ Bimbingan Tugas Akhir Dosen
     <div class="row">
         <div class="col-xxl-12">
             <div class="box box-body mb-0">
-                <div class="row">
+                <div class="row mb-2">
                     <div class="col-xl-12 col-lg-12 d-flex justify-content-between">
                         <div class="d-flex justify-content-start">
-                            <h4 class="fw-500 text-dark mt-0">Daftar Bimbingan Tugas Akhir Dosen</h4>
+                            <table class="table">
+                                <tr>
+                                    <td class="text-left">Judul</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$aktivitas->judul}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left text-nowrap">Tanggal Mulai</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$aktivitas->id_tanggal_mulai}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left text-nowrap align-middle">Pembimbing</td>
+                                    <td class="text-center align-middle">:</td>
+                                    <td class="text-left align-middle">
+                                        <ul style="padding: 0; padding-left:0.8rem">
+                                        @foreach ($aktivitas->bimbing_mahasiswa as $p)
+                                            <li>Pembimbing {{$p->pembimbing_ke}} : {{$p->nama_dosen}}</li>
+                                        @endforeach
+                                        </ul>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
                     </div>
                 </div>
