@@ -37,7 +37,7 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$akm->ips}} | {{$akm->ipk}}</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$akm->isEmpty() ? '0 | 0' : $akm[0]->ips .' | '. $akm[0]->ipk }}</h4>
                     </div>
                 </div>
             </div>

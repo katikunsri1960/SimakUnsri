@@ -63,7 +63,7 @@ class KrsController extends Controller
                     ->orderBy('id_semester', 'DESC')
                     ->get();
                     
-        $akm = $semester->first();
+        $akm = $semester;
         
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $semester_select)

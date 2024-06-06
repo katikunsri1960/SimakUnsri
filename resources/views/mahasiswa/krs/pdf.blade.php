@@ -26,44 +26,44 @@ Kartu Rencana Studi
             </td>
         </tr>
         <tr>
-            <td class="text-pdf text-10 text-upper" style="width: 12%">NIM</td>
+            <td class="text-pdf text-8 text-upper" style="width: 12%">NIM</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 35%">{{$nim}}</td>
-            <td width="5"></td>
-            <td class="text-pdf text-10 text-upper" style="width: 18%">FAKULTAS</td>
+            <td class="text-pdf text-8 text-upper" style="width: 45%">{{$nim}}</td>
+            <td width="15"></td>
+            <td class="text-pdf text-8 text-upper" style="width: 18%">FAKULTAS</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 30%">{{$fakultas_pdf}}</td>
+            <td class="text-pdf text-8 text-upper" style="width: 30%">{{$fakultas_pdf}}</td>
         </tr>
         <tr>
-            <td class="text-pdf text-10 text-upper" style="width: 12%">NAMA </td>
+            <td class="text-pdf text-8 text-upper" style="width: 12%">NAMA </td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 35%">{{$nama_mhs}}</td>
-            <td width="5"></td>
-            <td class="text-pdf text-10 text-upper" style="width: 18%">JURUSAN</td>
+            <td class="text-pdf text-8 text-upper" style="width: 45%">{{$nama_mhs}}</td>
+            <td width="15"></td>
+            <td class="text-pdf text-8 text-upper" style="width: 18%">JURUSAN</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 30%">{{$prodi->jurusan->nama_jurusan_id}}</td>
+            <td class="text-pdf text-8 text-upper" style="width: 30%">{{$prodi->jurusan->nama_jurusan_id}}</td>
         </tr>
         <tr>
-            <td class="text-pdf text-10 text-upper" style="width: 10%">NIP PA</td>
+            <td class="text-pdf text-8 text-upper" style="width: 10%">NIP PA</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 35%">
-                {!! $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip !!}
+            <td class="text-pdf text-8 text-upper" style="width: 45%">
+                {{ $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip }}
             </td>
-            <td width="5"></td>
-            <td class="text-pdf text-10 text-upper" style="width: 18%">PROGRAM STUDI</td>
+            <td width="15"></td>
+            <td class="text-pdf text-8 text-upper" style="width: 18%">PROGRAM STUDI</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 30%">{{$prodi->nama_jenjang_pendidikan}} - {{$prodi->nama_program_studi}}</td>
+            <td class="text-pdf text-8 text-upper" style="width: 30%">{{$prodi->nama_jenjang_pendidikan}} - {{$prodi->nama_program_studi}}</td>
         </tr>
         <tr>
-            <td class="text-pdf text-10 text-upper" style="width: 10%">DOSEN PA</td>
+            <td class="text-pdf text-8 text-upper" style="width: 10%">DOSEN PA</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 35%">
-                {!! $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nama_dosen !!}
+            <td class="text-pdf text-8 text-upper" style="width: 45%">
+                {{ $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nama_dosen }}
             </td>
-            <td width="5"></td>
-            <td class="text-pdf text-10 text-upper" style="width: 18%">SEMESTER</td>
+            <td width="15"></td>
+            <td class="text-pdf text-8 text-upper" style="width: 18%">SEMESTER</td>
             <td width="3"> : </td>
-            <td class="text-pdf text-10 text-upper" style="width: 30%">{{$nama_smt}}</td>
+            <td class="text-pdf text-8 text-upper" style="width: 30%">{{$nama_smt}}</td>
         </tr>
         <tr>
             <td height="10"></td>

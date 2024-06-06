@@ -248,6 +248,10 @@ class MataKuliah extends Model
                         ->whereHas('kurikulum' , function($query) use($kurikulum) {
                             $query->where('list_kurikulums.id_kurikulum', $kurikulum);
                         })
+                        ->whereHas('kelas_kuliah' , function($query) use($id_semester) {
+                            $query->where('kelas_kuliahs.id_semester', $id_semester->id_semester);
+                        })
+                        
                         ->withCount(['kelas_kuliah as jumlah_kelas' => function ($q) use($id_semester){
                             $q->where('id_semester', $id_semester->id_semester);
                         },
@@ -257,13 +261,14 @@ class MataKuliah extends Model
                         ->where('id_prodi', $prodi);
                         
         if ($data_akt_ids != NULL) {
-            $matakuliah->whereNotIn('id_matkul', $data_akt_ids);
+            
+            $matakuliah= $matakuliah->whereNotIn('id_matkul', $data_akt_ids);
         }
 
-        $matakuliah->orderBy('jumlah_kelas', 'DESC')
+        $matakuliah =  $matakuliah->orderBy('jumlah_kelas', 'DESC')
                     ->orderBy('jumlah_rps', 'ASC')
                     ->get();
-                    dd($matakuliah);
+                    // dd($matakuliah);
 
         return $matakuliah;
     }
