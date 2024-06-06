@@ -33,7 +33,7 @@ Ambil Aktivitas Mahasiswa
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-primary rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-1.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-1.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
@@ -44,7 +44,7 @@ Ambil Aktivitas Mahasiswa
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-warning rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-3.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">SKS Maksimum</p>
@@ -56,7 +56,7 @@ Ambil Aktivitas Mahasiswa
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-success rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-4.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-4.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">Dosen PA</p>
@@ -105,7 +105,7 @@ Ambil Aktivitas Mahasiswa
                                                             <div class="">
                                                                 {{-- COPY DISINI --}}
                                                                 <div class="container">
-                                                                    
+
                                                                     <table id="data-matkul-regular" class="table table-bordered table-striped text-left">
                                                                         <thead>
                                                                             <tr>
@@ -125,9 +125,9 @@ Ambil Aktivitas Mahasiswa
                                                                                 $no_a=1;
                                                                                 $isEnrolled = array_column($krs_regular->toArray(), 'id_matkul');
                                                                                 $kelas_Enrolled = array_column($krs_regular->toArray(), 'id_kelas_kuliah');
-                
+
                                                                             @endphp
-                
+
                                                                             {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
                                                                             @foreach ($rps as $data)
                                                                                 @php
@@ -140,7 +140,7 @@ Ambil Aktivitas Mahasiswa
                                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->kode_mata_kuliah }}</td>
                                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                                     <td class="text-center align-middle" style="white-space: nowrap;">
-                                                                                        <button class="btn btn-warning-light lihat-rps" title="Lihat RPS" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                                        <button class="btn btn-warning-light lihat-rps" title="Lihat RPS" data-id-matkul="{{ $data->id_matkul }}"
                                                                                             {{ $isDisabled || $isEnrolledMatkul ? 'disabled' : '' }}>
                                                                                             <i class="fa fa-newspaper-o"></i> Lihat RPS
                                                                                         </button>
@@ -149,7 +149,7 @@ Ambil Aktivitas Mahasiswa
                                                                                     <td class="text-center align-middle">{{ $data->sks_mata_kuliah }}</td>
                                                                                     <td class="text-center align-middle">{{ $data->jumlah_kelas_kuliah }}</td>
                                                                                     <td class="text-center align-middle">
-                                                                                        <button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="{{ $data->id_matkul }}" 
+                                                                                        <button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="{{ $data->id_matkul }}"
                                                                                             {{ $isDisabled || $isEnrolledMatkul || $noRPS ? 'disabled' : '' }}>
                                                                                             <i class="fa fa-eye"></i>
                                                                                         </button>
@@ -170,7 +170,7 @@ Ambil Aktivitas Mahasiswa
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
 				<!-- /.box-body -->
             </div>
@@ -189,6 +189,6 @@ Ambil Aktivitas Mahasiswa
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-    
+
 </script>
 @endpush

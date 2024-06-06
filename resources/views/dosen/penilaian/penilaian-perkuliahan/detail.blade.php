@@ -38,14 +38,14 @@ Detail Penilaian Perkuliahan Mahasiswa
             <div class="row">
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
-                        <div class="row">
+                        <div class="row mb-5">
                             <div class="col-xl-4 col-lg-12">
                                 <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
                             </div>                             
-                        </div>
+                        </div><br>
                         <div class="row">
                             <div class="table-responsive">
-                                <table id="data" class="table table-bordered table-striped text-center">
+                                <table id="data" class="table table-bordered table-striped text-center" style="font-size: 12px">
                                     <thead>
                                         <tr>
                                             <th rowspan="2">No</th>
@@ -53,9 +53,16 @@ Detail Penilaian Perkuliahan Mahasiswa
                                             <th rowspan="2">Nama Mahasiswa</th>
                                             <th rowspan="2">Nama Kelas Kuliah</th>
                                             <th rowspan="2">Angkatan</th>
-                                            <th colspan="2">Nilai</th>
+                                            <th colspan="6">Nilai Komponen Evaluasi</th>
+                                            <th colspan="2">Nilai Perkuliahan</th>
                                         </tr>
                                         <tr>
+                                            <th>Aktivitas Partisipatif</th>
+                                            <th>Hasil Proyek</th>
+                                            <th>Tugas</th>
+                                            <th>Quiz</th>
+                                            <th>UTS</th>
+                                            <th>UAS</th>
                                             <th>Angka</th>
                                             <th>Huruf</th>
                                         </tr>
@@ -68,6 +75,14 @@ Detail Penilaian Perkuliahan Mahasiswa
                                                 <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
                                                 <td class="text-start align-middle">{{$d->nama_kelas_kuliah}}</td>
                                                 <td class="text-center align-middle">{{$d->angkatan}}</td>
+                                                
+                                                @for ($i = 1; $i <= 6; $i++)
+                                                    @php
+                                                        $nilaiKomponen = $d->nilai_komponen->where('urutan', $i)->first();
+                                                    @endphp
+                                                    <td class="text-center align-middle">{{$nilaiKomponen ? $nilaiKomponen->nilai_komp_eval : 0}}</td>
+                                                @endfor
+                                                
                                                 <td class="text-center align-middle">{{$d->nilai_angka}}</td>
                                                 <td class="text-center align-middle">{{$d->nilai_huruf}}</td>
                                             </tr>
@@ -86,11 +101,11 @@ Detail Penilaian Perkuliahan Mahasiswa
 <script>
       $(document).ready(function() {
         $('#data').DataTable({
-            "paging": false,
+            "paging": true,
             "ordering": true,
             "searching": true,
-            "scrollCollapse": true,
-            "scrollY": "550px",
+            // "scrollCollapse": true,
+            // "scrollY": "550px",
             "fixedColumns": {
                 "rightColumns": 6
             },

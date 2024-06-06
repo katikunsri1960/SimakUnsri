@@ -9,7 +9,7 @@
                                 <div class="row">
                                     <div class="col-xl-12 col-lg-12">
                                         <h3 class="fw-500 text-dark mt-0 mb-20">Tagihan</h3>
-                                    </div>                             
+                                    </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-xl-4 col-md-6 col-12">
@@ -36,7 +36,7 @@
                                     </div>
                                     <div class="col-xl-4 col-md-6 col-12">
                                         <div class="box bs-5 border-danger rounded mb-10 pull-up"
-                                            style="background-image: url(../images/svg-icon/color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
+                                            style="background-image: url({{asset('images/images/svg-icon/color-svg/st-3.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                                             <div class="box-body">
                                                 <div class="flex-grow-1">
                                                     <p class="mt-5 mb-5 text-fade fs-12">Batas Akhir Pembayaran</p>
@@ -52,7 +52,7 @@
                                             <div class="row">
                                                 <div class="col-xl-12 col-lg-12">
                                                     <h3 class="fw-500 text-dark mt-0">Daftar Tagihan Uang Kuliah Tunggal</h3>
-                                                </div>                             
+                                                </div>
                                             </div>
                                             <div class="row">
                                                 <div class="table-responsive">
@@ -91,7 +91,7 @@
                             </div>
                         </div>
                     </div>
-                </div>  
+                </div>
             </div>
         </div>
     </div>

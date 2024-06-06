@@ -49,7 +49,7 @@ Rencana Pembelajaran Semester
                                         <td class="text-center align-middle">{{$loop->iteration}}</td>
                                         <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                         <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
-                                        <td class="text-center align-middle">{{$d->matkul->kurikulum ? $d->matkul->kurikulum->nama_kurikulum : '-'}}</td>
+                                        <td class="text-start align-middle">{{$d->matkul->kurikulum ? $d->matkul->kurikulum->nama_kurikulum : '-'}}</td>
                                         <td>@if($d->jumlah_rps == 0 && $d->jumlah_approved == 0)
                                                 <span class="badge badge-secondary">Belum di Isi<span>
                                             @elseif($d->jumlah_rps > 0 && $d->jumlah_approved >= 0 && $d->jumlah_rps != $d->jumlah_approved)

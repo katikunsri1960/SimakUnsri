@@ -130,7 +130,7 @@
                             <span>Bimbingan Non-Akademik</span>
                         </a>
                     </li> --}}
-                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-tugas-akhir') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-tugas-akhir') | request()->routeIs('dosen.pembimbing.bimbingan-tugas-akhir.*') ? 'active' : ''}}">
                         <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Tugas Akhir</span>
