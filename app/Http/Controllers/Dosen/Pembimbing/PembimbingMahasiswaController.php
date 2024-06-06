@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dosen\Pembimbing;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsistensiAkhir;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
@@ -102,5 +103,15 @@ class PembimbingMahasiswaController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
+
+    public function asistensi(AktivitasMahasiswa $aktivitas)
+    {
+        $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->get();
+
+        return view('dosen.pembimbing.tugas-akhir.asistensi', [
+            'data' => $data,
+            'aktivitas' => $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']),
+        ]);
     }
 }

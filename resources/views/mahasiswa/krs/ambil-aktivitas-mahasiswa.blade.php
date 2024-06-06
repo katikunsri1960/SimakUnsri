@@ -33,7 +33,7 @@ Ambil Aktivitas Mahasiswa
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-primary rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-1.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-1.svg')}}; background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
@@ -44,7 +44,7 @@ Ambil Aktivitas Mahasiswa
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-warning rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-3.svg')}}color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">SKS Maksimum</p>
@@ -56,7 +56,7 @@ Ambil Aktivitas Mahasiswa
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-success rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-4.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-4.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">Dosen PA</p>
@@ -120,7 +120,7 @@ Ambil Aktivitas Mahasiswa
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        
+
                                                                         <h4 class="text-info mb-20"><i class="fa fa-map"></i>  Lokasi</h4>
                                                                         {{-- <hr class="my-15"> --}}
                                                                         <div class="form-group mb-40">
@@ -133,7 +133,7 @@ Ambil Aktivitas Mahasiswa
                                                                                 </div>
                                                                             </div>
                                                                         </div>
-                                                                        
+
                                                                         <h4 class="text-info mb-0"><i class="fa fa-user"></i>  Dosen Pembimbing</h4>
                                                                         <hr class="my-15">
                                                                         @php
@@ -146,7 +146,7 @@ Ambil Aktivitas Mahasiswa
                                                                                         {{-- <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen Pembimbing {{ $no_a++ }}</label> --}}
                                                                                         {{-- <select class="form-select" name="dosen_bimbing_aktivitas[]" id="dosen_bimbing" required></select> --}}
                                                                                     </div>
-                                                                                    
+
                                                                                     <div class="col-md-1 mb-2">
                                                                                         <label class="form-label">&nbsp;</label>
                                                                                         <button type="button" class="btn btn-danger btn-rounded btn-sm remove-dosen form-control" style="display: none;" title="Hapus Dosen"><i class="fa fa-user-times" aria-hidden="true"></i></button>
@@ -155,7 +155,7 @@ Ambil Aktivitas Mahasiswa
                                                                             </div>
                                                                             <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
                                                                         </div>
-                                                                        
+
                                                                         <div class="row mt-20">
                                                                             <div class="col-12 text-end">
                                                                                 <input type="hidden" name="id_matkul" value="{{ $id_matkul }}">
@@ -174,7 +174,7 @@ Ambil Aktivitas Mahasiswa
                                 </div>
                             </div>
                         </div>
-                    </div>                    
+                    </div>
                 </div>
 				<!-- /.box-body -->
             </div>

@@ -71,7 +71,7 @@
             <!-- Tab panes -->
             <div class="tab-content">
                 <!-- Home tab content -->
-                <div class="tab-pane active" id="control-sidebar-home-tab">
+                {{-- <div class="tab-pane active" id="control-sidebar-home-tab">
                     <div class="flexbox">
                         <a href="javascript:void(0)" class="text-grey">
                             <i class="ti-more"></i>
@@ -137,7 +137,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-success" href="#">
-                                <img src="images/images/avatar/1.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/1.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -150,7 +150,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-danger" href="#">
-                                <img src="images/images/avatar/2.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/2.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -163,7 +163,7 @@
 
                         <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-warning" href="#">
-                                <img src="images/images/avatar/3.jpg" alt="...">
+                                <img src="{{asset('images/images/avatar/3.jpg')}}" alt="...">
                             </a>
                             <div class="media-body">
                                 <p class="fs-16">
@@ -189,7 +189,7 @@
 
                     </div>
 
-                </div>
+                </div> --}}
                 <!-- /.tab-pane -->
                 <!-- Settings tab content -->
                 {{-- <div class="tab-pane" id="control-sidebar-settings-tab">

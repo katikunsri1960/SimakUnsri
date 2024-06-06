@@ -88,6 +88,7 @@ Bimbingan Tugas Akhir Dosen
                                             </form>
                                             @endif
                                             <a href="#" class="btn btn-secondary btn-sm my-2" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="detailFunc({{$d}})"><i class="fa fa-eye"></i> Detail</a>
+                                            <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi', $d)}}" class="btn btn-sm btn-primary my-2" title="Approve Bimbingan"><i class="fa fa-pencil-square-o"></i> Asistensi</a>
                                         </div>
                                     </td>
                                 </tr>

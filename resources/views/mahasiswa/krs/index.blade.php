@@ -33,7 +33,7 @@ Kartu Rencana Studi
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-primary rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-1.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-1.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
@@ -44,7 +44,7 @@ Kartu Rencana Studi
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-warning rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-3.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-3.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">SKS Maksimum</p>
@@ -56,7 +56,7 @@ Kartu Rencana Studi
         </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-success rounded mb-10 pull-up"
-                style="background-image: url(../images/svg-icon/color-svg/st-4.svg); background-position: right bottom; background-repeat: no-repeat;">
+                style="background-image: url({{asset('images/images/svg-icon/color-svg/st-4.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">Dosen PA</p>
@@ -97,14 +97,14 @@ Kartu Rencana Studi
                                         <i class="fa fa-print"></i>
                                     </button> --}}
                                     <td>
-                                        <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}" class="waves-effect waves-light btn btn-sm btn-success mx-10" target="_blank"> PRINT PDF <i class="fa fa-print"></i></a> 
+                                        <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}" class="waves-effect waves-light btn btn-sm btn-success mx-10" target="_blank"> PRINT PDF <i class="fa fa-print"></i></a>
                                     </td>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-				
+
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.krs.include.krs')
@@ -262,7 +262,7 @@ Kartu Rencana Studi
                     // Jika Kapasitas Kelas !=  0, tampilkan Kapasitas peserta
                     table += '<td>' + kelas.peserta_kelas_count +'/'+ kelas.kapasitas +'</td>';;
                 }
-                
+
                 if (kelas.kelas_Enrolled) {
                     // Jika sudah terdaftar, tombol "Ambil" dinonaktifkan
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
@@ -382,7 +382,7 @@ Kartu Rencana Studi
             }
         });
     });
-    
+
     document.addEventListener('DOMContentLoaded', function () {
         const deleteButtons = document.querySelectorAll('.delete-button');
 
@@ -413,7 +413,7 @@ Kartu Rencana Studi
 
     $(function() {
         "use strict";
-        
+
         $('#krs-regular').DataTable({
             "paging": true,
             "ordering": true,
@@ -537,7 +537,7 @@ Kartu Rencana Studi
                         title: 'Tidak ada data RPS',
                         text: 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.',
                     });
-                    
+
                 } else {
                     displayData(data, resultContainerId);
                     $('#rpsModal').modal('show'); // Tampilkan modal setelah data dimuat
