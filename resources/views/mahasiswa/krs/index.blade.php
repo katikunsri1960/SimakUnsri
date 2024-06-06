@@ -97,7 +97,7 @@ Kartu Rencana Studi
                                         <i class="fa fa-print"></i>
                                     </button> --}}
                                     <td>
-                                        <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}" class="waves-effect waves-light btn btn-sm btn-success mx-10" target="_blank"> PRINT PDF <i class="fa fa-print"></i></a> 
+                                        <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}"  target="_blank" class="waves-effect waves-light btn btn-sm btn-success mb-5 float-end"><i class="fa fa-print"></i> Cetak</a> 
                                     </td>
                                 </div>
                             </div>
