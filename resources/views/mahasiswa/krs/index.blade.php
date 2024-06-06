@@ -84,20 +84,20 @@ Kartu Rencana Studi
                         </div>
                         <div class="d-flex justify-content-end px-3">
                             <div class="row">
-                                <div class="col-xl-8 mt-10">
-                                    <select name="semester" id="semester_select" class="form-select form-select-lg mb-5">
+                                <div class="col-xl-7 mt-10">
+                                    <select name="semester" id="semester_select" class="form-select form-select-lg mb-10">
                                         <option value="">-- Pilih Semester --</option>
                                         @foreach ($semester as $s)
-                                        <option value="{{$s->id_semester}}" @if ($s->id_semester == $semester_select) selected @endif>{{$s->nama_semester}}</option>
+                                            <option value="{{$s->id_semester}}" @if ($s->id_semester == $semester_select) selected @endif>{{$s->nama_semester}}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-xl-4 mt-5">
+                                <div class="col-xl-5 mt-10">
                                     {{-- <button href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}" type="button" class="waves-effect waves-light btn btn-success mx-10" title="Cetak KRS">
                                         <i class="fa fa-print"></i>
                                     </button> --}}
                                     <td>
-                                        <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}" class="waves-effect waves-light btn btn-sm btn-success mx-10" target="_blank"> PRINT PDF <i class="fa fa-print"></i></a>
+                                        <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}"  target="_blank" class="waves-effect waves-light btn btn-sm btn-success mb-5 float-end"><i class="fa fa-print"></i> Cetak</a> 
                                     </td>
                                 </div>
                             </div>
@@ -130,6 +130,7 @@ Kartu Rencana Studi
     $(document).ready(function() {
         $('#semester_select').select2({
             placeholder: '-- Pilih Semester --',
+            width: '100%',
         });
 
         $('#semester_select').on('change', function (e) {
