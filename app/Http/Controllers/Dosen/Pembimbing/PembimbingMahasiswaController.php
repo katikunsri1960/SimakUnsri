@@ -114,4 +114,18 @@ class PembimbingMahasiswaController extends Controller
             'aktivitas' => $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']),
         ]);
     }
+
+    public function asistensi_store(AktivitasMahasiswa $aktivitas, Request $request)
+    {
+        $data = $request->validate([
+                    'tanggal' => 'required',
+                    'uraian' => 'required',
+                ]);
+
+        $data['id_aktivitas'] = $aktivitas->id_aktivitas;
+
+        AsistensiAkhir::create($data);
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
 }

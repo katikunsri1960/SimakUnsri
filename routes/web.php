@@ -172,13 +172,14 @@ Route::group(['middleware' => ['auth']], function() {
                 });
 
                 Route::get('/bimbingan-non-akademik', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_non_akademik'])->name('dosen.pembimbing.bimbingan-non-akademik');
-                
+
                 Route::prefix('bimbingan-tugas-akhir')->group(function(){
                     Route::get('/', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_tugas_akhir'])->name('dosen.pembimbing.bimbingan-tugas-akhir');
                     Route::post('/approve-pembimbing/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'approve_pembimbing'])->name('dosen.pembimbing.bimbingan-tugas-akhir.approve-pembimbing');
 
                     Route::prefix('asistensi')->group(function(){
                         Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi');
+                        Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.store');
                     });
                 });
 

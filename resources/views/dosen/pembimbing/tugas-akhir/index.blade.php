@@ -65,10 +65,10 @@ Bimbingan Tugas Akhir Dosen
                                     </td>
                                     <td class="text-start align-middle text-nowrap">
                                         <ul>
-                                        @foreach ($d->bimbing_mahasiswa as $p)
-                                            <li>Pembimbing {{$p->pembimbing_ke}} :<br>{{$p->nama_dosen}}</li>
-                                        @endforeach
-                                        </ul>
+                                            @foreach ($d->bimbing_mahasiswa as $p)
+                                                <li>Pembimbing {{$p->pembimbing_ke}} :<br>{{$p->nama_dosen}}</li>
+                                            @endforeach
+                                            </ul>
                                     </td>
                                     <td class="text-center align-middle" style="width: 10%">
                                         @if ($d->approved > 0)
