@@ -17,14 +17,9 @@
             height: 50px;
             text-align: right;
         }
-        .text-judul1
+        .text-upper
         {
-            font-size: 12pt;
-            font-weight: 600; 
             text-transform: uppercase;
-            font-family: Arial, Helvetica, sans-serif;
-            clear: both;
-
         }
         .text-judul2
         {
@@ -39,6 +34,35 @@
             font-size: 10pt;
             font-family: Arial, Helvetica, sans-serif;
         }
+        .text-right
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: right;
+        }
+        .text-center
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+        }
+        .text-left
+        {
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: left;
+        }
+        .text-thead
+        {
+            font-size: 8pt;
+            font-family: Arial, Helvetica, sans-serif;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        .text-td
+        {
+            font-size: 8pt;
+            font-family: Arial, Helvetica, sans-serif;
+            text-transform: uppercase;
+        }
+        
         .table-pdf {
             border: 1px solid;
             padding-left: 5px;
@@ -51,6 +75,10 @@
         }
         .text-10 {
             font-size: 10pt;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        .text-12 {
+            font-size: 12pt;
             font-family: Arial, Helvetica, sans-serif;
         }
         .page-break {
