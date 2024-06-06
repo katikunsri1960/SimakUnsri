@@ -18,6 +18,11 @@ class NilaiPerkuliahan extends Model
 
     public function dosen_pengajar()
     {
-        return $this->hasMany(DosenPengajarKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah')->with('dosen');
+        return $this->hasMany(DosenPengajarKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
+    }
+
+    public function nilai_komponen()
+    {
+        return $this->hasMany(NilaiKomponenEvaluasi::class, 'id_kelas', 'id_kelas_kuliah');
     }
 }

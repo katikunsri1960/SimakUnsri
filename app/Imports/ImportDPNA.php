@@ -34,7 +34,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
             // Insert nilai komponen evaluasi
             $mahasiswa_kelas = PesertaKelasKuliah::where('nim', $row['nim'])->where('id_kelas_kuliah', $this->kelas)->first();
             $komponen_evaluasi = KomponenEvaluasiKelas::where('id_kelas_kuliah', $this->kelas)->orderBy('nomor_urut')->get();
-            $nilai_kompopnen = NilaiKomponenEvaluasi::where('id_kelas_kuliah', $this->kelas)->orderBy('urutan')->get();
+            $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $this->kelas)->orderBy('urutan')->get();
             $nilai_perkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)->get();
             
             for($i=0;$i<count($komponen_evaluasi);$i++){
@@ -44,7 +44,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         NilaiKomponenEvaluasi::create([
                             'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa,
                             'id_komponen_evaluasi' => $komponen_evaluasi[$i]['id_komponen_evaluasi'],
-                            'nilai_komp_eval' => $row['nilai_keaktifan_mahasiswa'],
+                            'nilai_komp_eval' => $row['nilai_aktivitas_partisipatif'],
                             'id_prodi' => $mahasiswa_kelas->id_prodi,
                             'nama_program_studi' => $mahasiswa_kelas->nama_program_studi,
                             'id_periode' => $this->semester_kelas,
@@ -54,6 +54,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
                             'sks_mata_kuliah' => $this->sks_matkul,
                             'nim' => $row['nim'],
+                            'nama_mahasiswa' => $row['nama_mahasiswa'],
                             'id_jns_eval' => $komponen_evaluasi[$i]['id_jenis_evaluasi'],
                             'nama' => $komponen_evaluasi[$i]['nama'],
                             'nama_inggris' => $komponen_evaluasi[$i]['nama_inggris'],
@@ -67,7 +68,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         NilaiKomponenEvaluasi::create([
                             'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa,
                             'id_komponen_evaluasi' => $komponen_evaluasi[$i]['id_komponen_evaluasi'],
-                            'nilai_komp_eval' => $row['nilai_proyek'],
+                            'nilai_komp_eval' => $row['nilai_hasil_proyek'],
                             'id_prodi' => $mahasiswa_kelas->id_prodi,
                             'nama_program_studi' => $mahasiswa_kelas->nama_program_studi,
                             'id_periode' => $this->semester_kelas,
@@ -77,6 +78,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
                             'sks_mata_kuliah' => $this->sks_matkul,
                             'nim' => $row['nim'],
+                            'nama_mahasiswa' => $row['nama_mahasiswa'],
                             'id_jns_eval' => $komponen_evaluasi[$i]['id_jenis_evaluasi'],
                             'nama' => $komponen_evaluasi[$i]['nama'],
                             'nama_inggris' => $komponen_evaluasi[$i]['nama_inggris'],
@@ -100,6 +102,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
                             'sks_mata_kuliah' => $this->sks_matkul,
                             'nim' => $row['nim'],
+                            'nama_mahasiswa' => $row['nama_mahasiswa'],
                             'id_jns_eval' => $komponen_evaluasi[$i]['id_jenis_evaluasi'],
                             'nama' => $komponen_evaluasi[$i]['nama'],
                             'nama_inggris' => $komponen_evaluasi[$i]['nama_inggris'],
@@ -123,6 +126,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
                             'sks_mata_kuliah' => $this->sks_matkul,
                             'nim' => $row['nim'],
+                            'nama_mahasiswa' => $row['nama_mahasiswa'],
                             'id_jns_eval' => $komponen_evaluasi[$i]['id_jenis_evaluasi'],
                             'nama' => $komponen_evaluasi[$i]['nama'],
                             'nama_inggris' => $komponen_evaluasi[$i]['nama_inggris'],
@@ -146,6 +150,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
                             'sks_mata_kuliah' => $this->sks_matkul,
                             'nim' => $row['nim'],
+                            'nama_mahasiswa' => $row['nama_mahasiswa'],
                             'id_jns_eval' => $komponen_evaluasi[$i]['id_jenis_evaluasi'],
                             'nama' => $komponen_evaluasi[$i]['nama'],
                             'nama_inggris' => $komponen_evaluasi[$i]['nama_inggris'],
@@ -169,6 +174,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
                             'sks_mata_kuliah' => $this->sks_matkul,
                             'nim' => $row['nim'],
+                            'nama_mahasiswa' => $row['nama_mahasiswa'],
                             'id_jns_eval' => $komponen_evaluasi[$i]['id_jenis_evaluasi'],
                             'nama' => $komponen_evaluasi[$i]['nama'],
                             'nama_inggris' => $komponen_evaluasi[$i]['nama_inggris'],
@@ -184,14 +190,14 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                 }else{
                     if($komponen_evaluasi[$i]['nomor_urut'] == 1){
                         NilaiKomponenEvaluasi::update([
-                            'nilai_komp_eval' => $row['nilai_keaktifan_mahasiswa'],
+                            'nilai_komp_eval' => $row['nilai_aktivitas_partisipatif'],
                         ])->where('id_komponen_evaluasi', $komponen_evaluasi[$i]['id_komponen_evaluasi'])
                         ->where('id_kelas', $this->kelas)
                         ->where('id_matkul', $this->matkul)
                         ->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa);
                     }else if($komponen_evaluasi[$i]['nomor_urut'] == 2){
                         NilaiKomponenEvaluasi::update([
-                            'nilai_komp_eval' => $row['nilai_proyek'],
+                            'nilai_komp_eval' => $row['nilai_hasil_proyek'],
                         ])->where('id_komponen_evaluasi', $komponen_evaluasi[$i]['id_komponen_evaluasi'])
                         ->where('id_kelas', $this->kelas)
                         ->where('id_matkul', $this->matkul)
@@ -255,11 +261,11 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                     'nilai_huruf' => $row['nilai_huruf'],
                 ]);
             }else{
-                NilaiPerkuliahan::update([
+                NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)->update([
                     'nilai_angka' => number_format($row['nilai_angka'],2),
                     'nilai_indeks' => number_format($row['nilai_indeks'],2),
                     'nilai_huruf' => $row['nilai_huruf'],
-                ])->where('id_kelas', $this->kelas);
+                ]);
             }
         }
     }
