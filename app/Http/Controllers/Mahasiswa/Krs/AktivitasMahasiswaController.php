@@ -260,6 +260,8 @@ class AktivitasMahasiswaController extends Controller
                 // }
                 $dosen_bimbing = BiodataDosen::whereIn('id_dosen', $request->dosen_bimbing_aktivitas)->get();
 
+                dd($dosen_bimbing);
+
                 $jumlah_dosen=count($request->dosen_bimbing_aktivitas);
                 // dd($jumlah_dosen);
 

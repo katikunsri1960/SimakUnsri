@@ -203,6 +203,7 @@ Kartu Rencana Studi
                     id_prodi: selectedProdiId
                 },
                 success: function(response) {
+                    console.log(response.mk_merdeka.id_semester)
                     var mkMerdeka = response.mk_merdeka;
                     var krsMerdeka = response.krs_merdeka.map(krs => krs.id_matkul); // Extract id_matkul from krs_merdeka
                     var tbody = $('#mk-merdeka-tbody');
@@ -216,9 +217,14 @@ Kartu Rencana Studi
                                 '<td class="text-center align-middle">' + (index + 1) + '</td>' +
                                 '<td class="text-start align-middle">' + data.kode_mata_kuliah + '</td>' +
                                 '<td class="text-start align-middle" style="white-space: nowrap;">' + data.nama_mata_kuliah + '</td>' +
-                                '<td class="text-center align-middle">' + data.semester + '</td>' +
+                                '<td class="text-center align-middle" style="white-space: nowrap;">' +
+                                '<button type="button" class="btn btn-warning-light lihat-rps" data-bs-toggle="modal" data-id-matkul="'+ data.id_matkul +'">' +
+                                        '<i class="fa fa-newspaper-o"></i> Lihat RPS' +
+                                    '</button>' +
+                                '</td>' +
+                                '<td class="text-center align-middle">' + data.matkul_kurikulum.semester + '</td>' +
                                 '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
-                                '<td class="text-center align-middle">' + data.jumlah_kelas_kuliah + '</td>' +
+                                '<td class="text-center align-middle">' + data.jumlah_kelas + '</td>' +
                                 '<td class="text-center align-middle">' +
                                     '<button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmpty || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
                                     '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 20px"></div>' +
@@ -254,13 +260,25 @@ Kartu Rencana Studi
                     _token: csrfToken  // Sertakan CSRF token di sini
                 },
                 success: function(data) {
-                    displayData(data, resultContainerId);
+                    // Cek apakah data kelas kuliah kosong
+                    if (data.length === 0) {
+                        // Jika kelas kuliah kosong, tampilkan pesan peringatan menggunakan SweetAlert
+                        Swal.fire({
+                            icon: 'warning',
+                            title: 'Kelas Kuliah Kosong',
+                            text: 'Tidak ada kelas kuliah yang tersedia untuk mata kuliah ini.'
+                        });
+                    } else {
+                        // Jika ada data kelas kuliah, tampilkan data seperti biasa
+                        displayData(data, resultContainerId);
+                    }
                 },
                 error: function(error) {
                     console.error('Error fetching data:', error);
                 }
             });
         });
+
 
 
 
@@ -345,29 +363,6 @@ Kartu Rencana Studi
                         });
                     }
                 });
-            });
-
-
-            // Tambahkan event listener untuk tombol "Ubah Kelas Kuliah"
-            $('.btn-ubah-kelas').click(function() {
-                var idKelas = $(this).data('id-kelas');
-
-                // Lakukan AJAX request untuk meng-update kelas kuliah
-                $.ajax({
-                    url: '{{ route("mahasiswa.krs.update_kelas_kuliah") }}',
-                    type: 'POST',
-                    data: {
-                        id_matkul: idMatkul,
-                        id_kelas_kuliah: idKelas,
-                        _token: csrfToken  // Sertakan CSRF token di sini
-                    },
-                    success: function(response) {
-                        console.log(response.message);
-                        // Tambahkan logika atau feedback sesuai kebutuhan
-                    },
-                    error: function(error) {
-                        console.error('Error updating data:', error);
-                    }});
             });
         }
 
@@ -583,8 +578,8 @@ Kartu Rencana Studi
     });
 
     // MENAMPILKAN DATA RPS
-    function displayData(data, resultContainerId) {
-        $(resultContainerId).empty();
+    function displayData(data, resultContainerIdModal) {
+        $(resultContainerIdModal).empty();
 
         $.each(data, function(index, rps) {
             var row = '<tr>';
@@ -592,7 +587,7 @@ Kartu Rencana Studi
             row += '<td class="text-start align-middle">' + rps.materi_indonesia + '</td>';
             row += '<td class="text-start align-middle">' + rps.materi_inggris + '</td>';
             row += '</tr>';
-            $(resultContainerId).append(row);
+            $(resultContainerIdModal).append(row);
         });
     }
 
