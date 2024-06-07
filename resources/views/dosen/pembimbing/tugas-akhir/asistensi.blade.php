@@ -76,12 +76,14 @@ Bimbingan Tugas Akhir Dosen
                             <a class="btn btn-rounded bg-success-light" href="#" data-bs-toggle="modal"
                                 data-bs-target="#tambahAsistensiModal"><i class="fa fa-plus"><span
                                         class="path1"></span><span class="path2"></span></i> Tambah Asistensi</a>
+                            <a class="btn btn-rounded bg-primary-light" href="#" data-bs-toggle="modal"
+                            data-bs-target="#"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
                         </div>
                     </div>
                 </div>
                 <div class="row mt-2">
                     <div class="table-responsive">
-                        <table id="dt" class="table table-bordered table-striped" style="font-size: 11px">
+                        <table id="dt" class="table table-bordered table-striped" style="font-size: 12px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle" style="width: 5%">No</th>
@@ -102,12 +104,16 @@ Bimbingan Tugas Akhir Dosen
                                     <td class="text-center align-middle">
                                         @if ($d->approved == 0)
                                         <span class="badge bg-warning">Menunggu</span>
-                                        @elseif ($d->status == 1)
+                                        @elseif ($d->approved == 1)
                                         <span class="badge bg-success">Disetujui</span>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
-
+                                        <div class="btn-group">
+                                            <a href="#" class="btn btn-sm btn-rounded bg-info-light">
+                                                <i class="fa fa-check-circle-o">
+                                                </i> Approve</a>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
