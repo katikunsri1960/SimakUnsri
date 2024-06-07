@@ -56,10 +56,7 @@ class KelasKuliah extends Model
 
     public function detail_penilaian_perkuliahan(string $kelas)
     {
-        $db = new KelasKuliah;
-        $data = $db->with('peserta_kelas', 'nilai_perkuliahan', 'nilai_komponen')->whereHas('nilai_komponen', function ($query) use ($kelas){
-            $query->where('id_kelas', $kelas);
-        })
+        $data = $this->with('peserta_kelas', 'nilai_perkuliahan', 'nilai_komponen')
         ->where('id_kelas_kuliah', $kelas)
         ->first();
 
