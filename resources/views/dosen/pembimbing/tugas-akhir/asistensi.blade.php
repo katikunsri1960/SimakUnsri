@@ -9,6 +9,8 @@ Bimbingan Tugas Akhir Dosen
         class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush
+@include('swal')
+@include('dosen.pembimbing.tugas-akhir.asistensi-tambah')
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-md-12">
@@ -43,18 +45,24 @@ Bimbingan Tugas Akhir Dosen
                                     <td class="text-left" style="text-align: justify">{{$aktivitas->judul}}</td>
                                 </tr>
                                 <tr>
+                                    <td class="text-left text-nowrap">No. SK</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$aktivitas->sk_tugas}}</td>
+                                </tr>
+                                <tr>
                                     <td class="text-left text-nowrap">Tanggal Mulai</td>
                                     <td class="text-center">:</td>
-                                    <td class="text-left" style="text-align: justify">{{$aktivitas->id_tanggal_mulai}}</td>
+                                    <td class="text-left" style="text-align: justify">{{$aktivitas->id_tanggal_mulai}}
+                                    </td>
                                 </tr>
                                 <tr>
                                     <td class="text-left text-nowrap align-middle">Pembimbing</td>
                                     <td class="text-center align-middle">:</td>
                                     <td class="text-left align-middle">
                                         <ul style="padding: 0; padding-left:0.8rem">
-                                        @foreach ($aktivitas->bimbing_mahasiswa as $p)
+                                            @foreach ($aktivitas->bimbing_mahasiswa as $p)
                                             <li>Pembimbing {{$p->pembimbing_ke}} : {{$p->nama_dosen}}</li>
-                                        @endforeach
+                                            @endforeach
                                         </ul>
                                     </td>
                                 </tr>
@@ -62,14 +70,26 @@ Bimbingan Tugas Akhir Dosen
                         </div>
                     </div>
                 </div>
+                <div class="row mb-5">
+                    <div class="col-xl-12 col-lg-12 text-end">
+                        <div class="btn-group">
+                            <a class="btn btn-rounded bg-success-light" href="#" data-bs-toggle="modal"
+                                data-bs-target="#tambahAsistensiModal"><i class="fa fa-plus"><span
+                                        class="path1"></span><span class="path2"></span></i> Tambah Asistensi</a>
+                            <a class="btn btn-rounded bg-primary-light" href="#" data-bs-toggle="modal"
+                            data-bs-target="#"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
+                        </div>
+                    </div>
+                </div>
                 <div class="row mt-2">
                     <div class="table-responsive">
-                        <table id="dt" class="table table-bordered table-striped" style="font-size: 11px">
+                        <table id="dt" class="table table-bordered table-striped" style="font-size: 12px">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle" style="width: 5%">No</th>
                                     <th class="text-center align-middle">Tanggal</th>
                                     <th class="text-center align-middle">Keterangan</th>
+                                    <th class="text-center align-middle">Pembimbing</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Aksi</th>
                                 </tr>
@@ -79,16 +99,21 @@ Bimbingan Tugas Akhir Dosen
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$d->id_tanggal}}</td>
-                                    <td class="text-center align-middle">{{$d->uraian}}</td>
+                                    <td class="text-left align-middle" style="text-align: justify">{{$d->uraian}}</td>
+                                    <td class="text-center align-middle">{{$d->dosen ? $d->dosen->nama_dosen : '-'}}</td>
                                     <td class="text-center align-middle">
                                         @if ($d->approved == 0)
                                         <span class="badge bg-warning">Menunggu</span>
-                                        @elseif ($d->status == 1)
+                                        @elseif ($d->approved == 1)
                                         <span class="badge bg-success">Disetujui</span>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
-
+                                        <div class="btn-group">
+                                            <a href="#" class="btn btn-sm btn-rounded bg-info-light">
+                                                <i class="fa fa-check-circle-o">
+                                                </i> Approve</a>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -107,6 +132,11 @@ Bimbingan Tugas Akhir Dosen
 @push('js')
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
+    function editAsistensi(data)
+    {
+        console.log('masuk edit asistensi')
+    }
+
     $('#dt').DataTable({
         "paging": true,
         "lengthChange": true,

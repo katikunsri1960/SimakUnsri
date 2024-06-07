@@ -2,6 +2,7 @@
 
 namespace App\Models\Perkuliahan;
 
+use App\Models\AsistensiAkhir;
 use App\Models\Semester;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
@@ -15,6 +16,11 @@ class AktivitasMahasiswa extends Model
     use HasFactory;
     protected $guarded = [];
     protected $appends = ['id_tanggal_sk_tugas', 'id_tanggal_mulai', 'id_tanggal_selesai'];
+
+    public function asistensi_akhir()
+    {
+        return $this->hasMany(AsistensiAkhir::class, 'id_aktivitas', 'id_aktivitas');
+    }
 
     public function konversi()
     {

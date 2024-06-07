@@ -109,9 +109,16 @@ class PembimbingMahasiswaController extends Controller
     {
         $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->get();
 
+        $aktivitas = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']);
+
+        $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
+                            ->where('id_dosen', auth()->user()->fk_id)
+                            ->first()->pembimbing_ke;
+        // dd($pembimbing_ke);
         return view('dosen.pembimbing.tugas-akhir.asistensi', [
             'data' => $data,
-            'aktivitas' => $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']),
+            'aktivitas' => $aktivitas,
+            'pembimbing_ke' => $pembimbing_ke,
         ]);
     }
 
@@ -123,6 +130,9 @@ class PembimbingMahasiswaController extends Controller
                 ]);
 
         $data['id_aktivitas'] = $aktivitas->id_aktivitas;
+        $data['approved'] = 1;
+        $data['id_dosen'] = auth()->user()->fk_id;
+        $data['tanggal'] = date('Y-m-d', strtotime($data['tanggal']));
 
         AsistensiAkhir::create($data);
 
