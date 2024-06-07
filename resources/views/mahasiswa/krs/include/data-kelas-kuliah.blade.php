@@ -181,9 +181,11 @@
                                                                     <th class="text-center align-middle">No</th>
                                                                     <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                                     <th class="text-center align-middle" style="width: 100%">Nama Mata Kuliah</th>
+                                                                    <th class="text-center align-middle">RPS</th>
                                                                     <th class="text-center align-middle">Semester Ke</th>
                                                                     <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                                     <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
+                                                                    <th class="text-center align-middle">Lihat Kelas</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody id="mk-merdeka-tbody">
@@ -239,7 +241,7 @@
                                                                         <td class="text-center align-middle">{{ $data['semester'] }}</td>
                                                                         <td class="text-center align-middle">{{ $data['sks_mata_kuliah'] }}</td>
                                                                         <td>
-                                                                            <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas {{ $isEnrolledMatkul || $isLower ? 'disabled' : '' }}" >
+                                                                            <a href="{{ route('mahasiswa.krs.ambil-aktivitas', $data['id_matkul']) }}" class="btn btn-primary-light ambil-aktivitas {{ $isEnrolledMatkul  ? 'disabled' : '' }}" >
                                                                                 Ambil
                                                                             </a>
                                                                         </td>

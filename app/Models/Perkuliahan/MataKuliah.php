@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\SemesterAktif;
+use Doctrine\DBAL\Query\Limit;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 use function PHPUnit\Framework\isEmpty;
@@ -40,6 +41,11 @@ class MataKuliah extends Model
     public function matkul_kurikulum()
     {
         return $this->belongsTo(MatkulKurikulum::class, 'id_matkul', 'id_matkul');
+    }
+
+    public function matkul_merdeka()
+    {
+        return $this->belongsTo(MatkulMerdeka::class, 'id_matkul', 'id_matkul');
     }
 
     public function kurikulum()
@@ -108,7 +114,7 @@ class MataKuliah extends Model
     public function getKrsAkt($id_reg, $id_semester)
     {
         //DATA AKTIVITAS
-        $id_reg = auth()->user()->fk_id;
+        // $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
@@ -118,7 +124,9 @@ class MataKuliah extends Model
 
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
-        if(isEmpty($data_akt))
+        
+
+        if( $data_akt == NULL)
         {
             $mk_akt=NULL;
             $data_akt_ids = NULL;
@@ -129,6 +137,8 @@ class MataKuliah extends Model
             $mk_akt = $data_akt['data']['data'];
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
+
+        // dd($data_akt);
 
         // AKTIVITAS MAHASISWA YG DIAMBIL
         $krs_akt = AnggotaAktivitasMahasiswa::with(['aktivitas_mahasiswa.bimbing_mahasiswa', 'aktivitas_mahasiswa.konversi'])
@@ -202,24 +212,48 @@ class MataKuliah extends Model
                 ->get();
 
         return $krs_merdeka;
-
     }
 
-    public function getMKMerdeka($prodi, $id_semester)
+
+    public function getMKMerdeka($id_semester, $id_prodi)
     {
-        $mk_merdeka = MatkulMerdeka::with('matkul.rencana_pembelajaran')
-                ->leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
-                ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
-                ->select('mata_kuliahs.id_matkul', 'mata_kuliahs.kode_mata_kuliah', 'mata_kuliahs.nama_mata_kuliah', 'matkul_kurikulums.semester', 'matkul_kurikulums.sks_mata_kuliah')
-                ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$id_semester."') AS jumlah_kelas_kuliah"))
-                ->whereIn('mata_kuliahs.id_prodi', $prodi->pluck('id')) // Hanya mengambil mata kuliah yang termasuk dalam program studi yang dipilih
-                ->orderBy('jumlah_kelas_kuliah', 'DESC')
-                ->orderBy('matkul_kurikulums.semester', 'ASC')
-                ->orderBy('matkul_kurikulums.sks_mata_kuliah', 'ASC')
-                ->get();
+        $mk_merdeka = $this->with(['kelas_kuliah', 'rencana_pembelajaran', 'matkul_merdeka','matkul_kurikulum'])
+                        ->whereHas('matkul_merdeka', function($query) use($id_prodi) {
+                            $query->where('id_prodi', $id_prodi);
+                        })
+                        ->withCount(['kelas_kuliah as jumlah_kelas' => function ($q) use($id_semester, $id_prodi){
+                            $q->where('id_semester', $id_semester);
+                        },
+                        'rencana_pembelajaran as jumlah_rps' => function ($q) {
+                                $q->where('approved', 0);
+                            }
+                        ])
+                        ->get();
 
         return $mk_merdeka;
     }
+
+
+    // public function getMKMerdeka($id_semester, $id_prodi)
+    // {
+    //     $mk_merdeka = MatkulMerdeka::with('matkul.rencana_pembelajaran')
+    //             ->leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
+    //             ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
+    //             ->select(
+    //                 // '*'
+    //                 'mata_kuliahs.id_matkul', 'mata_kuliahs.kode_mata_kuliah', 'mata_kuliahs.nama_mata_kuliah', 'matkul_kurikulums.semester', 'matkul_kurikulums.sks_mata_kuliah'
+    //                 )
+    //             ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$id_semester."') AS jumlah_kelas_kuliah"))
+    //             ->where('mata_kuliahs.id_prodi', $id_prodi) // Hanya mengambil mata kuliah yang termasuk dalam program studi yang dipilih
+    //             ->orderBy('jumlah_kelas_kuliah', 'DESC')
+    //             ->orderBy('matkul_kurikulums.semester', 'ASC')
+    //             ->orderBy('matkul_kurikulums.sks_mata_kuliah', 'ASC')
+    //             ->get();
+    //             dd($mk_merdeka);
+
+    //     return $mk_merdeka;
+    // }
+
 
     public function getMKRegular()
     {
@@ -281,47 +315,47 @@ class MataKuliah extends Model
                 "id_prodi"=> "f371d293-c602-4b1b-afc5-222081477091",
                 "data"=>
                 [
-                    // "id_kurikulum"=>"5f0173e8-8f43-4819-be60-41dcb73f9449",
-                    // "data"=>
-                    // [
-                    //     [
-                    //         "id_matkul"=>"b010c3b4-b4e3-4369-80a5-f8ddc9fc3529",
-                    //         "kode_mata_kuliah"=>"TKM4001",
-                    //         "nama_mata_kuliah"=>"KERJA PRAKTEK",
-                    //         "id_jenis_mata_kuliah"=>"A",
-                    //         "sks_mata_kuliah"=>2.00,
-                    //         "semester"=>7,
-                    //     ],
-                    //     [
-                    //         "id_matkul"=>"bff65f45-ee5d-4f6f-bf5f-eddf00fe6d9c",
-                    //         "kode_mata_kuliah"=>"TKM4002",
-                    //         "nama_mata_kuliah"=>"TUGAS AKHIR",
-                    //         "id_jenis_mata_kuliah"=>"S",
-                    //         "sks_mata_kuliah"=>5.00,
-                    //         "semester"=>8,
-                    //     ],
-                    // ],
-
-                    "id_kurikulum"=>"7699c236-04ae-4c63-974a-b47f29b03091",
+                    "id_kurikulum"=>"5f0173e8-8f43-4819-be60-41dcb73f9449",
                     "data"=>
                     [
                         [
-                            "id_matkul"=>"4f915940-8835-4ae1-ab57-83bdc9978447",
-                            "kode_mata_kuliah"=>"TKM490514",
-                            "nama_mata_kuliah"=>"SKRIPSI",
+                            "id_matkul"=>"b010c3b4-b4e3-4369-80a5-f8ddc9fc3529",
+                            "kode_mata_kuliah"=>"TKM4001",
+                            "nama_mata_kuliah"=>"KERJA PRAKTEK",
+                            "id_jenis_mata_kuliah"=>"A",
+                            "sks_mata_kuliah"=>2.00,
+                            "semester"=>7,
+                        ],
+                        [
+                            "id_matkul"=>"bff65f45-ee5d-4f6f-bf5f-eddf00fe6d9c",
+                            "kode_mata_kuliah"=>"TKM4002",
+                            "nama_mata_kuliah"=>"TUGAS AKHIR",
                             "id_jenis_mata_kuliah"=>"S",
                             "sks_mata_kuliah"=>5.00,
                             "semester"=>8,
                         ],
-                        [
-                            "id_matkul"=>"b5981e2b-061b-4c6f-ac45-1cca1f180a89",
-                            "kode_mata_kuliah"=>"TKM490314",
-                            "nama_mata_kuliah"=>"PROPOSAL SKRIPSI",
-                            "id_jenis_mata_kuliah"=>"S",
-                            "sks_mata_kuliah"=>1.00,
-                            "semester"=>8,
-                        ],
-                    ]
+                    ],
+
+                    // "id_kurikulum"=>"7699c236-04ae-4c63-974a-b47f29b03091",
+                    // "data"=>
+                    // [
+                    //     [
+                    //         "id_matkul"=>"4f915940-8835-4ae1-ab57-83bdc9978447",
+                    //         "kode_mata_kuliah"=>"TKM490514",
+                    //         "nama_mata_kuliah"=>"SKRIPSI",
+                    //         "id_jenis_mata_kuliah"=>"S",
+                    //         "sks_mata_kuliah"=>5.00,
+                    //         "semester"=>8,
+                    //     ],
+                    //     [
+                    //         "id_matkul"=>"b5981e2b-061b-4c6f-ac45-1cca1f180a89",
+                    //         "kode_mata_kuliah"=>"TKM490314",
+                    //         "nama_mata_kuliah"=>"PROPOSAL SKRIPSI",
+                    //         "id_jenis_mata_kuliah"=>"S",
+                    //         "sks_mata_kuliah"=>1.00,
+                    //         "semester"=>8,
+                    //     ],
+                    // ]
                 ]
             ],
             [
@@ -362,6 +396,11 @@ class MataKuliah extends Model
         foreach ($data as $prodi) {
             if ($prodi['id_prodi'] == $id_prodi) {
                 return $prodi;
+            }
+        }
+        foreach ($data['data'] as $kurikulum) {
+            if ($kurikulum['id-kurikulum'] == $id_kurikulum) {
+                return $kurikulum;
             }
         }
 

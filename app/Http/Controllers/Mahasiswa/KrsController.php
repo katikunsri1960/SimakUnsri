@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Mahasiswa;
 
 use Carbon\Carbon;
 use App\Models\Fakultas;
-// use Barryvdh\DomPDF\PDF;
 use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
@@ -55,13 +54,18 @@ class KrsController extends Controller
         //DATA AKTIVITAS 
         $db = new MataKuliah();
 
-        $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
+        $db_akt = new AnggotaAktivitasMahasiswa();
 
-        list($krs_akt, $data_akt_ids, $mk_akt) = $db->getKrsAkt($id_reg, $semester_select);
+        // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
+        
+
+        list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
+        // dd($krs_akt);
         
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->orderBy('id_semester', 'DESC')
                     ->get();
+                    
                     
         $akm = $semester;
         
@@ -89,11 +93,11 @@ class KrsController extends Controller
     // DATA MK_MERDEKA
         $fakultas=Fakultas::all();
 
-        $selectedFakultasId = $request->input('fakultas_id');
+        // $selectedFakultasId = $request->input('fakultas_id');
 
-        $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
+        // $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
 
-        $mk_merdeka = $db->getMKMerdeka($prodi, $semester_select);
+        // $mk_merdeka = $db->getMKMerdeka($prodi, $semester_select);
         // dd($mk_merdeka);
 
         // MATAKULIAH TANPA GANJIL GENAP
@@ -122,10 +126,12 @@ class KrsController extends Controller
             'status_mahasiswa',
             'data_status_mahasiswa',
             'semester_ke',
-            'fakultas', 'prodi',
-            'krs_akt','data_akt', 'mk_akt',
+            'fakultas', 
+            // 'prodi',
+            'krs_akt',
+            'mk_akt',
             'total_sks_akt',
-            'mk_merdeka',
+            // 'mk_merdeka',
             'mk_regular', 'semester_select'
         ));
     }
@@ -134,6 +140,8 @@ class KrsController extends Controller
     public function pilih_prodi(Request $request)
     {
         $fakultasId = $request->input('id');
+        $id_semester = $request->input('semester');
+        $id_prodi = $request->input('id_prodi');
 
         $prodi = ProgramStudi::where('fakultas_id', $fakultasId)->get();
 
@@ -146,8 +154,10 @@ class KrsController extends Controller
     {
         $id_reg = auth()->user()->fk_id;
 
-        $semester_select = SemesterAktif::first();
+        $semester_aktif = SemesterAktif::first();
         // Ambil id_prodi dari request
+
+        $id_prodi = $request->input('id_prodi');
 
         $selectedFakultasId = $request->input('fakultas_id');
 
@@ -157,9 +167,9 @@ class KrsController extends Controller
         $db = new MataKuliah();
         
         // Query untuk mengambil data mata kuliah merdeka berdasarkan id_prodi yang dipilih
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select);
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
 
-        $mkMerdeka = $db->getMKMerdeka($prodi, $semester_select);
+        $mkMerdeka = $db->getMKMerdeka($semester_aktif, $id_prodi);
 
         return response()->json(['mk_merdeka' => $mkMerdeka, 'krs_merdeka'=>$krs_merdeka]);
     }
@@ -171,12 +181,11 @@ class KrsController extends Controller
         $idMatkul = $request->get('id_matkul');
 
         
-        $semester_select = SemesterAktif::select('*')
-                        ->first();
+        $semester_aktif = SemesterAktif::pluck('id_semester');
 
         $kelasKuliah = KelasKuliah::with(['dosen_pengajar.dosen'])
                     ->withCount('peserta_kelas')
-                    ->where('id_semester',  $semester_select) 
+                    ->where('id_semester',  $semester_aktif) 
                     ->where('id_matkul', $idMatkul)
                     ->orderBy('nama_kelas_kuliah')
                     ->get();
@@ -184,6 +193,7 @@ class KrsController extends Controller
         foreach ($kelasKuliah as $kelas) {
             $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->id, $kelas->id_matkul);
         }
+        // dd($kelasKuliah);
 
         return response()->json($kelasKuliah);
     }
@@ -270,7 +280,7 @@ class KrsController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data', 'error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
         }
     }
 
