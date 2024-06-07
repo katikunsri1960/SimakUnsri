@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('/dashboard', [App\Http\Controllers\Mahasiswa\DashboardController::class, 'index'])->name('mahasiswa.dashboard');
             Route::get('/biodata', [App\Http\Controllers\Mahasiswa\BiodataController::class, 'index_rev'])->name('mahasiswa.biodata');
 
-            Route::get('/kartu-rencana-studi', [App\Http\Controllers\Mahasiswa\KrsController::class, 'index'])->name('mahasiswa.krs');
+            Route::get('/krs', [App\Http\Controllers\Mahasiswa\KrsController::class, 'index'])->name('mahasiswa.krs');
             Route::prefix('krs')->group(function () {
                 Route::get('/get-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'get_kelas_kuliah'])->name('mahasiswa.krs.get_kelas_kuliah');
                 Route::post('/store-kelas-kuliah', [App\Http\Controllers\Mahasiswa\KrsController::class, 'ambilKelasKuliah'])->name('mahasiswa.krs.store_kelas_kuliah');
@@ -38,28 +38,24 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/check-kelas-diambil', [App\Http\Controllers\Mahasiswa\KrsController::class, 'checkKelasDiambil'])->name('mahasiswa.krs.check_kelas_diambil');
                 Route::get('/pilih-prodi', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilih_prodi'])->name('mahasiswa.krs.pilih_prodi');
                 Route::get('/pilih-mk-merdeka', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilihMataKuliahMerdeka'])->name('mahasiswa.krs.pilih_mk_merdeka');
-
+                
                 Route::get('/get-aktivitas', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'getAktivitas'])->name('mahasiswa.krs.get-aktivitas');
                 Route::get('/ambil-aktivitas/{id_matkul}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'ambilAktivitas'])->name('mahasiswa.krs.ambil-aktivitas');
                 Route::post('/simpan-aktivitas', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'simpanAktivitas'])->name('mahasiswa.krs.simpan-aktivitas');
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
                 Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
-
+                
                 Route::get('/print/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print');
-                Route::get('/print-1/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print-1');
+                Route::get('/print/checkDosenPA/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'checkDosenPA'])->name('mahasiswa.krs.print.checkDosenPA');
 
-
-
+                Route::prefix('print')->group(function () {
+                    Route::get('/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print');
+                    Route::get('/checkDosenPA/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'checkDosenPA'])->name('mahasiswa.krs.print.checkDosenPA');
+                });
             });
 
             // Route::get('/rps/lihat-rps', [App\Http\Controllers\Mahasiswa\RencanaPembelajaranController::class, 'index'])->name('mahasiswa.lihat-rps');
             Route::get('/krs/rps/{id_matkul}', [App\Http\Controllers\Mahasiswa\RencanaPembelajaranController::class, 'getRPSData'])->name('mahasiswa.lihat-rps');
-
-
-
-
-
-
 
             Route::get('/ambil-krs', [App\Http\Controllers\Mahasiswa\AkademikController::class, 'create_krs'])->name('mahasiswa.create-krs');
             Route::post('/ambil-krs/{id_kelas_kuliah}', [KrsController::class, 'ambilKrs'])->name('ambil-krs');

@@ -81,6 +81,10 @@
             font-size: 12pt;
             font-family: Arial, Helvetica, sans-serif;
         }
+        .text-8 {
+            font-size: 8pt;
+            font-family: Arial, Helvetica, sans-serif;
+        }
         .page-break {
             page-break-after: always;
         }

@@ -37,7 +37,7 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$akm->ips}} | {{$akm->ipk}}</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$akm->isEmpty() ? '0 | 0' : $akm[0]->ips .' | '. $akm[0]->ipk }}</h4>
                     </div>
                 </div>
             </div>
@@ -92,12 +92,16 @@ Kartu Rencana Studi
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="col-xl-5 mt-10">
-                                    {{-- <button href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}" type="button" class="waves-effect waves-light btn btn-success mx-10" title="Cetak KRS">
-                                        <i class="fa fa-print"></i>
-                                    </button> --}}
+                                {{-- <div class="col-xl-5 mt-10">
                                     <td>
                                         <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}"  target="_blank" class="waves-effect waves-light btn btn-sm btn-success mb-5 float-end"><i class="fa fa-print"></i> Cetak</a> 
+                                    </td>
+                                </div> --}}
+                                <div class="col-xl-5 mt-10">
+                                    <td>
+                                        <a href="#" id="print-krs-btn" class="waves-effect waves-light btn btn-sm btn-success mb-5 float-end">
+                                            <i class="fa fa-print"></i> Cetak
+                                        </a> 
                                     </td>
                                 </div>
                             </div>
@@ -136,6 +140,29 @@ Kartu Rencana Studi
         $('#semester_select').on('change', function (e) {
             var id = $(this).val();
             window.location.href = "{{route('mahasiswa.krs')}}?semester=" + id;
+        });
+
+        $(document).ready(function() {
+            $('#print-krs-btn').on('click', function(e) {
+                e.preventDefault(); // Mencegah link untuk langsung mengarahkan
+
+                $.ajax({
+                    url: '{{ route("mahasiswa.krs.print.checkDosenPA", ["id_semester" => $semester_select]) }}', // Buat route khusus untuk pengecekan
+                    type: 'GET',
+                    success: function(response) {
+                        if (response.error) {
+                            swal("Perhatian", response.error, "warning").then(() => {
+                                window.location.href = '{{ url()->previous() }}'; // Redirect ke halaman sebelumnya
+                            });
+                        } else {
+                            window.open('{{ route("mahasiswa.krs.print", ["id_semester" => $semester_select]) }}', '_blank'); // Jika tidak ada error, buka halaman print di tab baru
+                        }
+                    },
+                    error: function(xhr) {
+                        console.error('Error fetching data:', xhr);
+                    }
+                });
+            });
         });
 
         // Select Fakultas Kampus Merdeka
@@ -364,7 +391,7 @@ Kartu Rencana Studi
         }
     });
 
-    // Event listener for all delete buttons
+    // TOMBOL 
     $('.delete-form').submit(function(e){
         e.preventDefault();
         var formId = $(this).data('id');
@@ -384,6 +411,7 @@ Kartu Rencana Studi
         });
     });
 
+    // HAPUS MK KRS
     document.addEventListener('DOMContentLoaded', function () {
         const deleteButtons = document.querySelectorAll('.delete-button');
 
@@ -409,8 +437,6 @@ Kartu Rencana Studi
             });
         });
     });
-
-
 
     $(function() {
         "use strict";
@@ -490,7 +516,8 @@ Kartu Rencana Studi
             ]
         });
     });
-
+    
+    //  PENGECEKAN PERIODE KRS
     $(document).ready(function() {
         // Pengecekan tanggal
         @php
@@ -500,22 +527,22 @@ Kartu Rencana Studi
 
         // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
         @if($today->greaterThan($deadline) || $semester_aktif->id_semester > $semester_select)
-            swal({
-                icon: 'warning',
-                title: 'Peringatan',
-                text: 'Periode pengisian KRS pada Semester yang Anda pilih telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah',
-                showConfirmButton: true,
-            });
+            swal(
+                "Perhatian", 
+                "Periode pengisian KRS pada Semester yang Anda pilih telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah", 
+                "warning"
+            ); 
         @endif
     });
 
+    // AMBIL AKTIVITAS
     $('.ambil-aktivitas').click(function() {
         var idMatkul = $(this).data('id-matkul');
         window.location.href = '/mahasiswa/krs/ambil-aktivitas/' + idMatkul;
     });
 
 
-// LIHAT RPS
+    // LIHAT RPS
     $(document).on('click', '.lihat-rps', function() {
         var idMatkul = $(this).data('id-matkul');
         var resultContainerId = '#data-rencana-pembelajaran tbody';
@@ -555,6 +582,7 @@ Kartu Rencana Studi
         });
     });
 
+    // MENAMPILKAN DATA RPS
     function displayData(data, resultContainerId) {
         $(resultContainerId).empty();
 
