@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,11 @@ class AsistensiAkhir extends Model
 
     protected $appends = ['id_tanggal'];
 
+    public function dosen()
+    {
+        return $this->belongsTo(BiodataDosen::class, 'id_dosen', 'id_dosen');
+    }
+
     public function aktivitas()
     {
         return $this->belongsTo(AktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
@@ -24,4 +30,5 @@ class AsistensiAkhir extends Model
         // change tanggal from database with format Y-m-d to d-m-Y
         return Carbon::parse($this->tanggal)->format('d-m-Y');
     }
+    
 }
