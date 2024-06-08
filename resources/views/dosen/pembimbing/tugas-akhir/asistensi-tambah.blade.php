@@ -8,22 +8,27 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.store', $aktivitas)}}" method="post" id="asistensiForm">
+            <form action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.store', $aktivitas)}}" method="post"
+                id="asistensiForm">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group row">
-						<label class="col-form-label col-md-2">Tanggal</label>
-						<div class="col-md-10">
-							<input type="text" class="form-control" name="tanggal" id="tanggal"
-                                aria-describedby="helpId" placeholder="" />
-						</div>
-					</div>
+                        <label class="col-form-label col-md-2">Tanggal</label>
+                        <div class="col-md-10">
+                            <div class="input-group">
+                                <input type="text" class="form-control" name="tanggal" id="tanggal"
+                                    aria-describedby="helpId" placeholder="" />
+                                <span class="input-group-text" id="basic-addon1" id="tanggal"><i
+                                        class="fa fa-calendar"></i></span>
+                            </div>
+                        </div>
+                    </div>
                     <div class="form-group row">
-						<label class="col-form-label col-md-2">Keterangan</label>
-						<div class="col-md-10">
-							<textarea class="form-control" name="uraian" id="uraian" rows="3"></textarea>
-						</div>
-					</div>
+                        <label class="col-form-label col-md-2">Keterangan</label>
+                        <div class="col-md-10">
+                            <textarea class="form-control" name="uraian" id="uraian" rows="3"></textarea>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -41,8 +46,9 @@
 @push('js')
 <script src="{{asset('assets/js/flatpickr/flatpickr.js')}}"></script>
 <script>
-   flatpickr("#tanggal", {
+    flatpickr("#tanggal", {
             dateFormat: "d-m-Y",
+            maxDate: "today",
         });
 
     $('#asistensiForm').submit(function(e){

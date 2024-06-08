@@ -103,17 +103,19 @@ Bimbingan Tugas Akhir Dosen
                                     <td class="text-center align-middle">{{$d->dosen ? $d->dosen->nama_dosen : '-'}}</td>
                                     <td class="text-center align-middle">
                                         @if ($d->approved == 0)
-                                        <span class="badge bg-warning">Menunggu</span>
+                                        <span class="badge bg-warning">Menunggu Persetujuan</span>
                                         @elseif ($d->approved == 1)
                                         <span class="badge bg-success">Disetujui</span>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
+                                        @if ($d->approved == 0)
                                         <div class="btn-group">
-                                            <a href="#" class="btn btn-sm btn-rounded bg-info-light">
+                                            <a href="#" class="btn btn-sm btn-rounded bg-info-light" onclick="approveAsistensi({{$d}})">
                                                 <i class="fa fa-check-circle-o">
                                                 </i> Approve</a>
                                         </div>
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -132,9 +134,41 @@ Bimbingan Tugas Akhir Dosen
 @push('js')
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
-    function editAsistensi(data)
+    function approveAsistensi(data)
     {
-        console.log('masuk edit asistensi')
+        swal({
+            title: "Apakah anda yakin?",
+            text: "Data tidak bisa diubah lagi setelah disimpan!",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya, Simpan!',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#spinner').show();
+                $.ajax({
+                    url: "{{route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.approve', '')}}/" + data.id,
+                    type: "POST",
+                    data: {
+                        _token: "{{ csrf_token() }}",
+                        id: data.id
+                    },
+                    success: function (response) {
+                        $('#spinner').hide();
+                        alert(response.message);
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        $('#spinner').hide();
+                        alert(xhr.responseJSON.message);
+                    }
+                });
+            }
+        });
+        // ajax request form post approve asistensi
+
     }
 
     $('#dt').DataTable({
