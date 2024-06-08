@@ -108,7 +108,7 @@ Ambil Aktivitas Mahasiswa
                                                                     <form action="{{ route('mahasiswa.krs.simpan-aktivitas') }}" method="POST">
                                                                         @csrf
 
-                                                                        <h4 class="text-info mb-20"><i class="fa fa-book"></i>  Judul Aktivitas</h4>
+                                                                        <h4 class="text-info mb-20"><i class="fa fa-book"></i>  Judul</h4>
                                                                         {{-- <hr class="my-15"> --}}
                                                                         <div class="form-group mb-40">
                                                                             <div id="judul-fields">
@@ -121,7 +121,7 @@ Ambil Aktivitas Mahasiswa
                                                                             </div>
                                                                         </div>
 
-                                                                        <h4 class="text-info mb-20"><i class="fa fa-map"></i>  Lokasi Aktivitas</h4>
+                                                                        <h4 class="text-info mb-20"><i class="fa fa-map"></i>  Lokasi</h4>
                                                                         {{-- <hr class="my-15"> --}}
                                                                         <div class="form-group mb-40">
                                                                             <div id="lokasi-fields">

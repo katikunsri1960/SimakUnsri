@@ -208,13 +208,7 @@
                                                                 </td> --}}
                                                                 
                                                                 <td class="text-center align-middle" style="width:3%">
-                                                                    <form action="{{ route('mahasiswa.krs.hapus-aktivitas', ['id' => $data->id]) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus aktivitas ini?');" >
-                                                                        @csrf
-                                                                        @method('DELETE')
-                                                                        <button type="submit" class="btn btn-danger btn-sm" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
-                                                                    </form>
+                                                                    <button class="btn btn-danger btn-rounded hapus-aktivitas" data-id="{{ $data->aktivitas_mahasiswa->id }}"><i class="fa fa-trash"></i></button>
                                                                 </td>
                                                             </tr>
                                                         @endforeach

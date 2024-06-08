@@ -228,7 +228,9 @@ class KrsController extends Controller
 
             $db = new MataKuliah();
 
-            list($krs_akt, $data_akt_ids) = $db->getKrsAkt($id_reg, $semester_aktif);
+            $db_akt = new AnggotaAktivitasMahasiswa();
+
+            list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
             
             $sks_max = $db->getSksMax($id_reg, $semester_aktif);
             
@@ -360,9 +362,11 @@ class KrsController extends Controller
         //DATA AKTIVITAS 
         $db = new MataKuliah();
 
+        $db_akt = new AnggotaAktivitasMahasiswa();
+
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
-        list($krs_akt, $data_akt_ids, $mk_akt) = $db->getKrsAkt($id_reg, $id_semester);
+        list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $id_semester);
         
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->orderBy('id_semester', 'DESC')
@@ -381,27 +385,10 @@ class KrsController extends Controller
             return substr($item->id_semester, -1) != '3';
         })->count();
         
-        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester);
-        
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
         
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester);
 
-
-
-    // DATA MK_MERDEKA
-        $fakultas=Fakultas::all();
-
-        $selectedFakultasId = $request->input('fakultas_id');
-
-        $prodi_merdeka = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
-
-        $mk_merdeka = $db->getMKMerdeka($prodi_merdeka, $id_semester);
-        // dd($mk_merdeka);
-
-        // MATAKULIAH TANPA GANJIL GENAP
-        $mk_regular = $db->getMKRegular($riwayat_pendidikan, $data_akt_ids, $id_semester);
-        // dd($mk_regular);
 
     // TOTAL SELURUH SKS
         $total_sks_akt = $krs_akt->sum('aktivitas_mahasiswa.konversi.sks_mata_kuliah');
