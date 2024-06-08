@@ -243,6 +243,7 @@ Kartu Rencana Studi
             });
         });
 
+
         // Event listener untuk tombol "Lihat Kelas Kuliah"
         $(document).on('click', '.lihat-kelas-kuliah', function() {
             var idMatkul = $(this).data('id-matkul');
@@ -279,9 +280,6 @@ Kartu Rencana Studi
             });
         });
 
-
-
-
         function displayData(data, resultContainerId) {
             $(resultContainerId).empty();
 
@@ -303,10 +301,10 @@ Kartu Rencana Studi
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
                 if (kelas.kapasitas == null) {
                     // Jika Kapasitas Kelas = 0, tampilkan "-"
-                    table += '<td>' + kelas.peserta_kelas_count +'/'+ '-' +'</td>';;
+                    table += '<td>' + kelas.peserta_kelas_count + '/' + '-' + '</td>';
                 } else {
                     // Jika Kapasitas Kelas !=  0, tampilkan Kapasitas peserta
-                    table += '<td>' + kelas.peserta_kelas_count +'/'+ kelas.kapasitas +'</td>';;
+                    table += '<td>' + kelas.peserta_kelas_count + '/' + kelas.kapasitas + '</td>';
                 }
 
                 if (kelas.kelas_Enrolled) {
@@ -314,7 +312,7 @@ Kartu Rencana Studi
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
                 } else {
                     // Jika belum terdaftar, tombol "Ambil" aktif
-                    table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '">Ambil</button></td>';
+                    table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" data-id-matkul="' + kelas.id_matkul + '" data-nama-matkul="' + kelas.nama_mata_kuliah + '">Ambil</button></td>';
                 }
                 table += '</tr>';
             });
@@ -325,44 +323,78 @@ Kartu Rencana Studi
             // Tambahkan event listener untuk tombol "Ambil"
             $('.btn-ambil-kelas').click(function() {
                 var idKelas = $(this).data('id-kelas');
+                var idMatkul = $(this).data('id-matkul');
+                var id_reg = '{{ auth()->user()->fk_id }}';  // Pastikan user ID sudah terisi
 
                 // Dapatkan CSRF token dari meta tag
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
-                // Lakukan AJAX request untuk menyimpan kelas kuliah
-                $.ajax({
-                    url: '{{ route("mahasiswa.krs.store_kelas_kuliah") }}',
-                    type: 'POST',
-                    data: {
-                        id_kelas_kuliah: idKelas,
-                        _token: csrfToken  // Sertakan CSRF token di sini
-                    },
-                    success: function(response) {
-                        swal({
-                            title: 'Berhasil!',
-                            text: response.message,
-                            icon: 'success',
-                            confirmButtonText: 'OK'
-                        },function(result){
-                            if(result){
-                                console.log(response.message);
-                                // Lakukan refresh halaman atau aksi lainnya jika diperlukan
-                                location.reload();
+                // Cek prasyarat sebelum mengirimkan request
+                cekPrasyarat(idMatkul, id_reg, csrfToken, function(response) {
+                    if (response.prasyarat_dipenuhi) {
+                        // Jika prasyarat terpenuhi, lanjutkan dengan proses AJAX request untuk menyimpan kelas kuliah
+                        $.ajax({
+                            url: '{{ route("mahasiswa.krs.store_kelas_kuliah") }}',
+                            type: 'POST',
+                            data: {
+                                id_kelas_kuliah: idKelas,
+                                _token: csrfToken  // Sertakan CSRF token di sini
+                            },
+                            success: function(response) {
+                                swal({
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                    icon: 'success',
+                                    confirmButtonText: 'OK'
+                                }, function(result) {
+                                    if (result) {
+                                        console.log(response.message);
+                                        // Lakukan refresh halaman atau aksi lainnya jika diperlukan
+                                        location.reload();
+                                    }
+                                });
+                            },
+                            error: function(response) {
+                                console.log(response);
+                                var errorMessage = response.responseJSON.message;
+                                swal({
+                                    title: 'Gagal!',
+                                    text: errorMessage,
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK'
+                                });
                             }
                         });
-
-                    },
-                    error: function(response) {
-                        console.log(response);
-                        var errorMessage = response.responseJSON.message;
+                    } else {
+                        // Jika prasyarat tidak terpenuhi, tampilkan pesan peringatan
                         swal({
-                            title: 'Gagal!',
-                            text: errorMessage,
+                            title: 'Prasyarat Tidak Terpenuhi',
+                            text: 'Anda belum menyelesaikan mata kuliah prasyarat yang diperlukan ' +  ': ' + response.mata_kuliah_syarat,
                             icon: 'warning',
                             confirmButtonText: 'OK'
                         });
                     }
                 });
+            });
+        }
+
+
+        // Fungsi untuk mengecek prasyarat mata kuliah
+        function cekPrasyarat(idMatkul, id_reg, csrfToken, callback) {
+            $.ajax({
+                url: '{{ route("mahasiswa.krs.cek_prasyarat") }}',  // Pastikan rute ini sesuai dengan rute yang Anda gunakan
+                type: 'GET',
+                data: {
+                    id_matkul: idMatkul,
+                    id_reg: id_reg,
+                    _token: csrfToken
+                },
+                success: function(response) {
+                    callback(response);  // Callback untuk melanjutkan proses setelah pengecekan
+                },
+                error: function(error) {
+                    console.error('Error fetching prasyarat:', error);
+                }
             });
         }
 
@@ -613,6 +645,8 @@ Kartu Rencana Studi
             }
         });
     });
+
+    
 
     // MENAMPILKAN DATA RPS
     function displayData(data, resultContainerIdModal) {
