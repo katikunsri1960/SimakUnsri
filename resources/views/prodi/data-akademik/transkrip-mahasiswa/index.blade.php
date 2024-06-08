@@ -34,23 +34,8 @@ Transkrip Mahasiswa
                         <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button>
                     </div> --}}
                 </div>
-                <div class="box-body">
-                    <div class="table-responsive">
-                        <table id="data" class="table table-hover margin-top-10 w-p100">
-                          <thead>
-                             <tr>
-                                <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">NIDK/NIDN</th>
-                                <th class="text-center align-middle">NIP</th>
-                                <th class="text-center align-middle">NAMA</th>
-                                <th class="text-center align-middle">AKSI</th>
-                             </tr>
-                          </thead>
-                          <tbody>
-
-                          </tbody>
-                      </table>
-                      </div>
+                <div class="box-body text-center">
+                    <h1>UNDER DEVELOPMENT</h1>
                 </div>
 
             </div>
@@ -64,7 +49,7 @@ Transkrip Mahasiswa
 <script>
     $(function() {
         "use strict";
-        
+
         $('#data').DataTable();
     });
 </script>

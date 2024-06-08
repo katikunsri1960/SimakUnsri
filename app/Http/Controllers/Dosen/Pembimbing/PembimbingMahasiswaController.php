@@ -138,4 +138,36 @@ class PembimbingMahasiswaController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
+
+    public function asistensi_approve(AsistensiAkhir $asistensi)
+    {
+        $dosen = auth()->user()->fk_id;
+
+        $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $asistensi->id_aktivitas)
+                            ->where('id_dosen', $dosen)
+                            ->first()->pembimbing_ke;
+
+        if ($asistensi->id_dosen != $dosen && $pembimbing_ke != 1) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Anda tidak memiliki akses untuk menyetujui asistensi ini'
+            ]);
+        }
+
+        $store = $asistensi->update([
+            'approved' => 1
+        ]);
+
+        if ($store) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Asistensi berhasil disetujui!'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat menyetujui asistensi'
+            ]);
+        }
+    }
 }

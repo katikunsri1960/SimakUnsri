@@ -38,13 +38,13 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/pilih-prodi', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilih_prodi'])->name('mahasiswa.krs.pilih_prodi');
                 Route::get('/pilih-mk-merdeka', [App\Http\Controllers\Mahasiswa\KrsController::class, 'pilihMataKuliahMerdeka'])->name('mahasiswa.krs.pilih_mk_merdeka');
                 Route::get('/cek-prasyarat', [App\Http\Controllers\Mahasiswa\KrsController::class, 'cekPrasyarat'])->name('mahasiswa.krs.cek_prasyarat');
-                
+
                 Route::get('/get-aktivitas', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'getAktivitas'])->name('mahasiswa.krs.get-aktivitas');
                 Route::get('/ambil-aktivitas/{id_matkul}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'ambilAktivitas'])->name('mahasiswa.krs.ambil-aktivitas');
                 Route::post('/simpan-aktivitas', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'simpanAktivitas'])->name('mahasiswa.krs.simpan-aktivitas');
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
                 Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Krs\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
-                
+
                 Route::get('/print/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print');
                 Route::get('/print/checkDosenPA/{id_semester}', [App\Http\Controllers\Mahasiswa\KrsController::class, 'checkDosenPA'])->name('mahasiswa.krs.print.checkDosenPA');
 
@@ -185,6 +185,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::prefix('asistensi')->group(function(){
                         Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi');
                         Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.store');
+                        Route::post('/approve-asistensi/{asistensi}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_approve'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.approve');
                     });
                 });
 
