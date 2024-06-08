@@ -186,7 +186,7 @@ Kartu Rencana Studi
                         @foreach ($krs_akt as $data)
                             <tr>
                                 <td  class="text-td text-center">{{ $no++ }}.</td>
-                                <td  class="text-td">{{ $data->nama_jenis_aktivitas }}</td>
+                                <td  class="text-td">{{ $data->aktivitas_mahasiswa->nama_jenis_aktivitas }}</td>
                                 <td  class="text-td">
                                     @foreach($data->aktivitas_mahasiswa->bimbing_mahasiswa as $dosen_bimbing)
                                         <ul class="my-0">

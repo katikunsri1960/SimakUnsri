@@ -436,6 +436,43 @@ Kartu Rencana Studi
     $(function() {
         "use strict";
 
+        $('.hapus-aktivitas').click(function() {
+            var idAktivitas = $(this).data('id');
+            console.log(idAktivitas)
+            
+            swal({
+                title: "Apakah Anda yakin?",
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                icon: "warning",
+                buttons: true,
+                dangerMode: true,
+            },function(isConfirm){
+                if (isConfirm) {
+                    $.ajax({
+                        url: '/mahasiswa/krs/hapus-aktivitas/' + idAktivitas,
+                        type: 'DELETE',
+                        data: {
+                            "_token": "{{ csrf_token() }}"
+                        },
+                        success: function(response) {
+                            swal("Aktivitas telah dihapus.", {
+                                icon: "success",
+                            }).then(() => {
+                                window.location.reload();
+                            });
+                        },
+                        error: function(xhr) {
+                            swal({
+                                title:"Gagal Menghapus Aktivitas",
+                                text: xhr,
+                                icon: "error",
+                            });
+                        }
+                    });
+                }
+            });
+        });
+
         $('#krs-regular').DataTable({
             "paging": true,
             "ordering": true,
@@ -590,6 +627,10 @@ Kartu Rencana Studi
             $(resultContainerIdModal).append(row);
         });
     }
+    
+    
+        
+    
 
 </script>
 @endpush

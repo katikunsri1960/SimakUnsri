@@ -111,79 +111,6 @@ class MataKuliah extends Model
         return $sks_max;
     }
 
-    public function getKrsAkt($id_reg, $id_semester)
-    {
-        //DATA AKTIVITAS
-        // $id_reg = auth()->user()->fk_id;
-
-        $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->first();
-
-        $db = new MataKuliah();
-
-        $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
-
-        
-
-        if( $data_akt == NULL)
-        {
-            $mk_akt=NULL;
-            $data_akt_ids = NULL;
-
-        }
-        else
-        {
-            $mk_akt = $data_akt['data']['data'];
-            $data_akt_ids = array_column($mk_akt, 'id_matkul');
-        }
-
-        // dd($data_akt);
-
-        // AKTIVITAS MAHASISWA YG DIAMBIL
-        $krs_akt = AnggotaAktivitasMahasiswa::with(['aktivitas_mahasiswa.bimbing_mahasiswa', 'aktivitas_mahasiswa.konversi'])
-        ->select(
-            'aktivitas_mahasiswas.id',
-            'aktivitas_mahasiswas.nama_jenis_aktivitas',
-            'aktivitas_mahasiswas.nama_jenis_anggota',
-            'aktivitas_mahasiswas.nama_semester',
-            'aktivitas_mahasiswas.id_prodi',
-            'aktivitas_mahasiswas.lokasi',
-            'aktivitas_mahasiswas.mk_konversi',
-            'anggota_aktivitas_mahasiswas.id_aktivitas',
-            'anggota_aktivitas_mahasiswas.nim',
-            'anggota_aktivitas_mahasiswas.judul',
-            'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa',
-            'bimbing_mahasiswas.nama_kategori_kegiatan',
-            'bimbing_mahasiswas.approved',
-            )
-            ->leftJoin('aktivitas_mahasiswas', 'aktivitas_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas')
-            ->leftJoin('bimbing_mahasiswas', 'bimbing_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas')
-            ->where('anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', $id_reg)
-            ->where('aktivitas_mahasiswas.id_semester', $id_semester)
-            ->where('aktivitas_mahasiswas.id_prodi', $riwayat_pendidikan->id_prodi)
-            ->whereIn('aktivitas_mahasiswas.id_jenis_aktivitas', ['1','2', '3', '4','6','15', '22'])
-            ->whereNot('bimbing_mahasiswas.id_bimbing_mahasiswa', NUll)
-            ->groupBy(
-                'aktivitas_mahasiswas.id',
-                'aktivitas_mahasiswas.nama_jenis_aktivitas',
-                'aktivitas_mahasiswas.nama_jenis_anggota',
-                'aktivitas_mahasiswas.nama_semester',
-                'aktivitas_mahasiswas.id_prodi',
-                'aktivitas_mahasiswas.lokasi',
-                'aktivitas_mahasiswas.mk_konversi',
-                'anggota_aktivitas_mahasiswas.id_aktivitas',
-                'anggota_aktivitas_mahasiswas.nim',
-                'anggota_aktivitas_mahasiswas.judul',
-                'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa',
-                'bimbing_mahasiswas.nama_kategori_kegiatan',
-                'bimbing_mahasiswas.approved',
-            )
-            ->get();
-
-            return [$krs_akt, $data_akt_ids, $mk_akt];
-    }
-
     public function getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids)
     {
         $krs_regular = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'kelas_kuliahs.jadwal_hari', 'kelas_kuliahs.jadwal_jam_mulai', 'kelas_kuliahs.jadwal_jam_selesai', 'mata_kuliahs.sks_mata_kuliah')
@@ -232,28 +159,6 @@ class MataKuliah extends Model
 
         return $mk_merdeka;
     }
-
-
-    // public function getMKMerdeka($id_semester, $id_prodi)
-    // {
-    //     $mk_merdeka = MatkulMerdeka::with('matkul.rencana_pembelajaran')
-    //             ->leftJoin('mata_kuliahs', 'matkul_merdekas.id_matkul', '=', 'mata_kuliahs.id_matkul')
-    //             ->leftJoin('matkul_kurikulums','matkul_kurikulums.id_matkul','mata_kuliahs.id_matkul')
-    //             ->select(
-    //                 // '*'
-    //                 'mata_kuliahs.id_matkul', 'mata_kuliahs.kode_mata_kuliah', 'mata_kuliahs.nama_mata_kuliah', 'matkul_kurikulums.semester', 'matkul_kurikulums.sks_mata_kuliah'
-    //                 )
-    //             ->addSelect(DB::raw("(select count(id) from kelas_kuliahs where kelas_kuliahs.id_matkul=mata_kuliahs.id_matkul and kelas_kuliahs.id_semester='".$id_semester."') AS jumlah_kelas_kuliah"))
-    //             ->where('mata_kuliahs.id_prodi', $id_prodi) // Hanya mengambil mata kuliah yang termasuk dalam program studi yang dipilih
-    //             ->orderBy('jumlah_kelas_kuliah', 'DESC')
-    //             ->orderBy('matkul_kurikulums.semester', 'ASC')
-    //             ->orderBy('matkul_kurikulums.sks_mata_kuliah', 'ASC')
-    //             ->get();
-    //             dd($mk_merdeka);
-
-    //     return $mk_merdeka;
-    // }
-
 
     public function getMKRegular()
     {

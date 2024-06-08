@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    @vite(['resources/sass/app.scss'])
+    {{-- @vite(['resources/sass/app.scss']) --}}
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <link rel="icon" href="{{asset('images/unsri.png')}}">
@@ -104,32 +104,6 @@
                         </div>
 
                         <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-danger" href="#">
-                                <img src="images/images/avatar/2.jpg" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Luke</strong></a>
-                                </p>
-                                <p>Cras tempor diam ...</p>
-                                <span>33 min ago</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-warning" href="#">
-                                <img src="images/images/avatar/3.jpg" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Evan</strong></a>
-                                </p>
-                                <p>In posuere tortor vel...</p>
-                                <span>42 min ago</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
                             <a class="avatar avatar-lg status-primary" href="#">
                                 <img src="{{asset('images/images/avatar/4.jpg')}}" alt="...">
                             </a>
@@ -152,32 +126,6 @@
                                 </p>
                                 <p>Praesent tristique diam...</p>
                                 <span>Just now</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-danger" href="#">
-                                <img src="images/images/avatar/2.jpg" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Luke</strong></a>
-                                </p>
-                                <p>Cras tempor diam ...</p>
-                                <span>33 min ago</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-warning" href="#">
-                                <img src="images/images/avatar/3.jpg" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Evan</strong></a>
-                                </p>
-                                <p>In posuere tortor vel...</p>
-                                <span>42 min ago</span>
                             </div>
                         </div>
 
@@ -212,12 +160,12 @@
     <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/apexcharts-bundle/dist/apexcharts.js')}}"></script>
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
-    <script src="{{asset('assets/assets/vendor_components/chart.js-master/Chart.min.js')}}"></script>
+    {{-- <script src="{{asset('assets/assets/vendor_components/chart.js-master/Chart.min.js')}}"></script> --}}
     <script src="{{asset('assets/vendor_components/easypiechart/dist/jquery.easypiechart.js')}}"></script>
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/js/pages/data-table.js')}}"></script>
-    <script src="{{asset('assets/js/pages/chart-widgets.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/pages/chart-widgets.js')}}"></script> --}}
     <script src="{{asset('assets/js/pages/chartjs-int.js')}}"></script>
 
     @stack('js')
