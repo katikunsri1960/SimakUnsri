@@ -19,6 +19,7 @@ use function PHPUnit\Framework\isEmpty;
 use Illuminate\Cache\RateLimiting\Limit;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\PrasyaratMatkul;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
@@ -292,6 +293,69 @@ class KrsController extends Controller
 
         return redirect()->back()->with('success', 'Mata Kuliah Berhasil di Hapus');
     }
+
+    
+    public function cekPrasyarat(Request $request)
+    {
+        $idMatkul = $request->get('id_matkul');
+        $id_reg = $request->get('id_reg');
+
+        // Dapatkan mata kuliah prasyarat
+        $prasyarat = PrasyaratMatkul::where('id_matkul', $idMatkul)->pluck('id_matkul_prasyarat');
+
+        // Jika tidak ada prasyarat, langsung return true
+        if ($prasyarat->isEmpty()) {
+            return response()->json(['prasyarat_dipenuhi' => true]);
+        }
+
+        // Cek apakah mahasiswa sudah mengambil mata kuliah prasyarat
+        $mataKuliahDipenuhi = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                ->whereIn('id_matkul', $prasyarat)
+                ->where('approved', '1')
+                ->exists();
+
+        if ($mataKuliahDipenuhi) {
+            return response()->json(['prasyarat_dipenuhi' => true]);
+        } else {
+            // Dapatkan nama mata kuliah prasyarat yang belum diambil
+            $mataKuliahSyarat = MataKuliah::whereIn('id_matkul', $prasyarat)
+                ->pluck('nama_mata_kuliah')
+                ->toArray();
+            
+            // Gabungkan nama mata kuliah prasyarat dengan koma
+            $mataKuliahSyaratString = implode(', ', $mataKuliahSyarat);
+            // dd($mataKuliahSyaratString);
+            
+            return response()->json([
+                'prasyarat_dipenuhi' => false,
+                'mata_kuliah_syarat' => $mataKuliahSyaratString
+            ]);
+        }
+    }
+
+
+
+    // public function cekPrasyarat(Request $request)
+    // {
+    //     $idMatkul = $request->get('id_matkul');
+    //     $id_reg = $request->get('id_reg');
+
+    //     $prasyarat = PrasyaratMatkul::where('id_matkul', $idMatkul)->pluck('id_matkul_prasyarat');
+
+    //     foreach ($prasyarat as $idMatkulPrasyarat) {
+    //         $isPrasyaratSelesai = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+    //             ->where('id_matkul', $idMatkulPrasyarat)
+    //             ->where('approved', '1')
+    //             ->exists();
+
+    //         if (!$isPrasyaratSelesai) {
+    //             return response()->json(['prasyarat_dipenuhi' => false]);
+    //         }
+    //     }
+
+    //     return response()->json(['prasyarat_dipenuhi' => true]);
+    // }
+
 
 
     public function krs_print(Request $request, $id_semester)
