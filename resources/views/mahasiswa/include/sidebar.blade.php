@@ -105,6 +105,29 @@
                             <span>Nilai USEPT</span>
                         </a>
                     </li>
+                    <li class="header">PRESTASI MAHASISWA</li>
+                    <li class="treeview {{request()->routeIs('mahasiswa.prestasi.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-file-text-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Pelaporan Prestasi</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('mahasiswa.prestasi.prestasi-non-pendanaan') | request()->routeIs('mahasiswa.prestasi.prestasi-non-pendanaan.*')
+                                ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.prestasi.prestasi-non-pendanaan')}}"><i class="fa fa-trophy"><span
+                                            class="path1"></span><span class="path2"></span></i>Prestasi Non Pendanaan</a>
+                            </li>
+                            <!-- <li class="{{request()->routeIs('mahasiswa.prestasi.prestasi-non-pendanaan')
+                                ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.prestasi.prestasi-non-pendanaan')}}"><i class="fa fa-trophy"><span
+                                            class="path1"></span><span class="path2"></span></i>Prestasi Pendanaan UNSRI</a>
+                            </li> -->
+                        </ul>
+                    </li>
                     {{-- <li class="treeview">
                         <a href="#">
                             <i span class="fa fa-newspaper-o"><span class="path1"></span><span

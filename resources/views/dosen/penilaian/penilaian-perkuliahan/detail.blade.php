@@ -80,7 +80,7 @@ Detail Penilaian Perkuliahan Mahasiswa
                                                     @php
                                                         $nilaiKomponen = $d->nilai_komponen->where('urutan', $i)->first();
                                                     @endphp
-                                                    <td class="text-center align-middle">{{$nilaiKomponen ? $nilaiKomponen->nilai_komp_eval : 0}}</td>
+                                                    <td class="text-center align-middle">{{$nilaiKomponen ? $nilaiKomponen->nilai_komp_eval : '-'}}</td>
                                                 @endfor
                                                 
                                                 <td class="text-center align-middle">{{$d->nilai_angka}}</td>
