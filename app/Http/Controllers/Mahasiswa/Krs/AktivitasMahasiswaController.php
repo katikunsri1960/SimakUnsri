@@ -160,7 +160,7 @@ class AktivitasMahasiswaController extends Controller
                             ->where('id_registrasi_mahasiswa', $id_reg)
                             ->first();
 
-            $semester_aktif = SemesterAktif::first();
+            $semester_aktif = SemesterAktif::with('semester')->first();
             
             $now = Carbon::now();
 
@@ -208,7 +208,7 @@ class AktivitasMahasiswaController extends Controller
                     'id_prodi' => $riwayat_pendidikan->id_prodi,
                     'nama_prodi'=>$riwayat_pendidikan->nama_program_studi,
                     'id_semester' => $semester_aktif->id_semester,
-                    'nama_semester'=>$semester_aktif->nama_semester,
+                    'nama_semester'=>$semester_aktif->semester->nama_semester,
                     'judul' => $request->judul,
                     'keterangan'=>$request->keterangan,
                     'lokasi'=>$request->lokasi,
@@ -320,8 +320,10 @@ class AktivitasMahasiswaController extends Controller
     }
 
     
-    public function hapusAktivitas($id_aktivitas)
+    public function hapusAktivitas($id)
     {
+        $id_aktivitas=AktivitasMahasiswa::where('id', $id)->pluck('id_aktivitas');
+        
         DB::beginTransaction();
 
         try {
@@ -330,15 +332,15 @@ class AktivitasMahasiswaController extends Controller
             if ($bimbing) {
                 $bimbing->delete();
             }
-
+            
             // Menghapus anggota aktivitas mahasiswa
             $anggota = AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas);
             if ($anggota) {
                 $anggota->delete();
             }
-
+            
             // Menghapus aktivitas mahasiswa
-            $aktivitas = AktivitasMahasiswa::findOrFail($id_aktivitas);
+            $aktivitas = AktivitasMahasiswa::findOrFail($id);
             $aktivitas->delete();
 
             DB::commit();

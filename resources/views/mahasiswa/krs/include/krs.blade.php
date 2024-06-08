@@ -55,7 +55,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger rounded-10" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -187,28 +187,33 @@
                                                                     @foreach($data->aktivitas_mahasiswa->bimbing_mahasiswa as $dosen_bimbing)
                                                                         <ul>
                                                                             <li>
-                                                                                {{$dosen_bimbing->nama_dosen}} <p>(Pembimbing {{$dosen_bimbing->pembimbing_ke}})</p>
+                                                                                {{$dosen_bimbing->nama_dosen}} <p>{{$dosen_bimbing->pembimbing_ke == 1 ? '(Pembimbing Utama)' : '(Pembimbing Pendamping)'}}</p>
                                                                             </li>
                                                                         </ul> 
                                                                     @endforeach
                                                                 </td>
                                                                 <td class="text-center align-middle" style="width:10%">
                                                                     <div>
-                                                                        {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
+                                                                        @if($data->approved == 0)
+                                                                            <span class="badge badge-xl badge-danger-light rounded-10 mb-5">Belum Disetujui</span>
+                                                                        @else
+                                                                            <span class="badge badge-xl badge-success-light rounded-10 mb-5">Disetujui</span>
+                                                                        @endif
                                                                     </div>
                                                                 </td>
-                                                                {{-- <td class="text-center align-middle">
-                                                                    <form action="{{ route('mahasiswa.krs.hapus-aktivitas', ['id' => $data->id_aktivitas]) }}" method="POST" class="delete-aktivitas" id="deleteForm{{ $data->id_aktivitas }}">
+{{--                                                                 
+                                                                <td class="text-center align-middle" style="width:3%">
+                                                                    <form action="{{route('mahasiswa.krs.hapus-aktivitas',['id'=>$data->id_aktivitas])}}" method="post" class="delete-form" data-id="{{$data->id_aktivitas}}" id="deleteForm{{$data->id_aktivitas}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="button" class="btn btn-danger delete-button" data-id="{{ $data->id_aktivitas }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id_aktivitas }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
                                                                 </td> --}}
                                                                 
                                                                 <td class="text-center align-middle" style="width:3%">
-                                                                    <button class="btn btn-danger btn-rounded hapus-aktivitas" data-id="{{ $data->aktivitas_mahasiswa->id }}"><i class="fa fa-trash"></i></button>
+                                                                    <button class="btn btn-danger rounded-10 hapus-aktivitas" data-id="{{ $data->aktivitas_mahasiswa->id }}"><i class="fa fa-trash"></i></button>
                                                                 </td>
                                                             </tr>
                                                         @endforeach

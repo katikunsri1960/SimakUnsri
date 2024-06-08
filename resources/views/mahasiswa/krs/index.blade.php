@@ -203,7 +203,7 @@ Kartu Rencana Studi
                     id_prodi: selectedProdiId
                 },
                 success: function(response) {
-                    console.log(response.mk_merdeka.id_semester)
+                    console.log(response)
                     var mkMerdeka = response.mk_merdeka;
                     var krsMerdeka = response.krs_merdeka.map(krs => krs.id_matkul); // Extract id_matkul from krs_merdeka
                     var tbody = $('#mk-merdeka-tbody');
@@ -451,6 +451,7 @@ Kartu Rencana Studi
                     title: "Apakah Anda yakin?",
                     text: "Data yang dihapus tidak dapat dikembalikan!",
                     icon: "warning",
+                    type: 'warning',
                     buttons: true,
                     dangerMode: true,
                 })
@@ -476,6 +477,7 @@ Kartu Rencana Studi
                 title: "Apakah Anda yakin?",
                 text: "Data yang dihapus tidak dapat dikembalikan!",
                 icon: "warning",
+                type: 'warning',
                 buttons: true,
                 dangerMode: true,
             },function(isConfirm){
@@ -486,21 +488,9 @@ Kartu Rencana Studi
                         data: {
                             "_token": "{{ csrf_token() }}"
                         },
-                        success: function(response) {
-                            swal("Aktivitas telah dihapus.", {
-                                icon: "success",
-                            }).then(() => {
-                                window.location.reload();
-                            });
-                        },
-                        error: function(xhr) {
-                            swal({
-                                title:"Gagal Menghapus Aktivitas",
-                                text: xhr,
-                                icon: "error",
-                            });
-                        }
+                        
                     });
+                    window.location.reload();
                 }
             });
         });
