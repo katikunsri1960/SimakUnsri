@@ -9,55 +9,52 @@ use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 
 class BimbinganController extends Controller
 {
-    public function bimbingan_tugas_akhir1(Request $request)
+    public function index(AktivitasMahasiswa $aktivitas, Request $request)
     {
-        return view('mahasiswa.bimbingan.tugas-akhir.index', [
-            // 'data' => $data,
-            // 'semester' => $semester,
-            // 'id_semester' => $id_semester,
-        ]);
-    }
+        $id_reg = auth()->user()->fk_id;
+        $id_semester = SemesterAktif::first()->id_semester;
 
-    public function bimbingan_tugas_akhir2(RiwayatPendidikan $riwayat)
-    {
-        $id = $riwayat->id_registrasi_mahasiswa;
-        $semester = SemesterAktif::first()->id_semester;
-        $data = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
-                ->whereHas('kelas_kuliah', function($query) use ($semester) {
-                    $query->where('id_semester', $semester);
-                })
-                ->where('id_registrasi_mahasiswa', $id)
-                ->orderBy('kode_mata_kuliah')
-                ->get();
+        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas', 'jenis_aktivitas_mahasiswa','bimbing_mahasiswa' )
+                    ->whereHas('anggota_aktivitas', function($q) use($id_reg){
+                        $q->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    ->whereIn('id_jenis_aktivitas', ['2', '3', '4', '22'])
+                    ->where('id_semester', $id_semester)
+                    ->first();
 
-        // dd($data);
-
-        return view('mahasiswa.bimbingan.tugas-akhir.index', [
-            'riwayat' => $riwayat,
-            'data' => $data,
-        ]);
-    }
-
-    public function bimbingan_tugas_akhir(AktivitasMahasiswa $aktivitas)
-    {
         $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->get();
 
-        $aktivitas = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']);
-
-        $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
-                            // ->where('id_aktivitas', auth()->user()->fk_id)
-                            ->first()
-                            // ->pembimbing_ke
-                            ;
-        dd($aktivitas);
+        $dosen_pembimbing = $aktivitas->load(['bimbing_mahasiswa']);
+                        
         return view('mahasiswa.bimbingan.tugas-akhir.index', [
             'data' => $data,
             'aktivitas' => $aktivitas,
-            'pembimbing_ke' => $pembimbing_ke,
+            'dosen_pembimbing' => $dosen_pembimbing,
         ]);
     }
+
+    public function store(AktivitasMahasiswa $aktivitas, Request $request)
+    {
+        $data = $request->validate([
+                    'tanggal' => 'required',
+                    'uraian' => 'required',
+                    'dosen_pembimbing' => 'required|exists:biodata_dosens,id_dosen',
+                ]);
+
+    $data['id_aktivitas'] = $aktivitas->id_aktivitas;
+    $data['approved'] = 0;
+    $data['id_dosen'] = $request->dosen_pembimbing;
+    $data['tanggal'] = date('Y-m-d', strtotime($data['tanggal']));
+        // dd($data);
+
+        AsistensiAkhir::create($data);
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
+
 }
