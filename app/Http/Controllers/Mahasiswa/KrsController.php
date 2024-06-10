@@ -31,7 +31,7 @@ class KrsController extends Controller
 {
     public function index(Request $request)
     {
-    // DATA BAHAN 
+    // DATA BAHAN
         if ($request->has('semester') && $request->semester != '') {
             $semester_select = $request->semester;
         } else {
@@ -45,31 +45,31 @@ class KrsController extends Controller
                     ->select('riwayat_pendidikans.*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
-                    
+
         $semester_aktif = SemesterAktif::first();
 
         $total_sks_akt = 0;
         $total_sks_regular=0;
         $total_sks_merdeka=0;
 
-        //DATA AKTIVITAS 
+        //DATA AKTIVITAS
         $db = new MataKuliah();
 
         $db_akt = new AktivitasMahasiswa();
 
         // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
-        
+
 
         list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
         // dd($krs_akt);
-        
+
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->orderBy('id_semester', 'DESC')
                     ->get();
-                    
-                    
+
+
         $akm = $semester;
-        
+
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $semester_select)
                     ->pluck('id_status_mahasiswa')
@@ -77,16 +77,16 @@ class KrsController extends Controller
 
         // Menentukan status mahasiswa berdasarkan hasil query
         $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
-        
+
         // Menghitung jumlah semester, mengabaikan semester pendek
         $semester_ke = $semester->filter(function($item) {
             return substr($item->id_semester, -1) != '3';
         })->count();
-        
+
         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester);
-        
+
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select, $data_akt_ids);
-        
+
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select);
 
 
@@ -127,7 +127,7 @@ class KrsController extends Controller
             'status_mahasiswa',
             'data_status_mahasiswa',
             'semester_ke',
-            'fakultas', 
+            'fakultas',
             // 'prodi',
             'krs_akt',
             'mk_akt',
@@ -166,7 +166,7 @@ class KrsController extends Controller
 
 
         $db = new MataKuliah();
-        
+
         // Query untuk mengambil data mata kuliah merdeka berdasarkan id_prodi yang dipilih
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
 
@@ -182,12 +182,12 @@ class KrsController extends Controller
     {
         $idMatkul = $request->get('id_matkul');
 
-        
+
         $semester_aktif = SemesterAktif::pluck('id_semester');
 
         $kelasKuliah = KelasKuliah::with(['dosen_pengajar.dosen'])
                     ->withCount('peserta_kelas')
-                    ->where('id_semester',  $semester_aktif) 
+                    ->where('id_semester',  $semester_aktif)
                     ->where('id_matkul', $idMatkul)
                     ->orderBy('nama_kelas_kuliah')
                     ->get();
@@ -218,7 +218,7 @@ class KrsController extends Controller
         try {
             $idKelasKuliah = $request->input('id_kelas_kuliah');
             // dd($idKelasKuliah);
-            
+
             $id_reg = auth()->user()->fk_id;
 
             $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
@@ -233,18 +233,18 @@ class KrsController extends Controller
             $db_akt = new AktivitasMahasiswa();
 
             list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
-            
-            
+
+
             $sks_max = $db->getSksMax($id_reg, $semester_aktif);
-            
+
             $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);
-            
+
             $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
 
             $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
-    
+
             $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
@@ -322,11 +322,11 @@ class KrsController extends Controller
             $mataKuliahSyarat = MataKuliah::whereIn('id_matkul', $prasyarat)
                 ->pluck('nama_mata_kuliah')
                 ->toArray();
-            
+
             // Gabungkan nama mata kuliah prasyarat dengan koma
             $mataKuliahSyaratString = implode(', ', $mataKuliahSyarat);
             // dd($mataKuliahSyaratString);
-            
+
             return response()->json([
                 'prasyarat_dipenuhi' => false,
                 'mata_kuliah_syarat' => $mataKuliahSyaratString
@@ -336,14 +336,14 @@ class KrsController extends Controller
 
     public function krs_print(Request $request, $id_semester)
     {
-        
-    
+
+
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
                 ->where('id_registrasi_mahasiswa', $id_reg)
                 ->first();
-        
+
         $prodi = ProgramStudi::with(['fakultas', 'jurusan'])
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
 
@@ -358,7 +358,7 @@ class KrsController extends Controller
         $db = new MataKuliah();
 
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
-        
+
         if(isEmpty($data_akt))
         {
             $mk_akt=NULL;
@@ -367,7 +367,7 @@ class KrsController extends Controller
         }
         else
         {
-            $mk_akt = $data_akt['data']['data'];
+            $mk_akt = $data_akt;
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
 
@@ -386,7 +386,7 @@ class KrsController extends Controller
         // dd($prodi);
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
-        
+
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
         $nama_mhs = $riwayat_pendidikan->nama_mahasiswa;
@@ -399,7 +399,7 @@ class KrsController extends Controller
         }
 
 
-        //DATA AKTIVITAS 
+        //DATA AKTIVITAS
         $db = new MataKuliah();
 
         $db_akt = new AktivitasMahasiswa();
@@ -407,7 +407,7 @@ class KrsController extends Controller
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
         list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $id_semester);
-        
+
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->orderBy('id_semester', 'DESC')
                     ->get();
@@ -419,14 +419,14 @@ class KrsController extends Controller
 
         // Menentukan status mahasiswa berdasarkan hasil query
         $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
-        
+
         // Menghitung jumlah semester, mengabaikan semester pendek
         $semester_ke = $semester->filter(function($item) {
             return substr($item->id_semester, -1) != '3';
         })->count();
-        
+
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
-        
+
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester);
 
 

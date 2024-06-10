@@ -182,10 +182,10 @@ class MataKuliah extends Model
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
 
-
         $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 'kelas_kuliah', 'rencana_pembelajaran'])
-                        ->whereHas('kurikulum' , function($query) use($kurikulum) {
-                            $query->where('list_kurikulums.id_kurikulum', $kurikulum);
+                        ->whereHas('kurikulum' , function($query) use($kurikulum, $prodi) {
+                            $query->where('list_kurikulums.id_kurikulum', $kurikulum)
+                                ->where('list_kurikulums.id_prodi', $prodi);
                         })
                         ->whereHas('kelas_kuliah' , function($query) use($id_semester) {
                             $query->where('kelas_kuliahs.id_semester', $id_semester->id_semester);
@@ -196,9 +196,9 @@ class MataKuliah extends Model
                         },
                         'rencana_pembelajaran as jumlah_rps' => function ($q) {
                             $q->where('approved', 1);
-                        }])
-                        ->where('id_prodi', $prodi);
+                        }]);
 
+        // dd($matakuliah->get());
         if ($data_akt_ids != NULL) {
 
             $matakuliah= $matakuliah->whereNotIn('id_matkul', $data_akt_ids);
