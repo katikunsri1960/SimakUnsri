@@ -67,6 +67,9 @@ class AktivitasMahasiswaController extends Controller
         ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
         ->first();
 
+        $aktivitas_mk=MataKuliah::where('id_matkul', $id_matkul)->first();
+        // dd($aktivitas_mk);
+
         $prodi_id = $riwayat_pendidikan->id_prodi;
         
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
@@ -112,6 +115,7 @@ class AktivitasMahasiswaController extends Controller
             'id_matkul' => $id_matkul, 
             'akm'=>$akm, 
             'sks_max'=>$sks_max,
+            'aktivitas_mk'=>$aktivitas_mk,
             'dosen_bimbing_aktivitas'=>$dosen_pembimbing
 
         ]);
@@ -145,8 +149,8 @@ class AktivitasMahasiswaController extends Controller
         // Validasi data
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
-            // 'keterangan' => 'required|string|max:255', // tambahkan validasi untuk Keterangan
-            'lokasi' => 'required|string|max:255',
+            'keterangan' => 'string|max:50', // tambahkan validasi untuk Keterangan
+            'lokasi' => 'required|string',
             'dosen_bimbing_aktivitas.*' => 'required',
             'id_matkul' => 'required',
         ]);
@@ -160,7 +164,7 @@ class AktivitasMahasiswaController extends Controller
                             ->where('id_registrasi_mahasiswa', $id_reg)
                             ->first();
 
-            $semester_aktif = SemesterAktif::first();
+            $semester_aktif = SemesterAktif::with('semester')->first();
             
             $now = Carbon::now();
 
@@ -208,7 +212,7 @@ class AktivitasMahasiswaController extends Controller
                     'id_prodi' => $riwayat_pendidikan->id_prodi,
                     'nama_prodi'=>$riwayat_pendidikan->nama_program_studi,
                     'id_semester' => $semester_aktif->id_semester,
-                    'nama_semester'=>$semester_aktif->nama_semester,
+                    'nama_semester'=>$semester_aktif->semester->nama_semester,
                     'judul' => $request->judul,
                     'keterangan'=>$request->keterangan,
                     'lokasi'=>$request->lokasi,
@@ -240,17 +244,6 @@ class AktivitasMahasiswaController extends Controller
                     'nama_jenis_peran'=>'Anggota',
                     'status_sync'=>'belum sync',
                 ]);          
-
-                // // Simpan data ke tabel bimbingan_mahasiswas untuk setiap dosen pembimbing
-                // foreach ($request->dosen_bimbing_aktivitas as $dosen) {
-                //     BimbingMahasiswa::create([
-                //         'id_aktivitas' => $aktivitas->id,
-                //         'nama_dosen' => $dosen,
-                //         // tambahkan field lain yang diperlukan
-                //     ]);
-                // }
-                // $dosen_bimbing = BiodataDosen::whereIn('id_dosen', $request->dosen_bimbing_aktivitas)->orderBy('id', 'DESC')->get();
-                
 
                 $jumlah_dosen=count($request->dosen_bimbing_aktivitas);
                
@@ -320,8 +313,10 @@ class AktivitasMahasiswaController extends Controller
     }
 
     
-    public function hapusAktivitas($id_aktivitas)
+    public function hapusAktivitas($id)
     {
+        $id_aktivitas=AktivitasMahasiswa::where('id', $id)->pluck('id_aktivitas');
+        
         DB::beginTransaction();
 
         try {
@@ -330,15 +325,15 @@ class AktivitasMahasiswaController extends Controller
             if ($bimbing) {
                 $bimbing->delete();
             }
-
+            
             // Menghapus anggota aktivitas mahasiswa
             $anggota = AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas);
             if ($anggota) {
                 $anggota->delete();
             }
-
+            
             // Menghapus aktivitas mahasiswa
-            $aktivitas = AktivitasMahasiswa::findOrFail($id_aktivitas);
+            $aktivitas = AktivitasMahasiswa::findOrFail($id);
             $aktivitas->delete();
 
             DB::commit();

@@ -2,14 +2,15 @@
 
 namespace App\Models\Perkuliahan;
 
-use App\Models\AsistensiAkhir;
 use App\Models\Semester;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
-use App\Models\Referensi\JenisAktivitasMahasiswa;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\AsistensiAkhir;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Referensi\JenisAktivitasMahasiswa;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class AktivitasMahasiswa extends Model
 {
@@ -132,6 +133,52 @@ class AktivitasMahasiswa extends Model
         $data->bimbing_mahasiswa()->update(['approved' => 1]);
 
         return $data;
+    }
+
+    public function getKrsAkt($id_reg, $id_semester)
+    {
+        //DATA AKTIVITAS
+        
+        $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->first();
+
+        $db = new MataKuliah();
+
+        $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
+
+        
+
+        if( $data_akt == NULL)
+        {
+            $mk_akt=NULL;
+            $data_akt_ids = NULL;
+
+        }
+        else
+        {
+            $mk_akt = $data_akt['data']['data'];
+            $data_akt_ids = array_column($mk_akt, 'id_matkul');
+        }
+        // dd($data_akt);
+
+        // AKTIVITAS MAHASISWA YG DIAMBIL
+        $krs_akt = $this::with(['anggota_aktivitas','bimbing_mahasiswa', 'konversi'])
+                            ->whereHas('bimbing_mahasiswa' , function($query) {
+                                $query->whereNot('id_bimbing_mahasiswa', NUll);
+                            })
+                            ->whereHas('anggota_aktivitas' , function($query) use ( $id_reg){
+                                $query->where('id_registrasi_mahasiswa', $id_reg);
+                            })
+                            ->where('id_semester', $id_semester)
+                            ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                            ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','6','15', '22'])
+                            ->get();
+                            
+        // $matkul_konversi = $krs_akt->aktivitas_mahasiswa->konversi;
+                        // dd($krs_akt);
+
+            return [$krs_akt, $data_akt_ids, $mk_akt];
     }
 
 
