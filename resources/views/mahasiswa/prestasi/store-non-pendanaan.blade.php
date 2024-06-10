@@ -82,7 +82,7 @@ Dosen Kelas Perkuliahan
                         <div class="form-group">
                             <div id="prestasi-fields">
                                 <div class="prestasi-field row">
-                                    <div class="col-md-5 mb-2">
+                                    <div class="col-md-2 mb-2">
                                         <label for="nama_prestasi" class="form-label">Nama Prestasi</label>
                                         <input
                                             type="text"
@@ -90,19 +90,52 @@ Dosen Kelas Perkuliahan
                                             name="nama_prestasi[]"
                                             id="nama_prestasi"
                                             aria-describedby="helpId"
-                                            value="0"
+                                            value=""
+                                            placeholder="Masukkan Nama Prestasi"
                                             required
                                         />
                                     </div>
-                                    <div class="col-md-3 mb-2">
+                                    <div class="col-md-2 mb-2">
+                                        <label for="evaluasi" class="form-label">Jenis Prestasi</label>
+                                        <select class="form-select" name="jenis_prestasi[]" id="jenis_prestasi" required>
+                                            <option value="">Pilih Jenis Prestasi</option>
+                                            @foreach($jenis_prestasi as $j)
+                                                <option value="{{$j->id_jenis_prestasi}}">{{$j->nama_jenis_prestasi}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-2">
+                                        <label for="evaluasi" class="form-label">Tingkat Prestasi</label>
+                                        <select class="form-select" name="tingkat_prestasi[]" id="tingkat_prestasi" required>
+                                            <option value="">Pilih Tingkat Prestasi</option>
+                                            @foreach($tingkat_prestasi as $t)
+                                                <option value="{{$t->id_tingkat_prestasi}}">{{$t->nama_tingkat_prestasi}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2 mb-2">
                                         <label for="tahun_prestasi" class="form-label">Tahun Prestasi</label>
                                         <input
-                                            type="text"
+                                            type="number"
                                             class="form-control"
                                             name="tahun_prestasi[]"
                                             id="tahun_prestasi"
                                             aria-describedby="helpId"
-                                            value="0"
+                                            value=""
+                                            placeholder="Masukkan Tahun Pelaksanaan Lomba"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="penyelenggara" class="form-label">Penyelenggara</label>
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="penyelenggara[]"
+                                            id="penyelenggara"
+                                            aria-describedby="helpId"
+                                            value=""
+                                            placeholder="Masukkan Instansi / Organisasi Penyelenggara"
                                             required
                                         />
                                     </div>
@@ -112,7 +145,7 @@ Dosen Kelas Perkuliahan
                                     </div>
                                 </div>
                             </div>
-                            <p>*Notes Jumlah total dari seluruh rencana minggu pertemuan dosen harus sama dengan 16 pertemuan</p>
+                            <!-- <p>*Prestasi Harus di Buktikan Sertifikat atau Foto Kegiatan</p> -->
                             <button id="add-prestasi" type="button" class="btn btn-primary" title="Tambah Prestasi"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
                         </div>
                     </div>
@@ -134,20 +167,42 @@ Dosen Kelas Perkuliahan
     $(document).ready(function(){
         // Event listener for adding a new row
         $('#add-prestasi').click(function() {
-            var newRow = $('<div class="prestasi-field row">' +
-                            '<div class="col-md-5 mb-2">' +
-                                '<label for="nama_prestasi" class="form-label">Nama Prestasi</label>' +
-                                '<input type="text" class="form-control" name="nama_prestasi[]" aria-describedby="helpId" value="" required/>' +
-                            '</div>' +
-                            '<div class="col-md-3 mb-2">' +
-                                '<label for="tahun_prestasi" class="form-label">Tahun Prestasi</label>' +
-                                '<input type="text" class="form-control" name="tahun_prestasi[]" aria-describedby="helpId" value="0" required/>' +
-                            '</div>' +
-                            '<div class="col-md-1 mb-2">' +
-                                '<label class="form-label">&nbsp;</label>' +
-                                '<button type="button" class="btn btn-danger btn-rounded btn-sm remove-prestasi form-control" style="display: none;" title="Hapus Prestasi"><i class="fa fa-user-times" aria-hidden="true"></i></button>' +
-                            '</div>' +
-                        '</div>');
+            var newRow = $('<div class="prestasi-field row">'+
+                                    '<div class="col-md-2 mb-2">' +
+                                        '<label for="nama_prestasi" class="form-label">Nama Prestasi</label>'+
+                                        '<input type="text" class="form-control" name="nama_prestasi[]" id="nama_prestasi" aria-describedby="helpId" value="" placeholder="Masukkan Nama Prestasi" required/>'+
+                                    '</div>'+
+                                    '<div class="col-md-2 mb-2">'+
+                                        '<label for="evaluasi" class="form-label">Jenis Prestasi</label>'+
+                                        '<select class="form-select" name="jenis_prestasi[]" id="jenis_prestasi" required>'+
+                                            '<option value="">-- Pilih Jenis Prestasi --</option>'+
+                                            '@foreach($jenis_prestasi as $j)'+
+                                                '<option value="{{$j->id_jenis_prestasi}}">{{$j->nama_jenis_prestasi}}</option>'+
+                                            '@endforeach'+
+                                        '</select>'+
+                                    '</div>'+
+                                    '<div class="col-md-2 mb-2">'+
+                                        '<label for="evaluasi" class="form-label">Tingkat Prestasi</label>'+
+                                        '<select class="form-select" name="tingkat_prestasi[]" id="tingkat_prestasi" required>'+
+                                            '<option value="">-- Pilih Tingkat Prestasi --</option>'+
+                                            '@foreach($tingkat_prestasi as $t)'+
+                                                '<option value="{{$t->id_tingkat_prestasi}}">{{$t->nama_tingkat_prestasi}}</option>'+
+                                            '@endforeach'+
+                                        '</select>'+
+                                    '</div>'+
+                                    '<div class="col-md-2 mb-2">'+
+                                        '<label for="tahun_prestasi" class="form-label">Tahun Prestasi</label>'+
+                                        '<input type="number" class="form-control" name="tahun_prestasi[]" id="tahun_prestasi" aria-describedby="helpId" value="" placeholder="Masukkan Tahun Pelaksanaan Lomba" required/>'+
+                                    '</div>'+
+                                    '<div class="col-md-3 mb-2">'+
+                                        '<label for="penyelenggara" class="form-label">Penyelenggara</label>'+
+                                        '<input type="number" class="form-control" name="penyelenggara[]" id="penyelenggara" aria-describedby="helpId" value="" placeholder="Masukkan Instansi / Organisasi Penyelenggara" required/>'+
+                                    '</div>'+
+                                    '<div class="col-md-1 mb-2">'+
+                                        '<label class="form-label">&nbsp;</label>'+
+                                        '<button type="button" class="btn btn-danger btn-rounded btn-sm remove-prestasi form-control" style="display: none;" title="Hapus Prestasi"><i class="fa fa-user-times" aria-hidden="true"></i></button>'+
+                                    '</div>' +
+                                '</div>');
 
             // Append the new row
             newRow.appendTo('#prestasi-fields');
