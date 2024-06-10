@@ -178,7 +178,7 @@ class MataKuliah extends Model
         }
         else
         {
-            $mk_akt = $data_akt['data']['data'];
+            $mk_akt = $data_akt;
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
 
@@ -190,7 +190,7 @@ class MataKuliah extends Model
                         ->whereHas('kelas_kuliah' , function($query) use($id_semester) {
                             $query->where('kelas_kuliahs.id_semester', $id_semester->id_semester);
                         })
-                        
+
                         ->withCount(['kelas_kuliah as jumlah_kelas' => function ($q) use($id_semester){
                             $q->where('id_semester', $id_semester->id_semester);
                         },
@@ -198,9 +198,9 @@ class MataKuliah extends Model
                             $q->where('approved', 1);
                         }])
                         ->where('id_prodi', $prodi);
-                        
+
         if ($data_akt_ids != NULL) {
-            
+
             $matakuliah= $matakuliah->whereNotIn('id_matkul', $data_akt_ids);
         }
 
@@ -241,26 +241,26 @@ class MataKuliah extends Model
                         ],
                     ],
 
-                    // "id_kurikulum"=>"7699c236-04ae-4c63-974a-b47f29b03091",
-                    // "data"=>
-                    // [
-                    //     [
-                    //         "id_matkul"=>"4f915940-8835-4ae1-ab57-83bdc9978447",
-                    //         "kode_mata_kuliah"=>"TKM490514",
-                    //         "nama_mata_kuliah"=>"SKRIPSI",
-                    //         "id_jenis_mata_kuliah"=>"S",
-                    //         "sks_mata_kuliah"=>5.00,
-                    //         "semester"=>8,
-                    //     ],
-                    //     [
-                    //         "id_matkul"=>"b5981e2b-061b-4c6f-ac45-1cca1f180a89",
-                    //         "kode_mata_kuliah"=>"TKM490314",
-                    //         "nama_mata_kuliah"=>"PROPOSAL SKRIPSI",
-                    //         "id_jenis_mata_kuliah"=>"S",
-                    //         "sks_mata_kuliah"=>1.00,
-                    //         "semester"=>8,
-                    //     ],
-                    // ]
+                    "id_kurikulum"=>"7699c236-04ae-4c63-974a-b47f29b03091",
+                    "data"=>
+                    [
+                        [
+                            "id_matkul"=>"4f915940-8835-4ae1-ab57-83bdc9978447",
+                            "kode_mata_kuliah"=>"TKM490514",
+                            "nama_mata_kuliah"=>"SKRIPSI",
+                            "id_jenis_mata_kuliah"=>"S",
+                            "sks_mata_kuliah"=>5.00,
+                            "semester"=>8,
+                        ],
+                        [
+                            "id_matkul"=>"b5981e2b-061b-4c6f-ac45-1cca1f180a89",
+                            "kode_mata_kuliah"=>"TKM490314",
+                            "nama_mata_kuliah"=>"PROPOSAL SKRIPSI",
+                            "id_jenis_mata_kuliah"=>"S",
+                            "sks_mata_kuliah"=>1.00,
+                            "semester"=>8,
+                        ],
+                    ]
                 ]
             ],
             [
@@ -298,18 +298,17 @@ class MataKuliah extends Model
                 ]
             ]
         ];
-        foreach ($data as $prodi) {
-            if ($prodi['id_prodi'] == $id_prodi) {
-                return $prodi;
-            }
-        }
-        foreach ($data['data'] as $kurikulum) {
-            if ($kurikulum['id-kurikulum'] == $id_kurikulum) {
-                return $kurikulum;
-            }
-        }
 
-        return [];
+        foreach ($data as $prodi) {
+            if ($prodi['id_prodi'] === $id_prodi) {
+                foreach ($prodi['data'] as $kurikulumKey => $kurikulumValue) {
+                    if (is_array($kurikulumValue) && array_key_exists('id_kurikulum', $kurikulumValue) && $kurikulumValue['id_kurikulum'] === $id_kurikulum) {
+                        return $kurikulumValue['data'];
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 
