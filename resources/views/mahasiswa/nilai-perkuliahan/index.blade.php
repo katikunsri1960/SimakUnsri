@@ -21,7 +21,8 @@ Dashboard
                 </div>
             </div>
         </div>
-    </div> 
+    </div>
+
     <div class="row mt-10">
         <div class="col-lg-12 col-xl-12 mt-0">
             <!-- Nav tabs -->
@@ -33,7 +34,7 @@ Dashboard
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.nilai-perkuliahan.include.khs')
-                    @include('mahasiswa.nilai-perkuliahan.include.transkrip-mahasiswa')                      
+                    @include('mahasiswa.nilai-perkuliahan.include.transkrip-mahasiswa')
                 </div>
 				<!-- /.box-body -->
             </div>
