@@ -12,7 +12,7 @@ class RencanaPembelajaranController extends Controller
 {
     public function getRPSData($id_matkul)
     {
-        $rps = RencanaPembelajaran::where('id_matkul', $id_matkul)->orderBy('pertemuan', 'ASC')->get();
+        $rps = RencanaPembelajaran::where('id_matkul', $id_matkul)->orderBy('pertemuan', 'ASC')->where('approved', '1')->get();
         return response()->json($rps);
     }
 

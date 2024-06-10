@@ -55,7 +55,7 @@ class KrsController extends Controller
         //DATA AKTIVITAS 
         $db = new MataKuliah();
 
-        $db_akt = new AnggotaAktivitasMahasiswa();
+        $db_akt = new AktivitasMahasiswa();
 
         // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
         
@@ -106,7 +106,7 @@ class KrsController extends Controller
         // dd($mk_regular);
 
     // TOTAL SELURUH SKS
-        $total_sks_akt = $krs_akt->sum('aktivitas_mahasiswa.konversi.sks_mata_kuliah');
+        $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
@@ -155,14 +155,14 @@ class KrsController extends Controller
     {
         $id_reg = auth()->user()->fk_id;
 
-        $semester_aktif = SemesterAktif::first();
+        $semester_aktif = SemesterAktif::first()->id_semester;
         // Ambil id_prodi dari request
 
         $id_prodi = $request->input('id_prodi');
 
-        $selectedFakultasId = $request->input('fakultas_id');
+        // $selectedFakultasId = $request->input('fakultas_id');
 
-        $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
+        // $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
 
 
         $db = new MataKuliah();
@@ -171,6 +171,7 @@ class KrsController extends Controller
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
 
         $mkMerdeka = $db->getMKMerdeka($semester_aktif, $id_prodi);
+        // dd($semester_aktif);
 
         return response()->json(['mk_merdeka' => $mkMerdeka, 'krs_merdeka'=>$krs_merdeka]);
     }
@@ -229,9 +230,10 @@ class KrsController extends Controller
 
             $db = new MataKuliah();
 
-            $db_akt = new AnggotaAktivitasMahasiswa();
+            $db_akt = new AktivitasMahasiswa();
 
             list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
+            
             
             $sks_max = $db->getSksMax($id_reg, $semester_aktif);
             
@@ -239,7 +241,7 @@ class KrsController extends Controller
             
             $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
 
-            $total_sks_akt = $krs_akt->sum('aktivitas_mahasiswa.konversi.sks_mata_kuliah');
+            $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
     
@@ -294,7 +296,6 @@ class KrsController extends Controller
         return redirect()->back()->with('success', 'Mata Kuliah Berhasil di Hapus');
     }
 
-    
     public function cekPrasyarat(Request $request)
     {
         $idMatkul = $request->get('id_matkul');
@@ -332,31 +333,6 @@ class KrsController extends Controller
             ]);
         }
     }
-
-
-
-    // public function cekPrasyarat(Request $request)
-    // {
-    //     $idMatkul = $request->get('id_matkul');
-    //     $id_reg = $request->get('id_reg');
-
-    //     $prasyarat = PrasyaratMatkul::where('id_matkul', $idMatkul)->pluck('id_matkul_prasyarat');
-
-    //     foreach ($prasyarat as $idMatkulPrasyarat) {
-    //         $isPrasyaratSelesai = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
-    //             ->where('id_matkul', $idMatkulPrasyarat)
-    //             ->where('approved', '1')
-    //             ->exists();
-
-    //         if (!$isPrasyaratSelesai) {
-    //             return response()->json(['prasyarat_dipenuhi' => false]);
-    //         }
-    //     }
-
-    //     return response()->json(['prasyarat_dipenuhi' => true]);
-    // }
-
-
 
     public function krs_print(Request $request, $id_semester)
     {
@@ -426,7 +402,7 @@ class KrsController extends Controller
         //DATA AKTIVITAS 
         $db = new MataKuliah();
 
-        $db_akt = new AnggotaAktivitasMahasiswa();
+        $db_akt = new AktivitasMahasiswa();
 
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
@@ -455,7 +431,7 @@ class KrsController extends Controller
 
 
     // TOTAL SELURUH SKS
-        $total_sks_akt = $krs_akt->sum('aktivitas_mahasiswa.konversi.sks_mata_kuliah');
+        $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
