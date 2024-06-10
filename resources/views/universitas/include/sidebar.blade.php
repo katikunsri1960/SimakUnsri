@@ -120,6 +120,15 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="{{request()->routeIs('univ.kuisioner') | request()->routeIs('univ.kuisioner.*') ? 'active' : ''}}">
+                        <a href="{{route('univ.kuisioner')}}">
+                            <i class="fa fa-comments"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Kuisioner</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.pengaturan.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-cog"><span class="path1"></span><span class="path2"></span></i>

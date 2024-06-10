@@ -309,6 +309,13 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
         Route::prefix('universitas')->group(function () {
 
+            Route::prefix('kuisioner')->group(function(){
+                Route::get('/', [App\Http\Controllers\Universitas\KuisionerController::class, 'index'])->name('univ.kuisioner');
+                Route::post('/store', [App\Http\Controllers\Universitas\KuisionerController::class, 'store'])->name('univ.kuisioner.store');
+                Route::patch('/update/{kuisioner}', [App\Http\Controllers\Universitas\KuisionerController::class, 'update'])->name('univ.kuisioner.update');
+                Route::delete('/delete/{kuisioner}', [App\Http\Controllers\Universitas\KuisionerController::class, 'destroy'])->name('univ.kuisioner.delete');
+            });
+
             Route::prefix('mahasiswa')->group(function () {
                 Route::get('/', [App\Http\Controllers\Universitas\MahasiswaController::class, 'daftar_mahasiswa'])->name('univ.mahasiswa');
                 Route::get('/data', [App\Http\Controllers\Universitas\MahasiswaController::class, 'daftar_mahasiswa_data'])->name('univ.mahasiswa.data');
