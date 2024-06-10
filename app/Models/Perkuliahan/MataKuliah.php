@@ -187,12 +187,14 @@ class MataKuliah extends Model
                             $query->where('list_kurikulums.id_kurikulum', $kurikulum)
                                 ->where('list_kurikulums.id_prodi', $prodi);
                         })
-                        ->whereHas('kelas_kuliah' , function($query) use($id_semester) {
-                            $query->where('kelas_kuliahs.id_semester', $id_semester->id_semester);
+                        ->whereHas('kelas_kuliah' , function($query) use($id_semester, $prodi) {
+                            $query->where('kelas_kuliahs.id_semester', $id_semester->id_semester)
+                                    ->where('kelas_kuliahs.id_prodi', $prodi);
                         })
 
-                        ->withCount(['kelas_kuliah as jumlah_kelas' => function ($q) use($id_semester){
-                            $q->where('id_semester', $id_semester->id_semester);
+                        ->withCount(['kelas_kuliah as jumlah_kelas' => function ($q) use($id_semester, $prodi){
+                            $q->where('id_semester', $id_semester->id_semester)
+                                ->where('id_prodi', $prodi);
                         },
                         'rencana_pembelajaran as jumlah_rps' => function ($q) {
                             $q->where('approved', 1);
