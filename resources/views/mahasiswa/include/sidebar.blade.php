@@ -167,8 +167,8 @@
                             <span>Bimbingan Akademik</span>
                         </a>
                     </li> --}}
-                    <li class="{{request()->routeIs('mahasiswa.bimbingan.tugas-akhir') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.bimbingan.tugas-akhir')}}">
+                    <li class="{{request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Tugas Akhir</span>
                         </a>

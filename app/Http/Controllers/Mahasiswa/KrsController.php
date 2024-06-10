@@ -61,7 +61,7 @@ class KrsController extends Controller
 
 
         list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
-        // dd($krs_akt);
+        // dd($mk_akt);
 
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->orderBy('id_semester', 'DESC')
