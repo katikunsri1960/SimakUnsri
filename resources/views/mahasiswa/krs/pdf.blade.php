@@ -186,9 +186,9 @@ Kartu Rencana Studi
                         @foreach ($krs_akt as $data)
                             <tr>
                                 <td  class="text-td text-center">{{ $no++ }}.</td>
-                                <td  class="text-td">{{ $data->aktivitas_mahasiswa->nama_jenis_aktivitas }}</td>
+                                <td  class="text-td">{{ $data->nama_jenis_aktivitas }}</td>
                                 <td  class="text-td">
-                                    @foreach($data->aktivitas_mahasiswa->bimbing_mahasiswa as $dosen_bimbing)
+                                    @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
                                         <ul class="my-0">
                                             <li class="my-0">
                                                 {{$dosen_bimbing->nama_dosen}}
@@ -196,7 +196,7 @@ Kartu Rencana Studi
                                         </ul> 
                                     @endforeach
                                 </td>
-                                <td  class="text-td text-center">{{ $data->aktivitas_mahasiswa->konversi->sks_mata_kuliah }}</td>
+                                <td  class="text-td text-center">{{ $data->konversi->sks_mata_kuliah }}</td>
                                 
                             </tr>
                         @endforeach
@@ -237,7 +237,7 @@ Kartu Rencana Studi
             <tr>
                 <td width="60%"></td>
                 <td width="40%" class="text-right text-10" >
-                    {!! $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip!!}
+                    {{ $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nama_dosen}}
                 </td>
             </tr>
             <tr>
@@ -245,7 +245,7 @@ Kartu Rencana Studi
                     {{-- Lembar untuk mahasiswa --}}
                 </td>
                 <td width="40%" class="text-right text-10" >
-                    {!! $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nama_dosen!!}
+                    {{ $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip}}
                 </td>
             </tr>
         </tbody>
