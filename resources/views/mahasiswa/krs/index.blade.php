@@ -212,9 +212,10 @@ Kartu Rencana Studi
                     if (mkMerdeka.length > 0) {
                         $.each(mkMerdeka, function(index, data) {
                             var isDisabled = krsMerdeka.includes(data.id_matkul);
-                            var isEmpty = data.jumlah_kelas_kuliah == 0
+                            var isEmptyClass = data.jumlah_kelas == 0
+                            var isEmptyRps = data.jumlah_rpss == 0
                             var row = '<tr class="' + (isDisabled ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
-                                '<td class="text-center align-middle">' + (index + 1) + '</td>' +
+                                '<td class="text-center align-middle">' + (index + 1) +'. '+ '</td>' +
                                 '<td class="text-start align-middle">' + data.kode_mata_kuliah + '</td>' +
                                 '<td class="text-start align-middle" style="white-space: nowrap;">' + data.nama_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle" style="white-space: nowrap;">' +
@@ -226,8 +227,8 @@ Kartu Rencana Studi
                                 '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle">' + data.jumlah_kelas + '</td>' +
                                 '<td class="text-center align-middle">' +
-                                    '<button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmpty || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
-                                    '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 20px"></div>' +
+                                    '<button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmptyClass || isEmptyRps || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
+                                    '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 5px"></div>' +
                                 '</td>' +
                                 '</tr>';
                             tbody.append(row);

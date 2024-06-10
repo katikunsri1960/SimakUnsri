@@ -119,7 +119,7 @@
                                                                     $noRPS = $data->jumlah_rps == 0;
                                                                 @endphp
                                                                 <tr class="{{ $isEnrolledMatkul ? 'bg-success-light' : '' }} {{ $isDisabled ? 'disabled-row' : '' }}">
-                                                                    <td class="text-center align-middle">{{ $no_a++ }}</td>
+                                                                    <td class="text-center align-middle">{{ $no_a++ }}. </td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->kode_mata_kuliah }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle" style="white-space: nowrap;">
@@ -225,7 +225,7 @@
                                                             @php
                                                                 $no_a=1;
                                                                 $isEnrolled = array_column($krs_akt->toArray(), 'mk_konversi');
-                                                                
+                                                                // ($isEnrolled);
                                                             @endphp
                                                             @if (!empty($mk_akt)) 
                                                                 {{-- Tampilkan mata kuliah yang ada di $isEnrolled --}}
@@ -235,7 +235,7 @@
                                                                         $isLower = $semester_ke < $data['semester'] ;
                                                                     @endphp
                                                                     <tr class="{{ $isEnrolledMatkul ? 'bg-success-light' : '' }}">
-                                                                        <td class="text-center align-middle">{{ $no_a++ }}</td>
+                                                                        <td class="text-center align-middle">{{ $no_a++ }}. </td>
                                                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['kode_mata_kuliah'] }}</td>
                                                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['nama_mata_kuliah'] }}</td>
                                                                         <td class="text-center align-middle">{{ $data['semester'] }}</td>

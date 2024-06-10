@@ -195,7 +195,7 @@ class MataKuliah extends Model
                             $q->where('id_semester', $id_semester->id_semester);
                         },
                         'rencana_pembelajaran as jumlah_rps' => function ($q) {
-                            $q->where('approved', 0);
+                            $q->where('approved', 1);
                         }])
                         ->where('id_prodi', $prodi);
                         

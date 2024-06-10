@@ -178,13 +178,13 @@
                                                         @foreach ($krs_akt as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
-                                                                <td class="text-center align-middle" style="width:5%" style="white-space: nowrap;">{{ $data->aktivitas_mahasiswa->nama_jenis_aktivitas }}</td>
+                                                                <td class="text-center align-middle" style="width:5%" style="white-space: nowrap;">{{ $data->nama_jenis_aktivitas }}</td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->judul }}</td>
                                                                 {{-- <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->nama_semester }}</td> --}}
-                                                                <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->aktivitas_mahasiswa->lokasi }}</td>
-                                                                <td class="text-center align-middle" style="width:5%">{{ $data->aktivitas_mahasiswa->konversi->sks_mata_kuliah }}</td>
+                                                                <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->lokasi }}</td>
+                                                                <td class="text-center align-middle" style="width:5%">{{ $data->konversi->sks_mata_kuliah }}</td>
                                                                 <td class="text-start align-middle"  style="white-space: nowrap; width:20%">
-                                                                    @foreach($data->aktivitas_mahasiswa->bimbing_mahasiswa as $dosen_bimbing)
+                                                                    @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
                                                                         <ul>
                                                                             <li>
                                                                                 {{$dosen_bimbing->nama_dosen}} <p>{{$dosen_bimbing->pembimbing_ke == 1 ? '(Pembimbing Utama)' : '(Pembimbing Pendamping)'}}</p>
@@ -213,7 +213,7 @@
                                                                 </td> --}}
                                                                 
                                                                 <td class="text-center align-middle" style="width:3%">
-                                                                    <button class="btn btn-danger rounded-10 hapus-aktivitas" data-id="{{ $data->aktivitas_mahasiswa->id }}"><i class="fa fa-trash"></i></button>
+                                                                    <button class="btn btn-danger rounded-10 hapus-aktivitas" data-id="{{ $data->id }}"><i class="fa fa-trash"></i></button>
                                                                 </td>
                                                             </tr>
                                                         @endforeach

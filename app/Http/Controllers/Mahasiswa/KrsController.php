@@ -55,7 +55,7 @@ class KrsController extends Controller
         //DATA AKTIVITAS 
         $db = new MataKuliah();
 
-        $db_akt = new AnggotaAktivitasMahasiswa();
+        $db_akt = new AktivitasMahasiswa();
 
         // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
         
@@ -106,7 +106,7 @@ class KrsController extends Controller
         // dd($mk_regular);
 
     // TOTAL SELURUH SKS
-        $total_sks_akt = $krs_akt->sum('aktivitas_mahasiswa.konversi.sks_mata_kuliah');
+        $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
@@ -230,9 +230,10 @@ class KrsController extends Controller
 
             $db = new MataKuliah();
 
-            $db_akt = new AnggotaAktivitasMahasiswa();
+            $db_akt = new AktivitasMahasiswa();
 
             list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
+            
             
             $sks_max = $db->getSksMax($id_reg, $semester_aktif);
             
@@ -240,7 +241,7 @@ class KrsController extends Controller
             
             $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
 
-            $total_sks_akt = $krs_akt->sum('aktivitas_mahasiswa.konversi.sks_mata_kuliah');
+            $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
     
@@ -401,7 +402,7 @@ class KrsController extends Controller
         //DATA AKTIVITAS 
         $db = new MataKuliah();
 
-        $db_akt = new AnggotaAktivitasMahasiswa();
+        $db_akt = new AktivitasMahasiswa();
 
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
@@ -430,7 +431,7 @@ class KrsController extends Controller
 
 
     // TOTAL SELURUH SKS
-        $total_sks_akt = $krs_akt->sum('aktivitas_mahasiswa.konversi.sks_mata_kuliah');
+        $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 

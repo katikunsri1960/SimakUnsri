@@ -82,96 +82,86 @@ Ambil Aktivitas Mahasiswa
                 <div class="tab-content tabcontent">
                     <div class="tab-pane active" id="data-kelas-kuliah" role="tabpanel">
                         <div class="col-xl-12 col-lg-12 col-12">
-                            <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
-                                <div class="row">
-                                    <div class="row">
-                                        <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
-                                            <div class="row mb-20">
-                                                <div class="col-xxl-12">
-                                                    <div class="box box-body mb-0 bg-white">
-                                                        <div class="row mb-3">
-                                                            <div class="col-12">
-                                                                <div class="box no-shadow mb-0 bg-transparent">
-                                                                    <div class="box-header no-border px-0">
-                                                                        <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
-                                                                        <i class="fa-solid fa-arrow-left"></i>
-                                                                        </a>
-                                                                        <h3 class="box-title px-3">Ambil Aktivitas Mahasiswa</h3>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        <div>
-                                                        <div class="row">
-                                                            <div class="">
-                                                                {{-- COPY DISINI --}}
-                                                                <div class="container">
-                                                                    <form action="{{ route('mahasiswa.krs.simpan-aktivitas') }}" method="POST">
-                                                                        @csrf
+                            <div class="box box-outline-success bs-3 border-success mb-20 shadow-lg">
+                                <div class="content-header">
+                                    <div class="d-flex align-items-center">
+                                        <div class="me-auto">
+                                            <h3 class="page-title">TAMBAH AKTIVITAS {{$aktivitas_mk->nama_mata_kuliah}}</h3>
+                                            {{-- <div class="d-inline-block align-items-center">
+                                                <nav>
+                                                    <ol class="breadcrumb">
+                                                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                                                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('mahasiswa.krs')}}">Kartu Rencana Studi</a></li>
+                                                        <li class="breadcrumb-item active" aria-current="page">Ambil Aktivitas {{$aktivitas_mk->nama_mata_kuliah}}</li>
+                                                    </ol>
+                                                </nav>
+                                            </div> --}}
+                                        </div>
+                                    </div>
+                                </div>
+                                <section class="content m-20">
+                                    <div class="col-12">
+                                        <div class="container-fluid">
+                                            <form action="{{ route('mahasiswa.krs.simpan-aktivitas') }}" method="POST">
+                                                @csrf
 
-                                                                        <h4 class="text-info mb-20"><i class="fa fa-book"></i>  Judul</h4>
-                                                                        {{-- <hr class="my-15"> --}}
-                                                                        <div class="form-group mb-40">
-                                                                            <div id="judul-fields">
-                                                                                <div class="judul-field row">
-                                                                                    <div class="col-md-12 mb-2">
-                                                                                        <label>Judul</label>
-                                                                                        <textarea id="judul" class="form-control" name="judul" required></textarea>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <h4 class="text-info mb-20"><i class="fa fa-map"></i>  Lokasi</h4>
-                                                                        {{-- <hr class="my-15"> --}}
-                                                                        <div class="form-group mb-40">
-                                                                            <div id="lokasi-fields">
-                                                                                <div class="lokasi-field row">
-                                                                                    <div class="col-md-6 mb-2">
-                                                                                        {{-- <label for="lokasi" class="form-label">Lokasi</label> --}}
-                                                                                        <input type="text" id="lokasi" class="form-control" name="lokasi" required>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <h4 class="text-info mb-0"><i class="fa fa-user"></i>  Dosen Pembimbing</h4>
-                                                                        <hr class="my-15">
-                                                                        @php
-                                                                            $no_a=1;
-                                                                        @endphp
-                                                                        <div class="form-group mb-20">
-                                                                            <div id="dosen-fields">
-                                                                                <div class="dosen-field row">
-                                                                                    <div class="col-md-5 mb-2">
-                                                                                        {{-- <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen Pembimbing {{ $no_a++ }}</label> --}}
-                                                                                        {{-- <select class="form-select" name="dosen_bimbing_aktivitas[]" id="dosen_bimbing" required></select> --}}
-                                                                                    </div>
-
-                                                                                    <div class="col-md-1 mb-2">
-                                                                                        <label class="form-label">&nbsp;</label>
-                                                                                        <button type="button" class="btn btn-danger btn-rounded btn-sm remove-dosen form-control" style="display: none;" title="Hapus Dosen"><i class="fa fa-user-times" aria-hidden="true"></i></button>
-                                                                                    </div>
-                                                                                </div>
-                                                                            </div>
-                                                                            <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
-                                                                        </div>
-
-                                                                        <div class="row mt-20">
-                                                                            <div class="col-12 text-end">
-                                                                                <input type="hidden" name="id_matkul" value="{{ $id_matkul }}">
-                                                                                <button type="submit" class="btn btn-primary">Simpan</button>
-                                                                            </div>
-                                                                        </div>
-                                                                    </form>
-                                                                </div>
+                                                <h4 class="text-info mb-20"><i class="fa fa-book"></i>  DATA AKTIVITAS</h4>
+                                                {{-- <hr class="my-15"> --}}
+                                                <div class="form-group mb-20">
+                                                    <div id="judul-fields">
+                                                        <div class="judul-field row">
+                                                            <div class="col-md-8 mb-2">
+                                                                <label>Judul</label>
+                                                                <textarea id="judul" class="form-control" name="judul" required></textarea>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
+                                                <div class="form-group mb-20">
+                                                    <div id="lokasi-fields">
+                                                        <div class="lokasi-field row">
+                                                            <div class="col-md-8 mb-2">
+                                                                <label for="lokasi" class="form-label">Lokasi</label>
+                                                                <input type="text" id="lokasi" class="form-control" name="lokasi" required>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group mb-20">
+                                                    <div id="keterangan-fields">
+                                                        <div class="keterangan-field row">
+                                                            <div class="col-md-8 mb-2">
+                                                                <label for="keterangan" class="form-label">Keterangan</label>
+                                                                <input type="text" id="keterangan" class="form-control" name="keterangan">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <h4 class="text-info mt-40"><i class="fa fa-user"></i>  Dosen Pembimbing</h4>
+                                                <hr class="my-15">
+                                                @php
+                                                    $no_a=1;
+                                                @endphp
+                                                <div class="form-group mb-20">
+                                                    <div id="dosen-fields">
+                                                        <div class="dosen-field row">
+                                                            
+                                                        </div>
+                                                    </div>
+                                                    <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
+                                                </div>
+
+                                                <div class="row mt-20 mb-20">
+                                                    <div class="col-12 text-end">
+                                                        <input type="hidden" name="id_matkul" value="{{ $id_matkul }}">
+                                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                                    </div>
+                                                </div>
+                                            </form>
                                         </div>
                                     </div>
-                                </div>
+                                </section>
                             </div>
                         </div>
                     </div>
@@ -202,6 +192,7 @@ Ambil Aktivitas Mahasiswa
 
         // Array to store selected values from Select2 inputs
         var selectedValues = [];
+        var maxDosen = 4; // Batas maksimum dosen pembimbing
 
         function initializeSelect2(selectElement) {
             return selectElement.select2({
@@ -239,8 +230,17 @@ Ambil Aktivitas Mahasiswa
 
         // Event listener untuk menambahkan baris baru
         $('#add-dosen').click(function() {
+            if ($('.dosen-field').length > maxDosen) {
+                swal({
+                    title: "Batas Maksimum Tercapai",
+                    text: "Anda hanya dapat menambahkan maksimal 4 dosen pembimbing.",
+                    type: "warning",
+                    button: "OK",
+                });
+                return;
+            }
             var newRow = $('<div class="dosen-field row">' +
-                                '<div class="col-md-5 mb-2">' +
+                                '<div class="col-md-8 mb-2">' +
                                     '<label for="dosen_bimbing_aktivitas_' + dosenCounter + '" class="form-label">Nama Dosen Pembimbing ' + dosenCounter + '</label>' +
                                     '<select id="dosen_bimbing_aktivitas_' + dosenCounter + '" class="form-select select2" name="dosen_bimbing_aktivitas[]" required></select>' +
                                 '</div>' +
@@ -280,24 +280,23 @@ Ambil Aktivitas Mahasiswa
             console.log(selectedValues);
         }
 
-        $('#tambah-dosen-pengajar').submit(function(e){
-            e.preventDefault();
-            swal({
-                title: 'Manajemen Dosen Kelas Kuliah',
-                text: "Apakah anda yakin ingin menambahkan dosen pengajar?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Lanjutkan',
-                cancelButtonText: 'Batal'
-            },function(isConfirmed){
-                if (isConfirmed) {
-                    collectSelectedValues();
-                    $('#tambah-dosen-pengajar').unbind('submit').submit();
-                    $('#spinner').show();
+        // Cek apakah dosen pembimbing sudah diisi sebelum submit form
+        $('form').submit(function(e) {
+            var allFilled = true;
+            $('.select2').each(function() {
+                if ($(this).val() === null || $(this).val() === "") {
+                    allFilled = false;
                 }
             });
+            if (!allFilled) {
+                e.preventDefault();
+                swal({
+                    title: "Dosen Pembimbing Belum Dipilih",
+                    text: "Silakan pilih dosen pembimbing untuk semua field.",
+                    icon: "warning",
+                    button: "OK",
+                });
+            }
         });
     });
 
