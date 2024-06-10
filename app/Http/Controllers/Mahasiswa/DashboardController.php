@@ -20,9 +20,9 @@ class DashboardController extends Controller
 
         $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
                             ->first();
-        
+                            // dd($riwayat_pendidikan);
         $prodi_id = $riwayat_pendidikan->id_prodi;
-        // dd($prodi_id);
+        
 
         $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();

@@ -74,7 +74,7 @@ Ambil Aktivitas Mahasiswa
         <div class="col-lg-12 col-xl-12 mt-5">
             <div class="box">
 				<!-- Nav tabs -->
-                <ul class="nav nav-pills justify-content-left" role="tablist">
+                <ul class="nav nav-pills justify-content-left mb-20" role="tablist">
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link" href="{{route('mahasiswa.krs')}}"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
@@ -102,7 +102,7 @@ Ambil Aktivitas Mahasiswa
                                 <section class="content m-20">
                                     <div class="col-12">
                                         <div class="container-fluid">
-                                            <form action="{{ route('mahasiswa.krs.simpan-aktivitas') }}" method="POST">
+                                            <form action="{{ route('mahasiswa.krs.simpan-aktivitas') }}" method="POST" id='form-aktivitas'>
                                                 @csrf
 
                                                 <h4 class="text-info mb-20"><i class="fa fa-book"></i>  DATA AKTIVITAS</h4>
@@ -250,25 +250,29 @@ Ambil Aktivitas Mahasiswa
                                 '</div>' +
                             '</div>');
 
-            // Append the new row
-            newRow.appendTo('#dosen-fields');
+            
 
-            // Initialize Select2 untuk elemen select baru
-            var newSelect = newRow.find('.select2');
-            initializeSelect2(newSelect);
-            newSelect.val(null).trigger('change');
+                // Append the new row
+                newRow.appendTo('#dosen-fields');
 
-            // Show the remove button
-            newRow.find('.remove-dosen').show();
+                // Initialize Select2 untuk elemen select baru
+                var newSelect = newRow.find('.select2');
+                initializeSelect2(newSelect, dosenCounter);
+                newSelect.val(null).trigger('change');
 
-            // Increment counter
-            dosenCounter++;
-        });
+                // Show the remove button
+                newRow.find('.remove-dosen').show();
 
-        // Event listener for removing a row
-        $(document).on('click', '.remove-dosen', function() {
-            $(this).closest('.dosen-field').remove();
-        });
+                // Increment counter
+                dosenCounter++;
+            });
+
+            // Event listener for removing a row
+            $(document).on('click', '.remove-dosen', function() {
+                $(this).closest('.dosen-field').remove();
+                // Reset dosenCounter
+                dosenCounter = $('.dosen-field').length;
+            });
 
         // Example function to collect selected values
         function collectSelectedValues() {
@@ -279,25 +283,6 @@ Ambil Aktivitas Mahasiswa
             });
             console.log(selectedValues);
         }
-
-        // Cek apakah dosen pembimbing sudah diisi sebelum submit form
-        $('form').submit(function(e) {
-            var allFilled = true;
-            $('.select2').each(function() {
-                if ($(this).val() === null || $(this).val() === "") {
-                    allFilled = false;
-                }
-            });
-            if (!allFilled) {
-                e.preventDefault();
-                swal({
-                    title: "Dosen Pembimbing Belum Dipilih",
-                    text: "Silakan pilih dosen pembimbing untuk semua field.",
-                    icon: "warning",
-                    button: "OK",
-                });
-            }
-        });
     });
 
     function upperCaseF(a){

@@ -243,7 +243,12 @@ class AktivitasMahasiswaController extends Controller
                     'jenis_peran'=>2,
                     'nama_jenis_peran'=>'Anggota',
                     'status_sync'=>'belum sync',
-                ]);          
+                ]);   
+                
+                // Periksa jumlah dosen pembimbing yang dipilih
+                if (count((array)$request->dosen_bimbing_aktivitas) == 0) {
+                    return redirect()->back()->with('error', 'Harap pilih minimal satu dosen pembimbing.');
+                }
 
                 $jumlah_dosen=count($request->dosen_bimbing_aktivitas);
                
