@@ -23,6 +23,7 @@ Dashboard
             </div>
         </div>
     </div>
+    @include('swal')
     <div class="row mt-10">
         <div class="col-lg-12 col-xl-12 mt-0">
             <!-- Nav tabs -->
@@ -109,11 +110,11 @@ Dashboard
                                                 <tbody>
                                                     @foreach($data_nilai as $d)
                                                     <tr>
-                                                        <td class="text-center align-middle">{{$d->kode_mata_kuliah}}
+                                                        <td class="text-center align-middle">{{$d->kode_mata_kuliah}} {{$d->kuisoner_count}}
                                                         </td>
                                                         <td class="text-start align-middle">{{$d->nama_mata_kuliah}}
                                                         </td>
-                                                        @if ($d->kuisoner_count != $count_kuisoner)
+                                                        @if ($d->kelas_kuliah->kuisoner_count != $count_kuisoner)
                                                         <td colspan="3" class="text-center align-middle bg-secondary">
                                                             <div class="row px-3">
                                                                 <a href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner', $d->id_kelas_kuliah)}}"

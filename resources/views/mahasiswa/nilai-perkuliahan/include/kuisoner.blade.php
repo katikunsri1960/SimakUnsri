@@ -90,7 +90,7 @@ Dashboard
                                     </div>
                                     <div class="row">
                                         <div class="table-responsive">
-                                            <form id="kuisionerForm" action="{{ route('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner.store', ['kelas' => $kelas->id_kelas_kuliah]) }}" method=" post">
+                                            <form id="kuisionerForm" action="{{ route('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner.store', ['kelas' => $kelas->id_kelas_kuliah]) }}" method="post">
                                                 @csrf
                                                 <table class="table table-bordered table-striped text-left">
                                                     <thead>
@@ -169,10 +169,7 @@ Dashboard
             }
         });
 
-        if (!valid) {
-            event.preventDefault();
-            alert('Silakan pilih minimal satu nilai untuk setiap pertanyaan.');
-        }
+
     });
 </script>
 

@@ -38,8 +38,10 @@ class NilaiController extends Controller
 
         $aktivitas_kuliah=AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->where('id_semester', $id_semester)->get();
 
-        $nilai_mahasiswa = NilaiPerkuliahan::with(['dosen_pengajar', 'kelas_kuliah' => function($query) {
-                                                $query->withCount('kuisoner');
+        $nilai_mahasiswa = NilaiPerkuliahan::with(['dosen_pengajar', 'kelas_kuliah' => function($query) use ($id_reg_mhs) {
+                                                $query->withCount(['kuisoner' => function($query) use ($id_reg_mhs) {
+                                                    $query->where('id_registrasi_mahasiswa', $id_reg_mhs);
+                                                }]);
                                             }])
                                             ->where('id_registrasi_mahasiswa', $id_reg_mhs)
                                             ->where('id_semester', $id_semester)
@@ -56,7 +58,7 @@ class NilaiController extends Controller
 
         $kuisoner = KuisonerQuestion::all();
         $count_kuisoner = $kuisoner->count();
-
+        // dd($count_kuisoner);
         return view('mahasiswa.nilai-perkuliahan.include.detail-khs', [
             'data_nilai' => $nilai_mahasiswa,
             'data_aktivitas' => $aktivitas_kuliah,
@@ -96,7 +98,7 @@ class NilaiController extends Controller
     {
         $data = $request->all();
         $id_reg = auth()->user()->fk_id;
-        
+
         $validator = Validator::make($data, [
             'nilai.*' => 'required|in:1,2,3,4', // Validasi nilai radio button harus 1, 2, 3, atau 4
         ]);
@@ -113,6 +115,8 @@ class NilaiController extends Controller
                 'nilai' => $nilai,
             ]);
         }
-        return redirect()->route('mahasiswa.nilai-perkuliahan.index')->with('success', 'Kuisoner berhasil diisi');
+        $semester = KelasKuliah::where('id_kelas_kuliah', $kelas)->first()->id_semester;
+        
+        return redirect()->route('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs', $semester)->with('success', 'Kuisoner berhasil diisi');
     }
 }
