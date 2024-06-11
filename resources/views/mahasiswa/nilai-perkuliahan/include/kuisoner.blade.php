@@ -148,19 +148,27 @@ Dashboard
 </section>
 @endsection
 @push('js')
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
     document.getElementById('kuisionerForm').addEventListener('submit', function(event) {
         let valid = true;
         const rows = document.querySelectorAll('tbody tr');
 
         rows.forEach((row, index) => {
-            const radioButtons = row.querySelectorAll(`input[name="nilai[${index + 1}]"]`);
+            const rowIndex = index + 1;  // Adjusting for 1-based index in Blade
+            const radioButtons = row.querySelectorAll(`input[name="nilai[${rowIndex}]"]`);
             let oneChecked = false;
-            radioButtons.forEach(radio => {
-                if (radio.checked) {
-                    oneChecked = true;
-                }
-            });
+
+            if (radioButtons.length === 0) {
+                oneChecked = true;
+            } else {
+                radioButtons.forEach(radio => {
+                    if (radio.checked) {
+                        oneChecked = true;
+                    }
+                });
+            }
+
             if (!oneChecked) {
                 valid = false;
                 row.style.backgroundColor = '#f8d7da'; // Highlight the row with a red background
@@ -169,7 +177,35 @@ Dashboard
             }
         });
 
+        if (!valid) {
+            event.preventDefault();
+            swal({
+                title: 'Harap isi semua pertanyaan terlebih dahulu!',
+                type: 'warning',
+                showCancelButton: true,
+                showConfirmButton: false,
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'Tutup'
+            });
+        }
 
+        if(valid) {
+            event.preventDefault();
+            swal({
+                title: 'Apakah anda yakin?',
+                text: "Data yang sudah disubmit tidak dapat diubah!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, submit!',
+                cancelButtonText: 'Tidak, batalkan!',
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    document.getElementById('kuisionerForm').submit();
+                }
+            });
+        }
     });
 </script>
 
