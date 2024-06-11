@@ -19,7 +19,7 @@
                             <span>Biodata</span>
                         </a>
                     </li>
-                    
+
                     <!-- <li class="treeview">
                         <a href="#">
                             <i span class="fa fa-newspaper-o"><span class="path1"></span><span
@@ -91,7 +91,7 @@
                             <span>Kuisioner</span>
                         </a>
                     </li> --}}
-                    <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') | request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan')}}">
                             <i class="fa fa-line-chart"><span class="path1"></span><span
                                     class="path2"></span></i>

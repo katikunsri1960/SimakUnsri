@@ -2,6 +2,7 @@
 
 namespace App\Models\Perkuliahan;
 
+use App\Models\KuisonerAnswer;
 use App\Models\Semester;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\ProgramStudi;
@@ -13,6 +14,8 @@ class KelasKuliah extends Model
     use HasFactory;
 
     protected $guarded = [];
+
+    protected $appends = ['kuisoner_count'];
 
     public function semester()
     {
@@ -62,5 +65,15 @@ class KelasKuliah extends Model
 
         // dd($data);
         return $data;
+    }
+
+    public function kuisoner()
+    {
+        return $this->hasMany(KuisonerAnswer::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
+    }
+
+    public function getKuisonerCountAttribute()
+    {
+        return $this->kuisoner->count();
     }
 }

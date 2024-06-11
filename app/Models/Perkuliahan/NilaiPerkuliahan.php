@@ -25,4 +25,9 @@ class NilaiPerkuliahan extends Model
     {
         return $this->hasMany(NilaiKomponenEvaluasi::class, 'id_kelas', 'id_kelas_kuliah');
     }
+
+    public function kelas_kuliah()
+    {
+        return $this->belongsTo(KelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
+    }
 }
