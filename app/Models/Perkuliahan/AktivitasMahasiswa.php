@@ -157,7 +157,7 @@ class AktivitasMahasiswa extends Model
         }
         else
         {
-            $mk_akt = $data_akt['data']['data'];
+            $mk_akt = $data_akt;
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
         // dd($data_akt);

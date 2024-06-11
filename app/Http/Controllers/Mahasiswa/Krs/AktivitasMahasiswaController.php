@@ -188,7 +188,7 @@ class AktivitasMahasiswaController extends Controller
             }elseif($mk_konversi->nama_mata_kuliah == 'KERJA PRAKTEK' || $mk_konversi->nama_mata_kuliah == 'KERJA PRAKTIK' ){
                 $id_jenis_aktivitas = 6;
                 $nama_jenis_aktivitas = 'Kerja praktek/PKL';
-            }elseif($mk_konversi->nama_mata_kuliah == 'SKRIPSI' || $mk_konversi->nama_mata_kuliah =='DISERTASI DAN PUBLIKASI'){
+            }elseif($mk_konversi->nama_mata_kuliah == 'DISERTASI DAN PUBLIKASI'){
                 $id_jenis_aktivitas = 15;
                 $nama_jenis_aktivitas = 'Penelitian/Riset';
             }elseif($mk_konversi->nama_mata_kuliah == 'SKRIPSI'){

@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Bimbingan Tugas Akhir
+Bimbingan Tugas Akhir Dosen
 @endsection
 @section('content')
 @push('header')
@@ -60,22 +60,13 @@ Bimbingan Tugas Akhir
                                     <td class="text-center align-middle">:</td>
                                     <td class="text-left align-middle">
                                         <ul style="padding: 0; padding-left:0.8rem">
-                                            @foreach ($aktivitas->bimbing_mahasiswa as $p)
-                                            <li>Pembimbing {{$p->pembimbing_ke}} : {{$p->nama_dosen}}</li>
+                                            @foreach ($aktivitas->bimbing_mahasiswa as $dospem)
+                                            <li>Pembimbing {{$dospem->pembimbing_ke }} : {{$dospem->nama_dosen}}</li>
                                             @endforeach
                                         </ul>
                                     </td>
                                 </tr>
                             </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="row mb-5">
-                    <div class="col-xl-12 col-lg-12 text-end">
-                        <div class="btn-group">
-                            <a class="btn btn-rounded bg-success-light" href="#" data-bs-toggle="modal"
-                                data-bs-target="#tambahAsistensiModal"><i class="fa fa-plus"><span
-                                class="path1"></span><span class="path2"></span></i> Tambah Asistensi</a>
                         </div>
                     </div>
                 </div>
