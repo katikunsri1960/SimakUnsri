@@ -29,7 +29,7 @@
                             <select class="form-control select2" name="dosen_pembimbing" id="dosen_pembimbing" required>
                                 <option value="">-- Pilih Dosen Pembimbing --</option>
                                 @foreach($dosen_pembimbing->bimbing_mahasiswa as $dosen)
-                                    <option value="{{ $dosen->id_dosen }}"><li>Pembimbing {{$dosen->pembimbing_ke}} - {{ $dosen->nama_dosen }}</option>
+                                    <option value="{{ $dosen->id_dosen }}" {{$dosen->approved==0 ? 'disabled': ''}}><li>Pembimbing {{$dosen->pembimbing_ke}} - {{ $dosen->nama_dosen }}</option>
                                 @endforeach
                             </select>
                         </div>
