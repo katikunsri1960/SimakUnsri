@@ -11,6 +11,7 @@ use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -58,6 +59,7 @@ class NilaiController extends Controller
 
         $kuisoner = KuisonerQuestion::all();
         $count_kuisoner = $kuisoner->count();
+        $semester_aktif = SemesterAktif::first()->id_semester;
         // dd($count_kuisoner);
         return view('mahasiswa.nilai-perkuliahan.include.detail-khs', [
             'data_nilai' => $nilai_mahasiswa,
@@ -66,7 +68,8 @@ class NilaiController extends Controller
             'nilai_konversi' => $nilai_konversi,
             'nilai_transfer' => $nilai_transfer,
             'kuisoner' => $kuisoner,
-            'count_kuisoner' => $count_kuisoner
+            'count_kuisoner' => $count_kuisoner,
+            'semester_aktif' => $semester_aktif,
         ]);
     }
     public function histori_nilai($id_matkul)
@@ -116,7 +119,7 @@ class NilaiController extends Controller
             ]);
         }
         $semester = KelasKuliah::where('id_kelas_kuliah', $kelas)->first()->id_semester;
-        
+
         return redirect()->route('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs', $semester)->with('success', 'Kuisoner berhasil diisi');
     }
 }
