@@ -118,7 +118,7 @@ Dashboard
                                                                 </p>
                                                             </td>
                                                             <td class="text-start align-middle text-nowrap">
-                                                                @for ($i = 1; $i <= 4; $i++)
+                                                                @for ($i = 1; $i <= 7; $i++)
                                                                 <div class="form-check form-check-inline">
                                                                     <input class="form-check-input" type="radio" id="nilai_{{ $loop->iteration }}_{{ $i }}" name="nilai[{{ $loop->iteration }}]" value="{{ $i }}" @if ($k->nilai == $i) checked @endif>
                                                                     <label class="form-check-label" for="nilai_{{ $loop->iteration }}_{{ $i }}">{{ $i }}</label>
