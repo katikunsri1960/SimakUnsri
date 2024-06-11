@@ -27,7 +27,7 @@ class BimbinganController extends Controller
                     ->where('id_semester', $id_semester)
                     ->first();
 
-        $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->get();
+        $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->orderBy('tanggal', 'ASC')->get();
 
         $dosen_pembimbing = $aktivitas->load(['bimbing_mahasiswa']);
                         

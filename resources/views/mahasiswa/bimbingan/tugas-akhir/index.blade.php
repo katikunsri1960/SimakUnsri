@@ -60,8 +60,14 @@ Bimbingan Tugas Akhir
                                     <td class="text-center align-middle">:</td>
                                     <td class="text-left align-middle">
                                         <ul style="padding: 0; padding-left:0.8rem">
-                                            @foreach ($aktivitas->bimbing_mahasiswa as $p)
-                                            <li>Pembimbing {{$p->pembimbing_ke}} : {{$p->nama_dosen}}</li>
+                                            @foreach ($aktivitas->bimbing_mahasiswa as $bimbingan)
+                                            <li>Pembimbing {{$bimbingan->pembimbing_ke}} : {{$bimbingan->nama_dosen}}  
+                                                @if ($bimbingan->approved == 0)
+                                                    <span class="badge bg-warning mx-5">Menunggu Persetujuan</span>
+                                                @elseif ($bimbingan->approved == 1)
+                                                    <span class="badge bg-success mx-5">Disetujui</span>
+                                                @endif
+                                            </li>
                                             @endforeach
                                         </ul>
                                     </td>
@@ -74,7 +80,7 @@ Bimbingan Tugas Akhir
                     <div class="col-xl-12 col-lg-12 text-end">
                         <div class="btn-group">
                             <a class="btn btn-rounded bg-success-light" href="#" data-bs-toggle="modal"
-                                data-bs-target="#tambahAsistensiModal"><i class="fa fa-plus"><span
+                                data-bs-target="#tambahAsistensiModal" id="btnTambahAsistensi"><i class="fa fa-plus"><span
                                 class="path1"></span><span class="path2"></span></i> Tambah Asistensi</a>
                         </div>
                     </div>
@@ -98,7 +104,7 @@ Bimbingan Tugas Akhir
                                     <td class="text-center align-middle">{{$d->id_tanggal}}</td>
                                     <td class="text-left align-middle" style="text-align: justify">{{$d->uraian}}</td>
                                     <td class="text-center align-middle">{{$d->dosen ? $d->dosen->nama_dosen : '-'}}</td>
-                                    <td class="text-center align-middle">
+                                    <td class="text-center align-middle ">
                                         @if ($d->approved == 0)
                                         <span class="badge bg-warning">Menunggu Persetujuan</span>
                                         @elseif ($d->approved == 1)
@@ -120,27 +126,38 @@ Bimbingan Tugas Akhir
 <link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
 @endpush
 @push('js')
-<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
-    function approveAsistensi(data)
-    {
-        swal({
-            title: "Apakah anda yakin?",
-            text: "Data tidak bisa diubah lagi setelah disimpan!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Simpan!',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#spinner').show();
+    $(document).ready(function() {
+        $('.select2').select2();
+
+        // Check if there are any pending approvals
+        let bimbinganApproved = true;
+
+        @foreach ($aktivitas->bimbing_mahasiswa as $bimbingan)
+            if ({{ $bimbingan->approved }} === 0) {
+                bimbinganApproved = false;
+                break;  // Exit the loop early if any approval is pending
+            }
+        @endforeach
+
+        $('#btnTambahAsistensi').click(function(e) {
+            e.preventDefault();  // Prevent the default action
+            if (!bimbinganApproved) {
+                console.log('masoookkk'),
+                swal({
+                    
+                    title: 'Dosen Pembimbing Belum Disetujui!',
+                    text: 'Dosen pembimbing Anda belum disetujui oleh Koordinator Program Studi.',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                $('#tambahAsistensiModal').modal('show');
             }
         });
-        // ajax request form post approve asistensi
-
-    }
+    });
 
     $('#dt').DataTable({
         "paging": true,
@@ -150,6 +167,6 @@ Bimbingan Tugas Akhir
         "info": true,
         "autoWidth": true,
     });
-
 </script>
+
 @endpush
