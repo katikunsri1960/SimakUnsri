@@ -1,3 +1,4 @@
+@if ($aktivitas !== Null)
 <div class="modal fade" id="tambahAsistensiModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false"
     role="dialog" aria-labelledby="asistensiTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
@@ -52,6 +53,8 @@
         </div>
     </div>
 </div>
+@endif
+
 @push('css')
 <link rel="stylesheet" href="{{asset('assets/js/flatpickr/flatpickr.min.css')}}">
 @endpush

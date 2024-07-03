@@ -15,7 +15,7 @@
                                     <div class="box box-body mb-0 bg-white">
                                         <div class="row">
                                             <div class="col-xl-12 col-lg-12">
-                                                <h3 class="fw-500 text-dark mb-20">Kartu Rencana Studi Reguler</h3>
+                                                <h3 class="fw-500 text-dark mb-20">Rencana Studi Reguler</h3>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -83,7 +83,7 @@
                                         <div class="box box-body mb-0 bg-white">
                                             <div class="row">
                                                 <div class="col-xl-12 col-lg-12">
-                                                    <h3 class="fw-500 text-dark mb-20">Kartu Rencana Studi Kampus Merdeka</h3>
+                                                    <h3 class="fw-500 text-dark mb-20">Rencana Studi Kampus Merdeka</h3>
                                                 </div>
                                             </div>
                                             <div class="row">
@@ -151,7 +151,7 @@
                                     <div class="box box-body mb-0 bg-white">
                                         <div class="row">
                                             <div class="col-xl-12 col-lg-12">
-                                                <h3 class="fw-500 text-dark mb-20">Aktivitas Mahasiswa</h3>
+                                                <h3 class="fw-500 text-dark mb-20">Rencana Aktivitas Reguler Mahasiswa</h3>
                                             </div>
                                         </div>
                                         <div class="row">

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa;
+namespace App\Http\Controllers\Mahasiswa\Akademik;
 
 use App\Http\Controllers\Controller;
 use App\Models\KuisonerAnswer;

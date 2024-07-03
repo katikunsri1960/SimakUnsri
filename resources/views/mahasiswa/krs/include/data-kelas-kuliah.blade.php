@@ -6,15 +6,14 @@
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
                         <!-- Modal -->
                         <div class="modal fade" id="rpsModal" tabindex="-1" aria-labelledby="rpsModalLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-centered">
+                            <div class="modal-dialog modal-dialog-centered">
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">
                                             <div class="row">
-                                            
                                                 <div class="modal-content">
                                                     <div class="modal-header">
-                                                        <h3 class="modal-title" id="rpsModalLabel">Rencana Pembelajaran Semester</h3>
+                                                        <h3 class="modal-title" id="rpsModalLabel">Rencana Pembelajaran Semester (RPS)</h3>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">

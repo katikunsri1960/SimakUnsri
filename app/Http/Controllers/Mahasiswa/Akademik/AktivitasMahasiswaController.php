@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa\Krs;
+namespace App\Http\Controllers\Mahasiswa\Akademik;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa;
+namespace App\Http\Controllers\Mahasiswa\Biodata;
 
 use App\Models\Wilayah;
 use Illuminate\Http\Request;
@@ -122,6 +122,7 @@ class BiodataController extends Controller
         }
 
         $riwayat_pendidikan = RiwayatPendidikan::where('id_mahasiswa', $data->id_mahasiswa)->get();
+        // dd($riwayat_pendidikan);
 
         return view('mahasiswa.biodata.index', compact('data','provinsi','riwayat_pendidikan', 'id_kab_kota', 'kab_kota'));
 

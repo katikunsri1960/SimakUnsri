@@ -24,9 +24,9 @@
                                                     <th class="text-center">Bidang Minat</th>
                                                     <th class="text-center">Status</th>
                                                     <th class="text-center">Tanggal Keluar</th>
-                                                    <th class="text-center">SKS Lulus</th>
+                                                    <th class="text-center">SKS Diakui</th>
                                                     <th class="text-center">IPK Lulus</th>
-                                                    <th class="text-center">Action</th>
+                                                    {{-- <th class="text-center">Action</th> --}}
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -41,27 +41,19 @@
                                                         {{-- <td class="text-start"></td> --}}
                                                         <td class="text-start">{{$data->nama_perguruan_tinggi}}</td>
                                                         <td class="text-start">{{$data->prodi->nama_program_studi}}</td>
-                                                        <td class="text-start">{{$data->nm_bidang_minat}}</td>
-
-                                                        @if ($data->id_jenis_keluar == NULL)
-                                                            <td class="text-center">Aktif</td>
-                                                        @else
-                                                            <td class="text-center">{{$data->keterangan_keluar}}</td>
-                                                        @endif
-
-                                                        @if ($data->id_jenis_keluar == NULL)
-                                                            <td class="text-center">Tidak Diisi</td>
-                                                        @else
-                                                            <td class="text-center">{{date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}</td>
-                                                        @endif
-
-                                                        <td class="text-center"></td>
-                                                        <td class="text-center">{{$data->sks_diakui}}</td>
-                                                        <td class="text-center"></td>
                                                         <td class="text-center">
-                                                            <a class="btn btn-rounded bg-warning-light" href="#" title="Hapus Riwayat"><i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i></a>
-                                                            <a class="btn btn-rounded bg-success-light" href="#" title="Edit Riwayat"><i class="fa fa-pen-to-square"><span class="path1"></span><span class="path2"></span></i></a>
+                                                            {{$data->nm_bidang_minat == Null ? 'Tidak Diisi' : $data->nm_bidang_minat}}
                                                         </td>
+                                                        <td class="text-center">
+                                                            {{$data->id_jenis_keluar == Null ? 'Aktif' : $data->keterangan_keluar}}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {{$data->id_jenis_keluar == Null ? '-' : date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}
+                                                        </td>
+                                                        <td class="text-center">
+                                                            {{$data->sks_diakui == Null ? 'Tidak Diisi' : $data->sks_diakui }}
+                                                        </td>
+                                                        <td class="text-center"></td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
