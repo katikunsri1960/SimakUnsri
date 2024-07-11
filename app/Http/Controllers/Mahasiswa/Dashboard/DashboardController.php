@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa;
+namespace App\Http\Controllers\Mahasiswa\Dashboard;
 
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;

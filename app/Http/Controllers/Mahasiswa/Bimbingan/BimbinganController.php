@@ -23,20 +23,27 @@ class BimbinganController extends Controller
                     ->whereHas('anggota_aktivitas', function($q) use($id_reg){
                         $q->where('id_registrasi_mahasiswa', $id_reg);
                     })
+                    ->whereHas('bimbing_mahasiswa', function($q) {
+                        $q->where('approved', '1');
+                    })
                     ->whereIn('id_jenis_aktivitas', ['2', '3', '4', '22'])
                     ->where('id_semester', $id_semester)
                     ->first();
+        
+        // if (!$aktivitas) {
+        //     return response()->json(['error' => 'Aktivitas Tidak Ditemukan'], 404);
+        // }
 
         $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->orderBy('tanggal', 'ASC')->get();
-
         $dosen_pembimbing = $aktivitas->load(['bimbing_mahasiswa']);
-                        
+
         return view('mahasiswa.bimbingan.tugas-akhir.index', [
             'data' => $data,
             'aktivitas' => $aktivitas,
             'dosen_pembimbing' => $dosen_pembimbing,
         ]);
     }
+
 
     public function store(AktivitasMahasiswa $aktivitas, Request $request)
     {

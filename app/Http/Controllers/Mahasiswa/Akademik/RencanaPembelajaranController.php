@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa;
+namespace App\Http\Controllers\Mahasiswa\Akademik;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;

@@ -20,33 +20,6 @@
                         </a>
                     </li>
 
-                    <!-- <li class="treeview">
-                        <a href="#">
-                            <i span class="fa fa-newspaper-o"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Akademik</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('mahasiswa.krs')
-                                ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.krs')}}"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Kartu Rencana Studi</a>
-                            </li>
-                            <li class="{{request()->routeIs('mahasiswa.khs')
-                                ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.khs')}}"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
-                            </li>
-                            <li class="{{request()->routeIs('mahasiswa.transkrip')
-                                ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.transkrip')}}"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Transkrip Nilai</a>
-                            </li>
-                        </ul>
-                    </li> -->
                     {{-- <li class="{{request()->routeIs('mahasiswa.biaya-kuliah') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.biaya-kuliah')}}">
                             <i class="fa fa-money"><span class="path1"></span><span

@@ -22,7 +22,7 @@ Kartu Rencana Studi
         </tr>
         <tr>
             <td class="text-12 text-center text-upper" height="30" colspan="7">
-                <strong>KARTU STUDI MAHASISWA (KSM)</strong>
+                <strong>KARTU RENCANA STUDI (KRS)</strong>
             </td>
         </tr>
         <tr>
@@ -73,7 +73,7 @@ Kartu Rencana Studi
         <table style="width: 100%">
             <tr>
                 <td class="text-upper text-center text-12" height="30" colspan="4">
-                    <strong>Kartu Rencana Studi Reguler</strong> 
+                    <strong>Rencana Studi Reguler</strong> 
                 </td>
             </tr>
         </table>
@@ -117,7 +117,7 @@ Kartu Rencana Studi
         <table style="width: 100%">
             <tr>
                 <td class="text-upper text-center text-12" height="30" colspan="4">
-                    <strong>Kartu Rencana Studi Kampus Merdeka</strong> 
+                    <strong>Rencana Studi Kampus Merdeka</strong> 
                 </td>
             </tr>
         </table>
@@ -162,7 +162,7 @@ Kartu Rencana Studi
         <table style="width: 100%">
             <tr>
                 <td class="text-upper text-center text-12" height="30" colspan="4">
-                    <strong>Kartu Rencana Aktivitas Mahasiswa</strong> 
+                    <strong>Rencana Aktivitas Reguler Mahasiswa</strong> 
                 </td>
             </tr>
         </table>
