@@ -38,6 +38,12 @@ Route::group(['middleware' => ['auth']], function() {
         });
     });
 
+    Route::group(['middleware' => ['role:fakultas']], function(){
+        Route::prefix('fakultas')->group(function(){
+            Route::get('/', [App\Http\Controllers\Fakultas\DashboardController::class, 'index'])->name('fakultas');
+        });
+    });
+
 
     Route::group(['middleware' => ['role:mahasiswa']], function() {
         Route::prefix('mahasiswa')->group(function () {
@@ -326,11 +332,6 @@ Route::group(['middleware' => ['auth']], function() {
 
     });
 
-    Route::group(['middleware' => ['role:fakultas']], function() {
-        Route::get('/fakultas', [App\Http\Controllers\Fakultas\DashboardController::class, 'index'])->name('fakultas');
-
-    });
-
     Route::group(['middleware' => ['role:univ']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
         Route::prefix('universitas')->group(function () {
@@ -434,6 +435,9 @@ Route::group(['middleware' => ['auth']], function() {
 
                     Route::post('/dosen-store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_dosen_create'])->name('univ.pengaturan.akun.dosen-store');
                     Route::get('/get-dosen', [App\Http\Controllers\Universitas\PengaturanController::class, 'get_dosen'])->name('univ.pengaturan.akun.get-dosen');
+
+                    Route::get('/get-fakultas', [App\Http\Controllers\Universitas\PengaturanController::class, 'get_fakultas'])->name('univ.pengaturan.akun.get-fakultas');
+                    Route::post('/fakultas-store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_fakultas_create'])->name('univ.pengaturan.akun.fakultas-store');
                 });
             });
         });

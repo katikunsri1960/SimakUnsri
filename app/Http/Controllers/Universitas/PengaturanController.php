@@ -6,12 +6,14 @@ use App\Models\SemesterAktif;
 use App\Models\Referensi\PeriodePerkuliahan;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
+use App\Models\Fakultas;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SkalaNilai;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
+use Illuminate\Support\Facades\DB;
 
 class PengaturanController extends Controller
 {
@@ -132,7 +134,7 @@ class PengaturanController extends Controller
         return redirect()->back()->with('success', 'Data berhasil di sinkronisasi');
     }
 
-    public function akun()
+    public function akun(Request $request)
     {
         $data = User::orderBy('role')->get();
         $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
@@ -177,6 +179,44 @@ class PengaturanController extends Controller
 
         return response()->json($data);
 
+    }
+
+    public function get_fakultas(Request $request)
+    {
+        $db = new Fakultas();
+
+        $data = $db->where('nama_fakultas', 'like', '%'.$request->q.'%')->get();
+
+        return response()->json($data);
+    }
+
+    public function akun_fakultas_create(Request $request)
+    {
+        $data = $request->validate([
+            'role' => 'required',
+            'username' => 'required',
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+            'fk_id' => 'required|exists:fakultas,id',
+        ]);
+
+        $data['password'] = bcrypt($data['password']);
+        $data['role'] = 'fakultas';
+        try {
+            DB::beginTransaction();
+
+            User::create($data);
+
+            DB::commit();
+        } catch (\Throwable $th) {
+            //throw $th;
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data gagal disimpan. '. $th->getMessage());
+        }
+
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
     public function akun_dosen_create(Request $request)
