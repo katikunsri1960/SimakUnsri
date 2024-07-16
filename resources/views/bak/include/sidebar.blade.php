@@ -23,6 +23,16 @@
                             </span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('bak.pengajuan-cuti') ? 'active' : ''}}">
+                        <a href="{{route('bak.pengajuan-cuti')}}">
+                            <i class="fa fa-exclamation-triangle"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Pengajuan Cuti Mhs</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
                     {{-- <li class="treeview {{request()->routeIs('dosen.profile.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-user"><span class="path1"></span><span

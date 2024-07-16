@@ -29,6 +29,11 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('/', [App\Http\Controllers\Bak\DashboardController::class, 'index'])->name('bak');
             Route::prefix('transkrip-nilai')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\TranskripController::class, 'index'])->name('bak.transkrip-nilai');
+                Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'getTranskrip'])->name('bak.transkrip-nilai.get');
+            });
+
+            Route::prefix('pengajuan-cuti')->group(function(){
+                Route::get('/', [App\Http\Controllers\Bak\PengajuanCutiController::class, 'index'])->name('bak.pengajuan-cuti');
             });
         });
     });
