@@ -23,6 +23,22 @@ Auth::routes([
 
 Route::group(['middleware' => ['auth']], function() {
     // route for mahasiswa
+
+    Route::group(['middleware' => ['role:bak']], function(){
+        Route::prefix('bak')->group(function(){
+            Route::get('/', [App\Http\Controllers\Bak\DashboardController::class, 'index'])->name('bak');
+            Route::prefix('transkrip-nilai')->group(function(){
+                Route::get('/', [App\Http\Controllers\Bak\TranskripController::class, 'index'])->name('bak.transkrip-nilai');
+                Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'getTranskrip'])->name('bak.transkrip-nilai.get');
+            });
+
+            Route::prefix('pengajuan-cuti')->group(function(){
+                Route::get('/', [App\Http\Controllers\Bak\PengajuanCutiController::class, 'index'])->name('bak.pengajuan-cuti');
+            });
+        });
+    });
+
+
     Route::group(['middleware' => ['role:mahasiswa']], function() {
         Route::prefix('mahasiswa')->group(function () {
             Route::get('/dashboard', [App\Http\Controllers\Mahasiswa\Dashboard\DashboardController::class, 'index'])->name('mahasiswa.dashboard');
@@ -86,7 +102,7 @@ Route::group(['middleware' => ['auth']], function() {
                         Route::post('/{aktivitas}/store', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'store'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.store');
                     });
             });
-           
+
             // Route::get('/nilai-suliet', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.nilai-suliet');
             Route::get('/kegiatan-akademik', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'akademik'])->name('mahasiswa.akademik');
             Route::get('/kegiatan-seminar', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'seminar'])->name('mahasiswa.seminar');
@@ -265,7 +281,7 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('prodi.data-akademik.transkrip-mahasiswa');
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
 
-                
+
                 Route::get('/khs', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'khs'])->name('prodi.data-akademik.khs');
                 Route::get('', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'krs'])->name('prodi.data-akademik.krs');
                 Route::get('/sidang-mahasiswa', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'sidang_mahasiswa'])->name('prodi.data-akademik.sidang-mahasiswa');

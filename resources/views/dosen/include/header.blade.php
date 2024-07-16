@@ -11,7 +11,7 @@
             <!-- logo-->
             <div class="logo-lg">
                 <span class="light-logo"><img src="{{asset('images/logo-simak-unsri.png')}}" alt="logo"></span>
-                <span class="dark-logo"><img src="{{asset('images/logo-simak-unsri.png')}}"" alt="logo"></span>
+                <span class="dark-logo"><img src="{{asset('images/logo-simak-unsri.png')}}" alt="logo"></span>
             </div>
         </a>
     </div>

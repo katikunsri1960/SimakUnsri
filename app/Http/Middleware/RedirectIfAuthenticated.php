@@ -33,7 +33,7 @@ class RedirectIfAuthenticated
                 } elseif (auth()->user()->role === 'mahasiswa') {
                     return redirect(RouteServiceProvider::MAHASISWA);
                 }elseif (auth()->user()->role === 'bak') {
-                    return redirect(RouteServiceProvider::BAK);
+                    return redirect(RouteServiceProvider::BAAK);
                 }
 
             }
