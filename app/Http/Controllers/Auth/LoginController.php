@@ -54,21 +54,25 @@ class LoginController extends Controller
             'password' => 'required',
         ]);
 
-        if (auth()->attempt(['username' => $input['username'], 'password' => $input['password']])) {
-            if (auth()->user()->role == User::ADMINISTRATOR) {
-                return redirect()->route('admin.dashboard-admin');
-            } else if (auth()->user()->role == User::ADMIN_UNIVERSITAS) {
-                return redirect()->route('univ');
-            } else if(auth()->user()->role == User::ADMIN_FAKULTAS){
-                return redirect()->route('admin-fakultas.dashboard-admin-fakultas');
-            } else if(auth()->user()->role == User::ADMIN_PRODI){
-                return redirect()->route('prodi');
-            }else if(auth()->user()->role == User::DOSEN){
-                return redirect()->route('dosen');
-            }else if(auth()->user()->role == User::MAHASISWA){
-                return redirect()->route('mahasiswa.dashboard');
-            }
+        $roleToRouteMap = [
+            User::ADMINISTRATOR => 'admin.dashboard-admin',
+            User::ADMIN_UNIVERSITAS => 'univ',
+            User::ADMIN_FAKULTAS => 'admin-fakultas.dashboard-admin-fakultas',
+            User::ADMIN_PRODI => 'prodi',
+            User::DOSEN => 'dosen',
+            User::MAHASISWA => 'mahasiswa.dashboard',
+            User::BAAK => 'bak',
+        ];
 
+        if (auth()->attempt(['username' => $input['username'], 'password' => $input['password']])) {
+            $userRole = auth()->user()->role;
+
+            // Step 2: Use the user's role to look up the redirect route
+            if (array_key_exists($userRole, $roleToRouteMap)) {
+                return redirect()->route($roleToRouteMap[$userRole]);
+            } else {
+                return redirect()->route('login')->with('error', 'Username or password is incorrect');
+            }
         } else {
             return redirect()->route('login')->with('error', 'Username or password is incorrect');
         }

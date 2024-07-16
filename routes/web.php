@@ -29,7 +29,6 @@ Route::group(['middleware' => ['auth']], function() {
             Route::get('/', [App\Http\Controllers\Bak\DashboardController::class, 'index'])->name('bak');
             Route::prefix('transkrip-nilai')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\TranskripController::class, 'index'])->name('bak.transkrip-nilai');
-                Route::get('/get')
             });
         });
     });
