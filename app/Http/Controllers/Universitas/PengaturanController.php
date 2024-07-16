@@ -7,6 +7,7 @@ use App\Models\Referensi\PeriodePerkuliahan;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Fakultas;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SkalaNilai;
@@ -181,6 +182,16 @@ class PengaturanController extends Controller
 
     }
 
+    public function get_mahasiswa(Request $request)
+    {
+        $db = new RiwayatPendidikan();
+
+        $data = $db->where('nim', 'like', '%'.$request->q.'%')
+                    ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')->get();
+
+        return response()->json($data);
+    }
+
     public function get_fakultas(Request $request)
     {
         $db = new Fakultas();
@@ -238,6 +249,34 @@ class PengaturanController extends Controller
         unset($data['id_dosen']);
 
         User::create($data);
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
+
+    public function akun_mahasiswa_create(Request $request)
+    {
+        $data = $request->validate([
+            'fk_id' => 'required',
+            'password' => 'required|confirmed',
+        ]);
+
+        $db = new RiwayatPendidikan();
+        $mhs = $db->where('id_registrasi_mahasiswa', $data['fk_id'])->first();
+
+        $data['password'] = bcrypt($data['password']);
+        $data['name'] = $mhs->nama_mahasiswa;
+        $data['username'] = $mhs->nim;
+        $data['email'] = $mhs->nim."@student.unsri.ac.id";
+        $data['role'] = 'mahasiswa';
+        
+        try {
+            DB::beginTransaction();
+            User::create($data);
+            DB::commit();
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data gagal disimpan. '. $th->getMessage());
+        }
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }

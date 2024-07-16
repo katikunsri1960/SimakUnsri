@@ -438,6 +438,9 @@ Route::group(['middleware' => ['auth']], function() {
 
                     Route::get('/get-fakultas', [App\Http\Controllers\Universitas\PengaturanController::class, 'get_fakultas'])->name('univ.pengaturan.akun.get-fakultas');
                     Route::post('/fakultas-store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_fakultas_create'])->name('univ.pengaturan.akun.fakultas-store');
+
+                    Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\PengaturanController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
+                    Route::post('/mahasiswa-store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_mahasiswa_create'])->name('univ.pengaturan.akun.mahasiswa-store');
                 });
             });
         });
