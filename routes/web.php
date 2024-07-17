@@ -21,6 +21,7 @@ Route::get('/', function () {
 Route::get('/akun-mahasiswa', [App\Http\Controllers\Auth\CreateAccountController::class, 'createAccountMahasiswa'])->name('create-account-mahasiswa');
 Route::get('/checkNim/{nim}', [App\Http\Controllers\Auth\CreateAccountController::class, 'checkNim'])->name('check-nim');
 Route::post('/store-akun', [App\Http\Controllers\Auth\CreateAccountController::class, 'storeAkun'])->name('store-akun');
+Route::get('/test-nusoap/{nim}/{tak_pembayaran}', [App\Http\Controllers\Auth\CreateAccountController::class, 'testNusoap'])->name('test-nusoap');
 Auth::routes([
     'register' => false
 ]);

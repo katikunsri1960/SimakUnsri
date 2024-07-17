@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use App\Libraries\nusoap;
 
 class CreateAccountController extends Controller
 {
@@ -28,6 +29,23 @@ class CreateAccountController extends Controller
                 'message' => 'NIM tidak ditemukan'
             ]);
         }
+
+    }
+
+    public function testNusoap(string $nim, string $tak_pembayaran)
+    {
+        $url = "http://103.241.4.52/services/host2host.php";
+        $tak_pembayaran = "20241";
+        require_once app_path('Libraries/nusoap.php');
+        $client = new \nusoap_client($url, true);
+        $param = array(
+            'nim'			=>	$nim,
+            'kode'			=>	$tak_pembayaran
+         );
+        $client->soap_defencoding = 'UTF-8';
+        $response = $client->call('CheckPembayaran', $param);
+        dd($response);
+        return response()->json($response);
     }
 
     public function storeAkun(Request $request)
