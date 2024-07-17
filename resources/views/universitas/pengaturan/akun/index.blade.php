@@ -21,6 +21,8 @@ Pengaturan Akun
     </div>
 </div>
 @include('swal')
+@include('universitas.pengaturan.akun.create-fakultas')
+@include('universitas.pengaturan.akun.create-mahasiswa')
 @include('universitas.pengaturan.akun.create-prodi')
 @include('universitas.pengaturan.akun.create-dosen')
 <section class="content">
@@ -29,12 +31,17 @@ Pengaturan Akun
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
-
+                        <button class="btn btn-warning waves-effect waves-light" type="button" data-bs-toggle="modal"
+                        data-bs-target="#createFakultas"><i class="fa fa-plus"></i> Tambah Akun Fakultas</button>
+                        <span class="divider-line mx-1"></span>
                         <button class="btn btn-primary waves-effect waves-light" type="button" data-bs-toggle="modal"
                             data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Akun Prodi</button>
                         <span class="divider-line mx-1"></span>
                         <button class="btn btn-success waves-effect waves-light" type="button" data-bs-toggle="modal"
                         data-bs-target="#createDosen"><i class="fa fa-plus"></i> Tambah Akun Dosen</button>
+                        <span class="divider-line mx-1"></span>
+                        <button class="btn btn-secondary waves-effect waves-light" type="button" data-bs-toggle="modal"
+                        data-bs-target="#createMahasiswa"><i class="fa fa-plus"></i> Tambah Akun Mahasiswa</button>
                         {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i
                                 class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
                     </div>
@@ -46,6 +53,7 @@ Pengaturan Akun
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Role</th>
+                                    <th class="text-center align-middle">Username</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">ACT</th>
                                 </tr>
@@ -55,6 +63,7 @@ Pengaturan Akun
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$user->role}}</td>
+                                    <td class="text-start align-middle">{{$user->username}}</td>
                                     <td class="text-start align-middle">{{$user->name}}</td>
                                     <td class="text-center align-middle">
                                         {{-- <a href="{{route('univ.pengaturan.akun.edit', $user->id)}}"
@@ -97,6 +106,64 @@ Pengaturan Akun
             dropdownParent: $('#createModal')
         });
 
+        $("#fakultas_fk_id").select2({
+            placeholder : '-- Pilih Fakultas --',
+            dropdownParent: $('#createFakultas'),
+            width: '100%',
+            minimumInputLength: 3,
+            ajax: {
+                url: "{{route('univ.pengaturan.akun.get-fakultas')}}",
+                type: "GET",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // search term
+                    };
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.nama_fakultas,
+                                id: item.id
+                            }
+                        })
+                    };
+                },
+            }
+        });
+
+        $("#mahasiswa_fk_id").select2({
+            placeholder : '-- Masukan NIM / Nama Mahasiswa --',
+            dropdownParent: $('#createMahasiswa'),
+            width: '100%',
+            minimumInputLength: 3,
+            ajax: {
+                url: "{{route('univ.pengaturan.akun.get-mahasiswa')}}",
+                type: "GET",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // search term
+                    };
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: "("+item.nim+") "+item.nama_mahasiswa,
+                                id: item.id_registrasi_mahasiswa
+                            }
+                        })
+                    };
+                },
+            }
+        });
+
         $("#id_dosen_create").select2({
             placeholder : '-- Pilih Nama Dosen --',
             dropdownParent: $('#createDosen'),
@@ -113,7 +180,6 @@ Pengaturan Akun
                     };
                 },
                 processResults: function (data) {
-                    console.log(data);
                     return {
                         results: $.map(data, function (item) {
                             return {
@@ -127,7 +193,7 @@ Pengaturan Akun
         });
 
         confirmSubmit('dosen-refresh');
-
+        confirmSubmit('createFakultasForm');
         // sweet alert createProdiForm
         $('#createProdiForm').submit(function(e){
             e.preventDefault();
