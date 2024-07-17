@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
@@ -48,6 +49,17 @@ class LoginController extends Controller
     public function login(Request $req)
     {
         $input = $req->all();
+        $nim = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '20'];
+        $username = $input['username'];
+        // check left 2 digit of username
+        $left2digit = substr($username, 0, 2);
+        if (in_array($left2digit, $nim)) {
+            $user = RiwayatPendidikan::where('nim', $username)->first();
+            $akun = User::where('username', $username)->first();
+            if ($user && !$akun) {
+                return redirect()->route('create-account-mahasiswa');
+            }
+        }
 
         $this->validate($req, [
             'username' => 'required|exists:users,username',

@@ -5,7 +5,6 @@ Login Page
 @section('content')
 <div class="container h-p100">
     <div class="row align-items-center justify-content-md-center h-p100">
-
         <div class="col-12">
             <div class="row justify-content-center g-0">
                 <div class="col-lg-5 col-md-12 col-sm-12">
@@ -40,7 +39,7 @@ Login Page
                                 <div class="form-group">
                                     <div class="input-group mb-3">
                                         <span class="input-group-text bg-transparent"><i class="ti-user"></i></span>
-                                        <input type="text" class="form-control ps-15 bg-transparent" placeholder="Username" name="username" value="{{old('username')}}">
+                                        <input type="text" class="form-control ps-15 bg-transparent" placeholder="Username/NIM mahasiswa" name="username" value="{{old('username')}}">
                                     </div>
                                     @error('username')
                                     <span class="invalid-feedback" role="alert">
