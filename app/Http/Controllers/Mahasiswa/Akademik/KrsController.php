@@ -86,6 +86,7 @@ class KrsController extends Controller
                             DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
                         )
                         ->where('id_registrasi_mahasiswa', $id_reg)
+                        ->whereNotIn('nilai_huruf', ['F', ''])
                         ->groupBy('id_registrasi_mahasiswa')
                         ->first();
                         // dd($transkrip);
