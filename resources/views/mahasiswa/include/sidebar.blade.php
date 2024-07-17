@@ -122,15 +122,6 @@
                                             class="path1"></span><span class="path2"></span></i>Seminar</a>
                             </li>
                         </ul>
-                    </li>
-
-                    <li class="header">LAIN-LAIN</li>
-                    <li class="{{request()->routeIs('mahasiswa.pengajuan-cuti') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.pengajuan-cuti')}}">
-                            <i class="fa fa-calendar-times-o"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Pengajuan Cuti</span>
-                        </a>
                     </li> --}}
 
                     <li class="header">Bimbingan</li>
@@ -144,6 +135,15 @@
                         <a href="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Tugas Akhir</span>
+                        </a>
+                    </li>
+
+                    <li class="header">LAIN-LAIN</li>
+                    <li class="{{request()->routeIs('mahasiswa.pengajuan-cuti.index') | request()->routeIs('mahasiswa.pengajuan-cuti.tambah') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.pengajuan-cuti.index')}}">
+                            <i class="fa fa-calendar-times-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Pengajuan Cuti</span>
                         </a>
                     </li>
 

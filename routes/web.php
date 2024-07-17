@@ -102,7 +102,6 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/prestasi-non-pendanaan/store', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'store_prestasi_mahasiswa_non_pendanaan'])->name('mahasiswa.prestasi.prestasi-non-pendanaan.store');
             });
 
-
             Route::prefix('bimbingan-tugas-akhir')->group(function () {
                 Route::get('/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'index'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir');
                     Route::prefix('asistensi')->group(function(){
@@ -110,10 +109,17 @@ Route::group(['middleware' => ['auth']], function() {
                     });
             });
 
+            //Route for prestasi mahasiswa
+            Route::prefix('pengajuan-cuti')->group(function () {
+                Route::get('/', [App\Http\Controllers\Mahasiswa\Cuti\CutiController::class, 'index'])->name('mahasiswa.pengajuan-cuti.index');
+                Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Cuti\CutiController::class, 'tambah'])->name('mahasiswa.pengajuan-cuti.tambah');
+                Route::post('/store', [App\Http\Controllers\Mahasiswa\Cuti\CutiController::class, 'store'])->name('mahasiswa.pengajuan-cuti.store');
+            });
+
             // Route::get('/nilai-suliet', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.nilai-suliet');
             Route::get('/kegiatan-akademik', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'akademik'])->name('mahasiswa.akademik');
             Route::get('/kegiatan-seminar', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'seminar'])->name('mahasiswa.seminar');
-            Route::get('/pengajuan-cuti', [App\Http\Controllers\Mahasiswa\CutiController::class, 'index'])->name('mahasiswa.pengajuan-cuti');
+            // Route::get('/pengajuan-cuti', [App\Http\Controllers\Mahasiswa\CutiController::class, 'index'])->name('mahasiswa.pengajuan-cuti');
 
             //Route Bantuan
             Route::prefix('bantuan')->group(function () {
