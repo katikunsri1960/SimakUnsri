@@ -7,7 +7,6 @@
                         $today = \Carbon\Carbon::now();
                         $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                     @endphp
-
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
                         @if($data_status_mahasiswa == "A" || $data_status_mahasiswa == "M" )
                             <div class="row mb-20">
@@ -245,13 +244,30 @@
                                             <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
                                                 <div class="box box-body bg-warning-light">
                                                     <div class="row" style="align-items: center;">
-                                                        <div class="col-lg-1 text-right" style="text-align-last: end;">
+                                                        <div class="col-lg-2 text-center" style="text-align-last: center; padding-bottom:20px">
                                                             <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
                                                         </div>
                                                         <div class="col-lg-10 text-left text-danger">
                                                             <label>
                                                                 Anda tidak dapat melakukan pengisian KRS!
-                                                            </label>
+                                                            </label><br>
+                                                            @if($tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti==NULL)
+                                                                <label>
+                                                                    Segera Lakukan Pembayaran UKT Sebelum Periode Pembayaran Berakhir!
+                                                                </label>
+                                                            @elseif($tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti!=NULL)
+                                                                <label>
+                                                                    Anda dalam Masa <strong>Cuti Kuliah</strong> / <strong>STOP OUT</strong>
+                                                                </label>
+                                                            @elseif($tagihan->status_pembayaran==NULL && $today>$deadline && $cuti==NULL)
+                                                                <label>
+                                                                    Anda Dinyatakan <strong>DROP OUT</strong> karena tidak melakukan pembayaran dan tidak mengajukan <strong>STOP OUT</strong>
+                                                                </label>
+                                                            @elseif($tagihan->status_pembayaran==NULL && $today>$deadline)
+                                                                 <label>
+                                                                    Segera Ajukan <strong>Cuti Kuliah</strong> / Stop Out Sebelum Periode Pengajuan Berakhir!
+                                                                 </label>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>

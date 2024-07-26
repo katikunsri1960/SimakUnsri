@@ -19,20 +19,25 @@ class BimbinganController extends Controller
         $id_reg = auth()->user()->fk_id;
         $id_semester = SemesterAktif::first()->id_semester;
 
-        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas', 'jenis_aktivitas_mahasiswa','bimbing_mahasiswa' )
-                    ->whereHas('anggota_aktivitas', function($q) use($id_reg){
-                        $q->where('id_registrasi_mahasiswa', $id_reg);
-                    })
-                    ->whereHas('bimbing_mahasiswa', function($q) {
-                        $q->where('approved', '1');
-                    })
-                    ->whereIn('id_jenis_aktivitas', ['2', '3', '4', '22'])
-                    ->where('id_semester', $id_semester)
-                    ->first();
-        
-        // if (!$aktivitas) {
-        //     return response()->json(['error' => 'Aktivitas Tidak Ditemukan'], 404);
-        // }
+        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas', 'jenis_aktivitas_mahasiswa', 'bimbing_mahasiswa')
+            ->whereHas('anggota_aktivitas', function($q) use($id_reg) {
+                $q->where('id_registrasi_mahasiswa', $id_reg);
+            })
+            ->whereHas('bimbing_mahasiswa', function($q) {
+                $q->where('approved', '1');
+            })
+            ->whereIn('id_jenis_aktivitas', ['2', '3', '4', '22'])
+            ->where('id_semester', $id_semester)
+            ->first();
+
+        if (!$aktivitas) {
+            return view('mahasiswa.bimbingan.tugas-akhir.index', [
+                'aktivitas' => null,
+                'data' => collect(),
+                'dosen_pembimbing' => collect(),
+                'showAlert' => true // Flag untuk menampilkan SweetAlert
+            ]);
+        }
 
         $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->orderBy('tanggal', 'ASC')->get();
         $dosen_pembimbing = $aktivitas->load(['bimbing_mahasiswa']);
@@ -41,8 +46,10 @@ class BimbinganController extends Controller
             'data' => $data,
             'aktivitas' => $aktivitas,
             'dosen_pembimbing' => $dosen_pembimbing,
+            'showAlert' => false // Flag untuk tidak menampilkan SweetAlert
         ]);
     }
+
 
 
     public function store(AktivitasMahasiswa $aktivitas, Request $request)

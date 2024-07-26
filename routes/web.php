@@ -53,6 +53,10 @@ Route::group(['middleware' => ['auth']], function() {
         Route::prefix('mahasiswa')->group(function () {
             Route::get('/dashboard', [App\Http\Controllers\Mahasiswa\Dashboard\DashboardController::class, 'index'])->name('mahasiswa.dashboard');
             Route::get('/biodata', [App\Http\Controllers\Mahasiswa\Biodata\BiodataController::class, 'index_rev'])->name('mahasiswa.biodata');
+            Route::prefix('ukt')->group(function(){
+                Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\BiayaKuliahController::class, 'index'])->name('mahasiswa.biaya-kuliah');
+                // Route::post('/store/{kelas}', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'kuisioner_store'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner.store');
+            });
 
             Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'index'])->name('mahasiswa.krs');
             // Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'generateAKM'])->name('mahasiswa.krs');
