@@ -29,7 +29,7 @@
                     </li>
 
                     <li class="header">PERKULIAHAN</li>
-                    <li class="{{request()->routeIs('mahasiswa.krs') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.krs')}}">
                             <i class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>

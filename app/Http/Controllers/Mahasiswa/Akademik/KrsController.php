@@ -33,6 +33,14 @@ class KrsController extends Controller
 {
     public function index(Request $request)
     {
+<<<<<<< HEAD
+        return view('mahasiswa.perkuliahan.ksm.index');
+    }
+
+    public function view(Request $request)
+    {
+=======
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
         // DATA BAHAN
         if ($request->has('semester') && $request->semester != '') {
             $semester_select = $request->semester;
@@ -71,12 +79,21 @@ class KrsController extends Controller
 
 
         // Mengambil status mahasiswa untuk semester aktif
+<<<<<<< HEAD
+        $status_mahasiswa = $semester->where('id_semester', $semester_select)
+                    ->pluck('id_status_mahasiswa')
+                    ->first();
+
+        // Menentukan status mahasiswa berdasarkan hasil query
+        $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
+=======
         // $status_mahasiswa = $semester->where('id_semester', $semester_select)
         //             ->pluck('id_status_mahasiswa')
         //             ->first();
 
         // // Menentukan status mahasiswa berdasarkan hasil query
         // $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
 
         // Menghitung jumlah semester, mengabaikan semester pendek
         $semester_ke = $semester->filter(function($item) {
@@ -145,7 +162,11 @@ class KrsController extends Controller
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
+<<<<<<< HEAD
+        return view('mahasiswa.perkuliahan.ksm.mata-kuliah.index',[
+=======
         return view('mahasiswa.perkuliahan.ksm.index',[
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
             'formatDosenPengajar' => function($dosenPengajar) {
                 return $this->formatDosenPengajar($dosenPengajar);
             }], compact(
@@ -160,8 +181,13 @@ class KrsController extends Controller
             'sks_max', 
             'semester',
             'total_sks',
+<<<<<<< HEAD
+            'status_mahasiswa',
+            'data_status_mahasiswa',
+=======
             // 'status_mahasiswa',
             // 'data_status_mahasiswa',
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
             'semester_ke',
             'fakultas',
             'krs_akt',

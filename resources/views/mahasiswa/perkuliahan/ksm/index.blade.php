@@ -30,13 +30,21 @@ Kartu Rencana Studi
         <div class="box ribbon-box">
           <div class="ribbon-two ribbon-two-primary"><span>KSM</span></div>
           <div class="box-header no-border p-0">				
+<<<<<<< HEAD
+            <a href="{{route('mahasiswa.krs.index')}}">
+=======
             <a href="#">
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
               <img class="img-fluid" src="{{asset('images/images/avatar/ksm_regular.png')}}" alt="">
             </a>
           </div>
           <div class="box-body">
               <div class="text-center">
+<<<<<<< HEAD
+                <h3 class="my-10"><a href="{{route('mahasiswa.krs.index')}}">Kartu Studi Mahasiswa</a></h3>
+=======
                 <h3 class="my-10"><a href="#">Kartu Studi Mahasiswa</a></h3>
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
                 {{-- <h6 class="user-info mt-0 mb-10 text-fade">Designer</h6> --}}
                 <p class="text-fade w-p85 mx-auto">KSM Regular, KSM Kampus Merdeka, Aktivitas Regular </p>
               </div>
@@ -47,13 +55,21 @@ Kartu Rencana Studi
         <div class="box ribbon-box">
           <div class="ribbon-two ribbon-two-danger"><span>Magang</span></div>
           <div class="box-header no-border p-0">				
+<<<<<<< HEAD
+            <a href="{{route('mahasiswa.aktivitas.magang')}}">
+=======
             <a href="#">
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
               <img class="img-fluid" src="{{asset('images/images/avatar/magang.png')}}" alt="">
             </a>
           </div>
           <div class="box-body">
               <div class="text-center">
+<<<<<<< HEAD
+                <h3 class="my-10"><a href="{{route('mahasiswa.aktivitas.magang')}}">Aktivitas Magang</a></h3>
+=======
                 <h3 class="my-10"><a href="#">Aktivitas Magang</a></h3>
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
                 {{-- <h6 class="user-info mt-0 mb-10 text-fade">Full Stack Developer</h6> --}}
                 <p class="text-fade w-p85 mx-auto">Aktivitas Magang Kampus Merdeka</p>
               </div>
@@ -63,6 +79,8 @@ Kartu Rencana Studi
     </div>
 </section>
 @endsection
+<<<<<<< HEAD
+=======
 @push('css')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 @endpush
@@ -599,3 +617,4 @@ Kartu Rencana Studi
 
 </script>
 @endpush
+>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d
