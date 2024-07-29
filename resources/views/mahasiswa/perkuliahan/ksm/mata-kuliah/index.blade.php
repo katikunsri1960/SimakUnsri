@@ -13,7 +13,7 @@ Kartu Rencana Studi
                         <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Kartu Rencana Studi Mahasiswa</h2>
+                            <h2>Kartu Studi Mahasiswa</h2>
                             <p class="text-dark align-middle mb-0 fs-16">
                                 Universitas Sriwijaya
                             </p>
@@ -111,13 +111,8 @@ Kartu Rencana Studi
 
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
-<<<<<<<< HEAD:resources/views/mahasiswa/perkuliahan/ksm/mata-kuliah/index.blade.php
                     @include('mahasiswa.perkuliahan.ksm.mata-kuliah.krs')
                     @include('mahasiswa.perkuliahan.ksm.mata-kuliah.data-kelas-kuliah')
-========
-                    {{-- @include('mahasiswa.krs.include.krs')
-                    @include('mahasiswa.krs.include.data-kelas-kuliah') --}}
->>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d:resources/views/mahasiswa/perkuliahan/ksm/index-bu.blade.php
                 </div>
 				<!-- /.box-body -->
             </div>
