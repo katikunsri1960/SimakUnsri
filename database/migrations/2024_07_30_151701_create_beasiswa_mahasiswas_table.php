@@ -18,6 +18,9 @@ return new class extends Migration
             $table->string('nim');
             $table->string('nama_mahasiswa');
             $table->string('id_jenis_beasiswa');
+            $table->date('tanggal_mulai_beasiswa')->default('1970-01-01');
+            $table->date('tanggal_akhir_beasiswa')->default('1970-01-01');
+            $table->string('status_beasiswa');
             $table->timestamps(); 
         });
     }
