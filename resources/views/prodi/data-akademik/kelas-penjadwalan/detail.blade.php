@@ -41,7 +41,7 @@ Kelas Penjadwalan
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-hover margin-top-10 w-p100">
+                        <table id="data" class="table table-hover margin-top-10 w-p100" style="font-size: 12px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
@@ -76,7 +76,34 @@ Kelas Penjadwalan
                                             </ul>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <a type="button" class="btn btn-rounded btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar', ['id_matkul' => $d->id_matkul, 'nama_kelas_kuliah' => $d->nama_kelas_kuliah])}}" title="Manajemen Dosen Kelas"><i class="fa fa-user"></i></a>
+
+                                            @if ($d->dosen_pengajar->count() > 0 && $d->feeder == 0)
+                                            <form action="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form px-3 my-3" data-id="{{$d->id}}" id="deleteForm{{$d->id}}">
+                                                @csrf
+                                                @method('delete')
+                                                <div class="row">
+                                                <button type="submit" class="btn btn-sm btn-rounded btn-warning waves-effect waves-light"><i class="fa fa-users"></i> Hapus Dosen</button>
+                                                </div>
+                                            </form>
+                                            @else
+                                            <div class="row my-3 px-3">
+                                            <a type="button" class="btn btn-sm btn-rounded btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar', ['id_matkul' => $d->id_matkul, 'nama_kelas_kuliah' => $d->nama_kelas_kuliah])}}" title="Manajemen Dosen Kelas"><i class="fa fa-user"></i> Tambah Pengajar</a>
+                                            </div>
+                                            @endif
+                                            @if ($d->feeder == 0)
+                                            {{-- <div class="row my-3 px-3">
+                                                <a href="{{route('prodi.data-akademik.kelas-penjadwalan.tambah',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Edit Kelas</a>
+                                            </div> --}}
+
+                                            <form action="{{route('prodi.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
+                                                @csrf
+                                                @method('delete')
+                                                <div class="row">
+                                                <button type="submit" class="btn btn-sm btn-rounded btn-danger waves-effect waves-light"><i class="fa fa-trash"></i> Hapus Kelas</button>
+                                                </div>
+                                            </form>
+                                            @endif
+
                                         </td>
                                     </tr>
                                 @endforeach
@@ -97,6 +124,25 @@ Kelas Penjadwalan
         "use strict";
 
         $('#data').DataTable();
+
+        $('.delete-form').submit(function(e){
+            e.preventDefault();
+            var formId = $(this).data('id');
+            swal({
+                title: 'Apakah Anda Yakin??',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $(`#deleteForm${formId}`).unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
+        });
     });
 </script>
 @endpush

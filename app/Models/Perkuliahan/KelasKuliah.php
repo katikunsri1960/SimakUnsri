@@ -39,7 +39,7 @@ class KelasKuliah extends Model
 
     public function dosen_pengajar()
     {
-        return $this->hasMany(DosenPengajarKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
+        return $this->hasMany(DosenPengajarKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah')->orderBy('urutan', 'asc');
     }
 
     public function peserta_kelas()

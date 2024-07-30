@@ -23,7 +23,7 @@ Dashboard
             </div>
         </div>
     </div>
-    <div class="row">
+    {{-- <div class="row">
         <div class="col-12">
             <div class="box no-shadow mb-0 bg-transparent">
                 <div class="box-header no-border px-0">
@@ -171,8 +171,8 @@ Dashboard
                 </div>
             </div>
         </div>
-    </div>
-    <div class="row">
+    </div> --}}
+    {{-- <div class="row">
         <div class="col-xl-4 col-12">
             <div class="box">
                 <div class="box-body">
@@ -531,6 +531,6 @@ Dashboard
                 </div>
             </div>
         </div>
-    </div>
+  </div> --}}
 </section>
 @endsection

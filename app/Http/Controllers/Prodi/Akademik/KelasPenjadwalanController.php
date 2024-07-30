@@ -14,6 +14,7 @@ use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Semester;
 use App\Models\JenisEvaluasi;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\SemesterAktif;
 use Ramsey\Uuid\Uuid;
 
@@ -316,7 +317,7 @@ class KelasPenjadwalanController extends Controller
         // dd($id_matkul);
         $prodi_id = auth()->user()->fk_id;
         $evaluasi = JenisEvaluasi::get();
-        $kelas = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
+        $kelas = KelasKuliah::with(['dosen_pengajar'])->leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
                             ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
                             ->select('*','kelas_kuliahs.tanggal_mulai_efektif','kelas_kuliahs.tanggal_akhir_efektif')
@@ -324,7 +325,9 @@ class KelasPenjadwalanController extends Controller
                             ->where('kelas_kuliahs.nama_kelas_kuliah', $nama_kelas_kuliah)
                             ->where('kelas_kuliahs.id_prodi', $prodi_id)
                             ->get();
+
         // dd($kelas);
+        // $pengajar = DosenPengajarKelasKuliah::where('')
         return view('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar', ['evaluasi' => $evaluasi, 'kelas' => $kelas]);
     }
 
@@ -332,14 +335,15 @@ class KelasPenjadwalanController extends Controller
     {
         $search = $request->get('q');
         // $prodi_id = auth()->user()->fk_id;
-        $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        $tahun_ajaran = SemesterAktif::with('semester')->first();
+        // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
 
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran[0]['id_tahun_ajaran'])
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1)
                                 ->orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
                   ->orWhere('nama_program_studi', 'like', "%{$search}%")
-                  ->where('id_tahun_ajaran', $tahun_ajaran[0]['id_tahun_ajaran']);
+                  ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1);
         }
 
         $data = $query->get();
@@ -389,35 +393,96 @@ class KelasPenjadwalanController extends Controller
         for($i=0;$i<$jumlah_data_pertemuan;$i++){
             $rencana_pertemuan = $rencana_pertemuan + $request->rencana_minggu_pertemuan[$i];
         }
+
+        if ($rencana_pertemuan == 0) {
+            return redirect()->back()->with('error', 'Rencana Pertemuan tidak boleh 0');
+        }
         // dd($rencana_pertemuan);
+        try {
+            DB::beginTransaction();
 
-        //Get id dosen pengajar kelas kuliah
-        $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
+            $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
 
-        if($rencana_pertemuan > 0){
-             //Count jumlah dosen pengajar kelas kuliah
+            if($dosen_pengajar->count() == 0 || $dosen_pengajar->count() != count($request->dosen_kelas_kuliah)){
+                $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
+            }
+            //Count jumlah dosen pengajar kelas kuliah
             $jumlah_dosen=count($request->dosen_kelas_kuliah);
 
             for($i=0;$i<$jumlah_dosen;$i++){
                 //Generate id aktivitas mengajar
                 $id_aktivitas_mengajar = Uuid::uuid4()->toString();
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_kelas_kuliah[$i])->first();
+                if(!$dosen)
+                {
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_kelas_kuliah[$i])->first();
+                }
 
                 if(is_null($request->substansi_kuliah)){
                     //Store data to table tanpa substansi kuliah
-                    DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
 
                 }else{
                     //Get sks substansi total
                     $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
 
                     //Store data to table dengan substansi kuliah
-                    DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen_pengajar[$i]['id_registrasi_dosen'], 'id_dosen'=> $dosen_pengajar[$i]['id_dosen'], 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
                 }
 
             }
+
+            DB::commit();
+
             return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Berhasil di Tambahkan');
-        }else{
-            return redirect()->back()->with('error', 'Total Rencana Minggu Pertemuan Dosen Tidak Berjumlah 16');
+
+
+            //
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+        }
+
+    }
+
+    public function dosen_pengajar_destroy($id_matkul, $id_kelas)
+    {
+        try {
+            DB::beginTransaction();
+
+            DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+
+            DB::commit();
+
+            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Pengajar Berhasil di Hapus!!');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Pengajar Gagal di Hapus. '. $th->getMessage());
+        }
+    }
+
+    public function kelas_penjadwalan_destroy($id_matkul, $id_kelas)
+    {
+        $peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->first();
+
+        if($peserta){
+            return redirect()->back()->with('error', 'Data Kelas tidak bisa dihapus karena sudah ada peserta');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+
+            KelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+
+
+            DB::commit();
+
+            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Kelas Berhasil di Hapus!!');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. '. $th->getMessage());
         }
     }
 }
