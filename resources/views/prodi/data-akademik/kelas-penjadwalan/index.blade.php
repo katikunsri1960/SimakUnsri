@@ -20,7 +20,7 @@ Kelas Penjadwalan
 
     </div>
 </div>
-
+@include('swal')
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -39,6 +39,7 @@ Kelas Penjadwalan
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">KURIKULUM</th>
                                     <th class="text-center align-middle">KODE MATA KULIAH</th>
                                     <th class="text-center align-middle">NAMA MATA KULIAH</th>
                                     <th class="text-center align-middle">JUMLAH KELAS</th>
@@ -53,6 +54,7 @@ Kelas Penjadwalan
                                 @foreach($data as $d)
                                     <tr>
                                         <td class="text-center align-middle">{{$row = $row + 1}}</td>
+                                        <td class="text-start align-middle">{{$d->kurikulum->nama_kurikulum}}</td>
                                         <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                         <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
                                         <td class="text-center align-middle">{{$d->jumlah_kelas_kuliah}}</td>

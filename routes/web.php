@@ -296,10 +296,15 @@ Route::group(['middleware' => ['auth']], function() {
                     // Route::get('/get-mata-kuliah', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'get_matkul'])->name('prodi.data-akademik.kelas-penjadwalan.get-matkul');
                     Route::get('/{id_matkul}/tambah', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'tambah_kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan.tambah');
                     Route::post('/{id_matkul}/store', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_store'])->name('prodi.data-akademik.kelas-penjadwalan.store');
+
+                    Route::delete('/{id_matkul}/{id_kelas}/delete', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_destroy'])->name('prodi.data-akademik.kelas-penjadwalan.delete');
+                    Route::get('/{id_matkul}/{nama_kelas_kuliah}/dosen-pengajar', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar');
+                    Route::delete('/{id_matkul}/{id_kelas}/dosen-pengajar/delete', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_destroy'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.delete');
+
                 });
 
                 //Dosen Pengajar Kelas Kuliah
-                Route::get('/kelas-penjadwalan/{id_matkul}/{nama_kelas_kuliah}/dosen-pengajar', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar');
+
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'get_dosen'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-dosen');
                 Route::get('/get-substansi-kuliah', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'get_substansi'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-substansi');
                 Route::post('/kelas-penjadwalan/{id_matkul}/{nama_kelas_kuliah}/dosen-pengajar/store', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_store'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.store');
