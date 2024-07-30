@@ -112,6 +112,7 @@ class KrsController extends Controller
         // dd($mk_regular);
 
     // TAGIHAN PEMBAYARAN
+        $beasiswa = '';
         $tagihan = DB::connection('keu_con')
             ->table('tagihan')
             ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
@@ -173,10 +174,10 @@ class KrsController extends Controller
             'krs_akt',
             'mk_akt',
             'total_sks_akt',
+            'beasiswa',
             'tagihan', 
             'cuti',
             'transkrip'
-            
         ));
     }
 
@@ -240,7 +241,6 @@ class KrsController extends Controller
                         ->groupBy('id_registrasi_mahasiswa')
                         ->first();
                         // dd($transkrip);
-
         if($status_bayar==1 && $akm_aktif->isEmpty()  && $status_cuti==0)
         {
             $peserta = AktivitasKuliahMahasiswa::create([
@@ -337,139 +337,6 @@ class KrsController extends Controller
         // return view('mahasiswa.krs.index', compact(
         //     'akm_aktif'
         // ));
-    }
-
-
-
-    public function index_1(Request $request)
-    {
-    // DATA BAHAN
-        if ($request->has('semester') && $request->semester != '') {
-            $semester_select = $request->semester;
-        } else {
-            $semester_select = SemesterAktif::first()->id_semester;
-        }
-        // dd($semester_select);
-
-        $id_reg = auth()->user()->fk_id;
-        
-        $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
-                    ->select('riwayat_pendidikans.*')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->first();
-
-        $semester_aktif = SemesterAktif::first();
-
-        $total_sks_akt = 0;
-        $total_sks_regular=0;
-        $total_sks_merdeka=0;
-
-        //DATA AKTIVITAS
-        $db = new MataKuliah();
-
-        $db_akt = new AktivitasMahasiswa();
-
-        // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
-
-
-        list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
-        // dd($mk_akt);
-
-        $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->orderBy('id_semester', 'DESC')
-                    ->get();
-
-
-        $akm = $semester;
-
-        // Mengambil status mahasiswa untuk semester aktif
-        $status_mahasiswa = $semester->where('id_semester', $semester_select)
-                    ->pluck('id_status_mahasiswa')
-                    ->first();
-
-        // Menentukan status mahasiswa berdasarkan hasil query
-        $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
-
-        // Menghitung jumlah semester, mengabaikan semester pendek
-        $semester_ke = $semester->filter(function($item) {
-            return substr($item->id_semester, -1) != '3';
-        })->count();
-
-        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester);
-
-        $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select, $data_akt_ids);
-
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select);
-
-
-
-    // DATA MK_MERDEKA
-        $fakultas=Fakultas::all();
-
-        // $selectedFakultasId = $request->input('fakultas_id');
-
-        // $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
-
-        // $mk_merdeka = $db->getMKMerdeka($prodi, $semester_select);
-        // dd($mk_merdeka);
-
-        // MATAKULIAH TANPA GANJIL GENAP
-        $mk_regular = $db->getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_select);
-        // dd($mk_regular);
-
-    // TAGIHAN PEMBAYARAN
-        $tagihan = DB::connection('keu_con')
-            ->table('tagihan')
-            ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-            ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
-            ->where('tagihan.kode_periode', $semester_aktif->id_semester)
-            ->select(
-                'tagihan.nama',
-                'tagihan.nomor_pembayaran',
-                'tagihan.total_nilai_tagihan',
-                'tagihan.kode_periode',
-                // 'tagihan.nama_periode',
-                'tagihan.waktu_berlaku',
-                'tagihan.waktu_berakhir',
-                'pembayaran.status_pembayaran'
-            )
-            ->first();
-            // dd($tagihan);
-
-            $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
-            // dd($cuti);
-
-    // TOTAL SELURUH SKS
-        $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
-        $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
-        $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
-
-        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
-
-        return view('mahasiswa.krs.index',[
-            'formatDosenPengajar' => function($dosenPengajar) {
-                return $this->formatDosenPengajar($dosenPengajar);
-            }], compact(
-            'riwayat_pendidikan',
-            'semester_aktif',
-            'krs_regular',
-            'krs_merdeka',
-            'total_sks_merdeka',
-            'total_sks_regular',
-            'akm', 'sks_max', 'semester',
-            'total_sks',
-            'status_mahasiswa',
-            'data_status_mahasiswa',
-            'semester_ke',
-            'fakultas',
-            // 'prodi',
-            'krs_akt',
-            'mk_akt',
-            'total_sks_akt',
-            'tagihan', 
-            'cuti',
-            'mk_regular', 'semester_select'
-        ));
     }
 
     public function pilih_prodi(Request $request)
@@ -669,8 +536,6 @@ class KrsController extends Controller
 
     public function krs_print(Request $request, $id_semester)
     {
-
-
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
@@ -770,7 +635,7 @@ class KrsController extends Controller
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-        $pdf = PDF::loadview('mahasiswa.krs.pdf', [
+        $pdf = PDF::loadview('mahasiswa.perkuliahan.ksm.mata-kuliah.pdf', [
             'today'=> $today,
             'deadline'=> $deadline,
             'data' => $data,

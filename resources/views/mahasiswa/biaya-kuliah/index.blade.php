@@ -55,7 +55,7 @@ Biaya Kuliah
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Mengambil data dari Blade
-        var statusBayar = @json($tagihan->status_pembayaran);
+        var statusBayar = @json($tagihan->pembayaran->status_pembayaran);
 
         // Mengecek apakah status bayar adalah NULL
         if (statusBayar === null) {

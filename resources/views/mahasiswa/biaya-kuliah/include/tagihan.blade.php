@@ -40,7 +40,7 @@
                                             <div class="box-body">
                                                 <div class="flex-grow-1">
                                                     <p class="mt-5 mb-5 text-fade fs-12">Batas Akhir Pembayaran</p>
-                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">{{$semester_tagihan->waktu_berakhir}}</h4>
+                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">{{$tagihan->waktu_berakhir}}</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -71,15 +71,15 @@
                                                         <tbody>
                                                             <tr>
                                                                 <td class="text-center">1</td>
-                                                                <td class="text-start">UKT {{$semester_tagihan->nama_semester}}</td>
-                                                                <td class="text-start">{{$semester_tagihan->nama_semester}}</td>
+                                                                <td class="text-start">UKT {{$tagihan->formatted_kode_periode }}</td>
+                                                                <td class="text-start">{{$tagihan->formatted_kode_periode}}</td>
                                                                 <!-- <td class="text-start">2023/2024</td> -->
                                                                 <td class="text-start">Rp  {{number_format($tagihan->total_nilai_tagihan, 2, ',', '.') }}</td>
                                                                 <td class="text-start">{{$tagihan->waktu_berakhir}}</td>
                                                                 <td class="text-start">
                                                                     <div>
-                                                                        <span class="badge badge-xl {{ $tagihan->status_pembayaran == NULL ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
-                                                                            {{ $tagihan->status_pembayaran == NULL ? 'Belum Bayar' : 'Lunas' }}
+                                                                        <span class="badge badge-xl {{ $tagihan->pembayaran->status_pembayaran == NULL ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
+                                                                            {{ $tagihan->pembayaran->status_pembayaran == NULL ? 'Belum Bayar' : 'Lunas' }}
                                                                         </span>
                                                                     </div>
                                                                 </td>

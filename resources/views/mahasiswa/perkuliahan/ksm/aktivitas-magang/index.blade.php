@@ -1,162 +1,102 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Dashboard
+Aktivitas Magang
 @endsection
 @section('content')
-<section class="content">
+<section class="content bg-white">
     <div class="row align-items-end">
-        <div class="col-xl-12 col-12">
-            <div class="box bg-primary-light pull-up">
-                <div class="box-body p-xl-0">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-lg-3"><img
-                                src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
-                        </div>
-                        <div class="col-12 col-lg-9">
-                            <h2>Kartu Studi Mahasiswa</h2>
-                            <p class="text-dark mb-0 fs-16">
-                                SIMAK Universitas Sriwijaya
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="col-12">
+			<div class="box pull-up">
+				<div class="box-body bg-img bg-primary-light">
+					<div class="d-lg-flex align-items-center justify-content-between">
+						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
+			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
+							<div class="ms-30">
+								<h2 class="mb-10">Aktivitas Magang Kampus Merdeka</h2>
+								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
+							</div>
+						</div>
+					<div>
+				</div>
+			</div>							
+		</div>
     </div>
-    @include('swal')
-    <div class="row mt-10">
-        <div class="col-lg-12 col-xl-12 mt-0">
-            <!-- Nav tabs -->
-            <ul class="nav nav-pills justify-content-left" role="tablist">
-                <li class="nav-item bg-secondary-light"> <a class="nav-link active" data-bs-toggle="tab" href="#khs"
-                        role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span
-                            class="hidden-xs-down ms-15">Aktivitas Magang Mahasiswa</span></a> </li>
-                {{-- <li class="nav-item bg-secondary-light"> <a class="nav-link" data-bs-toggle="tab"
-                        href="#transkrip-mahasiswa" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span>
-                        <span class="hidden-xs-down ms-15">Transkrip Mahasiswa</span></a> </li> --}}
-            </ul>
-            <div class="box">
-                <!-- Tab panes -->
-                <div class="tab-content tabcontent">
-                    <div class="tab-pane active" id="khs" role="tabpanel">
-                        <div class="col-xl-12 col-lg-12 col-12">
-                            <div class="bg-primary-light big-side-section mb-20 shadow-lg">
-                                <div class="box box-body mb-0 bg-white">
-                                    <div class="row mb-3 p-3">
-                                        <div class="col-12">
-                                            <div class="box no-shadow mb-0 bg-transparent">
-                                                <div class="box-header no-border px-0">
-                                                    <a type="button"
-                                                        href="{{route('mahasiswa.krs')}}"
-                                                        class="btn btn-warning btn-rounded waves-effect waves-light">
-                                                        <i class="fa-solid fa-arrow-left"></i>
-                                                    </a>
-                                                    <h3 class="box-title px-3">
-                                                        Aktivitas Magang Kampus Merdeka
-                                                    </h3>
-                                                    {{-- <h3 class="box-title px-3">
-                                                        {{empty($data_aktivitas[0]['nama_semester']) ? 'Data Tidak Ada'
-                                                        : $data_aktivitas[0]['nama_semester']}}</h3> --}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-4 col-md-6 col-12">
-                                            <div class="box bs-5 border-primary rounded mb-10 pull-up">
-                                                <div class="box-body">
-                                                    <div class="flex-grow-1">
-                                                        <p class="mt-5 mb-5 text-fade fs-12">SKS Semester</p>
-                                                        <h4 class="mt-5 mb-0" style="color:#0052cc">
-                                                            {{empty($data_aktivitas[0]['sks_semester']) ? 'Data Tidak
-                                                            Ada' : $data_aktivitas[0]['sks_semester']}}</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-4 col-md-6 col-12">
-                                            <div class="box bs-5 border-danger rounded mb-10 pull-up">
-                                                <div class="box-body">
-                                                    <div class="flex-grow-1">
-                                                        <p class="mt-5 mb-5 text-fade fs-12">IP Semester</p>
-                                                        <h4 class="mt-5 mb-0" style="color:#0052cc">
-                                                            {{empty($data_aktivitas[0]['ips']) ? 'Data Tidak Ada' :
-                                                            $data_aktivitas[0]['ips']}}</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-xl-4 col-md-6 col-12">
-                                            <div class="box bs-5 border-warning rounded mb-10 pull-up">
-                                                <div class="box-body">
-                                                    <div class="flex-grow-1">
-                                                        <p class="mt-5 mb-5 text-fade fs-12">IP Komulatif</p>
-                                                        <h4 class="mt-5 mb-0" style="color:#0052cc">
-                                                            {{empty($data_aktivitas[0]['ipk']) ? 'Data Tidak Ada' :
-                                                            $data_aktivitas[0]['ipk']}}</h4>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row p-3">
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-striped text-left">
-                                                <thead>
-                                                    <tr>
-                                                        <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                        <th class="text-center align-middle">Nama Mata Kuliah </th>
-                                                        <th class="text-center align-middle">Nilai Angka</th>
-                                                        <th class="text-center align-middle">Nilai Indeks</th>
-                                                        <th class="text-center align-middle">Nilai Huruf</th>
-                                                        <th class="text-center align-middle">Dosen Pengampu</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @foreach($krs_akt as $d)
-                                                    <tr>
-                                                        <td class="text-center align-middle">{{$d->kode_mata_kuliah}} {{$d->kuisoner_count}}
-                                                        </td>
-                                                        <td class="text-start align-middle">{{$d->nama_mata_kuliah}}
-                                                        </td>
-                                                        @if ($d->kelas_kuliah->kuisoner_count < $count_kuisoner)
-                                                        <td colspan="3" class="text-center align-middle bg-secondary">
-                                                            <div class="row px-3">
-                                                                <a href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner', $d->id_kelas_kuliah)}}"
-                                                                    class="btn btn-primary btn-rounded">
-                                                                    <i class="fa fa-comments"></i> Kuisioner</a>
-                                                            </div>
-                                                        </td>
-                                                        @else
-                                                        <td class="text-center align-middle">{{empty($d->nilai_angka) ?
-                                                            '-' : $d->nilai_angka}}</td>
-                                                        <td class="text-center align-middle">{{empty($d->nilai_indeks) ?
-                                                            '-' : $d->nilai_indeks}}</td>
-                                                        <td class="text-center align-middle">
-                                                            {{empty($d->nilai_huruf) ? '-' : $d->nilai_huruf}}</td>
-                                                        @endif
+    <div class="row">
+        <div class="col-xxl-12">
+            <div class="box box-body mb-0">
+                <div class="row">
+                    <div class="col-xl-6 col-lg-12">
+                        <h3 class="fw-500 text-dark mt-0">Daftar Aktivitas Magang Kampus Merdeka</h3>
+                    </div>                             
+                </div>
+                <div class="row mb-5">
+                    <div class="col-xl-12 col-lg-12 text-end">
+                        <div class="btn-group">
+                            <a class="btn btn-rounded bg-success-light " href="{{route('mahasiswa.perkuliahan.aktivitas-magang.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Aktivitas Magang</a>
+                        </div>   
+                    </div>                           
+                </div><br>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table id="data" class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Semester</th>
+                                    <th>Nama Instansi Magang</th>
+                                    <th>Lokasi Magang</th>
+                                    <th>Status</th>
 
-                                                        <td class="text-start align-middle w-300">
-                                                            <ul>
-                                                                @foreach($d->dosen_pengajar as $dd)
-                                                                <li>{{$dd->nama_dosen}}</li>
-                                                                @endforeach
-                                                            </ul>
-                                                        </td>
-                                                    </tr>
-                                                    @endforeach
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                                    
+                                    {{-- <th>Lokasi File</th> --}}
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($data as $d)
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>
+                                        <td class="text-start align-middle">{{$d->nama_instansi}}</td>
+                                        <td class="text-start align-middle">{{$d->lokasi}}</td>
+                                        <td class="text-center align-middle" style="width:10%">
+                                            @if($d->approved == 0)
+                                                <span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>
+                                            @elseif($d->approved == 1)
+                                                <span class="badge badge-xl badge-warning-light mb-5">Disetujui Fakultas</span>
+                                            @elseif($d->approved == 2)
+                                                <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
+                                            @endif
+                                            {{-- <div>
+                                                {!! $d->approved == 0 ? '' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
+                                            </div> --}}
+                                        </td>
+                                        {{-- <td>{{$d->file_pendukung}}</td> --}}
+
+                                    </tr>
+                                @endforeach
+                            </tbody>
+					  </table>
                     </div>
                 </div>
-                <!-- /.box-body -->
             </div>
-            <!-- /.box -->
         </div>
-        <!-- /.col -->
-    </div>
+    </div>			
 </section>
 @endsection
+@push('js')
+
+<script>
+      $(document).ready(function() {
+        $('#data').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            // "scrollCollapse": true,
+            // "scrollY": "550px",
+        });
+
+    });
+</script>
+
+@endpush
+

@@ -19,28 +19,30 @@
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center">No</th>
+                                                            <th class="text-center">Nama Tagihan</th>
                                                             <th class="text-center">Tanggal Bayar</th>
                                                             <th class="text-center">Jumlah Bayar</th>
                                                             <th class="text-center">Status Bayar</th>
-                                                            <th class="text-center">Kode Bank</th>
-                                                            <th class="text-center">Channel Bayar</th>
+                                                            {{-- <th class="text-center">Kode Bank</th>
+                                                            <th class="text-center">Channel Bayar</th> --}}
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($pembayaran as $p)
                                                         <tr>
-                                                            <td class="text-center align-middle">{{ $loop->iteration }}</td>
-                                                            <td class="text-start align-middle">{{ $p->waktu_transaksi }}</td>
-                                                            <td class="text-end align-middle">Rp. {{number_format($p->total_nilai_pembayaran, 2, ',', '.') }}</td>
+                                                            <td class="text-center align-middle" style="width:5%">{{ $loop->iteration }}</td>
+                                                            <td class="text-start align-middle">UKT {{ $p->formatted_kode_periode}}</td>
+                                                            <td class="text-start align-middle">{{ $p->pembayaran->waktu_transaksi }}</td>
+                                                            <td class="text-end align-middle">Rp. {{number_format($p->pembayaran->total_nilai_pembayaran, 2, ',', '.') }}</td>
                                                             <td class="text-center align-middle" style="width:10%">
                                                                 <div>
-                                                                    <span class="badge badge-xl {{ $p->status_pembayaran == 0 ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
-                                                                        {{ $p->status_pembayaran == 0 ? 'Belum Bayar' : 'Lunas' }}
+                                                                    <span class="badge badge-xl {{ $p->pembayaran->status_pembayaran == 0 ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
+                                                                        {{ $p->pembayaran->status_pembayaran == 0 ? 'Belum Bayar' : 'Lunas' }}
                                                                     </span>
                                                                 </div>
                                                             </td>
-                                                            <td class="text-center align-middle">{{ $p->kode_bank }}</td>
-                                                            <td class="text-center align-middle">{{ $p->kanal_bayar_bank }}</td>
+                                                            {{-- <td class="text-center align-middle">{{ $p->kode_bank }}</td>
+                                                            <td class="text-center align-middle">{{ $p->kanal_bayar_bank }}</td> --}}
                                                         </tr>
                                                         @endforeach
                                                     </tbody>

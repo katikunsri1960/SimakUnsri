@@ -77,7 +77,7 @@
                                 </div>
                             </div>
                         @elseif(!$today->greaterThan($deadline))
-                            @if($data_status_mahasiswa == "A" || $data_status_mahasiswa == "M")
+                            @if(!empty($beasiswa) || !empty($tagihan->status_pembayaran))
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">
@@ -145,7 +145,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if ($data_status_mahasiswa == "M" )
+                                {{-- @if ($data_status_mahasiswa == "M" ) --}}
                                     <div class="row mb-20">
                                         <div class="col-xxl-12">
                                             <div class="box box-body mb-0 bg-white">
@@ -196,7 +196,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                @endif
+                                {{-- @endif --}}
 
                                 {{-- DATA AKTIVITAS KULIAH --}}
                                 <div class="row mb-20">

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Mahasiswa\Dashboard;
 
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
+use App\Models\Connection\Tagihan;
 use Illuminate\Support\Facades\DB;
 use App\Models\Mahasiswa\Dashboard;
 use App\Http\Controllers\Controller;
+use App\Models\Connection\Registrasi;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
@@ -42,24 +44,12 @@ class DashboardController extends Controller
                 ->whereRaw("RIGHT(id_semester, 1) != 3")
                 ->count();
 
-        $tagihan = DB::connection('keu_con')
-                ->table('tagihan')
-                ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-                ->where('tagihan.nomor_pembayaran', $user->username)
-                ->where('tagihan.kode_periode', $semester_aktif->id_semester)
-                ->select(
-                    'tagihan.nama',
-                    'tagihan.nomor_pembayaran',
-                    'tagihan.total_nilai_tagihan',
-                    'tagihan.kode_periode',
-                    // 'tagihan.nama_periode',
-                    'tagihan.waktu_berlaku',
-                    'tagihan.waktu_berakhir',
-                    'pembayaran.status_pembayaran'
+        $registrasi = Registrasi::where('rm_nim', $user->username)
+                ->select('*'
                 )
                 ->first();
-                // dd($tagihan);
-
+                // dd($registrasi);
+        
         $transkrip = TranskripMahasiswa::select(
                 DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
                 DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
@@ -73,7 +63,7 @@ class DashboardController extends Controller
         return view('mahasiswa.dashboard', compact(
             'riwayat_pendidikan',
             'semester_aktif',
-            'semester_ke', 'smt', 'tagihan','transkrip'
+            'semester_ke', 'smt','transkrip'
         ));
     }
 }

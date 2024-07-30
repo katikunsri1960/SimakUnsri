@@ -47,7 +47,7 @@ Dashboard
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 col-12">
+        <div class="col-xl-4 col-md-6 col-12">
             <div class="box text-white bg-success pull-up bg-opacity-50">
                 <div class="box-header with-border">
                 <div class="d-flex align-items-center">
@@ -58,9 +58,9 @@ Dashboard
                 <div class="box-body">
                     <div class="flex-grow-1">
                         @if (!empty($transkrip->ipk))
-                            <h2 class="mb-5">{{$transkrip->ipk}}</h2>
+                            <h2 class="mt-5 mb-0">{{$transkrip->ipk}}</h2>
                         @else
-                            <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
+                            <h2 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h2>
                         @endif
                         
                         <p class="text-fade mb-0 fs-12 text-white">Indeks Prestasi Kumulatif</p>
@@ -68,7 +68,7 @@ Dashboard
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 col-12">
+        {{-- <div class="col-xl-3 col-md-6 col-12">
             <div class="box text-white bg-info pull-up">
                 <div class="box-header with-border">
                     <div class="d-flex align-items-center">
@@ -81,17 +81,17 @@ Dashboard
                         @if (!empty($tagihan->total_nilai_tagihan))
                             <h2 class="mb-5">Rp  {{number_format($tagihan->total_nilai_tagihan, 0, ',', '.') }}</h2>
                         @else
-                            <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
+                            <h2 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h2>
                         @endif
 
-                        <p class="text-fade mb-0 fs-12 {{$tagihan->status_pembayaran === NULL ? 'text-white' : 'text-danger'}}">
-                            {{$tagihan->status_pembayaran===NULL ? 'Belum Bayar' : 'Lunas'}}
+                        <p class="text-fade mb-0 fs-12 {{$tagihan->status_pembayaran === NULL ? 'text-danger' : 'text-white'}}">
+                            {{$tagihan->status_pembayaran===NULL ? 'Tagihan Belum Bayar' : 'Tagihan Belum Bayar'}}
                         </p>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="col-xl-3 col-md-6 col-12">
+        </div> --}}
+        <div class="col-xl-4 col-md-6 col-12">
             <div class="box text-white bg-danger pull-up">
                 <div class="box-header with-border">
                     <div class="d-flex align-items-center">
@@ -101,13 +101,13 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        <h2 class="mb-5 text-center">{{$semester_ke}}</h2>
+                        <h2 class="mt-5 mb-0 text-center">{{$semester_ke}}</h2>
                         <p class="text-fade mb-0 fs-12 text-white">Semester yang telah ditempuh</p>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xl-3 col-md-6 col-12">
+        <div class="col-xl-4 col-md-6 col-12">
             <div class="box text-white bg-warning pull-up">
                 <div class="box-header with-border">
                 <div class="d-flex align-items-center">
@@ -118,9 +118,9 @@ Dashboard
                 <div class="box-body">
                     <div class="flex-grow-1">
                         @if (!empty($transkrip->total_sks))
-                        <h2 class="mb-5">{{$transkrip->total_sks}} SKS</h2>
+                            <h2 class="mt-5 mb-0">{{$transkrip->total_sks}} SKS</h2>
                         @else
-                            <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
+                            <h2 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h2>
                         @endif
                         
                         <p class="text-fade mb-0 fs-12 text-white">Total SKS yang telah ditempuh</p>

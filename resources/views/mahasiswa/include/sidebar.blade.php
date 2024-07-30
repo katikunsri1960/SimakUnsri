@@ -29,13 +29,43 @@
                     </li>
 
                     <li class="header">PERKULIAHAN</li>
-                    <li class="{{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.*') ? 'active' : ''}}">
+                    <li class="treeview {{request()->routeIs('mahasiswa.krs.index.*') || request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index') ||
+                                        request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.tambah')
+                    ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-newspaper-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Kartu Rencana Studi</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('mahasiswa.krs.index') || request()->routeIs('mahasiswa.krs.index.*') ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.krs.index')}}">
+                                    <i class="fa fa-newspaper-o"><span class="path1"></span><span
+                                            class="path2"></span></i>
+                                    <span>Kartu Studi Mahasiswa</span>
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index') || request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index.*') ||
+                                        request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.tambah')
+                             ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.perkuliahan.aktivitas-magang.index')}}">
+                                    <i class="fa fa-newspaper-o"><span class="path1"></span><span
+                                            class="path2"></span></i>
+                                    <span>Aktivitas Magang</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    {{-- <li class="{{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.krs')}}">
                             <i class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Kartu Rencana Studi</span>
                         </a>
-                    </li>
+                    </li> --}}
                     {{-- <li class="{{request()->routeIs('mahasiswa.bahan-tugas') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.bahan-tugas')}}">
                             <i class="fa fa-tasks"><span class="path1"></span><span
