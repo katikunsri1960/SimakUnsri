@@ -30,14 +30,14 @@ Biaya Kuliah
                 <ul class="nav nav-pills justify-content-left" role="tablist">
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#tagihan" role="tab"><span><i class="fa fa-money"></i></span> <span class="hidden-xs-down ms-15">Tagihan</span></a> </li>
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#riwayat-pembayaran" role="tab"><span><i class="fa-solid fa-refresh"></i></span> <span class="hidden-xs-down ms-15">Riwayat Pembayaran</span></a> </li>
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#rekap-pembayaran" role="tab"><span><i class="fa-solid fa-tasks"></i></span> <span class="hidden-xs-down ms-15">Rekap Pembayaran</span></a> </li>
+                    {{-- <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link " data-bs-toggle="tab" href="#rekap-pembayaran" role="tab"><span><i class="fa-solid fa-tasks"></i></span> <span class="hidden-xs-down ms-15">Rekap Pembayaran</span></a> </li> --}}
                 </ul>
                 
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.biaya-kuliah.include.tagihan')
                     @include('mahasiswa.biaya-kuliah.include.riwayat-pembayaran')
-                    @include('mahasiswa.biaya-kuliah.include.rekap-pembayaran')
+                    {{-- @include('mahasiswa.biaya-kuliah.include.rekap-pembayaran') --}}
                 </div>
 				<!-- /.box-body -->
             </div>
@@ -47,3 +47,29 @@ Biaya Kuliah
     </div>	
 </section>
 @endsection
+<script src="https://cdn.jsdelivr.net/npm/sweetalert@1.1.3/dist/sweetalert.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert@1.1.3/dist/sweetalert.css">
+
+<!-- Kode HTML dan Blade Anda di sini -->
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Mengambil data dari Blade
+        var statusBayar = @json($tagihan->status_pembayaran);
+
+        // Mengecek apakah status bayar adalah NULL
+        if (statusBayar === null) {
+            // Menampilkan SweetAlert jika status bayar adalah NULL
+            swal({
+                title: "Tagihan Belum Dibayar",
+                text: "Anda belum membayar tagihan UKT. Silakan bayar untuk dapat mengisi KRS.",
+                type: "warning",
+                confirmButtonText: "OK",
+                closeOnConfirm: false
+            }, function() {
+                // Kembali ke halaman index atau halaman lain jika tombol OK diklik
+                window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai
+            });
+        }
+    });
+</script>

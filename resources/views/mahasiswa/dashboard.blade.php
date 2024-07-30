@@ -57,8 +57,8 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        @if (!empty($akm->ipk))
-                            <h2 class="mb-5">{{$akm->ipk}}</h2>
+                        @if (!empty($transkrip->ipk))
+                            <h2 class="mb-5">{{$transkrip->ipk}}</h2>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
@@ -69,7 +69,7 @@ Dashboard
             </div>
         </div>
         <div class="col-xl-3 col-md-6 col-12">
-            <div class="box text-white bg-danger pull-up">
+            <div class="box text-white bg-info pull-up">
                 <div class="box-header with-border">
                     <div class="d-flex align-items-center">
                         <span class="rounded bg-primary p-2"><i class="fa fa-money"></i></span>
@@ -78,18 +78,21 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        @if (!empty($akm->biaya_kuliah_smt))
-                            <h2 class="mb-5">Rp  {{number_format($akm->biaya_kuliah_smt, 0, ',', '.') }}</h2>
+                        @if (!empty($tagihan->total_nilai_tagihan))
+                            <h2 class="mb-5">Rp  {{number_format($tagihan->total_nilai_tagihan, 0, ',', '.') }}</h2>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif
-                        <p class="text-fade mb-0 fs-12 text-white">Nominal UKT</p>
+
+                        <p class="text-fade mb-0 fs-12 {{$tagihan->status_pembayaran === NULL ? 'text-white' : 'text-danger'}}">
+                            {{$tagihan->status_pembayaran===NULL ? 'Belum Bayar' : 'Lunas'}}
+                        </p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-xl-3 col-md-6 col-12">
-            <div class="box text-white bg-info pull-up">
+            <div class="box text-white bg-danger pull-up">
                 <div class="box-header with-border">
                     <div class="d-flex align-items-center">
                         <span class="rounded bg-primary p-2"><i class="fa fa-graduation-cap"></i></span>
@@ -114,8 +117,8 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        @if (!empty($akm->sks_total))
-                        <h2 class="mb-5">{{$akm->sks_total}} SKS</h2>
+                        @if (!empty($transkrip->total_sks))
+                        <h2 class="mb-5">{{$transkrip->total_sks}} SKS</h2>
                         @else
                             <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
                         @endif

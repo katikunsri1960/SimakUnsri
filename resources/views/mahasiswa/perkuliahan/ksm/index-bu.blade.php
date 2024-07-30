@@ -37,7 +37,7 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$akm->isEmpty() ? '0 | 0' : $akm[0]->ips .' | '. $akm[0]->ipk }}</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$transkrip==NULL ? '0 | 0' : $transkrip->ips .' | '. $transkrip->ipk }}</h4>
                     </div>
                 </div>
             </div>
@@ -111,8 +111,13 @@ Kartu Rencana Studi
 
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
-                    @include('mahasiswa.krs.include.krs')
-                    @include('mahasiswa.krs.include.data-kelas-kuliah')
+<<<<<<<< HEAD:resources/views/mahasiswa/perkuliahan/ksm/mata-kuliah/index.blade.php
+                    @include('mahasiswa.perkuliahan.ksm.mata-kuliah.krs')
+                    @include('mahasiswa.perkuliahan.ksm.mata-kuliah.data-kelas-kuliah')
+========
+                    {{-- @include('mahasiswa.krs.include.krs')
+                    @include('mahasiswa.krs.include.data-kelas-kuliah') --}}
+>>>>>>>> f1985c162a610e19a27b82d0fe490682e5053c6d:resources/views/mahasiswa/perkuliahan/ksm/index-bu.blade.php
                 </div>
 				<!-- /.box-body -->
             </div>
@@ -139,7 +144,7 @@ Kartu Rencana Studi
 
         $('#semester_select').on('change', function (e) {
             var id = $(this).val();
-            window.location.href = "{{route('mahasiswa.krs')}}?semester=" + id;
+            window.location.href = "{{route('mahasiswa.krs.index')}}?semester=" + id;
         });
 
         $(document).ready(function() {

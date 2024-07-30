@@ -20,16 +20,16 @@
                         </a>
                     </li>
 
-                    {{-- <li class="{{request()->routeIs('mahasiswa.biaya-kuliah') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('mahasiswa.biaya-kuliah') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.biaya-kuliah')}}">
                             <i class="fa fa-money"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Biaya Kuliah</span>
                         </a>
-                    </li> --}}
+                    </li>
 
                     <li class="header">PERKULIAHAN</li>
-                    <li class="{{request()->routeIs('mahasiswa.krs') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.krs')}}">
                             <i class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>

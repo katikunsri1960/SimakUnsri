@@ -1,19 +1,13 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa\Cuti;
+namespace App\Http\Controllers\Fakultas;
 
 use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
-use Illuminate\Validation\Rule;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\PengajuanCuti;
-use App\Models\Referensi\JenisPrestasi;
-use App\Models\Referensi\TingkatPrestasi;
-use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Connection\ConnectionKeuangan;
 
 class CutiController extends Controller
 {
@@ -22,10 +16,10 @@ class CutiController extends Controller
         // dd($semester_aktif->id_semester);
         $id_reg = auth()->user()->fk_id;
         
-        $data = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->get();
+        $data = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('approved',1)->get();
         // dd($data_mahasiswa->biodata->id_mahasiswa);
 
-        return view('mahasiswa.pengajuan-cuti.index', ['data' => $data]);
+        return view('fakultas.pengajuan-cuti.index', ['data' => $data]);
     }
 
     public function tambah()
@@ -34,7 +28,7 @@ class CutiController extends Controller
         $id_reg = auth()->user()->fk_id;
         $data = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        return view('mahasiswa.pengajuan-cuti.store', ['data' => $data]);
+        return view('fakultas.pengajuan-cuti.store', ['data' => $data]);
     }
 
     public function store(Request $request)
@@ -67,26 +61,11 @@ class CutiController extends Controller
             'file_pendukung' => 'required|file|mimes:pdf|max:2048',
         ]);
 
-        $id_cuti = Uuid::uuid4()->toString();
-        
-        $fileName = 'file_pendukung_' . str_replace(' ', '_', $riwayat_pendidikan->nama_mahasiswa) . '_' . time() . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
-
-        // Simpan file ke folder public/pdf dengan nama kustom
-        $filePath = $request->file('file_pendukung')->storeAs('pdf', $fileName, 'public');
-
-        PengajuanCuti::create([
-            'id_cuti' => $id_cuti,
-            'id_registrasi_mahasiswa' => $id_reg,
-            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-            'id_semester' => $semester_aktif->id_semester,
-            'nama_semester'=> $semester_aktif->semester->nama_semester,
-            'alasan_cuti' => $request->alasan_cuti[0],
-            'file_pendukung' => $filePath,
-            'approved' => 0,
-            'status_sync' => 'belum sync',
+        PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->update([
+            'approved' => 2,
         ]);
         
         // Redirect kembali ke halaman index dengan pesan sukses
-        return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->route('fakultas.pengajuan-cuti.index')->with('success', 'Data Berhasil di Tambahkan');
     }
 }

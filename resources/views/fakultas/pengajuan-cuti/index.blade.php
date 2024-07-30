@@ -1,6 +1,6 @@
-@extends('layouts.mahasiswa')
+@extends('layouts.fakultas')
 @section('title')
-Pengajuan Cuti Mahasiswa
+Pengajuan Cuti Fakultas
 @endsection
 @section('content')
 <section class="content bg-white">
@@ -12,7 +12,7 @@ Pengajuan Cuti Mahasiswa
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Pengajuan Cuti Mahasiswa</h2>
+								<h2 class="mb-10">Pengajuan Cuti Fakultas</h2>
 								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
 							</div>
 						</div>
@@ -26,13 +26,13 @@ Pengajuan Cuti Mahasiswa
             <div class="box box-body mb-0">
                 <div class="row">
                     <div class="col-xl-6 col-lg-12">
-                        <h3 class="fw-500 text-dark mt-0">Daftar Pengajuan Cuti Mahasiswa</h3>
+                        <h3 class="fw-500 text-dark mt-0">Daftar Pengajuan Cuti Fakultas</h3>
                     </div>                             
                 </div>
                 <div class="row mb-5">
                     <div class="col-xl-12 col-lg-12 text-end">
                         <div class="btn-group">
-                            <a class="btn btn-rounded bg-success-light " href="{{route('mahasiswa.pengajuan-cuti.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Pengajuan Cuti</a>
+                            <a class="btn btn-rounded bg-success-light " href="{{route('fakultas.pengajuan-cuti.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Pengajuan Cuti</a>
                         </div>   
                     </div>                           
                 </div><br>
@@ -42,6 +42,8 @@ Pengajuan Cuti Mahasiswa
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>Program Studi</th>
                                     <th>Semester</th>
                                     <th>Alasan Pengajuan Cuti</th>
                                     <th>Status Pengajuan Cuti</th>
@@ -52,6 +54,8 @@ Pengajuan Cuti Mahasiswa
                                 @foreach($data as $d)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
+                                        <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
+                                        <td class="text-start align-middle">{{$d->nama_program_studi}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>
                                         <td class="text-start align-middle">{{$d->alasan_cuti}}</td>
                                         <td class="text-center align-middle" style="width:10%">

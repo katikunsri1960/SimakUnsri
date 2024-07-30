@@ -18,7 +18,7 @@
                                             <div class="box-body">
                                                 <div class="flex-grow-1">
                                                     <p class="mt-5 mb-5 text-fade fs-12">UKT</p>
-                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</h4>
+                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">Rp  {{number_format($tagihan->total_nilai_tagihan, 2, ',', '.') }}</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -29,7 +29,7 @@
                                             <div class="box-body">
                                                 <div class="flex-grow-1">
                                                     <p class="mt-5 mb-5 text-fade fs-12">UKT yang Belum Dibayar</p>
-                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</h4>
+                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">Rp  {{number_format($tagihan->total_nilai_tagihan, 2, ',', '.') }}</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -40,7 +40,7 @@
                                             <div class="box-body">
                                                 <div class="flex-grow-1">
                                                     <p class="mt-5 mb-5 text-fade fs-12">Batas Akhir Pembayaran</p>
-                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">20 Januari 2024</h4>
+                                                    <h4 class="mt-5 mb-0" style="color:#0052cc">{{$semester_tagihan->waktu_berakhir}}</h4>
                                                 </div>
                                             </div>
                                         </div>
@@ -65,16 +65,24 @@
                                                                 <!-- <th class="text-center">Tahun Ajaran</th>                                     -->
                                                                 <th class="text-center">Nominal Tagihan</th>
                                                                 <th class="text-center">Batas Akhir Tagihan</th>
+                                                                <th class="text-center">Status Tagihan</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
                                                             <tr>
                                                                 <td class="text-center">1</td>
-                                                                <td class="text-start">UKT Periode 2023/2024 Genap</td>
-                                                                <td class="text-start">Periode 2023/2024 Genap</td>
+                                                                <td class="text-start">UKT {{$semester_tagihan->nama_semester}}</td>
+                                                                <td class="text-start">{{$semester_tagihan->nama_semester}}</td>
                                                                 <!-- <td class="text-start">2023/2024</td> -->
-                                                                <td class="text-start">Rp  {{number_format($biaya_kuliah->biaya_masuk, 2, ',', '.') }}</td>
-                                                                <td class="text-start">1 Agustus 2023</td>
+                                                                <td class="text-start">Rp  {{number_format($tagihan->total_nilai_tagihan, 2, ',', '.') }}</td>
+                                                                <td class="text-start">{{$tagihan->waktu_berakhir}}</td>
+                                                                <td class="text-start">
+                                                                    <div>
+                                                                        <span class="badge badge-xl {{ $tagihan->status_pembayaran == NULL ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
+                                                                            {{ $tagihan->status_pembayaran == NULL ? 'Belum Bayar' : 'Lunas' }}
+                                                                        </span>
+                                                                    </div>
+                                                                </td>
                                                             </tr>
                                                         </tbody>
                                                 </table>
@@ -84,11 +92,11 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="box-footer text-end">
+                            {{-- <div class="box-footer text-end">
                                 <button type="submit" class="btn btn-primary">
                                     <i class="fa fa-money"> </i>  Bayar Tagihan
                                 </button>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
                 </div>
@@ -96,3 +104,4 @@
         </div>
     </div>
 </div>
+
