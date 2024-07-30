@@ -78,8 +78,8 @@
                                                                 <td class="text-start">{{$tagihan->waktu_berakhir}}</td>
                                                                 <td class="text-start">
                                                                     <div>
-                                                                        <span class="badge badge-xl {{ $tagihan->pembayaran->status_pembayaran == NULL ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
-                                                                            {{ $tagihan->pembayaran->status_pembayaran == NULL ? 'Belum Bayar' : 'Lunas' }}
+                                                                        <span class="badge badge-xl {{ $tagihan->pembayaran == NULL ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
+                                                                            {{ $tagihan->pembayaran == NULL ? 'Belum Bayar' : 'Lunas' }}
                                                                         </span>
                                                                     </div>
                                                                 </td>
