@@ -61,8 +61,8 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::get('/ksm', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'index'])->name('mahasiswa.krs');
             // Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'generateAKM'])->name('mahasiswa.krs');
-            Route::prefix('ksm')->group(function () {
-                Route::get('/daftar-ksm', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'view'])->name('mahasiswa.krs.index');
+            Route::prefix('perkuliahan')->group(function () {
+                Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'view'])->name('mahasiswa.krs.index');
                 Route::get('/get-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'get_kelas_kuliah'])->name('mahasiswa.krs.get_kelas_kuliah');
                 Route::post('/store-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'ambilKelasKuliah'])->name('mahasiswa.krs.store_kelas_kuliah');
                 Route::post('/update-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'update_kelas_kuliah'])->name('mahasiswa.krs.update_kelas_kuliah');
@@ -79,13 +79,19 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
 
                 // Route::get('/get-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'get_kelas_kuliah'])->name('mahasiswa.aktivitas.magang');
-                Route::prefix('aktivitas')->group(function () {
-                    Route::get('/magang', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'index_magang'])->name('mahasiswa.aktivitas.magang');
-                    // Route::get('/checkDosenPA/{id_semester}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'checkDosenPA'])->name('mahasiswa.krs.print.checkDosenPA');
+                // Route::prefix('aktivitas')->group(function () {
+                //     Route::get('/magang', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'index_magang'])->name('mahasiswa.aktivitas.magang');
+                //     // Route::get('/checkDosenPA/{id_semester}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'checkDosenPA'])->name('mahasiswa.krs.print.checkDosenPA');
+                // });
+                //Route for Aktivitas Magang
+                Route::prefix('aktivitas-magang')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'index'])->name('mahasiswa.perkuliahan.aktivitas-magang.index');
+                    Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'tambah'])->name('mahasiswa.perkuliahan.aktivitas-magang.tambah');
+                    Route::post('/store', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'store'])->name('mahasiswa.perkuliahan.aktivitas-magang.store');
                 });
 
-                Route::get('/print/{id_semester}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print');
-                Route::get('/print/checkDosenPA/{id_semester}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'checkDosenPA'])->name('mahasiswa.krs.print.checkDosenPA');
+                // Route::get('/print/{id_semester}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print');
+                // Route::get('/print/checkDosenPA/{id_semester}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'checkDosenPA'])->name('mahasiswa.krs.print.checkDosenPA');
 
                 Route::prefix('print')->group(function () {
                     Route::get('/{id_semester}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'krs_print'])->name('mahasiswa.krs.print');

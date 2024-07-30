@@ -8,7 +8,7 @@
                         $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                     @endphp
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
-                        @if($data_status_mahasiswa == "A" || $data_status_mahasiswa == "M" )
+                        @if(!empty($beasiswa) || !empty($tagihan->status_pembayaran))
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -74,9 +74,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            
-                            @if ($data_status_mahasiswa == "M" )
+                            </div>                            
+                            {{-- @if ($data_status_mahasiswa == "M" ) --}}
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">
@@ -143,8 +142,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            @endif
-
+                            {{-- @endif --}}
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -200,17 +198,7 @@
                                                                         @endif
                                                                     </div>
                                                                 </td>
-{{--                                                                 
-                                                                <td class="text-center align-middle" style="width:3%">
-                                                                    <form action="{{route('mahasiswa.krs.hapus-aktivitas',['id'=>$data->id_aktivitas])}}" method="post" class="delete-form" data-id="{{$data->id_aktivitas}}" id="deleteForm{{$data->id_aktivitas}}">
-                                                                        @csrf
-                                                                        @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id_aktivitas }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
-                                                                            <i class="fa fa-trash"></i>
-                                                                        </button>
-                                                                    </form>
-                                                                </td> --}}
-                                                                
+
                                                                 <td class="text-center align-middle" style="width:3%">
                                                                     <button class="btn btn-danger rounded-10 hapus-aktivitas" data-id="{{ $data->id }}"><i class="fa fa-trash"></i></button>
                                                                 </td>
@@ -244,14 +232,14 @@
                                             <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
                                                 <div class="box box-body bg-warning-light">
                                                     <div class="row" style="align-items: center;">
-                                                        <div class="col-lg-2 text-center" style="text-align-last: center; padding-bottom:20px">
+                                                        <div class="col-lg-1 text-right" style="text-align-last: end;">
                                                             <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
                                                         </div>
                                                         <div class="col-lg-10 text-left text-danger">
                                                             <label>
                                                                 Anda tidak dapat melakukan pengisian KRS!
                                                             </label><br>
-                                                            @if($tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti==NULL)
+                                                            @if($beasiswa==NULL || $tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti==NULL)
                                                                 <label>
                                                                     Segera Lakukan Pembayaran UKT Sebelum Periode Pembayaran Berakhir!
                                                                 </label>
@@ -277,7 +265,6 @@
                                 </div>
                             </div>
                         @endif
-
                     </div>
                 </div>
             </div>

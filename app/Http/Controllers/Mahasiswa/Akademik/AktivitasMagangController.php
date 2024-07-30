@@ -2,66 +2,74 @@
 
 namespace App\Http\Controllers\Mahasiswa\Akademik;
 
-use App\Models\Fakultas;
-use App\Models\ProgramStudi;
+use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Perkuliahan\MataKuliah;
-use App\Models\Mahasiswa\PengajuanCuti;
+use App\Models\Mahasiswa\AktivitasMagang;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 
 class AktivitasMagangController extends Controller
 {
-    public function index_magang(Request $request)
+    public function index()
     {
-        // DATA BAHAN
-        if ($request->has('semester') && $request->semester != '') {
-            $semester_select = $request->semester;
-        } else {
-            $semester_select = SemesterAktif::first()->id_semester;
-        }
-        // dd($semester_select);
-
         $id_reg = auth()->user()->fk_id;
+        
+        $data = AktivitasMagang::where('id_registrasi_mahasiswa', $id_reg)->get();
 
-        $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
-        ->where('id_registrasi_mahasiswa', $id_reg)
-        ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+        return view('mahasiswa.perkuliahan.ksm.aktivitas-magang.index', ['data' => $data]);
+    }
+
+    public function tambah()
+    {
+        $id_reg = auth()->user()->fk_id;
+        $data = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
+
+        return view('mahasiswa.perkuliahan.ksm.aktivitas-magang.store', ['data' => $data]);
+    }
+
+    public function store(Request $request)
+    {
+        $id_reg = auth()->user()->fk_id;
+        $semester_aktif = SemesterAktif::first();
+
+        $riwayat_pendidikan = RiwayatPendidikan::select('*')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->first();
+
+        $existingMagang = AktivitasMagang::where('id_registrasi_mahasiswa', $id_reg)
+        ->where('id_semester', $semester_aktif->id_semester)
         ->first();
-
-        $prodi_id = $riwayat_pendidikan->id_prodi;
         
-        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->whereNotIn('id_status_mahasiswa', ['N'])
-                    ->orderBy('id_semester', 'DESC')
-                    ->first();
-        
-        $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
-                    ->first();
-                    
-        $krs_akt = AnggotaAktivitasMahasiswa::select(
-            'anggota_aktivitas_mahasiswas.*', 'aktivitas_mahasiswas.*', 'bimbing_mahasiswas.*'
-        )
-            ->leftJoin('aktivitas_mahasiswas', 'aktivitas_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas')
-            ->leftJoin('bimbing_mahasiswas', 'bimbing_mahasiswas.id_aktivitas', '=', 'anggota_aktivitas_mahasiswas.id_aktivitas')
-            ->where('anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa', $id_reg)
-            ->where('aktivitas_mahasiswas.id_semester', $semester_aktif->id_semester)
-            ->where('aktivitas_mahasiswas.id_prodi', $prodi_id)
-            ->whereIn('aktivitas_mahasiswas.id_jenis_aktivitas', ['2', '3', '4', '22'])
-            ->whereNotNull('bimbing_mahasiswas.id_bimbing_mahasiswa')
-            ->get();
+        if (!empty($existingMagang)) {
+            if ($existingMagang->approved == 0) {
+                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
+            } elseif ($existingMagang->approved == 1) {
+                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sudah disetujui.');
+            }
+        }
 
-        return view('mahasiswa.perkuliahan.ksm.aktivitas-magang.index',
-        compact(
-            'semester_select',
-            'semester_aktif',
-            'krs_akt'            
-        ));
+        // dd($request);
+        
+        $request->validate([
+            'nama_instansi' => 'required',
+            'lokasi' => 'required',
+        ]);
+
+        $id_aktivitas = Uuid::uuid4()->toString();
+        
+        AktivitasMagang::create([
+            'id_aktivitas' => $id_aktivitas,
+            'id_registrasi_mahasiswa' => $id_reg,
+            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+            'id_semester' => $semester_aktif->id_semester,
+            'nama_semester' => $semester_aktif->semester->nama_semester,
+            'nama_instansi' => $request->nama_instansi,
+            'lokasi' => $request->lokasi,
+            'approved' => 0,
+            'status_sync' => 'belum sync',
+        ]);
+        
+        return redirect()->route('mahasiswa.perkuliahan.aktivitas-magang.index')->with('success', 'Data Berhasil di Tambahkan');
     }
 }
