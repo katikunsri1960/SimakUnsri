@@ -17,10 +17,10 @@ return new class extends Migration
             $table->foreign('id_registrasi_mahasiswa')->references('id_registrasi_mahasiswa')->on('riwayat_pendidikans')->onDelete('set null');
             $table->string('nim');
             $table->string('nama_mahasiswa');
-            $table->string('id_jenis_beasiswa');
+            $table->foreignId('id_jenis_beasiswa')->nullable()->constrained('jenis_beasiswa_mahasiswas')->onDelete('set null');
             $table->date('tanggal_mulai_beasiswa')->default('1970-01-01');
             $table->date('tanggal_akhir_beasiswa')->default('1970-01-01');
-            $table->string('status_beasiswa');
+            $table->string('status_beasiswa')->nullable();
             $table->timestamps(); 
         });
     }
