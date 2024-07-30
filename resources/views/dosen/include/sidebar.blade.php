@@ -111,12 +111,12 @@
                             <span>Penilaian Perkuliahan</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('dosen.penilaian.penilaian-sidang') ? 'active' : ''}}">
+                    <!-- <li class="{{request()->routeIs('dosen.penilaian.penilaian-sidang') ? 'active' : ''}}">
                         <a href="{{route('dosen.penilaian.penilaian-sidang')}}">
                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Penilaian Sidang</span>
                         </a>
-                    </li>
+                    </li> -->
                     <li class="header">Pembimbing Mahasiswa</li>
                     <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-akademik') ? 'active' : ''}}">
                         <a href="{{route('dosen.pembimbing.bimbingan-akademik')}}">
@@ -143,12 +143,12 @@
                             <span>Ganti Password</span>
                         </a>
                     </li>
-                    <li>
+                    <!-- <li>
                         <a href="#" target="_blank">
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
-                    </li>
+                    </li> -->
                 </ul>
             </div>
         </div>

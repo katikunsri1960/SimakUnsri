@@ -14,7 +14,7 @@ Dashboard Dosen
                         <div class="col-12 col-lg-9">
                             <h2>Hello {{auth()->user()->name}}, Welcome Back!</h2>
                             <p class="text-dark mb-0 fs-16">
-                                Selamat Datang di SIAKAD (Sistem Informasi Akademik) Universitas Sriwijaya
+                                Selamat Datang di SIMAK (Sistem Informasi Akademik) Universitas Sriwijaya
                             </p>
                         </div>
                     </div>
@@ -22,7 +22,7 @@ Dashboard Dosen
             </div>
         </div>
     </div>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col-12">
             <div class="box no-shadow mb-0 bg-transparent">
                 <div class="box-header no-border px-0">
@@ -496,6 +496,6 @@ Dashboard Dosen
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </section>
 @endsection
