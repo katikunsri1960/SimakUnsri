@@ -15,21 +15,23 @@ use Illuminate\Support\Facades\DB;
 
 class PembimbingMahasiswaController extends Controller
 {
-    public function bimbingan_akademik()
+    public function bimbingan_akademik() 
     {
         $semester = SemesterAktif::with(['semester'])->first();
 
-        $data = RiwayatPendidikan::with(['aktivitas_kuliah', 'prodi', 'peserta_kelas'])
+        $data = RiwayatPendidikan::with(['prodi', 'peserta_kelas'])
                     ->withCount(['peserta_kelas' => function($query) use ($semester) {
                         $query->whereHas('kelas_kuliah', function($query) use ($semester) {
                             $query->where('id_semester', $semester->id_semester)
                                 ->where('approved', 0);
                         });
                     }])
-                    // $query->where('id_semester', $semester->id_semester);
-                    ->whereHas('aktivitas_kuliah', function($query) use ($semester) {
-                        $query->where('id_semester', $semester->id_semester);
-                    })->where('dosen_pa', auth()->user()->fk_id)
+                    ->whereHas('peserta_kelas', function($query) use ($semester) {
+                        $query->whereHas('kelas_kuliah', function($query) use ($semester) {
+                            $query->where('id_semester', $semester->id_semester);
+                        });
+                    })
+                    ->where('dosen_pa', auth()->user()->fk_id)
                 ->get();
 
         return view('dosen.pembimbing.akademik.index', [

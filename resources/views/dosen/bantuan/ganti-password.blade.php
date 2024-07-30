@@ -16,7 +16,7 @@ Perubahan Password Akun
                     </div>
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 text-center">
-                            <h3 class="fw-500 text-dark mt-0">Perubahan Password Akun SIAKAD Universitas Sriwijaya</h3>
+                            <h3 class="fw-500 text-dark mt-0">Perubahan Password Akun SIMAK Universitas Sriwijaya</h3>
                         </div>                             
                     </div>
                 </div>
