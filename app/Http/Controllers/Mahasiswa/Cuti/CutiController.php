@@ -54,7 +54,7 @@ class CutiController extends Controller
         // dd($existingCuti->approved);
 
         // Jika sudah ada pengajuan cuti yang sedang diproses, tampilkan pesan error
-        if (!empty($existingMagang)) {
+        if (!empty($existingCuti)) {
             if ($existingCuti->approved == 0) {
                 return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
             }
