@@ -44,10 +44,10 @@ class DashboardController extends Controller
                 ->whereRaw("RIGHT(id_semester, 1) != 3")
                 ->count();
 
-        $registrasi = Registrasi::where('rm_nim', $user->username)
-                ->select('*'
-                )
-                ->first();
+        // $registrasi = Registrasi::where('rm_nim', $user->username)
+        //         ->select('*'
+        //         )
+        //         ->first();
                 // dd($registrasi);
         
         $transkrip = TranskripMahasiswa::select(
