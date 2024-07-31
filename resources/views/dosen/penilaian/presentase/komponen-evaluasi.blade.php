@@ -136,7 +136,7 @@ Komponen Evaluasi Kelas Perkuliahan
                         </div>
                         <div class="row p-5">
                             <strong>
-                                <p class="text-danger">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
+                                <p class="text-danger p-5">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
                             </strong>
                         </div>
                         <!-- /.box-body -->
@@ -246,7 +246,7 @@ Komponen Evaluasi Kelas Perkuliahan
                         </div>
                         <div class="row p-5">
                             <strong>
-                                <p class="text-danger">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
+                                <p class="text-danger p-5">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
                             </strong>
                         </div>
                         <!-- /.box-body -->
