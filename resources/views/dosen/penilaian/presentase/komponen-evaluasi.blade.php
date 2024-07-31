@@ -134,6 +134,11 @@ Komponen Evaluasi Kelas Perkuliahan
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <strong>
+                                <p class="text-danger">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
+                            </strong>
+                        </div>
                         <!-- /.box-body -->
                         <div class="box-footer text-end">
                             <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
@@ -239,6 +244,11 @@ Komponen Evaluasi Kelas Perkuliahan
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                            <strong>
+                                <p class="text-danger">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
+                            </strong>
+                        </div>
                         <!-- /.box-body -->
                         <div class="box-footer text-end">
                             <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
@@ -250,11 +260,7 @@ Komponen Evaluasi Kelas Perkuliahan
                         </div>
                     </form>
                 @endif
-                <div class="row">
-                    <strong>
-                        <p class="text-danger">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
-                    </strong>
-                </div>
+
             </div>
             <!-- /.box -->
         </div>
