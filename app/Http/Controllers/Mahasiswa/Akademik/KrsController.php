@@ -141,7 +141,7 @@ class KrsController extends Controller
                 )
                 ->where('id_registrasi_mahasiswa', $id_reg)
                 ->whereNotIn('nilai_huruf', ['F', ''])
-                ->groupBy('id_registrasi_mahasiswa')
+                // ->groupBy('id_registrasi_mahasiswa')
                 ->first();
                 // dd($transkrip);
 
