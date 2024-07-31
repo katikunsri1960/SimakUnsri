@@ -134,7 +134,7 @@ Komponen Evaluasi Kelas Perkuliahan
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row p-5">
                             <strong>
                                 <p class="text-danger">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
                             </strong>
@@ -244,7 +244,7 @@ Komponen Evaluasi Kelas Perkuliahan
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row p-5">
                             <strong>
                                 <p class="text-danger">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
                             </strong>
