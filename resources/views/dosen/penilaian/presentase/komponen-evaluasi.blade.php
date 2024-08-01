@@ -19,7 +19,7 @@ Komponen Evaluasi Kelas Perkuliahan
 						</div>
 					<div>
 				</div>
-			</div>							
+			</div>
 		</div>
     </div>
     <div class="row">
@@ -29,13 +29,13 @@ Komponen Evaluasi Kelas Perkuliahan
                     <div class="row">
                         <div class="col-xl-4 col-lg-12 pb-20">
                             <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
-                        </div>                             
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
                             <h3 class="fw-500 text-dark mt-0">Komponen Evaluasi Kelas ({{$kelas[0]['nama_mata_kuliah']}} - {{$kelas[0]['nama_kelas_kuliah']}})</h3>
                             <p class="mb-0 text-fade fs-18">Total Keseluruhan Komponen Evaluasi Sama Dengan 100 %</p>
-                        </div>                             
+                        </div>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -134,6 +134,11 @@ Komponen Evaluasi Kelas Perkuliahan
                                 </div>
                             </div>
                         </div>
+                        <div class="row p-5">
+                            <strong>
+                                <p class="text-danger p-5">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
+                            </strong>
+                        </div>
                         <!-- /.box-body -->
                         <div class="box-footer text-end">
                             <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
@@ -142,7 +147,7 @@ Komponen Evaluasi Kelas Perkuliahan
                             <button type="submit" class="btn btn-primary" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}>
                                 <i class="ti-save-alt"></i> Save
                             </button>
-                        </div> 
+                        </div>
                     </form>
                 @else
                     <form class="form" method="POST" id="komponen-evaluasi-update" action="{{ route('dosen.penilaian.komponen-evaluasi.update', ['kelas' => $kelas[0]['id_kelas_kuliah']]) }}">
@@ -239,6 +244,11 @@ Komponen Evaluasi Kelas Perkuliahan
                                 </div>
                             </div>
                         </div>
+                        <div class="row p-5">
+                            <strong>
+                                <p class="text-danger p-5">Untuk Point 1 dan 2 disarankan memiliki total minimum 50%</p>
+                            </strong>
+                        </div>
                         <!-- /.box-body -->
                         <div class="box-footer text-end">
                             <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
@@ -248,12 +258,13 @@ Komponen Evaluasi Kelas Perkuliahan
                                 <i class="ti-save-alt"></i> Save
                             </button>
                         </div>
-                    </form> 
-                @endif    
+                    </form>
+                @endif
+
             </div>
-            <!-- /.box -->			
+            <!-- /.box -->
         </div>
-    </div>			
+    </div>
 </section>
 @endsection
 @push('js')
