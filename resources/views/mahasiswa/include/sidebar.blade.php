@@ -29,10 +29,10 @@
                     </li>
 
                     <li class="header">PERKULIAHAN</li>
-                    <li class="treeview {{request()->routeIs('mahasiswa.krs.index.*') || request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index') ||
-                                        request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.tambah')
+                    {{-- <li class="treeview {{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.index.*') ||
+                                        request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index') || request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.tambah')
                     ? 'active menu-open' : ''}}">
-                        <a href="#">
+                        <a href="{{route('mahasiswa.krs')}}">
                             <i span class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Kartu Rencana Studi</span>
@@ -58,14 +58,16 @@
                                 </a>
                             </li>
                         </ul>
-                    </li>
-                    {{-- <li class="{{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.*') ? 'active' : ''}}">
+                    </li> --}}
+                    <li class="{{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.index.*') ||
+                                        request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index') || request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.tambah')
+                    ? 'active menu-open' : ''}}">
                         <a href="{{route('mahasiswa.krs')}}">
                             <i class="fa fa-newspaper-o"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Kartu Rencana Studi</span>
                         </a>
-                    </li> --}}
+                    </li>
                     {{-- <li class="{{request()->routeIs('mahasiswa.bahan-tugas') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.bahan-tugas')}}">
                             <i class="fa fa-tasks"><span class="path1"></span><span

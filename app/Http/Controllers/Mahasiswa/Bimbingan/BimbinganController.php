@@ -11,17 +11,29 @@ use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Connection\Tagihan;
 
 class BimbinganController extends Controller
 {
     public function index(AktivitasMahasiswa $aktivitas, Request $request)
     {
-        $id_reg = auth()->user()->fk_id;
+        // $id_reg = auth()->user()->fk_id;
         $id_semester = SemesterAktif::first()->id_semester;
+        $user = auth()->user();
+
+        // Cek status pembayaran
+        $tagihan = Tagihan::with('pembayaran')
+            ->where('nomor_pembayaran', $user->username)
+            ->where('kode_periode', $id_semester)
+            ->first();
+
+        $statusPembayaran = $tagihan->pembayaran ? $tagihan->pembayaran->status_pembayaran : null;
+        // dd($statusPembayaran);
+
 
         $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas', 'jenis_aktivitas_mahasiswa', 'bimbing_mahasiswa')
-            ->whereHas('anggota_aktivitas', function($q) use($id_reg) {
-                $q->where('id_registrasi_mahasiswa', $id_reg);
+            ->whereHas('anggota_aktivitas', function($q) use($user) {
+                $q->where('id_registrasi_mahasiswa', $user->fk_id);
             })
             ->whereHas('bimbing_mahasiswa', function($q) {
                 $q->where('approved', '1');
@@ -35,7 +47,8 @@ class BimbinganController extends Controller
                 'aktivitas' => null,
                 'data' => collect(),
                 'dosen_pembimbing' => collect(),
-                'showAlert' => true // Flag untuk menampilkan SweetAlert
+                'showAlert' => true, // Flag untuk menampilkan SweetAlert
+                'statusPembayaran' => $statusPembayaran,
             ]);
         }
 
@@ -46,29 +59,26 @@ class BimbinganController extends Controller
             'data' => $data,
             'aktivitas' => $aktivitas,
             'dosen_pembimbing' => $dosen_pembimbing,
-            'showAlert' => false // Flag untuk tidak menampilkan SweetAlert
+            'showAlert' => false, // Flag untuk tidak menampilkan SweetAlert
+            'statusPembayaran' => $statusPembayaran,
         ]);
     }
-
-
 
     public function store(AktivitasMahasiswa $aktivitas, Request $request)
     {
         $data = $request->validate([
-                    'tanggal' => 'required',
-                    'uraian' => 'required',
-                    'dosen_pembimbing' => 'required|exists:biodata_dosens,id_dosen',
-                ]);
+            'tanggal' => 'required',
+            'uraian' => 'required',
+            'dosen_pembimbing' => 'required|exists:biodata_dosens,id_dosen',
+        ]);
 
-    $data['id_aktivitas'] = $aktivitas->id_aktivitas;
-    $data['approved'] = 0;
-    $data['id_dosen'] = $request->dosen_pembimbing;
-    $data['tanggal'] = date('Y-m-d', strtotime($data['tanggal']));
-        // dd($data);
+        $data['id_aktivitas'] = $aktivitas->id_aktivitas;
+        $data['approved'] = 0;
+        $data['id_dosen'] = $request->dosen_pembimbing;
+        $data['tanggal'] = date('Y-m-d', strtotime($data['tanggal']));
 
         AsistensiAkhir::create($data);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
-
 }
