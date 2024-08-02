@@ -37,7 +37,7 @@ Kartu Rencana Studi
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$transkrip==NULL ? '0 | 0' : $transkrip->ips .' | '. $transkrip->ipk }}</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$transkrip->ipk==NULL ? '0 | 0' : $transkrip->ips .' | '. $transkrip->ipk }}</h4>
                     </div>
                 </div>
             </div>
@@ -73,6 +73,18 @@ Kartu Rencana Studi
     <div class="row mt-20">
         <div class="col-lg-12 col-xl-12 mt-5">
             <div class="box">
+                <div class="row mx-20 ">
+                    <div class="col-12 px-25">
+                        <div class="box no-shadow mb-0 bg-transparent">
+                            <div class="box-header no-border px-0">
+                                <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                </a>
+                                <h3 class="box-title px-3">Kartu Studi Mahasiswa</h3>
+                            </div>
+                        </div>
+                    </div>
+                <div>
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 d-flex justify-content-between mb-10">
                         <div class="d-flex justify-content-start px-3">
@@ -108,11 +120,10 @@ Kartu Rencana Studi
                         </div>
                     </div>
                 </div>
-
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
-                    @include('mahasiswa.perkuliahan.ksm.mata-kuliah.krs')
-                    @include('mahasiswa.perkuliahan.ksm.mata-kuliah.data-kelas-kuliah')
+                    @include('mahasiswa.perkuliahan.krs.krs-regular.krs')
+                    @include('mahasiswa.perkuliahan.krs.krs-regular.data-kelas-kuliah')
                 </div>
 				<!-- /.box-body -->
             </div>

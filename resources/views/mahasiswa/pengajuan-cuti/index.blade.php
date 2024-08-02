@@ -3,6 +3,7 @@
 Pengajuan Cuti Mahasiswa
 @endsection
 @section('content')
+@include('swal')
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-12">
@@ -80,19 +81,43 @@ Pengajuan Cuti Mahasiswa
 </section>
 @endsection
 @push('js')
-
+<script src="{{ asset('assets/vendor_components/sweetalert/sweetalert.min.js') }}"></script>
 <script>
-      $(document).ready(function() {
+    $(document).ready(function() {
         $('#data').DataTable({
             "paging": true,
             "ordering": true,
             "searching": true,
-            // "scrollCollapse": true,
-            // "scrollY": "550px",
         });
 
+        @if ($showAlert1)
+            swal({
+                title: 'Pengajuan Cuti Tidak Diizinkan',
+                text: 'Anda tidak bisa mengajukan cuti, karena Anda Mahasiswa Program Pendidikan Profesi',
+                type: 'warning',
+                button: 'OK'
+            }, function() {
+                window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
+            });
+        @elseif ($showAlert2)
+            swal({
+                title: 'Pengajuan Cuti Tidak Diizinkan',
+                text: 'Anda tidak bisa mengajukan cuti, karena Anda Mahasiswa Penerima Beasiswa',
+                type: 'warning',
+                button: 'OK'
+            }, function() {
+                window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
+            });
+        @elseif ($showAlert3)
+            swal({
+                title: 'Pengajuan Cuti Tidak Diizinkan',
+                text: 'Anda tidak bisa mengajukan cuti, karena belum menyelesaikan 4 semester',
+                type: 'warning',
+                button: 'OK'
+            }, function() {
+                window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
+            });
+        @endif
     });
 </script>
-
 @endpush
-

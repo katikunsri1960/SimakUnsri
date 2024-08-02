@@ -59,7 +59,7 @@ Route::group(['middleware' => ['auth']], function() {
                 // Route::post('/store/{kelas}', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'kuisioner_store'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner.store');
             });
 
-            Route::get('/ksm', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'index'])->name('mahasiswa.krs');
+            Route::get('/krs-magang', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'index'])->name('mahasiswa.krs');
             // Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'generateAKM'])->name('mahasiswa.krs');
             Route::prefix('perkuliahan')->group(function () {
                 Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'view'])->name('mahasiswa.krs.index');

@@ -47,13 +47,13 @@ Kartu Rencana Studi
         <div class="box ribbon-box">
           <div class="ribbon-two ribbon-two-danger"><span>Magang</span></div>
           <div class="box-header no-border p-0">				
-            <a href="{{route('mahasiswa.aktivitas.magang')}}">
+            <a href="{{route('mahasiswa.perkuliahan.aktivitas-magang.index')}}">
               <img class="img-fluid" src="{{asset('images/images/avatar/magang.png')}}" alt="">
             </a>
           </div>
           <div class="box-body">
               <div class="text-center">
-                <h3 class="my-10"><a href="{{route('mahasiswa.aktivitas.magang')}}">Aktivitas Magang</a></h3>
+                <h3 class="my-10"><a href="{{route('mahasiswa.perkuliahan.aktivitas-magang.index')}}">Aktivitas Magang</a></h3>
                 {{-- <h6 class="user-info mt-0 mb-10 text-fade">Full Stack Developer</h6> --}}
                 <p class="text-fade w-p85 mx-auto">Aktivitas Magang Kampus Merdeka</p>
               </div>
