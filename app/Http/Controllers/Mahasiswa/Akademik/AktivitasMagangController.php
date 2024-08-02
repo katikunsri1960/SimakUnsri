@@ -17,7 +17,7 @@ class AktivitasMagangController extends Controller
         
         $data = AktivitasMagang::where('id_registrasi_mahasiswa', $id_reg)->get();
 
-        return view('mahasiswa.perkuliahan.ksm.aktivitas-magang.index', ['data' => $data]);
+        return view('mahasiswa.perkuliahan.krs.aktivitas-magang.index', ['data' => $data]);
     }
 
     public function tambah()
@@ -25,7 +25,7 @@ class AktivitasMagangController extends Controller
         $id_reg = auth()->user()->fk_id;
         $data = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        return view('mahasiswa.perkuliahan.ksm.aktivitas-magang.store', ['data' => $data]);
+        return view('mahasiswa.perkuliahan.krs.aktivitas-magang.store', ['data' => $data]);
     }
 
     public function store(Request $request)
@@ -43,9 +43,9 @@ class AktivitasMagangController extends Controller
         
         if (!empty($existingMagang)) {
             if ($existingMagang->approved == 0) {
-                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
+                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan magang yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
             } elseif ($existingMagang->approved == 1) {
-                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sudah disetujui.');
+                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan magang yang sudah disetujui.');
             }
         }
 

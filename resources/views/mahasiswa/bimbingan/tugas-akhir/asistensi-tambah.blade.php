@@ -66,24 +66,60 @@
             maxDate: "today",
         });
 
-    $('#asistensiForm').submit(function(e){
-        e.preventDefault();
-        swal({
-            title: 'Apakah anda yakin?',
-            text: "Data tidak bisa diubah lagi setelah disimpan!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Simpan!',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#spinner').show();
-                $('#asistensiForm').unbind('submit').submit();
+    $(document).ready(function() {
+        $('.select2').select2();
+
+        $('#asistensiForm').submit(function(e){
+            e.preventDefault();
+            swal({
+                title: 'Apakah anda yakin?',
+                text: "Data tidak bisa diubah lagi setelah disimpan!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Simpan!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $('#asistensiForm').unbind('submit').submit();
+                }
+            });
+        });
+
+        $('#btnTambahAsistensi').click(function(e) {
+            e.preventDefault();  // Prevent the default action
+
+            // Check if there are any pending approvals
+            let bimbinganApproved = true;
+            let statusPembayaran = {{ $status_pembayaran ? 'true' : 'false' }};
+
+            @foreach ($aktivitas->bimbing_mahasiswa as $bimbingan)
+                if ({{ $bimbingan->approved }} === 0) {
+                    bimbinganApproved = false;
+                    break;  // Exit the loop early if any approval is pending
+                }
+            @endforeach
+
+            if (!bimbinganApproved) {
+                swal({
+                    title: 'Dosen Pembimbing Belum Disetujui!',
+                    text: 'Dosen pembimbing Anda belum disetujui oleh Koordinator Program Studi.',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            } else if (!statusPembayaran) {
+                swal({
+                    title: 'Pembayaran Belum Lunas!',
+                    text: 'Anda belum melunasi pembayaran. Silakan lunasi pembayaran terlebih dahulu.',
+                    type: 'warning',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                $('#tambahAsistensiModal').modal('show');
             }
         });
     });
-
 </script>
 @endpush

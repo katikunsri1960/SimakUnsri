@@ -27,14 +27,13 @@ use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\RencanaPembelajaran;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
+
 
 class KrsController extends Controller
 {
     public function index(Request $request)
     {
-
-        return view('mahasiswa.perkuliahan.ksm.index');
+        return view('mahasiswa.perkuliahan.krs.index');
     }
 
     public function view(Request $request)
@@ -75,7 +74,6 @@ class KrsController extends Controller
                     ->orderBy('id_semester', 'DESC')
                     ->get();
 
-
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $semester_select)
                     ->pluck('id_status_mahasiswa')
@@ -88,6 +86,7 @@ class KrsController extends Controller
         $semester_ke = $semester->filter(function($item) {
             return substr($item->id_semester, -1) != '3';
         })->count();
+        // dd($semester_ke);
 
         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester);
 
@@ -152,7 +151,7 @@ class KrsController extends Controller
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-        return view('mahasiswa.perkuliahan.ksm.mata-kuliah.index',[
+        return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
                 return $this->formatDosenPengajar($dosenPengajar);
             }], compact(
@@ -309,7 +308,6 @@ class KrsController extends Controller
                 'status_sync' => 'belum sync',
             ]);
         }
-
         elseif($status_bayar==0 && $akm_aktif->isEmpty() && $status_cuti==0)
         {
             $peserta = AktivitasKuliahMahasiswa::create([
@@ -635,7 +633,7 @@ class KrsController extends Controller
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-        $pdf = PDF::loadview('mahasiswa.perkuliahan.ksm.mata-kuliah.pdf', [
+        $pdf = PDF::loadview('mahasiswa.perkuliahan.krs.krs-regular.pdf', [
             'today'=> $today,
             'deadline'=> $deadline,
             'data' => $data,
