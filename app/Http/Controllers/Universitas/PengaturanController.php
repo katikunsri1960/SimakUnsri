@@ -151,7 +151,7 @@ class PengaturanController extends Controller
         $data = $request->validate([
             'username' => 'required',
             'name' => 'required',
-            'email' => 'required|email',
+            'email' => 'nullable|email',
             'password' => 'required|confirmed',
             'role' => 'required',
             'fk_id' => 'required',
@@ -234,7 +234,7 @@ class PengaturanController extends Controller
     {
         $data = $request->validate([
             'username' => 'required',
-            'email' => 'nullable|email',
+            'email' => 'required|email',
             'password' => 'required|confirmed',
             'id_dosen' => 'required',
         ]);
