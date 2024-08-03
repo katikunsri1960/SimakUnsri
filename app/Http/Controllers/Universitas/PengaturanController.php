@@ -234,7 +234,7 @@ class PengaturanController extends Controller
     {
         $data = $request->validate([
             'username' => 'required',
-            'email' => 'required|email',
+            'email' => 'nullable|email',
             'password' => 'required|confirmed',
             'id_dosen' => 'required',
         ]);
@@ -268,7 +268,7 @@ class PengaturanController extends Controller
         $data['username'] = $mhs->nim;
         $data['email'] = $mhs->nim."@student.unsri.ac.id";
         $data['role'] = 'mahasiswa';
-        
+
         try {
             DB::beginTransaction();
             User::create($data);
