@@ -23,24 +23,20 @@ class KRSController extends Controller
     {
 
         $searchValue = $request->input('search.value');
-        $semester = SemesterAktif::with(['semester'])->first();
-        // dd($semester);
+        $semester = $request->input('semester');
+        
         $query = RiwayatPendidikan::with(['prodi', 'peserta_kelas'])
                 ->withCount(['peserta_kelas' => function($query) use ($semester) {
                     $query->whereHas('kelas_kuliah', function($query) use ($semester) {
-                        $query->where('id_semester', $semester->id_semester-10);
+                        $query->where('id_semester', $semester);
                     });
                 }])
                 ->whereHas('peserta_kelas', function($query) use ($semester) {
                     $query->whereHas('kelas_kuliah', function($query) use ($semester) {
-                        $query->where('id_semester', $semester->id_semester-10);
+                        $query->where('id_semester', $semester);
                     });
                 })
                 ->where('id_prodi', auth()->user()->fk_id);
-
-        // $query = RiwayatPendidikan::with('kurikulum', 'pembimbing_akademik')
-        //     ->where('id_prodi', auth()->user()->fk_id)
-        //     ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
 
         if ($searchValue) {
             $query = $query->where(function($q) use ($searchValue) {
