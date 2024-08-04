@@ -27,8 +27,13 @@
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
-
+    <div id="spinner" class="centered" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); z-index: 9999;">
+        <div class="spinner-border text-primary" role="status">
+            <span class="sr-only">Loading...</span>
+        </div>
+    </div>
     <div class="wrapper">
+
         <div id="loader"></div>
 
         @include('prodi.include.header')
@@ -61,6 +66,13 @@
     <script src="{{asset('assets/icons/feather-icons/feather.min.js')}}"></script>
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
     <script src="{{asset('assets/js/confirmSubmit.js')}}"></script>
+    <script>
+        $(document).ajaxStart(function() {
+             $("#spinner").show();
+         }).ajaxStop(function() {
+             $("#spinner").hide();
+         });
+    </script>
     @stack('js')
     <!-- EduAdmin App -->
 

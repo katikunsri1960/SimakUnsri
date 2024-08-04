@@ -21,6 +21,11 @@ class RiwayatPendidikan extends Model
 
     protected $appends = ['angkatan', 'gelombang_masuk'];
 
+    public function dosen_pa()
+    {
+        return $this->belongsTo(BiodataDosen::class, 'dosen_pa', 'id_dosen');
+    }
+
     public function peserta_kelas()
     {
         return $this->hasMany(PesertaKelasKuliah::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');

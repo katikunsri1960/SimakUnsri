@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Prodi\Akademik;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -12,86 +14,92 @@ class KRSController extends Controller
 {
     public function krs()
     {
-        $semester = SemesterAktif::with(['semester'])->first();
-
+        $semesters = Semester::orderBy('id_semester', 'desc')->get();
+        $semesterAktif = SemesterAktif::with('semester')->first();
         return view('prodi.data-akademik.krs.index', [
-            'semester' => $semester,
+            'semesters' => $semesters,
+            'semesterAktif' => $semesterAktif,
         ]);
     }
 
     public function data(Request $request)
     {
+        $semester = $request->semester;
+        $nim = $request->nim;
 
-        $searchValue = $request->input('search.value');
-        $semester = $request->input('semester');
-        
-        $query = RiwayatPendidikan::with(['prodi', 'peserta_kelas'])
-                ->withCount(['peserta_kelas' => function($query) use ($semester) {
-                    $query->whereHas('kelas_kuliah', function($query) use ($semester) {
-                        $query->where('id_semester', $semester);
-                    });
-                }])
-                ->whereHas('peserta_kelas', function($query) use ($semester) {
-                    $query->whereHas('kelas_kuliah', function($query) use ($semester) {
-                        $query->where('id_semester', $semester);
-                    });
+        $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')->where('nim', $nim)->first();
+
+        if(!$riwayat) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Data mahasiswa tidak ditemukan',
+            ];
+            return response()->json($response);
+        }
+
+        $krs = PesertaKelasKuliah::with('kelas_kuliah.matkul')->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                ->whereHas('kelas_kuliah' , function($query) use ($semester) {
+                    $query->where('id_semester', $semester);
                 })
-                ->where('id_prodi', auth()->user()->fk_id);
+                ->get();
 
-        if ($searchValue) {
-            $query = $query->where(function($q) use ($searchValue) {
-                $q->where('nim', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
-            });
+        if($krs->isEmpty()) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Data KRS tidak ditemukan!',
+            ];
+            return response()->json($response);
         }
-
-        if ($request->has('angkatan') && !empty($request->angkatan)) {
-            $filter = $request->angkatan;
-            $query->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $filter);
-        }
-
-        $limit = $request->input('length');
-        $offset = $request->input('start');
-
-        $data = $query->get();
-        dd($data);
-
-        if ($request->has('order')) {
-            $orderColumn = $request->input('order.0.column');
-            $orderDirection = $request->input('order.0.dir');
-
-            $columns = ['angkatan', 'nim', 'nama_mahasiswa'];
-
-            if ($columns[$orderColumn] == 'angkatan') {
-                if ($orderDirection == 'asc') {
-                    $data = $data->sortBy(function($item) {
-                        return substr($item->id_periode_masuk, 0, 4);
-                    })->values();
-                } else {
-                    $data = $data->sortByDesc(function($item) {
-                        return substr($item->id_periode_masuk, 0, 4);
-                    })->values();
-                }
-            } else {
-                if ($orderDirection == 'asc') {
-                    $data = $data->sortBy($columns[$orderColumn])->values();
-                } else {
-                    $data = $data->sortByDesc($columns[$orderColumn])->values();
-                }
-            }
-        }
-
-        $recordsFiltered = $data->count();
-
-        $data = $data->slice($offset, $limit)->values();
-
-        $recordsTotal = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)->count();
 
         $response = [
-            'draw' => $request->input('draw'),
-            'recordsTotal' => $recordsTotal,
-            'recordsFiltered' => $recordsFiltered,
-            'data' => $data,
+            'status' => 'success',
+            'message' => 'Data KRS berhasil diambil',
+            'krs' => $krs,
+            'riwayat' => $riwayat,
+        ];
+
+
+        return response()->json($response);
+    }
+
+    public function approve(Request $request)
+    {
+        $nim = $request->nim;
+        $semester = $request->semester;
+        $riwayat = RiwayatPendidikan::where('nim', $nim)->first();
+
+        if(!$riwayat) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data mahasiswa tidak ditemukan',
+            ]);
+        }
+
+        $krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                ->whereHas('kelas_kuliah', function($query) use ($semester) {
+                    $query->where('id_semester', $semester);
+                })
+                ->where('approved', '0')
+                ->get();
+
+        if($krs->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data KRS tidak ditemukan',
+            ]);
+        }
+
+        DB::beginTransaction();
+        foreach($krs as $item) {
+            $item->approved = 1;
+            $item->save();
+        }
+        DB::commit();
+
+
+        $response = [
+            'status' => 'success',
+            'message' => 'KRS berhasil diapprove',
         ];
 
         return response()->json($response);
