@@ -40,9 +40,9 @@ Penilaian Perkuliahan Mahasiswa
                     <div class="box box-body mb-0 ">
                         <div class="row">
                             <div class="col-xl-4 col-lg-12">
-                                <h3 class="fw-500 text-dark mt-0">{{$data[0]->kelas_kuliah->nama_semester}}</h3>
+                                {{-- <h3 class="fw-500 text-dark mt-0">{{$data[0]->kelas_kuliah->nama_semester}}</h3> --}}
                                 <p class="mb-0 text-fade fs-18">Batas Pengisian Nilai, {{$semester_aktif ? $semester_aktif['batas_isi_nilai'] : 'Data Belum Terisi'}}</p>
-                            </div> 
+                            </div>
                         </div><hr>
                         <div class="row">
                             <div class="table-responsive">

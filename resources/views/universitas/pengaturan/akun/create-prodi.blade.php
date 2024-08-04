@@ -32,7 +32,7 @@
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="email" class="form-label">E-Mail</label>
-                            <input type="text" class="form-control" name="email" id="email" required value="{{old('email')}}">
+                            <input type="text" class="form-control" name="email" id="email" value="{{old('email')}}">
                         </div>
                         <div class="col-md-4 mb-3">
                             <label for="password" class="form-label">Password</label>
