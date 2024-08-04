@@ -12,6 +12,7 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\BeasiswaMahasiswa;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Mahasiswa\PengajuanCuti;
@@ -66,7 +67,6 @@ class KrsController extends Controller
 
         // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
-
         list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
         // dd($mk_akt);
 
@@ -94,8 +94,6 @@ class KrsController extends Controller
 
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select);
 
-
-
     // DATA MK_MERDEKA
         $fakultas=Fakultas::all();
 
@@ -111,7 +109,8 @@ class KrsController extends Controller
         // dd($mk_regular);
 
     // TAGIHAN PEMBAYARAN
-        $beasiswa = '';
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
+        // dd($beasiswa);
         $tagihan = DB::connection('keu_con')
             ->table('tagihan')
             ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
@@ -383,13 +382,24 @@ class KrsController extends Controller
 
         $semester_aktif = SemesterAktif::pluck('id_semester');
 
-        $kelasKuliah = KelasKuliah::with(['dosen_pengajar.dosen'])
+        $kelasKuliah = KelasKuliah::with(['dosen_pengajar','dosen_pengajar.dosen'])
+                    ->whereHas('dosen_pengajar' , function($query) {
+                            $query->whereNotNull('id_dosen');
+                        })
                     ->withCount('peserta_kelas')
                     ->where('id_semester',  $semester_aktif)
                     ->where('id_matkul', $idMatkul)
                     ->orderBy('nama_kelas_kuliah')
                     ->get();
 
+        // $rps=RencanaPembelajaran::where('id_matkul', $idMatkul)->get();
+        // dd($kelasKuliah);
+
+        // if ($rps == NULL) {
+        //     // return redirect()->back()->with('error', 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.');
+        //     return response()->json(['message' => 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.'], 400);
+        // }
+        
         foreach ($kelasKuliah as $kelas) {
             $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->id, $kelas->id_matkul);
         }
@@ -451,6 +461,8 @@ class KrsController extends Controller
                     ->pluck('sks_mata_kuliah')
                     ->first();
 
+            
+
             // Check if the total SKS exceeds the maximum allowed SKS
             if (($total_sks + $sks_mk) > $sks_max) {
                 return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum.', 'sks_max' => $sks_max], 400);
@@ -458,6 +470,15 @@ class KrsController extends Controller
 
             $kelas_mk = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul','=','kelas_kuliahs.id_matkul')
                     ->where('id_kelas_kuliah', $idKelasKuliah)->first();
+
+            //QUERY RPS
+            $rps=RencanaPembelajaran::where('id_matkul', $kelas_mk->id_matkul)->get();
+            
+    
+            if ($rps->count() == 0) {
+                // return redirect()->back()->with('error', 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.');
+                return response()->json(['message' => 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.'], 400);
+            }
 
             DB::beginTransaction();
 
@@ -484,11 +505,21 @@ class KrsController extends Controller
             DB::rollback();
 
             return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
+            // return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
     public function hapus_kelas_kuliah(PesertaKelasKuliah $pesertaKelas)
     {
+        // $peserta= PesertaKelasKuliah::where('id', $pesertaKelas)->first();
+        // dd($pesertaKelas);
+
+        if ($pesertaKelas->approved ==1) {
+            // return redirect()->back()->with('error', 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.');
+            // return response()->json(['message' => 'Anda tidak dapat menghapus Mata Kuliah ini.'], 400);
+            return redirect()->back()->with('error', 'Anda tidak dapat menghapus Mata Kuliah ini, Mata Kuliah telah disetujui Dosen Pembimbing Akademik');
+        }
+
         $pesertaKelas->delete();
 
         return redirect()->back()->with('success', 'Mata Kuliah Berhasil di Hapus');

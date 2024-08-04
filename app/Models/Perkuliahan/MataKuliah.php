@@ -152,7 +152,7 @@ class MataKuliah extends Model
                             $q->where('id_semester', $semester_aktif);
                         },
                         'rencana_pembelajaran as jumlah_rps' => function ($q) {
-                                $q->where('approved', 0);
+                                $q->where('approved', 1);
                             }
                         ])
                         ->get();
@@ -182,7 +182,7 @@ class MataKuliah extends Model
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
 
-        $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 'kelas_kuliah', 'rencana_pembelajaran'])
+        $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 'kelas_kuliah','kelas_kuliah.dosen_pengajar', 'rencana_pembelajaran'])
                         ->whereHas('kurikulum' , function($query) use($kurikulum, $prodi) {
                             $query->where('list_kurikulums.id_kurikulum', $kurikulum)
                                 ->where('list_kurikulums.id_prodi', $prodi);
@@ -299,6 +299,45 @@ class MataKuliah extends Model
                                     "sks_mata_kuliah"=>6.00,
                                     "semester"=>8,
                                 ],
+                            ]
+                        ]
+                    ],
+            ],
+
+
+            [
+                "id_prodi"=> "5c1370e1-dfd1-4137-af50-a24025696602",
+                "data"=>
+                [
+                    [   
+                        "id_kurikulum"=>"f577582a-9ef0-4a04-aed8-a84a0dd8714b",
+                        "data"=>
+                            [
+                                [
+                                    "id_matkul"=>"f2595b3a-8a35-4a1c-bf01-9ade1594f3a4",
+                                    "kode_mata_kuliah"=>"FIk406220",
+                                    "nama_mata_kuliah"=>"TESIS",
+                                    "id_jenis_mata_kuliah"=>"S",
+                                    "sks_mata_kuliah"=>6.00,
+                                    "semester"=>3,
+                                ]
+                                // ,
+                                // [
+                                //     "id_matkul"=>"1301a6e0-371b-40b6-8cd4-37119ac8a491",
+                                //     "kode_mata_kuliah"=>"FTI4015",
+                                //     "nama_mata_kuliah"=>"KULIAH KERJA NYATA",
+                                //     "id_jenis_mata_kuliah"=>"A",
+                                //     "sks_mata_kuliah"=>3.00,
+                                //     "semester"=>7,
+                                // ],
+                                // [
+                                //     "id_matkul"=>"a96fe827-4811-4c65-973f-079dc398d7cb",
+                                //     "kode_mata_kuliah"=>"FTI4017",
+                                //     "nama_mata_kuliah"=>"SKRIPSI",
+                                //     "id_jenis_mata_kuliah"=>"A",
+                                //     "sks_mata_kuliah"=>6.00,
+                                //     "semester"=>8,
+                                // ],
                             ]
                         ]
                     ],

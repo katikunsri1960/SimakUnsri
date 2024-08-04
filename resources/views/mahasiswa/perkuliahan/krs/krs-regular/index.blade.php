@@ -224,7 +224,7 @@ Kartu Rencana Studi
                         $.each(mkMerdeka, function(index, data) {
                             var isDisabled = krsMerdeka.includes(data.id_matkul);
                             var isEmptyClass = data.jumlah_kelas == 0
-                            var isEmptyRps = data.jumlah_rpss == 0
+                            var isEmptyRps = data.jumlah_rps == 0
                             var row = '<tr class="' + (isDisabled ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
                                 '<td class="text-center align-middle">' + (index + 1) +'. '+ '</td>' +
                                 '<td class="text-start align-middle">' + data.kode_mata_kuliah + '</td>' +
@@ -277,7 +277,7 @@ Kartu Rencana Studi
                     if (data.length === 0) {
                         // Jika kelas kuliah kosong, tampilkan pesan peringatan menggunakan SweetAlert
                         Swal.fire({
-                            icon: 'warning',
+                            type: 'warning',
                             title: 'Kelas Kuliah Kosong',
                             text: 'Tidak ada kelas kuliah yang tersedia untuk mata kuliah ini.'
                         });
@@ -372,7 +372,7 @@ Kartu Rencana Studi
                                 swal({
                                     title: 'Gagal!',
                                     text: errorMessage,
-                                    icon: 'warning',
+                                    type: 'warning',
                                     confirmButtonText: 'OK'
                                 });
                             }
@@ -382,7 +382,7 @@ Kartu Rencana Studi
                         swal({
                             title: 'Prasyarat Tidak Terpenuhi',
                             text: 'Anda belum menyelesaikan mata kuliah prasyarat yang diperlukan ' +  ': ' + response.mata_kuliah_syarat,
-                            icon: 'warning',
+                            type: 'warning',
                             confirmButtonText: 'OK'
                         });
                     }
@@ -627,7 +627,7 @@ Kartu Rencana Studi
                 if (data.length === 0) {
                     // Tampilkan pesan error jika data RPS kosong
                     swal({
-                        icon: 'warning',
+                        type: 'warning',
                         title: 'Tidak ada data RPS',
                         text: 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.',
                     });
@@ -662,10 +662,7 @@ Kartu Rencana Studi
             row += '</tr>';
             $(resultContainerIdModal).append(row);
         });
-    }
-    
-    
-        
+    }      
     
 
 </script>
