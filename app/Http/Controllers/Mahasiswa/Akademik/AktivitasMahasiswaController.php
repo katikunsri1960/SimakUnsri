@@ -149,7 +149,7 @@ class AktivitasMahasiswaController extends Controller
         // Validasi data
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
-            'keterangan' => 'string|max:50', // tambahkan validasi untuk Keterangan
+            'keterangan' => 'nullable|max:100', // tambahkan validasi untuk Keterangan
             'lokasi' => 'required|string',
             'dosen_bimbing_aktivitas.*' => 'required',
             'id_matkul' => 'required',
