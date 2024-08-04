@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
+use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -19,6 +20,9 @@ class BiayaKuliahController extends Controller
         $semester_aktif = SemesterAktif::first();
         $user = auth()->user();
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
+
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
+        // dd($beasiswa);
 
         $tagihan = Tagihan::with('pembayaran')
                 ->where('tagihan.nomor_pembayaran', $user->username)
@@ -55,6 +59,6 @@ class BiayaKuliahController extends Controller
             }
         }
         
-        return view('mahasiswa.biaya-kuliah.index', ['tagihan' => $tagihan, 'pembayaran'=> $pembayaran]);
+        return view('mahasiswa.biaya-kuliah.index', ['tagihan' => $tagihan, 'pembayaran'=> $pembayaran, 'beasiswa'=> $beasiswa]);
     }
 }

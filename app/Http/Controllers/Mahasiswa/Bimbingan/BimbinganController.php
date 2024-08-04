@@ -5,13 +5,14 @@ namespace App\Http\Controllers\Mahasiswa\Bimbingan;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Models\AsistensiAkhir;
+use App\Models\BeasiswaMahasiswa;
+use App\Models\Connection\Tagihan;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
-use App\Models\Connection\Tagihan;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 
 class BimbinganController extends Controller
 {
@@ -21,11 +22,16 @@ class BimbinganController extends Controller
         $id_semester = SemesterAktif::first()->id_semester;
         $user = auth()->user();
 
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
+        // dd($beasiswa);
+
         // Cek status pembayaran
         $tagihan = Tagihan::with('pembayaran')
             ->where('nomor_pembayaran', $user->username)
             ->where('kode_periode', $id_semester)
             ->first();
+
+        
 
         $statusPembayaran = $tagihan->pembayaran ? $tagihan->pembayaran->status_pembayaran : null;
         // dd($statusPembayaran);
@@ -61,6 +67,7 @@ class BimbinganController extends Controller
             'dosen_pembimbing' => $dosen_pembimbing,
             'showAlert' => false, // Flag untuk tidak menampilkan SweetAlert
             'statusPembayaran' => $statusPembayaran,
+            'beasiswa' => $beasiswa,
         ]);
     }
 
