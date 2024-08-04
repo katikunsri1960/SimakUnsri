@@ -66,6 +66,7 @@ class KRSController extends Controller
     {
         $nim = $request->nim;
         $semester = $request->semester;
+        
         $riwayat = RiwayatPendidikan::where('nim', $nim)->first();
 
         if(!$riwayat) {
