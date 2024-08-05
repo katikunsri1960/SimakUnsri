@@ -26,8 +26,13 @@ class PembimbingMahasiswaController extends Controller
                                 ->where('approved', 0);
                         });
                     }])
-                    ->whereHas('peserta_kelas', function($query) use ($semester) {
-                        $query->whereHas('kelas_kuliah', function($query) use ($semester) {
+                    ->where(function($query) use ($semester) {
+                        $query->whereHas('peserta_kelas', function($query) use ($semester) {
+                            $query->whereHas('kelas_kuliah', function($query) use ($semester) {
+                                $query->where('id_semester', $semester->id_semester);
+                            });
+                        })
+                        ->orWhereHas('aktivitas_mahasiswa', function($query) use ($semester) {
                             $query->where('id_semester', $semester->id_semester);
                         });
                     })
