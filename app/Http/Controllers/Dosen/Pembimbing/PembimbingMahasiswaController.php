@@ -8,6 +8,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Dosen\PenugasanDosen;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -181,5 +182,102 @@ class PembimbingMahasiswaController extends Controller
                 'message' => 'Terjadi kesalahan saat menyetujui asistensi'
             ]);
         }
+    }
+
+    public function ajuan_sidang(AktivitasMahasiswa $aktivitas)
+    {
+        $data = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']);
+
+        $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
+                            ->where('id_dosen', auth()->user()->fk_id)
+                            ->first()->pembimbing_ke;
+        // dd($pembimbing_ke);
+        return view('dosen.pembimbing.tugas-akhir.pengajuan-sidang', [
+            'data' => $data,
+            'pembimbing_ke' => $pembimbing_ke
+        ]);
+    }
+
+    public function get_dosen(Request $request)
+    {
+        $search = $request->get('q');
+        
+        // Log the search term for debugging
+        \Log::info('Search term: ' . $search);
+
+        // Get the active semester and associated year
+        $tahun_ajaran = SemesterAktif::with('semester')->first();
+
+        // Start building the query
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1)
+                                ->orderBy('nama_dosen', 'asc');
+
+        // Add search conditions if search term is present
+        if ($search) {
+            $query->where(function ($q) use ($search, $tahun_ajaran) {
+                $q->where('nama_dosen', 'like', "%{$search}%")
+                ->orWhere('nama_program_studi', 'like', "%{$search}%")
+                ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1);
+            });
+        }
+
+        // Get the results
+        $data = $query->get();
+
+        // Return the results as JSON
+        return response()->json($data);
+    }
+
+
+    public function ajuan_sidang_store(Request $request, $id_matkul, $nama_kelas_kuliah)
+    {
+        // dd($request->all());
+        try {
+            DB::beginTransaction();
+
+            AktivitasMahasiswa::update();
+
+            $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
+
+            if($dosen_pengajar->count() == 0 || $dosen_pengajar->count() != count($request->dosen_kelas_kuliah)){
+                $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
+            }
+            //Count jumlah dosen pengajar kelas kuliah
+            $jumlah_dosen=count($request->dosen_kelas_kuliah);
+
+            for($i=0;$i<$jumlah_dosen;$i++){
+                //Generate id aktivitas mengajar
+                $id_uji_mahasiswa = Uuid::uuid4()->toString();
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_kelas_kuliah[$i])->first();
+                if(!$dosen)
+                {
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_kelas_kuliah[$i])->first();
+                }
+
+                if(is_null($request->substansi_kuliah)){
+                    //Store data to table tanpa substansi kuliah
+                    DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+
+                }else{
+                    //Get sks substansi total
+                    $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
+
+                    //Store data to table dengan substansi kuliah
+                    DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                }
+
+            }
+
+            DB::commit();
+
+            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Berhasil di Tambahkan');
+
+
+            //
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+        }
+
     }
 }
