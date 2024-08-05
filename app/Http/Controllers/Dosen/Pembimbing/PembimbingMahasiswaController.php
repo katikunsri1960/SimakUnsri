@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\DB;
 
 class PembimbingMahasiswaController extends Controller
 {
-    public function bimbingan_akademik() 
+    public function bimbingan_akademik()
     {
         $semester = SemesterAktif::with(['semester'])->first();
 
@@ -33,6 +33,7 @@ class PembimbingMahasiswaController extends Controller
                     })
                     ->where('dosen_pa', auth()->user()->fk_id)
                 ->get();
+        // $dataAktivitas = AktivitasMahasiswa::where('')
 
         return view('dosen.pembimbing.akademik.index', [
             'data' => $data,
