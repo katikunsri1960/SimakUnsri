@@ -6,6 +6,8 @@ use App\Models\Dosen\BiodataDosen;
 use App\Models\Semester;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\JalurMasuk;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
@@ -20,6 +22,16 @@ class RiwayatPendidikan extends Model
     protected $guarded = [];
 
     protected $appends = ['angkatan', 'gelombang_masuk'];
+
+    public function anggota_aktivitas_mahasiswa()
+    {
+        return $this->hasMany(AnggotaAktivitasMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function aktivitas_mahasiswa()
+    {
+        return $this->hasManyThrough(AktivitasMahasiswa::class, AnggotaAktivitasMahasiswa::class, 'id_registrasi_mahasiswa', 'id_aktivitas', 'id_registrasi_mahasiswa', 'id_aktivitas');
+    }
 
     public function dosen_pa()
     {

@@ -50,7 +50,7 @@ Bimbingan Akademik Dosen
                             <div class="">
                                 <form action="{{route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat])}}" method="post" id="approveAll">
                                 @csrf
-                                <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count() == 0)
+                                <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() == 0)
                                     disabled
                                 @endif>Setujui Semua KRS</button>
                                 </form>
@@ -81,6 +81,22 @@ Bimbingan Akademik Dosen
                                     <td class="text-center align-middle">{{$d->kelas_kuliah->nama_kelas_kuliah}}</td>
                                     <td class="text-center align-middle">
                                         @if ($d->approved == '1')
+                                            <span class="badge bg-success rounded">Disetujui</span>
+                                        @else
+                                            <span class="badge bg-danger">Belum Disetujui</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                                @foreach ($aktivitas as $a)
+                                <tr>
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{$a->konversi->kode_mata_kuliah}}</td>
+                                    <td class="text-start align-middle">{{$a->konversi->nama_mata_kuliah}}</td>
+                                    <td class="text-center align-middle">{{$a->konversi->sks_mata_kuliah}}</td>
+                                    <td class="text-center align-middle"> - </td>
+                                    <td class="text-center align-middle">
+                                        @if ($a->approve_krs == '1')
                                             <span class="badge bg-success rounded">Disetujui</span>
                                         @else
                                             <span class="badge bg-danger">Belum Disetujui</span>

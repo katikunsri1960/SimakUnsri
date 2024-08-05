@@ -28,13 +28,12 @@ class KRSController extends Controller
         $nim = $request->nim;
 
         $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')->where('nim', $nim)->first();
-
-        if(!$riwayat) {
-            $response = [
+        // dd($riwayat);
+        if (!$riwayat || $riwayat->id_prodi != auth()->user()->fk_id) {
+            return response()->json([
                 'status' => 'error',
                 'message' => 'Data mahasiswa tidak ditemukan',
-            ];
-            return response()->json($response);
+            ]);
         }
 
         $krs = PesertaKelasKuliah::with('kelas_kuliah.matkul')->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
@@ -66,7 +65,7 @@ class KRSController extends Controller
     {
         $nim = $request->nim;
         $semester = $request->semester;
-        
+
         $riwayat = RiwayatPendidikan::where('nim', $nim)->first();
 
         if(!$riwayat) {

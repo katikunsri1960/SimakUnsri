@@ -82,9 +82,24 @@ class PesertaKelasKuliah extends Model
                     ->groupBy('id_registrasi_mahasiswa')
                     ->first();
                     // dd($transkrip);
+
+        $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
+                    ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
+                        $query->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->get();
+
+        // dd($aktivitas);
         try {
 
             DB::beginTransaction();
+
+            foreach ($aktivitas as $item) {
+                $item->update([
+                    'approve_krs' => '1',
+                ]);
+            }
 
             foreach ($data as $item) {
                 $item->update([
@@ -118,7 +133,7 @@ class PesertaKelasKuliah extends Model
                 $result = [
                     'status' => 'error',
                     'message' => 'AKM Mahasiswa sudah ada!',
-                ]; 
+                ];
                 return $result;
             }
 
