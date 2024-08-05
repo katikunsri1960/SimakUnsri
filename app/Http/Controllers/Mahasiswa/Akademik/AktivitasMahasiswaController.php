@@ -110,7 +110,7 @@ class AktivitasMahasiswaController extends Controller
                     // ->where('id_prodi', $prodi_id)
                     ->get();
 
-        return view('mahasiswa.krs.ambil-aktivitas-mahasiswa', 
+        return view('mahasiswa.perkuliahan.krs.krs-regular.aktivitas-mahasiswa.ambil-aktivitas-mahasiswa', 
         [
             'id_matkul' => $id_matkul, 
             'akm'=>$akm, 
@@ -129,7 +129,7 @@ class AktivitasMahasiswaController extends Controller
         $tahun_ajaran = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
         
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran)
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran-1)
                                 ->orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
@@ -149,7 +149,7 @@ class AktivitasMahasiswaController extends Controller
         // Validasi data
         $validated = $request->validate([
             'judul' => 'required|string|max:255',
-            'keterangan' => 'string|max:50', // tambahkan validasi untuk Keterangan
+            'keterangan' => 'nullable|max:100', // tambahkan validasi untuk Keterangan
             'lokasi' => 'required|string',
             'dosen_bimbing_aktivitas.*' => 'required',
             'id_matkul' => 'required',
