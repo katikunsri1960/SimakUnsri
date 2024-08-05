@@ -19,13 +19,17 @@ class PembimbingMahasiswaController extends Controller
     {
         $semester = SemesterAktif::with(['semester'])->first();
 
-        $data = RiwayatPendidikan::with(['prodi', 'peserta_kelas'])
+        $data = RiwayatPendidikan::with(['prodi', 'peserta_kelas', 'aktivitas_mahasiswa'])
                     ->withCount(['peserta_kelas' => function($query) use ($semester) {
                         $query->whereHas('kelas_kuliah', function($query) use ($semester) {
                             $query->where('id_semester', $semester->id_semester)
                                 ->where('approved', 0);
                         });
+                    }, 'aktivitas_mahasiswa' => function($query) use ($semester) {
+                        $query->where('id_semester', $semester->id_semester)
+                            ->where('approve_krs', 0);
                     }])
+
                     ->where(function($query) use ($semester) {
                         $query->whereHas('peserta_kelas', function($query) use ($semester) {
                             $query->whereHas('kelas_kuliah', function($query) use ($semester) {
@@ -39,7 +43,7 @@ class PembimbingMahasiswaController extends Controller
                     ->where('dosen_pa', auth()->user()->fk_id)
                 ->get();
         // $dataAktivitas = AktivitasMahasiswa::where('')
-
+                    dd($data[0]->aktivitas_mahasiswa_count);
         return view('dosen.pembimbing.akademik.index', [
             'data' => $data,
             'semester' => $semester,
