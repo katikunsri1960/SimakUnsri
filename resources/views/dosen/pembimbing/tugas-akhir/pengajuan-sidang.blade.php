@@ -27,7 +27,7 @@ Pengajuan Sidang Mahasiswa
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang.store', ['aktivitas' => $data])}}" id="approve-sidang" method="POST">
+                <form class="form" action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang.store', ['aktivitas' => $data->id_aktivitas])}}" id="approve-sidang" method="POST">
                     @csrf
                     <div class="box-body">
                         <h4 class="text-info mb-0"><i class="fa fa-university"></i> Detail Bimbing Mahasiswa</h4>
@@ -164,7 +164,7 @@ Pengajuan Sidang Mahasiswa
                             '</div>' +
                             '<div class="col-md-3 mb-2">' +
                                 '<label for="penguji_ke" class="form-label">Penguji Ke -</label>' +
-                                '<input type="text" class="form-control" name="penguji_ke[]" aria-describedby="helpId" value="0" />' +
+                                '<input type="text" class="form-control" name="penguji_ke[]" aria-describedby="helpId" value="1" />' +
                             '</div>' +
                             '<div class="col-md-1 mb-2">' +
                                 '<label class="form-label">&nbsp;</label>' +
@@ -195,7 +195,7 @@ Pengajuan Sidang Mahasiswa
                     selectedValues.push(selectedValue);
                 }
             });
-            console.log(selectedValues);
+            // console.log(selectedValues);
         }
 
         // Form submission with SweetAlert confirmation
@@ -210,7 +210,7 @@ Pengajuan Sidang Mahasiswa
                 cancelButtonColor: '#d33',
                 confirmButtonText: 'Lanjutkan',
                 cancelButtonText: 'Batal'
-            }).then(function(isConfirmed){
+            },function(isConfirmed){
                 if (isConfirmed) {
                     collectSelectedValues();
                     $('#approve-sidang').unbind('submit').submit();
