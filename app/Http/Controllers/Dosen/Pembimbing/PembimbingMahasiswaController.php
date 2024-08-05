@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\DB;
 
 class PembimbingMahasiswaController extends Controller
 {
-    public function bimbingan_akademik()
+    public function bimbingan_akademik() 
     {
         $semester = SemesterAktif::with(['semester'])->first();
 
@@ -30,7 +30,6 @@ class PembimbingMahasiswaController extends Controller
                         $query->where('id_semester', $semester->id_semester)
                             ->where('approve_krs', 0);
                     }])
-
                     ->where(function($query) use ($semester) {
                         $query->whereHas('peserta_kelas', function($query) use ($semester) {
                             $query->whereHas('kelas_kuliah', function($query) use ($semester) {
@@ -44,7 +43,7 @@ class PembimbingMahasiswaController extends Controller
                     ->where('dosen_pa', auth()->user()->fk_id)
                 ->get();
         // $dataAktivitas = AktivitasMahasiswa::where('')
-                    // dd($data[0]->aktivitas_mahasiswa_count);
+
         return view('dosen.pembimbing.akademik.index', [
             'data' => $data,
             'semester' => $semester,
@@ -195,13 +194,9 @@ class PembimbingMahasiswaController extends Controller
     {
         $data = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']);
 
-        $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
-                            ->where('id_dosen', auth()->user()->fk_id)
-                            ->first()->pembimbing_ke;
         // dd($pembimbing_ke);
         return view('dosen.pembimbing.tugas-akhir.pengajuan-sidang', [
-            'data' => $data,
-            'pembimbing_ke' => $pembimbing_ke
+            'data' => $data
         ]);
     }
 
@@ -236,13 +231,33 @@ class PembimbingMahasiswaController extends Controller
     }
 
 
-    public function ajuan_sidang_store(Request $request, $id_matkul, $nama_kelas_kuliah)
+    public function ajuan_sidang_store(Request $request, $aktivitas)
     {
         // dd($request->all());
+
         try {
             DB::beginTransaction();
 
-            AktivitasMahasiswa::update();
+            AktivitasMahasiswa::update('approve_sidang');
+
+
+
+            $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
+                            ->where('id_dosen', auth()->user()->fk_id)
+                            ->first()->pembimbing_ke;
+
+            //Define variable
+            $semester_aktif = SemesterAktif::first();
+
+            //Validate request data
+            $data = $request->validate([
+                'dosen_kelas_kuliah.*' => 'required',
+                'rencana_minggu_pertemuan.*' => 'required',
+                'evaluasi.*' => [
+                    'required',
+                    Rule::in(['1','2','3','4'])
+                ]
+            ]);
 
             $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_kelas_kuliah)->get();
 
