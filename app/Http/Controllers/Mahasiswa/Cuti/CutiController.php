@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\PengajuanCuti;
 use App\Models\Referensi\JenisPrestasi;
+use Illuminate\Support\Facades\Storage;
 use App\Models\Referensi\TingkatPrestasi;
 use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
@@ -32,7 +33,7 @@ class CutiController extends Controller
         $user = auth()->user();
         $id_semester = SemesterAktif::first()->id_semester;
         $data = PengajuanCuti::where('id_registrasi_mahasiswa', $user->fk_id)->get();
-        // dd($data_mahasiswa->biodata->id_mahasiswa);
+        // dd($data[0]->id_cuti);
 
         $jenjang_pendidikan = RiwayatPendidikan::with('prodi')->where('id_registrasi_mahasiswa', $user->fk_id)->first();
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
@@ -118,11 +119,10 @@ class CutiController extends Controller
 
     public function store(Request $request)
     {
-        //Define variable
+        // Define variable
         $id_reg = auth()->user()->fk_id;
         $semester_aktif = SemesterAktif::first();
         
-
         $riwayat_pendidikan = RiwayatPendidikan::select('*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
@@ -143,7 +143,7 @@ class CutiController extends Controller
             }
         }
 
-        //Validate request data
+        // Validate request data
         $request->validate([
             'jalan' => 'required',
             // 'dusun' => 'required',
@@ -159,17 +159,21 @@ class CutiController extends Controller
 
         $id_cuti = Uuid::uuid4()->toString();
 
-        $alamat = $request->jalan. ', ' . $request->dusun . ', RT-' . $request->rt. '/RW-' . $request->rw
+        $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
         . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
 
         $alamat = str_replace(', ,', ',', $alamat);
 
-        // dd($request->handphone);
-        
+        // Generate file name
         $fileName = 'file_pendukung_' . str_replace(' ', '_', $riwayat_pendidikan->nama_mahasiswa) . '_' . time() . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
 
         // Simpan file ke folder public/pdf dengan nama kustom
         $filePath = $request->file('file_pendukung')->storeAs('pdf', $fileName, 'public');
+
+        // Cek apakah file berhasil diupload
+        if (!$filePath) {
+            return redirect()->back()->with('error', 'File pendukung gagal diunggah. Silakan coba lagi.');
+        }
 
         PengajuanCuti::create([
             'id_cuti' => $id_cuti,
@@ -188,5 +192,33 @@ class CutiController extends Controller
 
         // Redirect kembali ke halaman index dengan pesan sukses
         return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+
+    public function delete($id_cuti)
+    {
+        try {
+            // Temukan pengajuan cuti berdasarkan ID
+            $cuti = PengajuanCuti::where('id_cuti', $id_cuti)->first();
+
+            // Jika pengajuan cuti tidak ditemukan, lemparkan pesan error
+            if (!$cuti) {
+                return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak ditemukan.');
+            }
+
+            // Hapus file pendukung dari storage jika ada
+            // if ($cuti->file_pendukung) {
+            //     \Storage::disk('public')->delete($cuti->file_pendukung);
+            // }
+
+            // Hapus data pengajuan cuti dari database
+            $cuti->delete();
+
+            // Redirect kembali ke halaman index dengan pesan sukses
+            return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('success', 'Pengajuan cuti berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Tangani error dan tampilkan pesan error
+            return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Terjadi kesalahan saat menghapus pengajuan cuti.');
+        }
     }
 }

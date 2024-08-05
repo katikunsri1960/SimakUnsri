@@ -114,6 +114,7 @@ Kartu Rencana Studi
         </div>
     @endif
     @if($krs_merdeka->isNotEmpty())
+        <br>    
         <table style="width: 100%">
             <tr>
                 <td class="text-upper text-center text-12" height="30" colspan="4">
@@ -186,7 +187,7 @@ Kartu Rencana Studi
                         @foreach ($krs_akt as $data)
                             <tr>
                                 <td  class="text-td text-center">{{ $no++ }}.</td>
-                                <td  class="text-td">{{ $data->nama_jenis_aktivitas }}</td>
+                                <td  class="text-td text-center">{{ $data->nama_jenis_aktivitas }}</td>
                                 <td  class="text-td">
                                     @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
                                         <ul class="my-0">
@@ -196,7 +197,11 @@ Kartu Rencana Studi
                                         </ul> 
                                     @endforeach
                                 </td>
-                                <td  class="text-td text-center">{{ $data->konversi->sks_mata_kuliah }}</td>
+                                <td class="text-center align-middle" style="width:10%">
+                                    <div>
+                                        {{ $data->konversi= NULL ? $data->konversi->sks_mata_kuliah : '-' }}
+                                    </div>
+                                </td>
                                 
                             </tr>
                         @endforeach
@@ -218,7 +223,7 @@ Kartu Rencana Studi
             </tr>
             <tr width="100%">
                 <td width="60%"></td>
-                <td width="40%" class="text-right text-10" >
+                <td width="50%" class="text-right text-10" >
                     Inderalaya, {{$today->isoFormat('DD MMMM Y')}}
                 </td>
             </tr>
@@ -226,17 +231,17 @@ Kartu Rencana Studi
                 <td class="text-left text-10" width="60%">
                     {{-- Catatan: --}}
                 </td>
-                <td width="40%" class="text-right text-10" >Pembimbing Akademik,</td>
+                <td width="50%" class="text-right text-10" >Pembimbing Akademik,</td>
             </tr>
             <tr>
                 <td class="text-left text-10" width="60%" style="vertical-align: text-top">
                     {{-- KSM harus dibawa pada saat mengikuti ujian akhir semester --}}
                 </td>
-                <td height="60" width="40%"></td>
+                <td height="60" width="50%"></td>
             </tr>
             <tr>
-                <td width="60%"></td>
-                <td width="40%" class="text-right text-10" >
+                <td width="50%"></td>
+                <td width="50%" class="text-right text-10" >
                     {{ $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nama_dosen}}
                 </td>
             </tr>
@@ -244,7 +249,7 @@ Kartu Rencana Studi
                 <td class="text-left text-10" width="60%" style="font-style: italic; ">
                     {{-- Lembar untuk mahasiswa --}}
                 </td>
-                <td width="40%" class="text-right text-10" >
+                <td width="50%" class="text-right text-10" >
                     {{ $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip}}
                 </td>
             </tr>

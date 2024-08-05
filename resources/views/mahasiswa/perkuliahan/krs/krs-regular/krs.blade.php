@@ -182,7 +182,7 @@
                                                                 {{-- <td class="text-center align-middle" style="width:5%">{{ $data->konversi->sks_mata_kuliah }}</td> --}}
                                                                 <td class="text-center align-middle" style="width:10%">
                                                                     <div>
-                                                                        {{ $data->konversi= NULL ? $data->konversi->sks_mata_kuliah : 'Tidak Diisi' }}
+                                                                        {{ $data->konversi== NULL ? 'Tidak Diisi' : $data->konversi->sks_mata_kuliah }}
                                                                     </div>
                                                                 </td>
                                                                 <td class="text-start align-middle"  style="white-space: nowrap; width:20%">
@@ -203,9 +203,14 @@
                                                                         @endif
                                                                     </div>
                                                                 </td>
-
                                                                 <td class="text-center align-middle" style="width:3%">
-                                                                    <button class="btn btn-danger rounded-10 hapus-aktivitas" data-id="{{ $data->id }}"><i class="fa fa-trash"></i></button>
+                                                                    <form action="{{route('mahasiswa.krs.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
+                                                                        @csrf
+                                                                        @method('delete')
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                            <i class="fa fa-trash"></i>
+                                                                        </button>
+                                                                    </form>
                                                                 </td>
                                                             </tr>
                                                         @endforeach

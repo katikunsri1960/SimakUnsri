@@ -45,8 +45,8 @@ Pengajuan Cuti Mahasiswa
                                     <th>No</th>
                                     <th>Semester</th>
                                     <th>Alasan Pengajuan Cuti</th>
-                                    <th>Status Pengajuan Cuti</th>
-                                    {{-- <th>Lokasi File</th> --}}
+                                    <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,7 +54,7 @@ Pengajuan Cuti Mahasiswa
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>
-                                        <td class="text-start align-middle">{{$d->alasan_cuti}}</td>
+                                        <td class="text-start align-middle" style="white-space:nowrap;">{{$d->alasan_cuti}}</td>
                                         <td class="text-center align-middle" style="width:10%">
                                             @if($d->approved == 0)
                                                 <span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>
@@ -63,12 +63,18 @@ Pengajuan Cuti Mahasiswa
                                             @elseif($d->approved == 2)
                                                 <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
                                             @endif
-                                            {{-- <div>
-                                                {!! $d->approved == 0 ? '' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
-                                            </div> --}}
                                         </td>
-                                        {{-- <td>{{$d->file_pendukung}}</td> --}}
-
+                                        <td>{{$d->file_pendukung}}</td>
+                                        <td>
+                                            <form action="{{ route('mahasiswa.pengajuan-cuti.delete', $d->id_cuti) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan cuti ini?');">
+                                                @csrf
+                                                @method('DELETE')
+                                                {{-- <button type="submit" class="btn btn-danger">Hapus</button> --}}
+                                                <button type="submit" class="btn btn-danger rounded-10">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

@@ -13,7 +13,7 @@ Kartu Rencana Studi
                         <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Kartu Studi Mahasiswa</h2>
+                            <h2>Kartu Rencana Studi</h2>
                             <p class="text-dark align-middle mb-0 fs-16">
                                 Universitas Sriwijaya
                             </p>
@@ -80,7 +80,7 @@ Kartu Rencana Studi
                                 <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
                                 <i class="fa-solid fa-arrow-left"></i>
                                 </a>
-                                <h3 class="box-title px-3">Kartu Studi Mahasiswa</h3>
+                                <h3 class="box-title px-3">Kartu Rencana Studi</h3>
                             </div>
                         </div>
                     </div>

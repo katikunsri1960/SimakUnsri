@@ -309,7 +309,7 @@ class AktivitasMahasiswaController extends Controller
             });
 
             // Jika berhasil, kembalikan respons sukses
-            return redirect()->route('mahasiswa.krs')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
+            return redirect()->route('mahasiswa.krs.index')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
 
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
@@ -343,11 +343,11 @@ class AktivitasMahasiswaController extends Controller
 
             DB::commit();
 
-            return redirect()->route('mahasiswa.krs')->with('success', 'Aktivitas berhasil dihapus.');
+            return redirect()->route('mahasiswa.krs.index')->with('success', 'Aktivitas berhasil dihapus.');
         } catch (\Exception $e) {
             DB::rollback();
 
-            return redirect()->route('mahasiswa.krs')->with('error', $e->getMessage());
+            return redirect()->route('mahasiswa.krs.index')->with('error', $e->getMessage());
         }
     }
 

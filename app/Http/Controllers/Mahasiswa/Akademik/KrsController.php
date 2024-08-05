@@ -68,7 +68,7 @@ class KrsController extends Controller
         // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
         list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
-        // dd($mk_akt);
+        // dd($krs_akt[0]->konversi);
 
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->orderBy('id_semester', 'DESC')
@@ -111,6 +111,16 @@ class KrsController extends Controller
     // TAGIHAN PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
         // dd($beasiswa);
+
+        // if (!empty($existingCuti)) {
+        //     if ($existingCuti->approved == 0) {
+        //         return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
+        //     }
+        //     elseif ($existingCuti->approved == 1) {
+        //         return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sudah disetujui.');
+        //     }
+        // }
+
         $tagihan = DB::connection('keu_con')
             ->table('tagihan')
             ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
@@ -391,14 +401,6 @@ class KrsController extends Controller
                     ->where('id_matkul', $idMatkul)
                     ->orderBy('nama_kelas_kuliah')
                     ->get();
-
-        // $rps=RencanaPembelajaran::where('id_matkul', $idMatkul)->get();
-        // dd($kelasKuliah);
-
-        // if ($rps == NULL) {
-        //     // return redirect()->back()->with('error', 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.');
-        //     return response()->json(['message' => 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.'], 400);
-        // }
         
         foreach ($kelasKuliah as $kelas) {
             $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->id, $kelas->id_matkul);
