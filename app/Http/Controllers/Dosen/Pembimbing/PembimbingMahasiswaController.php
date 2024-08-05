@@ -44,7 +44,7 @@ class PembimbingMahasiswaController extends Controller
                     ->where('dosen_pa', auth()->user()->fk_id)
                 ->get();
         // $dataAktivitas = AktivitasMahasiswa::where('')
-                    dd($data[0]->aktivitas_mahasiswa_count);
+                    // dd($data[0]->aktivitas_mahasiswa_count);
         return view('dosen.pembimbing.akademik.index', [
             'data' => $data,
             'semester' => $semester,
@@ -64,10 +64,17 @@ class PembimbingMahasiswaController extends Controller
                 ->get();
 
         // dd($data);
+        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
+                    ->whereHas('anggota_aktivitas_personal', function($query) use ($id) {
+                        $query->where('id_registrasi_mahasiswa', $id);
+                    })
+                    ->where('id_semester', $semester)
+                    ->get();
 
         return view('dosen.pembimbing.akademik.detail', [
             'riwayat' => $riwayat,
             'data' => $data,
+            'aktivitas' => $aktivitas,
         ]);
     }
 
@@ -201,7 +208,7 @@ class PembimbingMahasiswaController extends Controller
     public function get_dosen(Request $request)
     {
         $search = $request->get('q');
-        
+
         // Log the search term for debugging
         \Log::info('Search term: ' . $search);
 

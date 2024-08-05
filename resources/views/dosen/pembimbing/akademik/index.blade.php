@@ -51,7 +51,7 @@ Bimbingan Akademik Dosen
                                     <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
                                     <td class="text-center align-middle">{{$d->prodi->nama_jenjang_pendidikan}} {{$d->prodi->nama_program_studi}}</td>
                                     <td class="text-center align-middle">
-                                        @if ($d->peserta_kelas_count > 0)
+                                        @if ($d->peserta_kelas_count+$d->aktivitas_mahasiswa_count > 0)
                                             <span class="badge bg-warning">Belum Disetujui</span>
                                         @else
                                             <span class="badge bg-success">Sudah Disetujui</span>
