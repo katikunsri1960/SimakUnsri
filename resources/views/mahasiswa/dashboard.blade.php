@@ -360,3 +360,4 @@ Dashboard
         chart.render();
     });
 </script>
+@endpush

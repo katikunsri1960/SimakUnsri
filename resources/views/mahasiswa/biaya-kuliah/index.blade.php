@@ -47,11 +47,11 @@ Biaya Kuliah
     </div>	
 </section>
 @endsection
+@push('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert@1.1.3/dist/sweetalert.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert@1.1.3/dist/sweetalert.css">
 
 <!-- Kode HTML dan Blade Anda di sini -->
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Mengambil data dari Blade
@@ -73,3 +73,4 @@ Biaya Kuliah
         }
     });
 </script>
+@endpush
