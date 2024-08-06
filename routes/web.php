@@ -245,6 +245,13 @@ Route::group(['middleware' => ['auth']], function() {
                         Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.store');
                         Route::post('/approve-asistensi/{asistensi}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_approve'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.approve');
                     });
+
+                    Route::prefix('ajuan-sidang')->group(function(){
+                        Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'ajuan_sidang'])->name('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang');
+                        Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'ajuan_sidang_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang.store');
+                    });
+
+                    Route::get('/get-dosen', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'get_dosen'])->name('dosen.pembimbing.bimbingan-tugas-akhir.get-dosen');
                 });
 
             });

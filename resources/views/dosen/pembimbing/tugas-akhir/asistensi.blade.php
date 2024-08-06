@@ -76,8 +76,7 @@ Bimbingan Tugas Akhir Dosen
                             <a class="btn btn-rounded bg-success-light" href="#" data-bs-toggle="modal"
                                 data-bs-target="#tambahAsistensiModal"><i class="fa fa-plus"><span
                                         class="path1"></span><span class="path2"></span></i> Tambah Asistensi</a>
-                            <a class="btn btn-rounded bg-primary-light" href="#" data-bs-toggle="modal"
-                            data-bs-target="#"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
+                            <a class="btn btn-rounded bg-primary-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang', ['aktivitas' => $aktivitas])}}"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
                         </div>
                     </div>
                 </div>

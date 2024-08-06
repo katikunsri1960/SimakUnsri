@@ -8,10 +8,13 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Perkuliahan\UjiMahasiswa;
+use App\Models\Dosen\PenugasanDosen;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 
 class PembimbingMahasiswaController extends Controller
 {
@@ -19,20 +22,29 @@ class PembimbingMahasiswaController extends Controller
     {
         $semester = SemesterAktif::with(['semester'])->first();
 
-        $data = RiwayatPendidikan::with(['prodi', 'peserta_kelas'])
+        $data = RiwayatPendidikan::with(['prodi', 'peserta_kelas', 'aktivitas_mahasiswa'])
                     ->withCount(['peserta_kelas' => function($query) use ($semester) {
                         $query->whereHas('kelas_kuliah', function($query) use ($semester) {
                             $query->where('id_semester', $semester->id_semester)
                                 ->where('approved', 0);
                         });
+                    }, 'aktivitas_mahasiswa' => function($query) use ($semester) {
+                        $query->where('id_semester', $semester->id_semester)
+                            ->where('approve_krs', 0);
                     }])
-                    ->whereHas('peserta_kelas', function($query) use ($semester) {
-                        $query->whereHas('kelas_kuliah', function($query) use ($semester) {
+                    ->where(function($query) use ($semester) {
+                        $query->whereHas('peserta_kelas', function($query) use ($semester) {
+                            $query->whereHas('kelas_kuliah', function($query) use ($semester) {
+                                $query->where('id_semester', $semester->id_semester);
+                            });
+                        })
+                        ->orWhereHas('aktivitas_mahasiswa', function($query) use ($semester) {
                             $query->where('id_semester', $semester->id_semester);
                         });
                     })
                     ->where('dosen_pa', auth()->user()->fk_id)
                 ->get();
+        // $dataAktivitas = AktivitasMahasiswa::where('')
 
         return view('dosen.pembimbing.akademik.index', [
             'data' => $data,
@@ -53,10 +65,17 @@ class PembimbingMahasiswaController extends Controller
                 ->get();
 
         // dd($data);
+        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
+                    ->whereHas('anggota_aktivitas_personal', function($query) use ($id) {
+                        $query->where('id_registrasi_mahasiswa', $id);
+                    })
+                    ->where('id_semester', $semester)
+                    ->get();
 
         return view('dosen.pembimbing.akademik.detail', [
             'riwayat' => $riwayat,
             'data' => $data,
+            'aktivitas' => $aktivitas,
         ]);
     }
 
@@ -172,4 +191,138 @@ class PembimbingMahasiswaController extends Controller
             ]);
         }
     }
+
+    public function ajuan_sidang(AktivitasMahasiswa $aktivitas)
+    {
+        $data = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']);
+
+        // dd($pembimbing_ke);
+        return view('dosen.pembimbing.tugas-akhir.pengajuan-sidang', [
+            'data' => $data
+        ]);
+    }
+
+    public function get_dosen(Request $request)
+    {
+        $search = $request->get('q');
+
+        // Log the search term for debugging
+        // \Log::info('Search term: ' . $search);
+
+        // Get the active semester and associated year
+        $tahun_ajaran = SemesterAktif::with('semester')->first();
+
+        // Start building the query
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1)
+                                ->orderBy('nama_dosen', 'asc');
+
+        // Add search conditions if search term is present
+        if ($search) {
+            $query->where(function ($q) use ($search, $tahun_ajaran) {
+                $q->where('nama_dosen', 'like', "%{$search}%")
+                ->orWhere('nama_program_studi', 'like', "%{$search}%")
+                ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1);
+            });
+        }
+
+        // Get the results
+        $data = $query->get();
+
+        // Return the results as JSON
+        return response()->json($data);
+    }
+
+
+    public function ajuan_sidang_store(Request $request, $aktivitas)
+    {
+        // dd($request->all());
+
+        try {
+            DB::beginTransaction();
+
+            $aktivitasMahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
+            // dd($aktivitasMahasiswa);
+
+            if (!$aktivitasMahasiswa) {
+                return redirect()->back()->with('error', 'Aktivitas Mahasiswa tidak ditemukan.');
+            }
+
+            $aktivitasMahasiswa->update(['approve_sidang' => 1]);
+
+            if (!empty($request->dosen_penguji) && !empty($request->penguji_ke)) {
+
+                $pembimbing = BimbingMahasiswa::where('id_aktivitas', $aktivitas)
+                                ->where('id_dosen', auth()->user()->fk_id)
+                                ->first();
+                // dd($pembimbing->pembimbing_ke);
+                if ($pembimbing->pembimbing_ke != 1) {
+
+                    return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat mengajukan.');
+
+                }else{
+                    $semester_aktif = SemesterAktif::first();
+
+                    $data = $request->validate([
+                        'dosen_penguji.*' => 'required',
+                        'penguji_ke.*' => 'required'
+                    ]);
+
+                    $data_aktivitas = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
+
+                    $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran)
+                                    ->whereIn('id_registrasi_dosen', $request->dosen_penguji)
+                                    ->get();
+
+                    if ($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($request->dosen_penguji)) {
+                        $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran - 1)
+                                        ->whereIn('id_registrasi_dosen', $request->dosen_penguji)
+                                        ->get();
+                    }
+
+                    $jumlah_dosen = count($request->dosen_penguji);
+
+                    for ($i = 0; $i < $jumlah_dosen; $i++) {
+                        $id_uji_mahasiswa = Uuid::uuid4()->toString();
+                        $dosen = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran)
+                                    ->where('id_registrasi_dosen', $request->dosen_penguji[$i])
+                                    ->first();
+                        if (!$dosen) {
+                            $dosen = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran - 1)
+                                        ->where('id_registrasi_dosen', $request->dosen_penguji[$i])
+                                        ->first();
+                        }
+
+                        $kategori_kegiatan = $request->penguji_ke[$i] == '1' ? '110501' : '110502';
+                        $nama_kategori_kegiatan = $request->penguji_ke[$i] == '1' ? 'Ketua Penguji' : 'Anggota Penguji';
+
+                        UjiMahasiswa::create([
+                            'feeder' => 0,
+                            'id_uji' => $id_uji_mahasiswa,
+                            'id_aktivitas' => $aktivitas,
+                            'judul' => $data_aktivitas->judul,
+                            'id_kategori_kegiatan' => $kategori_kegiatan,
+                            'nama_kategori_kegiatan' => $nama_kategori_kegiatan,
+                            'id_dosen' => $dosen->id_dosen,
+                            'nidn' => $dosen->nidn,
+                            'nama_dosen' => $dosen->nama_dosen,
+                            'penguji_ke' => $request->penguji_ke[$i],
+                            'status_uji_mahasiswa' => 0,
+                            'status_sync' => 'Belum Sync'
+                        ]);
+                    }
+                }
+            }else{
+                return redirect()->back()->with('success', 'Data Berhasil di Tambahkan'); 
+            }
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+        }
+    }
+
 }
