@@ -2,15 +2,16 @@
 
 namespace App\Models\Perkuliahan;
 
+use App\Models\Semester;
 use App\Models\ProgramStudi;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\SemesterAktif;
 use Doctrine\DBAL\Query\Limit;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use Illuminate\Support\Facades\DB;
 use function PHPUnit\Framework\isEmpty;
+use Illuminate\Database\Eloquent\Model;
+
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class MataKuliah extends Model
 {
@@ -77,15 +78,20 @@ class MataKuliah extends Model
         return $result;
     }
 
-    public function getSksMax($id_reg, $id_semester)
+    public function getSksMax($id_reg, $id_semester, $id_periode_masuk)
     {
+
         $ips = AktivitasKuliahMahasiswa::select('ips')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $id_semester)
                     ->orderBy('id_semester', 'DESC')
                     ->pluck('ips')->first();
 
-        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
+        // $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
+        $semester_ke = Semester::orderBy('id_semester', 'ASC')
+                ->whereBetween('id_semester', [$id_periode_masuk, $id_semester])
+                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                ->count();
 
         if($semester_ke == 1 || $semester_ke == 2 ){
             $sks_max = 20;

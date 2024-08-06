@@ -68,11 +68,17 @@ class KrsController extends Controller
         // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
         list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
-        // dd($krs_akt[0]->konversi);
+        
 
-        $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->orderBy('id_semester', 'DESC')
+        // $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+        //             ->orderBy('id_semester', 'DESC')
+        //             ->get();
+
+        $semester = Semester::orderBy('id_semester', 'ASC')
+                    ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                    // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                     ->get();
+        // dd($semester);
 
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $semester_select)
@@ -82,13 +88,27 @@ class KrsController extends Controller
         // Menentukan status mahasiswa berdasarkan hasil query
         $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
 
-        // Menghitung jumlah semester, mengabaikan semester pendek
-        $semester_ke = $semester->filter(function($item) {
-            return substr($item->id_semester, -1) != '3';
-        })->count();
-        // dd($semester_ke);
+        // $semester_urut = Semester::orderBy('id_semester', 'ASC')
+        //             // ->limit(10)
+        //             ->get();
 
-        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester);
+        $semester_ke = Semester::orderBy('id_semester', 'ASC')
+                ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                ->count();
+
+        // $semester_ke = Semester::orderBy('id_semester', 'ASC')
+        //     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+        //     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+        //     ->get();
+
+        // Menghitung jumlah semester, mengabaikan semester pendek
+        // $semester_ke = $semester->filter(function($item) {
+        //     return substr($item->id_semester, -1) != '3';
+        // })->count();
+        // dd($semester);
+
+        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select, $data_akt_ids);
 
@@ -106,7 +126,7 @@ class KrsController extends Controller
 
         // MATAKULIAH TANPA GANJIL GENAP
         $mk_regular = $db->getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_select);
-        // dd($mk_regular);
+        // dd($sks_max);
 
     // TAGIHAN PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
@@ -214,7 +234,7 @@ class KrsController extends Controller
 
             list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
 
-            $sks_max = $db->getSksMax($id_reg, $semester_aktif);
+            $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
             $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);
 
@@ -445,7 +465,7 @@ class KrsController extends Controller
             list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
 
 
-            $sks_max = $db->getSksMax($id_reg, $semester_aktif);
+            $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
             $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);
 

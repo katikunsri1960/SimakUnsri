@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mahasiswa\Dashboard;
 
+use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Models\Connection\Tagihan;
@@ -40,8 +41,9 @@ class DashboardController extends Controller
                 ->get();
                 // dd($smt);
         
-        $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
-                ->whereRaw("RIGHT(id_semester, 1) != 3")
+        $semester_ke = Semester::orderBy('id_semester', 'ASC')
+                ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                 ->count();
 
         // $registrasi = Registrasi::where('rm_nim', $user->username)

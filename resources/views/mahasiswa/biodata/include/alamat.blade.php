@@ -118,7 +118,7 @@
                                                 value="{{ $data->biodata ? $data->biodata->nomor_kps : '' }}">
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    {{-- <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Alat Transportasi</label>
                                             <select class="form-select" aria-label="Default select example">
@@ -152,7 +152,7 @@
                                                 <option value="99">Lainnya</option>
                                             </select>
                                         </div>
-                                    </div>
+                                    </div> --}}
                                 </div>
                                 <div class="box-footer text-end">
                                     {{-- <button type="submit" class="btn btn-primary">
