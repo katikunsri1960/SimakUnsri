@@ -176,7 +176,7 @@ class AktivitasMahasiswa extends Model
                             ->get();
                             
         // $matkul_konversi = $krs_akt->aktivitas_mahasiswa->konversi;
-                        dd($krs_akt);
+                        // dd($krs_akt);
 
             return [$krs_akt, $data_akt_ids, $mk_akt];
     }
