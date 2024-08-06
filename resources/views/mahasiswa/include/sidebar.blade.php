@@ -59,8 +59,8 @@
                             </li>
                         </ul>
                     </li> --}}
-                    <li class="{{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.index.*') ||
-                                        request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index') || request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.tambah')
+                    <li class="{{request()->routeIs('mahasiswa.krs.*') || request()->routeIs('mahasiswa.krs') ||
+                                request()->routeIs('mahasiswa.perkuliahan.mbkm.*')
                     ? 'active menu-open' : ''}}">
                         <a href="{{route('mahasiswa.krs')}}">
                             <i class="fa fa-newspaper-o"><span class="path1"></span><span
@@ -103,8 +103,8 @@
                             <span>Nilai Perkuliahan</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-usept') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.perkuliahan.nilai-usept')}}">
+                    <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-usept.devop') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.perkuliahan.nilai-usept.devop')}}">
                             <i class="fa fa-chart-line"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Nilai USEPT</span>

@@ -64,17 +64,25 @@ Pengajuan Cuti Mahasiswa
                                                 <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
                                             @endif
                                         </td>
-                                        <td>{{$d->file_pendukung}}</td>
-                                        <td>
-                                            <form action="{{ route('mahasiswa.pengajuan-cuti.delete', $d->id_cuti) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pengajuan cuti ini?');">
+                                        {{-- <td>{{$d->file_pendukung}}</td> --}}
+                                        <td class="text-center align-middle" style="width:3%">
+                                            <form action="{{route('mahasiswa.pengajuan-cuti.delete',$d->id_cuti)}}" method="post" class="delete-form" data-id="{{$d->id_cuti}}" id="deleteForm{{$d->id_cuti}}">
                                                 @csrf
-                                                @method('DELETE')
-                                                {{-- <button type="submit" class="btn btn-danger">Hapus</button> --}}
-                                                <button type="submit" class="btn btn-danger rounded-10">
+                                                @method('delete')
+                                                <button type="submit" class="btn btn-danger" data-id="{{ $d->id_cuti }}" title="Hapus Data">
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
                                         </td>
+                                        {{-- <td>
+                                            <form action="{{ route('mahasiswa.pengajuan-cuti.delete', $d->id_cuti) }}" method="POST" class="delete-form">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger rounded-10 delete-btn">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td> --}}
                                     </tr>
                                 @endforeach
                             </tbody>
@@ -124,6 +132,25 @@ Pengajuan Cuti Mahasiswa
                 window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
             });
         @endif
+
+        $('.delete-form').submit(function(e){
+            e.preventDefault();
+            var formId = $(this).data('id');
+            swal({
+                title: 'Apakah Anda Yakin??',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $(`#deleteForm${formId}`).unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
+        });
     });
 </script>
 @endpush

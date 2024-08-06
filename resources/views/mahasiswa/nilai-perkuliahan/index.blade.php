@@ -14,7 +14,7 @@ Dashboard
                         <div class="col-12 col-lg-9">
                             <h2>Nilai Perkuliahan,  {{auth()->user()->name}}</h2>
                             <p class="text-dark mb-0 fs-16">
-                                SIAKAD Universitas Sriwijaya
+                                Universitas Sriwijaya
                             </p>
                         </div>
                     </div>
