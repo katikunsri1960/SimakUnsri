@@ -147,7 +147,7 @@ Bimbingan Tugas Akhir
                                     <tr>
                                         <th class="text-center align-middle" style="width: 5%">No</th>
                                         <th class="text-center align-middle">Tanggal</th>
-                                        <th class="text-center align-middle">Keterangan</th>
+                                        <th class="text-center align-middle">Asistensi</th>
                                         <th class="text-center align-middle">Pembimbing</th>
                                         <th class="text-center align-middle">Status</th>
                                     </tr>
@@ -217,7 +217,7 @@ Bimbingan Tugas Akhir
                 e.preventDefault();  // Prevent the default action
 
                 let bimbinganApproved = true;
-
+                
                 @foreach ($aktivitas->bimbing_mahasiswa as $bimbingan)
                     if ({{ $bimbingan->approved }} === 0) {
                         bimbinganApproved = false;

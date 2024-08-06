@@ -93,7 +93,7 @@
 
             // Check if there are any pending approvals
             let bimbinganApproved = true;
-            let statusPembayaran = {{ $status_pembayaran ? 'true' : 'false' }};
+            
 
             @foreach ($aktivitas->bimbing_mahasiswa as $bimbingan)
                 if ({{ $bimbingan->approved }} === 0) {
@@ -109,14 +109,9 @@
                     type: 'warning',
                     confirmButtonText: 'OK'
                 });
-            } else if (!statusPembayaran) {
-                swal({
-                    title: 'Pembayaran Belum Lunas!',
-                    text: 'Anda belum melunasi pembayaran. Silakan lunasi pembayaran terlebih dahulu.',
-                    type: 'warning',
-                    confirmButtonText: 'OK'
-                });
-            } else {
+            } 
+            
+            else {
                 $('#tambahAsistensiModal').modal('show');
             }
         });

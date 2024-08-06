@@ -73,6 +73,7 @@ class BimbinganController extends Controller
 
     public function store(AktivitasMahasiswa $aktivitas, Request $request)
     {
+        
         $data = $request->validate([
             'tanggal' => 'required',
             'uraian' => 'required',
