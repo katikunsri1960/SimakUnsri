@@ -13,9 +13,9 @@ Biodata
                         </div>
                         <div class="col-12 col-lg-9">
                             <!-- <h2>Halaman Biodata {{auth()->user()->name}}</h2> -->
-                            <h2>Biodata Mahasiswa</h2>
+                            <h2 class="mb-10">Halaman Biodata Mahasiswa,  {{auth()->user()->name}}</h2>
                             <p class="text-dark mb-0 fs-16">
-                                Universitas Sriwijaya
+                                SIMAK Universitas Sriwijaya
                             </p>
                         </div>
                     </div>

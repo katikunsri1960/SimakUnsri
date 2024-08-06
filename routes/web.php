@@ -85,11 +85,12 @@ Route::group(['middleware' => ['auth']], function() {
                 // });
                 //Route for Aktivitas Magang
                 Route::prefix('mbkm')->group(function () {
-                    Route::get('/home', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'home'])->name('mahasiswa.perkuliahan.mbkm.home');
-                    Route::get('/magang', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'index'])->name('mahasiswa.perkuliahan.mbkm.index');
+                    // Route::get('/home', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'home'])->name('mahasiswa.perkuliahan.mbkm.home');
+                    Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'index'])->name('mahasiswa.perkuliahan.mbkm.index');
                     Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'tambah'])->name('mahasiswa.perkuliahan.mbkm.tambah');
                     Route::post('/store', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'store'])->name('mahasiswa.perkuliahan.mbkm.store');
                     Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'get_dosen'])->name('mahasiswa.perkuliahan.mbkm.get-dosen');
+                    Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'hapusAktivitas'])->name('mahasiswa.perkuliahan.mbkm.hapus-aktivitas');
                     // Route::get('/dosen-pengajar', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMagangController::class, 'dosen_pengajar_kelas'])->name('mahasiswa.perkuliahan.mbkm.dosen-pengajar');
                 });
 

@@ -13,9 +13,9 @@ Kartu Rencana Studi
                         <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Kartu Rencana Studi</h2>
-                            <p class="text-dark align-middle mb-0 fs-16">
-                                Universitas Sriwijaya
+                            <h2 class="mb-10">Halaman Kartu Rencana Studi</h2>
+                            <p class="text-dark mb-0 fs-16">
+                                SIMAK Universitas Sriwijaya
                             </p>
                         </div>
                     </div>
@@ -48,13 +48,13 @@ Kartu Rencana Studi
           <div class="box ribbon-box">
             <div class="ribbon-two ribbon-two-danger"><span>MBKM</span></div>
             <div class="box-header no-border p-0">				
-              <a href="{{route('mahasiswa.perkuliahan.mbkm.home')}}">
+              <a href="{{route('mahasiswa.perkuliahan.mbkm.index')}}">
                 <img class="img-fluid" src="{{asset('images/images/avatar/icon_kampus_merdeka.png')}}" alt="">
               </a>
             </div>
             <div class="box-body">
                 <div class="text-center">
-                  <h3 class="my-10"><a href="{{route('mahasiswa.perkuliahan.mbkm.home')}}">Aktivitas MBKM Non-Perkuliahan</a></h3>
+                  <h3 class="my-10"><a href="{{route('mahasiswa.perkuliahan.mbkm.index')}}">Aktivitas MBKM Non-Perkuliahan</a></h3>
                   {{-- <h6 class="user-info mt-0 mb-10 text-fade">Full Stack Developer</h6> --}}
                   <p class="text-fade w-p85 mx-auto">Aktivitas MBKM Non-Perkuliahan</p>
                 </div>

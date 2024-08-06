@@ -3,7 +3,6 @@
 Kartu Rencana Studi
 @endsection
 @section('content')
-@include('swal')
 <section class="content">
     <div class="row align-items-end">
         <div class="col-xl-12 col-12">
@@ -13,9 +12,9 @@ Kartu Rencana Studi
                         <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Kartu Rencana Studi</h2>
-                            <p class="text-dark align-middle mb-0 fs-16">
-                                Universitas Sriwijaya
+                            <h2 class="mb-10">Halaman Kartu Rencana Studi,  {{auth()->user()->name}}</h2>
+                            <p class="text-dark mb-0 fs-16">
+                                SIMAK Universitas Sriwijaya
                             </p>
                         </div>
                     </div>
@@ -23,14 +22,8 @@ Kartu Rencana Studi
             </div>
         </div>
     </div>
+    @include('swal')
     <div class="row">
-        <div class="col-12">
-            <div class="box no-shadow mb-0 bg-transparent">
-                <div class="box-header no-border px-0">
-                    <h4 class="box-title"><i class="fa fa-file-invoice"></i> KRS</h4>
-                </div>
-            </div>
-        </div>
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box bs-5 border-primary rounded mb-10 pull-up"
                 style="background-image: url({{asset('images/images/svg-icon/color-svg/st-1.svg')}}); background-position: right bottom; background-repeat: no-repeat;">

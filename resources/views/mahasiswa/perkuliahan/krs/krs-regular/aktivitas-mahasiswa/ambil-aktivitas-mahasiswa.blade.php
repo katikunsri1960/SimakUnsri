@@ -13,9 +13,9 @@ Ambil Aktivitas Mahasiswa
                         <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Kartu Rencana Studi Mahasiswa</h2>
-                            <p class="text-dark align-middle mb-0 fs-16">
-                                Universitas Sriwijaya
+                            <h2>Aktivitas Mahasiswa,  {{auth()->user()->name}}</h2>
+                            <p class="text-dark mb-0 fs-16">
+                                SIMAK Universitas Sriwijaya
                             </p>
                         </div>
                     </div>

@@ -12,9 +12,9 @@ Dashboard
                         <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Nilai Perkuliahan,  {{auth()->user()->name}}</h2>
+                            <h2 class="mb-10">Halaman Nilai Perkuliahan,  {{auth()->user()->name}}</h2>
                             <p class="text-dark mb-0 fs-16">
-                                Universitas Sriwijaya
+                                SIMAK Universitas Sriwijaya
                             </p>
                         </div>
                     </div>

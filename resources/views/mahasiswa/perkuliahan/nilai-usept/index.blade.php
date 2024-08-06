@@ -11,7 +11,7 @@ Dashboard
                     <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                     </div>
                     <div class="col-12 col-lg-9">
-                        <h2>Halaman Nilai Suliet</h2>
+                        <h2>Halaman Nilai Suliet,  {{auth()->user()->name}}</h2>
                         <p class="text-dark mb-0 fs-16">
                             Universitas Sriwijaya
                         </p>

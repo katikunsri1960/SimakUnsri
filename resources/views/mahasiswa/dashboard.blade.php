@@ -15,7 +15,7 @@ Dashboard
                         <div class="col-12 col-lg-9">
                             <h2>Halo {{$riwayat_pendidikan->nama_mahasiswa}}, Selamat datang!</h2>
                             <p class="text-dark mb-0 fs-16">
-                            Universitas Sriwijaya
+                                SIMAK Universitas Sriwijaya
                             </p>
                         </div>
                     </div>
@@ -179,13 +179,15 @@ Dashboard
     $(document).ready(function() {
         // Data Grafik SKS
         var data = {!! json_encode($smt->map(function($item) {
-            return $item->sks_semester + 1;
+            return $item->sks_semester;
         })) !!};
 
-        // Tambahkan angka 0 ke dalam array data
-        data.push(0);
-
         var smt_ke = {!! json_encode($semester_ke) !!};
+
+        // Tambahkan angka 0 sebanyak selisih smt_ke - jumlah data
+        while (data.length < smt_ke) {
+            data.push(0);
+        }
 
         let categories = [];
         for (let i = 0; i < smt_ke; i++) {
@@ -272,10 +274,12 @@ Dashboard
             return $item->ips;
         })) !!};
 
-        // Tambahkan angka 0 ke dalam array data
-        data.push(0);
-
         var smt_ke = {!! json_encode($semester_ke) !!};
+
+        // Tambahkan angka 0 sebanyak selisih smt_ke - jumlah data
+        while (data.length < smt_ke) {
+            data.push(0);
+        }
 
         let categories = [];
         for (let i = 0; i < smt_ke; i++) {
@@ -358,5 +362,6 @@ Dashboard
         var chart = new ApexCharts(document.querySelector("#ips-diambil"), options);
         chart.render();
     });
+
 </script>
 @endpush

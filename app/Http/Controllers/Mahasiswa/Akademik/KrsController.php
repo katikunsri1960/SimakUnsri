@@ -74,7 +74,7 @@ class KrsController extends Controller
         //             ->orderBy('id_semester', 'DESC')
         //             ->get();
 
-        $semester = Semester::orderBy('id_semester', 'ASC')
+        $semester = Semester::orderBy('id_semester', 'DESC')
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
                     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                     ->get();
