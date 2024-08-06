@@ -196,7 +196,7 @@
                                                                 </td>
                                                                 <td class="text-center align-middle" style="width:10%">
                                                                     <div>
-                                                                        @if($data->approved == 0)
+                                                                        @if($data->approve_krs == 0)
                                                                             <span class="badge badge-xl badge-danger-light rounded-10 mb-5">Belum Disetujui</span>
                                                                         @else
                                                                             <span class="badge badge-xl badge-success-light rounded-10 mb-5">Disetujui</span>

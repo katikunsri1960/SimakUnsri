@@ -113,10 +113,10 @@ class CutiController extends Controller
         $semester_aktif=SemesterAktif::with('semester')->first();
         // dd($data);
 
-
         return view('mahasiswa.pengajuan-cuti.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);
     }
 
+    
     public function store(Request $request)
     {
         // Define variable
@@ -131,14 +131,12 @@ class CutiController extends Controller
         $existingCuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)
         ->where('id_semester', $semester_aktif->id_semester)
         ->first();
-        // dd($existingCuti->approved);
 
         // Jika sudah ada pengajuan cuti yang sedang diproses, tampilkan pesan error
         if (!empty($existingCuti)) {
             if ($existingCuti->approved == 0) {
                 return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
-            }
-            elseif ($existingCuti->approved == 1) {
+            } elseif ($existingCuti->approved == 1) {
                 return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sudah disetujui.');
             }
         }
@@ -146,11 +144,7 @@ class CutiController extends Controller
         // Validate request data
         $request->validate([
             'jalan' => 'required',
-            // 'dusun' => 'required',
-            // 'rt' => 'required',
-            // 'rw' => 'required',
             'kelurahan' => 'required',
-            // 'kode_pos' => 'nullable',
             'nama_wilayah' => 'required',
             'handphone' => 'required',
             'alasan_cuti' => 'required',

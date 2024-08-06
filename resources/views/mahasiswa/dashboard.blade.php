@@ -15,7 +15,7 @@ Dashboard
                         <div class="col-12 col-lg-9">
                             <h2>Halo {{$riwayat_pendidikan->nama_mahasiswa}}, Selamat datang!</h2>
                             <p class="text-dark mb-0 fs-16">
-                            Selamat Datang di SIAKAD (Sistem Informasi Akademik) Universitas Sriwijaya
+                            Universitas Sriwijaya
                             </p>
                         </div>
                     </div>

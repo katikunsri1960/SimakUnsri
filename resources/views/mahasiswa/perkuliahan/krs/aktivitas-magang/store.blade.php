@@ -77,32 +77,41 @@ Pengajuan Aktivitas Magang
                         </div>
                         <h4 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Aktivitas Magang Kampus Merdeka</h4>
                         <hr class="my-15">
-                        <div class="form-group">
-                            <div id="magang-fields">
-                                <div class="magang-field row">
-                                    <div class="col-lg-12 mb-2">
-                                        <label for="nama_instansi" class="form-label">Nama Instansi</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            name="nama_instansi"
-                                            id="nama_instansi"
-                                            aria-describedby="helpId"
-                                            required
-                                        />
+                        <div class="form-group mb-20">
+                            <div id="judul-fields">
+                                <div class="judul-field row">
+                                    <div class="col-md-12 mb-2">
+                                        <label>Judul</label>
+                                        <textarea id="judul" class="form-control" name="judul" required></textarea>
                                     </div>
                                 </div>
-                                <div class="magang-field row">
-                                    <div class="col-lg-12 mb-2">
-                                        <label for="lokasi" class="form-label">Nama Kota</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            name="lokasi"
-                                            id="lokasi"
-                                            aria-describedby="helpId"
-                                            required
-                                        />
+                            </div>
+                            <div id="lokasi-fields">
+                                <div class="lokasi-field row">
+                                    <div class="col-md-12 mb-2">
+                                        <label for="lokasi" class="form-label">Lokasi</label>
+                                        <input type="text" id="lokasi" class="form-control" name="lokasi" placeholder="Masukkan Lokasi Penelitan" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="keterangan-fields">
+                                <div class="keterangan-field row">
+                                    <div class="col-md-12 mb-2">
+                                        <label for="keterangan" class="form-label">Keterangan</label>
+                                        <input type="text" id="keterangan" class="form-control" name="keterangan">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h4 class="text-info mt-40"><i class="fa fa-user"></i>  Dosen Pembimbing</h4>
+                        <hr class="my-15">
+                        <div class="form-group">
+                            <div id="dosen-fields">
+                                <div class="dosen-field row">
+                                    <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen</label>
+                                    <div class="col-md-12 mb-2">
+                                        <select class="form-select" name="dosen_bimbing_aktivitas[]" id="dosen_bimbing_aktivitas" required></select>
                                     </div>
                                 </div>
                             </div>
@@ -122,6 +131,7 @@ Pengajuan Aktivitas Magang
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
     $(document).ready(function(){
         $('#tambah-aktivitas-magang').submit(function(e){
@@ -144,5 +154,38 @@ Pengajuan Aktivitas Magang
         });
     });
 
+    $(document).ready(function(){
+        // Initialize Select2 for the first select element
+        var initialSelect = initializeSelect2($('#dosen_bimbing_aktivitas'));
+
+        function initializeSelect2(selectElement) {
+            return selectElement.select2({
+                placeholder : '-- Pilih Dosen --',
+                minimumInputLength: 3,
+                width: 'resolve', // Auto width
+                ajax: {
+                    url: "{{route('mahasiswa.perkuliahan.aktivitas-magang.get-dosen')}}",
+                    type: "GET",
+                    dataType: 'json',
+                    delay: 250,
+                    data: function (params) {
+                        return {
+                            q: params.term // search term
+                        };
+                    },
+                    processResults: function (data) {
+                        return {
+                            results: $.map(data, function (item) {
+                                return {
+                                    text: item.nama_dosen + " ( " + item.nama_program_studi + " )",
+                                    id: item.id_registrasi_dosen
+                                }
+                            })
+                        };
+                    },
+                }
+            });
+        }
+    });
 </script>
 @endpush
