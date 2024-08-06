@@ -46,7 +46,7 @@
                                         value="{{ $data->biodata ? $data->biodata->tanggal_lahir_wali : '' }}">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            {{-- <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Status Hidup</label>
                                     <select class="form-select" disabled aria-label="Default select example">
@@ -55,7 +55,7 @@
                                         <option value="2">Meninggal</option>
                                     </select>
                                 </div>
-                            </div>
+                            </div> --}}
                             <div class="col-lg-6">
                                 <div class="form-group">
                                     <label>Pendidikan Terakhir</label>
@@ -70,7 +70,7 @@
                                         value="{{ $data->biodata ? $data->biodata->nama_penghasilan_wali : '' }}">
                                 </div>
                             </div>
-                            <div class="col-lg-12">
+                            {{-- <div class="col-lg-12">
                                 <div class="form-group">
                                     <label>Alamat</label>
                                     <input type="name" class="form-control" disabled
@@ -104,7 +104,7 @@
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->kode_pos_wali : '' }}">
                                 </div>
-                            </div>
+                            </div> --}}
 
                         </div>
                     </div>

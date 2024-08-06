@@ -33,7 +33,7 @@ Biodata
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#alamat" role="tab"><span><i class="fas fa-address-card"></i></span> <span class="hidden-xs-down ms-15">Alamat</span></a> </li>
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#orang-tua" role="tab"><span><i class="fas fa-users"></i></span> <span class="hidden-xs-down ms-15">Orang Tua</span></a> </li>
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#wali" role="tab"><span><i class="fas fa-user-friends"></i></span> <span class="hidden-xs-down ms-15">Wali</span></a> </li>
-                    <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#data-sekolah" role="tab"><span><i class="fas fa-school"></i></span> <span class="hidden-xs-down ms-15">Data Sekolah</span></a> </li>
+                    {{-- <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#data-sekolah" role="tab"><span><i class="fas fa-school"></i></span> <span class="hidden-xs-down ms-15">Data Sekolah</span></a> </li> --}}
                     <li class="nav-item"> <a class="nav-link " data-bs-toggle="tab" href="#pt-asal" role="tab"><span><i class="fas fa-university"></i></span> <span class="hidden-xs-down ms-15">Perguruan Tinggi Asal</span></a> </li>
                     <li class="nav-item"> <a class="nav-link" data-bs-toggle="tab" href="#riwayat-pendidikan" role="tab"><span><i class="fas fa-tasks"></i></span> <span class="hidden-xs-down ms-15">Riwayat Pendidikan</span></a> </li>
                 </ul>
@@ -44,7 +44,7 @@ Biodata
                     @include('mahasiswa.biodata.include.alamat')
                     @include('mahasiswa.biodata.include.orang-tua')
                     @include('mahasiswa.biodata.include.wali')
-                    @include('mahasiswa.biodata.include.data-sekolah')
+                    {{-- @include('mahasiswa.biodata.include.data-sekolah') --}}
                     @include('mahasiswa.biodata.include.pt-asal')
                     @include('mahasiswa.biodata.include.riwayat-pendidikan')
                 </div>

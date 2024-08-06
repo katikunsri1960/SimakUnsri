@@ -37,15 +37,15 @@
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->tanggal_lahir_ayah : '' }}">
                                 </div>
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Status Hidup</label>
                                     <select class="form-select" disabled aria-label="Default select example">
                                         <option selected>Meninggal</option>
                                         <option value="1">Hidup</option>
                                         <option value="2">Meninggal</option>
                                     </select>
-                                </div>
-                                <div class="form-group">
+                                </div> --}}
+                                {{-- <div class="form-group">
                                     <label>Pendidikan Terakhir</label>
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->nama_pendidikan_ayah : '' }}">
@@ -79,7 +79,7 @@
                                     <label>Kode Pos</label>
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->kode_pos : '' }}">
-                                </div>
+                                </div> --}}
                             </div>
 
 
@@ -110,15 +110,15 @@
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->tanggal_lahir_ibu : '' }}">
                                 </div>
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Status Hidup</label>
                                     <select class="form-select" disabled aria-label="Default select example">
                                         <option selected>Hidup</option>
                                         <option value="1">Hidup</option>
                                         <option value="2">Meninggal</option>
                                     </select>
-                                </div>
-                                <div class="form-group">
+                                </div> --}}
+                                {{-- <div class="form-group">
                                     <label>Pendidikan Terakhir</label>
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->nama_pendidikan_ibu : '' }}">
@@ -152,7 +152,7 @@
                                     <label>Kode Pos</label>
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->kode_pos : '' }}">
-                                </div>
+                                </div> --}}
                                 <!-- </div> -->
                             </div>
                         </div>

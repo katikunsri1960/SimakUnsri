@@ -179,29 +179,26 @@ Dashboard
     $(document).ready(function() {
         // Data Grafik SKS
         var data = {!! json_encode($smt->map(function($item) {
-                return $item->sks_semester;
-            })) !!};
+            return $item->sks_semester + 1;
+        })) !!};
+
+        // Tambahkan angka 0 ke dalam array data
+        data.push(0);
 
         var smt_ke = {!! json_encode($semester_ke) !!};
 
         let categories = [];
         for (let i = 0; i < smt_ke; i++) {
-            categories.push("Semester " + (i+1));
+            categories.push("Semester " + (i + 1));
         }
-        
-        // Tampilkan data di konsol
-        console.log("Data SKS:", data);
-        console.log(categories);
-
 
         var options = {
             series: [{
                 name: 'SKS',
-                data: data
-                // labels: data,
+                data: data,
             }],
             chart: {
-                foreColor:"#bac0c7",
+                foreColor: "#bac0c7",
                 type: 'bar',
                 height: 350,
                 stacked: true,
@@ -221,8 +218,8 @@ Dashboard
                         offsetY: 0
                     }
                 }
-            }],		
-            colors:['#f64e60', '#f64e60'],
+            }],
+            colors: ['#f64e60', '#f64e60'],
             plotOptions: {
                 bar: {
                     borderRadius: 10,
@@ -236,7 +233,7 @@ Dashboard
             dataLabels: {
                 enabled: true,
                 formatter: function (data) {
-                    return data + " SKS" ;
+                    return data + " SKS";
                 },
                 offsetY: -20,
                 style: {
@@ -245,14 +242,14 @@ Dashboard
                 }
             },
             yaxis: {
-                max:24,
+                max: 24,
                 tickAmount: 6,
                 title: {
                     text: 'Satuan Kredit Semester (SKS)',
                 },
                 labels: {
                     formatter: function (data) {
-                    return data.toFixed(0) ;
+                        return data.toFixed(0);
                     }
                 },
             },
@@ -272,24 +269,26 @@ Dashboard
     $(document).ready(function() {
         // Data Grafik IPS
         var data = {!! json_encode($smt->map(function($item) {
-                return $item->ips;
-            })) !!};
+            return $item->ips;
+        })) !!};
+
+        // Tambahkan angka 0 ke dalam array data
+        data.push(0);
 
         var smt_ke = {!! json_encode($semester_ke) !!};
 
         let categories = [];
         for (let i = 0; i < smt_ke; i++) {
-            categories.push("Semester " + (i+1));
+            categories.push("Semester " + (i + 1));
         }
-        
+
         var options = {
             series: [{
                 name: 'IPS',
                 data: data
-                // labels: data,
             }],
             chart: {
-                foreColor:"#bac0c7",
+                foreColor: "#bac0c7",
                 type: 'bar',
                 height: 350,
                 stacked: true,
@@ -309,8 +308,8 @@ Dashboard
                         offsetY: 0
                     }
                 }
-            }],		
-            colors:['#04a08b', '#f64e60'],
+            }],
+            colors: ['#04a08b', '#f64e60'],
             plotOptions: {
                 bar: {
                     borderRadius: 10,
@@ -333,14 +332,14 @@ Dashboard
                 }
             },
             yaxis: {
-                max:4,
+                max: 4,
                 tickAmount: 4,
                 title: {
                     text: 'Indeks Prestasi Semester (IPS)',
                 },
                 labels: {
                     formatter: function (data) {
-                    return data.toFixed(2) ;
+                        return data.toFixed(2);
                     }
                 },
             },
