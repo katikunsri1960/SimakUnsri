@@ -12,8 +12,10 @@ Bimbingan Non Akademik Dosen
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Bimbingan Non Akademik Dosen</h2>
-								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
+								<h2 class="mb-10">Halaman Bimbingan Non Akademik Dosen,  {{auth()->user()->name}}
+								<p class="text-dark mb-0 fs-16">
+                                    SIMAK Universitas Sriwijaya
+                                </p>
 							</div>
 						</div>
 					<div>

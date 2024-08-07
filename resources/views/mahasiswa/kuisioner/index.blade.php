@@ -13,9 +13,9 @@ Kuisioner
                         </div>
                         <div class="col-12 col-lg-9">
                             <!-- <h2>Halaman KRS {{auth()->user()->name}}</h2> -->
-                            <h2>Kuisioner</h2>
+                            <h2>Kuisioner,  {{auth()->user()->name}}</h2>
                             <p class="text-dark mb-0 fs-16">
-                                Universitas Sriwijaya
+                                SIMAK Universitas Sriwijaya
                             </p>
                         </div>
                     </div>

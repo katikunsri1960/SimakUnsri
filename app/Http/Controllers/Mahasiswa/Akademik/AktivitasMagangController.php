@@ -19,25 +19,6 @@ use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 
 class AktivitasMagangController extends Controller
 {
-    public function home()
-    {
-        $id_reg = auth()->user()->fk_id;
-        
-        // $data = AktivitasMagang::where('id_registrasi_mahasiswa', $id_reg)->get();
-        // $anggota_aktivitas = AnggotaAktivitasMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->get();
-
-        $semester_aktif = SemesterAktif::first();
-        
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa'])
-                ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
-                    $query->where('id_registrasi_mahasiswa', $id_reg);
-                })
-                ->where('id_jenis_aktivitas', '13')->get();
-                // dd($data);
-
-        return view('mahasiswa.perkuliahan.krs.aktivitas-magang.index', ['data' => $data, 'semester_aktif' => $semester_aktif]);
-    }
-
     public function index()
     {
         $id_reg = auth()->user()->fk_id;
@@ -51,10 +32,11 @@ class AktivitasMagangController extends Controller
                 ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                     $query->where('id_registrasi_mahasiswa', $id_reg);
                 })
-                ->where('id_jenis_aktivitas', '13')->get();
+                ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20'])
+                ->get();
                 // dd($data);
 
-        return view('mahasiswa.perkuliahan.krs.aktivitas-magang.magang', ['data' => $data, 'semester_aktif' => $semester_aktif]);
+        return view('mahasiswa.perkuliahan.krs.aktivitas-magang.index', ['data' => $data, 'semester_aktif' => $semester_aktif]);
     }
 
     public function tambah()
@@ -62,12 +44,18 @@ class AktivitasMagangController extends Controller
         $id_reg = auth()->user()->fk_id;
         $data = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
 
+        $aktivitas_mbkm = AktivitasMahasiswa::select('id_jenis_aktivitas','nama_jenis_aktivitas')
+                        ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20'])
+                        ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+                        ->get();
+                        // dd($aktivitas_mbkm);
+
         $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
                     // ->leftJoin()
                     // ->where('id_prodi', $prodi_id)
                     ->first();
 
-        return view('mahasiswa.perkuliahan.krs.aktivitas-magang.store', ['data' => $data, 'dosen_bimbing_aktivitas'=>$dosen_pembimbing]);
+        return view('mahasiswa.perkuliahan.krs.aktivitas-magang.store', ['data' => $data, 'dosen_bimbing_aktivitas'=>$dosen_pembimbing, 'aktivitas_mbkm'=>$aktivitas_mbkm]);
     }
 
     public function get_dosen(Request $request)
@@ -80,11 +68,6 @@ class AktivitasMagangController extends Controller
 
         $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1)
                                 ->orderby('nama_dosen', 'asc')->limit(10);
-
-        // $query = PenugasanDosen::
-        //         limit(10)
-        //         ->get();
-        
 
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
@@ -101,6 +84,7 @@ class AktivitasMagangController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'aktivitas_mbkm' =>'required',
             'judul' => 'required|string|max:255',
             'keterangan' => 'nullable|max:100', // tambahkan validasi untuk Keterangan
             'lokasi' => 'required|string',
@@ -122,9 +106,15 @@ class AktivitasMagangController extends Controller
             $now = Carbon::now();
 
             // $mk_konversi = MataKuliah::where('id_matkul', $request->id_matkul)->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
-            // dd($mk_konversi);
+            // dd($request->aktivitas_mbkm);
 
             $id_aktivitas = Uuid::uuid4()->toString();
+
+            $aktivitas_mbkm = AktivitasMahasiswa::select('id_jenis_aktivitas','nama_jenis_aktivitas')
+                            ->where('id_jenis_aktivitas', $request->aktivitas_mbkm)
+                            ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+                            ->first();
+                            // dd($aktivitas_mbkm);
 
             // Simpan data ke tabel aktivitas_mahasiswas
                 $aktivitas=AktivitasMahasiswa::create([
@@ -135,8 +125,8 @@ class AktivitasMagangController extends Controller
                     'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
                     'jenis_anggota'=>0,
                     'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
-                    'id_jenis_aktivitas'=>13,
-                    'nama_jenis_aktivitas'=>'Magang/Praktik Kerja',
+                    'id_jenis_aktivitas'=>$aktivitas_mbkm->id_jenis_aktivitas,
+                    'nama_jenis_aktivitas'=>$aktivitas_mbkm->nama_jenis_aktivitas,
                     'id_prodi' => $riwayat_pendidikan->id_prodi,
                     'nama_prodi'=>$riwayat_pendidikan->nama_program_studi,
                     'id_semester' => $semester_aktif->id_semester,
@@ -182,7 +172,7 @@ class AktivitasMagangController extends Controller
                 //Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
                 
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)
                                 ->where('id_registrasi_dosen', $request->dosen_bimbing_aktivitas)->first();
                 // $dosen_pembimbing=BiodataDosen::where('id_dosen', $request->dosen_bimbing_aktivitas)->first();
                 // dd($dosen_pembimbing);
@@ -209,13 +199,46 @@ class AktivitasMagangController extends Controller
             });
 
             // Jika berhasil, kembalikan respons sukses
-            return redirect()->route('mahasiswa.perkuliahan.mbkm.home')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
+            return redirect()->route('mahasiswa.perkuliahan.mbkm.index')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
 
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
             return redirect()->back()->with('error', $e->getMessage());
         }
         
-        return redirect()->route('mahasiswa.perkuliahan.mbkm.home')->with('success', 'Data Berhasil di Tambahkan');
+        return redirect()->route('mahasiswa.perkuliahan.mbkm.index')->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+    public function hapusAktivitas($id)
+    {
+        $id_aktivitas=AktivitasMahasiswa::where('id', $id)->pluck('id_aktivitas');
+        // dd($id_aktivitas);
+        DB::beginTransaction();
+
+        try {
+            // Menghapus bimbingan mahasiswa
+           $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
+            if ($bimbing) {
+                $bimbing->delete();
+            }
+            
+            // Menghapus anggota aktivitas mahasiswa
+            $anggota = AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas);
+            if ($anggota) {
+                $anggota->delete();
+            }
+            
+            // Menghapus aktivitas mahasiswa
+            $aktivitas = AktivitasMahasiswa::findOrFail($id);
+            $aktivitas->delete();
+
+            DB::commit();
+
+            return redirect()->route('mahasiswa.perkuliahan.mbkm.index')->with('success', 'Aktivitas berhasil dihapus.');
+        } catch (\Exception $e) {
+            DB::rollback();
+
+            return redirect()->route('mahasiswa.perkuliahan.mbkm.index')->with('error', $e->getMessage());
+        }
     }
 }

@@ -12,7 +12,7 @@ Pengajuan Aktivitas Magang
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('mahasiswa.perkuliahan.aktivitas-magang.index')}}">Aktivitas Magang</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('mahasiswa.perkuliahan.mbkm.index')}}">Aktivitas Magang</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Tambah Aktivitas Magang</li>
                     </ol>
                 </nav>
@@ -25,7 +25,7 @@ Pengajuan Aktivitas Magang
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('mahasiswa.perkuliahan.aktivitas-magang.store')}}" id="tambah-aktivitas-magang" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{route('mahasiswa.perkuliahan.mbkm.store')}}" id="tambah-aktivitas-magang" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body">
                         <h4 class="text-info mb-0"><i class="fa fa-university"></i> Data Mahasiswa</h4>
@@ -75,30 +75,43 @@ Pengajuan Aktivitas Magang
                                 />
                             </div>
                         </div>
-                        <h4 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Aktivitas Magang Kampus Merdeka</h4>
+                        <h4 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Aktivitas MBKM Non-Perkuliahan</h4>
                         <hr class="my-15">
                         <div class="form-group mb-20">
+                            <div id="aktivitas-fields">
+                                <div class="aktivitas-field row">
+                                    <div class="col-md-12 mb-10">
+                                        <label>Jenis Aktivitas MBKM</label>
+                                        <select id="aktivitas_mbkm" name="aktivitas_mbkm" class="form-select" >
+                                            <option value="" disabled selected>-- Pilih Aktivitas MBKM Non-Perkuliahan --</option>
+                                            @foreach($aktivitas_mbkm as $aktivitas)
+                                                <option value="{{ $aktivitas['id_jenis_aktivitas'] }}">{{ $aktivitas['nama_jenis_aktivitas'] }} </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="judul-fields">
                                 <div class="judul-field row">
-                                    <div class="col-md-12 mb-2">
+                                    <div class="col-md-12 mb-10">
                                         <label>Judul</label>
-                                        <textarea id="judul" class="form-control" name="judul" required></textarea>
+                                        <textarea id="judul" class="form-control" name="judul" placeholder="Masukkan Judul Kegiatan" required></textarea>
                                     </div>
                                 </div>
                             </div>
                             <div id="lokasi-fields">
                                 <div class="lokasi-field row">
-                                    <div class="col-md-12 mb-2">
+                                    <div class="col-md-12 mb-10">
                                         <label for="lokasi" class="form-label">Lokasi</label>
-                                        <input type="text" id="lokasi" class="form-control" name="lokasi" placeholder="Masukkan Lokasi Penelitan" required>
+                                        <input type="text" id="lokasi" class="form-control" name="lokasi" placeholder="Masukkan Lokasi Kegiatan" required>
                                     </div>
                                 </div>
                             </div>
                             <div id="keterangan-fields">
                                 <div class="keterangan-field row">
-                                    <div class="col-md-12 mb-2">
+                                    <div class="col-md-12 mb-10">
                                         <label for="keterangan" class="form-label">Keterangan</label>
-                                        <input type="text" id="keterangan" class="form-control" name="keterangan">
+                                        <input type="text" id="keterangan" class="form-control" name="keterangan" placeholder="Masukkan Keterangan Kegiatan">
                                     </div>
                                 </div>
                             </div>
@@ -111,14 +124,14 @@ Pengajuan Aktivitas Magang
                                 <div class="dosen-field row">
                                     <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen</label>
                                     <div class="col-md-12 mb-2">
-                                        <select class="form-select" name="dosen_bimbing_aktivitas[]" id="dosen_bimbing_aktivitas" required></select>
+                                        <select class="form-select" name="dosen_bimbing_aktivitas" id="dosen_bimbing_aktivitas" required></select>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('mahasiswa.perkuliahan.aktivitas-magang.index')}}" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('mahasiswa.perkuliahan.mbkm.index')}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
@@ -164,7 +177,7 @@ Pengajuan Aktivitas Magang
                 minimumInputLength: 3,
                 width: 'resolve', // Auto width
                 ajax: {
-                    url: "{{route('mahasiswa.perkuliahan.aktivitas-magang.get-dosen')}}",
+                    url: "{{route('mahasiswa.perkuliahan.mbkm.get-dosen')}}",
                     type: "GET",
                     dataType: 'json',
                     delay: 250,
