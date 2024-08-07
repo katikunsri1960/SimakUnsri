@@ -164,11 +164,13 @@ class DataMasterController extends Controller
         ]);
     }
 
-    public function approved_rps($matkul)
+    public function approved_rps(RencanaPembelajaran $rps, $matkul)
     {
-        $approved = RencanaPembelajaran::update('approved',1)->where('id_matkul', $matkul);
+        $rps->where('id_matkul', $matkul)->update([
+            'approved' => 1,
+        ]);
             // dd($data);
-        return redirect()->back()->with($approved['status'], $approved['message']);
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
     public function matkul_merdeka()
