@@ -28,7 +28,9 @@
                     </a>
                 </li>
             </ul>
-        </div>
+            @stack('header')
+        </div> 
+        
 
         <div class="navbar-custom-menu r-side">
             <ul class="nav navbar-nav">
