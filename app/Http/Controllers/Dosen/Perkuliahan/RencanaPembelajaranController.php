@@ -82,7 +82,7 @@ class RencanaPembelajaranController extends Controller
         //Hitung jumlah RPS yang di buat
         $jumlah_pertemuan=count($request->pertemuan);
 
-        if($rps->approved != 1){
+        if(is_null($rps)){
             if($jumlah_pertemuan > 0){
                 $data_dosen = DosenPengajarKelasKuliah::with('kelas_kuliah')->whereHas('kelas_kuliah', function ($query) use ($id_matkul, $semester_aktif){
                     $query->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester);
@@ -108,7 +108,7 @@ class RencanaPembelajaranController extends Controller
                 return redirect()->back()->with('error', 'Silahkan Mengisi RPS Terlebih Dahulu');
             }
         }else{
-            return redirect()->back()->with('error', 'RPS Sudah di Setujui Kaprodi');
+            return redirect()->back()->with('error', 'RPS Sudah di Isi');
         }
     }
 
