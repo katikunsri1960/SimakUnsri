@@ -86,7 +86,7 @@ Lihat RPS Mata Kuliah
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$d->materi_indonesia}}</td>
                                     <td class="text-start align-middle">{{$d->materi_Inggris}}</td>
-                                    <td class="text-center align-middle">{{$dl->pertemuan}}</td>
+                                    <td class="text-center align-middle">{{$d->pertemuan}}</td>
                                     <td class="text-center align-middle">
                                         @if ($d->approved == '1')
                                             <span class="badge bg-success rounded">Disetujui</span>
