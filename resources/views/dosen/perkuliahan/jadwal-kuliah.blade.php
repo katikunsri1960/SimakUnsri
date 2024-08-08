@@ -41,6 +41,7 @@ Jadwal Kuliah Dosen
                                     <th>Ruang Perkuliahan</th>
                                     <th>Semester</th>
                                     <th>Jadwal Kuliah</th>
+                                    <th>Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -53,7 +54,10 @@ Jadwal Kuliah Dosen
                                         <td>{{$d->nama_ruang}}</td>
                                         <td style="white-space:nowrap;">{{$d->nama_semester}}</td>
                                         <td>{{$d->jadwal_hari}}, {{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}</td>
-                                    </tr>
+                                        <td>
+                                            <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.jadwal-kuliah.detail', ['kelas' => $d->id_kelas_kuliah])}}"><i class="fa fa-search"></i> Detail Kelas</a>
+                                        </td>
+                                    </tr> 
                                 @endforeach
                             </tbody>
 					  </table>

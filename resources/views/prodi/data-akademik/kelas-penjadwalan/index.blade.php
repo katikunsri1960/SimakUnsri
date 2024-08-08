@@ -51,18 +51,22 @@ Kelas Penjadwalan
                                 @php
                                     $row=0;
                                 @endphp
-                                @foreach($data as $d)
-                                    <tr> 
-                                        <td class="text-center align-middle">{{$row = $row + 1}}</td>
-                                        <td class="text-start align-middle">{{$d->matkul_kurikulum->nama_kurikulum}}</td>
-                                        <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
-                                        <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
-                                        <td class="text-center align-middle">{{$d->jumlah_kelas_kuliah}}</td>
-                                        <td class="text-center align-middle">{{$d->matkul_kurikulum ? $d->matkul_kurikulum->semester : '-'}}</td>
-                                        <td class="text-center align-middle">
-                                            <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
-                                        </td>
-                                    </tr>
+                                @foreach ($data as $k)
+                                    @if ($k->mata_kuliah)
+                                        @foreach($k->mata_kuliah as $d)
+                                            <tr> 
+                                                <td class="text-center align-middle">{{$row = $row + 1}}</td>
+                                                <td class="text-start align-middle">{{$k->nama_kurikulum}}</td>
+                                                <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
+                                                <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
+                                                <td class="text-center align-middle">{{$d->jumlah_kelas_kuliah}}</td>
+                                                <td class="text-center align-middle">{{$k->semester_mulai_berlaku}}</td>
+                                                <td class="text-center align-middle">
+                                                    <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    @endif
                                 @endforeach
                             </tbody>
                       </table>
@@ -81,7 +85,7 @@ Kelas Penjadwalan
         "use strict";
 
         var table = $('#data').DataTable({
-            "paging": false,
+            "paging": true,
             "ordering": true,
             "searching": true,
             "scrollCollapse": true,
