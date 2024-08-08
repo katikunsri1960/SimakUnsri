@@ -141,7 +141,7 @@ class MataKuliah extends Model
                 ->join('matkul_merdekas', 'matkul_merdekas.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
-                ->where('peserta_kelas_kuliahs.id_registrasi_mahasiswa', $id_reg)
+                ->where('id_registrasi_mahasiswa', $id_reg)
                 ->get();
 
         return $krs_merdeka;

@@ -9,6 +9,7 @@ use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Perkuliahan\PrasyaratMatkul;
+use App\Models\Perkuliahan\RencanaPembelajaran;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
@@ -150,6 +151,26 @@ class DataMasterController extends Controller
         return view('prodi.data-master.mata-kuliah.index', [
             'data' => $data
         ]);
+    }
+
+    public function lihat_rps($matkul)
+    {
+        $data_matkul = MataKuliah::where('id_matkul', $matkul)->first();
+        $data = RencanaPembelajaran::where('id_matkul', $matkul)->get();
+            // dd($data);
+        return view('prodi.data-master.mata-kuliah.lihat-rps', [
+            'data' => $data,
+            'matkul' => $data_matkul
+        ]);
+    }
+
+    public function approved_rps(RencanaPembelajaran $rps, $matkul)
+    {
+        $rps->where('id_matkul', $matkul)->update([
+            'approved' => 1,
+        ]);
+            // dd($data);
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
     public function matkul_merdeka()
