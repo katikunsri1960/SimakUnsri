@@ -94,10 +94,7 @@ class AktivitasMahasiswaKonversiController extends Controller
         $kurikulum_id = $request->input('kurikulum_id');
         $search = $request->input('q');
 
-        $mk_konversi = MataKuliah::with('matkul_kurikulum')
-            ->whereHas('matkul_kurikulum', function($query) use($kurikulum_id) {
-                $query->where('id_kurikulum', $kurikulum_id);
-            })
+        $mk_konversi = MatkulKurikulum::where('id_kurikulum', $kurikulum_id)
             ->where('id_prodi', $prodi_id)
             ->where('nama_mata_kuliah', 'LIKE', "%$search%")
             ->get();
