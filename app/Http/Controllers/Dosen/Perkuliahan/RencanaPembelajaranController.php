@@ -20,19 +20,19 @@ class RencanaPembelajaranController extends Controller
         $id_dosen = auth()->user()->fk_id;
 
         // dd($semester_aktif->id_semester);
-        $data = KelasKuliah::with(['matkul.kurikulum', 'matkul.rencana_pembelajaran'])->whereHas('dosen_pengajar', function($query) use ($id_dosen){
-                    $query->where('id_dosen', $id_dosen);
-                })
-                ->where('id_semester', $semester_aktif->id_semester)
-                ->select('kelas_kuliahs.*')
-                ->addSelect(DB::raw('(select count(id) from rencana_pembelajarans where rencana_pembelajarans.id_matkul=kelas_kuliahs.id_matkul) AS jumlah_rps'))
-                ->addSelect(DB::raw('(select count(approved) from rencana_pembelajarans where rencana_pembelajarans.id_matkul=kelas_kuliahs.id_matkul and approved=1) AS jumlah_approved'))
-                ->orderBy('kode_mata_kuliah', 'ASC')
-                ->get();
+        $data = KelasKuliah::with(['matkul.matkul_kurikulum', 'matkul.rencana_pembelajaran'])->whereHas('dosen_pengajar', function($query) use ($id_dosen){
+            $query->where('id_dosen', $id_dosen);
+        })
+        ->where('id_semester', $semester_aktif->id_semester)
+        ->select('kelas_kuliahs.*')
+        ->addSelect(DB::raw('(select count(id) from rencana_pembelajarans where rencana_pembelajarans.id_matkul=kelas_kuliahs.id_matkul) AS jumlah_rps'))
+        ->addSelect(DB::raw('(select count(approved) from rencana_pembelajarans where rencana_pembelajarans.id_matkul=kelas_kuliahs.id_matkul and approved=1) AS jumlah_approved'))
+        ->orderBy('kode_mata_kuliah', 'ASC')
+        ->get();
 
         $data_matkul = $data->unique('id_matkul')->values();
 
-        // dd($data);
+        // dd($data_matkul);
 
         return view('dosen.perkuliahan.rencana-pembelajaran.index', ['data' => $data_matkul]);
     }
@@ -82,7 +82,7 @@ class RencanaPembelajaranController extends Controller
         //Hitung jumlah RPS yang di buat
         $jumlah_pertemuan=count($request->pertemuan);
 
-        if($rps->approved != 1){
+        if(is_null($rps)){
             if($jumlah_pertemuan > 0){
                 $data_dosen = DosenPengajarKelasKuliah::with('kelas_kuliah')->whereHas('kelas_kuliah', function ($query) use ($id_matkul, $semester_aktif){
                     $query->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester);
@@ -108,7 +108,7 @@ class RencanaPembelajaranController extends Controller
                 return redirect()->back()->with('error', 'Silahkan Mengisi RPS Terlebih Dahulu');
             }
         }else{
-            return redirect()->back()->with('error', 'RPS Sudah di Setujui Kaprodi');
+            return redirect()->back()->with('error', 'RPS Sudah di Isi');
         }
     }
 
