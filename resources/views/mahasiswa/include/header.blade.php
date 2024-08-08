@@ -59,7 +59,7 @@
                 </li>
 
                 <!-- Notifications -->
-                <li class="dropdown notifications-menu">
+                {{-- <li class="dropdown notifications-menu">
                     <a href="#" class="waves-effect waves-light dropdown-toggle" data-bs-toggle="dropdown"
                         title="Notifications">
                         <i class="icon-Notifications"><span class="path1"></span><span class="path2"></span></i>
@@ -129,7 +129,7 @@
                             <a href="#">View all</a>
                         </li>
                     </ul>
-                </li>
+                </li> --}}
 
                 <!-- User Account-->
                 <li class="dropdown user user-menu">
@@ -139,10 +139,10 @@
                     </a>
                     <ul class="dropdown-menu animated flipInX">
                         <li class="user-body">
-                            <a class="dropdown-item" href="#"><i class="ti-user text-muted me-2"></i>
+                            <a class="dropdown-item" href="{{route('mahasiswa.biodata')}}"><i class="ti-user text-muted me-2"></i>
                                 Data Diri</a>
-                            <a class="dropdown-item" href="#"><i class="ti-settings text-muted me-2"></i>
-                                Settings</a>
+                            {{-- <a class="dropdown-item" href="#"><i class="ti-settings text-muted me-2"></i>
+                                Settings</a> --}}
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                             document.getElementById('logout-form').submit();"><i class="ti-lock text-muted me-2"></i> Logout</a>
@@ -150,11 +150,11 @@
                     </ul>
                 </li>
                 <!-- Control Sidebar Toggle Button -->
-                <li>
+                {{-- <li>
                     <a href="#" data-toggle="control-sidebar" title="Setting" class="waves-effect waves-light">
                         <i class="icon-Settings"><span class="path1"></span><span class="path2"></span></i>
                     </a>
-                </li>
+                </li> --}}
 
             </ul>
         </div>

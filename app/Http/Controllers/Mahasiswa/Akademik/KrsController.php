@@ -69,6 +69,7 @@ class KrsController extends Controller
 
         list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
         
+
         // $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
         //             ->orderBy('id_semester', 'DESC')
         //             ->get();
@@ -707,7 +708,6 @@ class KrsController extends Controller
             'total_sks_merdeka' => $total_sks_merdeka,
             'total_sks_regular' => $total_sks_regular,
             'total_sks' => $total_sks,
-
         ])->setPaper('a4', 'portrait');
 
         return $pdf->stream('KRS_' . $nim . '_' . $nama_smt . '.pdf');
