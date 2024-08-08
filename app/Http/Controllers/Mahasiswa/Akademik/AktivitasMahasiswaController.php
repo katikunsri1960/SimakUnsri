@@ -203,6 +203,8 @@ class AktivitasMahasiswaController extends Controller
             
                 // Simpan data ke tabel aktivitas_mahasiswas
                 $aktivitas=AktivitasMahasiswa::create([
+                    'approve_krs' =>0,
+                    'approve_sidang' =>0,
                     'feeder'=>0,
                     'id_aktivitas' => $id_aktivitas,
                     'judul' => $request->judul_skripsi,
