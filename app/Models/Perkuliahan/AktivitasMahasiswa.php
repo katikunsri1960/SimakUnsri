@@ -145,11 +145,12 @@ class AktivitasMahasiswa extends Model
 
         $db = new MataKuliah();
 
-        $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
-
-        
-
-        if( $data_akt == NULL)
+        $data_akt = Konversi::
+                    where('id_prodi', $riwayat_pendidikan->id_prodi)
+                    ->where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
+                    ->get();
+                    
+        if($data_akt == NULL)
         {
             $mk_akt=NULL;
             $data_akt_ids = NULL;
@@ -158,7 +159,7 @@ class AktivitasMahasiswa extends Model
         else
         {
             $mk_akt = $data_akt;
-            $data_akt_ids = array_column($mk_akt, 'id_matkul');
+            $data_akt_ids = $mk_akt->pluck('id_matkul');
         }
         // dd($data_akt);
 
