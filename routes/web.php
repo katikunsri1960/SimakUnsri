@@ -186,7 +186,10 @@ Route::group(['middleware' => ['auth']], function() {
 
             //Route Perkuliahan
             Route::prefix('perkuliahan')->group(function () {
-                Route::get('/jadwal-kuliah', [App\Http\Controllers\Dosen\Perkuliahan\JadwalKuliahController::class, 'jadwal_kuliah'])->name('dosen.perkuliahan.jadwal-kuliah');
+                Route::prefix('jadwal-kuliah')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Dosen\Perkuliahan\JadwalKuliahController::class, 'jadwal_kuliah'])->name('dosen.perkuliahan.jadwal-kuliah');
+                    Route::get('/jadwal-kuliah/detail/{kelas}', [App\Http\Controllers\Dosen\Perkuliahan\JadwalKuliahController::class, 'detail_kelas_kuliah'])->name('dosen.perkuliahan.jadwal-kuliah.detail');
+                });
                 Route::get('/jadwal-bimbingan', [App\Http\Controllers\Dosen\Perkuliahan\JadwalBimbinganController::class, 'jadwal_bimbingan'])->name('dosen.perkuliahan.jadwal-bimbingan');
 
                 //Detail Fitur

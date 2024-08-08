@@ -12,6 +12,7 @@ use App\Models\Perkuliahan\SubstansiKuliah;
 use App\Models\RuangPerkuliahan;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Semester;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\JenisEvaluasi;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
@@ -29,14 +30,9 @@ class KelasPenjadwalanController extends Controller
         // dd($semester_aktif);
         $prodi_id = auth()->user()->fk_id;
 
-        $data = MataKuliah::with('kurikulum', 'matkul_kurikulum')->whereHas('kurikulum', function($query) use ($prodi_id){
-                    $query->where('list_kurikulums.id_prodi', $prodi_id)
-                        ->where('is_active', 1);
-                })
-                ->withCount(['kelas_kuliah as jumlah_kelas_kuliah' => function($query) use ($prodi_id, $semester_aktif){
-                    $query->where('kelas_kuliahs.id_prodi', $prodi_id)
-                        ->where('kelas_kuliahs.id_semester', $semester_aktif->id_semester);
-                }])
+        $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.kelas_kuliah'])
+                ->where('id_prodi', $prodi_id)
+                ->where('is_active', 1)
                 ->get();
         // dd($data);
         return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data, 'semester_aktif' => $semester_aktif]);
