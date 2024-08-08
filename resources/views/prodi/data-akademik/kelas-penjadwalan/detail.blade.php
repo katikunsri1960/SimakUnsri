@@ -26,15 +26,22 @@ Kelas Penjadwalan
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    <div class="row">
-                        <div class="col-lg-6">
+                    <div class="row mb-5">
+                        <div class="col-lg-6 mb-10">
                             <div class="d-flex">
                                 <a type="button" class="btn btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"><i class="fa fa-arrow-left"></i> Kembali</a>
                             </div>
                         </div>
-                        <div class="col-lg-6">
+                        <div class="col-lg-6 mb-10">
                             <div class="d-flex justify-content-end">
                                 <a type="button" class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.tambah',['id_matkul' => $id_matkul])}}"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="d-flex">
+                                <h4>{{$matkul->kode_mata_kuliah}} - {{$matkul->nama_mata_kuliah}}</h4>
                             </div>
                         </div>
                     </div>
@@ -91,9 +98,9 @@ Kelas Penjadwalan
                                             </div>
                                             @endif
                                             @if ($d->feeder == 0)
-                                            {{-- <div class="row my-3 px-3">
-                                                <a href="{{route('prodi.data-akademik.kelas-penjadwalan.tambah',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Edit Kelas</a>
-                                            </div> --}}
+                                            {{--<div class="row my-3 px-3">
+                                                <a href="{{route('prodi.data-akademik.kelas-penjadwalan.edit',['id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Edit Kelas</a>
+                                            </div>--}}
 
                                             <form action="{{route('prodi.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
                                                 @csrf
