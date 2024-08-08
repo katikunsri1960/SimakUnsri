@@ -358,6 +358,15 @@ Route::group(['middleware' => ['auth']], function() {
 
             //Route for Data Aktivitas
             Route::prefix('data-aktivitas')->group(function(){
+                //Route for Data Aktivitas Mahasiswa
+                Route::prefix('aktivitas-mahasiswa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'index'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.index');
+                    Route::get('/tambah', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'create'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.create');
+                    Route::get('/get-nama-mk', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'get_mk_konversi'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.get_mk');
+                    Route::get('/get-mata-kuliah/{id_kurikulum}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'getMataKuliah'])->name('get-mata-kuliah');
+                    Route::post('/store', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'store'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.store');
+                    Route::delete('/delete/{id}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'delete'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.delete');
+                });
                 Route::get('/aktivitas-penelitian', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_penelitian'])->name('prodi.data-aktivitas.aktivitas-penelitian');
                 Route::get('/aktivitias-lomba', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_lomba'])->name('prodi.data-aktivitas.aktivitas-lomba');
                 Route::get('/aktivitas-organisasi', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_organisasi'])->name('prodi.data-aktivitas.aktivitas-organisasi');
