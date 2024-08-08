@@ -20,7 +20,7 @@ class RencanaPembelajaranController extends Controller
         $id_dosen = auth()->user()->fk_id;
 
         // dd($semester_aktif->id_semester);
-        $data = KelasKuliah::with(['matkul.kurikulum', 'matkul.rencana_pembelajaran'])->whereHas('dosen_pengajar', function($query) use ($id_dosen){
+        $data = KelasKuliah::with(['matkul.matkul_kurikulum', 'matkul.rencana_pembelajaran'])->whereHas('dosen_pengajar', function($query) use ($id_dosen){
             $query->where('id_dosen', $id_dosen);
         })
         ->where('id_semester', $semester_aktif->id_semester)
