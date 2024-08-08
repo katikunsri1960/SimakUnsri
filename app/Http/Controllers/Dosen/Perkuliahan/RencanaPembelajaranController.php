@@ -21,14 +21,14 @@ class RencanaPembelajaranController extends Controller
 
         // dd($semester_aktif->id_semester);
         $data = KelasKuliah::with(['matkul.matkul_kurikulum', 'matkul.rencana_pembelajaran'])->whereHas('dosen_pengajar', function($query) use ($id_dosen){
-            $query->where('id_dosen', $id_dosen);
-        })
-        ->where('id_semester', $semester_aktif->id_semester)
-        ->select('kelas_kuliahs.*')
-        ->addSelect(DB::raw('(select count(id) from rencana_pembelajarans where rencana_pembelajarans.id_matkul=kelas_kuliahs.id_matkul) AS jumlah_rps'))
-        ->addSelect(DB::raw('(select count(approved) from rencana_pembelajarans where rencana_pembelajarans.id_matkul=kelas_kuliahs.id_matkul and approved=1) AS jumlah_approved'))
-        ->orderBy('kode_mata_kuliah', 'ASC')
-        ->get();
+                    $query->where('id_dosen', $id_dosen);
+                })
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->select('kelas_kuliahs.*')
+                ->addSelect(DB::raw('(select count(id) from rencana_pembelajarans where rencana_pembelajarans.id_matkul=kelas_kuliahs.id_matkul) AS jumlah_rps'))
+                ->addSelect(DB::raw('(select count(approved) from rencana_pembelajarans where rencana_pembelajarans.id_matkul=kelas_kuliahs.id_matkul and approved=1) AS jumlah_approved'))
+                ->orderBy('kode_mata_kuliah', 'ASC')
+                ->get();
 
         $data_matkul = $data->unique('id_matkul')->values();
 

@@ -27,6 +27,25 @@ class AktivitasMahasiswaKonversiController extends Controller
         return view('prodi.data-aktivitas.aktivitas-mahasiswa.index', compact('data'));
     }
 
+    public function index_1()
+    {
+        // dd($semester_aktif);
+        $prodi_id = auth()->user()->fk_id;
+
+
+        $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.kelas_kuliah'])
+                ->whereHas('mata_kuliah', function($query) use($prodi_id){
+                    $query->whereHas('kelas_kuliah', function($query) use($prodi_id) {
+                        $query->where('id_prodi', $prodi_id)->count();
+                    });
+                })
+                ->where('id_prodi', $prodi_id)
+                ->where('is_active', 1)
+                ->get();
+        dd($data);
+        return view('prodi.data-aktivitas.aktivitas-mahasiswa.index', compact('data'));
+    }
+
     /**
      * Show the form for creating a new resource.
      */
