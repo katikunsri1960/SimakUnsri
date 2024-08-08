@@ -59,7 +59,11 @@ Kelas Penjadwalan
                                                 <td class="text-start align-middle">{{$k->nama_kurikulum}}</td>
                                                 <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                                 <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
-                                                <td class="text-center align-middle">{{$d->jumlah_kelas_kuliah}}</td>
+                                                <td class="text-center align-middle">
+                                                    @php
+                                                        echo count($d->kelas_kuliah);
+                                                    @endphp
+                                                </td>
                                                 <td class="text-center align-middle">{{$k->semester_mulai_berlaku}}</td>
                                                 <td class="text-center align-middle">
                                                     <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>

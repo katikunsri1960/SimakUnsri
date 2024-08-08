@@ -325,6 +325,9 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/{id_matkul}/{nama_kelas_kuliah}/dosen-pengajar', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar');
                     Route::delete('/{id_matkul}/{id_kelas}/dosen-pengajar/delete', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_destroy'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.delete');
 
+                    Route::get('/{id_kelas}/edit-kelas', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'edit_kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan.edit');
+                    Route::delete('/{id_matkul}/{id_kelas}/update', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_update'])->name('prodi.data-akademik.kelas-penjadwalan.update');
+
                 });
 
                 //Dosen Pengajar Kelas Kuliah
