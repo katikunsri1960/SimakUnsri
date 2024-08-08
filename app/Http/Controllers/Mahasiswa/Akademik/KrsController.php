@@ -708,7 +708,6 @@ class KrsController extends Controller
             'total_sks_merdeka' => $total_sks_merdeka,
             'total_sks_regular' => $total_sks_regular,
             'total_sks' => $total_sks,
-
         ])->setPaper('a4', 'portrait');
 
         return $pdf->stream('KRS_' . $nim . '_' . $nama_smt . '.pdf');

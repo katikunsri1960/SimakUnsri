@@ -181,5 +181,7 @@ class AktivitasMahasiswa extends Model
             return [$krs_akt, $data_akt_ids, $mk_akt];
     }
 
+    
+
 
 }

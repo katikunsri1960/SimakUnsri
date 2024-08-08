@@ -61,9 +61,9 @@
                                     @endif
                                 @endforeach  
                             </div>
-                            <div class="box-footer text-end">
+                            {{-- <div class="box-footer text-end">
                                 <a class="btn btn-rounded bg-primary" href="#"><i class="fa-solid fa-plus"> <span class="path1"></span><span class="path2"></span></i> Tambah</a>
-                            </div>  
+                            </div>   --}}
                         </div>
                     </div>
                 </div>  
