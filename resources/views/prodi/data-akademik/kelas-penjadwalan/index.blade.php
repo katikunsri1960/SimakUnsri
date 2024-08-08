@@ -52,9 +52,9 @@ Kelas Penjadwalan
                                     $row=0;
                                 @endphp
                                 @foreach($data as $d)
-                                    <tr> 
+                                    <tr>
                                         <td class="text-center align-middle">{{$row = $row + 1}}</td>
-                                        <td class="text-start align-middle">{{$d->matkul_kurikulum->nama_kurikulum}}</td>
+                                        <td class="text-start align-middle">{{$d->kurikulum->nama_kurikulum}}</td>
                                         <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                         <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
                                         <td class="text-center align-middle">{{$d->jumlah_kelas_kuliah}}</td>

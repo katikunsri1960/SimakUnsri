@@ -80,19 +80,16 @@ Mata Kuliah
                                                 </form>
                                             </div>
                                             @else
-                                            <div class="col-md-12 mb-2">
+                                            <div class="col-md-12">
                                                 <a class="btn btn-primary btn-sm w-100"
                                                     href="{{route('prodi.data-master.mata-kuliah.tambah-prasyarat', ['matkul' => $d])}}">
                                                     <i class="fa fa-plus"></i> Prasyarat
                                                 </a>
                                             </div>
                                             @endif
-                                            <div class="col-md-12">
-                                                <a class="btn btn-warning btn-sm w-100"
-                                                    href="{{route('prodi.data-master.mata-kuliah.lihat-rps', ['matkul' => $d->id_matkul])}}">
-                                                    <i class="fa fa-search"></i> Lihat RPS
-                                                </a>
-                                            </div>
+
+
+
                                         </div>
                                     </td>
                                 </tr>

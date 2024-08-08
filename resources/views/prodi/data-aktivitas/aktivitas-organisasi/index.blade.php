@@ -17,10 +17,8 @@ Aktivitas Organisasi Mahasiswa
                 </nav>
             </div>
         </div>
-
     </div>
 </div>
-
 <section class="content">
     <div class="row">
         <div class="col-12">

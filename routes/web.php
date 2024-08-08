@@ -284,8 +284,6 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/{matkul}/tambah-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'tambah_prasyarat'])->name('prodi.data-master.mata-kuliah.tambah-prasyarat');
                     Route::post('/{matkul}/store-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'tambah_prasyarat_store'])->name('prodi.data-master.mata-kuliah.store-prasyarat');
                     Route::delete('/{matkul}/delete-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'hapus_prasyarat'])->name('prodi.data-master.mata-kuliah.delete-prasyarat');
-                    Route::get('/{matkul}/lihat-rps', [App\Http\Controllers\Prodi\DataMasterController::class, 'lihat_rps'])->name('prodi.data-master.mata-kuliah.lihat-rps');
-                    Route::post('/{matkul}/approved-all', [App\Http\Controllers\Prodi\DataMasterController::class, 'approved_rps'])->name('prodi.data-master.mata-kuliah.approved-all');
                 });
 
                 Route::prefix('matkul-merdeka')->group(function(){
@@ -358,6 +356,17 @@ Route::group(['middleware' => ['auth']], function() {
 
             //Route for Data Aktivitas
             Route::prefix('data-aktivitas')->group(function(){
+                //Route for Data Aktivitas Mahasiswa
+                Route::prefix('aktivitas-mahasiswa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'index'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.index');
+                    Route::get('/tambah', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'create'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.create');
+                    Route::get('/get-nama-mk', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'get_mk_konversi'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.get_mk');
+                    Route::get('/get-mata-kuliah/{id_kurikulum}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'getMataKuliah'])->name('get-mata-kuliah');
+
+                    Route::post('/store', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'store'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.store');
+                    // Route::delete('/delete', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'delete'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.delete');
+                    Route::delete('/aktivitas-mahasiswa/delete/{id}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'delete'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.delete');
+                });
                 Route::get('/aktivitas-penelitian', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_penelitian'])->name('prodi.data-aktivitas.aktivitas-penelitian');
                 Route::get('/aktivitias-lomba', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_lomba'])->name('prodi.data-aktivitas.aktivitas-lomba');
                 Route::get('/aktivitas-organisasi', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_organisasi'])->name('prodi.data-aktivitas.aktivitas-organisasi');
