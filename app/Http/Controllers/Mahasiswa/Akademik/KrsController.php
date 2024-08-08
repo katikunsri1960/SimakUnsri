@@ -125,7 +125,7 @@ class KrsController extends Controller
         // dd($mk_merdeka);
 
         // MATAKULIAH TANPA GANJIL GENAP
-        $mk_regular = $db->getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_select);
+        $mk_regular = $db->getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_select, $riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
         // dd($sks_max);
 
     // TAGIHAN PEMBAYARAN
@@ -158,6 +158,7 @@ class KrsController extends Controller
             )
             ->first();
             // dd($tagihan);
+
 
             $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
             // dd($cuti);

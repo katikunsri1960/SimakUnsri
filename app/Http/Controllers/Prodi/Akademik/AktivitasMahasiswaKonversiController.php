@@ -27,24 +27,32 @@ class AktivitasMahasiswaKonversiController extends Controller
         return view('prodi.data-aktivitas.aktivitas-mahasiswa.index', compact('data'));
     }
 
-    public function index_1()
-    {
-        // dd($semester_aktif);
-        $prodi_id = auth()->user()->fk_id;
+    // public function index(Request $request)
+    // {
+    //     $prodi_id = $request->prodi_id; // Pastikan prodi_id berasal dari request atau di-set sebelumnya
 
+    //     // Mengambil data ListKurikulum dengan relasi ke mata_kuliah dan kelas_kuliah
+    //     $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.kelas_kuliah'])
+    //         ->whereHas('mata_kuliah', function($query) use($prodi_id) {
+    //             $query->whereHas('kelas_kuliah', function($query) use($prodi_id) {
+    //                 $query->where('id_prodi', $prodi_id);
+    //             });
+    //         })
+    //         ->where('id_prodi', $prodi_id)
+    //         ->where('is_active', 1)
+    //         ->get();
 
-        $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.kelas_kuliah'])
-                ->whereHas('mata_kuliah', function($query) use($prodi_id){
-                    $query->whereHas('kelas_kuliah', function($query) use($prodi_id) {
-                        $query->where('id_prodi', $prodi_id)->count();
-                    });
-                })
-                ->where('id_prodi', $prodi_id)
-                ->where('is_active', 1)
-                ->get();
-        dd($data);
-        return view('prodi.data-aktivitas.aktivitas-mahasiswa.index', compact('data'));
-    }
+            
+    //     // Menghitung jumlah kelas dari tabel kelas_kuliah
+    //     $jumlah_kelas = KelasKuliah::where('id_prodi', $prodi_id)->count();
+
+    //     dd($jumlah_kelas);
+
+    //     return response()->json([
+    //         'data' => $data,
+    //         'jumlah_kelas' => $jumlah_kelas
+    //     ]);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -93,7 +101,10 @@ class AktivitasMahasiswaKonversiController extends Controller
             ->where('nama_mata_kuliah', 'LIKE', "%$search%")
             ->get();
 
+            // dd($mk_konversi);
+
         return response()->json($mk_konversi);
+        // return view('prodi.data-aktivitas.aktivitas-mahasiswa.store', compact('mk_konversi'));
     }
 
 

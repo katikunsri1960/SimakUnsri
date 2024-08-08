@@ -20,14 +20,13 @@ Aktivitas Mahasiswa
     </div>
 </div>
 <section class="content">
+    @include('swal')
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
-                        {{-- <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.create')}}"><i class="fa fa-plus"></i> Tambah Konversi Aktivitas</button> --}}
-                        <div class="btn-group">
+                       <div class="btn-group">
                             <a class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.create')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Konversi Aktivitas</a>
                         </div>   
                     </div>
@@ -42,8 +41,8 @@ Aktivitas Mahasiswa
                                     <th class="text-center align-middle">NAMA KURIKULUM</th>
                                     {{-- <th class="text-center align-middle">SEMESTER</th> --}}
                                     <th class="text-center align-middle">NAMA AKTIVITAS</th>
-                                    <th class="text-center align-middle">NAMA MATA KULIAH</th>
                                     <th class="text-center align-middle">KODE MATA KULIAH</th>
+                                    <th class="text-center align-middle">NAMA MATA KULIAH</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -60,11 +59,13 @@ Aktivitas Mahasiswa
                                         <td class="text-center align-middle">{{ $d->nama_jenis_aktivitas }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->kode_mata_kuliah }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_mata_kuliah }}</td>
-                                        <td>
+                                        <td class="text-center align-middle" style="width:3%">
                                             <form action="{{ route('prodi.data-aktivitas.aktivitas-mahasiswa.delete', $d->id) }}" method="POST" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn btn-danger delete-button">Hapus</button>
+                                                <button type="submit" class="btn btn-danger delete-button">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
                                             </form>
                                         </td>
                                     </tr>
@@ -88,6 +89,27 @@ Aktivitas Mahasiswa
         "use strict";
         
         $('#data').DataTable();
+    });
+
+    $(document).ready(function(){
+        $('.delete-button').click(function(e){
+            e.preventDefault();
+            var form = $(this).closest('form');
+            swal({
+                title: 'Apakah Anda yakin?',
+                text: "Data yang dihapus tidak dapat dikembalikan!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirmed){
+                if (isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
     });
 </script>
 @endpush

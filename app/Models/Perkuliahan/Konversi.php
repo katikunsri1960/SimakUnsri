@@ -18,10 +18,10 @@ class Konversi extends Model
     //     return $this->belongsTo(ListKurikulum::class, 'id_kurikulum', 'id_kurikulum');
     // }
 
-    // public function matkul_kurikulum()
-    // {
-    //     return $this->belongsTo(MatkulKurikulum::class, 'id_matkul', 'id_matkul');
-    // }
+    public function matkul_kurikulum()
+    {
+        return $this->belongsTo(MatkulKurikulum::class, 'id_matkul', 'id_matkul');
+    }
 
     // public function matkul()
     // {

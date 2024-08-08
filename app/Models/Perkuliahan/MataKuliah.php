@@ -173,9 +173,11 @@ class MataKuliah extends Model
         $prodi = $riwayat->id_prodi;
         $kurikulum = $riwayat->id_kurikulum;
 
-        $data_akt = $this->getMKAktivitas($prodi, $kurikulum);
-
-
+        $data_akt = Konversi::
+                    where('id_prodi', $prodi)
+                    ->where('id_kurikulum', $kurikulum)
+                    ->get();
+                    
         if($data_akt == NULL)
         {
             $mk_akt=NULL;
@@ -185,7 +187,7 @@ class MataKuliah extends Model
         else
         {
             $mk_akt = $data_akt;
-            $data_akt_ids = array_column($mk_akt, 'id_matkul');
+            $data_akt_ids = $mk_akt->pluck('id_matkul');
         }
 
         $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 'kelas_kuliah','kelas_kuliah.dosen_pengajar', 'rencana_pembelajaran'])
@@ -206,7 +208,7 @@ class MataKuliah extends Model
                             $q->where('approved', 1);
                         }]);
 
-        // dd($matakuliah->get());
+        // dd($data_akt_ids);
         if ($data_akt_ids != NULL) {
 
             $matakuliah= $matakuliah->whereNotIn('id_matkul', $data_akt_ids);
@@ -219,6 +221,21 @@ class MataKuliah extends Model
 
         return $matakuliah;
     }
+
+
+    public function getMKAktivitas_1($id_prodi, $id_kurikulum)
+    {
+        $dataAkt = Konversi::
+                    // with(['matkul_kurikulum'])
+                    where('id_prodi', $id_prodi)
+                    ->where('id_kurikulum', $id_kurikulum)
+                    ->pluck('id_matkul');
+                    // dd($dataAkt);
+
+        return $dataAkt;
+    }
+
+
 
     public function getMKAktivitas($id_prodi, $id_kurikulum)
     {
