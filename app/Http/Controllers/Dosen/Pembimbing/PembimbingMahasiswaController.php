@@ -88,7 +88,7 @@ class PembimbingMahasiswaController extends Controller
         $store = $db->approve_all($id);
         // dd($store);
         return redirect()->back()->with($store['status'], $store['message']);
-    }
+    } 
 
     public function bimbingan_non_akademik()
     {

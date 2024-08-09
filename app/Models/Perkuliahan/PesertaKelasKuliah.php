@@ -56,7 +56,7 @@ class PesertaKelasKuliah extends Model
 
         list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
 
-        $sks_max = $db->getSksMax($id_reg, $semester_aktif);
+        $sks_max = $db->getSksMax($id_reg, $semester_aktif, $riwayat_pendidikan->id_periode_masuk); 
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);
 

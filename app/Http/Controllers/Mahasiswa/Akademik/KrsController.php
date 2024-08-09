@@ -144,8 +144,8 @@ class KrsController extends Controller
         $tagihan = DB::connection('keu_con')
             ->table('tagihan')
             ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-            // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
-            ->where('tagihan.nomor_pembayaran', '08051282328058')
+            ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+            // ->where('tagihan.nomor_pembayaran', '08051282328058')
             ->where('tagihan.kode_periode', $semester_aktif->id_semester)
             ->select(
                 'tagihan.nama',

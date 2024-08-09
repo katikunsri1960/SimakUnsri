@@ -125,7 +125,7 @@ class DataMasterController extends Controller
         ]);
 
         return redirect()->back()->with('success', "Data Berhasil di tambahkan");
-    }
+    } 
 
     public function set_kurikulum_angkatan(Request $request)
     {
