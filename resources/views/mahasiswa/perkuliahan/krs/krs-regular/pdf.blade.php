@@ -199,7 +199,7 @@ Kartu Rencana Studi
                                 </td>
                                 <td class="text-center align-middle" style="width:10%">
                                     <div>
-                                        {{ $data->konversi= NULL ? $data->konversi->sks_mata_kuliah : '-' }}
+                                        {{ $data->konversi= NULL ? '-' :  $data->konversi->sks_mata_kuliah }}
                                     </div>
                                 </td>
                                 

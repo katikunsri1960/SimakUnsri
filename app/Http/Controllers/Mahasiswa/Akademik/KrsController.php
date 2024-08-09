@@ -112,7 +112,7 @@ class KrsController extends Controller
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select, $data_akt_ids);
 
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select);
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select, $semester_aktif->id_semester);
 
     // DATA MK_MERDEKA
         $fakultas=Fakultas::all();
@@ -127,6 +127,7 @@ class KrsController extends Controller
         // MATAKULIAH TANPA GANJIL GENAP
         $mk_regular = $db->getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_select, $riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
         // dd($sks_max);
+
 
     // TAGIHAN PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
@@ -389,6 +390,9 @@ class KrsController extends Controller
 
         $id_prodi = $request->input('id_prodi');
 
+        // $id_prodi ='d8fc7d99-9d8a-4484-b946-3d1e7680314b';
+        
+
         // $selectedFakultasId = $request->input('fakultas_id');
 
         // $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
@@ -400,7 +404,7 @@ class KrsController extends Controller
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
 
         $mkMerdeka = $db->getMKMerdeka($semester_aktif, $id_prodi);
-        // dd($semester_aktif);
+        // dd($mkMerdeka);
 
         return response()->json(['mk_merdeka' => $mkMerdeka, 'krs_merdeka'=>$krs_merdeka]);
     }
@@ -457,6 +461,8 @@ class KrsController extends Controller
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                     ->first();
+            $prodi = $riwayat_pendidikan->id_prodi;
+            $kurikulum = $riwayat_pendidikan->id_kurikulum;
 
             $semester_aktif = SemesterAktif::first();
 
@@ -495,6 +501,13 @@ class KrsController extends Controller
             $kelas_mk = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul','=','kelas_kuliahs.id_matkul')
                     ->where('id_kelas_kuliah', $idKelasKuliah)->first();
 
+            $jumlah_peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)->count();
+                            
+            // Pengecekan kapasitas kelas
+            if ($jumlah_peserta >= $kelas_mk->kapasitas) {
+                return response()->json(['message' => 'Kapasitas kelas sudah penuh.'], 400);
+            }
+
             //QUERY RPS
             $rps=RencanaPembelajaran::where('id_matkul', $kelas_mk->id_matkul)->get();
             
@@ -524,7 +537,7 @@ class KrsController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk'=>$sks_mk, '$peserta'=>$peserta], 200);
+            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk'=>$sks_mk, '$peserta'=>$peserta, '$jumlah_peserta'=>$jumlah_peserta], 200);
         } catch (\Exception $e) {
             DB::rollback();
 
@@ -636,7 +649,7 @@ class KrsController extends Controller
                     ->get();
         // dd($prodi);
 
-        $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
+        $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids)->where('approved', 1);
 
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
@@ -659,6 +672,8 @@ class KrsController extends Controller
 
         list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $id_semester);
 
+        $krs_akt = $krs_akt->where('approve_krs', 1);
+
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->orderBy('id_semester', 'DESC')
                     ->get();
@@ -676,10 +691,12 @@ class KrsController extends Controller
             return substr($item->id_semester, -1) != '3';
         })->count();
 
-        $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
+        // $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
 
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester);
-
+        
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester)->where('approved', 1);
+        
+        // dd($krs_akt);
 
     // TOTAL SELURUH SKS
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
@@ -688,6 +705,10 @@ class KrsController extends Controller
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
+        if (empty($krs_regular) && empty($krs_merdeka) && empty($krs_akt)) {
+            return response()->json(['error' => 'KRS tidak dapat dicetak, karena data tidak ditemukan']);
+        }
+        
         $pdf = PDF::loadview('mahasiswa.perkuliahan.krs.krs-regular.pdf', [
             'today'=> $today,
             'deadline'=> $deadline,
