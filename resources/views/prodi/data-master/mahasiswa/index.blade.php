@@ -161,7 +161,7 @@ Mahasiswa Prodi
                     render: function(data, type, row) {
                         var buttonClass = data.dosen_pa ? 'warning' : 'primary';
                         var buttonText = data.dosen_pa ? 'Ubah' : 'Assign';
-                        var jsonData = encodeURIComponent(JSON.stringify(data));
+                        var jsonData = encodeURIComponent(JSON.stringify(data).replace(/'/g, '&#39;'));
                         return '<button class="btn btn-sm btn-rounded btn-' + buttonClass + ' text-nowrap" data-bs-toggle="modal" data-bs-target="#assignDosenPa" onclick="setDosenPa(decodeURIComponent(\'' + jsonData + '\'), ' + data.id + ')"><i class="fa fa-user-graduate"></i> ' + buttonText + ' PA</button>';
                     },
                     orderable: false,
@@ -174,6 +174,7 @@ Mahasiswa Prodi
     });
 
     function setDosenPa(data, id) {
+        data = data.replace(/&#39;/g, "'");
         console.log('setDosenPa called with data:', data, 'and id:', id);
         $('#edit_id_dosen').val(data.dosen_pa).trigger('change');
         // Populate other fields...
