@@ -55,10 +55,15 @@ Biaya Kuliah
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Mengambil data dari Blade
+        var statusBeasiswa = @json($beasiswa);
         var statusBayar = @json($tagihan->pembayaran);
-
+        
         // Mengecek apakah status bayar adalah NULL
-        if (statusBayar === null) {
+        if (statusBeasiswa !== null || statusBayar !== null) {
+            // Menampilkan SweetAlert jika status bayar adalah NULL
+        }
+        else 
+        {
             // Menampilkan SweetAlert jika status bayar adalah NULL
             swal({
                 title: "Tagihan Belum Dibayar",
@@ -71,6 +76,7 @@ Biaya Kuliah
                 window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai
             });
         }
+        
     });
 </script>
 @endpush

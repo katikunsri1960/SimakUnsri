@@ -25,8 +25,6 @@ return new class extends Migration
             $table->foreign('id_matkul')->references('id_matkul')->on('mata_kuliahs');
             $table->string("kode_mata_kuliah")->nullable();
             $table->string("nama_mata_kuliah")->nullable();
-            $table->string("sks_mata_kuliah");
-            $table->string("semester");
             $table->timestamps();
         });
     }

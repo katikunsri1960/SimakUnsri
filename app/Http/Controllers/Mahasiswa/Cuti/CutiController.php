@@ -52,6 +52,9 @@ class CutiController extends Controller
             ->where('nomor_pembayaran', $user->username)
             ->where('kode_periode', $id_semester)
             ->first();
+
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
+            // dd($beasiswa);
     
         $statusPembayaran = $tagihan->pembayaran ? $tagihan->pembayaran->status_pembayaran : null;
     
