@@ -78,7 +78,7 @@ class KrsController extends Controller
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
                     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                     ->get();
-        // dd($semester);
+        // dd($krs_akt);
 
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $semester_select)
@@ -144,7 +144,8 @@ class KrsController extends Controller
         $tagihan = DB::connection('keu_con')
             ->table('tagihan')
             ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-            ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+            // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+            ->where('tagihan.nomor_pembayaran', '08051282328058')
             ->where('tagihan.kode_periode', $semester_aktif->id_semester)
             ->select(
                 'tagihan.nama',

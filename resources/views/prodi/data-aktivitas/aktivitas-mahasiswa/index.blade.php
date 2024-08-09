@@ -37,13 +37,14 @@ Aktivitas Mahasiswa
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">NAMA PROGRAM STUDI</th>
-                                    <th class="text-center align-middle">NAMA KURIKULUM</th>
-                                    {{-- <th class="text-center align-middle">SEMESTER</th> --}}
-                                    <th class="text-center align-middle">NAMA AKTIVITAS</th>
-                                    <th class="text-center align-middle">KODE MATA KULIAH</th>
-                                    <th class="text-center align-middle">NAMA MATA KULIAH</th>
-                                    <th class="text-center align-middle">AKSI</th>
+                                    {{-- <th class="text-center align-middle">Program Studi</th> --}}
+                                    <th class="text-center align-middle">Kurikulum</th>
+                                    <th class="text-center align-middle">Aktivitas</th>
+                                    <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                    <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                    <th class="text-center align-middle">SKS</th>
+                                    <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -54,11 +55,13 @@ Aktivitas Mahasiswa
                                 @foreach ($data as $d)
                                     <tr>
                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
-                                        <td class="text-center align-middle">{{ $d->nama_program_studi}}</td>
-                                        <td class="text-center align-middle">{{ $d->nama_kurikulum }}</td>
-                                        <td class="text-center align-middle">{{ $d->nama_jenis_aktivitas }}</td>
+                                        {{-- <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_program_studi}}</td> --}}
+                                        <td class="text-start align-middle">{{ $d->nama_kurikulum }}</td>
+                                        <td class="text-start align-middle">{{ $d->nama_jenis_aktivitas }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->kode_mata_kuliah }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_mata_kuliah }}</td>
+                                        <td class="text-center align-middle" style="width:3%">{{ $d->sks_mata_kuliah }}</td>
+                                        <td class="text-center align-middle" style="width:3%">{{ $d->semester }}</td>
                                         <td class="text-center align-middle" style="width:3%">
                                             <form action="{{ route('prodi.data-aktivitas.aktivitas-mahasiswa.delete', $d->id) }}" method="POST" class="delete-form">
                                                 @csrf

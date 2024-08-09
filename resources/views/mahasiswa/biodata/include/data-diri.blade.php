@@ -86,17 +86,17 @@
                                                 value="{{$data->biodata ? $data->biodata->kewarganegaraan : ''}}">
                                         </div>
                                     </div>
-                                    <div class="col-lg-6">
+                                    {{-- <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>No. Telpon</label>
                                             <input type="name" class="form-control"
                                                 value="{{$data->biodata ? $data->biodata->telepon : ''}}">
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     <!-- JENIS KELAMIN -->
                                     @if ($data->biodata->jenis_kelamin == "Laki-laki" )
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-12">
                                             <label class="mb-5">Jenis Kelamin</label>
                                             <div class="form-group ">
                                                 <div class="form-check form-check-inline">
@@ -120,7 +120,7 @@
                                             </div>
                                         </div>
                                     @elseif ($data->biodata->jenis_kelamin == "Perempuan" )
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-12">
                                             <label class="mb-5">Jenis Kelamin</label>
                                             <div class="form-group ">
                                                 <div class="form-check form-check-inline">
@@ -144,7 +144,7 @@
                                             </div>
                                         </div>
                                     @else
-                                        <div class="col-lg-6">
+                                        <div class="col-lg-12">
                                             <label class="mb-5">Jenis Kelamin</label>
                                             <div class="form-group ">
                                                 <div class="form-check form-check-inline">
@@ -170,7 +170,7 @@
                                     @endif
 
 
-                                    <div class="col-lg-6">
+                                    {{-- <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>Golongan Darah</label>
                                             <select class="form-select" aria-label="Default select example" >
@@ -202,7 +202,7 @@
                                                 <span class="input-group-addon">kg</span>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
 
                                     {{-- <div class="col-lg-6">
                                         <label class="mb-5">Ukuran Baju</label>
@@ -253,14 +253,14 @@
                                         <div class="form-group">
                                             <label>Email</label>
                                             <input type="name" class="form-control"
-                                                value="{{$data->biodata ? $data->biodata->email : ''}}">
+                                                value="{{$data->biodata ? $data->biodata->email : ''}}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="form-group">
                                             <label>No. HP</label>
                                             <input type="name" class="form-control"
-                                                value="{{$data->biodata ? $data->biodata->handphone : ''}}">
+                                                value="{{$data->biodata ? $data->biodata->handphone : ''}}" disabled>
                                         </div>
                                     </div>
                                 </div>

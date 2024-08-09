@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\Konversi;
 use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\MatkulKurikulum;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
@@ -93,10 +94,7 @@ class AktivitasMahasiswaKonversiController extends Controller
         $kurikulum_id = $request->input('kurikulum_id');
         $search = $request->input('q');
 
-        $mk_konversi = MataKuliah::with('matkul_kurikulum')
-            ->whereHas('matkul_kurikulum', function($query) use($kurikulum_id) {
-                $query->where('id_kurikulum', $kurikulum_id);
-            })
+        $mk_konversi = MatkulKurikulum::where('id_kurikulum', $kurikulum_id)
             ->where('id_prodi', $prodi_id)
             ->where('nama_mata_kuliah', 'LIKE', "%$search%")
             ->get();
@@ -134,11 +132,7 @@ class AktivitasMahasiswaKonversiController extends Controller
                             ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
                             ->first();
 
-            $mk_konversi = MataKuliah::with('matkul_kurikulum')
-                            ->whereHas('matkul_kurikulum', function($query) use($request) {
-                                $query->where('id_kurikulum', $request->kurikulum);
-                            })
-                            ->where('id_prodi', $prodi_id)
+            $mk_konversi = MatkulKurikulum::where('id_prodi', $prodi_id)
                             ->where('id_matkul', $request->mk_konversi)
                             ->first();
                             // dd($mk_konversi);
@@ -154,11 +148,11 @@ class AktivitasMahasiswaKonversiController extends Controller
                     'id_matkul' =>$mk_konversi->id_matkul,
                     'kode_mata_kuliah' =>$mk_konversi->kode_mata_kuliah,
                     'nama_mata_kuliah' =>$mk_konversi->nama_mata_kuliah,
+                    'sks_mata_kuliah' =>$mk_konversi->sks_mata_kuliah,
+                    'semester' =>$mk_konversi->semester,
                 ]);
                 // dd($koversi);
             });
-
-
             
             // Jika berhasil, kembalikan respons sukses
             return redirect()->route('prodi.data-aktivitas.aktivitas-mahasiswa.index')->with('success', 'Data konversi aktivitas berhasil disimpan');

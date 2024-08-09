@@ -16,70 +16,70 @@
                                         <div class="form-group">
                                             <label>Jalan</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $data->biodata ? $data->biodata->jalan : '' }}">
+                                                value="{{ $data->biodata ? $data->biodata->jalan : '' }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Dusun</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $data->biodata ? $data->biodata->dusun : '' }}">
+                                                value="{{ $data->biodata ? $data->biodata->dusun : '' }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="form-group">
                                             <label>RT</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $data->biodata ? $data->biodata->rt : '' }}">
+                                                value="{{ $data->biodata ? $data->biodata->rt : '' }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-2">
                                         <div class="form-group">
                                             <label>RW</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $data->biodata ? $data->biodata->rw : '' }}">
+                                                value="{{ $data->biodata ? $data->biodata->rw : '' }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Kelurahan</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $data->biodata ? $data->biodata->kelurahan : '' }}">
+                                                value="{{ $data->biodata ? $data->biodata->kelurahan : '' }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Kecamatan</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $data->biodata ? $data->biodata->nama_wilayah : '' }}">
+                                                value="{{ $data->biodata ? $data->biodata->nama_wilayah : '' }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Kab/Kota</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $kab_kota }}">
+                                                value="{{ $kab_kota }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Provinsi</label>
                                             <input type="name" class="form-control"
-                                                value="{{$provinsi}}">
+                                                value="{{$provinsi}}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="form-group">
                                             <label>Kode Pos</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $data->biodata ? $data->biodata->kode_pos : '' }}">
+                                                value="{{ $data->biodata ? $data->biodata->kode_pos : '' }}" disabled>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <label class="mb-5">Penerima KPS</label>
                                         <!-- CEK VALUE PENERIMA KPS -->
                                         @if ($data->biodata && $data->biodata->penerima_kps == 0 )
-                                            <div class="form-group ">
+                                            <div class="form-group" disabled>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" >
                                                     <label class="form-check-label" for="exampleRadios1">
@@ -94,7 +94,7 @@
                                                 </div>
                                             </div>
                                         @else
-                                            <div class="form-group ">
+                                            <div class="form-group" disabled>
                                                 <div class="form-check form-check-inline">
                                                     <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios1" value="option1" checked>
                                                     <label class="form-check-label" for="exampleRadios1">
@@ -102,7 +102,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="form-check form-check-inline">
-                                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2">
+                                                    <input class="form-check-input" type="radio" name="exampleRadios" id="exampleRadios2" value="option2" >
                                                     <label class="form-check-label" for="exampleRadios2">
                                                         Tidak
                                                     </label>
@@ -115,7 +115,7 @@
                                         <div class="form-group">
                                             <label>No. KPS</label>
                                             <input type="name" class="form-control"
-                                                value="{{ $data->biodata ? $data->biodata->nomor_kps : '' }}">
+                                                value="{{ $data->biodata ? $data->biodata->nomor_kps : '' }}" disabled>
                                         </div>
                                     </div>
                                     {{-- <div class="col-lg-6">
