@@ -78,9 +78,20 @@
                                                                 <td class="text-start">{{$tagihan->waktu_berakhir}}</td>
                                                                 <td class="text-start">
                                                                     <div>
-                                                                        <span class="badge badge-xl {{ $tagihan->pembayaran == NULL ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
-                                                                            {{ $tagihan->pembayaran == NULL ? 'Belum Bayar' : 'Lunas' }}
-                                                                        </span>
+                                                                        @if(!empty($beasiswa))
+                                                                            <span class="badge badge-xl badge-primary-light mb-5">
+                                                                                Beasiswa
+                                                                            </span>
+                                                                        @elseif(!empty($beasiswa) || !empty($tagihan->pembayaran))
+                                                                            <span class="badge badge-xl badge-success-light mb-5">
+                                                                                Lunas
+                                                                            </span>
+                                                                        @else
+                                                                            <span class="badge badge-xl badge-danger-light mb-5">
+                                                                                Belum Bayar
+                                                                            </span>
+                                                                        @endif
+                                                                        
                                                                     </div>
                                                                 </td>
                                                             </tr>

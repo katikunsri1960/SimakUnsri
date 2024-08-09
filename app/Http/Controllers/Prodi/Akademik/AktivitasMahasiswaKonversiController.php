@@ -177,17 +177,62 @@ class AktivitasMahasiswaKonversiController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit()
+    public function edit(string $id)
     {
-        //
+        $prodi_id = auth()->user()->fk_id;
+        $mk_konversi = Konversi::where('id', $id)->first();
+
+        return view('prodi.data-aktivitas.aktivitas-mahasiswa.update', ['mk_konversi' => $mk_konversi]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request)
+    public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'kurikulum' =>'required',
+            'jenis_aktivitas' => 'required',
+            'mk_konversi' => 'required', 
+        ]);       
+
+        // try {
+            // Gunakan transaksi untuk memastikan semua operasi database berhasil
+            $prodi_id = auth()->user()->fk_id;
+
+            $kurikulum = ListKurikulum::select('id_kurikulum','nama_kurikulum', 'id_prodi', 'nama_program_studi')
+                            ->where('id_prodi', $prodi_id)
+                            ->where('id_kurikulum', $request->kurikulum)
+                            ->first();
+
+            $jenis_aktivitas = AktivitasMahasiswa::select('id_jenis_aktivitas','nama_jenis_aktivitas')
+                            ->where('id_jenis_aktivitas', $request->jenis_aktivitas)
+                            ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+                            ->first();
+
+            $mk_konversi = MatkulKurikulum::where('id_prodi', $prodi_id)
+                            ->where('id_matkul', $request->mk_konversi)
+                            ->first();
+                            // dd($mk_konversi);
+
+            // Simpan data ke tabel aktivitas_mahasiswas
+            Konversi::where('id', $id)
+                ->update([
+                    'id_kurikulum' =>$kurikulum->id_kurikulum,
+                    'nama_kurikulum' =>$kurikulum->nama_kurikulum,
+                    'id_prodi' =>$kurikulum->id_prodi,
+                    'nama_program_studi' =>$kurikulum->nama_program_studi,
+                    'id_jenis_aktivitas'=>$jenis_aktivitas->id_jenis_aktivitas,
+                    'nama_jenis_aktivitas'=>$jenis_aktivitas->nama_jenis_aktivitas,
+                    'id_matkul' =>$mk_konversi->id_matkul,
+                    'kode_mata_kuliah' =>$mk_konversi->kode_mata_kuliah,
+                    'nama_mata_kuliah' =>$mk_konversi->nama_mata_kuliah,
+                    'sks_mata_kuliah' =>$mk_konversi->sks_mata_kuliah,
+                    'semester' =>$mk_konversi->semester,
+                ]);
+                // dd($koversi);
+        
+        return redirect()->route('prodi.data-aktivitas.aktivitas-mahasiswa.index')->with('success', 'Data Berhasil Diubah');
     }
 
     /**
