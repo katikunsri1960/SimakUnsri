@@ -483,12 +483,19 @@ class KelasPenjadwalanController extends Controller
         }
     }
 
-    public function edit_kelas_penjadwalan($id_kelas)
+    public function edit_kelas_penjadwalan($id_matkul, $id_kelas)
     {
         // dd($id_matkul);
-        $kelas = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', 'kelas_kuliahs.id_matkul')->leftJoin('ruang_perkuliahans', 'ruang_perkuliahans.id', 'kelas_kuliahs.ruang_perkuliahan_id')->where('id_kelas_kuliah', $id_kelas)->first();
-        // dd($mata_kuliah);
-        return view('prodi.data-akademik.kelas-penjadwalan.edit', ['kelas' => $kelas]);
+        $semester_aktif = SemesterAktif::first();
+        $prodi_id = auth()->user()->fk_id;
+        $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
+        $kelas = KelasKuliah::leftJoin('ruang_perkuliahans', 'ruang_perkuliahans.id', 'kelas_kuliahs.ruang_perkuliahan_id')
+        ->where('id_kelas_kuliah', $id_kelas)
+        ->where('kelas_kuliahs.id_prodi', $prodi_id)
+        ->where('kelas_kuliahs.id_semester', $semester_aktif->id_semester)
+        ->first();
+        // dd($kelas);
+        return view('prodi.data-akademik.kelas-penjadwalan.edit', ['kelas' => $kelas, 'matkul' => $mata_kuliah]);
     }
 
     public function kelas_penjadwalan_update(Request $request, $id_matkul, $id_kelas)
@@ -512,7 +519,6 @@ class KelasPenjadwalanController extends Controller
                 'bulan_mulai' => 'required',
                 'bulan_akhir' => 'required',
                 'kapasitas_kelas' => 'required',
-                'ruang_kelas' => 'required',
                 'mode_kelas' => [
                     'required',
                     Rule::in(['O','F','M'])
@@ -536,11 +542,11 @@ class KelasPenjadwalanController extends Controller
             $jam_mulai_kelas = $request->jam_mulai.":".$request->menit_mulai.":".$detik;
             $jam_selesai_kelas = $request->jam_selesai.":".$request->menit_selesai.":".$detik;
 
-            KelasKuliah::update(['tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas])->where('id_kelas_kuliah', $id_kelas);
+            KelasKuliah::where('id_kelas_kuliah', $id_kelas)->update(['tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Kelas Berhasil di Ubah!!');
+            return redirect()->back()->with('success', 'Data Kelas Berhasil di Ubah!!');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', 'Data Kelas Gagal di Ubah. '. $th->getMessage());

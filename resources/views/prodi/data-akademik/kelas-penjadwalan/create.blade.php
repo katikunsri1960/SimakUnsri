@@ -100,7 +100,7 @@ Tambah Kelas Perkuliahan
                                 <div class="form-group">
                                     <label class="form-label">Tanggal Akhir Efektif</label>
                                     <div class="row">
-                                    <div class="col-sm-4 mb-2">
+                                        <div class="col-sm-4 mb-2">
                                             <select class="form-select" name="tanggal_akhir" id="tanggal_akhir" required>
                                                 <option value="">Tanggal</option>
                                                 @for($i=1;$i <= 31;$i++)
@@ -252,7 +252,7 @@ Tambah Kelas Perkuliahan
                                 <div class="form-group">
                                     <label class="form-label">Jam Selesai Kelas</label>
                                     <div class="row">
-                                    <div class="col-sm-4 mb-2">
+                                        <div class="col-sm-4 mb-2">
                                             <select class="form-select" name="jam_selesai" id="jam_selesai" required>
                                                 <option value="">Jam</option>
                                                 @for($i=0;$i < 24;$i++)

@@ -13,9 +13,10 @@
     <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
 
     @stack('css')
-        <!-- Vendors Style-->
+    <!-- Vendors Style-->
     <link rel="stylesheet" href="{{asset('assets/css/vendors_css.css')}}">
     <link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/js/flatpickr/flatpickr.min.css')}}">
 
     <!-- Style-->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
