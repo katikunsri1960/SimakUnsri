@@ -36,18 +36,16 @@ Edit Kelas Perkuliahan
                         <div class="form-group">
                             <div class=" col-lg-12 mb-3">
                                 <label for="nama_mata_kuliah" class="form-label">Nama Mata Kuliah</label>
-                                @foreach ($kelas->matkul as $d)
                                 <input
                                     type="text"
                                     class="form-control"
                                     name="nama_mata_kuliah"
                                     id="nama_mata_kuliah"
                                     aria-describedby="helpId"
-                                    value="{{$d->kode_mata_kuliah.' - '.$d->nama_mata_kuliah}}"
+                                    value="{{$matkul->kode_mata_kuliah.' - '.$matkul->nama_mata_kuliah}}"
                                     disabled
                                     required
                                 />
-                                @endforeach
                             </div>
                         </div>
                         <div class="form-group">
@@ -188,17 +186,6 @@ Edit Kelas Perkuliahan
                             <div class="mb-4">
                                 <label for="mode_kelas" class="form-label">Mode Kelas Kuliah</label>
                                 <select class="form-select" name="mode_kelas" id="mode_kelas" required>
-                                <option value="{{$kelas->mode}}">
-                                    @if($kelas->mode == 'O')
-                                        Online
-                                    @elseif($kelas->mode == 'F')
-                                        Offline
-                                    @elseif($kelas->mode == 'M')
-                                        Campuran
-                                    @else
-                                        Pilih Mode Kelas
-                                    @endif
-                                </option>
                                 <option value="">-- Pilih Mode Kelas --</option>
                                 <option value="O" {{ $kelas->mode == 'O' ? 'selected' : '' }}>Online</option>
                                 <option value="F" {{ $kelas->mode == 'F' ? 'selected' : '' }}>Offline</option>
@@ -210,17 +197,6 @@ Edit Kelas Perkuliahan
                             <div class="mb-4">
                                 <label for="lingkup_kelas" class="form-label">Lingkup Kelas Kuliah</label>
                                 <select class="form-select" name="lingkup_kelas" id="lingkup_kelas" required>
-                                    <option value="{{$kelas->lingkup}}">
-                                        @if($kelas->lingkup == '1')
-                                            Internal
-                                        @elseif($kelas->lingkup == '2')
-                                            External
-                                        @elseif($kelas->lingkup == '3')
-                                            Campuran
-                                        @else
-                                            Pilih Lingkup Kelas
-                                        @endif
-                                    </option>
                                     <option value="">-- Pilih Lingkup Kelas --</option>
                                     <option value="1" {{ $kelas->lingkup == '1' ? 'selected' : '' }}>Internal</option>
                                     <option value="2" {{ $kelas->lingkup == '2' ? 'selected' : '' }}>External</option>
@@ -354,48 +330,22 @@ Edit Kelas Perkuliahan
 <script src="{{asset('assets/js/flatpickr/flatpickr.js')}}"></script>
 <script>
 
-$(function () {
-        "use strict";
-
-        $('#id_semester').select2({
-            placeholder: 'Pilih Semester',
-            allowClear: true,
-            width: '100%',
-        });
-
-        flatpickr("#tanggal_mulai", {
-            dateFormat: "d-m-Y",
-        });
-
-        flatpickr("#tanggal_akhir", {
-            dateFormat: "d-m-Y",
-        });
-
-        flatpickr("#jam_mulai", {
-            dateFormat: "H:i:s",
-        });
-
-        flatpickr("#jam_selesai", {
-            dateFormat: "H:i:s",
-        });
-
-        $('#edit-kelas').submit(function(e){
-            e.preventDefault();
-            swal({
-                title: 'Ubah Kelas Kuliah',
-                text: "Apakah anda yakin ingin merubah detail kelas?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Lanjutkan',
-                cancelButtonText: 'Batal'
-            }, function(isConfirm){
-                if (isConfirm) {
-                    $('#edit-kelas').unbind('submit').submit();
-                    $('#spinner').show();
-                }
-            });
+    $('#edit-kelas').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Ubah Kelas Kuliah',
+            text: "Apakah anda yakin ingin merubah detail kelas?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#edit-kelas').unbind('submit').submit();
+                $('#spinner').show();
+            }
         });
     });
 </script>
