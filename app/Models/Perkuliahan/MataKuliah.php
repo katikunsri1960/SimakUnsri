@@ -181,6 +181,7 @@ class MataKuliah extends Model
                     where('id_prodi', $prodi)
                     ->where('id_kurikulum', $kurikulum)
                     ->get();
+                    // dd($data_akt);
                     
         if($data_akt == NULL)
         {
@@ -227,21 +228,27 @@ class MataKuliah extends Model
     }
 
 
-    public function getMKAktivitas_1($id_prodi, $id_kurikulum)
+    public function getMKAktivitas($id_prodi, $id_kurikulum)
     {
-        $dataAkt = Konversi::
-                    // with(['matkul_kurikulum'])
+
+        $data_akt = Konversi::
                     where('id_prodi', $id_prodi)
                     ->where('id_kurikulum', $id_kurikulum)
                     ->pluck('id_matkul');
-                    // dd($dataAkt);
 
-        return $dataAkt;
+        // $dataAkt = Konversi::
+        //             // with(['matkul_kurikulum'])
+        //             where('id_prodi', $id_prodi)
+        //             ->where('id_kurikulum', $id_kurikulum)
+        //             ->pluck('id_matkul');
+                    // dd($data_akt);
+
+        return $data_akt;
     }
 
 
 
-    public function getMKAktivitas($id_prodi, $id_kurikulum)
+    public function getMKAktivitas_1($id_prodi, $id_kurikulum)
     {
         $data=
         [

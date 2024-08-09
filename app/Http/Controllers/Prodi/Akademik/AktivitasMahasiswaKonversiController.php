@@ -24,48 +24,11 @@ class AktivitasMahasiswaKonversiController extends Controller
     {
         $prodi_id = auth()->user()->fk_id;
         $data = Konversi::where('id_prodi', $prodi_id)->get();
+        // dd($data);
 
         return view('prodi.data-aktivitas.aktivitas-mahasiswa.index', compact('data'));
     }
 
-    // public function index(Request $request)
-    // {
-    //     $prodi_id = $request->prodi_id; // Pastikan prodi_id berasal dari request atau di-set sebelumnya
-
-    //     // Mengambil data ListKurikulum dengan relasi ke mata_kuliah dan kelas_kuliah
-    //     $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.kelas_kuliah'])
-    //         ->whereHas('mata_kuliah', function($query) use($prodi_id) {
-    //             $query->whereHas('kelas_kuliah', function($query) use($prodi_id) {
-    //                 $query->where('id_prodi', $prodi_id);
-    //             });
-    //         })
-    //         ->where('id_prodi', $prodi_id)
-    //         ->where('is_active', 1)
-    //         ->get();
-
-            
-    //     // Menghitung jumlah kelas dari tabel kelas_kuliah
-    //     $jumlah_kelas = KelasKuliah::where('id_prodi', $prodi_id)->count();
-
-    //     dd($jumlah_kelas);
-
-    //     return response()->json([
-    //         'data' => $data,
-    //         'jumlah_kelas' => $jumlah_kelas
-    //     ]);
-    // }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    // public function getMataKuliah($id_kurikulum)
-    // {
-    //     $mata_kuliah = MataKuliah::whereHas('matkul_kurikulum', function($query) use($id_kurikulum) {
-    //         $query->where('id_kurikulum', $id_kurikulum);
-    //     })->get();
-
-    //     return response()->json($mata_kuliah);
-    // }
 
     public function create(Request $request)
     {
