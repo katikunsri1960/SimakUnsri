@@ -486,8 +486,15 @@ class KelasPenjadwalanController extends Controller
     public function edit_kelas_penjadwalan($id_kelas)
     {
         // dd($id_matkul);
-        $kelas = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', 'kelas_kuliahs.id_matkul')->leftJoin('ruang_perkuliahans', 'ruang_perkuliahans.id', 'kelas_kuliahs.ruang_perkuliahan_id')->where('id_kelas_kuliah', $id_kelas)->first();
-        // dd($mata_kuliah);
+        $semester_aktif = SemesterAktif::first();
+        $prodi_id = auth()->user()->fk_id;
+        $kelas = KelasKuliah::with(['matkul'])
+        ->leftJoin('ruang_perkuliahans', 'ruang_perkuliahans.id', 'kelas_kuliahs.ruang_perkuliahan_id')
+        ->where('id_kelas_kuliah', $id_kelas)
+        ->where('kelas_kuliahs.id_prodi', $prodi_id)
+        ->where('kelas_kuliahs.id_semester', $semester_aktif->id_semester)
+        ->first();
+        // dd($kelas);
         return view('prodi.data-akademik.kelas-penjadwalan.edit', ['kelas' => $kelas]);
     }
 
