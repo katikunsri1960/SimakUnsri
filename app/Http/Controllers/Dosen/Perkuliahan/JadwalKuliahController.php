@@ -34,7 +34,7 @@ class JadwalKuliahController extends Controller
         ->orderby('dosen_pengajar_kelas_kuliahs.urutan', 'asc')
         ->get();
 
-        $peserta_kelas = PesertaKelasKuliah::where('id_kelas_kuliah', $kelas)->get();
+        $peserta_kelas = PesertaKelasKuliah::where('id_kelas_kuliah', $kelas)->where('approved', 1)->get();
 
         return view('dosen.perkuliahan.detail-kelas-kuliah',['data' => $data, 'peserta' => $peserta_kelas]);
     }

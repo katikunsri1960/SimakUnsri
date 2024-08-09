@@ -14,7 +14,7 @@ Bimbingan Tugas Akhir Dosen
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Bimbingan Tugas Akhir Dosen</h2>
+								<h2 class="mb-10">Bimbingan Skripsi / Tesis / Disertasi Dosen</h2>
 								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
 							</div>
 						</div>
