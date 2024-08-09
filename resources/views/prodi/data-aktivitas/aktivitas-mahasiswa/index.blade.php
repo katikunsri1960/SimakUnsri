@@ -63,18 +63,14 @@ Aktivitas Mahasiswa
                                         <td class="text-center align-middle" style="width:3%">{{ $d->sks_mata_kuliah }}</td>
                                         <td class="text-center align-middle" style="width:3%">{{ $d->semester }}</td>
                                         <td class="text-center align-middle" style="width:3%">
-                                            {{-- <a class="btn btn-sm btn-rounded bg-warning" href="
-                                            {{route('prodi.data-aktivitas.aktivitas-mahasiswa.edit', ['id' => $d->id])}}
-                                            "><i class="fa fa-pencil-square-o"></i></a> --}}
-                                            <form action="
-                                            {{-- {{ route('prodi.data-aktivitas.aktivitas-mahasiswa.edit', $d->id) }} --}}
-                                             " method="POST" class="delete-form">
+                                            {{-- <form action="    
+                                                " method="POST" class="delete-form">
                                                 @csrf
                                                 @method('GET')
                                                 <button type="submit" class="btn btn-warning edit-button mb-5">
                                                     <i class="fa fa-pencil"></i>
                                                 </button>
-                                            </form>
+                                            </form> --}}
                                             <form action="{{ route('prodi.data-aktivitas.aktivitas-mahasiswa.delete', $d->id) }}" method="POST" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
