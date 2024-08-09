@@ -145,7 +145,6 @@ class RencanaPembelajaranController extends Controller
 
             // dd($data_dosen);
             if($data_dosen){
-
                 RencanaPembelajaran::where('id_rencana_ajar', $id_rencana_ajar)->update(['pertemuan'=> $request->pertemuan, 'materi_indonesia'=> $request->materi_indo, 'materi_inggris'=> $request->materi_inggris]);
 
             }else{
