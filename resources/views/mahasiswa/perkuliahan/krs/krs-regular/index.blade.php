@@ -312,7 +312,10 @@ Kartu Rencana Studi
                     table += '<td>' + kelas.peserta_kelas_count + '/' + kelas.kapasitas + '</td>';
                 }
 
-                if (kelas.kelas_Enrolled) {
+                if (kelas.kapasitas !== null && kelas.peserta_kelas_count >= kelas.kapasitas) {
+                    // Jika kelas penuh, tombol "Ambil" dinonaktifkan
+                    table += '<td><button class="btn btn-danger" disabled>Kelas Penuh</button></td>';
+                } else if (kelas.kelas_Enrolled) {
                     // Jika sudah terdaftar, tombol "Ambil" dinonaktifkan
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
                 } else {
@@ -349,7 +352,7 @@ Kartu Rencana Studi
                                 swal({
                                     title: 'Berhasil!',
                                     text: response.message,
-                                    icon: 'success',
+                                    type: 'success',
                                     confirmButtonText: 'OK'
                                 }, function(result) {
                                     if (result) {
@@ -455,7 +458,7 @@ Kartu Rencana Studi
                 swal({
                     title: "Apakah Anda yakin?",
                     text: "Data yang dihapus tidak dapat dikembalikan!",
-                    icon: "warning",
+                    type: "warning",
                     type: 'warning',
                     buttons: true,
                     dangerMode: true,
@@ -481,7 +484,7 @@ Kartu Rencana Studi
             swal({
                 title: "Apakah Anda yakin?",
                 text: "Data yang dihapus tidak dapat dikembalikan!",
-                icon: "warning",
+                type: "warning",
                 type: 'warning',
                 buttons: true,
                 dangerMode: true,
@@ -633,7 +636,7 @@ Kartu Rencana Studi
             error: function(error) {
                 console.error('Error fetching data:', error);
                 swal({
-                    icon: 'error',
+                    type: 'error',
                     title: 'Terjadi kesalahan',
                     text: 'Tidak dapat mengambil data RPS. Silakan coba lagi nanti.',
                 });
