@@ -11,6 +11,7 @@ use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\Perkuliahan\Konversi;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\BimbingMahasiswa;
@@ -168,38 +169,42 @@ class AktivitasMahasiswaController extends Controller
             
             $now = Carbon::now();
 
-            $mk_konversi = MataKuliah::where('id_matkul', $request->id_matkul)->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
+            $mk_konversi = Konversi::where('id_matkul', $request->id_matkul)->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
             // dd($mk_konversi);
 
             $id_aktivitas = Uuid::uuid4()->toString();
 
-            if($mk_konversi->nama_mata_kuliah == 'PROPOSAL SKRIPSI'){
-                $id_jenis_aktivitas = 1;
-                $nama_jenis_aktivitas = 'Laporan akhir studi';
-            }elseif($mk_konversi->nama_mata_kuliah == 'TUGAS AKHIR' ){
-                $id_jenis_aktivitas = 2;
-                $nama_jenis_aktivitas = 'Tugas akhir';
-            }elseif($mk_konversi->nama_mata_kuliah == 'TESIS' ){
-                $id_jenis_aktivitas = 3;
-                $nama_jenis_aktivitas = 'Tesis';
-            }elseif($mk_konversi->nama_mata_kuliah == 'UJIAN DISERTASI' ){
-                $id_jenis_aktivitas = 4;
-                $nama_jenis_aktivitas = 'Disertasi';
-            }elseif($mk_konversi->nama_mata_kuliah == 'KULIAH KERJA NYATA (KKN)' || $mk_konversi->nama_mata_kuliah == 'KULIAH KERJA NYATA'){
-                $id_jenis_aktivitas = 5;
-                $nama_jenis_aktivitas = 'Kuliah kerja nyata';
-            }elseif($mk_konversi->nama_mata_kuliah == 'KERJA PRAKTEK' || $mk_konversi->nama_mata_kuliah == 'KERJA PRAKTIK' ){
-                $id_jenis_aktivitas = 6;
-                $nama_jenis_aktivitas = 'Kerja praktek/PKL';
-            }elseif($mk_konversi->nama_mata_kuliah == 'DISERTASI DAN PUBLIKASI'){
-                $id_jenis_aktivitas = 15;
-                $nama_jenis_aktivitas = 'Penelitian/Riset';
-            }elseif($mk_konversi->nama_mata_kuliah == 'SKRIPSI'){
-                $id_jenis_aktivitas = 22;
-                $nama_jenis_aktivitas = 'Skripsi';
-            }else{
-                return response()->json('error', 'Jenis Aktivitas Tidak Ditemukan');
-            }
+            // if($mk_konversi->nama_mata_kuliah == 'PROPOSAL SKRIPSI'){
+            //     $id_jenis_aktivitas = 1;
+            //     $nama_jenis_aktivitas = 'Laporan akhir studi';
+            // }elseif($mk_konversi->nama_mata_kuliah == 'TUGAS AKHIR' ){
+            //     $id_jenis_aktivitas = 2;
+            //     $nama_jenis_aktivitas = 'Tugas akhir';
+            // }elseif($mk_konversi->nama_mata_kuliah == 'TESIS' ){
+            //     $id_jenis_aktivitas = 3;
+            //     $nama_jenis_aktivitas = 'Tesis';
+            // }elseif($mk_konversi->nama_mata_kuliah == 'UJIAN DISERTASI' ){
+            //     $id_jenis_aktivitas = 4;
+            //     $nama_jenis_aktivitas = 'Disertasi';
+            // }elseif($mk_konversi->nama_mata_kuliah == 'KULIAH KERJA NYATA (KKN)' || $mk_konversi->nama_mata_kuliah == 'KULIAH KERJA NYATA'){
+            //     $id_jenis_aktivitas = 5;
+            //     $nama_jenis_aktivitas = 'Kuliah kerja nyata';
+            // }elseif($mk_konversi->nama_mata_kuliah == 'KERJA PRAKTEK' || $mk_konversi->nama_mata_kuliah == 'KERJA PRAKTIK' ){
+            //     $id_jenis_aktivitas = 6;
+            //     $nama_jenis_aktivitas = 'Kerja praktek/PKL';
+            // }elseif($mk_konversi->nama_mata_kuliah == 'DISERTASI DAN PUBLIKASI'){
+            //     $id_jenis_aktivitas = 15;
+            //     $nama_jenis_aktivitas = 'Penelitian/Riset';
+            // }elseif($mk_konversi->nama_mata_kuliah == 'SKRIPSI'){
+            //     $id_jenis_aktivitas = 22;
+            //     $nama_jenis_aktivitas = 'Skripsi';
+            // }
+            // else{
+            //     // $id_jenis_aktivitas = NULL;
+            //     // $nama_jenis_aktivitas = NULL;
+            //     // return response()->json('error', 'Jenis Aktivitas Tidak Ditemukan');
+            //     return redirect()->back()->with('error', 'Jenis Aktivitas Tidak Ditemukan');
+            // }
             
                 // Simpan data ke tabel aktivitas_mahasiswas
                 $aktivitas=AktivitasMahasiswa::create([
@@ -212,8 +217,8 @@ class AktivitasMahasiswaController extends Controller
                     'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
                     'jenis_anggota'=>0,
                     'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
-                    'id_jenis_aktivitas'=>$id_jenis_aktivitas,
-                    'nama_jenis_aktivitas'=>$nama_jenis_aktivitas,
+                    'id_jenis_aktivitas'=>$mk_konversi->id_jenis_aktivitas,
+                    'nama_jenis_aktivitas'=>$mk_konversi->nama_jenis_aktivitas,
                     'id_prodi' => $riwayat_pendidikan->id_prodi,
                     'nama_prodi'=>$riwayat_pendidikan->nama_program_studi,
                     'id_semester' => $semester_aktif->id_semester,

@@ -78,7 +78,7 @@ class KrsController extends Controller
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
                     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                     ->get();
-        // dd($krs_akt);
+        // dd($mk_akt);
 
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $semester_select)
