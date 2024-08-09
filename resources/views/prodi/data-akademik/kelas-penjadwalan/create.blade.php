@@ -192,16 +192,16 @@ Tambah Kelas Perkuliahan
                         <div class="form-group">
                             <div class="mb-3">
                                 <label for="jadwal_hari" class="form-label">Jadwal Hari</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="jadwal_hari"
-                                    id="jadwal_hari"
-                                    aria-describedby="helpId"
-                                    placeholder="Masukkan Jadwal Hari Kelas Kuliah"
-                                    onkeydown="upperCaseF(this)"
-                                    required
-                                />
+                                <select class="form-select" name="jadwal_hari" id="jadwal_hari" required>
+                                    <option value="">-- Pilih Hari --</option>
+                                    <option value="SENIN">SENIN</option>
+                                    <option value="SELASA">SELASA</option>
+                                    <option value="RABU">RABU</option>
+                                    <option value="KAMIS">KAMIS</option>
+                                    <option value="JUMAT">JUMAT</option>
+                                    <option value="SABTU">SABTU</option>
+                                    <option value="MINGGU">MINGGU</option>
+                                </select>
                             </div>
                         </div>
                         <div class="row">
@@ -329,12 +329,6 @@ Tambah Kelas Perkuliahan
             }
         });
     });
-
-    function upperCaseF(a){
-        setTimeout(function(){
-            a.value = a.value.toUpperCase();
-        }, 1);
-    }
     
 </script>
 @endpush
