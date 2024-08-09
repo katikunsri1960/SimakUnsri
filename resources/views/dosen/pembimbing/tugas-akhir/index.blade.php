@@ -1,6 +1,6 @@
 @extends('layouts.dosen')
 @section('title')
-Bimbingan Tugas Akhir Dosen
+Pembimbingan Karya Ilmiah Dosen
 @endsection
 @section('content')
 
@@ -14,7 +14,7 @@ Bimbingan Tugas Akhir Dosen
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Bimbingan Skripsi / Tesis / Disertasi Dosen</h2>
+								<h2 class="mb-10">Pembimbingan Karya Ilmiah Dosen</h2>
 								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
 							</div>
 						</div>
@@ -29,7 +29,7 @@ Bimbingan Tugas Akhir Dosen
                 <div class="row">
                     <div class="col-xl-12 col-lg-12 d-flex justify-content-between">
                         <div class="d-flex justify-content-start">
-                            <h4 class="fw-500 text-dark mt-0">Daftar Bimbingan Tugas Akhir Dosen</h4>
+                            <h4 class="fw-500 text-dark mt-0">Daftar Bimbingan Karya Ilmiah Dosen</h4>
                         </div>
                         <div class="d-flex justify-content-end px-3">
                             <select name="semester" id="semester_select" class="form-select">

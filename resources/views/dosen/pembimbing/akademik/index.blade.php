@@ -1,6 +1,6 @@
 @extends('layouts.dosen')
 @section('title')
-Bimbingan Akademik Dosen
+Pembimbingan Akademik Dosen
 @endsection
 @section('content')
 <section class="content bg-white">
@@ -12,7 +12,7 @@ Bimbingan Akademik Dosen
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Bimbingan Akademik Dosen</h2>
+								<h2 class="mb-10">Pembimbingan Akademik Dosen</h2>
 								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
 							</div>
 						</div>

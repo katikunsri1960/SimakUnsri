@@ -54,13 +54,13 @@ class PesertaKelasKuliah extends Model
                 ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                 ->first();
 
-        list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
+        list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
-        $sks_max = $db->getSksMax($id_reg, $semester_aktif, $riwayat_pendidikan->id_periode_masuk); 
+        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk); 
 
-        $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);
+        $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
 
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester);
 
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');

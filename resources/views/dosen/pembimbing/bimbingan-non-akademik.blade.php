@@ -1,6 +1,6 @@
 @extends('layouts.dosen')
 @section('title')
-Bimbingan Non Akademik Dosen
+Pembimbingan Non Akademik Dosen
 @endsection
 @section('content')
 <section class="content bg-white">
@@ -12,7 +12,7 @@ Bimbingan Non Akademik Dosen
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Bimbingan Non Akademik Dosen</h2>
+								<h2 class="mb-10">Pembimbingan Non Akademik Dosen</h2>
 								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
 							</div>
 						</div>
@@ -32,7 +32,8 @@ Bimbingan Non Akademik Dosen
                 <div class="row">
                     <div class="table-responsive">
                         <table id="example1" class="table table-bordered table-striped">
-                            <thead>
+                            <h1 class="text-center">UNDER DEVELOPMENT</h1>
+                            <!-- <thead>
                                 <tr>
                                     <th>Name</th>
                                     <th>Position</th>
@@ -51,7 +52,7 @@ Bimbingan Non Akademik Dosen
                                     <td>2011/01/25</td>
                                     <td>$112,000</td>
                                 </tr>
-                            </tbody>
+                            </tbody> -->
 					  </table>
                     </div>
                 </div>

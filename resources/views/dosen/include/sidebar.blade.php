@@ -111,29 +111,29 @@
                             <span>Penilaian Perkuliahan</span>
                         </a>
                     </li>
-                    <!-- <li class="{{request()->routeIs('dosen.penilaian.penilaian-sidang') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('dosen.penilaian.penilaian-sidang') ? 'active' : ''}}">
                         <a href="{{route('dosen.penilaian.penilaian-sidang')}}">
                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Penilaian Sidang</span>
+                            <span>Penilaian Seminar / Sidang</span>
                         </a>
-                    </li> -->
+                    </li>
                     <li class="header">Pembimbing Mahasiswa</li>
                     <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-akademik') ? 'active' : ''}}">
                         <a href="{{route('dosen.pembimbing.bimbingan-akademik')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Bimbingan Akademik</span>
+                            <span>Pembimbing Akademik</span>
                         </a>
                     </li>
-                    {{-- <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-non-akademik') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-non-akademik') ? 'active' : ''}}">
                         <a href="{{route('dosen.pembimbing.bimbingan-non-akademik')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Bimbingan Non-Akademik</span>
+                            <span>Pembimbing Non-Akademik</span>
                         </a>
-                    </li> --}}
+                    </li>
                     <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-tugas-akhir') | request()->routeIs('dosen.pembimbing.bimbingan-tugas-akhir.*') ? 'active' : ''}}">
                         <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Bimbingan Tugas Akhir</span>
+                            <span>Pembimbing Karya Ilmiah</span>
                         </a>
                     </li>
                     <li class="header">Bantuan</li>
