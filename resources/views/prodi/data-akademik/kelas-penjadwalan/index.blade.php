@@ -54,6 +54,7 @@ Kelas Penjadwalan
                                 @foreach ($data as $k)
                                     @if ($k->mata_kuliah)
                                         @foreach($k->mata_kuliah as $d)
+                                            @if(!$d->matkul_konversi)
                                             <tr> 
                                                 <td class="text-center align-middle">{{$row = $row + 1}}</td>
                                                 <td class="text-start align-middle">{{$k->nama_kurikulum}}</td>
@@ -69,6 +70,7 @@ Kelas Penjadwalan
                                                     <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
                                                 </td>
                                             </tr>
+                                            @endif
                                         @endforeach
                                     @endif
                                 @endforeach

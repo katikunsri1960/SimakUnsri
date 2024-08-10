@@ -30,8 +30,12 @@ class KelasPenjadwalanController extends Controller
         // dd($semester_aktif);
         $prodi_id = auth()->user()->fk_id;
 
-        $data = ListKurikulum::with(['mata_kuliah' => function ($query) use ($semester_aktif) {
-            $query->with(['kelas_kuliah' => function ($query) use ($semester_aktif) {
+        $data = ListKurikulum::with(['mata_kuliah' => function ($query) use ($prodi_id, $semester_aktif) {
+            $query->with(['matkul_konversi' => function ($query) use ($prodi_id) {
+                $query->where('id_prodi', $prodi_id);
+            }]);
+            $query->with(['kelas_kuliah' => function ($query) use ($prodi_id, $semester_aktif) {
+                $query->where('id_prodi', $prodi_id);
                 $query->where('id_semester', $semester_aktif->id_semester);
             }]);
         }])

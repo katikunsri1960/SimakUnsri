@@ -49,6 +49,11 @@ class MataKuliah extends Model
         return $this->belongsTo(MatkulMerdeka::class, 'id_matkul', 'id_matkul');
     }
 
+    public function matkul_konversi()
+    {
+        return $this->belongsTo(Konversi::class, 'id_matkul', 'id_matkul');
+    }
+
     public function kurikulum()
     {
         return $this->hasOneThrough(
