@@ -85,13 +85,30 @@ class MataKuliah extends Model
 
     public function getSksMax($id_reg, $id_semester, $id_periode_masuk)
     {
+        $akm = Semester::orderBy('id_semester', 'ASC')
+                    ->whereBetween('id_semester', [$id_periode_masuk, $id_semester])
+                    ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                    ->pluck('id_semester');
+    
+        // Dapatkan indeks dari semester terakhir dalam koleksi
+        $index_semester_terakhir = $akm->search($akm->last());
+
+        // Pastikan bahwa indeks tidak berada di posisi pertama
+        if ($index_semester_terakhir > 0) {
+            // Mundur satu semester dari yang terakhir
+            $akm_sebelum = $akm[$index_semester_terakhir - 1];
+        } else {
+            // Jika tidak ada semester sebelumnya (semester pertama), bisa didefinisikan logika lain
+            $akm_sebelum = null;
+        }
 
         $ips = AktivitasKuliahMahasiswa::select('ips')
                     ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->where('id_semester', $id_semester)
+                    ->where('id_semester', $akm_sebelum)
                     ->orderBy('id_semester', 'DESC')
-                    ->pluck('ips')
+                    // ->pluck('ips')
                     ->first();
+                // dd($ips);
                     
         // $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
         $semester_ke = Semester::orderBy('id_semester', 'ASC')

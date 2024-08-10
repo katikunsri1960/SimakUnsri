@@ -425,8 +425,8 @@ class KrsController extends Controller
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                     ->first();
-            $prodi = $riwayat_pendidikan->id_prodi;
-            $kurikulum = $riwayat_pendidikan->id_kurikulum;
+            // $prodi = $riwayat_pendidikan->id_prodi;
+            // $kurikulum = $riwayat_pendidikan->id_kurikulum;
 
             $semester_aktif = SemesterAktif::first();
 
@@ -459,6 +459,7 @@ class KrsController extends Controller
                     ->pluck('sks_mata_kuliah')
                     ->first();
 
+            // dd($sks_max);
             // Pengecekan apakah SKS maksimum telah tercapai
             if ($sks_max == 0) {
                 return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
