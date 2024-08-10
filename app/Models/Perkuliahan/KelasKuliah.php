@@ -61,6 +61,7 @@ class KelasKuliah extends Model
     {
         $data = $this->with('peserta_kelas', 'nilai_perkuliahan', 'nilai_komponen')
         ->where('id_kelas_kuliah', $kelas)
+        ->where('approved', 1)
         ->first();
 
         // dd($data);
