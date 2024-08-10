@@ -143,7 +143,7 @@ class AktivitasMahasiswa extends Model
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
 
-        $db = new MataKuliah();
+        // $db = new MataKuliah();
 
         $data_akt = Konversi::
                     where('id_prodi', $riwayat_pendidikan->id_prodi)

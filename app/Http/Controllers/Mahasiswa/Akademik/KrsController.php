@@ -9,11 +9,13 @@ use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\BeasiswaMahasiswa;
+use App\Models\Connection\Tagihan;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\BeasiswaMahasiswa;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\Connection\Registrasi;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Mahasiswa\PengajuanCuti;
 use App\Models\Perkuliahan\KelasKuliah;
@@ -69,11 +71,6 @@ class KrsController extends Controller
 
         list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
         
-
-        // $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-        //             ->orderBy('id_semester', 'DESC')
-        //             ->get();
-
         $semester = Semester::orderBy('id_semester', 'DESC')
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
                     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
@@ -97,17 +94,6 @@ class KrsController extends Controller
                 ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                 ->count();
 
-        // $semester_ke = Semester::orderBy('id_semester', 'ASC')
-        //     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
-        //     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
-        //     ->get();
-
-        // Menghitung jumlah semester, mengabaikan semester pendek
-        // $semester_ke = $semester->filter(function($item) {
-        //     return substr($item->id_semester, -1) != '3';
-        // })->count();
-        // dd($semester);
-
         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select, $data_akt_ids);
@@ -117,47 +103,22 @@ class KrsController extends Controller
     // DATA MK_MERDEKA
         $fakultas=Fakultas::all();
 
-        // $selectedFakultasId = $request->input('fakultas_id');
-
-        // $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
-
-        // $mk_merdeka = $db->getMKMerdeka($prodi, $semester_select);
-        // dd($mk_merdeka);
-
         // MATAKULIAH TANPA GANJIL GENAP
         $mk_regular = $db->getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_select, $riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
         // dd($sks_max);
-
 
     // TAGIHAN PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
         // dd($beasiswa);
 
-        // if (!empty($existingCuti)) {
-        //     if ($existingCuti->approved == 0) {
-        //         return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
-        //     }
-        //     elseif ($existingCuti->approved == 1) {
-        //         return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sudah disetujui.');
-        //     }
-        // }
+        $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test');
 
-        $tagihan = DB::connection('keu_con')
-            ->table('tagihan')
-            ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-            ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+        $tagihan = Tagihan::with('pembayaran')
+            // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
+            // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+            ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
             // ->where('tagihan.nomor_pembayaran', '08051282328058')
-            ->where('tagihan.kode_periode', $semester_aktif->id_semester)
-            ->select(
-                'tagihan.nama',
-                'tagihan.nomor_pembayaran',
-                'tagihan.total_nilai_tagihan',
-                'tagihan.kode_periode',
-                // 'tagihan.nama_periode',
-                'tagihan.waktu_berlaku',
-                'tagihan.waktu_berakhir',
-                'pembayaran.status_pembayaran'
-            )
+            ->where('kode_periode', $semester_aktif->id_semester)
             ->first();
             // dd($tagihan);
 
@@ -175,6 +136,12 @@ class KrsController extends Controller
                 // ->groupBy('id_registrasi_mahasiswa')
                 ->first();
                 // dd($transkrip);
+            
+            // $sks_mk = KelasKuliah::select('sks_mata_kuliah')
+            //     ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
+            //     ->where('id_kelas_kuliah', $idKelasKuliah)
+            //     ->pluck('sks_mata_kuliah')
+            //     ->first();
 
     // TOTAL SELURUH SKS
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
@@ -182,6 +149,7 @@ class KrsController extends Controller
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
+        // dd($total_sks);
 
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
@@ -212,162 +180,162 @@ class KrsController extends Controller
         ));
     }
 
-    public function generateAKM(Request $request)
-    {
-        $id_reg = auth()->user()->fk_id;
-        $semester_aktif = SemesterAktif::first();
-        $db = new MataKuliah();
-        $db_akt = new AktivitasMahasiswa();
+    // public function generateAKM(Request $request)
+    // {
+    //     $id_reg = auth()->user()->fk_id;
+    //     $semester_aktif = SemesterAktif::first();
+    //     $db = new MataKuliah();
+    //     $db_akt = new AktivitasMahasiswa();
 
-        $status_bayar=0;
-        $status_cuti=1;
+    //     $status_bayar=0;
+    //     $status_cuti=1;
 
-        $akm_aktif= AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->where('id_semester', $semester_aktif->id_semester)
-                    ->get();
-                    // dd($akm_aktif);
+    //     $akm_aktif= AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+    //                 ->where('id_semester', $semester_aktif->id_semester)
+    //                 ->get();
+    //                 // dd($akm_aktif);
         
-        $idKelasKuliah = $request->input('id_kelas_kuliah');
-            // dd($idKelasKuliah);
+    //     $idKelasKuliah = $request->input('id_kelas_kuliah');
+    //         // dd($idKelasKuliah);
 
-            $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
-                    ->first();
+    //         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
+    //                 ->where('id_registrasi_mahasiswa', $id_reg)
+    //                 ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+    //                 ->first();
 
-            list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
+    //         list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
 
-            $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
+    //         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
-            $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);
+    //         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);
 
-            $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
+    //         $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
 
-            $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
-            $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
-            $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
+    //         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
+    //         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
+    //         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
-            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
+    //         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-            $sks_mk = KelasKuliah::select('sks_mata_kuliah')
-                    ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
-                    ->where('id_kelas_kuliah', $idKelasKuliah)
-                    ->pluck('sks_mata_kuliah')
-                    ->first();
+    //         $sks_mk = KelasKuliah::select('sks_mata_kuliah')
+    //                 ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
+    //                 ->where('id_kelas_kuliah', $idKelasKuliah)
+    //                 ->pluck('sks_mata_kuliah')
+    //                 ->first();
 
-            // Check if the total SKS exceeds the maximum allowed SKS
-            if (($total_sks + $sks_mk) > $sks_max) {
-                return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum.', 'sks_max' => $sks_max], 400);
-            }
+    //         // Check if the total SKS exceeds the maximum allowed SKS
+    //         if (($total_sks + $sks_mk) > $sks_max) {
+    //             return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum.', 'sks_max' => $sks_max], 400);
+    //         }
 
-            $kelas_mk = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul','=','kelas_kuliahs.id_matkul')
-                    ->where('id_kelas_kuliah', $idKelasKuliah)->first();
+    //         $kelas_mk = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul','=','kelas_kuliahs.id_matkul')
+    //                 ->where('id_kelas_kuliah', $idKelasKuliah)->first();
 
-            $transkrip = TranskripMahasiswa::select(
-                            DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
-                            DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
-                        )
-                        ->where('id_registrasi_mahasiswa', $id_reg)
-                        ->whereNotIn('nilai_huruf', ['F', ''])
-                        ->groupBy('id_registrasi_mahasiswa')
-                        ->first();
-                        // dd($transkrip);
-        if($status_bayar==1 && $akm_aktif->isEmpty()  && $status_cuti==0)
-        {
-            $peserta = AktivitasKuliahMahasiswa::create([
-                'id_registrasi_mahasiswa' => $id_reg,
-                'nim' => $riwayat_pendidikan->nim,
-                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                'id_prodi' => $riwayat_pendidikan->id_prodi,
-                'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                'id_semester'=> $semester_aktif->id_semester,
-                'nama_semester'=> $semester_aktif->semester->nama_semester,
-                'id_status_mahasiswa' => 'A',
-                'nama_status_mahasiswa' => 'Aktif',
-                'ips'=> 0,
-                'ipk'=> $transkrip->ipk,
-                'sks_semester'=> $total_sks,
-                'sks_total'=>$transkrip->total_sks,
-                'biaya_kuliah_smt' => 0,
-                'id_pembiayaan' => NULL,
-                'status_sync' => 'belum sync',
-            ]);
-        }
-        elseif($status_bayar==1 && $akm_aktif != NULL  && $status_cuti==0)
-        {
-            $updated = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->update([
-                'nim' => $riwayat_pendidikan->nim,
-                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                'id_prodi' => $riwayat_pendidikan->id_prodi,
-                'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                'id_semester'=> $semester_aktif->id_semester,
-                'nama_semester'=> $semester_aktif->semester->nama_semester,
-                'id_status_mahasiswa' => 'A',
-                'nama_status_mahasiswa' => 'Aktif',
-                'ips' => 0,
-                'ipk' => $transkrip->ipk,
-                'sks_semester' => $total_sks,
-                'sks_total' => $transkrip->total_sks,
-                'biaya_kuliah_smt' => 0,
-                'id_pembiayaan' => NULL,
-                'status_sync' => 'belum sync',
-            ]);
-        }
-        elseif($status_bayar==0 && $akm_aktif->isEmpty() && $status_cuti==1)
-        {
-            $peserta = AktivitasKuliahMahasiswa::create([
-                'id_registrasi_mahasiswa' => $id_reg,
-                'nim' => $riwayat_pendidikan->nim,
-                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                'id_prodi' => $riwayat_pendidikan->id_prodi,
-                'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                'id_semester'=> $semester_aktif->id_semester,
-                'nama_semester'=> $semester_aktif->semester->nama_semester,
-                'id_status_mahasiswa' => 'C',
-                'nama_status_mahasiswa' => 'Cuti',
-                'ips'=> 0,
-                'ipk'=> $transkrip->ipk,
-                'sks_semester'=>$total_sks,
-                'sks_total'=>$transkrip->total_sks,
-                'biaya_kuliah_smt' => 0,
-                'id_pembiayaan' => NULL,
-                'status_sync' => 'belum sync',
-            ]);
-        }
-        elseif($status_bayar==0 && $akm_aktif->isEmpty() && $status_cuti==0)
-        {
-            $peserta = AktivitasKuliahMahasiswa::create([
-                'id_registrasi_mahasiswa' => $id_reg,
-                'nim' => $riwayat_pendidikan->nim,
-                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                'id_prodi' => $riwayat_pendidikan->id_prodi,
-                'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                'id_semester'=> $semester_aktif->id_semester,
-                'nama_semester'=> $semester_aktif->semester->nama_semester,
-                'id_status_mahasiswa' => 'N',
-                'nama_status_mahasiswa' => 'Non-Aktif',
-                'ips'=> 0,
-                'ipk'=> $transkrip->ipk,
-                'sks_semester'=>$total_sks,
-                'sks_total'=>$transkrip->total_sks,
-                'biaya_kuliah_smt' => 0,
-                'id_pembiayaan' => NULL,
-                'status_sync' => 'belum sync',
-            ]);
-        }
+    //         $transkrip = TranskripMahasiswa::select(
+    //                         DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
+    //                         DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
+    //                     )
+    //                     ->where('id_registrasi_mahasiswa', $id_reg)
+    //                     ->whereNotIn('nilai_huruf', ['F', ''])
+    //                     ->groupBy('id_registrasi_mahasiswa')
+    //                     ->first();
+    //                     // dd($transkrip);
+    //     if($status_bayar==1 && $akm_aktif->isEmpty()  && $status_cuti==0)
+    //     {
+    //         $peserta = AktivitasKuliahMahasiswa::create([
+    //             'id_registrasi_mahasiswa' => $id_reg,
+    //             'nim' => $riwayat_pendidikan->nim,
+    //             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+    //             'id_prodi' => $riwayat_pendidikan->id_prodi,
+    //             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+    //             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+    //             'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+    //             'id_semester'=> $semester_aktif->id_semester,
+    //             'nama_semester'=> $semester_aktif->semester->nama_semester,
+    //             'id_status_mahasiswa' => 'A',
+    //             'nama_status_mahasiswa' => 'Aktif',
+    //             'ips'=> 0,
+    //             'ipk'=> $transkrip->ipk,
+    //             'sks_semester'=> $total_sks,
+    //             'sks_total'=>$transkrip->total_sks,
+    //             'biaya_kuliah_smt' => 0,
+    //             'id_pembiayaan' => NULL,
+    //             'status_sync' => 'belum sync',
+    //         ]);
+    //     }
+    //     elseif($status_bayar==1 && $akm_aktif != NULL  && $status_cuti==0)
+    //     {
+    //         $updated = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->update([
+    //             'nim' => $riwayat_pendidikan->nim,
+    //             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+    //             'id_prodi' => $riwayat_pendidikan->id_prodi,
+    //             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+    //             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+    //             'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+    //             'id_semester'=> $semester_aktif->id_semester,
+    //             'nama_semester'=> $semester_aktif->semester->nama_semester,
+    //             'id_status_mahasiswa' => 'A',
+    //             'nama_status_mahasiswa' => 'Aktif',
+    //             'ips' => 0,
+    //             'ipk' => $transkrip->ipk,
+    //             'sks_semester' => $total_sks,
+    //             'sks_total' => $transkrip->total_sks,
+    //             'biaya_kuliah_smt' => 0,
+    //             'id_pembiayaan' => NULL,
+    //             'status_sync' => 'belum sync',
+    //         ]);
+    //     }
+    //     elseif($status_bayar==0 && $akm_aktif->isEmpty() && $status_cuti==1)
+    //     {
+    //         $peserta = AktivitasKuliahMahasiswa::create([
+    //             'id_registrasi_mahasiswa' => $id_reg,
+    //             'nim' => $riwayat_pendidikan->nim,
+    //             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+    //             'id_prodi' => $riwayat_pendidikan->id_prodi,
+    //             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+    //             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+    //             'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+    //             'id_semester'=> $semester_aktif->id_semester,
+    //             'nama_semester'=> $semester_aktif->semester->nama_semester,
+    //             'id_status_mahasiswa' => 'C',
+    //             'nama_status_mahasiswa' => 'Cuti',
+    //             'ips'=> 0,
+    //             'ipk'=> $transkrip->ipk,
+    //             'sks_semester'=>$total_sks,
+    //             'sks_total'=>$transkrip->total_sks,
+    //             'biaya_kuliah_smt' => 0,
+    //             'id_pembiayaan' => NULL,
+    //             'status_sync' => 'belum sync',
+    //         ]);
+    //     }
+    //     elseif($status_bayar==0 && $akm_aktif->isEmpty() && $status_cuti==0)
+    //     {
+    //         $peserta = AktivitasKuliahMahasiswa::create([
+    //             'id_registrasi_mahasiswa' => $id_reg,
+    //             'nim' => $riwayat_pendidikan->nim,
+    //             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+    //             'id_prodi' => $riwayat_pendidikan->id_prodi,
+    //             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+    //             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+    //             'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+    //             'id_semester'=> $semester_aktif->id_semester,
+    //             'nama_semester'=> $semester_aktif->semester->nama_semester,
+    //             'id_status_mahasiswa' => 'N',
+    //             'nama_status_mahasiswa' => 'Non-Aktif',
+    //             'ips'=> 0,
+    //             'ipk'=> $transkrip->ipk,
+    //             'sks_semester'=>$total_sks,
+    //             'sks_total'=>$transkrip->total_sks,
+    //             'biaya_kuliah_smt' => 0,
+    //             'id_pembiayaan' => NULL,
+    //             'status_sync' => 'belum sync',
+    //         ]);
+    //     }
 
-        // return view('mahasiswa.krs.index', compact(
-        //     'akm_aktif'
-        // ));
-    }
+    //     // return view('mahasiswa.krs.index', compact(
+    //     //     'akm_aktif'
+    //     // ));
+    // }
 
     public function pilih_prodi(Request $request)
     {
@@ -447,14 +415,10 @@ class KrsController extends Controller
         return $kelasDiambil;
     }
 
-
-
     public function ambilKelasKuliah(Request $request)
     {
         try {
             $idKelasKuliah = $request->input('id_kelas_kuliah');
-            // dd($idKelasKuliah);
-
             $id_reg = auth()->user()->fk_id;
 
             $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
@@ -466,23 +430,27 @@ class KrsController extends Controller
 
             $semester_aktif = SemesterAktif::first();
 
-            $db = new MataKuliah();
+            // $approved = PesertaKelasKuliah::where('id_regitrasi_mahasiswa', $id_reg)
+            //             // ->where('approved', 1)
+            //             ->pluck('approved')->first();
+            //             dd($approved);
+            // // Pengecekan apakah KRS sudah diApprove            
+            // if ( $approved ==1) {
+            //     return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah, KRS anda telah disetujui Pembimbing Akademik.'], 400);
+            // }
 
+            $db = new MataKuliah();
             $db_akt = new AktivitasMahasiswa();
 
-            list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif);
-
+            list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
             $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
-
-            $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif, $data_akt_ids);
-
-            $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
+            $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
+            $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester);
 
             $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
-
             $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
@@ -491,11 +459,13 @@ class KrsController extends Controller
                     ->pluck('sks_mata_kuliah')
                     ->first();
 
-            
+            // Pengecekan apakah SKS maksimum telah tercapai
+            if ($sks_max == 0) {
+                return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
+            }
 
-            // Check if the total SKS exceeds the maximum allowed SKS
             if (($total_sks + $sks_mk) > $sks_max) {
-                return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum.', 'sks_max' => $sks_max], 400);
+                return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS', 'sks_max' => $sks_max], 400);
             }
 
             $kelas_mk = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul','=','kelas_kuliahs.id_matkul')
@@ -510,10 +480,8 @@ class KrsController extends Controller
 
             //QUERY RPS
             $rps=RencanaPembelajaran::where('id_matkul', $kelas_mk->id_matkul)->get();
-            
-    
+
             if ($rps->count() == 0) {
-                // return redirect()->back()->with('error', 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.');
                 return response()->json(['message' => 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.'], 400);
             }
 
@@ -537,14 +505,14 @@ class KrsController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk'=>$sks_mk, '$peserta'=>$peserta, '$jumlah_peserta'=>$jumlah_peserta], 200);
+            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk' => $sks_mk, 'peserta' => $peserta, 'jumlah_peserta' => $jumlah_peserta], 200);
         } catch (\Exception $e) {
             DB::rollback();
 
-            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
-            // return response()->json(['error' => $e->getMessage()], 500);
+            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()], 500);
         }
     }
+
 
     public function hapus_kelas_kuliah(PesertaKelasKuliah $pesertaKelas)
     {
@@ -687,9 +655,9 @@ class KrsController extends Controller
         $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
 
         // Menghitung jumlah semester, mengabaikan semester pendek
-        $semester_ke = $semester->filter(function($item) {
-            return substr($item->id_semester, -1) != '3';
-        })->count();
+        // $semester_ke = $semester->filter(function($item) {
+        //     return substr($item->id_semester, -1) != '3';
+        // })->count();
 
         // $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
 

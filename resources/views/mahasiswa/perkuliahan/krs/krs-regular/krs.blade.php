@@ -8,7 +8,7 @@
                         $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                     @endphp
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
-                        @if(!empty($beasiswa) || !empty($tagihan->status_pembayaran || $semester_select != $semester_aktif->id_semester))
+                        @if(!empty($beasiswa) || !empty($tagihan->pembayaran->status_pembayaran || $semester_select != $semester_aktif->id_semester))
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">

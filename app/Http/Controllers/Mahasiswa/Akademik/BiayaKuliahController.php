@@ -21,11 +21,12 @@ class BiayaKuliahController extends Controller
         $user = auth()->user();
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
 
+        // dd($id_test);
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
         // dd($beasiswa);
 
         $tagihan = Tagihan::with('pembayaran')
-                ->where('tagihan.nomor_pembayaran', $user->username)
+                ->whereIn('tagihan.nomor_pembayaran', [$id_test, $user->username])
                 ->where('tagihan.kode_periode', $semester_aktif->id_semester)
                 ->select(
                     'tagihan.id_record_tagihan',
@@ -58,6 +59,8 @@ class BiayaKuliahController extends Controller
                 $item->pembayaran->waktu_transaksi = Carbon::parse($item->pembayaran->waktu_transaksi)->translatedFormat('d F Y');
             }
         }
+
+        // dd($pembayaran);
         
         return view('mahasiswa.biaya-kuliah.index', ['tagihan' => $tagihan, 'pembayaran'=> $pembayaran, 'beasiswa'=> $beasiswa]);
     }
