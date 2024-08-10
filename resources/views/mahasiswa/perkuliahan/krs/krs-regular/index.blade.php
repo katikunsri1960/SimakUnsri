@@ -207,7 +207,7 @@ Kartu Rencana Studi
                     id_prodi: selectedProdiId
                 },
                 success: function(response) {
-                    console.log(response)
+                    // console.log(response)
                     var mkMerdeka = response.mk_merdeka;
                     var krsMerdeka = response.krs_merdeka.map(krs => krs.id_matkul); // Extract id_matkul from krs_merdeka
                     var tbody = $('#mk-merdeka-tbody');
@@ -336,7 +336,6 @@ Kartu Rencana Studi
 
                 // Dapatkan CSRF token dari meta tag
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
-
                 // Cek prasyarat sebelum mengirimkan request
                 cekPrasyarat(idMatkul, id_reg, csrfToken, function(response) {
                     if (response.prasyarat_dipenuhi) {
@@ -348,8 +347,10 @@ Kartu Rencana Studi
                                 id_kelas_kuliah: idKelas,
                                 _token: csrfToken  // Sertakan CSRF token di sini
                             },
+                            
                             success: function(response) {
-                                swal({
+                                console.log(response.message)
+                               swal({
                                     title: 'Berhasil!',
                                     text: response.message,
                                     type: 'success',
@@ -383,6 +384,7 @@ Kartu Rencana Studi
                         });
                     }
                 });
+                
             });
         }
 

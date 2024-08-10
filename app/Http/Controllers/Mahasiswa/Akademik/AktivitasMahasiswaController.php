@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa\Akademik;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
+use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
@@ -17,6 +18,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 
@@ -68,10 +70,20 @@ class AktivitasMahasiswaController extends Controller
         ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
         ->first();
 
-        $aktivitas_mk=MataKuliah::where('id_matkul', $id_matkul)->first();
+        $mk_konversi=Konversi::where('id_matkul', $id_matkul)->first();
         // dd($aktivitas_mk);
 
-        $prodi_id = $riwayat_pendidikan->id_prodi;
+        // $prodi_id = $riwayat_pendidikan->id_prodi;
+        $transkrip = TranskripMahasiswa::select(
+            DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
+            // DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ips'), 
+            DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
+            )
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->whereNotIn('nilai_huruf', ['F', ''])
+            // ->groupBy('id_registrasi_mahasiswa')
+            ->first();
+            
         
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                     ->whereNotIn('id_status_mahasiswa', ['N'])
@@ -79,46 +91,59 @@ class AktivitasMahasiswaController extends Controller
                     ->first();
         
         $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
-                    ->first();
+                    ->first(); 
+
+        $semester_ke = Semester::orderBy('id_semester', 'ASC')
+                    ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                    ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                    ->count();
+
+
 
         $ips = AktivitasKuliahMahasiswa::select('ips')
-        ->where('id_registrasi_mahasiswa', $id_reg)
-        ->where('id_semester', $semester_aktif->id_semester)
-        // ->where('id_status_mahasiswa', ['O'])
-        ->orderBy('id_semester', 'DESC')
-        ->pluck('ips')->first();
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $semester_aktif->id_semester)
+                // ->where('id_status_mahasiswa', ['O'])
+                ->orderBy('id_semester', 'DESC')
+                ->pluck('ips')->first();
 
+// dd($mk_konversi);
+        if($semester_ke == 1 || $semester_ke == 2 ){
+            $sks_max = 20;
+        }else{
             if ($ips !== null) {
-                if($ips >= 3.00){
+                if ($ips >= 3.00) {
                     $sks_max = 24;
-                }elseif($ips >= 2.50 && $ips <= 2.99){
+                } elseif ($ips >= 2.50 && $ips <= 2.99) {
                     $sks_max = 21;
-                }elseif($ips >= 2.00 && $ips <= 2.49){
+                } elseif ($ips >= 2.00 && $ips <= 2.49) {
                     $sks_max = 18;
-                }elseif($ips >= 1.50 && $ips <= 1.99){
+                } elseif ($ips >= 1.50 && $ips <= 1.99) {
                     $sks_max = 15;
-                }elseif($ips < 1.50){
+                } elseif ($ips < 1.50) {
                     $sks_max = 12;
-                }else{
-                    $sks_max = "Tidak Diisi";
+                } else {
+                    $sks_max = 0;
                 }
             } else {
-                $sks_max = "Tidak Diisi";
+                $sks_max = 0;
             }
+        }
 
-            $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
-                    // ->leftJoin()
-                    // ->where('id_prodi', $prodi_id)
-                    ->get();
+        $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
+                // ->leftJoin()
+                // ->where('id_prodi', $prodi_id)
+                ->get();
 
         return view('mahasiswa.perkuliahan.krs.krs-regular.aktivitas-mahasiswa.ambil-aktivitas-mahasiswa', 
         [
             'id_matkul' => $id_matkul, 
+            'transkrip' => $transkrip,
+            'riwayat_pendidikan' => $riwayat_pendidikan,
             'akm'=>$akm, 
             'sks_max'=>$sks_max,
-            'aktivitas_mk'=>$aktivitas_mk,
+            'mk_konversi'=>$mk_konversi,
             'dosen_bimbing_aktivitas'=>$dosen_pembimbing
-
         ]);
     }
 
@@ -153,7 +178,7 @@ class AktivitasMahasiswaController extends Controller
             'keterangan' => 'nullable|max:100', // tambahkan validasi untuk Keterangan
             'lokasi' => 'required|string',
             'dosen_bimbing_aktivitas.*' => 'required',
-            'id_matkul' => 'required',
+            'id_matkul_konversi' => 'required',
         ]);
         
         try {
@@ -169,157 +194,161 @@ class AktivitasMahasiswaController extends Controller
             
             $now = Carbon::now();
 
-            $mk_konversi = Konversi::where('id_matkul', $request->id_matkul)->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
+            $mk_konversi = Konversi::where('id_matkul', $request->id_matkul_konversi)->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
             // dd($mk_konversi);
+
+            $db = new MataKuliah();
+            $db_akt = new AktivitasMahasiswa();
+
+            list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
+
+            $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
+            $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
+            $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester);
+
+            $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
+            $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
+            $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
+            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
+
+            // dd($total_sks);
+            // Periksa jumlah dosen pembimbing yang dipilih
+            if (count((array)$request->dosen_bimbing_aktivitas) == 0) {
+                return redirect()->back()->with('error', 'Harap pilih minimal satu dosen pembimbing.');
+            }
+
+            // Pengecekan apakah SKS maksimum telah tercapai
+            if ($sks_max == 0) {
+                return redirect()->back()->with('error', 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.');
+                // return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
+            }
+
+            if (($total_sks + $mk_konversi->sks_mata_kuliah) > $sks_max) {
+                return redirect()->back()->with('error', 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah mengambil ' . $total_sks . ' SKS.');
+                // return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS', 'sks_max' => $sks_max], 400);
+            }
+            
 
             $id_aktivitas = Uuid::uuid4()->toString();
 
-            // if($mk_konversi->nama_mata_kuliah == 'PROPOSAL SKRIPSI'){
-            //     $id_jenis_aktivitas = 1;
-            //     $nama_jenis_aktivitas = 'Laporan akhir studi';
-            // }elseif($mk_konversi->nama_mata_kuliah == 'TUGAS AKHIR' ){
-            //     $id_jenis_aktivitas = 2;
-            //     $nama_jenis_aktivitas = 'Tugas akhir';
-            // }elseif($mk_konversi->nama_mata_kuliah == 'TESIS' ){
-            //     $id_jenis_aktivitas = 3;
-            //     $nama_jenis_aktivitas = 'Tesis';
-            // }elseif($mk_konversi->nama_mata_kuliah == 'UJIAN DISERTASI' ){
-            //     $id_jenis_aktivitas = 4;
-            //     $nama_jenis_aktivitas = 'Disertasi';
-            // }elseif($mk_konversi->nama_mata_kuliah == 'KULIAH KERJA NYATA (KKN)' || $mk_konversi->nama_mata_kuliah == 'KULIAH KERJA NYATA'){
-            //     $id_jenis_aktivitas = 5;
-            //     $nama_jenis_aktivitas = 'Kuliah kerja nyata';
-            // }elseif($mk_konversi->nama_mata_kuliah == 'KERJA PRAKTEK' || $mk_konversi->nama_mata_kuliah == 'KERJA PRAKTIK' ){
-            //     $id_jenis_aktivitas = 6;
-            //     $nama_jenis_aktivitas = 'Kerja praktek/PKL';
-            // }elseif($mk_konversi->nama_mata_kuliah == 'DISERTASI DAN PUBLIKASI'){
-            //     $id_jenis_aktivitas = 15;
-            //     $nama_jenis_aktivitas = 'Penelitian/Riset';
-            // }elseif($mk_konversi->nama_mata_kuliah == 'SKRIPSI'){
-            //     $id_jenis_aktivitas = 22;
-            //     $nama_jenis_aktivitas = 'Skripsi';
-            // }
-            // else{
-            //     // $id_jenis_aktivitas = NULL;
-            //     // $nama_jenis_aktivitas = NULL;
-            //     // return response()->json('error', 'Jenis Aktivitas Tidak Ditemukan');
-            //     return redirect()->back()->with('error', 'Jenis Aktivitas Tidak Ditemukan');
+            
+
+            // Periksa jumlah dosen pembimbing yang dipilih
+            // if (count((array)$request->dosen_bimbing_aktivitas) == 0) {
+            //     return redirect()->back()->with('error', 'Harap pilih minimal satu dosen pembimbing.');
             // }
             
-                // Simpan data ke tabel aktivitas_mahasiswas
-                $aktivitas=AktivitasMahasiswa::create([
-                    'approve_krs' =>0,
-                    'approve_sidang' =>0,
-                    'feeder'=>0,
-                    'id_aktivitas' => $id_aktivitas,
-                    'judul' => $request->judul_skripsi,
-                    'program_mbkm'=>0,
-                    'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
-                    'jenis_anggota'=>0,
-                    'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
-                    'id_jenis_aktivitas'=>$mk_konversi->id_jenis_aktivitas,
-                    'nama_jenis_aktivitas'=>$mk_konversi->nama_jenis_aktivitas,
-                    'id_prodi' => $riwayat_pendidikan->id_prodi,
-                    'nama_prodi'=>$riwayat_pendidikan->nama_program_studi,
-                    'id_semester' => $semester_aktif->id_semester,
-                    'nama_semester'=>$semester_aktif->semester->nama_semester,
-                    'judul' => $request->judul,
-                    'keterangan'=>$request->keterangan,
-                    'lokasi'=>$request->lokasi,
-                    'sk_tugas'=>Null,
-                    'sumber_data'=>1,
-                    'tanggal_sk_tugas'=>Null,
-                    'tanggal_mulai'=>$now,//tambahkan kondisi jika aktivitas melanjutkan semester
-                    'tanggal_selesai'=>Null,
-                    'untuk_kampus_merdeka'=>1,
-                    'asal_data'=>9,
-                    'nm_asaldata'=>'',
-                    'status_sync'=>'belum sync',
-                    'mk_konversi'=>$request->id_matkul,
-                    // tambahkan field lain yang diperlukan
-                ]);
+            // Simpan data ke tabel aktivitas_mahasiswas
+            $aktivitas=AktivitasMahasiswa::create([
+                'approve_krs' =>0,
+                'approve_sidang' =>0,
+                'feeder'=>0,
+                'id_aktivitas' => $id_aktivitas,
+                'judul' => $request->judul_skripsi,
+                'program_mbkm'=>0,
+                'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
+                'jenis_anggota'=>0,
+                'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
+                'id_jenis_aktivitas'=>$mk_konversi->id_jenis_aktivitas,
+                'nama_jenis_aktivitas'=>$mk_konversi->nama_jenis_aktivitas,
+                'id_prodi' => $riwayat_pendidikan->id_prodi,
+                'nama_prodi'=>$riwayat_pendidikan->nama_program_studi,
+                'id_semester' => $semester_aktif->id_semester,
+                'nama_semester'=>$semester_aktif->semester->nama_semester,
+                'judul' => $request->judul,
+                'keterangan'=>$request->keterangan,
+                'lokasi'=>$request->lokasi,
+                'sk_tugas'=>Null,
+                'sumber_data'=>1,
+                'tanggal_sk_tugas'=>Null,
+                'tanggal_mulai'=>$now,//tambahkan kondisi jika aktivitas melanjutkan semester
+                'tanggal_selesai'=>Null,
+                'untuk_kampus_merdeka'=>1,
+                'asal_data'=>9,
+                'nm_asaldata'=>'',
+                'status_sync'=>'belum sync',
+                'mk_konversi'=>$mk_konversi->id_matkul,
+                // tambahkan field lain yang diperlukan
+            ]);
 
-                $id_anggota = Uuid::uuid4()->toString();
+            $id_anggota = Uuid::uuid4()->toString();
 
-                // Simpan data ke tabel anggota_aktivitas_mahasiswas
-                AnggotaAktivitasMahasiswa::create([
-                    'feeder'=>0,
-                    'id_anggota'=>$id_anggota,
-                    'id_aktivitas' => $aktivitas->id_aktivitas,
-                    'judul' => $aktivitas->judul,
-                    'id_registrasi_mahasiswa'=>$id_reg,
-                    'nim'=>$riwayat_pendidikan->nim,
-                    'nama_mahasiswa'=> $riwayat_pendidikan->nama_mahasiswa,
-                    'jenis_peran'=>2,
-                    'nama_jenis_peran'=>'Anggota',
-                    'status_sync'=>'belum sync',
-                ]);   
+            // Simpan data ke tabel anggota_aktivitas_mahasiswas
+            AnggotaAktivitasMahasiswa::create([
+                'feeder'=>0,
+                'id_anggota'=>$id_anggota,
+                'id_aktivitas' => $aktivitas->id_aktivitas,
+                'judul' => $aktivitas->judul,
+                'id_registrasi_mahasiswa'=>$id_reg,
+                'nim'=>$riwayat_pendidikan->nim,
+                'nama_mahasiswa'=> $riwayat_pendidikan->nama_mahasiswa,
+                'jenis_peran'=>2,
+                'nama_jenis_peran'=>'Anggota',
+                'status_sync'=>'belum sync',
+            ]);   
+            
+            
+
+            $jumlah_dosen=count($request->dosen_bimbing_aktivitas);
+            
+            $prodi = $riwayat_pendidikan->prodi;
+
+            for($i=0;$i<$jumlah_dosen;$i++){
+                //Generate id aktivitas mengajar
+                $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
                 
-                // Periksa jumlah dosen pembimbing yang dipilih
-                if (count((array)$request->dosen_bimbing_aktivitas) == 0) {
-                    return redirect()->back()->with('error', 'Harap pilih minimal satu dosen pembimbing.');
-                }
-
-                $jumlah_dosen=count($request->dosen_bimbing_aktivitas);
-               
-                $prodi = $riwayat_pendidikan->prodi;
-
-                for($i=0;$i<$jumlah_dosen;$i++){
-                    //Generate id aktivitas mengajar
-                    $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
-                    
-                    // TAMBAHKAN TUGAS AKHIR D3
-                    if($prodi->nama_jenjang_pendidikan == 'S1'){
-                        if($i==0){
-                            $id_kategori_kegiatan=110403;
-                            $nama_kategori_kegiatan='Skripsi (pembimbing utama)';
-                        }else{
-                            $id_kategori_kegiatan=110407;
-                            $nama_kategori_kegiatan='Skripsi (pembimbing pendamping)';
-                        }
-                    }elseif($prodi->nama_jenjang_pendidikan == 'S2'){
-                        if($i==0){
-                            $id_kategori_kegiatan=110402;
-                            $nama_kategori_kegiatan='Tesis (pembimbing utama)';
-                        }else{
-                            $id_kategori_kegiatan=110406;
-                            $nama_kategori_kegiatan='Tesis (pembimbing pendamping)';
-                        }
-                    }elseif($prodi->nama_jenjang_pendidikan == 'S3'){
-                        if($i==0){
-                            $id_kategori_kegiatan=110401;
-                            $nama_kategori_kegiatan='Disertasi (pembimbing utama)';
-                        }else{
-                            $id_kategori_kegiatan=110405;
-                            $nama_kategori_kegiatan='Disertasi (pembimbing pendamping)';
-                        }
+                // TAMBAHKAN TUGAS AKHIR D3
+                if($prodi->nama_jenjang_pendidikan == 'S1'){
+                    if($i==0){
+                        $id_kategori_kegiatan=110403;
+                        $nama_kategori_kegiatan='Skripsi (pembimbing utama)';
+                    }else{
+                        $id_kategori_kegiatan=110407;
+                        $nama_kategori_kegiatan='Skripsi (pembimbing pendamping)';
                     }
-                    $dosen_pembimbing=BiodataDosen::where('id_dosen', $request->dosen_bimbing_aktivitas[$i])->first();
-                    // dd($dosen_pembimbing);
-
-                    $bimbing=BimbingMahasiswa::create([
-                        'feeder'=>0,
-                        'approved'=>0,
-                        'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
-                        'id_aktivitas'=>$aktivitas->id_aktivitas,
-                        'judul'=>$aktivitas->judul,
-                        'id_kategori_kegiatan'=>$id_kategori_kegiatan,
-                        'nama_kategori_kegiatan'=>$nama_kategori_kegiatan,
-                        'id_dosen'=>$dosen_pembimbing->id_dosen, 
-                        'nidn'=>$dosen_pembimbing->nidn,
-                        'nama_dosen'=>$dosen_pembimbing->nama_dosen,
-                        'pembimbing_ke'=>$i+1,
-                        'status_sync'=>'belum sync',
-                    ]);
-                    
+                }elseif($prodi->nama_jenjang_pendidikan == 'S2'){
+                    if($i==0){
+                        $id_kategori_kegiatan=110402;
+                        $nama_kategori_kegiatan='Tesis (pembimbing utama)';
+                    }else{
+                        $id_kategori_kegiatan=110406;
+                        $nama_kategori_kegiatan='Tesis (pembimbing pendamping)';
+                    }
+                }elseif($prodi->nama_jenjang_pendidikan == 'S3'){
+                    if($i==0){
+                        $id_kategori_kegiatan=110401;
+                        $nama_kategori_kegiatan='Disertasi (pembimbing utama)';
+                    }else{
+                        $id_kategori_kegiatan=110405;
+                        $nama_kategori_kegiatan='Disertasi (pembimbing pendamping)';
+                    }
                 }
-                // $bimbing_urut=$bimbing->orderBy('pembimbing_ke', 'ASC')->get();
-                // dd($bimbing);
-                
-            });
+                $dosen_pembimbing=BiodataDosen::where('id_dosen', $request->dosen_bimbing_aktivitas[$i])->first();
+                // dd($dosen_pembimbing);
 
-            // Jika berhasil, kembalikan respons sukses
-            return redirect()->route('mahasiswa.krs.index')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
+                $bimbing=BimbingMahasiswa::create([
+                    'feeder'=>0,
+                    'approved'=>0,
+                    'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
+                    'id_aktivitas'=>$aktivitas->id_aktivitas,
+                    'judul'=>$aktivitas->judul,
+                    'id_kategori_kegiatan'=>$id_kategori_kegiatan,
+                    'nama_kategori_kegiatan'=>$nama_kategori_kegiatan,
+                    'id_dosen'=>$dosen_pembimbing->id_dosen, 
+                    'nidn'=>$dosen_pembimbing->nidn,
+                    'nama_dosen'=>$dosen_pembimbing->nama_dosen,
+                    'pembimbing_ke'=>$i+1,
+                    'status_sync'=>'belum sync',
+                ]);
+                
+            }
+            // $bimbing_urut=$bimbing->orderBy('pembimbing_ke', 'ASC')->get();
+            // dd($bimbing);
+                
+        });
+
+        // Jika berhasil, kembalikan respons sukses
+        return redirect()->route('mahasiswa.krs.index')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
 
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan

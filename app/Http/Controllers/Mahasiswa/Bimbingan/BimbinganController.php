@@ -30,8 +30,7 @@ class BimbinganController extends Controller
             ->where('nomor_pembayaran', $user->username)
             ->where('kode_periode', $id_semester)
             ->first();
-
-        
+       
 
         $statusPembayaran = $tagihan->pembayaran ? $tagihan->pembayaran->status_pembayaran : null;
         // dd($statusPembayaran);

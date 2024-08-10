@@ -37,7 +37,7 @@ Ambil Aktivitas Mahasiswa
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$akm->ips}} | {{$akm->ipk}}</h4>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$transkrip->ipk==NULL ? '0 | 0' : $transkrip->ips .' | '. $transkrip->ipk}}</h4>
                     </div>
                 </div>
             </div>
@@ -60,11 +60,7 @@ Ambil Aktivitas Mahasiswa
                 <div class="box-body">
                     <div class="flex-grow-1">
                         <p class="mt-5 mb-5 text-fade fs-12">Dosen PA</p>
-                        @if (!empty($riwayat_pendidikan->nama_dosen))
-                            <h4 class="mt-5 mb-0" style="color:#0052cc">{{ $riwayat_pendidikan->nama_dosen }}</h4>
-                        @else
-                            <h4 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h4>
-                        @endif
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$riwayat_pendidikan->nama_dosen == NULL ? 'Tidak Diisi' : $riwayat_pendidikan->nama_dosen }}</h4>
                     </div>
                 </div>
             </div>
@@ -75,7 +71,7 @@ Ambil Aktivitas Mahasiswa
             <div class="box">
 				<!-- Nav tabs -->
                 <ul class="nav nav-pills justify-content-left mb-20" role="tablist">
-                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link" href="{{route('mahasiswa.krs')}}"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
+                    <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link" href="{{route('mahasiswa.krs.index')}}"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">KRS</span></a> </li>
                     <li class="nav-item bg-secondary-light rounded10"> <a class="nav-link active" data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Data Kelas Kuliah</span></a> </li>
                 </ul>
                 <!-- Tab panes -->
@@ -86,7 +82,7 @@ Ambil Aktivitas Mahasiswa
                                 <div class="content-header">
                                     <div class="d-flex align-items-center">
                                         <div class="me-auto">
-                                            <h3 class="page-title">TAMBAH AKTIVITAS {{$aktivitas_mk->nama_mata_kuliah}}</h3>
+                                            <h3 class="page-title">TAMBAH AKTIVITAS {{$mk_konversi->nama_mata_kuliah}}</h3>
                                             {{-- <div class="d-inline-block align-items-center">
                                                 <nav>
                                                     <ol class="breadcrumb">
@@ -154,7 +150,7 @@ Ambil Aktivitas Mahasiswa
 
                                                 <div class="row mt-20 mb-20">
                                                     <div class="col-12 text-end">
-                                                        <input type="hidden" name="id_matkul" value="{{ $id_matkul }}">
+                                                        <input type="hidden" name="id_matkul_konversi" value="{{ $mk_konversi->id_matkul }}">
                                                         <button type="submit" class="btn btn-primary">Simpan</button>
                                                     </div>
                                                 </div>

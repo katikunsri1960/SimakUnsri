@@ -85,13 +85,16 @@ class MataKuliah extends Model
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $id_semester)
                     ->orderBy('id_semester', 'DESC')
-                    ->pluck('ips')->first();
-
+                    ->pluck('ips')
+                    ->first();
+                    
         // $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
         $semester_ke = Semester::orderBy('id_semester', 'ASC')
                 ->whereBetween('id_semester', [$id_periode_masuk, $id_semester])
                 ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                 ->count();
+
+        // $semester_ke==3;
 
         if($semester_ke == 1 || $semester_ke == 2 ){
             $sks_max = 20;
@@ -108,10 +111,10 @@ class MataKuliah extends Model
                 } elseif ($ips < 1.50) {
                     $sks_max = 12;
                 } else {
-                    $sks_max = "Tidak Diisi";
+                    $sks_max = 0;
                 }
             } else {
-                $sks_max = "Tidak Diisi";
+                $sks_max = 0;
             }
         }
         return $sks_max;
