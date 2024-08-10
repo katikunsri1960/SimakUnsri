@@ -25,7 +25,7 @@ Konversi Aktivitas
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.update', ['id' => $mk_konversi->id])}}" id="update-konversi-aktivitas" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.update', ['rencana_ajar' => $mk_konversi->id])}}" id="update-konversi-aktivitas" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body">
                         <h4 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Konversi Aktivitas</h4>
@@ -36,9 +36,12 @@ Konversi Aktivitas
                                     <div class="col-md-12 mb-10">
                                         <label>Jenis Aktivitas</label>
                                         <select id="jenis_aktivitas" name="jenis_aktivitas" class="form-select" required>
-                                            <option value="{{$mk_konversi->id_jenis_aktivitas}}" disabled selected>{{$mk_konversi->nama_jenis_aktivitas}}</option>
+                                            <option value="" disabled selected>-- Pilih Jenis Aktivitas --</option>
                                             @foreach($jenis_aktivitas as $aktivitas)
-                                                <option value="{{ $aktivitas['id_jenis_aktivitas'] }}">{{ $aktivitas['nama_jenis_aktivitas'] }}</option>
+                                                <option value="{{ $aktivitas['id_jenis_aktivitas'] }}" 
+                                                    {{ $aktivitas['id_jenis_aktivitas'] == $mk_konversi->id_jenis_aktivitas ? 'selected' : '' }}>
+                                                    {{ $aktivitas['nama_jenis_aktivitas'] }}
+                                                </option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -49,11 +52,14 @@ Konversi Aktivitas
                                     <div class="col-md-12 mb-10">
                                         <label>Kurikulum Mata Kuliah</label>
                                         <select id="kurikulum" name="kurikulum" class="form-select" required>
-                                            <option value="{{$mk_konversi->id_kurikulum}}" disabled selected>{{$mk_konversi->nama_kurikulum}}</option>
-                                            @foreach($kurikulum_aktif as $kurikulum)
-                                                <option value="{{ $kurikulum['id_kurikulum'] }}">{{ $kurikulum['nama_kurikulum'] }}</option>
-                                            @endforeach
-                                        </select>
+                                        <option value="" disabled selected>-- Pilih Kurikulum --</option>
+                                        @foreach($kurikulum_aktif as $kurikulum)
+                                            <option value="{{ $kurikulum['id_kurikulum'] }}" 
+                                                {{ $kurikulum['id_kurikulum'] == $mk_konversi->id_kurikulum ? 'selected' : '' }}>
+                                                {{ $kurikulum['nama_kurikulum'] }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                     </div>
                                 </div>
                             </div>
@@ -62,7 +68,11 @@ Konversi Aktivitas
                                     <label for="mk_konversi" class="form-label">Mata Kuliah</label>
                                     <div class="col-md-12 mb-2">
                                         <select class="form-select" name="mk_konversi" id="mk_konversi" required>
-                                            <option value="{{$mk_konversi->id_matkul}}" disabled selected>{{$mk_konversi->nama_mata_kuliah}}</option>
+                                            <option value="" disabled selected>-- Pilih Mata kuliah --</option>
+                                            <option value="{{ $mk_konversi->id_matkul }}" 
+                                                {{ $mk_konversi->id_matkul != '' ? 'selected' : '' }}>
+                                                {{ $mk_konversi->nama_mata_kuliah }}
+                                            </option>
                                         </select>
                                     </div>
                                 </div>
@@ -105,10 +115,26 @@ Konversi Aktivitas
             });
         });
 
+        var kurikulum_id = $('#kurikulum').val();
+    
+        if (kurikulum_id) {
+            initializeSelect2($('#mk_konversi'), kurikulum_id);
+        }
+        
         $('#kurikulum').change(function() {
-            var kurikulum_id = $(this).val();
-            var selectElement = initializeSelect2($('#mk_konversi'), kurikulum_id);
+            kurikulum_id = $(this).val();
+            
+            // Clear previous selections
+            $('#mk_konversi').val(null).trigger('change');
+            
+            // Re-initialize Select2
+            initializeSelect2($('#mk_konversi'), kurikulum_id);
         });
+
+        // $('#kurikulum').change(function() {
+        //     var kurikulum_id = $(this).val();
+        //     var selectElement = initializeSelect2($('#mk_konversi'), kurikulum_id);
+        // });
 
         function initializeSelect2(selectElement, kurikulum_id) {
             return selectElement.select2({

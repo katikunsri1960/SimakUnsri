@@ -143,9 +143,21 @@ class AktivitasMahasiswaKonversiController extends Controller
     public function edit(string $id)
     {
         $prodi_id = auth()->user()->fk_id;
-        $mk_konversi = Konversi::where('id', $id)->first();
 
-        return view('prodi.data-aktivitas.aktivitas-mahasiswa.update', ['mk_konversi' => $mk_konversi]);
+        $kurikulum_aktif = ListKurikulum::where('id_prodi', $prodi_id)
+                    ->where('is_active', 1)
+                    ->orderBy('id_semester')
+                    ->get();
+
+        $jenis_aktivitas=AktivitasMahasiswa::select('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+                    ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+                    ->whereNotIn('id_jenis_aktivitas', ['13','14','15','16','17','18','19','20'])
+                    ->orderBy('nama_jenis_aktivitas')
+                    ->get();
+        $mk_konversi = Konversi::where('id', $id)->first();
+        // dd($mk_konversi);
+
+        return view('prodi.data-aktivitas.aktivitas-mahasiswa.update', ['mk_konversi' => $mk_konversi, 'jenis_aktivitas' => $jenis_aktivitas, 'kurikulum_aktif' => $kurikulum_aktif]);
     }
 
     /**

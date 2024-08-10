@@ -371,8 +371,8 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/get-nama-mk', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'get_mk_konversi'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.get_mk');
                     Route::get('/get-mata-kuliah/{id_kurikulum}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'getMataKuliah'])->name('get-mata-kuliah');
                     Route::post('/store', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'store'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.store');
-                    Route::get('/rencana-pembelajaran/ubah/{rencana_ajar}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'edit'])->name('dosen.perkuliahan.rencana-pembelajaran.ubah');
-                    Route::post('/rencana-pembelajaran/update/{rencana_ajar}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'update'])->name('dosen.perkuliahan.rencana-pembelajaran.update');
+                    Route::get('/aktivitas-mahasiswa/ubah/{rencana_ajar}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'edit'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.ubah');
+                    Route::post('/aktivitas-mahasiswa/update/{rencana_ajar}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'update'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.update');
                     Route::delete('/delete/{id}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'delete'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.delete');
                 });
                 Route::get('/aktivitas-penelitian', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_penelitian'])->name('prodi.data-aktivitas.aktivitas-penelitian');
