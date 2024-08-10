@@ -30,10 +30,14 @@ class KelasPenjadwalanController extends Controller
         // dd($semester_aktif);
         $prodi_id = auth()->user()->fk_id;
 
-        $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.kelas_kuliah'])
-                ->where('id_prodi', $prodi_id)
-                ->where('is_active', 1)
-                ->get();
+        $data = ListKurikulum::with(['mata_kuliah' => function ($query) use ($semester_aktif) {
+            $query->with(['kelas_kuliah' => function ($query) use ($semester_aktif) {
+                $query->where('id_semester', $semester_aktif->id_semester);
+            }]);
+        }])
+        ->where('id_prodi', $prodi_id)
+        ->where('is_active', 1)
+        ->get();
         // dd($data);
         return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data, 'semester_aktif' => $semester_aktif]);
     }
@@ -500,7 +504,7 @@ class KelasPenjadwalanController extends Controller
 
     public function kelas_penjadwalan_update(Request $request, $id_matkul, $id_kelas)
     {
-        
+
         try {
             DB::beginTransaction();
 
