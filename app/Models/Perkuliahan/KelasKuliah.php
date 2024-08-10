@@ -47,6 +47,11 @@ class KelasKuliah extends Model
         return $this->hasMany(PesertaKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
     }
 
+    public function peserta_kelas_approved()
+    {
+        return $this->hasMany(PesertaKelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah')->where('approved', 1);
+    }
+
     public function nilai_perkuliahan()
     {
         return $this->hasMany(NilaiPerkuliahan::class, 'id_kelas_kuliah', 'id_kelas_kuliah');

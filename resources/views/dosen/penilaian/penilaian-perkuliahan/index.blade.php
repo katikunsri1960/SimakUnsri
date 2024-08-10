@@ -80,7 +80,11 @@ Penilaian Perkuliahan Mahasiswa
                                                     </ul>
                                                 @endif
                                             </td>
-                                            <td class="text-center align-middle">{{$d->peserta_kelas_count}}</td>
+                                            <td class="text-center align-middle">
+                                                @php
+                                                    echo count($d->kelas_kuliah->peserta_kelas_approved)
+                                                @endphp
+                                            </td>
                                             <td class="text-center align-middle">
                                                 <!-- <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-12 mb-2">
