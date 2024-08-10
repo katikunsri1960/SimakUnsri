@@ -58,6 +58,8 @@ Kelas Penjadwalan
                                     <th class="text-center align-middle">JADWAL HARI</th>
                                     <th class="text-center align-middle">JAM KULIAH</th>
                                     <th class="text-center align-middle">DOSEN</th>
+                                    <th class="text-center align-middle">KAPASITAS</th>
+                                    <th class="text-center align-middle">JUMLAH PESERTA</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -81,6 +83,12 @@ Kelas Penjadwalan
                                                 @endforeach
                                             @endif
                                             </ul>
+                                        </td>
+                                        <td class="text-center align-middle">{{$d->kapasitas}}</td>
+                                        <td class="text-center align-middle">
+                                            @php
+                                                echo count($d->peserta_kelas);
+                                            @endphp
                                         </td>
                                         <td class="text-center align-middle">
 
