@@ -500,12 +500,7 @@ class KelasPenjadwalanController extends Controller
 
     public function kelas_penjadwalan_update(Request $request, $id_matkul, $id_kelas)
     {
-        $peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->first();
-
-        if($peserta){
-            return redirect()->back()->with('error', 'Data Kelas tidak bisa dihapus karena sudah ada peserta');
-        }
-
+        
         try {
             DB::beginTransaction();
 
