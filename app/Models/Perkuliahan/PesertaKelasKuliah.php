@@ -68,10 +68,16 @@ class PesertaKelasKuliah extends Model
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-        // Check if the total SKS exceeds the maximum allowed SKS
-        if ($total_sks > $sks_max) {
-            return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum.', 'sks_max' => $sks_max], 400);
-        }
+        // dd($sks_max);
+
+        // // Check if the total SKS exceeds the maximum allowed SKS
+        // if ($total_sks > $sks_max) {
+        //     $result = [
+        //         'status' => 'error',
+        //         'message' => 'AKM mahasiswa semester lalu belum diisikan, Silahkan Melapor ke Admin Prodi!',
+        //     ];
+        //     return $result;
+        // }
 
         $transkrip = TranskripMahasiswa::select(
                         DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
