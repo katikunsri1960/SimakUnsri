@@ -383,6 +383,9 @@ class KrsController extends Controller
     {
         $idMatkul = $request->get('id_matkul');
 
+        $id_reg = auth()->user()->fk_id;
+        $prodi_id = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                    ->pluck('id_prodi');
 
         $semester_aktif = SemesterAktif::pluck('id_semester');
 
@@ -391,15 +394,18 @@ class KrsController extends Controller
                             $query->whereNotNull('id_dosen');
                         })
                     ->withCount('peserta_kelas')
-                    ->where('id_semester',  $semester_aktif)
                     ->where('id_matkul', $idMatkul)
+                    ->where('id_semester',  $semester_aktif)
+                    ->where('id_prodi', $prodi_id)
                     ->orderBy('nama_kelas_kuliah')
                     ->get();
+
+                    // dd($kelasKuliah);
         
         foreach ($kelasKuliah as $kelas) {
-            $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->id, $kelas->id_matkul);
+            $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->fk_id, $kelas->id_matkul);
         }
-        // dd($kelasKuliah);
+       
 
         return response()->json($kelasKuliah);
     }
