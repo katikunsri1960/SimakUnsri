@@ -85,13 +85,32 @@ class AktivitasMahasiswaController extends Controller
             ->first();
             
         
-        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->whereNotIn('id_status_mahasiswa', ['N'])
-                    ->orderBy('id_semester', 'DESC')
-                    ->first();
+        // $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+        //             ->whereNotIn('id_status_mahasiswa', ['N'])
+        //             ->orderBy('id_semester', 'DESC')
+        //             ->first();
         
         $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                     ->first(); 
+
+        $akm = Semester::orderBy('id_semester', 'ASC')
+                    ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                    ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                    ->pluck('id_semester');
+    
+        // Dapatkan indeks dari semester terakhir dalam koleksi
+        $index_semester_terakhir = $akm->search($akm->last());
+
+        // Pastikan bahwa indeks tidak berada di posisi pertama
+        if ($index_semester_terakhir > 0) {
+            // Mundur satu semester dari yang terakhir
+            $akm_sebelum = $akm[$index_semester_terakhir - 1];
+        } else {
+            // Jika tidak ada semester sebelumnya (semester pertama), bisa didefinisikan logika lain
+            $akm_sebelum = null;
+        }
+    
+        // dd($akm_sebelum);
 
         $semester_ke = Semester::orderBy('id_semester', 'ASC')
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
@@ -102,7 +121,7 @@ class AktivitasMahasiswaController extends Controller
 
         $ips = AktivitasKuliahMahasiswa::select('ips')
                 ->where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $semester_aktif->id_semester)
+                ->where('id_semester', $akm_sebelum)
                 // ->where('id_status_mahasiswa', ['O'])
                 ->orderBy('id_semester', 'DESC')
                 ->pluck('ips')->first();
@@ -140,7 +159,7 @@ class AktivitasMahasiswaController extends Controller
             'id_matkul' => $id_matkul, 
             'transkrip' => $transkrip,
             'riwayat_pendidikan' => $riwayat_pendidikan,
-            'akm'=>$akm, 
+            'akm'=>$akm_sebelum, 
             'sks_max'=>$sks_max,
             'mk_konversi'=>$mk_konversi,
             'dosen_bimbing_aktivitas'=>$dosen_pembimbing
