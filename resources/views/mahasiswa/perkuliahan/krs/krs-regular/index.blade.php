@@ -219,8 +219,8 @@ Kartu Rencana Studi
                             var isEmptyClass = data.jumlah_kelas == 0
                             var isEmptyRps = data.jumlah_rps == 0
                             var row = '<tr class="' + (isDisabled ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
-                                '<td class="text-center align-middle">' + (index + 1) +'. '+ '</td>' +
-                                '<td class="text-start align-middle">' + data.kode_mata_kuliah + '</td>' +
+                                '<td class="text-center align-middle" style="width: 5%;">' + (index + 1) +'. '+ '</td>' +
+                                '<td class="text-center align-middle" style="width: 10%;">' + data.kode_mata_kuliah + '</td>' +
                                 '<td class="text-start align-middle" style="white-space: nowrap;">' + data.nama_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle" style="white-space: nowrap;">' +
                                 '<button type="button" class="btn btn-warning-light lihat-rps" data-bs-toggle="modal" data-id-matkul="'+ data.id_matkul +'">' +
@@ -546,8 +546,9 @@ Kartu Rencana Studi
             "ordering": true,
             "searching": true,
             "pageLength": 10,
+            "autoWidth": false,
             // "scrollCollapse": false,
-            // "scrollX": true,
+            // "scrollY": "450px",
             "columnDefs": [
                 { "width": "700px", "targets": 6 }, // Kolom lebar 700px
             ]
@@ -558,6 +559,7 @@ Kartu Rencana Studi
             "ordering": true,
             "searching": true,
             "pageLength": 10,
+            "autoWidth": false,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [
@@ -570,6 +572,7 @@ Kartu Rencana Studi
             "ordering": true,
             "searching": true,
             "pageLength": 10,
+            "autoWidth": false,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [
