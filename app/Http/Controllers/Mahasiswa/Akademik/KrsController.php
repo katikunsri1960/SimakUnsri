@@ -471,6 +471,7 @@ class KrsController extends Controller
 
             // Pengecekan apakah KRS sudah diApprove 
             $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                        ->where('nama_kelas_kuliah', 'LIKE', '241%' )
                         ->where('approved', 1)
                         ->count();
                         // dd($approved);
@@ -479,6 +480,7 @@ class KrsController extends Controller
                         ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
                             $query ->where('id_registrasi_mahasiswa', $id_reg);
                         })
+                        ->where('id_semester', '20241' )
                         ->where('approve_krs', 1)
                         ->count();
                         // dd($approved);
@@ -589,13 +591,16 @@ class KrsController extends Controller
                     ->first();
 
         $prodi_non_homebase = KelasKuliah::whereNotIn('id_prodi', [$id_prodi])
-                        ->first();
+                        ->pluck('id_prodi');
 
         // Dapatkan mata kuliah prasyarat
         $prasyarat = PrasyaratMatkul::where('id_matkul', $idMatkul)->pluck('id_matkul_prasyarat');
 
         // Jika tidak ada prasyarat, langsung return true
-        if ($prasyarat->isEmpty()) {
+        if ($prodi_non_homebase != $id_prodi) {
+            return response()->json(['prasyarat_dipenuhi' => true]);
+        }
+        elseif ($prasyarat->isEmpty()) {
             return response()->json(['prasyarat_dipenuhi' => true]);
         }
 
