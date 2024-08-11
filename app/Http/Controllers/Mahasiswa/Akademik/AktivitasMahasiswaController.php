@@ -127,19 +127,22 @@ class AktivitasMahasiswaController extends Controller
                 ->pluck('ips')->first();
 
 // dd($mk_konversi);
-        if($semester_ke == 1 || $semester_ke == 2 ){
+        // Pastikan untuk mengambil nilai ips
+        $ips_value = $ips ? $ips->ips : null;
+
+        if ($semester_ke == 1 || $semester_ke == 2) {
             $sks_max = 20;
-        }else{
-            if ($ips !== null) {
-                if ($ips >= 3.00) {
+        } else {
+            if ($ips_value !== null) {
+                if ($ips_value >= 3.00) {
                     $sks_max = 24;
-                } elseif ($ips >= 2.50 && $ips <= 2.99) {
+                } elseif ($ips_value >= 2.50 && $ips_value <= 2.99) {
                     $sks_max = 21;
-                } elseif ($ips >= 2.00 && $ips <= 2.49) {
+                } elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
                     $sks_max = 18;
-                } elseif ($ips >= 1.50 && $ips <= 1.99) {
+                } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
                     $sks_max = 15;
-                } elseif ($ips < 1.50) {
+                } elseif ($ips_value < 1.50) {
                     $sks_max = 12;
                 } else {
                     $sks_max = 0;

@@ -64,6 +64,7 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('perkuliahan')->group(function () {
                 Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'view'])->name('mahasiswa.krs.index');
                 Route::get('/get-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'get_kelas_kuliah'])->name('mahasiswa.krs.get_kelas_kuliah');
+                Route::get('/get-kelas-kuliah-merdeka', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'get_kelas_kuliah_merdeka'])->name('mahasiswa.krs.get_kelas_kuliah_merdeka');
                 Route::post('/store-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'ambilKelasKuliah'])->name('mahasiswa.krs.store_kelas_kuliah');
                 Route::post('/update-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'update_kelas_kuliah'])->name('mahasiswa.krs.update_kelas_kuliah');
                 Route::delete('/{pesertaKelas}/hapus-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'hapus_kelas_kuliah'])->name('mahasiswa.krs.hapus_kelas_kuliah');

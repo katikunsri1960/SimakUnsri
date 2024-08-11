@@ -219,8 +219,8 @@ Kartu Rencana Studi
                             var isEmptyClass = data.jumlah_kelas == 0
                             var isEmptyRps = data.jumlah_rps == 0
                             var row = '<tr class="' + (isDisabled ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
-                                '<td class="text-center align-middle">' + (index + 1) +'. '+ '</td>' +
-                                '<td class="text-start align-middle">' + data.kode_mata_kuliah + '</td>' +
+                                '<td class="text-center align-middle" style="width: 5%;">' + (index + 1) +'. '+ '</td>' +
+                                '<td class="text-center align-middle" style="width: 10%;">' + data.kode_mata_kuliah + '</td>' +
                                 '<td class="text-start align-middle" style="white-space: nowrap;">' + data.nama_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle" style="white-space: nowrap;">' +
                                 '<button type="button" class="btn btn-warning-light lihat-rps" data-bs-toggle="modal" data-id-matkul="'+ data.id_matkul +'">' +
@@ -231,7 +231,7 @@ Kartu Rencana Studi
                                 '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle">' + data.jumlah_kelas + '</td>' +
                                 '<td class="text-center align-middle">' +
-                                    '<button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmptyClass || isEmptyRps || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
+                                    '<button class="btn btn-success-light lihat-kelas-kuliah-merdeka" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmptyClass || isEmptyRps || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
                                     '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 5px"></div>' +
                                 '</td>' +
                                 '</tr>';
@@ -260,6 +260,42 @@ Kartu Rencana Studi
             // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
             $.ajax({
                 url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
+                type: 'GET',
+                data: {
+                    id_matkul: idMatkul,
+                    _token: csrfToken  // Sertakan CSRF token di sini
+                },
+                success: function(data) {
+                    // Cek apakah data kelas kuliah kosong
+                    if (data.length === 0) {
+                        // Jika kelas kuliah kosong, tampilkan pesan peringatan menggunakan SweetAlert
+                        Swal.fire({
+                            type: 'warning',
+                            title: 'Kelas Kuliah Kosong',
+                            text: 'Tidak ada kelas kuliah yang tersedia untuk mata kuliah ini.'
+                        });
+                    } else {
+                        // Jika ada data kelas kuliah, tampilkan data seperti biasa
+                        displayData(data, resultContainerId);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+
+        // Event listener untuk tombol "Lihat Kelas Kuliah"
+        $(document).on('click', '.lihat-kelas-kuliah-merdeka', function() {
+            var idMatkul = $(this).data('id-matkul');
+            var resultContainerId = '#result-container_' + idMatkul;
+
+            // Dapatkan CSRF token dari meta tag
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
+            $.ajax({
+                url: '{{ route("mahasiswa.krs.get_kelas_kuliah_merdeka") }}',
                 type: 'GET',
                 data: {
                     id_matkul: idMatkul,
@@ -510,8 +546,9 @@ Kartu Rencana Studi
             "ordering": true,
             "searching": true,
             "pageLength": 10,
+            "autoWidth": false,
             // "scrollCollapse": false,
-            // "scrollX": true,
+            // "scrollY": "450px",
             "columnDefs": [
                 { "width": "700px", "targets": 6 }, // Kolom lebar 700px
             ]
@@ -522,6 +559,7 @@ Kartu Rencana Studi
             "ordering": true,
             "searching": true,
             "pageLength": 10,
+            "autoWidth": false,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [
@@ -534,6 +572,7 @@ Kartu Rencana Studi
             "ordering": true,
             "searching": true,
             "pageLength": 10,
+            "autoWidth": false,
             // "scrollCollapse": false,
             // "scrollY": "450px",
             "columnDefs": [

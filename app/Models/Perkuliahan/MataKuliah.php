@@ -118,27 +118,30 @@ class MataKuliah extends Model
 
         // $semester_ke==3;
 
-        if($semester_ke == 1 || $semester_ke == 2 ){
-            $sks_max = 20;
-        }else{
-            if ($ips !== null) {
-                if ($ips >= 3.00) {
-                    $sks_max = 24;
-                } elseif ($ips >= 2.50 && $ips <= 2.99) {
-                    $sks_max = 21;
-                } elseif ($ips >= 2.00 && $ips <= 2.49) {
-                    $sks_max = 18;
-                } elseif ($ips >= 1.50 && $ips <= 1.99) {
-                    $sks_max = 15;
-                } elseif ($ips < 1.50) {
-                    $sks_max = 12;
-                } else {
-                    $sks_max = 0;
-                }
+        // Pastikan untuk mengambil nilai ips
+    $ips_value = $ips ? $ips->ips : null;
+
+    if ($semester_ke == 1 || $semester_ke == 2) {
+        $sks_max = 20;
+    } else {
+        if ($ips_value !== null) {
+            if ($ips_value >= 3.00) {
+                $sks_max = 24;
+            } elseif ($ips_value >= 2.50 && $ips_value <= 2.99) {
+                $sks_max = 21;
+            } elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
+                $sks_max = 18;
+            } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
+                $sks_max = 15;
+            } elseif ($ips_value < 1.50) {
+                $sks_max = 12;
             } else {
                 $sks_max = 0;
             }
+        } else {
+            $sks_max = 0;
         }
+    }
         return $sks_max;
     }
 
@@ -221,15 +224,13 @@ class MataKuliah extends Model
         }
 
         $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 'kelas_kuliah','kelas_kuliah.dosen_pengajar', 'rencana_pembelajaran'])
-                        ->whereHas('kurikulum' , function($query) use($kurikulum, $prodi) {
-                            $query->where('list_kurikulums.id_kurikulum', $kurikulum)
-                                ->where('list_kurikulums.id_prodi', $prodi);
+                        ->whereHas('kurikulum' , function($query) use($kurikulum) {
+                            $query->where('list_kurikulums.id_kurikulum', $kurikulum);
                         })
                         ->whereHas('kelas_kuliah' , function($query) use($id_semester, $prodi) {
                             $query->where('kelas_kuliahs.id_semester', $id_semester->id_semester)
                                     ->where('kelas_kuliahs.id_prodi', $prodi);
                         })
-
                         ->withCount(['kelas_kuliah as jumlah_kelas' => function ($q) use($id_semester, $prodi){
                             $q->where('id_semester', $id_semester->id_semester)
                                 ->where('id_prodi', $prodi);

@@ -40,9 +40,9 @@
                                                         @foreach ($krs_regular as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
-                                                                <td class="text-start align-middle" style="width:5%">{{$data->kode_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle" style="width:10%">{{$data->kode_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
+                                                                <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="width:5%">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="white-space: nowrap; width:20%">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
                                                                 <td class="text-center align-middle" style="width:10%">
@@ -107,11 +107,11 @@
                                                         @foreach ($krs_merdeka as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
-                                                                <td class="text-start align-middle" style="width:5%">{{$data->kode_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle" style="width:10%">{{$data->kode_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
-                                                                <td class="text-center align-middle">{{$data->nama_kelas_kuliah}}</td>
+                                                                <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="width:5%">{{$data->sks_mata_kuliah}}</td>
-                                                                <td class="text-start align-middle" style="white-space: nowrap; width:20%">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
+                                                                <td class="text-center align-middle" style="white-space: nowrap; width:20%">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
                                                                 <td class="text-center align-middle" style="width:10%">
                                                                     <div>
                                                                         {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
@@ -175,12 +175,12 @@
                                                         @foreach ($krs_akt as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
-                                                                <td class="text-center align-middle" style="width:5%" style="white-space: nowrap;">{{ $data->nama_jenis_aktivitas }}</td>
+                                                                <td class="text-center align-middle" style="width:10%" style="white-space: nowrap;">{{ $data->nama_jenis_aktivitas }}</td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->judul }}</td>
                                                                 {{-- <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->nama_semester }}</td> --}}
-                                                                <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->lokasi }}</td>
+                                                                <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{ $data->lokasi }}</td>
                                                                 {{-- <td class="text-center align-middle" style="width:5%">{{ $data->konversi->sks_mata_kuliah }}</td> --}}
-                                                                <td class="text-center align-middle" style="width:10%">
+                                                                <td class="text-center align-middle" style="width:5%">
                                                                     <div>
                                                                         {{ $data->konversi== NULL ? 'Tidak Diisi' : $data->konversi->sks_mata_kuliah }}
                                                                     </div>

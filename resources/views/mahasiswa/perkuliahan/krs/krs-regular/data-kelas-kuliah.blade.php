@@ -118,8 +118,8 @@
                                                                     $noRPS = $data->jumlah_rps == 0;
                                                                 @endphp
                                                                 <tr class="{{ $isEnrolledMatkul ? 'bg-success-light' : '' }} {{ $isDisabled ? 'disabled-row' : '' }}">
-                                                                    <td class="text-center align-middle">{{ $no_a++ }}. </td>
-                                                                    <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->kode_mata_kuliah }}</td>
+                                                                    <td class="text-center align-middle" style="width: 5%;">{{ $no_a++ }}. </td>
+                                                                    <td class="text-center align-middle" style="width: 10%;">{{ $data->kode_mata_kuliah }}</td>
                                                                     <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->nama_mata_kuliah }}</td>
                                                                     <td class="text-center align-middle" style="white-space: nowrap;">
                                                                         <button type="button" class="btn btn-warning-light lihat-rps" data-bs-toggle="modal" data-id-matkul="{{ $data['id_matkul'] }}">
@@ -234,8 +234,8 @@
                                                                         $isLower = $semester_ke < $data['semester'] ;
                                                                     @endphp
                                                                     <tr class="{{ $isEnrolledMatkul ? 'bg-success-light' : '' }}">
-                                                                        <td class="text-center align-middle">{{ $no_a++ }}. </td>
-                                                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['kode_mata_kuliah'] }}</td>
+                                                                        <td class="text-center align-middle" style="width: 5%;">{{ $no_a++ }}. </td>
+                                                                        <td class="text-center align-middle" style="width: 10%;">{{ $data['kode_mata_kuliah'] }}</td>
                                                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $data['nama_mata_kuliah'] }}</td>
                                                                         <td class="text-center align-middle">{{ $data['semester'] }}</td>
                                                                         <td class="text-center align-middle">{{ $data['sks_mata_kuliah'] }}</td>
