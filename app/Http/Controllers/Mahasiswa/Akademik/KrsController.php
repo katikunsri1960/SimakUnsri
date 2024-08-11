@@ -358,7 +358,8 @@ class KrsController extends Controller
 
         $id_prodi = $request->input('id_prodi');
 
-        // $id_prodi ='d8fc7d99-9d8a-4484-b946-3d1e7680314b';
+        // $id_prodi =RiwayatPendidikan::where('id_prodi', $prodi_id)
+        //             ->pluck('id_prodi');
         
 
         // $selectedFakultasId = $request->input('fakultas_id');
@@ -397,6 +398,38 @@ class KrsController extends Controller
                     ->where('id_matkul', $idMatkul)
                     ->where('id_semester',  $semester_aktif)
                     ->where('id_prodi', $prodi_id)
+                    ->orderBy('nama_kelas_kuliah')
+                    ->get();
+
+                    // dd($kelasKuliah);
+        
+        foreach ($kelasKuliah as $kelas) {
+            $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->fk_id, $kelas->id_matkul);
+        }
+       
+
+        return response()->json($kelasKuliah);
+    }
+
+
+    public function get_kelas_kuliah_merdeka(Request $request)
+    {
+        $idMatkul = $request->get('id_matkul');
+
+        $id_reg = auth()->user()->fk_id;
+        // $prodi_id = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+        //             ->pluck('id_prodi');
+
+        $semester_aktif = SemesterAktif::pluck('id_semester');
+
+        $kelasKuliah = KelasKuliah::with(['dosen_pengajar','dosen_pengajar.dosen'])
+                    ->whereHas('dosen_pengajar' , function($query) {
+                            $query->whereNotNull('id_dosen');
+                        })
+                    ->withCount('peserta_kelas')
+                    ->where('id_matkul', $idMatkul)
+                    ->where('id_semester',  $semester_aktif)
+                    // ->where('id_prodi', $prodi_id)
                     ->orderBy('nama_kelas_kuliah')
                     ->get();
 

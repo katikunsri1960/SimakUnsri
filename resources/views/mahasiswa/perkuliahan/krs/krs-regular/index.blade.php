@@ -231,7 +231,7 @@ Kartu Rencana Studi
                                 '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle">' + data.jumlah_kelas + '</td>' +
                                 '<td class="text-center align-middle">' +
-                                    '<button class="btn btn-success-light lihat-kelas-kuliah" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmptyClass || isEmptyRps || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
+                                    '<button class="btn btn-success-light lihat-kelas-kuliah-merdeka" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmptyClass || isEmptyRps || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
                                     '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 5px"></div>' +
                                 '</td>' +
                                 '</tr>';
@@ -260,6 +260,42 @@ Kartu Rencana Studi
             // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
             $.ajax({
                 url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
+                type: 'GET',
+                data: {
+                    id_matkul: idMatkul,
+                    _token: csrfToken  // Sertakan CSRF token di sini
+                },
+                success: function(data) {
+                    // Cek apakah data kelas kuliah kosong
+                    if (data.length === 0) {
+                        // Jika kelas kuliah kosong, tampilkan pesan peringatan menggunakan SweetAlert
+                        Swal.fire({
+                            type: 'warning',
+                            title: 'Kelas Kuliah Kosong',
+                            text: 'Tidak ada kelas kuliah yang tersedia untuk mata kuliah ini.'
+                        });
+                    } else {
+                        // Jika ada data kelas kuliah, tampilkan data seperti biasa
+                        displayData(data, resultContainerId);
+                    }
+                },
+                error: function(error) {
+                    console.error('Error fetching data:', error);
+                }
+            });
+        });
+
+        // Event listener untuk tombol "Lihat Kelas Kuliah"
+        $(document).on('click', '.lihat-kelas-kuliah-merdeka', function() {
+            var idMatkul = $(this).data('id-matkul');
+            var resultContainerId = '#result-container_' + idMatkul;
+
+            // Dapatkan CSRF token dari meta tag
+            var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
+            // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
+            $.ajax({
+                url: '{{ route("mahasiswa.krs.get_kelas_kuliah_merdeka") }}',
                 type: 'GET',
                 data: {
                     id_matkul: idMatkul,
