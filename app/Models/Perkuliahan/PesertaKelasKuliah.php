@@ -101,20 +101,20 @@ class PesertaKelasKuliah extends Model
 
             DB::beginTransaction();
 
-            foreach ($aktivitas as $item) {
-                $item->update([
-                    'approve_krs' => '1',
-                ]);
-            }
-
-            foreach ($data as $item) {
-                $item->update([
-                    'approved' => '1',
-                ]);
-            }
-
             if($akm_aktif->isEmpty())
             {
+                foreach ($aktivitas as $item) {
+                    $item->update([
+                        'approve_krs' => '1',
+                    ]);
+                }
+    
+                foreach ($data as $item) {
+                    $item->update([
+                        'approved' => '1',
+                    ]);
+                }
+
                 $peserta = AktivitasKuliahMahasiswa::create([
                     'id_registrasi_mahasiswa' => $id_reg,
                     'nim' => $riwayat_pendidikan->nim,
@@ -136,11 +136,19 @@ class PesertaKelasKuliah extends Model
                     'status_sync' => 'belum sync',
                 ]);
             }else{
-                $result = [
-                    'status' => 'error',
-                    'message' => 'AKM Mahasiswa sudah ada!',
-                ];
-                return $result;
+
+                foreach ($aktivitas as $item) {
+                    $item->update([
+                        'approve_krs' => '1',
+                    ]);
+                }
+    
+                foreach ($data as $item) {
+                    $item->update([
+                        'approved' => '1',
+                    ]);
+                }
+                
             }
 
             DB::commit();
