@@ -98,14 +98,14 @@ class KrsController extends Controller
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select, $data_akt_ids);
 
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select, $semester_aktif->id_semester);
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select, $riwayat_pendidikan->id_prodi);
 
     // DATA MK_MERDEKA
         $fakultas=Fakultas::all();
 
         // MATAKULIAH TANPA GANJIL GENAP
         $mk_regular = $db->getMKRegular($riwayat_pendidikan, $data_akt_ids, $semester_select, $riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
-        // dd($sks_max);
+        // dd($riwayat_pendidikan->id_prodi);
 
     // TAGIHAN PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
@@ -370,7 +370,7 @@ class KrsController extends Controller
         $db = new MataKuliah();
 
         // Query untuk mengambil data mata kuliah merdeka berdasarkan id_prodi yang dipilih
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif);
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif, $id_prodi);
 
         $mkMerdeka = $db->getMKMerdeka($semester_aktif, $id_prodi);
         // dd($mkMerdeka);
@@ -485,7 +485,7 @@ class KrsController extends Controller
 
             $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
             $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
-            $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester);
+            $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_prodi);
 
             $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
@@ -702,7 +702,7 @@ class KrsController extends Controller
         // $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
 
         
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester)->where('approved', 1);
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester, $riwayat_pendidikan->id_prodi)->where('approved', 1);
         
         // dd($krs_akt);
 
