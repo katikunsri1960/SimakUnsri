@@ -66,7 +66,7 @@ class RencanaPembelajaranController extends Controller
         $id_dosen = auth()->user()->fk_id;
         $semester_aktif = SemesterAktif::with(['semester'])->first();
         $matkul = MataKuliah::where('id_matkul',$id_matkul)->first();
-        $rps = RencanaPembelajaran::where('id_matkul',$id_matkul)->first();
+        $rps = RencanaPembelajaran::where('id_matkul',$id_matkul)->get();
 
         //Validate request data
         $data = $request->validate([
@@ -82,7 +82,7 @@ class RencanaPembelajaranController extends Controller
         //Hitung jumlah RPS yang di buat
         $jumlah_pertemuan=count($request->pertemuan);
 
-        if(is_null($rps)){
+        if(count($rps) < 16){
             if($jumlah_pertemuan > 0){
                 $data_dosen = DosenPengajarKelasKuliah::with('kelas_kuliah')->whereHas('kelas_kuliah', function ($query) use ($id_matkul, $semester_aktif){
                     $query->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester);
