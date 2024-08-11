@@ -469,14 +469,24 @@ class KrsController extends Controller
 
             $semester_aktif = SemesterAktif::first();
 
-            // $approved = PesertaKelasKuliah::where('id_regitrasi_mahasiswa', $id_reg)
-            //             // ->where('approved', 1)
-            //             ->pluck('approved')->first();
-            //             dd($approved);
-            // // Pengecekan apakah KRS sudah diApprove            
-            // if ( $approved ==1) {
-            //     return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah, KRS anda telah disetujui Pembimbing Akademik.'], 400);
-            // }
+            // Pengecekan apakah KRS sudah diApprove 
+            $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                        ->where('approved', 1)
+                        ->count();
+                        // dd($approved);
+
+            $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa'])
+                        ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
+                            $query ->where('id_registrasi_mahasiswa', $id_reg);
+                        })
+                        ->where('approve_krs', 1)
+                        ->count();
+                        // dd($approved);
+                       
+            if ( $approved_krs > 0 || $approved_akt > 0) {
+                return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
+                // return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
+            }
 
             $db = new MataKuliah();
             $db_akt = new AktivitasMahasiswa();
@@ -574,6 +584,12 @@ class KrsController extends Controller
     {
         $idMatkul = $request->get('id_matkul');
         $id_reg = $request->get('id_reg');
+
+        $id_prodi = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                    ->first();
+
+        $prodi_non_homebase = KelasKuliah::whereNotIn('id_prodi', [$id_prodi])
+                        ->first();
 
         // Dapatkan mata kuliah prasyarat
         $prasyarat = PrasyaratMatkul::where('id_matkul', $idMatkul)->pluck('id_matkul_prasyarat');

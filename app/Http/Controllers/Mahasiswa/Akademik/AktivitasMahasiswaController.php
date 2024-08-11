@@ -226,12 +226,31 @@ class AktivitasMahasiswaController extends Controller
 
             $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
             $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
-            $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester);
+            $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_prodi);
 
             $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
             $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
+
+            // Pengecekan apakah KRS sudah diApprove 
+            $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                        ->where('approved', 1)
+                        ->count();
+                        // dd($approved);
+
+            $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa'])
+                        ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
+                            $query ->where('id_registrasi_mahasiswa', $id_reg);
+                        })
+                        ->where('approve_krs', 1)
+                        ->count();
+                        // dd($approved);
+                       
+            if ( $approved_krs > 0 || $approved_akt > 0) {
+                // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
+                return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
+            }
 
             // dd($total_sks);
             // Periksa jumlah dosen pembimbing yang dipilih
@@ -381,11 +400,20 @@ class AktivitasMahasiswaController extends Controller
     
     public function hapusAktivitas($id)
     {
-        $id_aktivitas=AktivitasMahasiswa::where('id', $id)->pluck('id_aktivitas');
+        $aktivitas=AktivitasMahasiswa::where('id', $id)->first();
+        $id_aktivitas=$aktivitas->where('id', $id)->pluck('id_aktivitas');
+        
         
         DB::beginTransaction();
 
         try {
+
+            if ($aktivitas->approve_krs ==1) {
+                // return redirect()->back()->with('error', 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.');
+                // return response()->json(['message' => 'Anda tidak dapat menghapus Mata Kuliah ini.'], 400);
+                return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas ini, Aktivitas telah disetujui Dosen Pembimbing Akademik');
+            }
+    
             // Menghapus bimbingan mahasiswa
            $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
             if ($bimbing) {

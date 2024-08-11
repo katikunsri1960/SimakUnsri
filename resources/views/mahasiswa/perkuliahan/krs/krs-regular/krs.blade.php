@@ -207,7 +207,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) || $data->approved_krs == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approve_krs == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
