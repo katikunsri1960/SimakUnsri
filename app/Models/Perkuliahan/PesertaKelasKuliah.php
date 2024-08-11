@@ -60,7 +60,7 @@ class PesertaKelasKuliah extends Model
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
 
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester);
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_prodi);
 
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
