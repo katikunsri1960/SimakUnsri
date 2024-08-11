@@ -597,10 +597,11 @@ class KrsController extends Controller
         $prasyarat = PrasyaratMatkul::where('id_matkul', $idMatkul)->pluck('id_matkul_prasyarat');
 
         // Jika tidak ada prasyarat, langsung return true
-        if ($prodi_non_homebase != $id_prodi) {
-            return response()->json(['prasyarat_dipenuhi' => true]);
-        }
-        elseif ($prasyarat->isEmpty()) {
+        // if ($prodi_non_homebase != $id_prodi) {
+        //     return response()->json(['prasyarat_dipenuhi' => true]);
+        // }
+        // else
+        if ($prasyarat->isEmpty()) {
             return response()->json(['prasyarat_dipenuhi' => true]);
         }
 
