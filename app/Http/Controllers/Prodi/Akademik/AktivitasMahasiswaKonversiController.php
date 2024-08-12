@@ -45,9 +45,6 @@ class AktivitasMahasiswaKonversiController extends Controller
                     ->orderBy('nama_jenis_aktivitas')
                     ->get();
 
-        // $jenjang_pendidikan=ProgramStudi::where('id_prodi', $prodi_id)->pluck('nama_jenjang_pendidikan')->first();
-
-        // dd($jenis_aktivitas);
         return view('prodi.data-aktivitas.aktivitas-mahasiswa.store', compact('kurikulum_aktif', 'jenis_aktivitas'));
     }
 
@@ -55,10 +52,16 @@ class AktivitasMahasiswaKonversiController extends Controller
     {
         $prodi_id = auth()->user()->fk_id;
         $kurikulum_id = $request->input('kurikulum_id');
+        
+        $id_matkul = Konversi::where('id_prodi', $prodi_id)
+                ->where('id_kurikulum', $kurikulum_id)
+                ->pluck('id_matkul');
+
         $search = $request->input('q');
 
         $mk_konversi = MatkulKurikulum::where('id_kurikulum', $kurikulum_id)
             ->where('id_prodi', $prodi_id)
+            ->whereNotIn('id_matkul', $id_matkul)
             ->where('nama_mata_kuliah', 'LIKE', "%$search%")
             ->get();
 
