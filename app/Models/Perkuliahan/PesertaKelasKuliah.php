@@ -149,7 +149,7 @@ class PesertaKelasKuliah extends Model
                     ->whereNotIn('nilai_huruf', ['F', ''])
                     ->groupBy('id_registrasi_mahasiswa')
                     ->first();
-                    // dd($transkrip);
+                    dd($transkrip);
 
         $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
                     ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
@@ -158,7 +158,7 @@ class PesertaKelasKuliah extends Model
                     ->where('id_semester', $semester_aktif->id_semester)
                     ->get();
 
-        // dd($aktivitas);
+
         try {
 
             DB::beginTransaction();
@@ -305,15 +305,17 @@ class PesertaKelasKuliah extends Model
             ];
 
         } catch (\Exception $e) {
-            return $e->getMessage();
+
             DB::rollBack();
 
             $result = [
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan!',
+                'message' => 'Terjadi kesalahan!'. $e->getMessage(),
             ];
 
             return $result;
+
+
         }
 
         return $result;
