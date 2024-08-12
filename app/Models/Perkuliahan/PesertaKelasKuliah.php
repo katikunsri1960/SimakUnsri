@@ -165,19 +165,26 @@ class PesertaKelasKuliah extends Model
 
             if($akm_aktif){
 
-                if($akm_aktif->isEmpty())
-                {
-                    foreach ($aktivitas as $item) {
-                        $item->update([
-                            'approve_krs' => '1',
-                        ]);
-                    }
+                if($akm_aktif->feeder == '1'){
+                    $result = [
+                        'status' => 'error',
+                        'message' => 'Data sudah di sinkronisasi ke feeder!',
+                    ];
 
-                    foreach ($data as $item) {
-                        $item->update([
-                            'approved' => '1',
-                        ]);
-                    }
+                    return $result;
+                }
+
+                foreach ($aktivitas as $item) {
+                    $item->update([
+                        'approve_krs' => '1',
+                    ]);
+                }
+
+                foreach ($data as $item) {
+                    $item->update([
+                        'approved' => '1',
+                    ]);
+                }
 
                 if($data_mbkm > 0){
 
@@ -229,17 +236,17 @@ class PesertaKelasKuliah extends Model
 
             }else{
 
-                    foreach ($aktivitas as $item) {
-                        $item->update([
-                            'approve_krs' => '1',
-                        ]);
-                    }
+                foreach ($aktivitas as $item) {
+                    $item->update([
+                        'approve_krs' => '1',
+                    ]);
+                }
 
-                    foreach ($data as $item) {
-                        $item->update([
-                            'approved' => '1',
-                        ]);
-                    }
+                foreach ($data as $item) {
+                    $item->update([
+                        'approved' => '1',
+                    ]);
+                }
 
                 if($data_mbkm > 0){
 
@@ -288,13 +295,6 @@ class PesertaKelasKuliah extends Model
                     ]);
 
                 }
-            }else{
-                $result = [
-                    'status' => 'error',
-                    'message' => 'Data sudah di sinkronisasi ke feeder!',
-                ];
-
-                return $result;
             }
 
             DB::commit();
