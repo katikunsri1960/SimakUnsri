@@ -41,12 +41,13 @@ class PesertaKelasKuliah extends Model
                 ->where('id_registrasi_mahasiswa', $id_reg)
                 ->orderBy('kode_mata_kuliah')
                 ->get();
+
         $db = new MataKuliah();
         $db_akt = new AktivitasMahasiswa();
 
         $akm_aktif= AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $semester_aktif->id_semester)
-                ->get();
+                ->first();
                 // dd($akm_aktif);
 
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
@@ -67,17 +68,6 @@ class PesertaKelasKuliah extends Model
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
-
-        // dd($sks_max);
-
-        // // Check if the total SKS exceeds the maximum allowed SKS
-        // if ($total_sks > $sks_max) {
-        //     $result = [
-        //         'status' => 'error',
-        //         'message' => 'AKM mahasiswa semester lalu belum diisikan, Silahkan Melapor ke Admin Prodi!',
-        //     ];
-        //     return $result;
-        // }
 
         $transkrip = TranskripMahasiswa::select(
                         DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
@@ -101,54 +91,85 @@ class PesertaKelasKuliah extends Model
 
             DB::beginTransaction();
 
-            if($akm_aktif->isEmpty())
-            {
-                foreach ($aktivitas as $item) {
-                    $item->update([
-                        'approve_krs' => '1',
-                    ]);
-                }
-    
-                foreach ($data as $item) {
-                    $item->update([
-                        'approved' => '1',
-                    ]);
-                }
+            if($akm_aktif->feeder == '0'){
 
-                $peserta = AktivitasKuliahMahasiswa::create([
-                    'id_registrasi_mahasiswa' => $id_reg,
-                    'nim' => $riwayat_pendidikan->nim,
-                    'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                    'id_prodi' => $riwayat_pendidikan->id_prodi,
-                    'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                    'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                    'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                    'id_semester'=> $semester_aktif->id_semester,
-                    'nama_semester'=> $semester_aktif->semester->nama_semester,
-                    'id_status_mahasiswa' => 'A',
-                    'nama_status_mahasiswa' => 'Aktif',
-                    'ips'=> '0.00',
-                    'ipk'=> $transkrip->ipk,
-                    'sks_semester'=> $total_sks,
-                    'sks_total'=>$transkrip->total_sks,
-                    'biaya_kuliah_smt' => 0,
-                    'id_pembiayaan' => NULL,
-                    'status_sync' => 'belum sync',
-                ]);
+                if($akm_aktif->isEmpty())
+                {
+                    foreach ($aktivitas as $item) {
+                        $item->update([
+                            'approve_krs' => '1',
+                        ]);
+                    }
+        
+                    foreach ($data as $item) {
+                        $item->update([
+                            'approved' => '1',
+                        ]);
+                    }
+
+                    $peserta = AktivitasKuliahMahasiswa::create([
+                        'id_registrasi_mahasiswa' => $id_reg,
+                        'nim' => $riwayat_pendidikan->nim,
+                        'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                        'id_prodi' => $riwayat_pendidikan->id_prodi,
+                        'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+                        'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+                        'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+                        'id_semester'=> $semester_aktif->id_semester,
+                        'nama_semester'=> $semester_aktif->semester->nama_semester,
+                        'id_status_mahasiswa' => 'A',
+                        'nama_status_mahasiswa' => 'Aktif',
+                        'ips'=> '0.00',
+                        'ipk'=> $transkrip->ipk,
+                        'sks_semester'=> $total_sks,
+                        'sks_total'=>$transkrip->total_sks,
+                        'biaya_kuliah_smt' => 0,
+                        'id_pembiayaan' => NULL,
+                        'status_sync' => 'belum sync',
+                    ]);
+                }else{
+
+                    foreach ($aktivitas as $item) {
+                        $item->update([
+                            'approve_krs' => '1',
+                        ]);
+                    }
+        
+                    foreach ($data as $item) {
+                        $item->update([
+                            'approved' => '1',
+                        ]);
+                    }
+
+                    $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                        'id_registrasi_mahasiswa' => $id_reg,
+                        'nim' => $riwayat_pendidikan->nim,
+                        'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                        'id_prodi' => $riwayat_pendidikan->id_prodi,
+                        'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+                        'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+                        'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+                        'id_semester'=> $semester_aktif->id_semester,
+                        'nama_semester'=> $semester_aktif->semester->nama_semester,
+                        'id_status_mahasiswa' => 'A',
+                        'nama_status_mahasiswa' => 'Aktif',
+                        'ips'=> '0.00',
+                        'ipk'=> $transkrip->ipk,
+                        'sks_semester'=> $total_sks,
+                        'sks_total'=>$transkrip->total_sks,
+                        'biaya_kuliah_smt' => 0,
+                        'id_pembiayaan' => NULL,
+                        'status_sync' => 'belum sync',
+                    ]);
+
+                }
             }else{
-
-                foreach ($aktivitas as $item) {
-                    $item->update([
-                        'approve_krs' => '1',
-                    ]);
-                }
+                $result = [
+                    'status' => 'error',
+                    'message' => 'Data sudah di sinkronisasi ke feeder!',
+                ];
     
-                foreach ($data as $item) {
-                    $item->update([
-                        'approved' => '1',
-                    ]);
-                }
-                
+                return $result;
             }
 
             DB::commit();
