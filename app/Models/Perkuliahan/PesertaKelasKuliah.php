@@ -189,6 +189,7 @@ class PesertaKelasKuliah extends Model
                 if($data_mbkm > 0){
 
                     $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                        'feeder' => 0,
                         'id_registrasi_mahasiswa' => $id_reg,
                         'nim' => $riwayat_pendidikan->nim,
                         'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
@@ -212,6 +213,7 @@ class PesertaKelasKuliah extends Model
                 }else{
 
                     $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                        'feeder' => 0,
                         'id_registrasi_mahasiswa' => $id_reg,
                         'nim' => $riwayat_pendidikan->nim,
                         'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
