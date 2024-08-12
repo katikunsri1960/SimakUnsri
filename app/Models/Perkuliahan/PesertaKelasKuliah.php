@@ -31,6 +31,70 @@ class PesertaKelasKuliah extends Model
         return $this->hasMany(NilaiPerkuliahan::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
     }
 
+    public function batal_approve($id_reg)
+    {
+        $semester_aktif = SemesterAktif::first();
+
+        if (now()->isBefore($semester_aktif->krs_mulai) || now()->isAfter($semester_aktif->krs_selesai)) {
+            return [
+                'status' => 'error',
+                'message' => now()->isBefore($semester_aktif->krs_mulai) ? 'Masa Pengisian KRS Belum Dimulai!!' : 'Masa Pengisian KRS Sudah Berakhir!!',
+            ];
+        }
+
+        $data = $this->with(['kelas_kuliah', 'kelas_kuliah.matkul'])
+                    ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
+                        $query->where('id_semester', $semester_aktif->id_semester);
+                    })
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->orderBy('kode_mata_kuliah')
+                    ->get();
+
+        $db_akt = new AktivitasMahasiswa();
+
+        $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
+                        ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
+                            $query->where('id_registrasi_mahasiswa', $id_reg);
+                        })
+                        ->where('id_semester', $semester_aktif->id_semester)
+                        ->get();
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($aktivitas as $item) {
+                $item->update([
+                    'approve_krs' => '0',
+                ]);
+            }
+
+            foreach ($data as $item) {
+                $item->update([
+                    'approved' => '0',
+                ]);
+            }
+
+            DB::commit();
+
+            $result = [
+                'status' => 'success',
+                'message' => 'Persetujuan KRS berhasil dibatalkan!',
+            ];
+
+        } catch (\Exception $e) {
+            return $e->getMessage();
+            DB::rollBack();
+
+            $result = [
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan! '. $e->getMessage(),
+            ];
+
+            return $result;
+        }
+
+    }
+
     public function approve_all($id_reg)
     {
         $semester_aktif = SemesterAktif::first();
@@ -57,7 +121,7 @@ class PesertaKelasKuliah extends Model
 
         list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
-        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk); 
+        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
 
@@ -100,7 +164,7 @@ class PesertaKelasKuliah extends Model
                             'approve_krs' => '1',
                         ]);
                     }
-        
+
                     foreach ($data as $item) {
                         $item->update([
                             'approved' => '1',
@@ -134,7 +198,7 @@ class PesertaKelasKuliah extends Model
                             'approve_krs' => '1',
                         ]);
                     }
-        
+
                     foreach ($data as $item) {
                         $item->update([
                             'approved' => '1',
@@ -168,7 +232,7 @@ class PesertaKelasKuliah extends Model
                     'status' => 'error',
                     'message' => 'Data sudah di sinkronisasi ke feeder!',
                 ];
-    
+
                 return $result;
             }
 

@@ -18,7 +18,7 @@ use Ramsey\Uuid\Uuid;
 
 class PembimbingMahasiswaController extends Controller
 {
-    public function bimbingan_akademik() 
+    public function bimbingan_akademik()
     {
         $semester = SemesterAktif::with(['semester'])->first();
 
@@ -88,7 +88,18 @@ class PembimbingMahasiswaController extends Controller
         $store = $db->approve_all($id);
         // dd($store);
         return redirect()->back()->with($store['status'], $store['message']);
-    } 
+    }
+
+    public function bimbingan_akademik_batal_approve(RiwayatPendidikan $riwayat)
+    {
+        $id = $riwayat->id_registrasi_mahasiswa;
+
+        $db = new PesertaKelasKuliah();
+
+        $req = $db->batal_approve($id);
+
+        return redirect()->back()->with($req['status'], $req['message']);
+    }
 
     public function bimbingan_non_akademik()
     {
@@ -312,7 +323,7 @@ class PembimbingMahasiswaController extends Controller
                     }
                 }
             }else{
-                return redirect()->back()->with('success', 'Data Berhasil di Tambahkan'); 
+                return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
             }
 
             DB::commit();
