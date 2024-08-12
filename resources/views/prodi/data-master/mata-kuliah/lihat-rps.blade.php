@@ -62,7 +62,7 @@ Lihat RPS Mata Kuliah
                                 @csrf
                                 <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count() == 0)
                                     disabled
-                                @endif>Setujui Semua RPS</button>
+                                @endif>Setujui RPS</button>
                                 </form>
                             </div>
                         </div>
