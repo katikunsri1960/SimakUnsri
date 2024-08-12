@@ -501,6 +501,7 @@ Route::group(['middleware' => ['auth']], function() {
                 // Route Pengaturan akun
                 Route::prefix('akun')->group(function(){
                     Route::get('/', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun'])->name('univ.pengaturan.akun');
+                    Route::get('/data', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_data'])->name('univ.pengaturan.akun.data');
                     Route::post('/store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_store'])->name('univ.pengaturan.akun.store');
                     Route::patch('/update/{user}', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_update'])->name('univ.pengaturan.akun.update');
                     Route::delete('/delete/{user}', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_destroy'])->name('univ.pengaturan.akun.delete');

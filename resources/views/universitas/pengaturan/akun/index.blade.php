@@ -59,16 +59,14 @@ Pengaturan Akun
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $user)
+                                {{-- @foreach ($data as $user)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$user->role}}</td>
                                     <td class="text-start align-middle">{{$user->username}}</td>
                                     <td class="text-start align-middle">{{$user->name}}</td>
                                     <td class="text-center align-middle">
-                                        {{-- <a href="{{route('univ.pengaturan.akun.edit', $user->id)}}"
-                                            class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></a>
-                                        --}}
+
                                         <form action="{{route('univ.pengaturan.akun.delete', $user->id)}}" method="post"
                                             class="delete-form" id="deleteForm{{$user->id}}" data-id="{{$user->id}}">
                                             @csrf
@@ -78,7 +76,7 @@ Pengaturan Akun
                                         </form>
                                     </td>
                                 </tr>
-                                @endforeach
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
@@ -97,7 +95,70 @@ Pengaturan Akun
 <script>
     $(function () {
         // "use strict";
-        $('#data').DataTable();
+        var table = $('#data').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: {
+                url: '{{ route('univ.pengaturan.akun.data') }}',
+                type: 'GET',
+                error: function(xhr, error, thrown) {
+                    alert('An error occurred: ' + thrown);
+                }
+            },
+            columns: [
+                {
+                    data: null,
+                    searchable: false,
+                    class: "text-center align-middle",
+                    sortable: false,
+                    render: function(data, type, row, meta) {
+                        return meta.row + meta.settings._iDisplayStart + 1;
+                    }
+                },
+                { data: 'role', name: 'role', class: 'text-start', searchable: true, orderData: [0] },
+                { data: 'username', name: 'username', class: 'text-center', searchable: true, orderData: [1] },
+                { data: 'name', name: 'name', class: 'text-start', searchable: true, orderData: [2] },
+                {
+                    data: null,
+                    searchable: false,
+                    class: "text-center align-middle",
+                    sortable: false,
+                    render: function(data, type, row) {
+                        var userId = row.id; // Assuming 'id' is the user ID field
+                        return `
+                            <form action="{{ route('univ.pengaturan.akun.delete', '') }}/${userId}" method="post"
+                                class="delete-form" id="deleteForm${userId}" data-id="${userId}">
+                                @csrf
+                                @method('delete')
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                        `;
+                    }
+                }
+            ],
+            drawCallback: function() {
+                // Attach the event listener for the delete forms after the table is drawn
+                $('.delete-form').off('submit').on('submit', function(e) {
+                    e.preventDefault();
+                    var formId = $(this).data('id');
+                    swal({
+                        title: 'Apakah Anda Yakin?',
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#6c757d',
+                        confirmButtonText: 'Ya, simpan!'
+                    }, function(isConfirm) {
+                        if (isConfirm) {
+                            $(`#deleteForm${formId}`).unbind('submit').submit();
+                            $('#spinner').show();
+                        }
+                    });
+                });
+            }
+        });
 
         $('#fk_id').select2({
             placeholder: 'Pilih Salah Satu',
@@ -215,23 +276,6 @@ Pengaturan Akun
         });
 
 
-        $('.delete-form').submit(function(e){
-            e.preventDefault();
-            var formId = $(this).data('id');
-            swal({
-                title: 'Apakah Anda Yakin?',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Ya, simpan!'
-            }, function(isConfirm){
-                if (isConfirm) {
-                    $(`#deleteForm${formId}`).unbind('submit').submit();
-                    $('#spinner').show();
-                }
-            });
-        });
 
     });
 </script>
