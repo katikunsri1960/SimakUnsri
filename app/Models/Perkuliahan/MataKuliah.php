@@ -121,6 +121,9 @@ class MataKuliah extends Model
         // Pastikan untuk mengambil nilai ips
     $ips_value = $ips ? $ips->ips : null;
 
+    //  dd($ips);
+
+
     if ($semester_ke == 1 || $semester_ke == 2) {
         $sks_max = 20;
     } else {

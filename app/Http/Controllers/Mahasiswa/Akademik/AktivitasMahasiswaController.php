@@ -124,25 +124,29 @@ class AktivitasMahasiswaController extends Controller
                 ->where('id_semester', $akm_sebelum)
                 // ->where('id_status_mahasiswa', ['O'])
                 ->orderBy('id_semester', 'DESC')
-                ->pluck('ips')->first();
+                // ->pluck('ips')
+                ->first();
 
-// dd($mk_konversi);
+
+
         // Pastikan untuk mengambil nilai ips
-        $ips_value = $ips ? $ips->ips : null;
+        $ips = $ips ?  $ips->ips : null;
+
+        // dd($ips);
 
         if ($semester_ke == 1 || $semester_ke == 2) {
             $sks_max = 20;
         } else {
-            if ($ips_value !== null) {
-                if ($ips_value >= 3.00) {
+            if ($ips !== null) {
+                if ($ips >= 3.00) {
                     $sks_max = 24;
-                } elseif ($ips_value >= 2.50 && $ips_value <= 2.99) {
+                } elseif ($ips >= 2.50 && $ips <= 2.99) {
                     $sks_max = 21;
-                } elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
+                } elseif ($ips >= 2.00 && $ips <= 2.49) {
                     $sks_max = 18;
-                } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
+                } elseif ($ips >= 1.50 && $ips <= 1.99) {
                     $sks_max = 15;
-                } elseif ($ips_value < 1.50) {
+                } elseif ($ips < 1.50) {
                     $sks_max = 12;
                 } else {
                     $sks_max = 0;
@@ -235,14 +239,20 @@ class AktivitasMahasiswaController extends Controller
 
             // Pengecekan apakah KRS sudah diApprove 
             $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                        ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
+                            $query ->where('id_semester', $semester_aktif->id_semester);
+                        })
+                        ->where('id_registrasi_mahasiswa', $id_reg)
+                        ->where('nama_kelas_kuliah', 'LIKE', '241%' )
                         ->where('approved', 1)
                         ->count();
                         // dd($approved);
 
-            $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa'])
+            $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas'])
                         ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
                             $query ->where('id_registrasi_mahasiswa', $id_reg);
                         })
+                        ->where('id_semester', $semester_aktif->id_semester )
                         ->where('approve_krs', 1)
                         ->count();
                         // dd($approved);

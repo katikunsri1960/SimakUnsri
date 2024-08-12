@@ -119,6 +119,14 @@ class PesertaKelasKuliah extends Model
                 ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                 ->first();
 
+        $data_mbkm = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
+                    ->whereHas('kelas_kuliah', function($query) use ($semester_aktif,$riwayat_pendidikan) {
+                        $query->where('id_semester', $semester_aktif->id_semester)->whereNot('id_prodi', $riwayat_pendidikan->id_prodi);
+                    })
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->orderBy('kode_mata_kuliah')
+                    ->count();
+
         list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
@@ -155,7 +163,7 @@ class PesertaKelasKuliah extends Model
 
             DB::beginTransaction();
 
-            if($akm_aktif->feeder == '0'){
+            if($akm_aktif){
 
                 if($akm_aktif->isEmpty())
                 {
@@ -171,7 +179,32 @@ class PesertaKelasKuliah extends Model
                         ]);
                     }
 
-                    $peserta = AktivitasKuliahMahasiswa::create([
+                if($data_mbkm > 0){
+
+                    $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                        'id_registrasi_mahasiswa' => $id_reg,
+                        'nim' => $riwayat_pendidikan->nim,
+                        'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                        'id_prodi' => $riwayat_pendidikan->id_prodi,
+                        'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+                        'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+                        'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+                        'id_semester'=> $semester_aktif->id_semester,
+                        'nama_semester'=> $semester_aktif->semester->nama_semester,
+                        'id_status_mahasiswa' => 'M',
+                        'nama_status_mahasiswa' => 'Kampus Merdeka',
+                        'ips'=> '0.00',
+                        'ipk'=> $transkrip->ipk,
+                        'sks_semester'=> $total_sks,
+                        'sks_total'=>$transkrip->total_sks,
+                        'biaya_kuliah_smt' => 0,
+                        'id_pembiayaan' => NULL,
+                        'status_sync' => 'belum sync',
+                    ]);
+
+                }else{
+
+                    $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
                         'id_registrasi_mahasiswa' => $id_reg,
                         'nim' => $riwayat_pendidikan->nim,
                         'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
@@ -191,7 +224,10 @@ class PesertaKelasKuliah extends Model
                         'id_pembiayaan' => NULL,
                         'status_sync' => 'belum sync',
                     ]);
-                }else{
+
+                }
+
+            }else{
 
                     foreach ($aktivitas as $item) {
                         $item->update([
@@ -205,7 +241,32 @@ class PesertaKelasKuliah extends Model
                         ]);
                     }
 
-                    $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                if($data_mbkm > 0){
+
+                    $peserta = AktivitasKuliahMahasiswa::create([
+                        'id_registrasi_mahasiswa' => $id_reg,
+                        'nim' => $riwayat_pendidikan->nim,
+                        'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                        'id_prodi' => $riwayat_pendidikan->id_prodi,
+                        'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+                        'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+                        'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+                        'id_semester'=> $semester_aktif->id_semester,
+                        'nama_semester'=> $semester_aktif->semester->nama_semester,
+                        'id_status_mahasiswa' => 'M',
+                        'nama_status_mahasiswa' => 'Kampus Merdeka',
+                        'ips'=> '0.00',
+                        'ipk'=> $transkrip->ipk,
+                        'sks_semester'=> $total_sks,
+                        'sks_total'=>$transkrip->total_sks,
+                        'biaya_kuliah_smt' => 0,
+                        'id_pembiayaan' => NULL,
+                        'status_sync' => 'belum sync',
+                    ]);
+
+                }else{
+
+                    $peserta = AktivitasKuliahMahasiswa::create([
                         'id_registrasi_mahasiswa' => $id_reg,
                         'nim' => $riwayat_pendidikan->nim,
                         'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
