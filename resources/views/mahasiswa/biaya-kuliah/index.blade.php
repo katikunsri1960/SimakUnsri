@@ -47,19 +47,37 @@ Biaya Kuliah
     </div>	
 </section>
 @endsection
+@push('css')
+<meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
 @push('js')
 <script src="https://cdn.jsdelivr.net/npm/sweetalert@1.1.3/dist/sweetalert.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert@1.1.3/dist/sweetalert.css">
 
 <!-- Kode HTML dan Blade Anda di sini -->
 <script>
+    $(document).ready(function() {
+        $('#tagihan').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+        });
+        
+        $('#pembayaran').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+        });
+    });
+
+
     document.addEventListener('DOMContentLoaded', function() {
         // Mengambil data dari Blade
         var statusBeasiswa = @json($beasiswa);
-        var statusBayar = @json($tagihan->pembayaran);
+        var statusBayar = @json($tagihan);
         
         // Mengecek apakah status bayar adalah NULL
-        if (statusBeasiswa !== null || statusBayar !== null) {
+        if (statusBeasiswa !== null || statusBayar->pembayaran !== null) {
             // Menampilkan SweetAlert jika status bayar adalah NULL
         }
         else 
@@ -78,5 +96,6 @@ Biaya Kuliah
         }
         
     });
+    
 </script>
 @endpush

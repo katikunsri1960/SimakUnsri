@@ -57,8 +57,8 @@ Dashboard
                 </div>
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        @if (!empty($transkrip->ipk))
-                            <h2 class="mt-5 mb-0">{{$transkrip->ipk}}</h2>
+                        @if (!empty($akm[0]->ipk))
+                            <h2 class="mt-5 mb-0">{{$akm[0]->ipk}}</h2>
                         @else
                             <h2 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h2>
                         @endif
@@ -178,7 +178,7 @@ Dashboard
 <script>
     $(document).ready(function() {
         // Data Grafik SKS
-        var data = {!! json_encode($smt->map(function($item) {
+        var data = {!! json_encode($akm->map(function($item) {
             return $item->sks_semester;
         })) !!};
 
@@ -270,7 +270,7 @@ Dashboard
 
     $(document).ready(function() {
         // Data Grafik IPS
-        var data = {!! json_encode($smt->map(function($item) {
+        var data = {!! json_encode($akm->map(function($item) {
             return $item->ips;
         })) !!};
 
