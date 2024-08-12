@@ -105,12 +105,12 @@ Bimbingan Akademik Dosen
                                 </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
+                            {{-- <tfoot>
                                 <tr>
                                     <th class="text-center align-middle" colspan="3">Total</th>
                                     <th class="text-center align-middle">{{$data->count() > 0 ? $data->sum('sks_mata_kuliah') : '-'}}</th>
                                 </tr>
-                            </tfoot>
+                            </tfoot> --}}
 					  </table>
                     </div>
                 </div>
