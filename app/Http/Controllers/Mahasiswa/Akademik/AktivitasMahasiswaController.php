@@ -239,14 +239,20 @@ class AktivitasMahasiswaController extends Controller
 
             // Pengecekan apakah KRS sudah diApprove 
             $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                        ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
+                            $query ->where('id_semester', $semester_aktif->id_semester);
+                        })
+                        ->where('id_registrasi_mahasiswa', $id_reg)
+                        ->where('nama_kelas_kuliah', 'LIKE', '241%' )
                         ->where('approved', 1)
                         ->count();
                         // dd($approved);
 
-            $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa'])
+            $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas'])
                         ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
                             $query ->where('id_registrasi_mahasiswa', $id_reg);
                         })
+                        ->where('id_semester', $semester_aktif->id_semester )
                         ->where('approve_krs', 1)
                         ->count();
                         // dd($approved);
