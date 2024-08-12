@@ -56,7 +56,7 @@ Rencana Pembelajaran Semester
                                 <input
                                     type="text"
                                     class="form-control"
-                                    name="jadwanama_mata_kuliahl_kelas"
+                                    name="nama_mata_kuliah_kelas"
                                     id="nama_mata_kuliah"
                                     aria-describedby="helpId"
                                     value="{{$matkul->nama_mata_kuliah}}"
@@ -76,7 +76,7 @@ Rencana Pembelajaran Semester
                                     name="link_rps"
                                     id="link_rps"
                                     aria-describedby="helpId"
-                                    value=""
+                                    value="{{$matkul->link_rps}}"
                                     placeholder="Masukkan Link Repository Rencana Pembelajaran Semester"
                                     required
                                 />

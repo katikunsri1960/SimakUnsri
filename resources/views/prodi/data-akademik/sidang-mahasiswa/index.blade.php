@@ -40,9 +40,12 @@ Sidang Mahasiswa
                           <thead>
                              <tr>
                                 <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">NIDK/NIDN</th>
-                                <th class="text-center align-middle">NIP</th>
-                                <th class="text-center align-middle">NAMA</th>
+                                <th class="text-center align-middle">NIM</th>
+                                <th class="text-center align-middle">NAMA MAHASISWA</th>
+                                <th class="text-center align-middle">ANGKATAN</th>
+                                <th class="text-center align-middle">JUDUL</th>
+                                <th class="text-center align-middle">DOSEN PEMBIMBING</th>
+                                <th class="text-center align-middle">DOSEN PENGUJI</th>
                                 <th class="text-center align-middle">AKSI</th>
                              </tr>
                           </thead>
