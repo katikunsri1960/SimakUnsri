@@ -61,11 +61,11 @@ class PembimbingMahasiswaController extends Controller
                     $query->where('id_semester', $semester);
                 })
                 ->where('id_registrasi_mahasiswa', $id)
-                ->withSum('kelas_kuliah.matkul as total_sks', 'sks_mata_kuliah')
+                // ->withSum('kelas_kuliah.matkul as total_sks', 'sks_mata_kuliah')
                 ->orderBy('kode_mata_kuliah')
                 ->get();
 
-        dd($data);
+
         $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
                     ->whereHas('anggota_aktivitas_personal', function($query) use ($id) {
                         $query->where('id_registrasi_mahasiswa', $id);
