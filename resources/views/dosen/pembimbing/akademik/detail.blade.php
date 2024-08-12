@@ -52,7 +52,7 @@ Bimbingan Akademik Dosen
                                 @csrf
                                 <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() == 0)
                                     disabled
-                                @endif>Setujui Semua KRS</button>
+                                @endif>Setujui KRS</button>
                                 </form>
                             </div>
                         </div>
@@ -105,6 +105,12 @@ Bimbingan Akademik Dosen
                                 </tr>
                                 @endforeach
                             </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th class="text-center align-middle" colspan="3">Total</th>
+                                    <th class="text-center align-middle">{{$data->count() > 0 ? $data->sum('sks_mata_kuliah') : '-'}}</th>
+                                </tr>
+                            </tfoot>
 					  </table>
                     </div>
                 </div>
