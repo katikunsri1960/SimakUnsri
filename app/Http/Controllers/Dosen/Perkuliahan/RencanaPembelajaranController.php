@@ -103,7 +103,7 @@ class RencanaPembelajaranController extends Controller
                 }else{
                     return redirect()->back()->with('error', 'Anda Bukan Koordinator Mata Kuliah');
                 }
-                return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+                return redirect()->route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $matkul->id_matkul])->with('success', 'Data Berhasil di Tambahkan');
             }else{
                 return redirect()->back()->with('error', 'Silahkan Mengisi RPS Terlebih Dahulu');
             }
@@ -150,7 +150,7 @@ class RencanaPembelajaranController extends Controller
             }else{
                 return redirect()->back()->with('error', 'Anda Bukan Koordinator Mata Kuliah');
             }
-            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $rps->id_matkul])->with('success', 'Data Berhasil di Ubah');
         }else{
             return redirect()->back()->with('error', 'RPS Sudah di Setujui Kaprodi');
         }
