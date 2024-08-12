@@ -592,20 +592,20 @@ class KrsController extends Controller
         $id_reg = $request->get('id_reg');
 
         $id_prodi = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->first();
+                    ->pluck('id_prodi')->first();
 
-        $prodi_non_homebase = KelasKuliah::whereNotIn('id_prodi', [$id_prodi])
-                        ->pluck('id_prodi');
+        $prodi_non_homebase = KelasKuliah::whereIn('id_prodi', [$id_prodi])
+                        // ->whereHas('kelas_kuliah', function($query) use ($idMatkul) {
+                        //     $query ->where('id_matkul', $idMatkul);
+                        // })
+                        ->where('id_matkul', $idMatkul)
+                        ->first();
 
         // Dapatkan mata kuliah prasyarat
         $prasyarat = PrasyaratMatkul::where('id_matkul', $idMatkul)->pluck('id_matkul_prasyarat');
 
         // Jika tidak ada prasyarat, langsung return true
-        // if ($prodi_non_homebase != $id_prodi) {
-        //     return response()->json(['prasyarat_dipenuhi' => true]);
-        // }
-        // else
-        if ($prasyarat->isEmpty()) {
+        if ($prasyarat->isEmpty() || empty($prodi_non_homebase)) {
             return response()->json(['prasyarat_dipenuhi' => true]);
         }
 
@@ -629,7 +629,9 @@ class KrsController extends Controller
 
             return response()->json([
                 'prasyarat_dipenuhi' => false,
-                'mata_kuliah_syarat' => $mataKuliahSyaratString
+                'mata_kuliah_syarat' => $mataKuliahSyaratString,
+                'prodi_non_homebase' => $prodi_non_homebase,
+                'id_prodi'=>$id_prodi
             ]);
         }
     }
