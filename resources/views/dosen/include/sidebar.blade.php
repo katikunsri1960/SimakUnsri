@@ -143,12 +143,12 @@
                             <span>Ganti Password</span>
                         </a>
                     </li>
-                    <!-- <li>
-                        <a href="#" target="_blank">
+                    <li>
+                        <a href="http://repository.unsri.ac.id/154973/" target="_blank">
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
-                    </li> -->
+                    </li>
                 </ul>
             </div>
         </div>

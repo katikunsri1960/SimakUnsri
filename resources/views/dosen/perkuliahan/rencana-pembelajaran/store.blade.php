@@ -78,7 +78,6 @@ Rencana Pembelajaran Semester
                                     aria-describedby="helpId"
                                     value=""
                                     placeholder="Masukkan Link Repository Rencana Pembelajaran Semester"
-                                    required
                                 />
                             </div>
                         </div>

@@ -68,16 +68,28 @@ class RencanaPembelajaranController extends Controller
         $matkul = MataKuliah::where('id_matkul',$id_matkul)->first();
         $rps = RencanaPembelajaran::where('id_matkul',$id_matkul)->get();
 
-        //Validate request data
-        $data = $request->validate([
-            'link_rps' => 'required',
-            'pertemuan.*' => 'required',
-            'materi_indo.*' => 'required',
-            'materi_inggris.*' => 'required'
-        ]);
+        if(is_null($matkul->link_rps) || $request->link_rps != ''){
 
-        //Update link RPS
-        MataKuliah::where('id_matkul', $id_matkul)->update(['link_rps' => $request->link_rps]);
+            //Validate request data
+            $data = $request->validate([
+                'link_rps' => 'required',
+                'pertemuan.*' => 'required',
+                'materi_indo.*' => 'required',
+                'materi_inggris.*' => 'required'
+            ]);
+
+            //Update link RPS
+            MataKuliah::where('id_matkul', $id_matkul)->update(['link_rps' => $request->link_rps]);
+
+        }else{
+
+            $data = $request->validate([
+                'pertemuan.*' => 'required',
+                'materi_indo.*' => 'required',
+                'materi_inggris.*' => 'required'
+            ]);
+
+        }
 
         //Hitung jumlah RPS yang di buat
         $jumlah_pertemuan=count($request->pertemuan);
