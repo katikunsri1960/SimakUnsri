@@ -136,7 +136,8 @@ class KrsController extends Controller
                 // ->groupBy('id_registrasi_mahasiswa')
                 ->first();
                 // dd($transkrip);
-            
+
+
             // $sks_mk = KelasKuliah::select('sks_mata_kuliah')
             //     ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
             //     ->where('id_kelas_kuliah', $idKelasKuliah)
@@ -358,8 +359,8 @@ class KrsController extends Controller
 
         $id_prodi = $request->input('id_prodi');
 
-        // $id_prodi =RiwayatPendidikan::where('id_prodi', $prodi_id)
-        //             ->pluck('id_prodi');
+        $prodi_mhs =RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                    ->pluck('id_prodi');
         
 
         // $selectedFakultasId = $request->input('fakultas_id');
@@ -375,9 +376,8 @@ class KrsController extends Controller
         $mkMerdeka = $db->getMKMerdeka($semester_aktif, $id_prodi);
         // dd($mkMerdeka);
 
-        return response()->json(['mk_merdeka' => $mkMerdeka, 'krs_merdeka'=>$krs_merdeka]);
+        return response()->json(['mk_merdeka' => $mkMerdeka, 'krs_merdeka'=>$krs_merdeka, 'prodi_mhs'=>$prodi_mhs, 'prodi_mk'=>$id_prodi ]);
     }
-
 
 
     public function get_kelas_kuliah(Request $request)
@@ -438,7 +438,6 @@ class KrsController extends Controller
         foreach ($kelasKuliah as $kelas) {
             $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->fk_id, $kelas->id_matkul);
         }
-       
 
         return response()->json($kelasKuliah);
     }
