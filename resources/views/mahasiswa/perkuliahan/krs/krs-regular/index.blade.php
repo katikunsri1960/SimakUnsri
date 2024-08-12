@@ -207,14 +207,16 @@ Kartu Rencana Studi
                     id_prodi: selectedProdiId
                 },
                 success: function(response) {
-                    // console.log(response)
+                    // console.log(id_prodi)
                     var mkMerdeka = response.mk_merdeka;
                     var krsMerdeka = response.krs_merdeka.map(krs => krs.id_matkul); // Extract id_matkul from krs_merdeka
+                    var mhsProdi = response.prodi_mhs;
                     var tbody = $('#mk-merdeka-tbody');
                     tbody.empty(); // Kosongkan tabel sebelum menambahkan data baru
-
+                    
                     if (mkMerdeka.length > 0) {
                         $.each(mkMerdeka, function(index, data) {
+                            // console.log(mhsProdi)
                             var isDisabled = krsMerdeka.includes(data.id_matkul);
                             var isEmptyClass = data.jumlah_kelas == 0
                             var isEmptyRps = data.jumlah_rps == 0
