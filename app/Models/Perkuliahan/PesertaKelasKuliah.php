@@ -149,7 +149,7 @@ class PesertaKelasKuliah extends Model
                     ->whereNotIn('nilai_huruf', ['F', ''])
                     ->groupBy('id_registrasi_mahasiswa')
                     ->first();
-                    dd($transkrip);
+                    // dd($transkrip);
 
         $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
                     ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
