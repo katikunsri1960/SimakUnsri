@@ -84,7 +84,7 @@ Lihat RPS Mata Kuliah
                                 @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-center align-middle">{{$d->materi_indonesia}}</td>
+                                    <td class="text-start align-middle">{{$d->materi_indonesia}}</td>
                                     <td class="text-start align-middle">{{$d->materi_inggris}}</td>
                                     <td class="text-center align-middle">{{$d->pertemuan}}</td>
                                     <td class="text-center align-middle">

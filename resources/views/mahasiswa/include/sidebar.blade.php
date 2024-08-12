@@ -186,12 +186,12 @@
                             <span>Ganti Password</span>
                         </a>
                     </li>
-                    {{-- <li class="{{request()->routeIs('mahasiswa.panduan-aplikasi') ? 'active' : ''}}">
-                        <a href="#">
+                    <li>
+                        <a href="http://repository.unsri.ac.id/id/eprint/154976">
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>
-                    </li>   --}}
+                    </li>
                 </ul>
             </div>
         </div>
