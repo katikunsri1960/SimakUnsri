@@ -80,7 +80,7 @@ class PesertaKelasKuliah extends Model
                 'status' => 'success',
                 'message' => 'Persetujuan KRS berhasil dibatalkan!',
             ];
-            
+
             return $result;
 
         } catch (\Exception $e) {
@@ -268,9 +268,9 @@ class PesertaKelasKuliah extends Model
                         'id_status_mahasiswa' => 'M',
                         'nama_status_mahasiswa' => 'Kampus Merdeka',
                         'ips'=> '0.00',
-                        'ipk'=> $transkrip->ipk,
+                        'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                         'sks_semester'=> $total_sks,
-                        'sks_total'=>$transkrip->total_sks,
+                        'sks_total'=>$transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                         'biaya_kuliah_smt' => 0,
                         'id_pembiayaan' => NULL,
                         'status_sync' => 'belum sync',
@@ -292,9 +292,9 @@ class PesertaKelasKuliah extends Model
                         'id_status_mahasiswa' => 'A',
                         'nama_status_mahasiswa' => 'Aktif',
                         'ips'=> '0.00',
-                        'ipk'=> $transkrip->ipk,
+                        'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                         'sks_semester'=> $total_sks,
-                        'sks_total'=>$transkrip->total_sks,
+                        'sks_total'=>$transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                         'biaya_kuliah_smt' => 0,
                         'id_pembiayaan' => NULL,
                         'status_sync' => 'belum sync',
