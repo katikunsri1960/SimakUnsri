@@ -32,7 +32,7 @@ class UserMutasi extends Command
         $dbRiwayat = new RiwayatPendidikan();
         $users = $db->join('riwayat_pendidikans as rp', 'users.fk_id', '=', 'rp.id_registrasi_mahasiswa')
             ->select('users.id as id', 'users.fk_id as fk_id', 'users.username as username', 'users.name as name', 'rp.id_registrasi_mahasiswa as id_registrasi_mahasiswa', 'rp.nim as nim', 'rp.nama_mahasiswa as nama_mahasiswa')
-            ->where('rp.id_prodi', 'b2166a55-f878-4eec-9044-26bdc857ca53')
+            ->where('rp.id_prodi', 'ba2621a6-52f1-4579-b6ab-6d3c0c42e028')
             // ->limit(5)
             ->get();
 
