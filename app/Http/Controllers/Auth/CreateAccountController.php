@@ -7,6 +7,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use App\Libraries\nusoap;
+use App\Models\Mahasiswa\LulusDo;
 
 class CreateAccountController extends Controller
 {
@@ -54,6 +55,12 @@ class CreateAccountController extends Controller
             'nim' => 'required|exists:riwayat_pendidikans,nim',
             'password' => 'required|confirmed',
         ]);
+
+        $check = LulusDo::where('nim', $data['nim'])->first();
+
+        if ($check) {
+            return redirect()->back()->with('error', 'NIM ini Sudah dinyatakan '. $check->nama_jenis_keluar);
+        }
 
         $user = RiwayatPendidikan::where('nim', $data['nim'])->first();
         $data['username'] = $user->nim;
