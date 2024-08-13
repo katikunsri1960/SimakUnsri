@@ -53,7 +53,7 @@ Bimbingan Akademik Dosen
                                 @csrf
                                 <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() == 0)
                                     disabled
-                                @endif>Setujui KRS</button>
+                                @endif><i class="fa fa-check"></i> Setujui KRS</button>
                                 </form>
                                 @endif
                                 @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count() > 0)
@@ -61,7 +61,7 @@ Bimbingan Akademik Dosen
                                     @csrf
                                     <button class="btn btn-warning btn-rounded" type="submit" @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count() == 0)
                                         disabled
-                                    @endif>Batalkan KRS</button>
+                                    @endif><i class="fa fa-undo"></i> Batalkan Persetujuan KRS</button>
                                     </form>
                                 @endif
                             </div>
