@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Aktivitas MBKM Non-Perkuliahan
+Aktivitas MBKM - Non Pertukaran Pelajar
 @endsection
 @section('content')
 <section class="content bg-white">
@@ -12,7 +12,7 @@ Aktivitas MBKM Non-Perkuliahan
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Aktivitas MBKM Non-Perkuliahan,  {{auth()->user()->name}}</h2>
+								<h2 class="mb-10">Aktivitas MBKM - Non Pertukaran Pelajar,  {{auth()->user()->name}}</h2>
                                 <p class="text-dark mb-0 fs-16">
                                     SIMAK Universitas Sriwijaya
                                 </p>
@@ -33,7 +33,7 @@ Aktivitas MBKM Non-Perkuliahan
                             <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
                             <i class="fa-solid fa-arrow-left"></i>
                             </a>
-                            <h3 class="box-title px-3">Daftar Aktivitas MBKM-Non Perkuliahan</h3>
+                            <h3 class="box-title px-3">Daftar Aktivitas MBKM - Non Pertukaran Pelajar</h3>
                             </div>
                         </div>
                     </div>
@@ -41,7 +41,7 @@ Aktivitas MBKM Non-Perkuliahan
                 <div class="row mb-5">
                     <div class="col-xl-12 col-lg-12 text-end">
                         <div class="btn-group">
-                            <a class="btn btn-rounded bg-success-light " href="{{route('mahasiswa.perkuliahan.mbkm.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Aktivitas Magang</a>
+                            <a class="btn btn-rounded bg-success-light " href="{{route('mahasiswa.perkuliahan.mbkm.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Aktivitas MBKM</a>
                         </div>   
                     </div>                           
                 </div><br>

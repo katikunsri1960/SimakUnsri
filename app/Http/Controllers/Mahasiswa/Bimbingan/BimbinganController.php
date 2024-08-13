@@ -8,6 +8,7 @@ use App\Models\AsistensiAkhir;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
 use App\Http\Controllers\Controller;
+use App\Models\Connection\Registrasi;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
@@ -21,17 +22,19 @@ class BimbinganController extends Controller
         // $id_reg = auth()->user()->fk_id;
         $id_semester = SemesterAktif::first()->id_semester;
         $user = auth()->user();
+        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
 
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
         // dd($beasiswa);
 
         // Cek status pembayaran
         $tagihan = Tagihan::with('pembayaran')
-            ->where('nomor_pembayaran', $user->username)
+        ->whereIn('nomor_pembayaran', [$user->username, $id_test])
             ->where('kode_periode', $id_semester)
             ->first();
        
 
+        
         $statusPembayaran = $tagihan->pembayaran ? $tagihan->pembayaran->status_pembayaran : null;
         // dd($statusPembayaran);
 
