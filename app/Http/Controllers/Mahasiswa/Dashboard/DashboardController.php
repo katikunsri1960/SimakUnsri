@@ -28,30 +28,29 @@ class DashboardController extends Controller
                             // dd($riwayat_pendidikan);
         $prodi_id = $riwayat_pendidikan->id_prodi;
         
-
         $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
-                        // dd($semester_aktif);
-        
-        
 
-        $smt = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
-                ->whereRaw("RIGHT(id_semester, 1) != 3")
-                ->orderBy('id_semester', 'ASC')
-                ->get();
-                // dd($smt);
+        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
+                        ->whereRaw("RIGHT(id_semester, 1) != 3")
+                        ->orderBy('id_semester', 'DESC')
+                        ->limit(1)
+                        ->get();
+                
         
-        $semester_ke = Semester::orderBy('id_semester', 'ASC')
-                ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
-                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
-                ->count();
+        $semester = Semester::orderBy('id_semester', 'ASC')
+                        ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                        ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                        ->get();
 
-        // $registrasi = Registrasi::where('rm_nim', $user->username)
-        //         ->select('*'
-        //         )
-        //         ->first();
-                // dd($registrasi);
-        
+        $semester_ke = $semester->count();
+
+                        // dd($akm);
+
+        // $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
+        //                 ->where('id_semester')
+        //                 ->get();
+
         $transkrip = TranskripMahasiswa::select(
                 DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
                 DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
@@ -60,12 +59,12 @@ class DashboardController extends Controller
                 ->whereNotIn('nilai_huruf', ['F', ''])
                 ->groupBy('id_registrasi_mahasiswa')
                 ->first();
-                // dd($transkrip);
+                // dd($akm);
 
         return view('mahasiswa.dashboard', compact(
             'riwayat_pendidikan',
             'semester_aktif',
-            'semester_ke', 'smt','transkrip'
+            'semester_ke', 'akm','transkrip'
         ));
     }
 }
