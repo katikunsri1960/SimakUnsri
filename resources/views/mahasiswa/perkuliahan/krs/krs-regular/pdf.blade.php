@@ -98,7 +98,7 @@ Kartu Rencana Studi
                             <tr>
                                 <td class="text-td text-center">{{ $no++ }}.</td>
                                 <td class="text-td text-center">{{$data->kode_mata_kuliah}}</td>
-                                <td class="text-td">{{$data->nama_mata_kuliah}}</td>
+                                <td class="text-td text-left ">{{$data->nama_mata_kuliah}}</td>
                                 <td class="text-td text-center">{{$data->sks_mata_kuliah}}</td>
                             </tr>
                         @endforeach
@@ -143,15 +143,15 @@ Kartu Rencana Studi
                             <tr>
                                 <td class="text-td text-center">{{ $no++ }}.</td>
                                 <td class="text-td text-center">{{$data->kode_mata_kuliah}}</td>
-                                <td class="text-td">{{$data->nama_mata_kuliah}}</td>
+                                <td class="text-td text-left">{{$data->nama_mata_kuliah}}</td>
                                 <td class="text-td text-center">{{$data->sks_mata_kuliah}}</td>
                             </tr>
                         @endforeach
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td colspan="3"><center><strong>JUMLAH</strong></center></td>
-                            <td><center><strong>{{$total_sks_merdeka}}</strong></center></td>
+                            <td class="text-thead" colspan="3"><strong>JUMLAH</strong></td>
+                            <td class="text-thead"><strong>{{$total_sks_regular}}</strong></td>
                         </tr> 
                     </tfoot>
                 </table>
@@ -224,7 +224,9 @@ Kartu Rencana Studi
             <tr width="100%">
                 <td width="60%"></td>
                 <td width="50%" class="text-right text-10" >
-                    Inderalaya, {{$today->isoFormat('DD MMMM Y')}}
+                    Inderalaya, {{ \Carbon\Carbon::parse($krs_regular[0]->tanggal_approve)->locale('id')->translatedFormat('d F Y') }}
+
+                    {{-- {{$today->isoFormat('DD MMMM Y')}} --}}
                 </td>
             </tr>
             <tr>
@@ -237,7 +239,7 @@ Kartu Rencana Studi
                 <td class="text-left text-10" width="60%" style="vertical-align: text-top">
                     {{-- KSM harus dibawa pada saat mengikuti ujian akhir semester --}}
                 </td>
-                <td height="60" width="50%"></td>
+                <td height="60" width="50%" class="text-right text-10 mx-50"><strong>dto<strong></td>
             </tr>
             <tr>
                 <td width="50%"></td>
@@ -250,7 +252,7 @@ Kartu Rencana Studi
                     {{-- Lembar untuk mahasiswa --}}
                 </td>
                 <td width="50%" class="text-right text-10" >
-                    {{ $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip}}
+                    NIP. {{ $dosen_pa === NULL ? 'Tidak Diisi' : $dosen_pa->nip}}
                 </td>
             </tr>
         </tbody>

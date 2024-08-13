@@ -698,7 +698,6 @@ class KrsController extends Controller
             return response()->json(['error' => 'Dosen PA tidak ditemukan.']);
         }
 
-
         //DATA AKTIVITAS
         $db = new MataKuliah();
 
@@ -721,15 +720,7 @@ class KrsController extends Controller
 
         // Menentukan status mahasiswa berdasarkan hasil query
         $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
-
-        // Menghitung jumlah semester, mengabaikan semester pendek
-        // $semester_ke = $semester->filter(function($item) {
-        //     return substr($item->id_semester, -1) != '3';
-        // })->count();
-
-        // $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids);
-
-        
+       
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester, $riwayat_pendidikan->id_prodi)->where('approved', 1);
         
         // dd($krs_akt);

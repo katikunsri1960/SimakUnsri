@@ -273,7 +273,24 @@
                                                             <div class="col-lg-10 text-left text-danger">
                                                                 <label>
                                                                     Anda tidak dapat memilih Mata Kuliah!
-                                                                </label>
+                                                                </label><br>
+                                                                @if($beasiswa==NULL || $tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti==NULL)
+                                                                    <label>
+                                                                        Segera Lakukan Pembayaran UKT Sebelum Periode Pembayaran Berakhir!
+                                                                    </label>
+                                                                @elseif($tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti!=NULL)
+                                                                    <label>
+                                                                        Anda dalam Masa <strong>Cuti Kuliah</strong> / <strong>STOP OUT</strong>
+                                                                    </label>
+                                                                @elseif($tagihan->status_pembayaran==NULL && $today>$deadline && $cuti==NULL)
+                                                                    <label>
+                                                                        Anda Dinyatakan <strong>DROP OUT</strong> karena tidak melakukan pembayaran dan tidak mengajukan <strong>STOP OUT</strong>
+                                                                    </label>
+                                                                @elseif($tagihan->status_pembayaran==NULL && $today>$deadline)
+                                                                    <label>
+                                                                        Segera Ajukan <strong>Cuti Kuliah</strong> / Stop Out Sebelum Periode Pengajuan Berakhir!
+                                                                    </label>
+                                                                @endif
                                                             </div>
                                                         </div>
                                                     </div>
