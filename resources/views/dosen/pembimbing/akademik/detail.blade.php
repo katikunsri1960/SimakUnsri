@@ -54,6 +54,14 @@ Bimbingan Akademik Dosen
                                     disabled
                                 @endif>Setujui KRS</button>
                                 </form>
+                                {{-- @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count() > 0) --}}
+                                {{-- <form action="{{route('dosen.pembimbing.bimbingan-akademik.batal-krs', ['riwayat' => $riwayat])}}" method="post" id="batalKRS">
+                                    @csrf
+                                    <button class="btn btn-warning btn-rounded" type="submit" @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count() == 0)
+                                        disabled
+                                    @endif>Batalkan KRS</button>
+                                    </form> --}}
+                                {{-- @endif --}}
                             </div>
                         </div>
                     </div>
@@ -72,12 +80,19 @@ Bimbingan Akademik Dosen
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $totalSks = 0;
+                                @endphp
                                 @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
                                     <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
-                                    <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->sks_mata_kuliah}}</td>
+                                    <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->sks_mata_kuliah}}
+                                        @php
+                                            $totalSks += $d->kelas_kuliah->matkul->sks_mata_kuliah;
+                                        @endphp
+                                    </td>
                                     <td class="text-center align-middle">{{$d->kelas_kuliah->nama_kelas_kuliah}}</td>
                                     <td class="text-center align-middle">
                                         @if ($d->approved == '1')
@@ -93,7 +108,11 @@ Bimbingan Akademik Dosen
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$a->konversi->kode_mata_kuliah}}</td>
                                     <td class="text-start align-middle">{{$a->konversi->nama_mata_kuliah}}</td>
-                                    <td class="text-center align-middle">{{$a->konversi->sks_mata_kuliah}}</td>
+                                    <td class="text-center align-middle">{{$a->konversi->sks_mata_kuliah}}
+                                        @php
+                                            $totalSks += $a->konversi->sks_mata_kuliah;
+                                        @endphp
+                                    </td>
                                     <td class="text-center align-middle"> - </td>
                                     <td class="text-center align-middle">
                                         @if ($a->approve_krs == '1')
@@ -105,12 +124,13 @@ Bimbingan Akademik Dosen
                                 </tr>
                                 @endforeach
                             </tbody>
-                            {{-- <tfoot>
+                            <tfoot>
                                 <tr>
                                     <th class="text-center align-middle" colspan="3">Total</th>
-                                    <th class="text-center align-middle">{{$data->count() > 0 ? $data->sum('sks_mata_kuliah') : '-'}}</th>
+                                    <th class="text-center align-middle">{{$totalSks}}</th>
+                                    <th class="text-center align-middle" colspan="2"></th>
                                 </tr>
-                            </tfoot> --}}
+                            </tfoot>
 					  </table>
                     </div>
                 </div>
@@ -131,6 +151,7 @@ Bimbingan Akademik Dosen
             });
 
             confirmSubmit('approveAll');
+            confirmSubmit('batalKRS');
         });
     </script>
 @endpush

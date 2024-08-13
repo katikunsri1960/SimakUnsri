@@ -80,9 +80,11 @@ class PesertaKelasKuliah extends Model
                 'status' => 'success',
                 'message' => 'Persetujuan KRS berhasil dibatalkan!',
             ];
+            
+            return $result;
 
         } catch (\Exception $e) {
-            return $e->getMessage();
+
             DB::rollBack();
 
             $result = [
@@ -253,6 +255,7 @@ class PesertaKelasKuliah extends Model
                 if($data_mbkm > 0){
 
                     $peserta = AktivitasKuliahMahasiswa::create([
+                        'feeder' => 0,
                         'id_registrasi_mahasiswa' => $id_reg,
                         'nim' => $riwayat_pendidikan->nim,
                         'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
@@ -276,6 +279,7 @@ class PesertaKelasKuliah extends Model
                 }else{
 
                     $peserta = AktivitasKuliahMahasiswa::create([
+                        'feeder' => 0,
                         'id_registrasi_mahasiswa' => $id_reg,
                         'nim' => $riwayat_pendidikan->nim,
                         'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
