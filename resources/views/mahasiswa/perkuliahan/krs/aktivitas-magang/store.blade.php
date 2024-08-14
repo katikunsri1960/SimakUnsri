@@ -7,13 +7,13 @@ Pengajuan Aktivitas Magang
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Tambah Aktivitas Magang</h3>
+            <h3 class="page-title">Tambah Aktivitas MBKM</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('mahasiswa.perkuliahan.mbkm.index')}}">Aktivitas Magang</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Tambah Aktivitas Magang</li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('mahasiswa.perkuliahan.mbkm.index')}}">Aktivitas MBKM</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Tambah Aktivitas MBKM</li>
                     </ol>
                 </nav>
             </div>
@@ -75,7 +75,7 @@ Pengajuan Aktivitas Magang
                                 />
                             </div>
                         </div>
-                        <h4 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Aktivitas MBKM Non-Perkuliahan</h4>
+                        <h4 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Aktivitas MBKM - Non Pertukaran Pelajar</h4>
                         <hr class="my-15">
                         <div class="form-group mb-20">
                             <div id="aktivitas-fields">
@@ -83,7 +83,7 @@ Pengajuan Aktivitas Magang
                                     <div class="col-md-12 mb-10">
                                         <label>Jenis Aktivitas MBKM</label>
                                         <select id="aktivitas_mbkm" name="aktivitas_mbkm" class="form-select" >
-                                            <option value="" disabled selected>-- Pilih Aktivitas MBKM Non-Perkuliahan --</option>
+                                            <option value="" disabled selected>-- Pilih Aktivitas MBKM --</option>
                                             @foreach($aktivitas_mbkm as $aktivitas)
                                                 <option value="{{ $aktivitas['id_jenis_aktivitas'] }}">{{ $aktivitas['nama_jenis_aktivitas'] }} </option>
                                             @endforeach

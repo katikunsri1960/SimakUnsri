@@ -224,9 +224,7 @@ Kartu Rencana Studi
             <tr width="100%">
                 <td width="60%"></td>
                 <td width="50%" class="text-right text-10" >
-                    Inderalaya, {{ \Carbon\Carbon::parse($krs_regular[0]->tanggal_approve)->locale('id')->translatedFormat('d F Y') }}
-
-                    {{-- {{$today->isoFormat('DD MMMM Y')}} --}}
+                        Inderalaya, {{ $tanggal_approve}}
                 </td>
             </tr>
             <tr>

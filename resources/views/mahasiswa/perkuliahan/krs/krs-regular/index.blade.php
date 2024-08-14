@@ -69,6 +69,9 @@ Kartu Rencana Studi
                 <div class="row mx-20 ">
                     <div class="col-12 px-25">
                         <div class="box no-shadow mb-0 bg-transparent">
+                            <div class="d-flex justify-content-end mt-10 mr-0">
+                                <span class="badge badge-warning-light">Periode pengisian KRS hingga tanggal <strong style="color: red">{{ date('d M Y', strtotime($batas_isi_krs)) }}</strong></span>
+                            </div>                            
                             <div class="box-header no-border px-0">
                                 <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
                                 <i class="fa-solid fa-arrow-left"></i>
@@ -97,11 +100,6 @@ Kartu Rencana Studi
                                         @endforeach
                                     </select>
                                 </div>
-                                {{-- <div class="col-xl-5 mt-10">
-                                    <td>
-                                        <a href="{{route('mahasiswa.krs.print', ['id_semester' => $semester_select])}}"  target="_blank" class="waves-effect waves-light btn btn-sm btn-success mb-5 float-end"><i class="fa fa-print"></i> Cetak</a> 
-                                    </td>
-                                </div> --}}
                                 <div class="col-xl-5 mt-10">
                                     <td>
                                         <a href="#" id="print-krs-btn" class="waves-effect waves-light btn btn-sm btn-success mb-5 float-end">
@@ -327,39 +325,45 @@ Kartu Rencana Studi
             $(resultContainerId).empty();
 
             var table = '<table class="table table-bordered table-striped text-center">';
-            table += '<thead><tr><th>No</th><th>Kelas Kuliah</th><th>Dosen Pengajar</th><th style="width: 400px;">Jadwal Kuliah</th><th>Peserta</th><th>Action</th></tr></thead>';
+            table += '<thead><tr><th>No</th><th>Kelas Kuliah</th><th>Nama Ruang</th><th>Dosen Pengajar</th><th style="width: 400px;">Jadwal Kuliah</th><th>Peserta</th><th>Action</th></tr></thead>';
             table += '<tbody>';
 
             $.each(data, function(index, kelas) {
                 table += '<tr>';
                 table += '<td>' + (index + 1) + '</td>';
                 table += '<td>' + kelas.nama_kelas_kuliah + '</td>';
+                console.log(kelas)
+                if (kelas.ruang_perkuliahan) {
+                    table += '<td>' + kelas.ruang_perkuliahan.nama_ruang +' ('+kelas.ruang_perkuliahan.lokasi  +  ')</td>';
+                } else {
+                    table += '<td>-</td>';
+                }
+                // Menampilkan nama dosen pengajar
                 if (kelas.dosen_pengajar.length > 0) {
-                    // Jika dosen_pengajar tidak kosong, tampilkan nama dosen
                     table += '<td class="text-start align-middle">' + formatDosenPengajar(kelas.dosen_pengajar) + '</td>';
                 } else {
-                    // Jika dosen_pengajar kosong, tampilkan pesan "Nama Dosen Tidak Diisi"
                     table += '<td>Nama Dosen Tidak Diisi</td>';
                 }
+
+                // Menampilkan jadwal kuliah
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
+
+                // Menampilkan kapasitas dan peserta
                 if (kelas.kapasitas == null) {
-                    // Jika Kapasitas Kelas = 0, tampilkan "-"
                     table += '<td>' + kelas.peserta_kelas_count + '/' + '-' + '</td>';
                 } else {
-                    // Jika Kapasitas Kelas !=  0, tampilkan Kapasitas peserta
                     table += '<td>' + kelas.peserta_kelas_count + '/' + kelas.kapasitas + '</td>';
                 }
 
+                // Menampilkan tombol action
                 if (kelas.kapasitas !== null && kelas.peserta_kelas_count >= kelas.kapasitas) {
-                    // Jika kelas penuh, tombol "Ambil" dinonaktifkan
                     table += '<td><button class="btn btn-danger" disabled>Kelas Penuh</button></td>';
                 } else if (kelas.kelas_Enrolled) {
-                    // Jika sudah terdaftar, tombol "Ambil" dinonaktifkan
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" disabled>Ambil</button></td>';
                 } else {
-                    // Jika belum terdaftar, tombol "Ambil" aktif
                     table += '<td><button class="btn btn-primary btn-ambil-kelas" data-id-kelas="' + kelas.id_kelas_kuliah + '" data-id-matkul="' + kelas.id_matkul + '" data-nama-matkul="' + kelas.nama_mata_kuliah + '">Ambil</button></td>';
                 }
+
                 table += '</tr>';
             });
 
@@ -374,6 +378,7 @@ Kartu Rencana Studi
 
                 // Dapatkan CSRF token dari meta tag
                 var csrfToken = $('meta[name="csrf-token"]').attr('content');
+
                 // Cek prasyarat sebelum mengirimkan request
                 cekPrasyarat(idMatkul, id_reg, csrfToken, function(response) {
                     if (response.prasyarat_dipenuhi) {
@@ -385,15 +390,14 @@ Kartu Rencana Studi
                                 id_kelas_kuliah: idKelas,
                                 _token: csrfToken  // Sertakan CSRF token di sini
                             },
-                            
                             success: function(response) {
-                                console.log(response.message)
-                               swal({
+                                console.log(response.message);
+                                swal({
                                     title: 'Berhasil!',
                                     text: response.message,
-                                    type: 'success',
-                                    confirmButtonText: 'OK'
-                                }, function(result) {
+                                    icon: 'success',
+                                    button: 'OK'
+                                }).then(function(result) {
                                     if (result) {
                                         console.log(response.message);
                                         // Lakukan refresh halaman atau aksi lainnya jika diperlukan
@@ -407,8 +411,8 @@ Kartu Rencana Studi
                                 swal({
                                     title: 'Gagal!',
                                     text: errorMessage,
-                                    type: 'warning',
-                                    confirmButtonText: 'OK'
+                                    icon: 'warning',
+                                    button: 'OK'
                                 });
                             }
                         });
@@ -416,15 +420,15 @@ Kartu Rencana Studi
                         // Jika prasyarat tidak terpenuhi, tampilkan pesan peringatan
                         swal({
                             title: 'Prasyarat Tidak Terpenuhi',
-                            text: 'Anda belum menyelesaikan mata kuliah prasyarat yang diperlukan ' +  ': ' + response.mata_kuliah_syarat,
-                            type: 'warning',
-                            confirmButtonText: 'OK'
+                            text: 'Anda belum menyelesaikan mata kuliah prasyarat yang diperlukan: ' + response.mata_kuliah_syarat,
+                            icon: 'warning',
+                            button: 'OK'
                         });
                     }
                 });
-                
             });
         }
+
 
 
         // Fungsi untuk mengecek prasyarat mata kuliah
@@ -625,19 +629,20 @@ Kartu Rencana Studi
     //  PENGECEKAN PERIODE KRS
     $(document).ready(function() {
         // Pengecekan tanggal
-        @php
-            $today = \Carbon\Carbon::now();
-            $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
-        @endphp
+        var today = @json($today);
+        var batasIsiKrs = @json($batas_isi_krs);
 
         // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
-        @if($today->greaterThan($deadline) || $semester_aktif->id_semester > $semester_select)
-            swal(
-                "Perhatian", 
-                "Periode pengisian KRS pada Semester yang Anda pilih telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah", 
-                "warning"
-            ); 
-        @endif
+        if (today > batasIsiKrs || semesterAktif > semesterSelect) {
+            console.log(today)
+            console.log(batasIsiKrs)
+            swal({
+                title: "Perhatian",
+                text: "Periode pengisian KRS pada Semester yang Anda pilih telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah",
+                type: "warning",
+                button: "OK",
+            });
+        }
     });
 
     // AMBIL AKTIVITAS

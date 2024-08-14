@@ -45,10 +45,10 @@
                         @php
                             $no=1;
                             
-                            $today = \Carbon\Carbon::now();
-                            $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
+                            // $today = \Carbon\Carbon::now();
+                            // $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                         @endphp
-                        @if ($today->greaterThan($deadline) || $semester_aktif->id_semester > $semester_select)
+                        @if ($today>$batas_isi_krs || $semester_aktif->id_semester > $semester_select)
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -76,7 +76,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif(!$today->greaterThan($deadline))
+                        @elseif($today <= $batas_isi_krs)
                             @if(!empty($beasiswa) || !empty($tagihan->pembayaran->status_pembayaran))
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
@@ -96,6 +96,7 @@
                                                                 <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                                 <th class="text-center align-middle" style="width: 100%">Nama Mata Kuliah</th>
                                                                 <th class="text-center align-middle">RPS</th>
+                                                                {{-- <th class="text-center align-middle">Nama Ruang</th> --}}
                                                                 <th class="text-center align-middle">Semester Ke</th>
                                                                 <th class="text-center align-middle">SKS Mata Kuliah</th>
                                                                 <th class="text-center align-middle">Jumlah Kelas Kuliah</th>
