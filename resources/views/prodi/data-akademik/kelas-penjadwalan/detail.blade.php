@@ -93,7 +93,7 @@ Kelas Penjadwalan
                                         <td class="text-center align-middle">
 
                                             @if ($d->dosen_pengajar->count() > 0 && $d->feeder == 0)
-                                            <form action="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form px-3 my-3" data-id="{{$d->id}}" id="deleteForm{{$d->id}}">
+                                            <form action="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form-dosen px-3 my-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteFormDosen{{$d->id_kelas_kuliah}}">
                                                 @csrf
                                                 @method('delete')
                                                 <div class="row">
@@ -154,6 +154,27 @@ Kelas Penjadwalan
             }, function(isConfirm){
                 if (isConfirm) {
                     $(`#deleteForm${formId}`).unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
+        });
+
+        $('.delete-form-dosen').submit(function(e){
+            var formId = $(this).data('id');
+            console.log(formId);
+            e.preventDefault();
+
+            swal({
+                title: 'Apakah Anda Yakin??',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $(`#deleteFormDosen${formId}`).unbind('submit').submit();
                     $('#spinner').show();
                 }
             });
