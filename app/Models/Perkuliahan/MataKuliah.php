@@ -155,7 +155,6 @@ class MataKuliah extends Model
                 ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->where('kelas_kuliahs.id_prodi', $riwayat_pendidikan->id_prodi)
                 ->where('id_registrasi_mahasiswa', $id_reg)
-
                 ->where('id_semester', $id_semester)
                 ->get();
 
@@ -163,12 +162,13 @@ class MataKuliah extends Model
             $krs_regular->whereNotIn('peserta_kelas_kuliahs.id_matkul', $data_akt_ids);
         }
 
+
         return $krs_regular;
     }
 
     public function getKrsMerdeka($id_reg, $id_semester,  $id_prodi)
     {
-        $krs_merdeka = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'kelas_kuliahs.jadwal_hari', 'kelas_kuliahs.jadwal_jam_mulai', 'kelas_kuliahs.jadwal_jam_selesai', 'mata_kuliahs.sks_mata_kuliah')
+        $krs_merdeka = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'kelas_kuliahs.jadwal_hari', 'kelas_kuliahs.jadwal_jam_mulai', 'kelas_kuliahs.jadwal_jam_selesai', 'mata_kuliahs.sks_mata_kuliah', 'tanggal_approve')
                 ->join('matkul_merdekas', 'matkul_merdekas.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
@@ -227,7 +227,11 @@ class MataKuliah extends Model
             $data_akt_ids = $mk_akt->pluck('id_matkul');
         }
 
-        $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 'kelas_kuliah','kelas_kuliah.dosen_pengajar', 'rencana_pembelajaran'])
+        $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 
+                        'kelas_kuliah' => function($query) use ($id_semester, $prodi) {
+                            $query->where('id_semester', $id_semester->id_semester)
+                                    ->where('id_prodi', $prodi);
+                        },'kelas_kuliah.dosen_pengajar','kelas_kuliah.ruang_perkuliahan', 'rencana_pembelajaran'])
                         ->whereHas('kurikulum' , function($query) use($kurikulum) {
                             $query->where('list_kurikulums.id_kurikulum', $kurikulum);
                         })
@@ -243,7 +247,7 @@ class MataKuliah extends Model
                             $q->where('approved', 1);
                         }]);
 
-        // dd($data_akt_ids);
+        // dd($matakuliah);
         if ($data_akt_ids != NULL) {
 
             $matakuliah= $matakuliah->whereNotIn('id_matkul', $data_akt_ids);
