@@ -18,7 +18,7 @@ class CreateAccountController extends Controller
 
     public function checkNim(string $nim)
     {
-        $user = RiwayatPendidikan::select('nama_mahasiswa')->where('nim', $nim)->first();
+        $user = RiwayatPendidikan::select('nama_mahasiswa')->where('nim', $nim)->whereNot('id_jenis_keluar', '2')->first();
         if ($user) {
             return response()->json([
                 'status' => 'success',
@@ -58,7 +58,7 @@ class CreateAccountController extends Controller
 
         $check = LulusDo::where('nim', $data['nim'])->first();
 
-        if ($check) {
+        if ($check && $check->id_jenis_keluar == 1) {
             return redirect()->back()->with('error', 'NIM ini Sudah dinyatakan '. $check->nama_jenis_keluar);
         }
 
