@@ -125,7 +125,31 @@ class DataMasterController extends Controller
         ]);
 
         return redirect()->back()->with('success', "Data Berhasil di tambahkan");
-    } 
+    }
+
+    public function set_kurikulum(RiwayatPendidikan $mahasiswa, Request $request)
+    {
+        $validatedData = $request->validate([
+            'id_kurikulum' => 'required' // Added exists rule for better validation
+        ]);
+
+        try {
+            $mahasiswa->update([
+                'id_kurikulum' => $validatedData['id_kurikulum']
+            ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Data Berhasil di tambahkan'
+            ], 200); // Added HTTP status code
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Gagal di tambahkan',
+                'error' => $e->getMessage()
+            ], 500); // Added error handling and HTTP status code
+        }
+    }
 
     public function set_kurikulum_angkatan(Request $request)
     {
