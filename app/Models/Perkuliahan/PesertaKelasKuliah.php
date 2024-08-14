@@ -197,7 +197,7 @@ class PesertaKelasKuliah extends Model
                 foreach ($data as $item) {
                     $item->update([
                         'approved' => '1',
-                        'tanggal_approved' => date('Y-m-d')
+                        'tanggal_approve' => date('Y-m-d')
                     ]);
                 }
 
@@ -398,7 +398,7 @@ class PesertaKelasKuliah extends Model
                 foreach ($data as $item) {
                     $item->update([
                         'approved' => '1',
-                        'tanggal_approved' => date('Y-m-d')
+                        'tanggal_approve' => date('Y-m-d')
                     ]);
                 }
                 if($data_mbkm > 0){
@@ -585,7 +585,7 @@ class PesertaKelasKuliah extends Model
                             'status_sync' => 'belum sync',
                         ]);
                     }
-                }        
+                }
             }
 
             DB::commit();
