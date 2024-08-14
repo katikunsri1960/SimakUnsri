@@ -18,7 +18,7 @@ class CreateAccountController extends Controller
 
     public function checkNim(string $nim)
     {
-        $user = RiwayatPendidikan::select('nama_mahasiswa')->where('nim', $nim)->whereNot('id_jenis_keluar', '2')->first();
+        $user = RiwayatPendidikan::select('nama_mahasiswa')->where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
         if ($user) {
             return response()->json([
                 'status' => 'success',
