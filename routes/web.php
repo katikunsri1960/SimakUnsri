@@ -281,6 +281,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'mahasiswa'])->name('prodi.data-master.mahasiswa');
                     Route::get('/mahasiswa-data', [App\Http\Controllers\Prodi\DataMasterController::class, 'mahasiswa_data'])->name('prodi.data-master.mahasiswa.data');
                     Route::post('/set-pa/{mahasiswa}', [App\Http\Controllers\Prodi\DataMasterController::class, 'set_pa'])->name('prodi.data-master.mahasiswa.set-pa');
+                    Route::post('/set-kurikulum/{mahasiswa}', [App\Http\Controllers\Prodi\DataMasterController::class, 'set_kurikulum'])->name('prodi.data-master.mahasiswa.set-kurikulum');
                     Route::post('/set-kurikulum-angkatan', [App\Http\Controllers\Prodi\DataMasterController::class, 'set_kurikulum_angkatan'])->name('prodi.data-master.mahasiswa.set-kurikulum-angkatan');
                 });
 
