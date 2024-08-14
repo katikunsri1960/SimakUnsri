@@ -72,7 +72,7 @@ Edit Kelas Perkuliahan
                                     name="nama_mata_kuliah"
                                     id="nama_mata_kuliah"
                                     aria-describedby="helpId"
-                                    value="{{$kelas->nama_ruang}}"
+                                    value="{{$kelas->nama_ruang}} - {{$kelas->lokasi}}"
                                     disabled
                                     required
                                 />
@@ -180,6 +180,17 @@ Edit Kelas Perkuliahan
                                     value="{{$kelas->kapasitas}}"
                                     required
                                 />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mb-4">
+                                <label for="ruang_kelas" class="form-label">Ruang Kelas Kuliah</label>
+                                <select class="form-select" name="ruang_kelas" id="ruang_kelas" required>
+                                    <option value="">-- Pilih Ruang Kelas --</option>
+                                    @foreach($ruang as $r)                                    
+                                        <option value="{{$r->id}}" {{ $kelas->ruang_perkuliahan_id == $r->id ? 'selected' : '' }}>{{$r->nama_ruang}} - {{$r->lokasi}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                         <div class="form-group">
