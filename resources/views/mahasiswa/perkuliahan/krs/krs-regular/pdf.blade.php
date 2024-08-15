@@ -151,7 +151,7 @@ Kartu Rencana Studi
                     <tfoot>
                         <tr>
                             <td class="text-thead" colspan="3"><strong>JUMLAH</strong></td>
-                            <td class="text-thead"><strong>{{$total_sks_regular}}</strong></td>
+                            <td class="text-thead"><strong>{{$total_sks_merdeka}}</strong></td>
                         </tr> 
                     </tfoot>
                 </table>
@@ -197,7 +197,7 @@ Kartu Rencana Studi
                                         </ul> 
                                     @endforeach
                                 </td>
-                                <td class="text-center align-middle" style="width:10%">
+                                <td class="text-center align-middle text-8" style="width:10%">
                                     <div>
                                         {{ $data->konversi= NULL ? '-' :  $data->konversi->sks_mata_kuliah }}
                                     </div>
