@@ -129,6 +129,15 @@
                             </span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*') ? 'active' : ''}}">
+                        <a href="{{route('univ.p-bayar')}}">
+                            <i class="fa fa-plane-slash"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Penundaan Bayar</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.pengaturan.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-cog"><span class="path1"></span><span class="path2"></span></i>

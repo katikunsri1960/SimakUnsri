@@ -11,7 +11,7 @@ class PenundaanBayar extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    protected $appends = ['status_text'];
+    protected $appends = ['status_text', 'terakhir_update'];
 
     public function riwayat()
     {
@@ -34,5 +34,23 @@ class PenundaanBayar extends Model
         ];
 
         return $status[$this->status];
+    }
+
+    public function scopeFilter($query, $request)
+    {
+        if($request->has('id_semester') && $request->id_semester != '') {
+            $query->where('id_semester', $request->id_semester);
+        } else {
+            $semester_aktif = SemesterAktif::first()->id_semester;
+            $query->where('id_semester', $semester_aktif);
+        }
+
+        return $query;
+    }
+
+    public function getTerakhirUpdateAttribute()
+    {
+        // update_at with d F Y H:i
+        return $this->updated_at->format('d F Y (H:i)');
     }
 }
