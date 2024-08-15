@@ -109,7 +109,7 @@ Tugas Akhir
                                                         pembimbing</button>
                                                 </div>
                                             </form>
-                                            <a href="" class="btn btn-warning btn-sm my-2" title="Edit"><i
+                                            <a href="{{route('prodi.data-akademik.tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i
                                                     class="fa fa-edit"></i> Edit</a>
                                             @endif
                                             <a href="#" class="btn btn-info btn-sm my-2" title="Detail"

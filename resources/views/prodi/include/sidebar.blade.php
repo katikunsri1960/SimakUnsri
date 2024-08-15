@@ -73,12 +73,12 @@
                                 <a href="{{route('prodi.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-akademik.tugas-akhir') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-akademik.tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>@if(Auth::user()->fk->nama_jenjang_pendidikan == 'S1')Skripsi
+                                <a href="{{route('prodi.data-akademik.tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas @if(Auth::user()->fk->nama_jenjang_pendidikan == 'S1')Skripsi
                                     @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')Tesis
                                     @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')Disertasi
                                     @else Tugas Akhir
                                     @endif
-                                     Mahasiswa</a>
+                                     Mhs</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-akademik.sidang-mahasiswa') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.sidang-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Sidang Mahasiswa</a>
