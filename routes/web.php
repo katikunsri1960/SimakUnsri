@@ -364,7 +364,14 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::prefix('tugas-akhir')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'index'])->name('prodi.data-akademik.tugas-akhir');
                     Route::post('/approve-pembimbing/{aktivitasMahasiswa}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'approve_pembimbing'])->name('prodi.data-akademik.tugas-akhir.approve-pembimbing');
-                    Route::get('/edit-pembimbing/{aktivitasMahasiswa}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'edit_pembimbing'])->name('prodi.data-akademik.tugas-akhir.edit-pembimbing');
+                    Route::get('/edit-detail/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'ubah_detail_tugas_akhir'])->name('prodi.data-akademik.tugas-akhir.edit-detail');
+                    Route::post('/update-detail/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'update_detail_tugas_akhir'])->name('prodi.data-akademik.tugas-akhir.update-detail');
+                    Route::get('/get-nama-dosen', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'get_dosen'])->name('prodi.data-akademik.tugas-akhir.get-dosen');
+                    Route::get('/tambah-dosen/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'tambah_dosen_pembimbing'])->name('prodi.data-akademik.tugas-akhir.tambah-dosen');
+                    Route::post('/store-dosen/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'store_dosen_pembimbing'])->name('prodi.data-akademik.tugas-akhir.store-dosen');
+                    Route::get('/edit-dosen/{bimbing}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'edit_dosen_pembimbing'])->name('prodi.data-akademik.tugas-akhir.edit-dosen');
+                    Route::post('/update-dosen/{bimbing}/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'update_dosen_pembimbing'])->name('prodi.data-akademik.tugas-akhir.update-dosen');
+                    Route::delete('/delete-dosen/{bimbing}', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'delete_dosen_pembimbing'])->name('prodi.data-akademik.tugas-akhir.delete-dosen');
                 });
             });
 
