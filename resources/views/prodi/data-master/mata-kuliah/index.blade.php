@@ -45,11 +45,14 @@ Mata Kuliah
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $number = 1;
+                                @endphp
                                 @foreach ($data as $a)
                                 @if ($a->mata_kuliah)
                                 @foreach ($a->mata_kuliah as $d)
                                 <tr>
-                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{ $number++ }}</td>
                                     <td class="text-start align-middle" style="width: 15%">{{$a->nama_kurikulum}}</td>
                                     <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
@@ -82,7 +85,7 @@ Mata Kuliah
                                             @else
                                             <div class="col-md-12 mb-2">
                                                 <a class="btn btn-primary btn-sm w-100"
-                                                    href="{{route('prodi.data-master.mata-kuliah.tambah-prasyarat', ['matkul' => $d])}}">
+                                                    href="{{route('prodi.data-master.mata-kuliah.tambah-prasyarat', ['kurikulum' => $a,'matkul' => $d])}}">
                                                     <i class="fa fa-plus"></i> Prasyarat
                                                 </a>
                                             </div>

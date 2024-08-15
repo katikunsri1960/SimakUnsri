@@ -37,13 +37,14 @@ Tambah Prasyarat
                         <div class="mb-3">
                             <label for="" class="form-label">Mata Kuliah Prasyarat</label>
                             <select multiple class="form-select form-select-lg" name="prasyarat[]" id="prasyarat">
-                                @foreach ($prasyarat as $p)
-                                <option value="{{$p->id_matkul}}">({{$p->kode_mata_kuliah}}) - {{$p->nama_mata_kuliah}}
+                                @foreach ($prasyarat->mata_kuliah as $m)
+                                @if ($m->id_matkul != $matkul->id_matkul)
+                                <option value="{{$m->id_matkul}}">({{$m->kode_mata_kuliah}}) - {{$m->nama_mata_kuliah}}
                                 </option>
+                                @endif
                                 @endforeach
                             </select>
                         </div>
-                        {{-- button submit --}}
                         <button class="btn btn-success" type="submit">Simpan</button>
                     </form>
                 </div>

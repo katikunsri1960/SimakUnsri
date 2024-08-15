@@ -213,7 +213,7 @@ class DataMasterController extends Controller
             ->where('id_prodi', $id_prodi)
             ->where('is_active', 1)
             ->get();
-            
+
         // $kurikulum = ListKurikulum::with(['matkul_kurikulum'])->where('id_prodi', $id_prodi)
         //     ->where('is_active', 1)
         //     ->pluck('id_kurikulum');
@@ -333,13 +333,18 @@ class DataMasterController extends Controller
         ]);
     }
 
-    public function tambah_prasyarat(MataKuliah $matkul)
+    public function tambah_prasyarat(ListKurikulum $kurikulum, MataKuliah $matkul)
     {
         $id_prodi = auth()->user()->fk_id;
 
         $db = new MataKuliah();
-        $prasyarat = $db->matkul_prodi($id_prodi);
-
+        // $prasyarat = $db->matkul_prodi($id_prodi);
+        $prasyarat = ListKurikulum::with('mata_kuliah')
+                    ->whereHas('mata_kuliah', function($query) use ($matkul) {
+                        $query->where('mata_kuliahs.id_matkul', $matkul->id_matkul);
+                    })
+                    ->where('id_prodi', $id_prodi)->where('id_kurikulum', $kurikulum->id_kurikulum)->first();
+        // dd($prasyarat);
         return view('prodi.data-master.mata-kuliah.tambah-prasyarat', [
             'matkul' => $matkul,
             'prasyarat' => $prasyarat
