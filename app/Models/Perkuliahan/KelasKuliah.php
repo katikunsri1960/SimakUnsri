@@ -6,6 +6,7 @@ use App\Models\KuisonerAnswer;
 use App\Models\Semester;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\ProgramStudi;
+use App\Models\RuangPerkuliahan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -60,6 +61,11 @@ class KelasKuliah extends Model
     public function nilai_komponen()
     {
         return $this->hasMany(NilaiKomponenEvaluasi::class, 'id_kelas', 'id_kelas_kuliah');
+    }
+
+    public function ruang_perkuliahan()
+    {
+        return $this->belongsTo(RuangPerkuliahan::class, 'ruang_perkuliahan_id', 'id');
     }
 
     public function detail_penilaian_perkuliahan(string $kelas)

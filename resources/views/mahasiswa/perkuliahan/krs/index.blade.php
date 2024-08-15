@@ -54,9 +54,9 @@ Kartu Rencana Studi
             </div>
             <div class="box-body">
                 <div class="text-center">
-                  <h3 class="my-10"><a href="{{route('mahasiswa.perkuliahan.mbkm.index')}}">Aktivitas MBKM Non-Perkuliahan</a></h3>
+                  <h3 class="my-10"><a href="{{route('mahasiswa.perkuliahan.mbkm.index')}}">Aktivitas MBKM - Non Pertukaran Pelajar</a></h3>
                   {{-- <h6 class="user-info mt-0 mb-10 text-fade">Full Stack Developer</h6> --}}
-                  <p class="text-fade w-p85 mx-auto">Aktivitas MBKM Non-Perkuliahan</p>
+                  <p class="text-fade w-p85 mx-auto">Aktivitas MBKM - Non Pertukaran Pelajar</p>
                 </div>
             </div>
           </div>

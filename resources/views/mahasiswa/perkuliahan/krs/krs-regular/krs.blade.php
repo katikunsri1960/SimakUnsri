@@ -4,8 +4,9 @@
             <div class="row">
                 <div class="row">
                     @php
-                        $today = \Carbon\Carbon::now();
-                        $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
+                        // $today = \Carbon\Carbon::now();
+                        // $batas_isi_krs = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
+                        // $batas_pembayaran = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                     @endphp
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
                         @if(!empty($beasiswa) || !empty($tagihan->pembayaran->status_pembayaran) || $semester_select != $semester_aktif->id_semester)
@@ -54,7 +55,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger rounded-10" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger rounded-10" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approved == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -121,7 +122,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approved == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -207,7 +208,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approve_krs == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approve_krs == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -249,19 +250,19 @@
                                                             <label>
                                                                 Anda tidak dapat melakukan pengisian KRS!
                                                             </label><br>
-                                                            @if($beasiswa==NULL || $tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti==NULL)
+                                                            @if($beasiswa==NULL || $tagihan->status_pembayaran==NULL && $today<=$batas_pembayaran && $cuti==NULL)
                                                                 <label>
                                                                     Segera Lakukan Pembayaran UKT Sebelum Periode Pembayaran Berakhir!
                                                                 </label>
-                                                            @elseif($tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti!=NULL)
+                                                            @elseif($tagihan->status_pembayaran==NULL && $today > $batas_pembayaran && $cuti!=NULL)
                                                                 <label>
                                                                     Anda dalam Masa <strong>Cuti Kuliah</strong> / <strong>STOP OUT</strong>
                                                                 </label>
-                                                            @elseif($tagihan->status_pembayaran==NULL && $today>$deadline && $cuti==NULL)
+                                                            @elseif($tagihan->status_pembayaran==NULL  && $cuti==NULL && $today > $masa_tenggang )
                                                                 <label>
                                                                     Anda Dinyatakan <strong>DROP OUT</strong> karena tidak melakukan pembayaran dan tidak mengajukan <strong>STOP OUT</strong>
                                                                 </label>
-                                                            @elseif($tagihan->status_pembayaran==NULL && $today>$deadline)
+                                                            @elseif($tagihan->status_pembayaran==NULL && $today>$batas_pembayaran && $today<$masa_tenggang)
                                                                  <label>
                                                                     Segera Ajukan <strong>Cuti Kuliah</strong> / Stop Out Sebelum Periode Pengajuan Berakhir!
                                                                  </label>

@@ -10,6 +10,7 @@ use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Connection\Registrasi;
 use App\Models\Mahasiswa\PengajuanCuti;
 use App\Models\Referensi\JenisPrestasi;
 use Illuminate\Support\Facades\Storage;
@@ -31,6 +32,8 @@ class CutiController extends Controller
         // - atau telah menempuh minimal 50% dari total sks yang wajib ditempuh pada program studinya.
         
         $user = auth()->user();
+        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
+        
         $id_semester = SemesterAktif::first()->id_semester;
         $data = PengajuanCuti::where('id_registrasi_mahasiswa', $user->fk_id)->get();
         // dd($data[0]->id_cuti);
@@ -49,7 +52,7 @@ class CutiController extends Controller
         $pengecekan = $this->checkConditions($jenjang_pendidikan, $beasiswa, $data, $semester_ke);
 
         $tagihan = Tagihan::with('pembayaran')
-            ->where('nomor_pembayaran', $user->username)
+        ->whereIn('tagihan.nomor_pembayaran', [$id_test, $user->username])
             ->where('kode_periode', $id_semester)
             ->first();
 
