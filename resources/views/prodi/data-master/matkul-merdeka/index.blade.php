@@ -51,7 +51,7 @@ Mata Kuliah
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$d->matkul->kode_mata_kuliah}}</td>
-                                    <td class="text-center align-middle">{{$d->matkul->nama_mata_kuliah}}</td>
+                                    <td class="text-start align-middle">{{$d->matkul->nama_mata_kuliah}}</td>
                                     <td class="text-center align-middle">{{$d->matkul->sks_mata_kuliah}}</td>
                                     <td class="text-center align-middle">
                                         <form action="{{route('prodi.data-master.matkul-merdeka.delete', $d->id)}}" method="post" class="delete-form" data-id="{{$d->id}}" id="deleteForm{{$d->id}}">

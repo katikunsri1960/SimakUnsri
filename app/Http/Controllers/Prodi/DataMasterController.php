@@ -205,20 +205,29 @@ class DataMasterController extends Controller
             ->where('id_prodi', $id_prodi)
             ->get();
 
-        $kurikulum = ListKurikulum::with(['matkul_kurikulum'])->where('id_prodi', $id_prodi)
+        $idMatkulArray = $data->pluck('id_matkul')->toArray();
+        // dd($idMatkulArray);
+        $matkul = ListKurikulum::with(['mata_kuliah' => function($query) use ($idMatkulArray) {
+                $query->whereNotIn('mata_kuliahs.id_matkul', $idMatkulArray);
+            }])
+            ->where('id_prodi', $id_prodi)
             ->where('is_active', 1)
-            ->pluck('id_kurikulum');
-
-        $matkul = MataKuliah::with(['kurikulum'])->where('id_prodi', $id_prodi)
-            ->whereNotIn('id_matkul', function($query) use ($id_prodi) {
-                $query->select('id_matkul')
-                    ->from(with(new MatkulMerdeka)->getTable())
-                    ->where('id_prodi', $id_prodi);
-            })->whereHas('kurikulum', function($query) use ($kurikulum){
-                $query->whereIn('list_kurikulums.id_kurikulum', $kurikulum);
-            })
-            ->orderBy('kode_mata_kuliah')
             ->get();
+            
+        // $kurikulum = ListKurikulum::with(['matkul_kurikulum'])->where('id_prodi', $id_prodi)
+        //     ->where('is_active', 1)
+        //     ->pluck('id_kurikulum');
+
+        // $matkul = MataKuliah::with(['kurikulum'])->where('id_prodi', $id_prodi)
+        //     ->whereNotIn('id_matkul', function($query) use ($id_prodi) {
+        //         $query->select('id_matkul')
+        //             ->from(with(new MatkulMerdeka)->getTable())
+        //             ->where('id_prodi', $id_prodi);
+        //     })->whereHas('kurikulum', function($query) use ($kurikulum){
+        //         $query->whereIn('list_kurikulums.id_kurikulum', $kurikulum);
+        //     })
+        //     ->orderBy('kode_mata_kuliah')
+        //     ->get();
 
         return view('prodi.data-master.matkul-merdeka.index', compact('matkul', 'data'));
     }
