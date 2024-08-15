@@ -12,7 +12,7 @@ Pengajuan Aktivitas Magang
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('mahasiswa.perkuliahan.mbkm.index')}}">Aktivitas MBKM</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('mahasiswa.perkuliahan.mbkm.non-pertukaran')}}">Aktivitas MBKM Non Pertukaran</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Tambah Aktivitas MBKM</li>
                     </ol>
                 </nav>
@@ -131,7 +131,7 @@ Pengajuan Aktivitas Magang
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('mahasiswa.perkuliahan.mbkm.index')}}" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('mahasiswa.perkuliahan.mbkm.non-pertukaran')}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>

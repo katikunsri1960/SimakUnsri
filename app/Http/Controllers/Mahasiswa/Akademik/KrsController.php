@@ -595,21 +595,16 @@ class KrsController extends Controller
         $tgl_krs_merdeka = $krs_merdeka->first();
         $tgl_krs_akt = $krs_akt->first();
 
-        // $tgl_krs_merdeka = NULL;
-        // $tgl_krs_akt = NULL;
-
         if (!empty($tgl_krs_regular)) {
             $tanggal_approve = Carbon::parse($tgl_krs_regular->tanggal_approve);
         } 
         elseif (!empty($tgl_krs_merdeka))
         {
             $tanggal_approve = Carbon::parse($tgl_krs_merdeka->tanggal_approve);
-            // $tanggal_approve = NULL;
         }
         elseif (!empty($tgl_krs_akt))
         {
             $tanggal_approve = Carbon::parse($tgl_krs_akt->tanggal_approve);
-            // $tanggal_approve = NULL;
         }
         else
         {
