@@ -41,7 +41,7 @@ class AktivitasMahasiswaKonversiController extends Controller
 
         $jenis_aktivitas=AktivitasMahasiswa::select('id_jenis_aktivitas', 'nama_jenis_aktivitas')
                     ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
-                    ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','6', '22'])
+                    ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4', '5','6', '22'])
                     ->orderBy('nama_jenis_aktivitas')
                     ->get();
 
