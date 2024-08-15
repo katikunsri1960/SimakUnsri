@@ -23,6 +23,7 @@ use function PHPUnit\Framework\isEmpty;
 use Illuminate\Cache\RateLimiting\Limit;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PenundaanBayar;
 use App\Models\Perkuliahan\PrasyaratMatkul;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
@@ -160,8 +161,10 @@ class KrsController extends Controller
         $masa_tenggang = Carbon::parse($semester_aktif->batas_bayar_ukt)->addDays(30)->toDateString();
 
         $today = Carbon::now()->toDateString();
-        // $today= '2024-09-02';
-        // dd($today);
+        
+        $penundaan_pembayaran = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
+                                ->count();
+
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
                 return $this->formatDosenPengajar($dosenPengajar);
@@ -188,7 +191,7 @@ class KrsController extends Controller
             'tagihan', 
             'cuti',
             'transkrip',
-            'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang'
+            'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran'
         ));
     }
 

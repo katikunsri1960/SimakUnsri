@@ -77,7 +77,7 @@
                                 </div>
                             </div>
                         @elseif($today <= $batas_isi_krs)
-                            @if(!empty($beasiswa) || !empty($tagihan->pembayaran->status_pembayaran))
+                            @if(!empty($beasiswa)|| $penundaan_pembayaran > 0 || !empty($tagihan->pembayaran->status_pembayaran))
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">
