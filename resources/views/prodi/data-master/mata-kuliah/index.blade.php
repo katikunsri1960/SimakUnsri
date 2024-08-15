@@ -77,7 +77,7 @@ Mata Kuliah
                                                     method="post" id="delete-prasyarat-{{$d->id}}">
                                                     @csrf
                                                     @method('delete')
-                                                    <button type="submit" class="btn btn-warning btn-sm">
+                                                    <button type="submit" class="btn btn-danger btn-sm">
                                                         <i class="fa fa-trash"></i> Hapus Prasyarat
                                                     </button>
                                                 </form>
