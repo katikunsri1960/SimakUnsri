@@ -15,7 +15,11 @@
                         <select class="form-select" name="id_matkul" id="matkulTambah">
                             <option value="">-- Pilih Mata Kuliah --</option>
                             @foreach ($matkul as $m)
-                            <option value="{{$m->id_matkul}}">({{$m->kode_mata_kuliah}}) {{$m->nama_mata_kuliah}}</option>
+                            @if ($m->mata_kuliah)
+                            @foreach ($m->mata_kuliah as $mk)
+                            <option value="{{$mk->id_matkul}}">({{$mk->kode_mata_kuliah}}) {{$mk->nama_mata_kuliah}}</option>
+                            @endforeach
+                            @endif
                             @endforeach
                         </select>
                     </div>
