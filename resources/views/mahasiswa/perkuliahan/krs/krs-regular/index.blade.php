@@ -208,17 +208,18 @@ Kartu Rencana Studi
                     // console.log(id_prodi)
                     var mkMerdeka = response.mk_merdeka;
                     var krsMerdeka = response.krs_merdeka.map(krs => krs.id_matkul); // Extract id_matkul from krs_merdeka
-                    var mhsProdi = response.prodi_mhs;
+                    var mhsProdi = response.prodi_mk;
                     var tbody = $('#mk-merdeka-tbody');
                     tbody.empty(); // Kosongkan tabel sebelum menambahkan data baru
                     
                     if (mkMerdeka.length > 0) {
+                        console.log(response)
                         $.each(mkMerdeka, function(index, data) {
-                            // console.log(mhsProdi)
-                            var isDisabled = krsMerdeka.includes(data.id_matkul);
+                            var isDisabledMerdeka = krsMerdeka.includes(data.id_matkul);
                             var isEmptyClass = data.jumlah_kelas == 0
                             var isEmptyRps = data.jumlah_rps == 0
-                            var row = '<tr class="' + (isDisabled ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
+                            
+                            var row = '<tr class="' + (isDisabledMerdeka ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
                                 '<td class="text-center align-middle" style="width: 5%;">' + (index + 1) +'. '+ '</td>' +
                                 '<td class="text-center align-middle" style="width: 10%;">' + data.kode_mata_kuliah + '</td>' +
                                 '<td class="text-start align-middle" style="white-space: nowrap;">' + data.nama_mata_kuliah + '</td>' +
@@ -231,8 +232,8 @@ Kartu Rencana Studi
                                 '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
                                 '<td class="text-center align-middle">' + data.jumlah_kelas + '</td>' +
                                 '<td class="text-center align-middle">' +
-                                    '<button class="btn btn-success-light lihat-kelas-kuliah-merdeka" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmptyClass || isEmptyRps || isDisabled ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
-                                    '<div class="result-container" id="result-container_'+ data.id_matkul +'" style="margin-top: 5px"></div>' +
+                                    '<button class="btn btn-success-light lihat-kelas-kuliah-merdeka" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmptyClass || isEmptyRps || isDisabledMerdeka ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
+                                    '<div class="result-container" id="result-container_m'+ data.id_matkul +'" style="margin-top: 5px"></div>' +
                                 '</td>' +
                                 '</tr>';
                             tbody.append(row);
@@ -288,7 +289,7 @@ Kartu Rencana Studi
         // Event listener untuk tombol "Lihat Kelas Kuliah"
         $(document).on('click', '.lihat-kelas-kuliah-merdeka', function() {
             var idMatkul = $(this).data('id-matkul');
-            var resultContainerId = '#result-container_' + idMatkul;
+            var resultContainerId = '#result-container_m' + idMatkul;
 
             // Dapatkan CSRF token dari meta tag
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
@@ -332,7 +333,7 @@ Kartu Rencana Studi
                 table += '<tr>';
                 table += '<td>' + (index + 1) + '</td>';
                 table += '<td>' + kelas.nama_kelas_kuliah + '</td>';
-                console.log(kelas)
+                // console.log(kelas)
                 if (kelas.ruang_perkuliahan) {
                     table += '<td>' + kelas.ruang_perkuliahan.nama_ruang +' ('+kelas.ruang_perkuliahan.lokasi  +  ')</td>';
                 } else {

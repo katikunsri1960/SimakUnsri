@@ -224,7 +224,7 @@ Kartu Rencana Studi
             <tr width="100%">
                 <td width="60%"></td>
                 <td width="50%" class="text-right text-10" >
-                        Inderalaya, {{ $tanggal_approve}}
+                        Inderalaya, {{ $tanggal_approve->locale('id')->translatedFormat('d F Y')}}
                 </td>
             </tr>
             <tr>
