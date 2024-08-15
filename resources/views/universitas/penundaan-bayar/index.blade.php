@@ -54,21 +54,25 @@ Penundaan Bayar
                                 <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
                                 <td class="text-center align-middle">
                                     @php
-                                        if($d->status == 0) {
+                                    switch ($d->status) {
+                                        case 0:
                                             $text = 'warning';
-                                        } elseif($d->status == 2) {
+                                            break;
+                                        case 2:
+                                        case 3:
                                             $text = 'primary';
-                                        } elseif($d->status == 3) {
-                                            $text = 'primary';
-                                        } elseif($d->status == 4) {
+                                            break;
+                                        case 4:
                                             $text = 'success';
-                                        } else {
+                                            break;
+                                        default:
                                             $text = 'danger';
-                                        }
-                                    @endphp
-                                    <span class="badge bg-{{$text}}">
-                                        {{$d->status_text}}
-                                    </span>
+                                            break;
+                                    }
+                                @endphp
+                                <span class="badge bg-{{$text}}">
+                                    {{$d->status_text}}
+                                </span>
 
                                 </td>
                                 <td class="text-center align-middle">{{$d->terakhir_update}}</td>
