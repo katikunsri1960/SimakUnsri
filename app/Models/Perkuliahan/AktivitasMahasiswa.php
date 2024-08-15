@@ -155,7 +155,6 @@ class AktivitasMahasiswa extends Model
         {
             $mk_akt=NULL;
             $data_akt_ids = NULL;
-
         }
         else
         {
