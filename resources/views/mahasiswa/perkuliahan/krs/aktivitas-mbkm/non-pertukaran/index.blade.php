@@ -3,6 +3,7 @@
 Aktivitas MBKM - Non Pertukaran Pelajar
 @endsection
 @section('content')
+@include('swal')
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-12">
@@ -12,7 +13,8 @@ Aktivitas MBKM - Non Pertukaran Pelajar
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Aktivitas MBKM - Non Pertukaran Pelajar,  {{auth()->user()->name}}</h2>
+								<h2 class="mb-10">Aktivitas MBKM Non Pertukaran Pelajar,  
+                                    {{-- {{auth()->user()->name}}</h2> --}}
                                 <p class="text-dark mb-0 fs-16">
                                     SIMAK Universitas Sriwijaya
                                 </p>
@@ -30,10 +32,10 @@ Aktivitas MBKM - Non Pertukaran Pelajar
                     <div class="col-12 px-25">
                         <div class="box no-shadow mb-0 bg-transparent">
                             <div class="box-header no-border px-0" style="text-align-last: left; padding-bottom:20px">
-                            <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
+                            <a type="button" href="{{route('mahasiswa.perkuliahan.mbkm.view')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
                             <i class="fa-solid fa-arrow-left"></i>
                             </a>
-                            <h3 class="box-title px-3">Daftar Aktivitas MBKM - Non Pertukaran Pelajar</h3>
+                            <h3 class="box-title px-3">Daftar Aktivitas MBKM Non Pertukaran Pelajar</h3>
                             </div>
                         </div>
                     </div>
@@ -41,15 +43,11 @@ Aktivitas MBKM - Non Pertukaran Pelajar
                 <div class="row mb-5">
                     <div class="col-xl-12 col-lg-12 text-end">
                         <div class="btn-group">
-                            <a class="btn btn-rounded bg-success-light " href="{{route('mahasiswa.perkuliahan.mbkm.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Aktivitas MBKM</a>
+                            <a class="btn btn-rounded bg-success-light " href="{{route('mahasiswa.perkuliahan.mbkm.tambah-non-pertukaran')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Aktivitas MBKM</a>
                         </div>   
                     </div>                           
                 </div><br>
                 <div class="row">
-                    @php
-                        $today = \Carbon\Carbon::now();
-                        $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
-                    @endphp
                     <div class="table-responsive">
                         <table id="aktivitas-mbkm" class="table table-bordered table-striped text-left">
                             <thead>
@@ -103,7 +101,7 @@ Aktivitas MBKM - Non Pertukaran Pelajar
                                             <form action="{{route('mahasiswa.perkuliahan.mbkm.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ (!$today->greaterThan($deadline) && $data->approved == 0) ? '' : 'disabled' }}>
+                                                <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ $today>$deadline || $data->approved == 1 ?  'disabled' : '' }}> 
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>

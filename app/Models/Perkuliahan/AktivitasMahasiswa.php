@@ -148,7 +148,7 @@ class AktivitasMahasiswa extends Model
         $data_akt = Konversi::
                     where('id_prodi', $riwayat_pendidikan->id_prodi)
                     ->where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
-                    ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','6', '22'])
+                    ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','5','6', '22'])
                     ->get();
                     
         if($data_akt == NULL)
@@ -174,7 +174,7 @@ class AktivitasMahasiswa extends Model
                             })
                             ->where('id_semester', $id_semester)
                             ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                            ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','6', '22'])
+                            ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','5','6', '22'])
                             ->get();
                             
         // $matkul_konversi = $krs_akt->aktivitas_mahasiswa->konversi;
