@@ -166,14 +166,14 @@ class MataKuliah extends Model
         return $krs_regular;
     }
 
-    public function getKrsMerdeka($id_reg, $id_semester,  $id_prodi)
+    public function getKrsMerdeka($id_reg, $id_semester,  $prodi_mhs)
     {
         $krs_merdeka = PesertaKelasKuliah::select('peserta_kelas_kuliahs.*','kelas_kuliahs.id_prodi', 'kelas_kuliahs.jadwal_hari', 'kelas_kuliahs.jadwal_jam_mulai', 'kelas_kuliahs.jadwal_jam_selesai', 'mata_kuliahs.sks_mata_kuliah', 'tanggal_approve')
                 ->join('matkul_merdekas', 'matkul_merdekas.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'peserta_kelas_kuliahs.id_matkul')
                 ->leftJoin('kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
                 ->where('id_registrasi_mahasiswa', $id_reg)
-                ->whereNotIn('kelas_kuliahs.id_prodi', [$id_prodi])
+                ->whereNotIn('kelas_kuliahs.id_prodi', [$prodi_mhs])
                 ->where('id_semester', $id_semester)
                 ->get();
                 // dd($krs_merdeka);

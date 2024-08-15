@@ -159,7 +159,7 @@ class KrsController extends Controller
         
         $masa_tenggang = Carbon::parse($semester_aktif->batas_bayar_ukt)->addDays(30)->toDateString();
 
-        $today = \Carbon\Carbon::now()->toDateString();
+        $today = Carbon::now()->toDateString();
         // $today= '2024-09-02';
         // dd($today);
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
@@ -214,7 +214,7 @@ class KrsController extends Controller
         $id_prodi = $request->input('id_prodi');
 
         $prodi_mhs =RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->pluck('id_prodi');
+                    ->pluck('id_prodi')->first();
         
 
         // $selectedFakultasId = $request->input('fakultas_id');
@@ -225,7 +225,7 @@ class KrsController extends Controller
         $db = new MataKuliah();
 
         // Query untuk mengambil data mata kuliah merdeka berdasarkan id_prodi yang dipilih
-        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif, $id_prodi);
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif, $prodi_mhs);
 
         $mkMerdeka = $db->getMKMerdeka($semester_aktif, $id_prodi);
         // dd($mkMerdeka);
@@ -591,21 +591,32 @@ class KrsController extends Controller
             // dd($tidak_ada_krs_cetak);
         }
 
-        if (!empty($krs_regular->tanggal_approve)) {
-            $tanggal_approve = $krs_regular->tanggal_approve->first();
+        $tgl_krs_regular = $krs_regular->first();
+        $tgl_krs_merdeka = $krs_merdeka->first();
+        $tgl_krs_akt = $krs_akt->first();
+
+        // $tgl_krs_merdeka = NULL;
+        // $tgl_krs_akt = NULL;
+
+        if (!empty($tgl_krs_regular)) {
+            $tanggal_approve = Carbon::parse($tgl_krs_regular->tanggal_approve);
         } 
-        elseif (!empty($krs_merdeka->tanggal_approve))
+        elseif (!empty($tgl_krs_merdeka))
         {
-            $tanggal_approve = $krs_merdeka->tanggal_approve->first();
+            $tanggal_approve = Carbon::parse($tgl_krs_merdeka->tanggal_approve);
+            // $tanggal_approve = NULL;
         }
-        elseif (!empty($krs_akt->tanggal_approve))
+        elseif (!empty($tgl_krs_akt))
         {
-            $tanggal_approve = $krs_akt->tanggal_approve->first();
+            $tanggal_approve = Carbon::parse($tgl_krs_akt->tanggal_approve);
+            // $tanggal_approve = NULL;
         }
         else
         {
             $tanggal_approve = '-';
         }
+
+        // dd($krs_merdeka->first());
         
         
         $pdf = PDF::loadview('mahasiswa.perkuliahan.krs.krs-regular.pdf', [
