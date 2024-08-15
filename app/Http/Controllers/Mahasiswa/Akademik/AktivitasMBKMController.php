@@ -98,7 +98,7 @@ class AktivitasMBKMController extends Controller
             'aktivitas_mbkm' => 'required',
             'judul' => 'required|string|max:255',
             'keterangan' => 'nullable|max:100', 
-            'lokasi' => 'required|string',
+            'lokasi' => 'required|string|max:255',
             'dosen_bimbing_aktivitas' => 'required',
         ]);
 
@@ -277,7 +277,7 @@ class AktivitasMBKMController extends Controller
             'aktivitas_mbkm' =>'required',
             'judul' => 'required|string|max:255',
             'keterangan' => 'nullable|max:100', // tambahkan validasi untuk Keterangan
-            'lokasi' => 'required|string',
+            'lokasi' => 'required|string|max:255',
         ]);
 
         try {
