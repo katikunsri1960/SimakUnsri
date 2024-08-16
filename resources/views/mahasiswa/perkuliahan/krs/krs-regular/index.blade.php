@@ -392,22 +392,17 @@ Kartu Rencana Studi
                                 _token: csrfToken  // Sertakan CSRF token di sini
                             },
                             success: function(response) {
-                                console.log(response.message);
                                 swal({
                                     title: 'Berhasil!',
                                     text: response.message,
-                                    icon: 'success',
+                                    type: 'success',
                                     button: 'OK'
-                                }).then(function(result) {
-                                    if (result) {
-                                        console.log(response.message);
-                                        // Lakukan refresh halaman atau aksi lainnya jika diperlukan
-                                        location.reload();
-                                    }
+                                }, function() {
+                                    location.reload();
                                 });
                             },
                             error: function(response) {
-                                console.log(response);
+                                // console.log(response);
                                 var errorMessage = response.responseJSON.message;
                                 swal({
                                     title: 'Gagal!',
@@ -504,7 +499,6 @@ Kartu Rencana Studi
                     title: "Apakah Anda yakin?",
                     text: "Data yang dihapus tidak dapat dikembalikan!",
                     type: "warning",
-                    type: 'warning',
                     buttons: true,
                     dangerMode: true,
                 })
