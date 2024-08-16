@@ -153,10 +153,14 @@ Kartu Rencana Studi
                     type: 'GET',
                     success: function(response) {
                         if (response.error) {
-                            swal("Perhatian", response.error, "warning").then(() => {
+                            swal("Perhatian", 
+                                response.error, 
+                                "warning"
+                            ).then(() => {
                                 window.location.href = '{{ url()->previous() }}'; // Redirect ke halaman sebelumnya
                             });
-                        } else {
+                        } 
+                        else {
                             window.open('{{ route("mahasiswa.krs.print", ["id_semester" => $semester_select]) }}', '_blank'); // Jika tidak ada error, buka halaman print di tab baru
                         }
                     },
