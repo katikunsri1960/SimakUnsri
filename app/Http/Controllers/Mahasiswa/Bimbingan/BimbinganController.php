@@ -24,7 +24,7 @@ class BimbinganController extends Controller
         $user = auth()->user();
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
 
-        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
         // dd($beasiswa);
 
         // Cek status pembayaran
@@ -57,6 +57,7 @@ class BimbinganController extends Controller
                 'dosen_pembimbing' => collect(),
                 'showAlert' => true, // Flag untuk menampilkan SweetAlert
                 'statusPembayaran' => $statusPembayaran,
+                'beasiswa' => $beasiswa,
             ]);
         }
 
