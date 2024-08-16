@@ -588,15 +588,19 @@ class KrsController extends Controller
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-        if (empty($krs_regular) && empty($krs_merdeka) && empty($krs_akt)) {
-            // $tidak_ada_krs_cetak=1;
-            return response()->json(['error' => 'KRS tidak dapat dicetak, karena data tidak ditemukan']);
-            // dd($tidak_ada_krs_cetak);
-        }
+        // dd($krs_merdeka);
 
         $tgl_krs_regular = $krs_regular->first();
         $tgl_krs_merdeka = $krs_merdeka->first();
         $tgl_krs_akt = $krs_akt->first();
+
+        // if (empty($tgl_krs_regular) && empty($tgl_krs_merdeka) && empty($tgl_krs_akt) ) {
+        //     return response()->json(['error' => 'KRS anda belum disetujui Dosen PA.']);
+        // }
+
+        if (empty($krs_regular->first()) && empty($krs_merdeka->first()) && empty($krs_akt->first())) {
+            return redirect()->back()->with('error' , 'KRS tidak dapat dicetak,KRS belum disetujui Dosen PA');
+        }
 
         if (!empty($tgl_krs_regular)) {
             $tanggal_approve = Carbon::parse($tgl_krs_regular->tanggal_approve);
@@ -614,7 +618,7 @@ class KrsController extends Controller
             $tanggal_approve = '-';
         }
 
-        // dd($krs_merdeka->first());
+        
         
         
         $pdf = PDF::loadview('mahasiswa.perkuliahan.krs.krs-regular.pdf', [

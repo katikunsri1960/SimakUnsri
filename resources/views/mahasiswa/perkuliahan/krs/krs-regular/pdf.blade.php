@@ -3,6 +3,7 @@
 Kartu Rencana Studi
 @endsection
 @section('content')
+@include('swal')
 <div style="text-transform: uppercase; font-family: Arial, Helvetica, sans-serif" style="margin-left: 2%">
     <div class="container-fluid" >
         <table style="width: 70%" class="table-pdf">
