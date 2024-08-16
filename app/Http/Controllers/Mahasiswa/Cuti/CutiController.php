@@ -35,28 +35,30 @@ class CutiController extends Controller
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
         
         $id_semester = SemesterAktif::first()->id_semester;
+
         $data = PengajuanCuti::where('id_registrasi_mahasiswa', $user->fk_id)->get();
-        // dd($data[0]->id_cuti);
 
         $jenjang_pendidikan = RiwayatPendidikan::with('prodi')->where('id_registrasi_mahasiswa', $user->fk_id)->first();
-        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
+
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
         
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
                     ->orderBy('id_semester', 'DESC')
                     ->get();
+
         $semester_ke = $semester->filter(function($item) {
                 return substr($item->id_semester, -1) != '3';
             })->count();
-            // dd($semester_ke);
-
-        $pengecekan = $this->checkConditions($jenjang_pendidikan, $beasiswa, $data, $semester_ke);
+            
+        $pengecekan = $this->checkConditions($jenjang_pendidikan->prodi->id_jenjang_pendidikan, $beasiswa, $data, $semester_ke);
+        // dd($jenjang_pendidikan->prodi->id_jenjang_pendidikan);
 
         $tagihan = Tagihan::with('pembayaran')
         ->whereIn('tagihan.nomor_pembayaran', [$id_test, $user->username])
             ->where('kode_periode', $id_semester)
             ->first();
 
-        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
+        // $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
             // dd($beasiswa);
     
         $statusPembayaran = $tagihan->pembayaran ? $tagihan->pembayaran->status_pembayaran : null;
@@ -76,15 +78,20 @@ class CutiController extends Controller
     
     private function calculateMaxCuti($jenjang_pendidikan, $beasiswa)
     {
-        if ($jenjang_pendidikan->prodi->nama_jenjang_pendidikan == 'S1' ||
-            ($jenjang_pendidikan->prodi->nama_jenjang_pendidikan == 'D3' && $beasiswa == null)) {
-            return 1;
-        } elseif ($jenjang_pendidikan->prodi->nama_jenjang_pendidikan == 'S2' ||
-                    ($jenjang_pendidikan->prodi->nama_jenjang_pendidikan == 'S3' && $beasiswa == null)) {
-            return 2;
-        } else {
-            return 0;
-        }
+
+        // if ($beasiswa = 0) {
+            if ($jenjang_pendidikan == 30 ||
+                        $jenjang_pendidikan == 22) {
+                return 1;
+            } elseif ($jenjang_pendidikan == 35 ||
+                        $jenjang_pendidikan == 40) {
+                return 2;
+            } else {
+                return 0;
+            }
+        // } else {
+        //     return 0;
+        // }
     }
     
     private function checkConditions($jenjang_pendidikan, $beasiswa, $data, $semester_ke)
@@ -95,14 +102,14 @@ class CutiController extends Controller
         $showAlert2 = false;
         $showAlert3 = false;
     
-        if ($max_cuti == 0 && $data->isEmpty()) {
-            $showAlert1 = true;
-        } elseif ($beasiswa != null) {
+        if ($beasiswa > 0) {
             $showAlert2 = true;
+        } elseif  ($max_cuti == 0 && $data->isEmpty()){
+            $showAlert1 = true;
         } elseif ($semester_ke <= 4) {
             $showAlert3 = true;
         }
-    
+// dd($showAlert2);
         return [
             'max_cuti' => $max_cuti,
             'showAlert1' => $showAlert1,

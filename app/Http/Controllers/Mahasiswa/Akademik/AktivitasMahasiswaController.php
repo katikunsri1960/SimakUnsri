@@ -380,6 +380,7 @@ class AktivitasMahasiswaController extends Controller
                 $bimbing=BimbingMahasiswa::create([
                     'feeder'=>0,
                     'approved'=>0,
+                    'approved_dosen'=>0,
                     'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
                     'id_aktivitas'=>$aktivitas->id_aktivitas,
                     'judul'=>$aktivitas->judul,

@@ -191,7 +191,7 @@ Bimbingan Tugas Akhir
         $('.select2').select2();
 
         // Check payment status and show SweetAlert if not paid
-        @if ($statusPembayaran == NULL)
+        @if ($statusPembayaran == NULL && $beasiswa == 0)
         //console.log('masook')
             swal({
                 title: 'Pembayaran Belum Lunas',
