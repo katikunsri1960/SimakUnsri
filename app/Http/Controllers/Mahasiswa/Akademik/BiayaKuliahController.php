@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Connection\Pembayaran;
 use App\Models\Connection\Registrasi;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 
 class BiayaKuliahController extends Controller
 {
@@ -19,14 +20,20 @@ class BiayaKuliahController extends Controller
     {
         $semester_aktif = SemesterAktif::first();
         $user = auth()->user();
+        $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
+                    ->select('riwayat_pendidikans.*')
+                    ->where('id_registrasi_mahasiswa', $user->fk_id)
+                    ->first();
+                    
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
+
 
         // dd($id_test);
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
         // dd($beasiswa);
 
         $tagihan = Tagihan::with('pembayaran')
-                ->whereIn('tagihan.nomor_pembayaran', [$id_test, $user->username])
+                ->whereIn('tagihan.nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
                 ->where('tagihan.kode_periode', $semester_aktif->id_semester)
                 ->select(
                     'tagihan.id_record_tagihan',

@@ -31,7 +31,8 @@ class CutiController extends Controller
         // - mahasiswa telah menempuh minimal 4 semester untuk program sarjana, 
         // - atau telah menempuh minimal 50% dari total sks yang wajib ditempuh pada program studinya.
         
-        $user = auth()->user();
+        $user = auth()->user()->username;
+        // dd($user);
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
         
         $id_semester = SemesterAktif::first()->id_semester;
@@ -54,7 +55,7 @@ class CutiController extends Controller
         // dd($jenjang_pendidikan->prodi->id_jenjang_pendidikan);
 
         $tagihan = Tagihan::with('pembayaran')
-        ->whereIn('tagihan.nomor_pembayaran', [$id_test, $user->username])
+        ->whereIn('tagihan.nomor_pembayaran', [$id_test, $user])
             ->where('kode_periode', $id_semester)
             ->first();
 
