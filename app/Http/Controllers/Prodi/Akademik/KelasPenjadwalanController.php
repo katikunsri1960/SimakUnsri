@@ -51,11 +51,12 @@ class KelasPenjadwalanController extends Controller
         $semester_aktif = SemesterAktif::first();
         $prodi_id = auth()->user()->fk_id;
         $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
-        $data = KelasKuliah::with(['peserta_kelas','dosen_pengajar', 'dosen_pengajar.dosen'])->leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
-                            ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
-                            ->where('kelas_kuliahs.id_matkul', $id_matkul)
-                            ->where('kelas_kuliahs.id_prodi', $prodi_id)
-                            ->where('kelas_kuliahs.id_semester', $semester_aktif->id_semester)
+        $data = KelasKuliah::with(['peserta_kelas','dosen_pengajar', 'dosen_pengajar.dosen', 'ruang_perkuliahan', 'semester'])
+                            // ->leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
+                            // ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
+                            ->where('id_matkul', $id_matkul)
+                            ->where('id_prodi', $prodi_id)
+                            ->where('id_semester', $semester_aktif->id_semester)
                             ->get();
         // dd($data);
         return view('prodi.data-akademik.kelas-penjadwalan.detail', ['data' => $data, 'id_matkul' => $id_matkul, 'matkul' => $mata_kuliah]);
@@ -506,7 +507,7 @@ class KelasPenjadwalanController extends Controller
         // dd($kelas);
 
         $ruang = RuangPerkuliahan::where('id_prodi', $prodi_id)->where('lokasi', $kelas->lokasi)->get();
-    
+
         return view('prodi.data-akademik.kelas-penjadwalan.edit', ['kelas' => $kelas, 'matkul' => $mata_kuliah, 'ruang' => $ruang]);
     }
 
@@ -560,5 +561,14 @@ class KelasPenjadwalanController extends Controller
             DB::rollback();
             return redirect()->back()->with('error', 'Data Kelas Gagal di Ubah. '. $th->getMessage());
         }
+    }
+
+    public function peserta_kelas($id_matkul, $id_kelas)
+    {
+        $kelas = KelasKuliah::where('id', $id_kelas)->first();
+        $matkul = MataKuliah::where('id', $id_matkul)->first();
+        $peserta = PesertaKelasKuliah::with('mahasiswa')->where('id_kelas_kuliah', $kelas->id_kelas_kuliah)->get();
+        // dd($id_matkul);
+        return view('prodi.data-akademik.kelas-penjadwalan.peserta-kelas', ['peserta' => $peserta, 'kelas' => $kelas, 'matkul' => $matkul]);
     }
 }

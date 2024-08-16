@@ -24,6 +24,11 @@ class PesertaKelasKuliah extends Model
         return $this->belongsTo(KelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
     }
 
+    public function mahasiswa()
+    {
+        return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
     public function matkul()
     {
         $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');

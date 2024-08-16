@@ -70,9 +70,17 @@ Kelas Penjadwalan
                                 @foreach($data as $d)
                                     <tr>
                                         <td class="text-center align-middle">{{$row = $row + 1}}</td>
-                                        <td class="text-center align-middle">{{$d->nama_kelas_kuliah}}</td>
-                                        <td class="text-center align-middle">{{$d->nama_ruang}}<br>({{$d->lokasi}})</td>
-                                        <td class="text-center align-middle">{{$d->nama_semester}}</td>
+                                        <td class="text-center align-middle">
+                                            <a class="btn btn-sm btn-rounded btn-success-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.peserta', ['id_maktul' =>  $matkul->id, 'id_kelas' => $d->id])}}"> 
+                                                <i class="fa fa-search"></i>{{$d->nama_kelas_kuliah}}
+                                            </a>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            @if ($d->ruang_perkuliahan)
+                                            {{$d->ruang_perkuliahan->nama_ruang}}<br>({{$d->ruang_perkuliahan->lokasi}})
+                                            @endif
+                                        </td>
+                                        <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
                                         <td class="text-center align-middle">{{$d->jadwal_hari}}</td>
                                         <td class="text-center align-middle">{{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}</td>
                                         <td class="text-start align-middle">
