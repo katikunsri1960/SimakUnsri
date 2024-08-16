@@ -34,7 +34,13 @@ class DashboardController extends Controller
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
                         ->whereRaw("RIGHT(id_semester, 1) != 3")
                         ->orderBy('id_semester', 'DESC')
-                        ->limit(1)
+                        // ->limit(1)
+                        ->first();
+
+        $ips_sks_ipk = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
+                        ->whereRaw("RIGHT(id_semester, 1) != 3")
+                        ->orderBy('id_semester', 'ASC')
+                        // ->limit(1)
                         ->get();
                 
         
@@ -64,7 +70,7 @@ class DashboardController extends Controller
         return view('mahasiswa.dashboard', compact(
             'riwayat_pendidikan',
             'semester_aktif',
-            'semester_ke', 'akm','transkrip'
+            'semester_ke', 'akm','transkrip','ips_sks_ipk'
         ));
     }
 }

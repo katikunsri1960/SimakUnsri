@@ -31,17 +31,21 @@ class CutiController extends Controller
         // - mahasiswa telah menempuh minimal 4 semester untuk program sarjana, 
         // - atau telah menempuh minimal 50% dari total sks yang wajib ditempuh pada program studinya.
         
-        $user = auth()->user()->username;
-        // dd($user);
+        $user = auth()->user();
+        $nim = $user->username;
+        // dd($nim);
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
         
         $id_semester = SemesterAktif::first()->id_semester;
 
         $data = PengajuanCuti::where('id_registrasi_mahasiswa', $user->fk_id)->get();
 
-        $jenjang_pendidikan = RiwayatPendidikan::with('prodi')->where('id_registrasi_mahasiswa', $user->fk_id)->first();
+        $jenjang_pendidikan = RiwayatPendidikan::with('prodi')
+                    ->where('id_registrasi_mahasiswa', $user->fk_id)
+                    ->first();
 
-        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
+                    ->count();
         
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
                     ->orderBy('id_semester', 'DESC')
@@ -55,12 +59,12 @@ class CutiController extends Controller
         // dd($jenjang_pendidikan->prodi->id_jenjang_pendidikan);
 
         $tagihan = Tagihan::with('pembayaran')
-        ->whereIn('tagihan.nomor_pembayaran', [$id_test, $user])
+        ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
             ->where('kode_periode', $id_semester)
             ->first();
 
         // $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
-            // dd($beasiswa);
+            // dd($tagihan);
     
         $statusPembayaran = $tagihan->pembayaran ? $tagihan->pembayaran->status_pembayaran : null;
     
