@@ -30,6 +30,9 @@ Bimbingan Akademik Dosen
     <div class="row">
         <div class="col-xxl-12">
             <div class="box box-body mb-0">
+                <div class="row mb-10">
+                    <p class="text-danger text-end">*Pembatalan KRS hanya bisa dilakukan pada masa KPRS.</p>
+                </div>
                 <div class="row">
                     <div class="col-xl-12 col-lg-12  d-flex justify-content-between">
                         <div class="d-flex justify-content-start">
@@ -49,19 +52,22 @@ Bimbingan Akademik Dosen
                         <div class="d-flex justify-content-end align-middle">
                             <div class="">
                                 @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() > 0)
-                                <form action="{{route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat])}}" method="post" id="approveAll">
-                                @csrf
-                                <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() == 0)
-                                    disabled
-                                @endif><i class="fa fa-check"></i> Setujui KRS</button>
-                                </form>
+                                    <form action="{{route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat])}}" method="post" id="approveAll">
+                                    @csrf
+                                        <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() == 0)
+                                            disabled
+                                        @endif><i class="fa fa-check"></i> Setujui KRS</button>
+                                    </form>
                                 @endif
                                 @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count() > 0)
-                                <form action="{{route('dosen.pembimbing.bimbingan-akademik.batal-krs', ['riwayat' => $riwayat])}}" method="post" id="batalKRS">
+                                    <form action="{{route('dosen.pembimbing.bimbingan-akademik.batal-krs', ['riwayat' => $riwayat])}}" method="post" id="batalKRS">
                                     @csrf
-                                    <button class="btn btn-warning btn-rounded" type="submit" @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count() == 0)
-                                        disabled
-                                    @endif><i class="fa fa-undo"></i> Batalkan Persetujuan KRS</button>
+                                        <button class="btn btn-warning btn-rounded" type="submit"
+                                            @if ($data->where('approved', '1')->count() + $aktivitas->where('approve_krs', '1')->count() == 0 || date('Y-m-d') < $semester_aktif->tanggal_mulai_kprs)
+                                                disabled
+                                            @endif>
+                                            <i class="fa fa-undo"></i> Batalkan Persetujuan KRS
+                                        </button>
                                     </form>
                                 @endif
                             </div>
