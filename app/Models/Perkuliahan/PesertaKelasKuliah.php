@@ -50,6 +50,13 @@ class PesertaKelasKuliah extends Model
             ];
         }
 
+        if (now()->isAfter($semester_aktif->krs_mulai) && now()->isBefore($semester_aktif->tanggal_mulai_kprs)) {
+            return [
+                'status' => 'error',
+                'message' => 'Pembatalan Gagal, Masa Pengisian KPRS Belum Dimulai!!'
+            ];
+        }
+
         $data = $this->with(['kelas_kuliah', 'kelas_kuliah.matkul'])
                     ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
                         $query->where('id_semester', $semester_aktif->id_semester);
