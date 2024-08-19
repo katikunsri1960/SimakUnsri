@@ -42,14 +42,14 @@ Semester Aktif
                                 <label for="krs_mulai" class="form-label">Tanggal Mulai KRS</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="krs_mulai" id="krs_mulai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->krs_mulai : '' }}"/>
+                                    <input type="text" class="form-control" name="krs_mulai" id="krs_mulai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_krs_mulai : '' }}"/>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 mb-3">
                                 <label for="krs_selesai" class="form-label">Tanggal Akhir KRS</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="krs_selesai" id="krs_selesai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->krs_selesai : '' }}"/>
+                                    <input type="text" class="form-control" name="krs_selesai" id="krs_selesai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_krs_selesai : '' }}"/>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 mb-3">
@@ -63,7 +63,7 @@ Semester Aktif
                                 <label for="batas_bayar_ukt" class="form-label">Batas Bayar UKT</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="batas_bayar_ukt" id="batas_bayar_ukt" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->batas_bayar_ukt : '' }}"/>
+                                    <input type="text" class="form-control" name="batas_bayar_ukt" id="batas_bayar_ukt" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_batas_bayar_ukt : '' }}"/>
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 mb-3">
