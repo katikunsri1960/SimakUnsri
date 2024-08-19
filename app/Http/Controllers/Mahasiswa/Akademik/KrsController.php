@@ -174,10 +174,10 @@ class KrsController extends Controller
                                 ->count();
 
         // $mulai_kprs = $semester_aktif->tanggal_mulai_kprs;
-        // dd($semester_aktif);
+        // dd($semester_aktif->krs_mulai);
         // dd($semester_aktif->tanggal_mulai_kprs);
         // dd($today);
-        dd($batas_isi_krs);
+        // dd($batas_isi_krs);
 
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
