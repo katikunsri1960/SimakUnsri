@@ -43,19 +43,27 @@ class PesertaKelasKuliah extends Model
     {
         $semester_aktif = SemesterAktif::first();
 
-        if (now()->isBefore($semester_aktif->krs_mulai) || now()->isAfter($semester_aktif->krs_selesai)) {
+        if (now()->isBefore($semester_aktif->krs_mulai)) {
             return [
                 'status' => 'error',
-                'message' => now()->isBefore($semester_aktif->krs_mulai) ? 'Masa Pengisian KRS Belum Dimulai!!' : 'Masa Pengisian KRS Sudah Berakhir!!',
+                'message' => 'Masa Pengisian KRS Belum Dimulai!!',
             ];
         }
 
-        if (now()->isAfter($semester_aktif->krs_mulai) && now()->isBefore($semester_aktif->tanggal_mulai_kprs)) {
+        if (now()->isBefore($semester_aktif->tanggal_mulai_kprs)) {
             return [
                 'status' => 'error',
-                'message' => 'Pembatalan Gagal, Masa Pengisian KPRS Belum Dimulai!!'
+                'message' => 'Masa KPRS Belum Dimulai. Pembatalan hanya bisa dilakukan saat masa KPRS!!',
             ];
         }
+
+        if (now()->isAfter($semester_aktif->tanggal_akhir_kprs)) {
+            return [
+                'status' => 'error',
+                'message' => 'Masa Pengisian KRS & KPRS Telah Berakhir!!',
+            ];
+        }
+
 
         $data = $this->with(['kelas_kuliah', 'kelas_kuliah.matkul'])
                     ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
