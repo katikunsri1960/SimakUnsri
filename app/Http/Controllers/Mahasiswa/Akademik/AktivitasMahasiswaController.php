@@ -295,7 +295,7 @@ class AktivitasMahasiswaController extends Controller
                 'approve_sidang' =>0,
                 'feeder'=>0,
                 'id_aktivitas' => $id_aktivitas,
-                'judul' => $request->judul_skripsi,
+                // 'judul' => $request->judul_skripsi,
                 'program_mbkm'=>0,
                 'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
                 'jenis_anggota'=>0,

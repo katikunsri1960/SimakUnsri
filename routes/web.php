@@ -92,7 +92,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/daftar-mbkm-non-pertukaran', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'index_non_pertukaran'])->name('mahasiswa.perkuliahan.mbkm.non-pertukaran');
                     Route::get('/tambah-mbkm-pertukaran', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'tambah_pertukaran'])->name('mahasiswa.perkuliahan.mbkm.tambah-pertukaran');
                     Route::get('/tambah-mbkm-non-pertukaran', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'tambah'])->name('mahasiswa.perkuliahan.mbkm.tambah-non-pertukaran');
-                    Route::post('/store', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'store'])->name('mahasiswa.perkuliahan.mbkm.store');
+                    Route::post('/store-non-pertukaran', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'store'])->name('mahasiswa.perkuliahan.mbkm.store');
                     Route::post('/store-pertukaran', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'store_pertukaran'])->name('mahasiswa.perkuliahan.mbkm.store-pertukaran');
                     Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'get_dosen'])->name('mahasiswa.perkuliahan.mbkm.get-dosen');
                     Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'hapusAktivitas'])->name('mahasiswa.perkuliahan.mbkm.hapus-aktivitas');

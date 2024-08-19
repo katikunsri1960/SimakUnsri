@@ -165,6 +165,9 @@ class KrsController extends Controller
         $penundaan_pembayaran = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
                                 ->count();
 
+        // $mulai_kprs = $semester_aktif->tanggal_mulai_kprs;
+        // dd($today);
+
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
                 return $this->formatDosenPengajar($dosenPengajar);

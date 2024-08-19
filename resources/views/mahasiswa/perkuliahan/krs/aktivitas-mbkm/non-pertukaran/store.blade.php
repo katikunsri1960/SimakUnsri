@@ -1,13 +1,13 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Pengajuan Aktivitas Magang
+Pengajuan Aktivitas MBKM
 @endsection
 @section('content')
 @include('swal')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Tambah Aktivitas MBKM</h3>
+            <h3 class="page-title">Tambah Aktivitas MBKM Non Pertukaran Pelajar</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
@@ -75,7 +75,7 @@ Pengajuan Aktivitas Magang
                                 />
                             </div>
                         </div>
-                        <h4 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Aktivitas MBKM - Non Pertukaran Pelajar</h4>
+                        <h4 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Aktivitas MBKM Non Pertukaran Pelajar</h4>
                         <hr class="my-15">
                         <div class="form-group mb-20">
                             <div id="aktivitas-fields">
