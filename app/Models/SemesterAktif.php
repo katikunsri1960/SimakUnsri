@@ -10,11 +10,11 @@ class SemesterAktif extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['id_batas_isi_nilai', 'id_tanggal_mulai_kprs', 'id_tanggal_akhir_kprs'];
+    protected $appends = ['id_batas_isi_nilai', 'id_tanggal_mulai_kprs', 'id_tanggal_akhir_kprs', 'id_krs_mulai', 'id_krs_selesai', 'id_batas_bayar_ukt'];
 
-    public function getKrsMulaiAttribute($value)
+    public function getIdKrsMulaiAttribute()
     {
-        return date('d-m-Y', strtotime($value)) ?? '';
+        return date('d-m-Y', strtotime($this->krs_mulai)) ?? '';
     }
 
     public function setKrsMulaiAttribute($value)
@@ -22,9 +22,9 @@ class SemesterAktif extends Model
         $this->attributes['krs_mulai'] = date('Y-m-d', strtotime($value));
     }
 
-    public function getKrsSelesaiAttribute($value)
+    public function getIdKrsSelesaiAttribute()
     {
-        return date('d-m-Y', strtotime($value)) ?? '';
+        return date('d-m-Y', strtotime($this->krs_selesai)) ?? '';
     }
 
     public function setKrsSelesaiAttribute($value)
@@ -57,9 +57,9 @@ class SemesterAktif extends Model
         $this->attributes['tanggal_akhir_kprs'] = date('Y-m-d', strtotime($value));
     }
 
-    public function getBatasBayarUktAttribute($value)
+    public function getIdBatasBayarUktAttribute()
     {
-        return date('d-m-Y', strtotime($value)) ?? '';
+        return date('d-m-Y', strtotime($this->batas_bayar_ukt)) ?? '';
     }
 
     public function setBatasBayarUktAttribute($value)
