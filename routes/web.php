@@ -254,6 +254,7 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::prefix('bimbingan-tugas-akhir')->group(function(){
                     Route::get('/', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_tugas_akhir'])->name('dosen.pembimbing.bimbingan-tugas-akhir');
                     Route::post('/approve-pembimbing/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'approve_pembimbing'])->name('dosen.pembimbing.bimbingan-tugas-akhir.approve-pembimbing');
+                    Route::post('/decline-pembimbing/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'pembatalan_pembimbing'])->name('dosen.pembimbing.bimbingan-tugas-akhir.decline-pembimbing');
 
                     Route::prefix('asistensi')->group(function(){
                         Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi');

@@ -89,16 +89,18 @@ Tugas Akhir
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->approved > 0)
-                                        <span class="badge badge-lg badge-warning">Belum Disetujui</span>
+                                            <span class="badge badge-lg badge-danger">Belum Disetujui</span>
                                         @elseif ($d->approved == 0 && $d->approved_dosen > 0)
-                                        <span class="badge badge-lg badge-warning">Menunggu konfirmasi dosen</span>
+                                            <span class="badge badge-lg badge-warning">Menunggu konfirmasi dosen</span>
+                                        @elseif ($d->approved == 0 && $d->decline_dosen > 0)
+                                            <span class="badge badge-lg badge-danger">Bimbingan dibatalkan dosen</span>
                                         @else
-                                        <span class="badge badge-lg badge-success">Approved</span>
+                                            <span class="badge badge-lg badge-success">Approved</span>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center">
-                                            @if ($d->approved > 0)
+                                            @if ($d->approved > 0 || $d->decline_dosen > 0)
                                             <form
                                                 action="{{route('prodi.data-akademik.tugas-akhir.approve-pembimbing', $d)}}"
                                                 method="post" id="approveForm{{$d->id}}" data-id="{{$d->id}}"

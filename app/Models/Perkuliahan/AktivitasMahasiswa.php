@@ -99,7 +99,7 @@ class AktivitasMahasiswa extends Model
                         $query->where('id_dosen', $id_dosen)
                                 ->where('approved', 1);
                     })->withCount([
-                        'bimbing_mahasiswa as approved' => function($query) use ($id_dosen) {
+                        'bimbing_mahasiswa as count_approved' => function($query) use ($id_dosen) {
                             $query->where('id_dosen', $id_dosen)->where('approved_dosen', 0);
                         },
                     ])
@@ -117,6 +117,9 @@ class AktivitasMahasiswa extends Model
                         },
                         'bimbing_mahasiswa as approved_dosen' => function($query) {
                             $query->where('approved_dosen', 0);
+                        },
+                        'bimbing_mahasiswa as decline_dosen' => function($query) {
+                            $query->where('approved_dosen', 2);
                         },
                     ])
                     ->where('id_prodi', $id_prodi)

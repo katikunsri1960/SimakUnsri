@@ -3,7 +3,7 @@
 Pembimbingan Karya Ilmiah Mahasiswa
 @endsection
 @section('content')
-
+@include('swal')
 @include('dosen.pembimbing.tugas-akhir.detail')
 <section class="content bg-white">
     <div class="row align-items-end">
@@ -56,6 +56,7 @@ Pembimbingan Karya Ilmiah Mahasiswa
                             </thead>
                             <tbody>
                                 @foreach ($data as $d)
+                                @include('dosen.pembimbing.tugas-akhir.pembatalan-bimbingan')
                                 <tr>
 
                                     <td class="text-center align-middle" style="width: 10%">{{$d->nama_prodi}}</td>
@@ -71,22 +72,29 @@ Pembimbingan Karya Ilmiah Mahasiswa
                                             </ul>
                                     </td>
                                     <td class="text-center align-middle" style="width: 10%">
-                                        @if ($d->approved > 0)
-                                            <span class="badge bg-danger">Belum Disetujui</span>
-                                        @else
-                                            <span class="badge bg-success">Disetujui</span>
-                                        @endif
+                                        @foreach($d->bimbing_mahasiswa as $db)
+                                            @if ($db->approved == 1 && $db->approved_dosen == 0)
+                                                <span class="badge bg-warning">Menunggu Persetujuan Dosen</span>
+                                            @elseif ($db->approved == 1 && $db->approved_dosen == 1)
+                                                <span class="badge bg-success">Disetujui</span>
+                                            @elseif ($db->approved == 1 && $db->approved_dosen == 2)
+                                                <span class="badge bg-danger">Dibatalkan</span>
+                                            @else
+                                                <span class="badge bg-warning">{{$db->approved_dosen}}</span>
+                                            @endif
+                                        @endforeach
                                     </td>
                                     <td class="text-center align-middle text-nowrap">
                                         <div class="row">
-                                            @if ($d->approved > 0)
+                                            @if($d->count_approved > 0)
                                             <form action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.approve-pembimbing', $d)}}" method="post" id="approveForm{{$d->id_aktivitas}}" class="approve-class" data-id='{{$d->id_aktivitas}}'>
                                                 @csrf
                                                 <div class="row">
-                                                    <button type="submit" class="btn btn-sm btn-primary" title="Approve Bimbingan"><i class="fa fa-thumbs-up"></i> Approve</button>
+                                                    <button type="submit" class="btn btn-sm btn-primary" title="Setujui Bimbingan"><i class="fa fa-thumbs-up"></i> Approve</button>
                                                 </div>
                                             </form>
                                             @endif
+                                            <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal"><i class="fa fa-ban"></i> Decline</a>
                                             <a href="#" class="btn btn-secondary btn-sm my-2" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="detailFunc({{$d}})"><i class="fa fa-eye"></i> Detail</a>
                                             <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi', $d)}}" class="btn btn-sm btn-primary my-2" title="Approve Bimbingan"><i class="fa fa-pencil-square-o"></i> Asistensi</a>
                                         </div>

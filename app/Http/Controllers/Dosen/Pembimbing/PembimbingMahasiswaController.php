@@ -126,7 +126,7 @@ class PembimbingMahasiswaController extends Controller
             'semester' => $semester,
             'id_semester' => $id_semester,
         ]);
-    }
+    } 
 
     public function approve_pembimbing(AktivitasMahasiswa $aktivitas)
     {
@@ -134,9 +134,22 @@ class PembimbingMahasiswaController extends Controller
         $id_dosen = auth()->user()->fk_id;
         $aktivitas->bimbing_mahasiswa()->where('id_dosen', $id_dosen)->update([
             'approved_dosen' => 1,
+            'alasan_pembatalan' => NULL
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
+
+    public function pembatalan_pembimbing(Request $request, $aktivitas)
+    {
+        // dd($request->alasan_pembatalan);
+        $id_dosen = auth()->user()->fk_id;
+        BimbingMahasiswa::where('id_aktivitas',$aktivitas)->where('id_dosen', $id_dosen)->update([
+            'approved_dosen' => 2,
+            'alasan_pembatalan' => $request->alasan_pembatalan
+        ]);
+
+        return redirect()->back()->with('success', 'Data berhasil dibatalkan');
     }
 
     public function asistensi(AktivitasMahasiswa $aktivitas)
