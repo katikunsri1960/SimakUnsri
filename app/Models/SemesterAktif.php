@@ -47,14 +47,24 @@ class SemesterAktif extends Model
         $this->attributes['tanggal_mulai_kprs'] = date('Y-m-d', strtotime($value));
     }
 
-    public function getTanggalAkhirKprsAttribute()
+    public function getTanggalAkhirKprsAttribute($value)
     {
-        return date('d-m-Y', strtotime($this->tanggal_akhir_kprs)) ?? '';
+        return date('d-m-Y', strtotime($value)) ?? '';
     }
 
     public function setTanggalAkhirKprsAttribute($value)
     {
         $this->attributes['tanggal_akhir_kprs'] = date('Y-m-d', strtotime($value));
+    }
+
+    public function getBatasBayarUktAttribute($value)
+    {
+        return date('d-m-Y', strtotime($value)) ?? '';
+    }
+
+    public function setBatasBayarUktAttribute($value)
+    {
+        $this->attributes['batas_bayar_ukt'] = date('Y-m-d', strtotime($value));
     }
 
     public function setBatasIsiNilaiAttribute($value)

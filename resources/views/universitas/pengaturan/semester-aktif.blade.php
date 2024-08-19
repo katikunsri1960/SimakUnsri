@@ -60,13 +60,26 @@ Semester Aktif
                                 </div>
                             </div>
                             <div class="col-lg-3 col-md-6 mb-3">
+                                <label for="batas_bayar_ukt" class="form-label">Batas Bayar UKT</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="batas_bayar_ukt" id="batas_bayar_ukt" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->batas_bayar_ukt : '' }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-3">
                                 <label for="tanggal_mulai_kprs" class="form-label">Tanggal Mulai KPRS</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                     <input type="text" class="form-control" name="tanggal_mulai_kprs" id="tanggal_mulai_kprs" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->tanggal_mulai_kprs : '' }}"/>
                                 </div>
                             </div>
-
+                            <div class="col-lg-3 col-md-6 mb-3">
+                                <label for="tanggal_akhir_kprs" class="form-label">Tanggal Akhir KPRS</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="tanggal_akhir_kprs" id="tanggal_akhir_kprs" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->tanggal_akhir_kprs : '' }}"/>
+                                </div>
+                            </div>
                         </div>
                             <div class="col-lg-3 col-md-6 mb-3">
                                 <label class="form-label" style="opacity: 0;">Submit</label> <!-- Invisible label for alignment -->
@@ -112,6 +125,14 @@ Semester Aktif
         });
 
         flatpickr("#tanggal_mulai_kprs", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#tanggal_akhir_kprs", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#batas_bayar_ukt", {
             dateFormat: "d-m-Y",
         });
 
