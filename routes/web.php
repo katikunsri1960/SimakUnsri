@@ -427,6 +427,14 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
         Route::prefix('universitas')->group(function () {
 
+            Route::prefix('beasiswa')->group(function() {
+                Route::get('/', [App\Http\Controllers\Universitas\BeasiswaController::class, 'index'])->name('univ.beasiswa');
+                Route::post('/store', [App\Http\Controllers\Universitas\BeasiswaController::class, 'store'])->name('univ.beasiswa.store');
+                Route::patch('/update/{beasiswa}', [App\Http\Controllers\Universitas\BeasiswaController::class, 'update'])->name('univ.beasiswa.update');
+                Route::delete('/delete/{beasiswa}', [App\Http\Controllers\Universitas\BeasiswaController::class, 'delete'])->name('univ.beasiswa.delete');
+                Route::get('/data', [App\Http\Controllers\Universitas\BeasiswaController::class, 'data'])->name('univ.beasiswa.data');
+            });
+
             Route::prefix('p-bayar')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\PenundaanBayarController::class, 'index'])->name('univ.p-bayar');
                 Route::post('/store', [App\Http\Controllers\Universitas\PenundaanBayarController::class, 'store'])->name('univ.p-bayar.store');

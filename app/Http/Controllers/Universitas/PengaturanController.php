@@ -239,7 +239,8 @@ class PengaturanController extends Controller
         $db = new RiwayatPendidikan();
 
         $data = $db->where('nim', 'like', '%'.$request->q.'%')
-                    ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')->get();
+                    ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
+                    ->orderBy('id_periode_masuk', 'desc')->get();
 
         return response()->json($data);
     }
