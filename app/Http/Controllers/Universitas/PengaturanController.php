@@ -88,6 +88,7 @@ class PengaturanController extends Controller
             'krs_mulai' => 'required',
             'krs_selesai' => 'required',
             'batas_isi_nilai' => 'required',
+            'tanggal_mulai_kprs' => 'required',
         ]);
 
         $data['id'] = 1;
