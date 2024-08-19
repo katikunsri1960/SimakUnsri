@@ -175,8 +175,10 @@ Kartu Rencana Studi
                         
                         <tr>
                             <th width="30" class="text-thead">No.</th>
-                            <th width="150" class="text-thead">Jenis Aktivitas</th>
-                            <th width="250" class="text-thead">Dosen Pembimbing</th>
+                            <th width="50" class="text-thead">Nama Aktivitas</th>
+                            <th width="100" class="text-thead">Nama Mata Kuliah</th>
+                            <th width="50" class="text-thead">Kode MK</th>
+                            <th width="200" class="text-thead">Dosen Pembimbing</th>
                             <th width="50" class="text-thead">SKS (K)</th>
                         </tr>
                     </thead>
@@ -189,6 +191,8 @@ Kartu Rencana Studi
                             <tr>
                                 <td  class="text-td text-center">{{ $no++ }}.</td>
                                 <td  class="text-td text-center">{{ $data->nama_jenis_aktivitas }}</td>
+                                <td  class="text-td text-start">{{ $data->konversi->nama_mata_kuliah }}</td>
+                                <td  class="text-td text-center">{{ $data->konversi->kode_mata_kuliah }}</td>
                                 <td  class="text-td">
                                     @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
                                         <ul class="my-0">
@@ -209,7 +213,7 @@ Kartu Rencana Studi
                     </tbody>
                     <tfoot>
                         <tr>
-                            <td class="text-thead" colspan="3"><strong>JUMLAH</strong></td>
+                            <td class="text-thead" colspan="5"><strong>JUMLAH</strong></td>
                             <td class="text-thead"><strong>{{$total_sks_akt}}</strong></td>
                         </tr> 
                     </tfoot>
