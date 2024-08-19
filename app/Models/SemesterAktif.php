@@ -10,7 +10,7 @@ class SemesterAktif extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['id_batas_isi_nilai'];
+    protected $appends = ['id_batas_isi_nilai', 'id_tanggal_mulai_kprs', 'id_tanggal_akhir_kprs'];
 
     public function getKrsMulaiAttribute($value)
     {
@@ -37,9 +37,9 @@ class SemesterAktif extends Model
         return date('d-m-Y', strtotime($this->batas_isi_nilai)) ?? '';
     }
 
-    public function getTanggalMulaiKprsAttribute($value)
+    public function getIdTanggalMulaiKprsAttribute()
     {
-        return date('d-m-Y', strtotime($value)) ?? '';
+        return date('d-m-Y', strtotime($this->tanggal_mulai_kprs)) ?? '';
     }
 
     public function setTanggalMulaiKprsAttribute($value)
@@ -47,9 +47,9 @@ class SemesterAktif extends Model
         $this->attributes['tanggal_mulai_kprs'] = date('Y-m-d', strtotime($value));
     }
 
-    public function getTanggalAkhirKprsAttribute($value)
+    public function getIdTanggalAkhirKprsAttribute()
     {
-        return date('d-m-Y', strtotime($value)) ?? '';
+        return date('d-m-Y', strtotime($this->tanggal_akhir_kprs)) ?? '';
     }
 
     public function setTanggalAkhirKprsAttribute($value)
