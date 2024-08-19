@@ -105,8 +105,9 @@ Pengajuan Cuti Mahasiswa
             "ordering": true,
             "searching": true,
         });
-
+        
         @if ($showAlert1)
+            console.log('masoook')
             swal({
                 title: 'Pengajuan Cuti Tidak Diizinkan',
                 text: 'Anda tidak bisa mengajukan cuti, karena Anda Mahasiswa Program Pendidikan Profesi',

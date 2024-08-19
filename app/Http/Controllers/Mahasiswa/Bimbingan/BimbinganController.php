@@ -22,14 +22,20 @@ class BimbinganController extends Controller
         // $id_reg = auth()->user()->fk_id;
         $id_semester = SemesterAktif::first()->id_semester;
         $user = auth()->user();
+        $nim = RiwayatPendidikan::with('pembimbing_akademik')
+                    ->select('riwayat_pendidikans.*')
+                    ->where('id_registrasi_mahasiswa', $user->fk_id)
+                    ->pluck('nim')
+                    ->first();
+
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
 
-        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
-        // dd($beasiswa);
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
+        // dd($nim);
 
         // Cek status pembayaran
         $tagihan = Tagihan::with('pembayaran')
-        ->whereIn('nomor_pembayaran', [$user->username, $id_test])
+        ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
             ->where('kode_periode', $id_semester)
             ->first();
        
@@ -57,6 +63,7 @@ class BimbinganController extends Controller
                 'dosen_pembimbing' => collect(),
                 'showAlert' => true, // Flag untuk menampilkan SweetAlert
                 'statusPembayaran' => $statusPembayaran,
+                'beasiswa' => $beasiswa,
             ]);
         }
 

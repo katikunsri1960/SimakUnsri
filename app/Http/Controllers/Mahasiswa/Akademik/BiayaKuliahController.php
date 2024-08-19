@@ -12,31 +12,32 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Connection\Pembayaran;
 use App\Models\Connection\Registrasi;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 
 class BiayaKuliahController extends Controller
 {
     public function index()
     {
         $semester_aktif = SemesterAktif::first();
+
         $user = auth()->user();
+
+        $nim = RiwayatPendidikan::with('pembimbing_akademik')
+                    ->select('riwayat_pendidikans.*')
+                    ->where('id_registrasi_mahasiswa', $user->fk_id)
+                    ->pluck('nim')
+                    ->first();
+                    
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
+
 
         // dd($id_test);
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
         // dd($beasiswa);
 
         $tagihan = Tagihan::with('pembayaran')
-                ->whereIn('tagihan.nomor_pembayaran', [$id_test, $user->username])
+                ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
                 ->where('tagihan.kode_periode', $semester_aktif->id_semester)
-                ->select(
-                    'tagihan.id_record_tagihan',
-                    'tagihan.nama',
-                    'tagihan.nomor_pembayaran',
-                    'tagihan.total_nilai_tagihan',
-                    'tagihan.kode_periode',
-                    'tagihan.waktu_berlaku',
-                    'tagihan.waktu_berakhir'
-                )
                 ->first();
 
         if ($tagihan) {
@@ -44,13 +45,7 @@ class BiayaKuliahController extends Controller
         }
 
         $pembayaran = Tagihan::with('pembayaran')
-            ->whereIn('nomor_pembayaran', [$user->username, $id_test])
-            ->select(
-                'tagihan.id_record_tagihan',
-                'tagihan.nomor_pembayaran',
-                'tagihan.total_nilai_tagihan',
-                'tagihan.kode_periode'
-            )
+            ->whereIn('nomor_pembayaran', [$id_test, $nim])
             ->orderBy('kode_periode', 'ASC')
             ->get();
 
@@ -60,7 +55,7 @@ class BiayaKuliahController extends Controller
             }
         }
 
-        // dd($tagihan);
+        // dd($tagihan->pembayaran);
         
         return view('mahasiswa.biaya-kuliah.index', ['tagihan' => $tagihan, 'pembayaran'=> $pembayaran, 'beasiswa'=> $beasiswa]);
     }

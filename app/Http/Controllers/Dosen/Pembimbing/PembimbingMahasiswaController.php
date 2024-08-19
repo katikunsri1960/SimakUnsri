@@ -55,10 +55,10 @@ class PembimbingMahasiswaController extends Controller
     public function bimbingan_akademik_detail(RiwayatPendidikan $riwayat)
     {
         $id = $riwayat->id_registrasi_mahasiswa;
-        $semester = SemesterAktif::first()->id_semester;
+        $semester = SemesterAktif::first();
         $data = PesertaKelasKuliah::with(['kelas_kuliah.matkul'])
                 ->whereHas('kelas_kuliah', function($query) use ($semester) {
-                    $query->where('id_semester', $semester);
+                    $query->where('id_semester', $semester->id_semester);
                 })
                 ->where('id_registrasi_mahasiswa', $id)
                 // ->withSum('kelas_kuliah.matkul as total_sks', 'sks_mata_kuliah')
@@ -70,13 +70,14 @@ class PembimbingMahasiswaController extends Controller
                     ->whereHas('anggota_aktivitas_personal', function($query) use ($id) {
                         $query->where('id_registrasi_mahasiswa', $id);
                     })
-                    ->where('id_semester', $semester)
+                    ->where('id_semester', $semester->id_semester)
                     ->get();
 
         return view('dosen.pembimbing.akademik.detail', [
             'riwayat' => $riwayat,
             'data' => $data,
             'aktivitas' => $aktivitas,
+            'semester_aktif' => $semester
         ]);
     }
 
