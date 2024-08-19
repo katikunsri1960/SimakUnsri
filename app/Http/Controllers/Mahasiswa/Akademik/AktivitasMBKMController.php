@@ -43,6 +43,7 @@ class AktivitasMBKMController extends Controller
                 ->get();
                 // dd($data);
 
+        
         $today = Carbon::now()->toDateString();
 
         $deadline = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
@@ -60,6 +61,15 @@ class AktivitasMBKMController extends Controller
                         ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
                         ->get();
                         // dd($aktivitas_mbkm);
+
+        $jumlah_aktivitas_mbkm=$aktivitas_mbkm->count();
+
+        if ($jumlah_aktivitas_mbkm == 1) {
+            return redirect()->back()->with('error', 'Anda telah mengajukan Aktivitas'.' '.$aktivitas_mbkm->first()->nama_jenis_aktivitas);
+            // return response()->json(['message' => 'Anda telah mengajukan Aktivitas'.' '.$aktivitas_mbkm->first()->nama_jenis_aktivitas], 400);
+        }
+                        // dd($jumlah_aktivitas_mbkm);
+                
 
         $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
                     // ->leftJoin()
@@ -146,10 +156,12 @@ class AktivitasMBKMController extends Controller
 
             // Simpan data ke tabel aktivitas_mahasiswas
                 $aktivitas=AktivitasMahasiswa::create([
+                    'approve_krs' =>0,
+                    'approve_sidang' =>0,
                     'feeder'=>0,
                     'id_aktivitas' => $id_aktivitas,
                     // 'judul' => $request->judul_skripsi,
-                    'program_mbkm'=>0,
+                    'program_mbkm'=>2,
                     'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
                     'jenis_anggota'=>0,
                     'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
@@ -208,6 +220,7 @@ class AktivitasMBKMController extends Controller
                 BimbingMahasiswa::create([
                     'feeder'=>0,
                     'approved'=>0,
+                    'approved_dosen'=>0,
                     'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
                     'id_aktivitas'=>$aktivitas->id_aktivitas,
                     'judul'=>$aktivitas->judul,
@@ -251,6 +264,15 @@ class AktivitasMBKMController extends Controller
                 ->get();
                 // dd($data);
 
+                // $jumlah_aktivitas_mbkm=$data->count();
+
+                // if ($jumlah_aktivitas_mbkm > 0) {
+                //     // return redirect()->back()->with('error', 'Anda telah mengajukan Aktivitas'.' '.$aktivitas_mbkm->first()->nama_jenis_aktivitas);
+                //     return response()->json(['message' => 'Anda telah mengajukan Aktivitas'.' '.$data->first()->nama_jenis_aktivitas], 400);
+                // }
+        
+                // dd($jumlah_aktivitas_mbkm);
+
         return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.index', ['data' => $data, 'semester_aktif' => $semester_aktif]);
     }
 
@@ -263,12 +285,21 @@ class AktivitasMBKMController extends Controller
                         ->whereIn('id_jenis_aktivitas',['21'])
                         ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
                         ->get();
-                        // dd($aktivitas_mbkm);
+                        
+        $jumlah_aktivitas_mbkm=$aktivitas_mbkm->count();
 
-        $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
-                    ->first();
+        // if ($jumlah_aktivitas_mbkm == 1) {
+        //     return redirect()->back()->with('error', 'Anda telah mengajukan Aktivitas'.' '.$aktivitas_mbkm->first()->nama_jenis_aktivitas);
+        //     // return response()->json(['message' => 'Anda telah mengajukan Aktivitas'.' '.$aktivitas_mbkm->first()->nama_jenis_aktivitas], 400);
+        // }
 
-        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.store', ['data' => $data, 'dosen_bimbing_aktivitas'=>$dosen_pembimbing, 'aktivitas_mbkm'=>$aktivitas_mbkm]);
+        // dd($jumlah_aktivitas_mbkm);
+
+
+        // $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
+        //             ->first();
+
+        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.store', ['data' => $data, 'aktivitas_mbkm'=>$aktivitas_mbkm]);
     }
 
     public function store_pertukaran(Request $request)
@@ -306,9 +337,11 @@ class AktivitasMBKMController extends Controller
 
             // Simpan data ke tabel aktivitas_mahasiswas
                 $aktivitas=AktivitasMahasiswa::create([
+                    'approve_krs' =>0,
+                    'approve_sidang' =>0,
                     'feeder'=>0,
                     'id_aktivitas' => $id_aktivitas,
-                    'program_mbkm'=>0,
+                    'program_mbkm'=>2,
                     'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
                     'jenis_anggota'=>0,
                     'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
