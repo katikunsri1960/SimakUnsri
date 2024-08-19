@@ -41,7 +41,7 @@
                                                         @foreach ($krs_regular as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
-                                                                <td class="text-start align-middle" style="width:10%">{{$data->kode_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle" style="width:10%">{{$data->kode_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="width:5%">{{$data->sks_mata_kuliah}}</td>
@@ -55,7 +55,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger rounded-10" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $semester_aktif->tanggal_akhir_kprs && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger rounded-10" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approved == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -108,7 +108,7 @@
                                                         @foreach ($krs_merdeka as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
-                                                                <td class="text-start align-middle" style="width:10%">{{$data->kode_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle" style="width:10%">{{$data->kode_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{$data->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{$data->nama_kelas_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="width:5%">{{$data->sks_mata_kuliah}}</td>
@@ -122,7 +122,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $semester_aktif->tanggal_akhir_kprs && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approved == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -158,10 +158,10 @@
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center align-middle">No</th>
-                                                            <th class="text-center align-middle">Jenis Aktivitas</th>
-                                                            <th class="text-center align-middle">Judul</th>
+                                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                                            <th class="text-center align-middle">Nama Mata Kuliah Konversi</th>
                                                             {{-- <th class="text-center align-middle">Semester</th> --}}
-                                                            <th class="text-center align-middle">Lokasi</th>
+                                                            <th class="text-center align-middle">Nama Aktivitas</th>
                                                             <th class="text-center align-middle">SKS</th>
                                                             <th class="text-center align-middle">Dosen Pembimbing</th>
                                                             <th class="text-center align-middle">Status</th>
@@ -176,10 +176,12 @@
                                                         @foreach ($krs_akt as $data)
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
-                                                                <td class="text-center align-middle" style="width:10%" style="white-space: nowrap;">{{ $data->nama_jenis_aktivitas }}</td>
-                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->judul }}</td>
+                                                                <td class="text-center align-middle" style="width:10%" style="white-space: nowrap;">{{ mb_strtoupper($data->nama_jenis_aktivitas) }}</td>
+                                                                {{-- <td class="text-center align-middle" style="width:10%" style="white-space: nowrap;">{{ $data->nama_jenis_aktivitas }}</td> --}}
+                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->konversi->nama_mata_kuliah }}</td>
+                                                                {{-- <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->judul }}</td> --}}
                                                                 {{-- <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->nama_semester }}</td> --}}
-                                                                <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{ $data->lokasi }}</td>
+                                                                <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{ $data->konversi->kode_mata_kuliah }}</td>
                                                                 {{-- <td class="text-center align-middle" style="width:5%">{{ $data->konversi->sks_mata_kuliah }}</td> --}}
                                                                 <td class="text-center align-middle" style="width:5%">
                                                                     <div>
@@ -208,7 +210,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $semester_aktif->tanggal_akhir_kprs && $data->approve_krs == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approve_krs == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>

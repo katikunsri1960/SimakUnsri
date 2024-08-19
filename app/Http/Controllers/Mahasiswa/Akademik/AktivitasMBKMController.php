@@ -46,9 +46,19 @@ class AktivitasMBKMController extends Controller
         
         $today = Carbon::now()->toDateString();
 
-        $deadline = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
+            $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        }
+        elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
+            $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
+        }else
+        {
+            $batas_isi_krs =  NULL;
+        }
 
-        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.non-pertukaran.index', ['data' => $data, 'semester_aktif' => $semester_aktif,'today'=>$today ,'deadline'=>$deadline ]);
+        // dd($batas_isi_krs);
+
+        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.non-pertukaran.index', ['data' => $data, 'semester_aktif' => $semester_aktif,'today'=>$today ,'batas_isi_krs'=>$batas_isi_krs ]);
     }
 
     public function tambah()
@@ -273,7 +283,21 @@ class AktivitasMBKMController extends Controller
         
                 // dd($jumlah_aktivitas_mbkm);
 
-        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.index', ['data' => $data, 'semester_aktif' => $semester_aktif]);
+        $today = Carbon::now()->toDateString();
+
+        if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
+            $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        }
+        elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
+            $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
+        }else
+        {
+            $batas_isi_krs =  NULL;
+        }
+
+        // dd($batas_isi_krs);
+
+        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.index', ['data' => $data, 'semester_aktif' => $semester_aktif, 'today'=>$today ,'batas_isi_krs'=>$batas_isi_krs ]);
     }
 
     public function tambah_pertukaran()

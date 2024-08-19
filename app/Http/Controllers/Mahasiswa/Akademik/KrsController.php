@@ -77,7 +77,7 @@ class KrsController extends Controller
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
                     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                     ->get();
-        // dd($mk_akt);
+        // dd($krs_akt);
 
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $semester_select)
@@ -410,6 +410,18 @@ class KrsController extends Controller
             if ($rps->count() == 0) {
                 return response()->json(['message' => 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.'], 400);
             }
+            
+            $today = Carbon::now()->toDateString();
+
+            // if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
+            //     return response()->json(['message' => 'Periode pengisian KRS pada Semester yang Anda pilih telah berakhir.'], 400);
+            // }
+            // elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
+            //     return response()->json(['message' => 'Periode pengisian KRS pada Semester yang Anda pilih telah berakhir.'], 400);
+            // }else
+            // {
+            //     $batas_isi_krs =  NULL;
+            // }
 
             DB::beginTransaction();
 
@@ -631,9 +643,6 @@ class KrsController extends Controller
         {
             $tanggal_approve = '-';
         }
-
-        
-        
         
         $pdf = PDF::loadview('mahasiswa.perkuliahan.krs.krs-regular.pdf', [
             'today'=> $today,

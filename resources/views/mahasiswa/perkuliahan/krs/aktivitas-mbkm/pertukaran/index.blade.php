@@ -71,7 +71,7 @@ Aktivitas Pertukaran Pelajar
                                         <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->lokasi }}</td>
                                         <td class="text-center align-middle" style="width:10%">
                                             <div>
-                                                @if($data->approved == 0)
+                                                @if($data->approve_krs == 0)
                                                     <span class="badge badge-xl badge-danger-light rounded-10 mb-5">Belum Disetujui</span>
                                                 @else
                                                     <span class="badge badge-xl badge-success-light rounded-10 mb-5">Disetujui</span>
@@ -82,7 +82,10 @@ Aktivitas Pertukaran Pelajar
                                             <form action="{{route('mahasiswa.perkuliahan.mbkm.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ !$today <= $deadline ? '' : 'disabled' }}>
+                                                {{-- <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ !$today <= $deadline ? '' : 'disabled' }}>
+                                                    <i class="fa fa-trash"></i>
+                                                </button> --}}
+                                                <button type="submit" class="btn btn-danger rounded-10" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approve_krs == 0) ? '' : 'disabled' }}>
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>

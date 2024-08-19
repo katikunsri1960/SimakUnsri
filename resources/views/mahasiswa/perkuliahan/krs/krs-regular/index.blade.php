@@ -630,12 +630,13 @@ Kartu Rencana Studi
         // Pengecekan tanggal
         var today = @json($today);
         var batasIsiKrs = @json($batas_isi_krs);
-        var batasKprs = @json($semester_aktif->tanggal_akhir_kprs)
+
+        console.log(today)
+        console.log(batasIsiKrs)
 
         // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
-        if ((today > batasIsiKrs && today > batasKprs) || semesterAktif > semesterSelect) {
-            console.log(today)
-            console.log(batasKprs)
+        if (!batasIsiKrs || today > batasIsiKrs || semesterAktif > semesterSelect) {
+            
             swal({
                 title: "Perhatian",
                 text: "Periode pengisian KRS pada Semester yang Anda pilih telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah",
