@@ -32,6 +32,11 @@ Route::group(['middleware' => ['auth']], function() {
     Route::group(['middleware' => ['role:bak']], function(){
         Route::prefix('bak')->group(function(){
             Route::get('/', [App\Http\Controllers\Bak\DashboardController::class, 'index'])->name('bak');
+
+            Route::prefix('beasiswa')->group(function(){
+                Route::get('/', [App\Http\Controllers\Bak\BeasiswaController::class, 'index'])->name('bak.beasiswa');
+            });
+
             Route::prefix('transkrip-nilai')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\TranskripController::class, 'index'])->name('bak.transkrip-nilai');
                 Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'getTranskrip'])->name('bak.transkrip-nilai.get');

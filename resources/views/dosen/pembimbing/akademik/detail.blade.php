@@ -114,11 +114,11 @@ Bimbingan Akademik Dosen
                                 @foreach ($aktivitas as $a)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-center align-middle">{{$a->konversi->kode_mata_kuliah}}</td>
-                                    <td class="text-start align-middle">{{$a->konversi->nama_mata_kuliah}}</td>
-                                    <td class="text-center align-middle">{{$a->konversi->sks_mata_kuliah}}
+                                    <td class="text-center align-middle">{{$a->konversi ? $a->konversi->kode_mata_kuliah : '-'}}</td>
+                                    <td class="text-start align-middle">{{$a->konversi ? $a->konversi->nama_mata_kuliah : '-'}}</td>
+                                    <td class="text-center align-middle">{{$a->konversi ? $a->konversi->sks_mata_kuliah : '-'}}
                                         @php
-                                            $totalSks += $a->konversi->sks_mata_kuliah;
+                                            $totalSks += $a->konversi ? $a->konversi->sks_mata_kuliah : 0;
                                         @endphp
                                     </td>
                                     <td class="text-center align-middle"> - </td>
