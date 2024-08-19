@@ -55,7 +55,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger rounded-10" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger rounded-10" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $semester_aktif->tanggal_akhir_kprs && $data->approved == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -122,7 +122,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus_kelas_kuliah',['pesertaKelas'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approved == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $semester_aktif->tanggal_akhir_kprs && $data->approved == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
@@ -208,7 +208,7 @@
                                                                     <form action="{{route('mahasiswa.krs.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                                         @csrf
                                                                         @method('delete')
-                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $batas_isi_krs && $data->approve_krs == 0) ? '' : 'disabled' }}>
+                                                                        <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ ($today <= $semester_aktif->tanggal_akhir_kprs && $data->approve_krs == 0) ? '' : 'disabled' }}>
                                                                             <i class="fa fa-trash"></i>
                                                                         </button>
                                                                     </form>
