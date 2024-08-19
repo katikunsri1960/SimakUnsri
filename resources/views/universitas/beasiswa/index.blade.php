@@ -38,7 +38,7 @@ BEASISWA
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table  table-hover margin-top-10 w-p100" style="font-size: 10pt">
+                        <table id="data" class="table table-bordered table-hover margin-top-10 w-p100" style="font-size: 10pt">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
