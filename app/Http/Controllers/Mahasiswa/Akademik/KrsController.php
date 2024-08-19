@@ -152,21 +152,32 @@ class KrsController extends Controller
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
+
+        $today = Carbon::now()->toDateString();
+
         // dd($total_sks);
-        
-        $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
+            $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        }
+        elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
+            $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
+        }else
+        {
+            $batas_isi_krs =  NULL;
+        }
 
         $batas_pembayaran = Carbon::parse($semester_aktif->batas_bayar_ukt)->toDateString();
         
         $masa_tenggang = Carbon::parse($semester_aktif->batas_bayar_ukt)->addDays(30)->toDateString();
-
-        $today = Carbon::now()->toDateString();
         
         $penundaan_pembayaran = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
                                 ->count();
 
         // $mulai_kprs = $semester_aktif->tanggal_mulai_kprs;
+        // dd($semester_aktif);
+        // dd($semester_aktif->tanggal_mulai_kprs);
         // dd($today);
+        dd($batas_isi_krs);
 
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
