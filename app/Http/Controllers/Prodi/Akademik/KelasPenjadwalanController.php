@@ -552,8 +552,13 @@ class KelasPenjadwalanController extends Controller
             $jam_mulai_kelas = $request->jam_mulai.":".$request->menit_mulai.":".$detik;
             $jam_selesai_kelas = $request->jam_selesai.":".$request->menit_selesai.":".$detik;
 
-            KelasKuliah::where('id_kelas_kuliah', $id_kelas)->update(['ruang_perkuliahan_id' => $request->ruang_kelas,'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+            $data_kelas = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->get();
 
+            if($request->kapasitas_kelas <= count($data_kelas)){
+                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->update(['ruang_perkuliahan_id' => $request->ruang_kelas,'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+            }else{
+                return redirect()->back()->with('error', 'Ubah kapasitas tidak boleh lebih kecil dari jumlah peserta kelas kuliah!!'); 
+            }
             DB::commit();
 
             return redirect()->back()->with('success', 'Data Kelas Berhasil di Ubah!!');
