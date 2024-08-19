@@ -182,10 +182,10 @@ KRS Mahasiswa
 
                     // count response.krs.approved
                     var approved = 0;
-
+                    var no = 1;
                     response.krs.forEach(function(krs, index){
                         approved += krs.approved == '1' ? 0 : 1;
-                        var no = index + 1;
+                        var no++;
                         var status = krs.approved == '1' ? 'Disetujui' : 'Belum Disetujui';
 
                         $('#krs-regular tbody').append(`
@@ -201,6 +201,24 @@ KRS Mahasiswa
                             </tr>
                         `);
                     });
+
+                    response.aktivitas.forEach(function(aktivitas, index){
+                        approved += aktivitas.approve_krs == '1' ? 0 : 1;
+                        var no++;
+                        var status = aktivitas.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
+                        $('#krs-regular tbody').append(`
+                            <tr>
+                                <td class="text-center align-middle">${no}</td>
+                                <td class="text-center align-middle">${aktivitas.konversi.kode_mata_kuliah}</td>
+                                <td class="text-start align-middle">${aktivitas.konversi.nama_mata_kuliah}</td>
+                                <td class="text-center align-middle"> - </td>
+                                <td class="text-center align-middle">${aktivitas.konversi.sks_mata_kuliah}</td>
+                                <td class="text-center align-middle">
+                                    <span class="badge badge-${aktivitas.approve_krs == '1' ? 'success' : 'warning'}">${status}</span>
+                                </td>
+                            </tr>
+                        `);
+                    })
 
                     if(approved > 0){
                         $('#btnApprove').removeAttr('disabled');
