@@ -48,7 +48,7 @@
                             // $today = \Carbon\Carbon::now();
                             // $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                         @endphp
-                        @if (($today>$batas_isi_krs && $today<$semester_aktif->tanggal_mulai_kprs) || $semester_aktif->id_semester > $semester_select)
+                        @if ($today>$batas_isi_krs || $semester_aktif->id_semester > $semester_select)
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -76,7 +76,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif($today <= $batas_isi_krs || $today >= $semester_aktif->tanggal_mulai_kprs)
+                        @elseif($today <= $batas_isi_krs)
                             @if(!empty($beasiswa)|| $penundaan_pembayaran > 0 || !empty($tagihan->pembayaran->status_pembayaran))
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
