@@ -42,15 +42,41 @@ $id_matkul = $matkul->id_matkul;
             <div class="row">
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
+                    <div class="row mb-5">
+                            <div class="col-sm-12">
+                                <p class="text-end text-danger">*RPS hanya bisa di isi oleh dosen koordinator mata kuliah (yang di tunjuk sebagai dosen urutan pertama dalam kelas perkuliahan).</p>
+                            </div>                          
+                        </div>
                         <div class="row mb-5">
                             <div class="col-xl-6 col-lg-6">
                                 <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.rencana-pembelajaran')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
                             </div>  
                             <div class="col-xl-6 col-lg-6 text-end">
-                                <div class="btn-group">
-                                    <a class="btn btn-rounded bg-success-light " href="{{route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul])}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah RPS</a>
-                                    <a class="btn btn-rounded bg-warning-light " href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah-link', ['matkul' => $id_matkul])}}"><i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i> Edit Link RPS</a>
-                                </div>   
+                                @foreach($matkul->kelas_kuliah as $k)
+                                    @if($k->dosen_pengajar)
+                                        @foreach($k->dosen_pengajar as $dp)
+                                            <div class="btn-group">
+                                                @if($dp->ururtan == 1)
+                                                    <a class="btn btn-rounded bg-success-light"
+                                                    href="{{ route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul]) }}">
+                                                        <i class="fa fa-plus"></i> Tambah RPS
+                                                    </a>
+                                                    <a class="btn btn-rounded bg-warning-light"
+                                                    href="{{ route('dosen.perkuliahan.rencana-pembelajaran.ubah-link', ['matkul' => $id_matkul]) }}">
+                                                        <i class="fa fa-pencil-square-o"></i> Edit Link RPS
+                                                    </a>
+                                                @else
+                                                    <button class="btn btn-rounded bg-success-light" disabled>
+                                                        <i class="fa fa-plus"></i> Tambah RPS
+                                                    </a>
+                                                    <button class="btn btn-rounded bg-warning-light" disabled>
+                                                        <i class="fa fa-pencil-square-o"></i> Edit Link RPS
+                                                    </a>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                @endforeach
                             </div>                           
                         </div><br>
                         <div class="row">
@@ -71,8 +97,9 @@ $id_matkul = $matkul->id_matkul;
                                                 <td class="text-center align-middle">{{$d->pertemuan}}</td>
                                                 <td class="text-start align-middle">{{$d->materi_indonesia}}</td>
                                                 <td class="text-start align-middle">{{$d->materi_inggris}}</td>
-                                                <td class="text-center align-middle">@if($d->approved == 0)
-                                                    <span class="badge badge-danger">Belum di Setujui<span>
+                                                <td class="text-center align-middle">
+                                                    @if($d->approved == 0)
+                                                        <span class="badge badge-danger">Belum di Setujui<span>
                                                     @elseif($d->approved == 1)
                                                         <span class="badge badge-success">Sudah di Setujui<span>
                                                     @else
@@ -80,8 +107,23 @@ $id_matkul = $matkul->id_matkul;
                                                     @endif
                                                 </td>
                                                 <td>
-                                                    <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-pencil-square-o"></i> Update RPS</a>
-                                                    <a class="btn btn-sm btn-rounded bg-danger" href="{{route('dosen.perkuliahan.rencana-pembelajaran.delete', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
+                                                    @if($d->approved == 0)
+                                                        @foreach($matkul->kelas_kuliah as $k)
+                                                            @if($k->dosen_pengajar)
+                                                                @foreach($k->dosen_pengajar as $dp)
+                                                                    @if($dp->ururtan == 1)
+                                                                        <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-pencil-square-o"></i> Update RPS</a>
+                                                                        <a class="btn btn-sm btn-rounded bg-danger" href="{{route('dosen.perkuliahan.rencana-pembelajaran.delete', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
+                                                                    @else
+                                                                        <button class="btn btn-sm btn-rounded bg-warning" disabled><i class="fa fa-pencil-square-o"></i> Update RPS</a>
+                                                                        <button class="btn btn-sm btn-rounded bg-danger" disabled><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
+                                                                    @endif
+                                                                @endforeach
+                                                            @endif
+                                                        @endforeach
+                                                    @else
+                                                        <h4>Data Sudah disetujui Koordinator Prodi</h4>
+                                                    @endif
                                                 </td>
                                             </tr>
                                         @endforeach
