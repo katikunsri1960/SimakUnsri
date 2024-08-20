@@ -56,7 +56,7 @@ $id_matkul = $matkul->id_matkul;
                                     @if($k->dosen_pengajar)
                                         @foreach($k->dosen_pengajar as $dp)
                                             <div class="btn-group">
-                                                @if($dp->ururtan == 1)
+                                                @if($dp->urutan == 1)
                                                     <a class="btn btn-rounded bg-success-light"
                                                     href="{{ route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul]) }}">
                                                         <i class="fa fa-plus"></i> Tambah RPS
@@ -111,7 +111,7 @@ $id_matkul = $matkul->id_matkul;
                                                         @foreach($matkul->kelas_kuliah as $k)
                                                             @if($k->dosen_pengajar)
                                                                 @foreach($k->dosen_pengajar as $dp)
-                                                                    @if($dp->ururtan == 1)
+                                                                    @if($dp->urutan == 1)
                                                                         <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-pencil-square-o"></i> Update RPS</a>
                                                                         <a class="btn btn-sm btn-rounded bg-danger" href="{{route('dosen.perkuliahan.rencana-pembelajaran.delete', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
                                                                     @else
