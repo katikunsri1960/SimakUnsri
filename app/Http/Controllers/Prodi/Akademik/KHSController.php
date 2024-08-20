@@ -40,16 +40,15 @@ class KHSController extends Controller
         }
 
         $nilai = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                ->where('id_semester', $semester)
+                // ->where('id_semester', $semester)
                 ->get();
 
         $konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
-                    ->where('id_semester', $semester)
+                    // ->where('id_semester', $semester)
                     ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                     ->get();
 
-        $transfer = NilaiTransferPendidikan::where('id_semester', $semester)
-                    ->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+        $transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                     ->get();
 
         if($nilai->isEmpty() && $konversi->isEmpty() && $transfer->isEmpty()) {

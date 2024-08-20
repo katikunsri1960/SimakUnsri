@@ -28,7 +28,7 @@ KHS Mahasiswa
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="row">
-                        <div class="col-md-4">
+                        {{-- <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="semester" class="form-label">Tahun Akademik</label>
                                 <select class="form-select" name="semester" id="semester">
@@ -41,7 +41,7 @@ KHS Mahasiswa
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="col-md-4">
                             <label for="nim" class="form-label">Nomor Induk Mahasiswa</label>
                             <div class="input-group mb-3">
@@ -104,6 +104,7 @@ KHS Mahasiswa
                                         <th class="text-center align-middle">Kode Mata Kuliah</th>
                                         <th class="text-center align-middle">Nama Mata Kuliah</th>
                                         <th class="text-center align-middle">Nama Kelas</th>
+                                        <th class="text-center align-middle">Semester</th>
                                         <th class="text-center align-middle">SKS</th>
                                         <th class="text-center align-middle">Nilai Angka</th>
                                         <th class="text-center align-middle">Nilai Index</th>
@@ -201,10 +202,11 @@ KHS Mahasiswa
                                 <td class="text-center align-middle">${krs.kode_mata_kuliah}</td>
                                 <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
                                 <td class="text-center align-middle">${krs.nama_kelas_kuliah}</td>
+                                <td class="text-center align-middle">${krs.nama_semester}</td>
                                 <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
                                 <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
-                                <td class="text-center align-middle">${krs.nilai_indeks}</td>
-                                <td class="text-center align-middle">${krs.nilai_huruf}</td>
+                                <td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>
+                                <td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>
                             </tr>
                         `);
                         no++;
@@ -229,7 +231,8 @@ KHS Mahasiswa
                                 <td class="text-center align-middle">${no}</td>
                                 <td class="text-center align-middle">${krs.matkul.kode_mata_kuliah}</td>
                                 <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
-                                <td class="text-center align-middle">${krs.nama_kelas_kuliah}</td>
+                                <td class="text-center align-middle"> - </td>
+                                <td class="text-center align-middle">${krs.nama_semester}</td>
                                 <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
                                 <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
                                 <td class="text-center align-middle">${krs.nilai_indeks}</td>
