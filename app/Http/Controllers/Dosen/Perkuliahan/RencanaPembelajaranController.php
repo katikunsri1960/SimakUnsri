@@ -32,21 +32,33 @@ class RencanaPembelajaranController extends Controller
 
         $data_matkul = $data->unique('id_matkul')->values();
 
-        // dd($data_matkul);
+        // dd($data);
 
         return view('dosen.perkuliahan.rencana-pembelajaran.index', ['data' => $data_matkul]);
     }
 
     public function detail_rencana_pembelajaran(string $id_matkul)
     {
-        // dd($semester_aktif->id_semester);
-        $matkul = MataKuliah::where('id_matkul', $id_matkul)->first();
+        $id_dosen = auth()->user()->fk_id;
+        $semester_aktif = SemesterAktif::with(['semester'])->first();
+
+        $matkul = MataKuliah::with(['kelas_kuliah' => function($query) use ($semester_aktif, $id_dosen) {
+            $query->where('id_semester', $semester_aktif->id_semester)
+                  ->whereHas('dosen_pengajar', function($q) use ($id_dosen) {
+                      $q->where('id_dosen', $id_dosen);
+                  })
+                  ->with(['dosen_pengajar' => function($q) use ($id_dosen) {
+                      $q->where('id_dosen', $id_dosen);
+                  }]);
+        }])
+        ->where('id_matkul', $id_matkul)
+        ->first();
 
         $data = RencanaPembelajaran::where('id_matkul', $id_matkul)
         ->orderBy('pertemuan', 'ASC')
         ->get();
 
-        // dd($data_matkul);
+        // dd($matkul);
 
         return view('dosen.perkuliahan.rencana-pembelajaran.detail', ['data' => $data, 'matkul' => $matkul]);
     }
