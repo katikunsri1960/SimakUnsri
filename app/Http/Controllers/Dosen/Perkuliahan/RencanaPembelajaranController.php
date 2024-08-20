@@ -55,8 +55,11 @@ class RencanaPembelajaranController extends Controller
     {
         // dd($semester_aktif->id_semester);
         $matkul = MataKuliah::where('id_matkul', $id_matkul)->first();
+        $rps = RencanaPembelajaran::where('id_matkul', $id_matkul)
+                ->orderBy('pertemuan', 'ASC')
+                ->get();
 
-        return view('dosen.perkuliahan.rencana-pembelajaran.store', ['matkul' => $matkul]);
+        return view('dosen.perkuliahan.rencana-pembelajaran.store', ['matkul' => $matkul, 'rps' => $rps]);
     }
 
     public function rencana_pembelajaran_store(Request $request, string $id_matkul)
@@ -102,13 +105,13 @@ class RencanaPembelajaranController extends Controller
                 ->where('id_dosen', $id_dosen)
                 ->where('urutan', '1')
                 ->first();
-    
+
                 // dd($data_dosen);
                 if($data_dosen){
                     for($i=0;$i<$jumlah_pertemuan;$i++){
                         //Generate id rencana ajar
                         $id_rencana_ajar = Uuid::uuid4()->toString();
-    
+
                         //Store data to table tanpa substansi kuliah
                         RencanaPembelajaran::create(['feeder'=> 0, 'approved'=> 0, 'id_rencana_ajar'=> $id_rencana_ajar, 'id_matkul'=> $id_matkul, 'nama_mata_kuliah'=> $matkul->nama_mata_kuliah, 'kode_mata_kuliah' => $matkul->kode_mata_kuliah, 'sks_mata_kuliah'=> $matkul->sks_mata_kuliah, 'id_prodi'=> $matkul->id_prodi, 'nama_program_studi'=> $matkul->nama_program_studi, 'pertemuan'=> $request->pertemuan[$i], 'materi_indonesia'=> $request->materi_indo[$i], 'materi_inggris'=> $request->materi_inggris[$i], 'status_sync'=> 'belum sync']);
                     }

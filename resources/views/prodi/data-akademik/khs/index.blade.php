@@ -187,6 +187,8 @@ KHS Mahasiswa
                     var approved = 0;
                     var no = 1;
 
+                    console.log(response.konversi);
+
                     response.nilai.forEach(function(krs, index){
                         var trClass = '';
                         if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
@@ -207,6 +209,38 @@ KHS Mahasiswa
                         `);
                         no++;
                     });
+
+                    if (response.konversi.length > 0) {
+
+                        $('#krs-regular tbody').append(`
+                            <tr>
+                                <th class="text-center align-middle" colspan="8">Konversi Aktivitas</th>
+                            </tr>
+                        `);
+
+                        response.konversi.forEach(function(krs, index){
+                        var trClass = '';
+                        if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
+                        {
+                            trClass = 'bg-danger';
+                        }
+                        $('#krs-regular tbody').append(`
+                            <tr class="${trClass}">
+                                <td class="text-center align-middle">${no}</td>
+                                <td class="text-center align-middle">${krs.matkul.kode_mata_kuliah}</td>
+                                <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
+                                <td class="text-center align-middle">${krs.nama_kelas_kuliah}</td>
+                                <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
+                                <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
+                                <td class="text-center align-middle">${krs.nilai_indeks}</td>
+                                <td class="text-center align-middle">${krs.nilai_huruf}</td>
+                            </tr>
+                        `);
+                        no++;
+                    });
+
+                    }
+
 
                 }
             });

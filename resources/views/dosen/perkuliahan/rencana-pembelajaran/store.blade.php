@@ -82,7 +82,41 @@ Rencana Pembelajaran Semester
                                 />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <hr>
+                        @if ($rps->count() > 0)
+                        <div class="row my-3 p-3">
+                            <table class="table table-bordered table-hover">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">Pertemuan</th>
+                                        <th class="text-center align-middle">Materi Indonesia</th>
+                                        <th class="text-center align-middle">Materi Inggris</th>
+                                        <th class="text-center align-middle">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($rps as $d)
+                                        <tr>
+                                            <td class="text-center align-middle">{{$d->pertemuan}}</td>
+                                            <td class="text-start align-middle">{{$d->materi_indonesia}}</td>
+                                            <td class="text-start align-middle">{{$d->materi_inggris}}</td>
+                                            <td class="text-center align-middle">@if($d->approved == 0)
+                                                <span class="badge badge-danger">Belum di Setujui<span>
+                                                @elseif($d->approved == 1)
+                                                    <span class="badge badge-success">Sudah di Setujui<span>
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <hr>
+                        @endif
+                        <div class="form-group mt-2">
                             <div id="rps-fields">
                                 <div class="rps-field row">
                                     <div class="col-md-1 mb-2">

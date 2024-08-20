@@ -43,7 +43,7 @@ class KHSController extends Controller
                 ->where('id_semester', $semester)
                 ->get();
 
-        $konversi = KonversiAktivitas::join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+        $konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
                     ->where('id_semester', $semester)
                     ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                     ->get();
