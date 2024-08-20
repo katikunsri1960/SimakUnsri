@@ -17,8 +17,8 @@
                             <select class="form-select" name="tahun_angkatan" id="tahun_angkatan">
                                 <option value="" selected disabled>-- Pilih Angkatan --</option>
                                 @foreach ($angkatan as $a)
-                                <option value="{{$a->angkatan}}">
-                                    {{$a->angkatan}}
+                                <option value="{{$a->angkatan_raw}}">
+                                    {{$a->angkatan_raw}}
                                 </option>
                                 @endforeach
                             </select>

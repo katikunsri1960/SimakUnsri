@@ -97,10 +97,10 @@ class DataMasterController extends Controller
     {
 
         $angkatan = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)
-                ->select('id_periode_masuk')
-                ->distinct()
-                ->orderBy('id_periode_masuk', 'desc')
-                ->get();
+                    ->select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
+                    ->distinct()
+                    ->orderBy('angkatan_raw', 'desc')
+                    ->get();
 
         $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
 
