@@ -185,7 +185,6 @@ KRS Mahasiswa
                     var no = 1;
                     response.krs.forEach(function(krs, index){
                         approved += krs.approved == '1' ? 0 : 1;
-                        var no++;
                         var status = krs.approved == '1' ? 'Disetujui' : 'Belum Disetujui';
 
                         $('#krs-regular tbody').append(`
@@ -200,11 +199,12 @@ KRS Mahasiswa
                                 </td>
                             </tr>
                         `);
+                        no++;
                     });
 
                     response.aktivitas.forEach(function(aktivitas, index){
                         approved += aktivitas.approve_krs == '1' ? 0 : 1;
-                        var no++;
+
                         var status = aktivitas.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
                         $('#krs-regular tbody').append(`
                             <tr>
@@ -218,6 +218,7 @@ KRS Mahasiswa
                                 </td>
                             </tr>
                         `);
+                        no++;
                     })
 
                     if(approved > 0){

@@ -106,7 +106,7 @@ class KRSController extends Controller
         }
 
         DB::beginTransaction();
-        
+
         foreach($krs as $item) {
             $item->approved = 1;
             $item->save();

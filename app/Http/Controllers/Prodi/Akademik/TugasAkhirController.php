@@ -61,7 +61,7 @@ class TugasAkhirController extends Controller
         AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->update(['sk_tugas' => $request->sk_tugas, 'tanggal_sk_tugas' => $tanggal_sk_tugas]);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
-    } 
+    }
 
     public function get_dosen(Request $request)
     {
@@ -211,7 +211,7 @@ class TugasAkhirController extends Controller
 
             return redirect()->back()
                              ->with('success', 'Data berhasil dihapus');
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()
                              ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
