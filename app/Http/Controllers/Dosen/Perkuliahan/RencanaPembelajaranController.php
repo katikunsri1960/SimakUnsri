@@ -72,7 +72,7 @@ class RencanaPembelajaranController extends Controller
 
             //Validate request data
             $data = $request->validate([
-                'link_rps' => 'required',
+                'link_rps' => 'required|url',
                 'pertemuan.*' => 'required',
                 'materi_indo.*' => 'required',
                 'materi_inggris.*' => 'required'
