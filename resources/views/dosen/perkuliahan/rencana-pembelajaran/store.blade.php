@@ -118,50 +118,99 @@ Rencana Pembelajaran Semester
                         @endif
                         <div class="form-group mt-2">
                             <div id="rps-fields">
-                                <div class="rps-field row">
-                                    <div class="col-md-1 mb-2">
-                                        <label for="pertemuan" class="form-label">Pertemuan Ke -</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            name="pertemuan[]"
-                                            id="pertemuan"
-                                            aria-describedby="helpId"
-                                            value=""
-                                            required
-                                        />
+                                @if(old('pertemuan'))
+                                    @foreach(old('pertemuan') as $index => $pertemuan)
+                                        <div class="rps-field row">
+                                            <div class="col-md-1 mb-2">
+                                                <label for="pertemuan" class="form-label">Pertemuan Ke -</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="pertemuan[]"
+                                                    id="pertemuan"
+                                                    aria-describedby="helpId"
+                                                    value="{{ old('pertemuan.' . $index) }}"
+                                                    required
+                                                />
+                                            </div>
+                                            <div class="col-md-5 mb-2">
+                                                <label for="materi_indo" class="form-label">Materi Indonesia</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="materi_indo[]"
+                                                    id="materi_indo"
+                                                    aria-describedby="helpId"
+                                                    value="{{ old('materi_indo.' . $index) }}"
+                                                    placeholder="Masukkan Materi Dalam Bahasa Indonesia"
+                                                    required
+                                                />
+                                            </div>
+                                            <div class="col-md-5 mb-2">
+                                                <label for="materi_inggris" class="form-label">Materi Inggris</label>
+                                                <input
+                                                    type="text"
+                                                    class="form-control"
+                                                    name="materi_inggris[]"
+                                                    id="materi_inggris"
+                                                    aria-describedby="helpId"
+                                                    value="{{ old('materi_inggris.' . $index) }}"
+                                                    placeholder="Masukkan Materi Dalam Bahasa Inggris"
+                                                    required
+                                                />
+                                            </div>
+                                            <div class="col-md-1 mb-2">
+                                                <label class="form-label">&nbsp;</label>
+                                                <button type="button" class="btn btn-danger btn-rounded btn-sm remove-rps form-control" title="Hapus RPS"><i class="fa fa-user-times" aria-hidden="true"></i></button>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div class="rps-field row">
+                                        <div class="col-md-1 mb-2">
+                                            <label for="pertemuan" class="form-label">Pertemuan Ke -</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="pertemuan[]"
+                                                id="pertemuan"
+                                                aria-describedby="helpId"
+                                                value=""
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-5 mb-2">
+                                            <label for="materi_indo" class="form-label">Materi Indonesia</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="materi_indo[]"
+                                                id="materi_indo"
+                                                aria-describedby="helpId"
+                                                value=""
+                                                placeholder="Masukkan Materi Dalam Bahasa Indonesia"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-5 mb-2">
+                                            <label for="materi_inggris" class="form-label">Materi Inggris</label>
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="materi_inggris[]"
+                                                id="materi_inggris"
+                                                aria-describedby="helpId"
+                                                value=""
+                                                placeholder="Masukkan Materi Dalam Bahasa Inggris"
+                                                required
+                                            />
+                                        </div>
+                                        <div class="col-md-1 mb-2">
+                                            <label class="form-label">&nbsp;</label>
+                                            <button type="button" class="btn btn-danger btn-rounded btn-sm remove-rps form-control" style="display: none;" title="Hapus RPS"><i class="fa fa-user-times" aria-hidden="true"></i></button>
+                                        </div>
                                     </div>
-                                    <div class="col-md-5 mb-2">
-                                        <label for="materi_indo" class="form-label">Materi Indonesia</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            name="materi_indo[]"
-                                            id="materi_indo"
-                                            aria-describedby="helpId"
-                                            value=""
-                                            placeholder="Masukkan Materi Dalam Bahasa Indonesia"
-                                            required
-                                        />
-                                    </div>
-                                    <div class="col-md-5 mb-2">
-                                        <label for="materi_inggris" class="form-label">Materi Inggris</label>
-                                        <input
-                                            type="text"
-                                            class="form-control"
-                                            name="materi_inggris[]"
-                                            id="materi_inggris"
-                                            aria-describedby="helpId"
-                                            value=""
-                                            placeholder="Masukkan Materi Dalam Bahasa Inggris"
-                                            required
-                                        />
-                                    </div>
-                                    <div class="col-md-1 mb-2">
-                                        <label class="form-label">&nbsp;</label>
-                                        <button type="button" class="btn btn-danger btn-rounded btn-sm remove-rps form-control" style="display: none;" title="Hapus RPS"><i class="fa fa-user-times" aria-hidden="true"></i></button>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                             <button id="add-rps" type="button" class="btn btn-primary" title="Tambah RPS"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
                         </div>

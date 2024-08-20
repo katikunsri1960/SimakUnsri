@@ -116,14 +116,15 @@ class RencanaPembelajaranController extends Controller
                         RencanaPembelajaran::create(['feeder'=> 0, 'approved'=> 0, 'id_rencana_ajar'=> $id_rencana_ajar, 'id_matkul'=> $id_matkul, 'nama_mata_kuliah'=> $matkul->nama_mata_kuliah, 'kode_mata_kuliah' => $matkul->kode_mata_kuliah, 'sks_mata_kuliah'=> $matkul->sks_mata_kuliah, 'id_prodi'=> $matkul->id_prodi, 'nama_program_studi'=> $matkul->nama_program_studi, 'pertemuan'=> $request->pertemuan[$i], 'materi_indonesia'=> $request->materi_indo[$i], 'materi_inggris'=> $request->materi_inggris[$i], 'status_sync'=> 'belum sync']);
                     }
                 }else{
-                    return redirect()->back()->with('error', 'Anda Bukan Koordinator Mata Kuliah');
+                    return back()->withInput()->withErrors(['error' => 'Anda Bukan Koordinator Mata Kuliah']);
                 }
                 return redirect()->route('dosen.perkuliahan.rencana-pembelajaran.detail', ['matkul' => $matkul->id_matkul])->with('success', 'Data Berhasil di Tambahkan');
             }else{
-                return redirect()->back()->with('error', 'Silahkan Mengisi RPS Terlebih Dahulu');
+                return back()->withInput()->withErrors(['error' => 'Silahkan Mengisi RPS Terlebih Dahulu']);
+
             }
         }else{
-            return redirect()->back()->with('error', 'RPS Sudah di Isi');
+            return back()->withInput()->withErrors(['error' => 'RPS Sudah di Isi']);
         }
     }
 
