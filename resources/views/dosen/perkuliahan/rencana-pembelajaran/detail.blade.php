@@ -52,31 +52,29 @@ $id_matkul = $matkul->id_matkul;
                                 <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.rencana-pembelajaran')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
                             </div>  
                             <div class="col-xl-6 col-lg-6 text-end">
-                                @foreach($matkul->kelas_kuliah as $k)
-                                    @if($k->dosen_pengajar)
-                                        @foreach($k->dosen_pengajar as $dp)
-                                            <div class="btn-group">
-                                                @if($dp->urutan == 1)
-                                                    <a class="btn btn-rounded bg-success-light"
-                                                    href="{{ route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul]) }}">
-                                                        <i class="fa fa-plus"></i> Tambah RPS
-                                                    </a>
-                                                    <a class="btn btn-rounded bg-warning-light"
-                                                    href="{{ route('dosen.perkuliahan.rencana-pembelajaran.ubah-link', ['matkul' => $id_matkul]) }}">
-                                                        <i class="fa fa-pencil-square-o"></i> Edit Link RPS
-                                                    </a>
-                                                @else
-                                                    <button class="btn btn-rounded bg-success-light" disabled>
-                                                        <i class="fa fa-plus"></i> Tambah RPS
-                                                    </a>
-                                                    <button class="btn btn-rounded bg-warning-light" disabled>
-                                                        <i class="fa fa-pencil-square-o"></i> Edit Link RPS
-                                                    </a>
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                    @endif
-                                @endforeach
+                                @if($matkul->kelas_kuliah[0]->dosen_pengajar)
+                                    @foreach($matkul->kelas_kuliah[0]->dosen_pengajar as $dp)
+                                        <div class="btn-group">
+                                            @if($dp->urutan == 1)
+                                                <a class="btn btn-rounded bg-success-light"
+                                                href="{{ route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul]) }}">
+                                                    <i class="fa fa-plus"></i> Tambah RPS
+                                                </a>
+                                                <a class="btn btn-rounded bg-warning-light"
+                                                href="{{ route('dosen.perkuliahan.rencana-pembelajaran.ubah-link', ['matkul' => $id_matkul]) }}">
+                                                    <i class="fa fa-pencil-square-o"></i> Edit Link RPS
+                                                </a>
+                                            @else
+                                                <button class="btn btn-rounded bg-success-light" disabled>
+                                                    <i class="fa fa-plus"></i> Tambah RPS
+                                                </a>
+                                                <button class="btn btn-rounded bg-warning-light" disabled>
+                                                    <i class="fa fa-pencil-square-o"></i> Edit Link RPS
+                                                </a>
+                                            @endif
+                                        </div>
+                                    @endforeach
+                                @endif
                             </div>                           
                         </div><br>
                         <div class="row">
@@ -108,21 +106,27 @@ $id_matkul = $matkul->id_matkul;
                                                 </td>
                                                 <td>
                                                     @if($d->approved == 0)
-                                                        @foreach($matkul->kelas_kuliah as $k)
-                                                            @if($k->dosen_pengajar)
-                                                                @foreach($k->dosen_pengajar as $dp)
-                                                                    @if($dp->urutan == 1)
-                                                                        <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-pencil-square-o"></i> Update RPS</a>
-                                                                        <a class="btn btn-sm btn-rounded bg-danger" href="{{route('dosen.perkuliahan.rencana-pembelajaran.delete', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
-                                                                    @else
-                                                                        <button class="btn btn-sm btn-rounded bg-warning" disabled><i class="fa fa-pencil-square-o"></i> Update RPS</a>
-                                                                        <button class="btn btn-sm btn-rounded bg-danger" disabled><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
-                                                                    @endif
-                                                                @endforeach
-                                                            @endif
-                                                        @endforeach
+                                                        @if($matkul->kelas_kuliah[0]->dosen_pengajar)
+                                                            @foreach($matkul->kelas_kuliah[0]->dosen_pengajar as $dp)
+                                                                @if($dp->urutan == 1)
+                                                                    <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-pencil-square-o"></i> Update RPS</a>
+                                                                    <a class="btn btn-sm btn-rounded bg-danger" href="{{route('dosen.perkuliahan.rencana-pembelajaran.delete', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
+                                                                @else
+                                                                    <button class="btn btn-sm btn-rounded bg-warning" disabled><i class="fa fa-pencil-square-o"></i> Update RPS</a>
+                                                                    <button class="btn btn-sm btn-rounded bg-danger" disabled><i class="fa fa-trash" id="delete-rps"></i> Delete RPS</a>
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
                                                     @else
-                                                        <h4>Data Sudah disetujui Koordinator Prodi</h4>
+                                                        @if($matkul->kelas_kuliah[0]->dosen_pengajar)
+                                                            @foreach($matkul->kelas_kuliah[0]->dosen_pengajar as $dp)
+                                                                @if($dp->urutan == 1)
+                                                                    <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.rencana-pembelajaran.ubah', ['rencana_ajar' => $d->id_rencana_ajar])}}"><i class="fa fa-pencil-square-o"></i> Update RPS</a>
+                                                                @else
+                                                                    <button class="btn btn-sm btn-rounded bg-warning" disabled><i class="fa fa-pencil-square-o"></i> Update RPS</a>
+                                                                @endif
+                                                            @endforeach
+                                                        @endif
                                                     @endif
                                                 </td>
                                             </tr>
