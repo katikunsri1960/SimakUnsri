@@ -55,7 +55,7 @@ Kelas Penjadwalan
                                     @if ($k->mata_kuliah)
                                         @foreach($k->mata_kuliah as $d)
                                             @if(!$d->matkul_konversi)
-                                            <tr> 
+                                            <tr>
                                                 <td class="text-center align-middle">{{$row = $row + 1}}</td>
                                                 <td class="text-start align-middle">{{$k->nama_kurikulum}}</td>
                                                 <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
@@ -96,7 +96,7 @@ Kelas Penjadwalan
             "searching": true,
             "scrollCollapse": true,
             "scrollY": "450px",
-            "order": [[ 4, "asc" ]]
+            "order": [[ 4, "desc" ]]
         });
 
         table.on( 'order.dt search.dt', function () {
