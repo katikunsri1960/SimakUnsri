@@ -71,7 +71,7 @@ class PembimbingMahasiswaController extends Controller
                         $query->where('id_registrasi_mahasiswa', $id);
                     })
                     ->where('id_semester', $semester->id_semester)
-                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,5,6,22])
                     ->get();
         
         $aktivitas_mbkm = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
