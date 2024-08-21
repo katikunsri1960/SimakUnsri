@@ -80,7 +80,7 @@ Pengajuan Aktivitas MBKM
                         <div class="form-group mb-20">
                             <div id="aktivitas-fields">
                                 <div class="aktivitas-field row">
-                                    <div class="col-md-12 mb-10">
+                                    <div class="col-md-12 mb-20">
                                         <label>Jenis Aktivitas MBKM</label>
                                         <select id="aktivitas_mbkm" name="aktivitas_mbkm" class="form-select" >
                                             <option value="" disabled selected>-- Pilih Aktivitas MBKM --</option>
@@ -91,27 +91,40 @@ Pengajuan Aktivitas MBKM
                                     </div>
                                 </div>
                             </div>
+                            <div id="sks-fields">
+                                <div class="sks-field row">
+                                    <div class="col-md-12 mb-20">
+                                        <label>Total SKS Aktivitas MBKM </label>
+                                        <select id="sks_mbkm" name="sks_mbkm" class="form-select" >
+                                            <option value="" disabled selected>-- Pilih jumlah SKS yang akan dikonversi --</option>
+                                            @foreach($sks_aktivitas_mbkm as $sks_aktivitas)
+                                                <option value="{{ $sks_aktivitas}}">{{ $sks_aktivitas  }} SKS </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                             <div id="judul-fields">
                                 <div class="judul-field row">
-                                    <div class="col-md-12 mb-10">
+                                    <div class="col-md-12 mb-20">
                                         <label>Judul</label>
-                                        <textarea id="judul" class="form-control" name="judul" placeholder="Masukkan Judul Kegiatan" required></textarea>
+                                        <textarea id="judul" class="form-control" name="judul" placeholder="-- Masukkan Judul Aktivitas --" required></textarea>
                                     </div>
                                 </div>
                             </div>
                             <div id="lokasi-fields">
                                 <div class="lokasi-field row">
-                                    <div class="col-md-12 mb-10">
+                                    <div class="col-md-12 mb-20">
                                         <label for="lokasi" class="form-label">Lokasi</label>
-                                        <input type="text" id="lokasi" class="form-control" name="lokasi" placeholder="Masukkan Lokasi Kegiatan" required>
+                                        <input type="text" id="lokasi" class="form-control" name="lokasi" placeholder="-- Masukkan Lokasi Aktivitas --" required>
                                     </div>
                                 </div>
                             </div>
                             <div id="keterangan-fields">
                                 <div class="keterangan-field row">
-                                    <div class="col-md-12 mb-10">
+                                    <div class="col-md-12 mb-20">
                                         <label for="keterangan" class="form-label">Keterangan</label>
-                                        <input type="text" id="keterangan" class="form-control" name="keterangan" placeholder="Masukkan Keterangan Kegiatan">
+                                        <input type="text" id="keterangan" class="form-control" name="keterangan" placeholder="-- Masukkan Keterangan Aktivitas --">
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +135,7 @@ Pengajuan Aktivitas MBKM
                         <div class="form-group">
                             <div id="dosen-fields">
                                 <div class="dosen-field row">
-                                    <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen</label>
+                                    <la20l for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen</la20l>
                                     <div class="col-md-12 mb-2">
                                         <select class="form-select" name="dosen_bimbing_aktivitas" id="dosen_bimbing_aktivitas" required></select>
                                     </div>

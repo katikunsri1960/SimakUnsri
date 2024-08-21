@@ -177,12 +177,8 @@
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
                                                                 <td class="text-center align-middle" style="width:10%" style="white-space: nowrap;">{{ mb_strtoupper($data->nama_jenis_aktivitas) }}</td>
-                                                                {{-- <td class="text-center align-middle" style="width:10%" style="white-space: nowrap;">{{ $data->nama_jenis_aktivitas }}</td> --}}
                                                                 <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->konversi->nama_mata_kuliah }}</td>
-                                                                {{-- <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->judul }}</td> --}}
-                                                                {{-- <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->nama_semester }}</td> --}}
                                                                 <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{ $data->konversi->kode_mata_kuliah }}</td>
-                                                                {{-- <td class="text-center align-middle" style="width:5%">{{ $data->konversi->sks_mata_kuliah }}</td> --}}
                                                                 <td class="text-center align-middle" style="width:5%">
                                                                     <div>
                                                                         {{ $data->konversi== NULL ? 'Tidak Diisi' : $data->konversi->sks_mata_kuliah }}
