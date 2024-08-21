@@ -91,6 +91,15 @@ class SyncJob implements ShouldQueue
                     }, $r);
                 }
 
+                if ($this->act == 'GetListKonversiKampusMerdeka') {
+                    $r = array_map(function ($value) {
+                        if ($value['nilai_indeks'] == 'NaN') {
+                            $value['nilai_indeks'] = null;
+                        }
+                        return $value;
+                    }, $r);
+                }
+
                 try {
 
                     $this->model::upsert($r, $this->primary);
