@@ -115,6 +115,9 @@ KHS Mahasiswa
 
                                 </tbody>
                             </table>
+                            <div class="row mt-5" id="akmDiv">
+
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -221,30 +224,69 @@ KHS Mahasiswa
                         `);
 
                         response.konversi.forEach(function(krs, index){
-                        var trClass = '';
-                        if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
-                        {
-                            trClass = 'bg-danger';
-                        }
-                        $('#krs-regular tbody').append(`
-                            <tr class="${trClass}">
-                                <td class="text-center align-middle">${no}</td>
-                                <td class="text-center align-middle">${krs.matkul.kode_mata_kuliah}</td>
-                                <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
-                                <td class="text-center align-middle"> - </td>
-                                <td class="text-center align-middle">${krs.nama_semester}</td>
-                                <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
-                                <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
-                                <td class="text-center align-middle">${krs.nilai_indeks}</td>
-                                <td class="text-center align-middle">${krs.nilai_huruf}</td>
-                            </tr>
-                        `);
-                        no++;
-                    });
+                            var trClass = '';
+                            if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
+                            {
+                                trClass = 'bg-danger';
+                            }
+                            $('#krs-regular tbody').append(`
+                                <tr class="${trClass}">
+                                    <td class="text-center align-middle">${no}</td>
+                                    <td class="text-center align-middle">${krs.matkul.kode_mata_kuliah}</td>
+                                    <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
+                                    <td class="text-center align-middle"> - </td>
+                                    <td class="text-center align-middle">${krs.nama_semester}</td>
+                                    <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
+                                    <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
+                                    <td class="text-center align-middle">${krs.nilai_indeks}</td>
+                                    <td class="text-center align-middle">${krs.nilai_huruf}</td>
+                                </tr>
+                            `);
+                            no++;
+                        });
 
                     }
 
+                    console.log(response.akm);
+                    if(response.akm.length > 0)
+                    {
+                        $('#akmDiv').empty();
+                        $('#akmDiv').append(`
+                            <hr>
+                            <h2>Aktivitas Kuliah Mahasiswa (AKM)</h2>
+                        `);
+                        response.akm.forEach(function(akm, index){
+                            $('#akmDiv').append(`
+                                <div class="col-md-4">
+                                    <table style="width:100%" class="table table-bordered">
+                                        <tr>
+                                            <td class="text-start align-middle" style="width: 50%">Semester</td>
+                                            <td>:</td>
+                                            <td class="text-start
+                                                align-middle">${akm.nama_semester}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start align-middle" style="width: 50%">IPK</td>
+                                            <td>:</td>
+                                            <td class="text-start align-middle">${akm.ipk}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start align-middle" style="width: 50%">IPS</td>
+                                            <td>:</td>
+                                            <td class="text-start align-middle">${akm.ips}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start align-middle" style="width: 50%">Status Mahasiswa</td>
+                                            <td>:</td>
+                                            <td class="text-start align-middle">${akm.nama_status_mahasiswa}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            `);
+                        });
 
+
+                    }
                 }
             });
         }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Prodi\Akademik;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
@@ -51,6 +52,10 @@ class KHSController extends Controller
         $transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                     ->get();
 
+        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                ->orderBy('id_semester', 'desc')
+                ->get();
+
         if($nilai->isEmpty() && $konversi->isEmpty() && $transfer->isEmpty()) {
             $response = [
                 'status' => 'error',
@@ -66,6 +71,7 @@ class KHSController extends Controller
             'transfer' => $transfer,
             'konversi' => $konversi,
             'riwayat' => $riwayat,
+            'akm' => $akm,
         ];
 
 
