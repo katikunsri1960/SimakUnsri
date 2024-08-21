@@ -42,6 +42,7 @@ class KHSController extends Controller
 
         $nilai = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 // ->where('id_semester', $semester)
+                ->orderBy('id_semester')
                 ->get();
 
         $konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
