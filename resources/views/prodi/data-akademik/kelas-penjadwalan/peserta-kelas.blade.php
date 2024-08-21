@@ -26,8 +26,11 @@ Peserta Kelas Kuliah
                         <div class="d-inline-block align-items-center">
                             <nav>
                                 <ol class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="{{route('dosen')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                                    <li class="breadcrumb-item" aria-current="page"><a href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">Penilaian Perkuliahan</a></li>
+                                    <li class="breadcrumb-item"><a href="{{route('dosen')}}"><i
+                                                class="mdi mdi-home-outline"></i></a></li>
+                                    <li class="breadcrumb-item" aria-current="page"><a
+                                            href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">Penilaian
+                                            Perkuliahan</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">Detail</li>
                                 </ol>
                             </nav>
@@ -39,8 +42,21 @@ Peserta Kelas Kuliah
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
                         <div class="row mb-5">
-                            <div class="col-xl-4 col-lg-12">
-                                <a class="btn btn-rounded bg-warning-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $matkul->id_matkul])}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
+                            <div class="col-xl-6 col-lg-6">
+                                <a class="btn btn-rounded bg-warning-light"
+                                    href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $matkul->id_matkul])}}"><i
+                                        class="fa fa-chevron-left"><span class="path1"></span><span
+                                            class="path2"></span></i> Kembali</a>
+                            </div>
+                            <div class="col-xl-6 col-lg-6 text-end">
+                                <div class="btn-group">
+                                    {{-- <button class="btn btn-rounded bg-success-light" disabled>
+                                        <i class="fa fa-plus"></i> Tambah RPS
+                                    </button> --}}
+                                    <a class="btn btn-rounded bg-primary-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.absensi', ['id_kelas' => $kelas->id])}}" target="_blank">
+                                        <i class="fa fa-file-lines"></i> Download Absensi
+                                    </a>
+                                </div>
                             </div>
                         </div><br>
                         <div class="rowo mt-3">
@@ -75,7 +91,7 @@ Peserta Kelas Kuliah
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script>
-      $(document).ready(function() {
+    $(document).ready(function() {
         $('#data-table').DataTable({
             "paging": true,
             "ordering": true,

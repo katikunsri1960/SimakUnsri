@@ -62,6 +62,142 @@ class KelasPenjadwalanController extends Controller
         return view('prodi.data-akademik.kelas-penjadwalan.detail', ['data' => $data, 'id_matkul' => $id_matkul, 'matkul' => $mata_kuliah]);
     }
 
+    public function download_absensi($id_kelas)
+    {
+        $data = KelasKuliah::with(['peserta_kelas' => function($q) {
+            $q->orderBy('nim');
+        }, 'dosen_pengajar' => function($q) {
+            $q->orderBy('urutan');
+        }, 'dosen_pengajar.dosen', 'ruang_perkuliahan', 'semester', 'matkul', 'prodi'])->where('id', $id_kelas)->first();
+
+        $phpWord = new \PhpOffice\PhpWord\PhpWord();
+        $sectionStyle = array(
+            'orientation' => 'landscape',
+            'marginLeft' => 600,
+            'marginRight' => 600,
+            'marginTop' => 600,
+            'marginBottom' => 600
+        );
+
+        // Add section with the defined properties
+        $section = $phpWord->addSection($sectionStyle);
+
+        $section->addText('DAFTAR HADIR', array('name' => 'Arial', 'size' => 14, 'bold' => true), array('align' => 'center'));
+
+        $tableStyle = array('alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
+        $table = $section->addTable($tableStyle);
+
+        // Add rows and cells for each piece of text
+        $table->addRow();
+        $table->addCell(2000)->addText('Program Studi', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->prodi->nama_jenjang_pendidikan. " ".$data->prodi->nama_program_studi." (".$data->prodi->kode_program_studi.")", array('name' => 'Arial', 'size' => 10));
+
+        $table->addRow();
+        $table->addCell(2000)->addText('Tahun Akademik', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->semester->nama_semester, array('name' => 'Arial', 'size' => 10));
+
+        $table->addRow();
+        $table->addCell(2000)->addText('Mata Kuliah', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->matkul->kode_mata_kuliah.' - '.$data->matkul->nama_mata_kuliah, array('name' => 'Arial', 'size' => 10));
+
+        $table->addRow();
+        $table->addCell(2000)->addText('Kelas', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->nama_kelas_kuliah, array('name' => 'Arial', 'size' => 10));
+
+        $table->addRow();
+        $table->addCell(2000)->addText('Ruang', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->ruang_perkuliahan->nama_ruang." (".$data->ruang_perkuliahan->lokasi.")", array('name' => 'Arial', 'size' => 10));
+
+        $table->addRow();
+        $table->addCell(2000)->addText('Dosen', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $cell = $table->addCell(5000);
+
+        $listStyle = array(
+            'listType' => \PhpOffice\PhpWord\Style\ListItem::TYPE_BULLET_FILLED,
+            'inde' => array('left' => 0, 'hanging' => 0) // Adjust the negative value as needed
+        );
+
+        // Iterate over the dosen_pengajar array and add each dosen name as a bullet point with the custom list style
+        foreach ($data->dosen_pengajar as $dosenPengajar) {
+            $cell->addListItem($dosenPengajar->dosen->nama_dosen, 0, array('name' => 'Arial', 'size' => 10), $listStyle);
+        }
+
+        $table->addRow();
+        $table->addCell(2000)->addText('Jadwal Hari', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->jadwal_hari, array('name' => 'Arial', 'size' => 10));
+
+        $table->addRow();
+        $table->addCell(2000)->addText('Jadwal Jam', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->jadwal_jam_mulai.' - '.$data->jadwal_jam_selesai. " WIB", array('name' => 'Arial', 'size' => 10));
+
+
+
+
+
+        $section->addTextBreak(1);
+
+         $tableStyle = array(
+            'borderSize' => 6,
+            'borderColor' => '000000',
+            'cellMargin' => 50
+        );
+        $firstRowStyle = array('bgColor' => 'ffffff');
+        $phpWord->addTableStyle('Fancy Table', $tableStyle, $firstRowStyle);
+        $pertemuan = 16;
+        // Add table with the defined style
+        $table = $section->addTable('Fancy Table');
+        $table->addRow();
+        $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'restart'])->addText('NO', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'center', 'valign' => 'center']);
+        $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'vMerge' => 'restart'])->addText('NIM', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'center', 'valign' => 'center']);
+        $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'vMerge' => 'restart'])->addText('NAMA', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'center', 'valign' => 'center']);
+        $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'gridSpan' => $pertemuan])->addText('TANDA TANGAN', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'center', 'valign' => 'center']);
+
+        // Second row
+        $table->addRow();
+        $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'continue']);
+        $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'continue']);
+        $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'continue']);
+        for ($i = 1; $i <= $pertemuan; $i++) {
+            $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText('tgl', array('name' => 'Arial', 'size' => 9, 'bold' => true, 'italic' => true), ['align' => 'center', 'valign' => 'center']);
+        }
+
+
+        $no = 1;
+        foreach ($data->peserta_kelas as $peserta) {
+            $table->addRow();
+            $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($no++, array('name' => 'Arial', 'size' => 9), ['align' => 'center', 'valign' => 'center']);
+            $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nim, array('name' => 'Arial', 'size' => 9),['align' => 'center']);
+            $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nama_mahasiswa, array('name' => 'Arial', 'size' => 9),['valign' => 'center']);
+            for ($i=1; $i <= $pertemuan; $i++) {
+                $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+            }
+        }
+
+        $filename = 'Daftar Hadir '.$data->matkul->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.'.docx';
+        $folderPath = storage_path('app/public/absensi/');
+        $path = $folderPath . $filename;
+
+        // Check if the folder exists
+        if (!file_exists($folderPath) || !is_dir($folderPath)) {
+            // Create the folder
+            mkdir($folderPath, 0755, true);
+        }
+
+        // Save the file
+        $phpWord->save($path);
+
+        return response()->download($path);
+
+    }
+
     public function tambah_kelas_penjadwalan($id_matkul)
     {
         // dd($id_matkul);
@@ -559,7 +695,7 @@ class KelasPenjadwalanController extends Controller
             if((int) $request->kapasitas_kelas >= $data_kelas){
                 KelasKuliah::where('id_kelas_kuliah', $id_kelas)->update(['ruang_perkuliahan_id' => $request->ruang_kelas,'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
             }else{
-                return redirect()->back()->with('error', 'Ubah kapasitas tidak boleh lebih kecil dari jumlah peserta kelas kuliah!!'); 
+                return redirect()->back()->with('error', 'Ubah kapasitas tidak boleh lebih kecil dari jumlah peserta kelas kuliah!!');
             }
             DB::commit();
 
