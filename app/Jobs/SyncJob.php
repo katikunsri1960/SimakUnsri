@@ -93,7 +93,7 @@ class SyncJob implements ShouldQueue
 
                 if ($this->act == 'GetListKonversiKampusMerdeka') {
                     $r = array_map(function ($value) {
-                        if ($value['nilai_indeks'] == 'NaN') {
+                        if (isset($value['nilai_indeks']) && $value['nilai_indeks'] === 'NaN') {
                             $value['nilai_indeks'] = null;
                         }
                         return $value;
