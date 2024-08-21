@@ -178,9 +178,9 @@ KHS Mahasiswa
                     $('#namaKrs').text(response.riwayat.nama_mahasiswa);
                     var jurusan = response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-';
                     $('#jurusanKrs').text(jurusan);
-                    var nip_pa = response.riwayat.dosen_pa.nip ?? '-';
+                    var nip_pa = response.riwayat.dosen_pa ? response.riwayat.dosen_pa.nip : '-';
                     $('#nippaKrs').text(nip_pa);
-                    var dosen_pa = response.riwayat.dosen_pa.nama_dosen ?? '-';
+                    var dosen_pa = response.riwayat.dosen_pa ? response.riwayat.dosen_pa.nama_dosen : '-';
                     $('#dosenpaKrs').text(dosen_pa);
                     $('#prodiKrs').text(response.riwayat.prodi.nama_program_studi);
                     var semesterText =  $('#semester option:selected').text();
