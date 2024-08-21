@@ -142,6 +142,45 @@ Bimbingan Akademik Dosen
 					  </table>
                     </div>
                 </div>
+                <hr>
+                <div class="row my-10">
+                    <h4 class="text-center">Aktivitas MBKM Eksternal</h4>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table id="krs_mbkm" class="table table-bordered table-striped" style="font-size: 12px">
+                            <thead class="table-primary">
+                                <tr>
+                                    <th class="text-center align-middle">NO</th>
+                                    <th class="text-center align-middle">NAMA AKTIVITAS</th>
+                                    <th class="text-center align-middle">JUDUL AKTIVITAS</th>
+                                    <th class="text-center align-middle">SEMESTER</th>
+                                    <th class="text-center align-middle">LOKASI</th>
+                                    <th class="text-center align-middle">STATUS</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($aktivitas_mbkm as $am)
+                                <tr>
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{$am->nama_jenis_aktivitas}}</td>
+                                    <td class="text-start align-middle">{{$am->judul}}</td>
+                                    <td class="text-center align-middle">{{$am->nama_semester}}</td>
+                                    <td class="text-center align-middle">{{$am->lokasi}}</td>
+                                    <td class="text-center align-middle">
+                                        @if ($am->approve_krs == '1')
+                                            <span class="badge bg-success rounded">Disetujui</span>
+                                        @else
+                                            <span class="badge bg-danger">Belum Disetujui</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+					  </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -151,6 +190,14 @@ Bimbingan Akademik Dosen
     <script>
         $(function () {
             $('#krs').DataTable({
+                "paging": false,
+                "searching": true,
+                "ordering": true,
+                "info": true,
+                "autoWidth": true,
+            });
+
+            $('#krs_mbkm').DataTable({
                 "paging": false,
                 "searching": true,
                 "ordering": true,
