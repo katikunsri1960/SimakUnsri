@@ -3,6 +3,7 @@
 Aktivitas Pertukaran Pelajar
 @endsection
 @section('content')
+@include('swal')
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-12">
@@ -51,9 +52,10 @@ Aktivitas Pertukaran Pelajar
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">Jenis Aktivitas</th>
+                                    <th class="text-center align-middle">Nama Aktivitas</th>
                                     <th class="text-center align-middle">Judul</th>
                                     <th class="text-center align-middle">Lokasi</th>
+                                    <th class="text-center align-middle">SKS Konversi</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Action</th>
                                 </tr>
@@ -71,6 +73,11 @@ Aktivitas Pertukaran Pelajar
                                         <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->lokasi }}</td>
                                         <td class="text-center align-middle" style="width:10%">
                                             <div>
+                                                {{ $data->sks_aktivitas== NULL ? 'Tidak Diisi' : $data->sks_aktivitas }}
+                                            </div>
+                                        </td>
+                                        <td class="text-center align-middle" style="width:10%">
+                                            <div>
                                                 @if($data->approve_krs == 0)
                                                     <span class="badge badge-xl badge-danger-light rounded-10 mb-5">Belum Disetujui</span>
                                                 @else
@@ -79,7 +86,7 @@ Aktivitas Pertukaran Pelajar
                                             </div>
                                         </td>
                                         <td class="text-center align-middle" style="width:3%">
-                                            <form action="{{route('mahasiswa.perkuliahan.mbkm.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
+                                            <form action="{{route('mahasiswa.perkuliahan.mbkm.hapus-aktivitas-pertukaran',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
                                                 @csrf
                                                 @method('delete')
                                                 {{-- <button type="submit" class="btn btn-danger" data-id="{{ $data->id }}" title="Hapus Data" {{ !$today <= $deadline ? '' : 'disabled' }}>

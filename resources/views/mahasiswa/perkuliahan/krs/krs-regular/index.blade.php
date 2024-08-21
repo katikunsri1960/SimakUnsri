@@ -29,8 +29,8 @@ Kartu Rencana Studi
                 style="background-image: url({{asset('images/images/svg-icon/color-svg/st-1.svg')}}); background-position: right bottom; background-repeat: no-repeat;">
                 <div class="box-body">
                     <div class="flex-grow-1">
-                        <p class="mt-5 mb-5 text-fade fs-12">IPS | IPK</p>
-                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$transkrip->ipk==NULL ? '0 | 0' : $transkrip->ips .' | '. $transkrip->ipk }}</h4>
+                        <p class="mt-5 mb-5 text-fade fs-12">IPK</p>
+                        <h4 class="mt-5 mb-0" style="color:#0052cc">{{$transkrip->ipk==NULL ? '0' : $transkrip->ipk }}</h4>
                     </div>
                 </div>
             </div>
@@ -396,6 +396,7 @@ Kartu Rencana Studi
                                 _token: csrfToken  // Sertakan CSRF token di sini
                             },
                             success: function(response) {
+                                console.log(idKelas);
                                 swal({
                                     title: 'Berhasil!',
                                     text: response.message,
@@ -406,12 +407,11 @@ Kartu Rencana Studi
                                 });
                             },
                             error: function(response) {
-                                // console.log(response);
                                 var errorMessage = response.responseJSON.message;
                                 swal({
                                     title: 'Gagal!',
                                     text: errorMessage,
-                                    icon: 'warning',
+                                    type: 'warning',
                                     button: 'OK'
                                 });
                             }
@@ -421,7 +421,7 @@ Kartu Rencana Studi
                         swal({
                             title: 'Prasyarat Tidak Terpenuhi',
                             text: 'Anda belum menyelesaikan mata kuliah prasyarat yang diperlukan: ' + response.mata_kuliah_syarat,
-                            icon: 'warning',
+                            type: 'warning',
                             button: 'OK'
                         });
                     }

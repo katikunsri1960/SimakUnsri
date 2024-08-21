@@ -101,6 +101,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/store-pertukaran', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'store_pertukaran'])->name('mahasiswa.perkuliahan.mbkm.store-pertukaran');
                     Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'get_dosen'])->name('mahasiswa.perkuliahan.mbkm.get-dosen');
                     Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'hapusAktivitas'])->name('mahasiswa.perkuliahan.mbkm.hapus-aktivitas');
+                    Route::delete('/hapus-aktivitas-pertukaran/{id}', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'hapusAktivitas_pertukaran'])->name('mahasiswa.perkuliahan.mbkm.hapus-aktivitas-pertukaran');
                     // Route::get('/dosen-pengajar', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'dosen_pengajar_kelas'])->name('mahasiswa.perkuliahan.mbkm.dosen-pengajar');
                 });
 

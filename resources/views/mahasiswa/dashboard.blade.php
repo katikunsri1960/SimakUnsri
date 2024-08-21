@@ -62,7 +62,6 @@ Dashboard
                         @else
                             <h2 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h2>
                         @endif
-                        
                         <p class="text-fade mb-0 fs-12 text-white">Indeks Prestasi Kumulatif</p>
                     </div>
                 </div>
@@ -153,8 +152,6 @@ Dashboard
                     <h4 class="box-title">Grafik Indeks Prestasi Semester </h4>
                 </div>
                 <div class="box-body">
-                    <!-- <p class="text-fade">Grafik IPK</p> -->
-                    <!-- <h3 class="mt-0 mb-20">21 h 30 min <small class="text-danger"><i class="fa fa-arrow-down ms-25 me-5"></i> 15%</small></h3> -->
                     <div id="ips-diambil"></div>
                 </div>
             </div>
@@ -168,7 +165,6 @@ Dashboard
 <link rel="stylesheet" href="css/skin_color.css">
 @endpush
 @push('js')
-{{-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script> --}}
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/chartist-js-develop/chartist.js')}}"></script>

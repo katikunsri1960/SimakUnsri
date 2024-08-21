@@ -53,10 +53,10 @@ Aktivitas MBKM - Non Pertukaran Pelajar
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">Jenis Aktivitas</th>
+                                    <th class="text-center align-middle">Nama Aktivitas</th>
                                     <th class="text-center align-middle">Judul</th>
                                     <th class="text-center align-middle">Lokasi</th>
-                                    <th class="text-center align-middle">SKS</th>
+                                    <th class="text-center align-middle">SKS Konversi</th>
                                     <th class="text-center align-middle">Dosen Pembimbing</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Action</th>
@@ -75,7 +75,7 @@ Aktivitas MBKM - Non Pertukaran Pelajar
                                         <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->lokasi }}</td>
                                         <td class="text-center align-middle" style="width:10%">
                                             <div>
-                                                {{ $data->konversi== NULL ? 'Tidak Diisi' : $data->konversi->sks_mata_kuliah }}
+                                                {{ $data->sks_aktivitas== NULL ? 'Tidak Diisi' : $data->sks_aktivitas }}
                                             </div>
                                         </td>
                                         <td class="text-start align-middle"  style="white-space: nowrap; width:20%">
