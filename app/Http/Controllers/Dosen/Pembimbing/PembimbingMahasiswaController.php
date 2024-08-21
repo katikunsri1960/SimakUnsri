@@ -71,12 +71,22 @@ class PembimbingMahasiswaController extends Controller
                         $query->where('id_registrasi_mahasiswa', $id);
                     })
                     ->where('id_semester', $semester->id_semester)
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
                     ->get();
+        
+        $aktivitas_mbkm = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
+                        ->whereHas('anggota_aktivitas_personal', function($query) use ($id) {
+                            $query->where('id_registrasi_mahasiswa', $id);
+                        })
+                        ->where('id_semester', $semester->id_semester)
+                        ->whereIn('id_jenis_aktivitas',[13,14,15,16,17,18,19,20,21])
+                        ->get();
 
         return view('dosen.pembimbing.akademik.detail', [
             'riwayat' => $riwayat,
             'data' => $data,
             'aktivitas' => $aktivitas,
+            'aktivitas_mbkm' => $aktivitas_mbkm,
             'semester_aktif' => $semester
         ]);
     }
