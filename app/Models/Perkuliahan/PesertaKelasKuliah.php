@@ -187,7 +187,7 @@ class PesertaKelasKuliah extends Model
         if ((!$transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester) {
             return [
                 'status' => 'error',
-                'message' => 'IPK Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
+                'message' => 'Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
             ];
         }
 
