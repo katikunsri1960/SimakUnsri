@@ -247,7 +247,6 @@ KHS Mahasiswa
 
                     }
 
-                    console.log(response.akm);
                     if(response.akm.length > 0)
                     {
                         $('#akmDiv').empty();

@@ -222,43 +222,49 @@ KRS Mahasiswa
                         no++;
                     });
 
-                    response.aktivitas.forEach(function(aktivitas, index){
-                        approved += aktivitas.approve_krs == '1' ? 0 : 1;
+                    if (response.aktivitas.length > 0 ) {
+                        response.aktivitas.forEach(function(aktivitas, index){
+                            approved += aktivitas.approve_krs == '1' ? 0 : 1;
 
-                        var status = aktivitas.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
-                        $('#krs-regular tbody').append(`
-                            <tr>
-                                <td class="text-center align-middle">${no}</td>
-                                <td class="text-center align-middle">${aktivitas.konversi.kode_mata_kuliah}</td>
-                                <td class="text-start align-middle">${aktivitas.konversi.nama_mata_kuliah}</td>
-                                <td class="text-center align-middle"> - </td>
-                                <td class="text-center align-middle">${aktivitas.konversi.sks_mata_kuliah}</td>
-                                <td class="text-center align-middle">
-                                    <span class="badge badge-${aktivitas.approve_krs == '1' ? 'success' : 'warning'}">${status}</span>
-                                </td>
-                            </tr>
-                        `);
-                        no++;
-                    })
+                            var status = aktivitas.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
+                            $('#krs-regular tbody').append(`
+                                <tr>
+                                    <td class="text-center align-middle">${no}</td>
+                                    <td class="text-center align-middle">${aktivitas.konversi.kode_mata_kuliah}</td>
+                                    <td class="text-start align-middle">${aktivitas.konversi.nama_mata_kuliah}</td>
+                                    <td class="text-center align-middle"> - </td>
+                                    <td class="text-center align-middle">${aktivitas.konversi.sks_mata_kuliah}</td>
+                                    <td class="text-center align-middle">
+                                        <span class="badge badge-${aktivitas.approve_krs == '1' ? 'success' : 'warning'}">${status}</span>
+                                    </td>
+                                </tr>
+                            `);
+                            no++;
+                        });
+                    }
 
-                    response.aktivitas.forEach(function(aktivitas_mbkm, index){
-                        approved += aktivitas_mbkm.approve_krs == '1' ? 0 : 1;
 
-                        var status = aktivitas_mbkm.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
-                        $('#krs-mbkm tbody').append(`
-                            <tr>
-                                <td class="text-center align-middle">${no}</td>
-                                <td class="text-center align-middle">${aktivitas_mbkm.nama_jenis_aktivitas}</td>
-                                <td class="text-start align-middle">${aktivitas_mbkm.judul}</td>
-                                <td class="text-center align-middle">${aktivitas_mbkm.nama_semester}</td>
-                                <td class="text-center align-middle">${aktivitas_mbkm.lokasi}</td>
-                                <td class="text-center align-middle">
-                                    <span class="badge badge-${aktivitas_mbkm.approve_krs == '1' ? 'success' : 'warning'}">${status}</span>
-                                </td>
-                            </tr>
-                        `);
-                        no++;
-                    })
+                    if (response.aktivitas_mbkm.length > 0) {
+                        response.aktivitas_mbkm.forEach(function(aktivitas_mbkm, index){
+                            approved += aktivitas_mbkm.approve_krs == '1' ? 0 : 1;
+
+                            var status = aktivitas_mbkm.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
+                            $('#krs-mbkm tbody').append(`
+                                <tr>
+                                    <td class="text-center align-middle">${no}</td>
+                                    <td class="text-center align-middle">${aktivitas_mbkm.nama_jenis_aktivitas}</td>
+                                    <td class="text-start align-middle">${aktivitas_mbkm.judul}</td>
+                                    <td class="text-center align-middle">${aktivitas_mbkm.nama_semester}</td>
+                                    <td class="text-center align-middle">${aktivitas_mbkm.lokasi}</td>
+                                    <td class="text-center align-middle">
+                                        <span class="badge badge-${aktivitas_mbkm.approve_krs == '1' ? 'success' : 'warning'}">${status}</span>
+                                    </td>
+                                </tr>
+                            `);
+                            no++;
+                        });
+                    }
+
 
                     if(approved > 0){
                         $('#btnApprove').removeAttr('disabled');
