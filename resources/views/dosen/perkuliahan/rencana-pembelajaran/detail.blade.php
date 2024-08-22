@@ -45,14 +45,14 @@ $id_matkul = $matkul->id_matkul;
                     <div class="row mb-5">
                             <div class="col-sm-12">
                                 <p class="text-end text-danger">*RPS hanya bisa di isi oleh dosen koordinator mata kuliah (yang di tunjuk sebagai dosen urutan pertama dalam kelas perkuliahan).</p>
-                            </div>                          
+                            </div>
                         </div>
                         <div class="row mb-5">
                             <div class="col-xl-6 col-lg-6">
                                 <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.perkuliahan.rencana-pembelajaran')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
-                            </div>  
+                            </div>
                             <div class="col-xl-6 col-lg-6 text-end">
-                                @if($data[0]->approved == 0)
+                                @if($data && $data->where('approved', 1)->count() == 0)
                                     @if($matkul->kelas_kuliah[0]->dosen_pengajar)
                                         @foreach($matkul->kelas_kuliah[0]->dosen_pengajar as $dp)
                                             <div class="btn-group">
@@ -100,7 +100,7 @@ $id_matkul = $matkul->id_matkul;
                                         @endforeach
                                     @endif
                                 @endif
-                            </div>                           
+                            </div>
                         </div><br>
                         <div class="row">
                             <div class="table-responsive">
@@ -159,7 +159,7 @@ $id_matkul = $matkul->id_matkul;
                                     </tbody>
                                 </table>
                             </div>
-                        </div>                             
+                        </div>
                     </div>
                 </div>
             </div>
