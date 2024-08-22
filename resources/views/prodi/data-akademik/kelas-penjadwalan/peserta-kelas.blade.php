@@ -54,7 +54,7 @@ Peserta Kelas Kuliah
                                         <i class="fa fa-plus"></i> Tambah RPS
                                     </button> --}}
                                     <a class="btn btn-rounded bg-primary-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.absensi', ['id_kelas' => $kelas->id])}}" target="_blank">
-                                        <i class="fa fa-file-lines"></i> Download Absensi
+                                        <i class="fa fa-file-lines"></i> Download Presensi
                                     </a>
                                 </div>
                             </div>
