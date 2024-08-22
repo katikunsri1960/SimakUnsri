@@ -53,29 +53,29 @@ $id_matkul = $matkul->id_matkul;
                             </div>
                             <div class="col-xl-6 col-lg-6 text-end">
                                 @if($data && $data->where('approved', 1)->count() == 0)
-                                    @if($matkul->kelas_kuliah[0]->dosen_pengajar)
-                                        @foreach($matkul->kelas_kuliah[0]->dosen_pengajar as $dp)
-                                            <div class="btn-group">
-                                                @if($dp->urutan == 1)
-                                                    <a class="btn btn-rounded bg-success-light"
-                                                    href="{{ route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul]) }}">
-                                                        <i class="fa fa-plus"></i> Tambah RPS
-                                                    </a>
-                                                    <a class="btn btn-rounded bg-warning-light"
-                                                    href="{{ route('dosen.perkuliahan.rencana-pembelajaran.ubah-link', ['matkul' => $id_matkul]) }}">
-                                                        <i class="fa fa-pencil-square-o"></i> Edit Link RPS
-                                                    </a>
-                                                @else
-                                                    <button class="btn btn-rounded bg-success-light" disabled>
-                                                        <i class="fa fa-plus"></i> Tambah RPS
-                                                    </button>
-                                                    <button class="btn btn-rounded bg-warning-light" disabled>
-                                                        <i class="fa fa-pencil-square-o"></i> Edit Link RPS
-                                                    </button>
-                                                @endif
-                                            </div>
-                                        @endforeach
-                                    @endif
+
+                                    @foreach($matkul->kelas_kuliah[0]->dosen_pengajar as $dp)
+                                        <div class="btn-group">
+                                            @if($dp->urutan == 1)
+                                                <a class="btn btn-rounded bg-success-light"
+                                                href="{{ route('dosen.perkuliahan.rencana-pembelajaran.tambah', ['matkul' => $id_matkul]) }}">
+                                                    <i class="fa fa-plus"></i> Tambah RPS
+                                                </a>
+                                                <a class="btn btn-rounded bg-warning-light"
+                                                href="{{ route('dosen.perkuliahan.rencana-pembelajaran.ubah-link', ['matkul' => $id_matkul]) }}">
+                                                    <i class="fa fa-pencil-square-o"></i> Edit Link RPS
+                                                </a>
+                                            @else
+                                                <button class="btn btn-rounded bg-success-light" disabled>
+                                                    <i class="fa fa-plus"></i> Tambah RPS
+                                                </button>
+                                                <button class="btn btn-rounded bg-warning-light" disabled>
+                                                    <i class="fa fa-pencil-square-o"></i> Edit Link RPS
+                                                </button>
+                                            @endif
+                                        </div>
+                                    @endforeach
+
                                 @else
                                     @if($matkul->kelas_kuliah[0]->dosen_pengajar)
                                         @foreach($matkul->kelas_kuliah[0]->dosen_pengajar as $dp)
