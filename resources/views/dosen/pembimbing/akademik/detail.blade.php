@@ -51,7 +51,7 @@ Bimbingan Akademik Dosen
                         </div>
                         <div class="d-flex justify-content-end align-middle">
                             <div class="">
-                                @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() > 0)
+                                @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count()+$aktivitas_mbkm->where('approve_krs', '0')->count() > 0)
                                     <form action="{{route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat])}}" method="post" id="approveAll">
                                     @csrf
                                         <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() == 0)
@@ -59,7 +59,7 @@ Bimbingan Akademik Dosen
                                         @endif><i class="fa fa-check"></i> Setujui KRS</button>
                                     </form>
                                 @endif
-                                @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count() > 0)
+                                @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count()+$aktivitas_mbkm->where('approve_krs', '1')->count() > 0)
                                     <form action="{{route('dosen.pembimbing.bimbingan-akademik.batal-krs', ['riwayat' => $riwayat])}}" method="post" id="batalKRS">
                                     @csrf
                                         <button class="btn btn-warning btn-rounded" type="submit"
