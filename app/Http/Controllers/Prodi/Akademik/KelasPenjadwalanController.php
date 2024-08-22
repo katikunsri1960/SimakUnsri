@@ -8,6 +8,7 @@ use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\DB;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Perkuliahan\SubstansiKuliah;
 use App\Models\RuangPerkuliahan;
 use App\Models\Perkuliahan\MataKuliah;
@@ -605,7 +606,12 @@ class KelasPenjadwalanController extends Controller
 
     public function kelas_penjadwalan_destroy($id_matkul, $id_kelas)
     {
+        // dd($id_matkul);
         $peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->first();
+
+        $dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->count();
+
+        // dd($dosen);
 
         if($peserta){
             return redirect()->back()->with('error', 'Data Kelas tidak bisa dihapus karena sudah ada peserta');
@@ -614,10 +620,14 @@ class KelasPenjadwalanController extends Controller
         try {
             DB::beginTransaction();
 
-            DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
-
-            KelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
-
+            if($dosen){
+                DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+                KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas)->delete();
+                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+            }else{
+                KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas)->delete();
+                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+            }
 
             DB::commit();
 
