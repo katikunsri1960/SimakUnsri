@@ -54,7 +54,7 @@ Bimbingan Akademik Dosen
                                 @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count()+$aktivitas_mbkm->where('approve_krs', '0')->count() > 0)
                                     <form action="{{route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat])}}" method="post" id="approveAll">
                                     @csrf
-                                        <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count() == 0)
+                                        <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count()+$aktivitas_mbkm->where('approve_krs', '0')->count() == 0)
                                             disabled
                                         @endif><i class="fa fa-check"></i> Setujui KRS</button>
                                     </form>
@@ -63,7 +63,7 @@ Bimbingan Akademik Dosen
                                     <form action="{{route('dosen.pembimbing.bimbingan-akademik.batal-krs', ['riwayat' => $riwayat])}}" method="post" id="batalKRS">
                                     @csrf
                                         <button class="btn btn-warning btn-rounded" type="submit"
-                                            @if ($data->where('approved', '1')->count() + $aktivitas->where('approve_krs', '1')->count() == 0 || date('Y-m-d') < $semester_aktif->tanggal_mulai_kprs)
+                                            @if ($data->where('approved', '1')->count() + $aktivitas->where('approve_krs', '1')->count() + $aktivitas_mbkm->where('approve_krs', '1')->count() == 0 || date('Y-m-d') < $semester_aktif->tanggal_mulai_kprs)
                                                 disabled
                                             @endif>
                                             <i class="fa fa-undo"></i> Batalkan Persetujuan KRS
