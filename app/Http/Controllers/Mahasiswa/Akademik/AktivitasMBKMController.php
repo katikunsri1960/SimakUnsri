@@ -35,7 +35,7 @@ class AktivitasMBKMController extends Controller
 
         $semester_aktif = SemesterAktif::first();
         
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa'])
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa', 'semester'])
                 ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                     $query->where('id_registrasi_mahasiswa', $id_reg);
                 })
@@ -88,6 +88,7 @@ class AktivitasMBKMController extends Controller
                         ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                                 $query->where('id_registrasi_mahasiswa', $id_reg);
                         })
+                        ->where('id_semester', $semester_aktif->id_semester)
                         ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20'])
                         ->get();
                         
@@ -95,7 +96,7 @@ class AktivitasMBKMController extends Controller
                                 "10", 
                                 "20"
                             ];
-        // dd($aktivitas_mbkm);
+        // dd($data_aktivitas_mbkm);
 
         $jumlah_aktivitas_mbkm=$data_aktivitas_mbkm->count();
 
@@ -224,7 +225,7 @@ class AktivitasMBKMController extends Controller
                     'feeder'=>0,
                     'id_aktivitas' => $id_aktivitas,
                     // 'judul' => $request->judul_skripsi,
-                    'program_mbkm'=>2,
+                    'program_mbkm'=>0,
                     'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
                     'jenis_anggota'=>0,
                     'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
@@ -374,14 +375,15 @@ class AktivitasMBKMController extends Controller
         // $data = AktivitasMagang::where('id_registrasi_mahasiswa', $id_reg)->get();
         // $anggota_aktivitas = AnggotaAktivitasMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->get();
 
-        $semester_aktif = SemesterAktif::first();
+        $semester_aktif = SemesterAktif::with(['semester'])->first();
         
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa'])
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa', 'semester'])
                 ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                     $query->where('id_registrasi_mahasiswa', $id_reg);
                 })
                 ->whereIn('id_jenis_aktivitas',['21'])
                 ->get();
+                // dd($data);
 
         $today = Carbon::now()->toDateString();
 
@@ -395,7 +397,7 @@ class AktivitasMBKMController extends Controller
             $batas_isi_krs =  NULL;
         }
 
-        // dd($batas_isi_krs);
+        // dd($data);
 
         return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.index', ['data' => $data, 'semester_aktif' => $semester_aktif, 'today'=>$today ,'batas_isi_krs'=>$batas_isi_krs ]);
     }
@@ -427,6 +429,7 @@ class AktivitasMBKMController extends Controller
                         ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                                 $query->where('id_registrasi_mahasiswa', $id_reg);
                         })
+                        ->where('id_semester', $semester_aktif->id_semester)
                         ->whereIn('id_jenis_aktivitas',['21'])
                         ->get();
                         
@@ -434,7 +437,7 @@ class AktivitasMBKMController extends Controller
                                 "10", 
                                 "20"
                             ];
-        // dd($aktivitas_mbkm);
+                            // dd($data_aktivitas_mbkm);
 
         $jumlah_aktivitas_mbkm=$data_aktivitas_mbkm->count();
 
@@ -537,8 +540,8 @@ class AktivitasMBKMController extends Controller
                     'approve_sidang' =>0,
                     'feeder'=>0,
                     'id_aktivitas' => $id_aktivitas,
-                    'program_mbkm'=>2,
-                    'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
+                    'program_mbkm'=>1,
+                    'nama_program_mbkm'=>'Flagship',//tanyakan dirapat
                     'jenis_anggota'=>0,
                     'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
                     'id_jenis_aktivitas'=>$aktivitas_mbkm->id_jenis_aktivitas,
