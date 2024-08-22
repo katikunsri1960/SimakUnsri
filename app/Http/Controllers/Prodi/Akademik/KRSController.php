@@ -43,14 +43,23 @@ class KRSController extends Controller
                 })
                 ->get();
 
-         $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
+        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
                 ->whereHas('anggota_aktivitas_personal', function($query) use ($riwayat) {
                     $query->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa);
                 })
                 ->where('id_semester', $semester)
-                ->get();
+                ->whereIn('id_jenis_aktivitas', [1,2,3,4,5,6,22])
+                ->get(); 
+    
+        $aktivitas_mbkm = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
+                    ->whereHas('anggota_aktivitas_personal', function($query) use ($riwayat) {
+                        $query->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa);
+                    })
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas',[13,14,15,16,17,18,19,20,21])
+                    ->get();
 
-        if($krs->isEmpty() && $aktivitas->isEmpty()) {
+        if($krs->isEmpty() && $aktivitas->isEmpty() && $aktivitas_mbkm->isEmpty()) {
             $response = [
                 'status' => 'error',
                 'message' => 'Data KRS tidak ditemukan!',
@@ -63,6 +72,7 @@ class KRSController extends Controller
             'message' => 'Data KRS berhasil diambil',
             'krs' => $krs,
             'aktivitas' => $aktivitas,
+            'aktivitas_mbkm' => $aktivitas_mbkm,
             'riwayat' => $riwayat,
         ];
 
