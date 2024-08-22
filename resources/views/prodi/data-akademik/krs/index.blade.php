@@ -110,6 +110,24 @@ KRS Mahasiswa
 
                                 </tbody>
                             </table>
+                            <hr>
+                            <h4 class="text-center my-5">Aktivitas MBKM Eksternal</h4>
+                            <hr>
+                            <table class="table table-bordered mt-4" id="krs-mbkm">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">N0</th>
+                                        <th class="text-center align-middle">Nama Aktivitas</th>
+                                        <th class="text-center align-middle">Judul Aktivitas</th>
+                                        <th class="text-center align-middle">Semester</th>
+                                        <th class="text-center align-middle">Lokasi</th>
+                                        <th class="text-center align-middle">Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -166,7 +184,8 @@ KRS Mahasiswa
                     // append response.krs to table of krs-regular
                     $('#nimKrs').text(response.riwayat.nim);
                     // remove "Fakultas " from nama_fakultas
-                    var fakultas = response.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '');
+                    var check_fakultas = response.riwayat.prodi.fakultas.nama_fakultas ?? 'Fakultas -';
+                    var fakultas = check_fakultas.replace('Fakultas ', '');
                     $('#fakultasKrs').text(fakultas);
                     $('#namaKrs').text(response.riwayat.nama_mahasiswa);
                     var jurusan = response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-';
@@ -179,6 +198,7 @@ KRS Mahasiswa
                     var semesterText =  $('#semester option:selected').text();
                     $('#semesterKrs').text(semesterText);
                     $('#krs-regular tbody').empty();
+                    $('#krs-mbkm tbody').empty();
 
                     // count response.krs.approved
                     var approved = 0;
@@ -215,6 +235,25 @@ KRS Mahasiswa
                                 <td class="text-center align-middle">${aktivitas.konversi.sks_mata_kuliah}</td>
                                 <td class="text-center align-middle">
                                     <span class="badge badge-${aktivitas.approve_krs == '1' ? 'success' : 'warning'}">${status}</span>
+                                </td>
+                            </tr>
+                        `);
+                        no++;
+                    })
+
+                    response.aktivitas.forEach(function(aktivitas_mbkm, index){
+                        approved += aktivitas_mbkm.approve_krs == '1' ? 0 : 1;
+
+                        var status = aktivitas_mbkm.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
+                        $('#krs-mbkm tbody').append(`
+                            <tr>
+                                <td class="text-center align-middle">${no}</td>
+                                <td class="text-center align-middle">${aktivitas_mbkm.nama_jenis_aktivitas}</td>
+                                <td class="text-start align-middle">${aktivitas_mbkm.judul}</td>
+                                <td class="text-center align-middle">${aktivitas_mbkm.nama_semester}</td>
+                                <td class="text-center align-middle">${aktivitas_mbkm.lokasi}</td>
+                                <td class="text-center align-middle">
+                                    <span class="badge badge-${aktivitas_mbkm.approve_krs == '1' ? 'success' : 'warning'}">${status}</span>
                                 </td>
                             </tr>
                         `);
