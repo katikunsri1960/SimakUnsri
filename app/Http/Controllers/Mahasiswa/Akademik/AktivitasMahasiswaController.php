@@ -387,6 +387,14 @@ class AktivitasMahasiswaController extends Controller
                         $id_kategori_kegiatan=110405;
                         $nama_kategori_kegiatan='Disertasi (pembimbing pendamping)';
                     }
+                }elseif($prodi->nama_jenjang_pendidikan == 'D3' || $prodi->nama_jenjang_pendidikan == 'Profesi'){
+                    if($i==0){
+                        $id_kategori_kegiatan=110404;
+                        $nama_kategori_kegiatan='Laporan/tugas akhir studi (pembimbing utama)';
+                    }else{
+                        $id_kategori_kegiatan=110408;
+                        $nama_kategori_kegiatan='Laporan akhir studi (pembimbing pendamping)';
+                    }
                 }
                 $dosen_pembimbing=BiodataDosen::where('id_dosen', $request->dosen_bimbing_aktivitas[$i])->first();
                 // dd($dosen_pembimbing);
