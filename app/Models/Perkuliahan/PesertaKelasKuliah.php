@@ -184,20 +184,11 @@ class PesertaKelasKuliah extends Model
                     ->groupBy('id_registrasi_mahasiswa')
                     ->first();
 
-        if (!$transkrip && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester) {
+        if ((!$transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester) {
             return [
                 'status' => 'error',
                 'message' => 'IPK Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
             ];
-        }
-
-        if ($transkrip) {
-            if ($transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester) {
-                return [
-                    'status' => 'error',
-                    'message' => 'IPK Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
-                ];
-            }
         }
 
         $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
