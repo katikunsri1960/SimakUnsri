@@ -167,6 +167,8 @@ KRS Mahasiswa
                 },
                 success: function(response){
                     if (response.status == 'error') {
+                        $('#krsDiv').attr('hidden', true);
+
                         swal({
                             title: "Peringatan!",
                             text: response.message,
