@@ -115,6 +115,27 @@ KHS Mahasiswa
 
                                 </tbody>
                             </table>
+                            <hr>
+                            <div class="row mt-5" id="transferDiv" hidden>
+                                <h3>Nilai Transfer</h3>
+                                <table class="table table-bordered table-hover mt-2" id="transferTable">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center align-middle">No</th>
+                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                            <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                            <th class="text-center align-middle">Semester</th>
+                                            <th class="text-center align-middle">SKS Diakui</th>
+                                            <th class="text-center align-middle">Nilai Index Diakui</th>
+                                            <th class="text-center align-middle">Nilai Huruf Diakui</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                    </tbody>
+                                </table>
+                            </div>
+
                             <div class="row mt-5" id="akmDiv">
 
                             </div>
@@ -284,6 +305,24 @@ KHS Mahasiswa
                             `);
                         });
 
+                    }
+
+                    if (response.transfer.length > 0) {
+                        $('#transferDiv').removeAttr('hidden');
+
+                        response.transfer.forEach(function(transfer, index){
+                            $('#transferTable tbody').append(`
+                                <tr>
+                                    <td class="text-center align-middle">${index + 1}</td>
+                                    <td class="text-center align-middle">${transfer.kode_matkul_diakui}</td>
+                                    <td class="text-start align-middle">${transfer.nama_mata_kuliah_diakui}</td>
+                                    <td class="text-center align-middle">${transfer.nama_semester}</td>
+                                    <td class="text-center align-middle">${transfer.sks_mata_kuliah_diakui}</td>
+                                    <td class="text-center align-middle">${transfer.nilai_angka_diakui}</td>
+                                    <td class="text-center align-middle">${transfer.nilai_huruf_diakui}</td>
+                                </tr>
+                            `);
+                        });
 
                     }
                 }
