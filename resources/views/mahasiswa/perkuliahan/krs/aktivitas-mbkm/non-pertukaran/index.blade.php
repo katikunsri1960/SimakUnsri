@@ -90,13 +90,15 @@ Aktivitas MBKM - Non Pertukaran Pelajar
                                         </td>
                                         <td class="text-center align-middle" style="width:10%">
                                             @if ($data->approve_krs == 0)
-                                                <span class="badge badge-lg badge-danger">Belum Disetujui</span>
+                                                <span class="badge badge-lg badge-danger-light">Belum Disetujui</span>
+                                            @elseif ($data->bimbing_mahasiswa->first()->approved == 0)
+                                                <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi Koprodi</span>
                                             @elseif ($data->approve_krs == 1 && $data->bimbing_mahasiswa->first()->approved_dosen == 0)
-                                                <span class="badge badge-lg badge-warning">Menunggu konfirmasi dosen</span>
+                                                <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
                                             @elseif ($data->approve_krs == 1 && $data->bimbing_mahasiswa->first()->approved_dosen == 2)
-                                                <span class="badge badge-lg badge-danger">Ditolak dosen pembimbing</span>
+                                                <span class="badge badge-lg badge-danger-light">Ditolak dosen pembimbing</span>
                                             @else
-                                                <span class="badge badge-lg badge-success">Disetujui</span>
+                                                <span class="badge badge-lg badge-success-light">Disetujui</span>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle" style="width:3%">

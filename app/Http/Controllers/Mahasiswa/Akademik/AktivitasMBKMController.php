@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Mahasiswa\Akademik;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Models\Dosen\BiodataDosen;
@@ -15,6 +16,7 @@ use App\Models\Mahasiswa\AktivitasMagang;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 
 class AktivitasMBKMController extends Controller
@@ -107,6 +109,31 @@ class AktivitasMBKMController extends Controller
         }
         // dd($jumlah_aktivitas_mbkm);
 
+        // Pengecekan apakah KRS sudah diApprove 
+        $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
+                    $query ->where('id_semester', $semester_aktif->id_semester);
+                })
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('nama_kelas_kuliah', 'LIKE', '241%' )
+                ->where('approved', 1)
+                ->count();
+                // dd($approved);
+
+        $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
+                    $query ->where('id_registrasi_mahasiswa', $id_reg);
+                })
+                ->where('id_semester', $semester_aktif->id_semester )
+                ->where('approve_krs', 1)
+                ->count();
+                // dd($approved);
+            
+        if ( $approved_krs > 0 || $approved_akt > 0) {
+        // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
+        return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
+        }
+
         $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
                     // ->leftJoin()
                     // ->where('id_prodi', $prodi_id)
@@ -158,11 +185,12 @@ class AktivitasMBKMController extends Controller
         $aktivitas_mbkm = $request->aktivitas_mbkm;
 
         $semester_aktif = SemesterAktif::first();
-        $data_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+        $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                         ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                                 $query->where('id_registrasi_mahasiswa', $id_reg);
                         })
-                        ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20'])
+                        ->where('id_semester', $semester_aktif->id_semester)
+                        ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                         ->get();
          
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
@@ -183,8 +211,8 @@ class AktivitasMBKMController extends Controller
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
         
-        if(!empty($data_aktivitas_mbkm->first())){
-            $sks_akt_mbkm = $data_aktivitas_mbkm->first()-> sks_aktivitas;
+        if(!empty($krs_aktivitas_mbkm->first())){
+            $sks_akt_mbkm = $krs_aktivitas_mbkm->first()-> sks_aktivitas;
         }else{
             $sks_akt_mbkm =0;
         }
@@ -192,8 +220,10 @@ class AktivitasMBKMController extends Controller
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $sks_akt_mbkm ;     
 
         if (($total_sks + $request->sks_mbkm) > $sks_max) {
-            return redirect()->back()->with('error', 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS'.', Aktivitas MBKM yang Anda ambil memiliki SKS Konversi'.$sks_akt_mbkm.' SKS');
+            return redirect()->back()->with('error', 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS'.', Aktivitas MBKM yang Anda ambil memiliki SKS Konversi '.$sks_akt_mbkm.' SKS');
         }
+
+        // dd($total_sks, $request->sks_mbkm);
         
 
         // Lanjutkan proses penyimpanan jika tidak ada aktivitas yang sama
@@ -447,6 +477,30 @@ class AktivitasMBKMController extends Controller
             return redirect()->back()->with('error', 'Anda telah mengajukan Aktivitas'.' '.$aktivitas_mbkm->first()->nama_jenis_aktivitas);
         }
 
+        $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
+                    $query ->where('id_semester', $semester_aktif->id_semester);
+                })
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('nama_kelas_kuliah', 'LIKE', '241%' )
+                ->where('approved', 1)
+                ->count();
+                // dd($approved);
+
+        $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
+                    $query ->where('id_registrasi_mahasiswa', $id_reg);
+                })
+                ->where('id_semester', $semester_aktif->id_semester )
+                ->where('approve_krs', 1)
+                ->count();
+                // dd($approved);
+            
+        if ( $approved_krs > 0 || $approved_akt > 0) {
+        // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
+        return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
+        }
+
         // dd($jumlah_aktivitas_mbkm);
 
 
@@ -472,11 +526,12 @@ class AktivitasMBKMController extends Controller
         $aktivitas_mbkm = $request->aktivitas_mbkm;
 
         $semester_aktif = SemesterAktif::first();
-        $data_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+        $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                         ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                                 $query->where('id_registrasi_mahasiswa', $id_reg);
                         })
-                        ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20'])
+                        ->where('id_semester', $semester_aktif->id_semester)
+                        ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                         ->get();
          
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
@@ -496,8 +551,8 @@ class AktivitasMBKMController extends Controller
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
-        if(!empty($data_aktivitas_mbkm->first())){
-            $sks_akt_mbkm = $data_aktivitas_mbkm->first()-> sks_aktivitas;
+        if(!empty($krs_aktivitas_mbkm->first())){
+            $sks_akt_mbkm = $krs_aktivitas_mbkm->first()-> sks_aktivitas;
         }else{
             $sks_akt_mbkm =0;
         }
@@ -507,7 +562,7 @@ class AktivitasMBKMController extends Controller
         // dd($total_sks);
 
         if (($total_sks + $request->sks_mbkm) > $sks_max) {
-            return redirect()->back()->with('error', 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS'.', Aktivitas MBKM yang Anda ambil memiliki SKS Konversi'.$sks_akt_mbkm.' SKS');
+            return redirect()->back()->with('error', 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS'.', Aktivitas MBKM yang Anda ambil memiliki SKS Konversi '.$sks_akt_mbkm.' SKS');
         }
 
         try {

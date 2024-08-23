@@ -396,7 +396,7 @@ Kartu Rencana Studi
                                 _token: csrfToken  // Sertakan CSRF token di sini
                             },
                             success: function(response) {
-                                // console.log(idKelas);
+                                console.log(response.message);
                                 swal({
                                     title: 'Berhasil!',
                                     text: response.message,
