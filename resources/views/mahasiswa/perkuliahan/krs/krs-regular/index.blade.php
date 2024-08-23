@@ -217,7 +217,7 @@ Kartu Rencana Studi
                     tbody.empty(); // Kosongkan tabel sebelum menambahkan data baru
                     
                     if (mkMerdeka.length > 0) {
-                        console.log(response)
+                        //console.log(response)
                         $.each(mkMerdeka, function(index, data) {
                             var isDisabledMerdeka = krsMerdeka.includes(data.id_matkul);
                             var isEmptyClass = data.jumlah_kelas == 0
@@ -396,7 +396,7 @@ Kartu Rencana Studi
                                 _token: csrfToken  // Sertakan CSRF token di sini
                             },
                             success: function(response) {
-                                console.log(idKelas);
+                                // console.log(idKelas);
                                 swal({
                                     title: 'Berhasil!',
                                     text: response.message,
@@ -522,7 +522,7 @@ Kartu Rencana Studi
 
         $('.hapus-aktivitas').click(function() {
             var idAktivitas = $(this).data('id');
-            console.log(idAktivitas)
+            // console.log(idAktivitas)
             
             swal({
                 title: "Apakah Anda yakin?",
@@ -631,8 +631,8 @@ Kartu Rencana Studi
         var today = @json($today);
         var batasIsiKrs = @json($batas_isi_krs);
 
-        console.log(today)
-        console.log(batasIsiKrs)
+        // console.log(today)
+        // console.log(batasIsiKrs)
 
         // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
         if (!batasIsiKrs || today > batasIsiKrs || semesterAktif > semesterSelect) {
