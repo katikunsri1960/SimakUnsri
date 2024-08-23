@@ -47,10 +47,6 @@
                                 <a href="{{route('prodi.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.index') || request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.*')
-                                ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Konversi Aktivitas</a>
-                            </li>
                             <!-- <li class="{{request()->routeIs('prodi.data-master.ruang-perkuliahan') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Pengumuman</a>
@@ -112,6 +108,10 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.index') || request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.*')
+                                ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Konversi Aktivitas</a>
+                            </li>
                             <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-penelitian') || request()->routeIs('prodi.data-aktivitas.aktivitas-penelitian.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-aktivitas.aktivitas-penelitian')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Penelitian</a>
                             </li>
