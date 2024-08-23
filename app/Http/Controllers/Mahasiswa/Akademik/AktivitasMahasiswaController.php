@@ -223,10 +223,12 @@ class AktivitasMahasiswaController extends Controller
             $mk_konversi = Konversi::where('id_matkul', $request->id_matkul_konversi)->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
             // dd($mk_konversi);
 
-            $data_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+            $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                         ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                                 $query->where('id_registrasi_mahasiswa', $id_reg);
                         })
+                        // ->where('approve_krs', 1)
+                        ->where('id_semester', $semester_aktif->id_semester)
                         ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                         ->get();
 
@@ -242,13 +244,9 @@ class AktivitasMahasiswaController extends Controller
             $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
-            if(!empty($data_aktivitas_mbkm->first())){
-                $sks_akt_mbkm = $data_aktivitas_mbkm->first()-> sks_aktivitas;
-            }else{
-                $sks_akt_mbkm =0;
-            }
+            $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $sks_akt_mbkm ;     
+            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm ;
 
 
             // Pengecekan apakah KRS sudah diApprove 

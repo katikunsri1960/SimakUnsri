@@ -145,13 +145,24 @@ class KrsController extends Controller
             //     ->where('id_kelas_kuliah', $idKelasKuliah)
             //     ->pluck('sks_mata_kuliah')
             //     ->first();
+        $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                    ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
+                            $query->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    // ->where('approve_krs', 1)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
+                    ->get();
 
     // TOTAL SELURUH SKS
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
+        $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
+        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm ;
+
+        // $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
         $today = Carbon::now()->toDateString();
 
@@ -367,12 +378,14 @@ class KrsController extends Controller
                 // return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
             }
 
-            $data_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-                        ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
-                                $query->where('id_registrasi_mahasiswa', $id_reg);
-                        })
-                        ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
-                        ->get();
+            $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                    ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
+                            $query->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    // ->where('approve_krs', 1)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
+                    ->get();
 
             $db = new MataKuliah();
             $db_akt = new AktivitasMahasiswa();
@@ -386,13 +399,9 @@ class KrsController extends Controller
             $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
-            if(!empty($data_aktivitas_mbkm->first())){
-                $sks_akt_mbkm = $data_aktivitas_mbkm->first()-> sks_aktivitas;
-            }else{
-                $sks_akt_mbkm =0;
-            }
+            $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $sks_akt_mbkm ;     
+            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm ;
 
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
                     ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
@@ -404,7 +413,7 @@ class KrsController extends Controller
                     ->where('id_jenis_daftar', '14')
                     ->count();
 
-            // dd($sks_max);
+            // dd($krs_aktivitas_mbkm);
             // Pengecekan apakah SKS maksimum telah tercapai
             if ($sks_max == 0  && $non_gelar == 0) {
                 return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
@@ -627,16 +636,32 @@ class KrsController extends Controller
        
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester, $riwayat_pendidikan->id_prodi)->where('approved', 1);
         
+        $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                    ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
+                            $query->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    ->where('approve_krs', 1)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
+                    ->get();
+
         // dd($krs_akt);
+        // if(!empty($krs_aktivitas_mbkm->get())){
+        //     $sks_akt_mbkm = $krs_aktivitas_mbkm->get()->sks_aktivitas;
+        // }else{
+        //     $sks_akt_mbkm =0;
+        // }
 
     // TOTAL SELURUH SKS
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
+        $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
+        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm ;    
+        // $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-        // dd($krs_merdeka);
+        // dd($total_sks_mbkm);
 
         $tgl_krs_regular = $krs_regular->first();
         $tgl_krs_merdeka = $krs_merdeka->first();
@@ -687,8 +712,10 @@ class KrsController extends Controller
             'total_sks_akt' => $total_sks_akt,
             'total_sks_merdeka' => $total_sks_merdeka,
             'total_sks_regular' => $total_sks_regular,
+            'total_sks_mbkm' => $total_sks_mbkm,
             'total_sks' => $total_sks,
-            'tanggal_approve' => $tanggal_approve
+            'tanggal_approve' => $tanggal_approve,
+            'krs_aktivitas_mbkm' => $krs_aktivitas_mbkm
         ])->setPaper('a4', 'portrait');
 
         return $pdf->stream('KRS_' . $nim . '_' . $nama_smt . '.pdf');
