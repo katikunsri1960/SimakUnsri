@@ -184,5 +184,27 @@ class AktivitasMahasiswa extends Model
 
             return [$krs_akt, $data_akt_ids, $mk_akt];
     }
+
+    public function aktivitas_non_ta($id_prodi, $semester)
+    {
+        $data = $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+                    ->withCount([
+                        'bimbing_mahasiswa as approved' => function($query) {
+                            $query->where('approved', 0);
+                        },
+                        'bimbing_mahasiswa as approved_dosen' => function($query) {
+                            $query->where('approved_dosen', 0);
+                        },
+                        'bimbing_mahasiswa as decline_dosen' => function($query) {
+                            $query->where('approved_dosen', 2);
+                        },
+                    ])
+                    ->where('id_prodi', $id_prodi)
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [5,6,13,14,15,16,17,18,19,20,21])
+                    ->get();
+
+        return $data;
+    }
     
 }
