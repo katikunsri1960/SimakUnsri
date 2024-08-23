@@ -47,6 +47,10 @@
                                 <a href="{{route('prodi.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a>
                             </li>
+                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.index') || request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.*')
+                                ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Konversi Aktivitas</a>
+                            </li>
                             <!-- <li class="{{request()->routeIs('prodi.data-master.ruang-perkuliahan') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Pengumuman</a>
@@ -80,6 +84,13 @@
                                     @endif
                                      Mhs</a>
                             </li>
+                            <li class="{{request()->routeIs('prodi.data-akademik.non-tugas-akhir') || request()->routeIs('prodi.data-akademik.non-tugas-akhir.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-akademik.non-tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Non @if(Auth::user()->fk->nama_jenjang_pendidikan == 'S1')Skripsi
+                                    @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')Tesis
+                                    @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')Disertasi
+                                    @else Tugas Akhir
+                                    @endif</a>
+                            </li>
                             <li class="{{request()->routeIs('prodi.data-akademik.sidang-mahasiswa') || request()->routeIs('prodi.data-akademik.sidang-mahasiswa.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.sidang-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Sidang Mahasiswa</a>
                             </li>
@@ -101,10 +112,6 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.index') || request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.*')
-                                ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Mahasiswa</a>
-                            </li>
                             <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-penelitian') || request()->routeIs('prodi.data-aktivitas.aktivitas-penelitian.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-aktivitas.aktivitas-penelitian')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Penelitian</a>
                             </li>
