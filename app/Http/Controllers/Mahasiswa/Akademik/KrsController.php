@@ -400,9 +400,13 @@ class KrsController extends Controller
                     ->pluck('sks_mata_kuliah')
                     ->first();
 
-            // dd($total_sks);
+            $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_jenis_daftar', '14')
+                    ->count();
+
+            // dd($sks_max);
             // Pengecekan apakah SKS maksimum telah tercapai
-            if ($sks_max == 0) {
+            if ($sks_max == 0  && $non_gelar == 0) {
                 return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
             }
 
