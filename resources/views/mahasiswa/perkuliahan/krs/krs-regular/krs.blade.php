@@ -158,10 +158,10 @@
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center align-middle">No</th>
-                                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                                            <th class="text-center align-middle">Nama Aktivitas</th>
                                                             <th class="text-center align-middle">Nama Mata Kuliah Konversi</th>
                                                             {{-- <th class="text-center align-middle">Semester</th> --}}
-                                                            <th class="text-center align-middle">Nama Aktivitas</th>
+                                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                             <th class="text-center align-middle">SKS</th>
                                                             <th class="text-center align-middle">Dosen Pembimbing</th>
                                                             <th class="text-center align-middle">Status</th>
