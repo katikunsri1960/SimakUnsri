@@ -63,6 +63,7 @@ class AktivitasMahasiswaKonversiController extends Controller
             ->where('id_prodi', $prodi_id)
             ->whereNotIn('id_matkul', $id_matkul)
             ->where('nama_mata_kuliah', 'LIKE', "%$search%")
+            ->orWhere('kode_mata_kuliah', 'like', "%{$search}%")
             ->get();
 
             // dd($mk_konversi);

@@ -173,11 +173,14 @@ class KrsController extends Controller
         $penundaan_pembayaran = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
                                 ->count();
 
+        $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                            ->where('id_jenis_daftar', '14')
+                            ->count();
         // $mulai_kprs = $semester_aktif->tanggal_mulai_kprs;
         // dd($semester_aktif->krs_mulai);
         // dd($semester_aktif->tanggal_mulai_kprs);
         // dd($today);
-        // dd($batas_isi_krs);
+        // dd($non_gelar);
 
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
@@ -205,7 +208,7 @@ class KrsController extends Controller
             'tagihan', 
             'cuti',
             'transkrip',
-            'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran'
+            'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran', 'non_gelar'
         ));
     }
 
