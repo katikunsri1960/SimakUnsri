@@ -12,7 +12,7 @@
 
     <link rel="icon" href="{{asset('images/unsri.png')}}">
 
-    <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
+    <title>{{ config('app.name', 'SIMAK') }} - @yield('title')</title>
     @stack('css')
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
     <!-- Vendors Style-->

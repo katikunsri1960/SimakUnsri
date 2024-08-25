@@ -12,12 +12,12 @@ Perubahan Password Akun
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 pb-10 text-center">
                             <img src="{{asset('images/logo-unsri.png')}}" alt="UNSRI" class="img-responsive w-150">
-                        </div>                             
+                        </div>
                     </div>
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 text-center">
-                            <h3 class="fw-500 text-dark mt-0">Perubahan Password Akun SIAKAD Universitas Sriwijaya</h3>
-                        </div>                             
+                            <h3 class="fw-500 text-dark mt-0">Perubahan Password Akun SIMAK Universitas Sriwijaya</h3>
+                        </div>
                     </div>
                 </div>
                 <!-- /.box-header -->
@@ -47,12 +47,12 @@ Perubahan Password Akun
                         <button type="submit" class="btn btn-primary">
                             <i class="ti-save-alt"></i> Save
                         </button>
-                    </div>  
+                    </div>
                 </form>
             </div>
-            <!-- /.box -->			
+            <!-- /.box -->
         </div>
-    </div>			
+    </div>
 </section>
 @endsection
 

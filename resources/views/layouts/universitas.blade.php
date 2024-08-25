@@ -10,7 +10,7 @@
     @vite(['resources/sass/app.scss'])
     <link rel="icon" href="{{asset('images/unsri.png')}}">
 
-    <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
+    <title>{{ config('app.name', 'SIMAK') }} - @yield('title')</title>
     @stack('css')
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
     <!-- Vendors Style-->
@@ -36,7 +36,8 @@
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
-    <div id="spinner" class="centered" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); z-index: 9999;">
+    <div id="spinner" class="centered"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); z-index: 9999;">
         <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Loading...</span>
         </div>
@@ -57,151 +58,49 @@
                 <!-- /.content -->
             </div>
         </div>
+
         <!-- /.content-wrapper -->
         <footer class="main-footer">
             &copy; {{date('Y')}} <a href="https://tik.unsri.ac.id/">Created By UPT TIK UNSRI</a>. All Rights Reserved.
         </footer>
 
         <!-- Control Sidebar -->
-        <aside class="control-sidebar">
 
-            <div class="rpanel-title"><span class="pull-right btn btn-circle btn-danger"><i
-                        class="ion ion-close text-white" data-toggle="control-sidebar"></i></span> </div>
-            <!-- Create the tabs -->
-            <ul class="nav nav-tabs control-sidebar-tabs">
-                <li class="nav-item"><a href="#control-sidebar-home-tab" data-bs-toggle="tab" class="active"><i
-                            class="mdi mdi-message-text"></i></a></li>
-                <li class="nav-item"><a href="#control-sidebar-settings-tab" data-bs-toggle="tab"><i
-                            class="mdi mdi-playlist-check"></i></a></li>
-            </ul>
-            <!-- Tab panes -->
-            <div class="tab-content">
-                <!-- Home tab content -->
-                <div class="tab-pane active" id="control-sidebar-home-tab">
-                    <div class="flexbox">
-                        <a href="javascript:void(0)" class="text-grey">
-                            <i class="ti-more"></i>
-                        </a>
-                        <p>Users</p>
-                        <a href="javascript:void(0)" class="text-end text-grey"><i class="ti-plus"></i></a>
-                    </div>
-                    <div class="lookup lookup-sm lookup-right d-none d-lg-block">
-                        <input type="text" name="s" placeholder="Search" class="w-p100">
-                    </div>
-                    <div class="media-list media-list-hover mt-20">
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-success" href="#">
-                                <img src="{{asset('images/images/avatar/1.jpg')}}" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Tyler</strong></a>
-                                </p>
-                                <p>Praesent tristique diam...</p>
-                                <span>Just now</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-danger" href="#">
-                                <img src="{{asset('images/images/avatar/2.jpg')}}" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Luke</strong></a>
-                                </p>
-                                <p>Cras tempor diam ...</p>
-                                <span>33 min ago</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-warning" href="#">
-                                <img src="{{asset('images/images/avatar/3.jpg')}}" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Evan</strong></a>
-                                </p>
-                                <p>In posuere tortor vel...</p>
-                                <span>42 min ago</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-primary" href="#">
-                                <img src="{{asset('images/images/avatar/4.jpg')}}" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Evan</strong></a>
-                                </p>
-                                <p>In posuere tortor vel...</p>
-                                <span>42 min ago</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-success" href="#">
-                                <img src="{{asset('images/images/avatar/1.jpg')}}" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Tyler</strong></a>
-                                </p>
-                                <p>Praesent tristique diam...</p>
-                                <span>Just now</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-danger" href="#">
-                                <img src="{{asset('images/images/avatar/1.jpg')}}" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Luke</strong></a>
-                                </p>
-                                <p>Cras tempor diam ...</p>
-                                <span>33 min ago</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-warning" href="#">
-                                <img src="{{asset('images/images/avatar/3.jpg')}}" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Evan</strong></a>
-                                </p>
-                                <p>In posuere tortor vel...</p>
-                                <span>42 min ago</span>
-                            </div>
-                        </div>
-
-                        <div class="media py-10 px-0">
-                            <a class="avatar avatar-lg status-primary" href="#">
-                                <img src="{{asset('images/images/avatar/4.jpg')}}" alt="...">
-                            </a>
-                            <div class="media-body">
-                                <p class="fs-16">
-                                    <a class="hover-primary" href="#"><strong>Evan</strong></a>
-                                </p>
-                                <p>In posuere tortor vel...</p>
-                                <span>42 min ago</span>
-                            </div>
-                        </div>
-
-                    </div>
-
-
+        <div id="chat-box-body">
+            <div id="chat-circle" class="waves-effect waves-circle btn btn-circle btn-lg btn-warning l-h-70">
+                <div id="chat-overlay"></div>
+                <span class="icon-Group-chat fs-30"><span class="path1"></span><span class="path2"></span></span>
             </div>
-        </aside>
-        <!-- /.control-sidebar -->
+            <div class="chat-box">
+                <div class="chat-box-header p-15 d-flex justify-content-between align-items-center">
+                    <div class="text-center flex-grow-1">
+                        <div class="text-dark fs-18">Sync in Progress</div>
 
-        <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
-        <div class="control-sidebar-bg"></div>
+                    </div>
+                    <div class="chat-box-toggle">
+                        <a id="chat-box-toggle"
+                            class="waves-effect waves-circle btn btn-circle btn-danger-light h-40 w-40 rounded-circle l-h-45"
+                            href="#">
+                            <span class="icon-Close fs-22"><span class="path1"></span><span class="path2"></span></span>
+                        </a>
+                    </div>
+                </div>
+                <div class="chat-box-body">
+                    <div class="chat-box-overlay">
+                    </div>
+                    <div class="chat-logs">
+                        <div class="chat-msg user">
+                            <div class="cm-msg-text">
+                                job batch name :
+                                 
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
     <!-- ./wrapper -->
@@ -213,6 +112,7 @@
     <script src="{{asset('assets/vendor_components/moment/min/moment.min.js')}}"></script>
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
+    <script src="{{asset('assets/js/pages/chat-popup.js')}}"></script>
     @stack('js')
     {{-- <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script> --}}
 
