@@ -12,7 +12,7 @@ Konversi Aktivitas
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.index')}}">Pengajuan Cuti</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.index')}}">Konversi Aktivitas Mahasiswa</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Tambah Konversi Aktivitas</li>
                     </ol>
                 </nav>

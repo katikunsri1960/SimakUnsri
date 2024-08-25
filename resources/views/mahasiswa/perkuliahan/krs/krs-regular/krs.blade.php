@@ -9,7 +9,7 @@
                         // $batas_pembayaran = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                     @endphp
                     <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
-                        @if(!empty($beasiswa) || $penundaan_pembayaran > 0 || !empty($tagihan->pembayaran->status_pembayaran) || $semester_select != $semester_aktif->id_semester)
+                        @if(!empty($beasiswa) ||$non_gelar > 0|| $penundaan_pembayaran > 0 || !empty($tagihan->pembayaran->status_pembayaran) || $semester_select != $semester_aktif->id_semester)
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -158,10 +158,10 @@
                                                     <thead>
                                                         <tr>
                                                             <th class="text-center align-middle">No</th>
-                                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                                            <th class="text-center align-middle">Nama Aktivitas</th>
                                                             <th class="text-center align-middle">Nama Mata Kuliah Konversi</th>
                                                             {{-- <th class="text-center align-middle">Semester</th> --}}
-                                                            <th class="text-center align-middle">Nama Aktivitas</th>
+                                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                             <th class="text-center align-middle">SKS</th>
                                                             <th class="text-center align-middle">Dosen Pembimbing</th>
                                                             <th class="text-center align-middle">Status</th>
@@ -194,13 +194,17 @@
                                                                     @endforeach
                                                                 </td>
                                                                 <td class="text-center align-middle" style="width:10%">
-                                                                    <div>
-                                                                        @if($data->approve_krs == 0)
-                                                                            <span class="badge badge-xl badge-danger-light rounded-10 mb-5">Belum Disetujui</span>
-                                                                        @else
-                                                                            <span class="badge badge-xl badge-success-light rounded-10 mb-5">Disetujui</span>
-                                                                        @endif
-                                                                    </div>
+                                                                    @if ($data->approve_krs == 0)
+                                                                        <span class="badge badge-lg badge-danger-light">Belum Disetujui</span>
+                                                                    @elseif ($data->bimbing_mahasiswa->first()->approved == 0)
+                                                                        <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi Koprodi</span>
+                                                                    @elseif ($data->approve_krs == 1 && $data->bimbing_mahasiswa->first()->approved_dosen == 0)
+                                                                        <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
+                                                                    @elseif ($data->approve_krs == 1 && $data->bimbing_mahasiswa->first()->approved_dosen == 2)
+                                                                        <span class="badge badge-lg badge-danger-light">Ditolak dosen pembimbing</span>
+                                                                    @else
+                                                                        <span class="badge badge-lg badge-success-light">Disetujui</span>
+                                                                    @endif
                                                                 </td>
                                                                 <td class="text-center align-middle" style="width:3%">
                                                                     <form action="{{route('mahasiswa.krs.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">

@@ -12,20 +12,20 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 
-class TugasAkhirController extends Controller
+class AktivitasNonTAController extends Controller
 {
     public function index(Request $request)
     {
         $semesterAktif = SemesterAktif::first();
         $semester = $semesterAktif->id_semester;
         $db = new AktivitasMahasiswa();
-        $data = $db->ta(auth()->user()->fk_id, $semester );
+        $data = $db->aktivitas_non_ta(auth()->user()->fk_id, $semester );
         // dd($data);
-        return view('prodi.data-akademik.tugas-akhir.index', [
+        return view('prodi.data-akademik.non-tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
         ]);
-    }
+    } 
 
     public function approve_pembimbing(AktivitasMahasiswa $aktivitasMahasiswa)
     {
@@ -35,18 +35,18 @@ class TugasAkhirController extends Controller
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
-    public function ubah_detail_tugas_akhir($aktivitas)
+    public function ubah_detail_non_tugas_akhir($aktivitas)
     {
         $semesterAktif = SemesterAktif::first();
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
         // dd($data);
 
-        return view('prodi.data-akademik.tugas-akhir.edit', [
+        return view('prodi.data-akademik.non-tugas-akhir.edit', [
             'd' => $data
         ]);
     }
 
-    public function update_detail_tugas_akhir($aktivitas, Request $request)
+    public function update_detail_non_tugas_akhir($aktivitas, Request $request)
     {
         $tahun_aktif = date('Y');
 
@@ -86,11 +86,11 @@ class TugasAkhirController extends Controller
     public function tambah_dosen_pembimbing($aktivitas)
     {
         $semesterAktif = SemesterAktif::first();
-        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110405', '110403', '110404', '110408','110406', '110402', '110401', '110407'])->get();
+        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110405', '110403', '110406', '110402', '110401', '110407'])->get();
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
         // dd($data);
 
-        return view('prodi.data-akademik.tugas-akhir.tambah-dosen', [
+        return view('prodi.data-akademik.non-tugas-akhir.tambah-dosen', [
             'd' => $data,
             'kategori' => $kategori
         ]);
@@ -216,5 +216,4 @@ class TugasAkhirController extends Controller
                              ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
         }
     }
-
 }

@@ -56,6 +56,7 @@ Aktivitas Pertukaran Pelajar
                                     <th class="text-center align-middle">Judul</th>
                                     <th class="text-center align-middle">Lokasi</th>
                                     <th class="text-center align-middle">SKS Konversi</th>
+                                    <th class="text-center align-middle">Semester</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Action</th>
                                 </tr>
@@ -76,14 +77,25 @@ Aktivitas Pertukaran Pelajar
                                                 {{ $data->sks_aktivitas== NULL ? 'Tidak Diisi' : $data->sks_aktivitas }}
                                             </div>
                                         </td>
+                                        <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->semester->nama_semester }}</td>
                                         <td class="text-center align-middle" style="width:10%">
-                                            <div>
+                                            {{-- <div>
                                                 @if($data->approve_krs == 0)
                                                     <span class="badge badge-xl badge-danger-light rounded-10 mb-5">Belum Disetujui</span>
                                                 @else
                                                     <span class="badge badge-xl badge-success-light rounded-10 mb-5">Disetujui</span>
                                                 @endif
-                                            </div>
+                                            </div> --}}
+
+                                            @if ($data->approve_krs == 0)
+                                                <span class="badge badge-lg badge-danger">Belum Disetujui</span>
+                                            {{-- @elseif ($data->approve_krs == 1 && $data->approved_dosen > 0)
+                                                <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
+                                            @elseif ($data->approve_krs == 0 && $data->decline_dosen > 0)
+                                                <span class="badge badge-lg badge-danger-light">Bimbingan dibatalkan dosen</span> --}}
+                                            @else
+                                                <span class="badge badge-lg badge-success">Disetujui</span>
+                                            @endif
                                         </td>
                                         <td class="text-center align-middle" style="width:3%">
                                             <form action="{{route('mahasiswa.perkuliahan.mbkm.hapus-aktivitas-pertukaran',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">

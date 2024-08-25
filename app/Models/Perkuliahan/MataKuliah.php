@@ -118,13 +118,17 @@ class MataKuliah extends Model
 
         // $semester_ke==3;
 
-        // Pastikan untuk mengambil nilai ips
+    // Pastikan untuk mengambil nilai ips
     $ips_value = $ips ? $ips->ips : null;
 
-    //  dd($ips);
+    $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_jenis_daftar', '14')
+                    ->count();
+
+    //  dd($non_gelar);
 
 
-    if ($semester_ke == 1 || $semester_ke == 2) {
+    if ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
         $sks_max = 20;
     } else {
         if ($ips_value !== null) {
@@ -147,6 +151,8 @@ class MataKuliah extends Model
     }
         return $sks_max;
     }
+
+     
 
     public function getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids)
     {

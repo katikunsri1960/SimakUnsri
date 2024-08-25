@@ -119,7 +119,7 @@ Kartu Rencana Studi
         <table style="width: 100%">
             <tr>
                 <td class="text-upper text-center text-12" height="30" colspan="4">
-                    <strong>Rencana Studi Kampus Merdeka</strong> 
+                    <strong>Rencana Studi Kampus Merdeka Internal</strong> 
                 </td>
             </tr>
         </table>
@@ -215,6 +215,68 @@ Kartu Rencana Studi
                         <tr>
                             <td class="text-thead" colspan="5"><strong>JUMLAH</strong></td>
                             <td class="text-thead"><strong>{{$total_sks_akt}}</strong></td>
+                        </tr> 
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    @endif
+    @if($krs_aktivitas_mbkm->isNotEmpty())
+        <br>
+        <table style="width: 100%">
+            <tr>
+                <td class="text-upper text-center text-12" height="30" colspan="4">
+                    <strong>Rencana Aktivitas Kampus Merdeka Eksternal</strong> 
+                </td>
+            </tr>
+        </table>
+        <div class="row" >
+            <div class="table-responsive">
+                <table id="krs-akt" class="text-10" border="1" rules="all" style="width: 100%">
+                    <thead>
+                        
+                        <tr>
+                            <th width="30" class="text-thead">No.</th>
+                            <th width="150" class="text-thead">Nama Aktivitas</th>
+                            <th width="250" class="text-thead">Nama Mata Kuliah</th>
+                            {{-- <th width="50" class="text-thead">Kode MK</th>
+                            <th width="200" class="text-thead">Dosen Pembimbing</th> --}}
+                            <th width="50" class="text-thead">SKS (K)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @php
+                            $no=1;
+                        @endphp
+
+                        @foreach ($krs_aktivitas_mbkm as $data)
+                            <tr>
+                                <td  class="text-td text-center">{{ $no++ }}.</td>
+                                <td  class="text-td text-center">{{ $data->nama_jenis_aktivitas }}</td>
+                                <td  class="text-td text-start">{{ $data->judul }}</td>
+                                {{-- <td  class="text-td text-center">{{ $data->konversi->kode_mata_kuliah }}</td>
+                                <td  class="text-td">
+                                    @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
+                                        <ul class="my-0">
+                                            <li class="my-0">
+                                                {{$dosen_bimbing->nama_dosen}}
+                                            </li>
+                                        </ul> 
+                                    @endforeach
+                                </td> --}}
+                                <td class="text-center align-middle text-8" style="width:10%">
+                                    <div>
+                                        {{ $data->sks_aktivitas= NULL ? '-' :  $data->sks_aktivitas}}
+                                    </div>
+                                </td>
+                                
+                            </tr>
+                        @endforeach
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td class="text-thead" colspan="3"><strong>JUMLAH</strong></td>
+                            <td class="text-thead"><strong>{{$total_sks_mbkm}}</strong></td>
                         </tr> 
                     </tfoot>
                 </table>
