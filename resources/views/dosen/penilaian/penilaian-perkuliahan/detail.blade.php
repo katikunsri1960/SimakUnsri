@@ -13,8 +13,8 @@ Detail Penilaian Perkuliahan Mahasiswa
                             <img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}"
                                 class="img-fluid max-w-250" alt="" />
                             <div class="ms-30">
-                                <h2 class="mb-10">{{$data->kode_mata_kuliah}} - {{$data->nama_mata_kuliah}}</h2>
-                                <p class="mb-0 text-fade fs-18">{{$data->nama_program_studi}}</p>
+                                <h2 class="mb-10">{{$data->peserta_kelas[0]->kode_mata_kuliah}} - {{$data->peserta_kelas[0]->nama_mata_kuliah}}</h2>
+                                <p class="mb-0 text-fade fs-18">{{$data->peserta_kelas[0]->nama_program_studi}}</p>
                             </div>
                         </div>
                     </div>
@@ -68,23 +68,32 @@ Detail Penilaian Perkuliahan Mahasiswa
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($data->nilai_perkuliahan as $d)
+                                        @foreach ($data->peserta_kelas as $p)
                                             <tr>
                                                 <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                                <td class="text-center align-middle">{{$d->nim}}</td>
-                                                <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
-                                                <td class="text-start align-middle">{{$d->nama_kelas_kuliah}}</td>
-                                                <td class="text-center align-middle">{{$d->angkatan}}</td>
-                                                
-                                                @for ($i = 1; $i <= 6; $i++)
-                                                    @php
-                                                        $nilaiKomponen = $d->nilai_komponen->where('urutan', $i)->first();
-                                                    @endphp
-                                                    <td class="text-center align-middle">{{$nilaiKomponen ? $nilaiKomponen->nilai_komp_eval : '-'}}</td>
-                                                @endfor
-                                                
-                                                <td class="text-center align-middle">{{$d->nilai_angka}}</td>
-                                                <td class="text-center align-middle">{{$d->nilai_huruf}}</td>
+                                                <td class="text-center align-middle">{{$p->nim}}</td>
+                                                <td class="text-start align-middle">{{$p->nama_mahasiswa}}</td>
+                                                <td class="text-start align-middle">{{$p->nama_kelas_kuliah}}</td>
+                                                <td class="text-center align-middle">{{$p->angkatan}}</td>
+
+                                                @php
+                                                    // Find the corresponding nilai_perkuliahan for this peserta_kelas
+                                                    $nilaiPerkuliahan = $data->nilai_perkuliahan->where('id_peserta_kelas', $p->id_peserta_kelas)->first();
+                                                @endphp
+
+                                                @if(is_null($nilaiPerkuliahan))
+                                                    <td class="text-center align-middle" colspan="8">DATA NILAI BELUM DI UPLOAD.</td>
+                                                @else
+                                                    @for ($i = 1; $i <= 6; $i++)
+                                                        @php
+                                                            $nilaiKomponen = $nilaiPerkuliahan->nilai_komponen->where('urutan', $i)->first();
+                                                        @endphp
+                                                        <td class="text-center align-middle">{{$nilaiKomponen ? $nilaiKomponen->nilai_komp_eval : '0'}}</td>
+                                                    @endfor
+
+                                                    <td class="text-center align-middle">{{$nilaiPerkuliahan->nilai_angka}}</td>
+                                                    <td class="text-center align-middle">{{$nilaiPerkuliahan->nilai_huruf}}</td>
+                                                @endif
                                             </tr>
                                         @endforeach
                                     </tbody>
