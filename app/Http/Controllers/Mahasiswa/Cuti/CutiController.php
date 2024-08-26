@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Mahasiswa\Cuti;
 
 use Ramsey\Uuid\Uuid;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use Illuminate\Validation\Rule;
@@ -14,6 +15,7 @@ use App\Models\Connection\Registrasi;
 use App\Models\Mahasiswa\PengajuanCuti;
 use App\Models\Referensi\JenisPrestasi;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Referensi\TingkatPrestasi;
 use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
@@ -33,7 +35,8 @@ class CutiController extends Controller
         
         $user = auth()->user();
         $nim = $user->username;
-        // dd($nim);
+
+        // dd($riwayat_pendidikan);
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
         
         $id_semester = SemesterAktif::first()->id_semester;
@@ -55,7 +58,7 @@ class CutiController extends Controller
                 return substr($item->id_semester, -1) != '3';
             })->count();
             
-        $pengecekan = $this->checkConditions($jenjang_pendidikan->prodi->id_jenjang_pendidikan, $beasiswa, $data, $semester_ke);
+        $pengecekan = $this->checkConditions($jenjang_pendidikan->prodi->id_jenjang_pendidikan, $beasiswa, $data, $semester_ke, $user->fk_id, $id_semester);
         // dd($jenjang_pendidikan->prodi->id_jenjang_pendidikan);
 
         $tagihan = Tagihan::with('pembayaran')
@@ -77,13 +80,13 @@ class CutiController extends Controller
             'max_cuti' => $pengecekan['max_cuti'],
             'showAlert1' => $pengecekan['showAlert1'],
             'showAlert2' => $pengecekan['showAlert2'],
-            'showAlert3' => $pengecekan['showAlert3']
+            'showAlert3' => $pengecekan['showAlert3'],
+            'showAlert4' => $pengecekan['showAlert4']
         ]);
     }
     
     private function calculateMaxCuti($jenjang_pendidikan, $beasiswa)
     {
-
         // if ($beasiswa = 0) {
             if ($jenjang_pendidikan == 30 ||
                         $jenjang_pendidikan == 22) {
@@ -99,7 +102,7 @@ class CutiController extends Controller
         // }
     }
     
-    private function checkConditions($jenjang_pendidikan, $beasiswa, $data, $semester_ke)
+    private function checkConditions($jenjang_pendidikan, $beasiswa, $data, $semester_ke, $fk_id, $id_semester)
     {
         $max_cuti = $this->calculateMaxCuti($jenjang_pendidikan, $beasiswa);
     
@@ -114,12 +117,53 @@ class CutiController extends Controller
         } elseif ($semester_ke <= 4) {
             $showAlert3 = true;
         }
-// dd($showAlert2);
+
+        // CARI 50% SKS TOTAL 
+        // $user = auth()->user();
+
+        $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
+                    ->select('riwayat_pendidikans.*')
+                    ->where('id_registrasi_mahasiswa', $fk_id)
+                    ->first();
+        
+        $akm = Semester::orderBy('id_semester', 'ASC')
+                ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $id_semester])
+                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                ->pluck('id_semester');
+
+
+        $index_semester_terakhir = $akm->search($akm->last());
+
+        // Pastikan bahwa indeks tidak berada di posisi pertama
+        if ($index_semester_terakhir > 0) {
+            // Mundur satu semester dari yang terakhir
+            $akm_sebelum = $akm[$index_semester_terakhir - 1];
+        } else {
+            // Jika tidak ada semester sebelumnya (semester pertama), bisa didefinisikan logika lain
+            $akm_sebelum = null;
+        }
+
+        $jumlah_sks_lulus = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
+                        ->pluck('jumlah_sks_lulus')->first();
+
+        $jumlah_sks_diambil = intval(
+                        AktivitasKuliahMahasiswa::where('id_semester', $akm_sebelum)
+                        ->pluck('sks_total')
+                        ->first()
+                    );
+
+        $showAlert4 = false;
+        
+        if ($jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
+            $showAlert4 = true;
+        } 
+        
         return [
             'max_cuti' => $max_cuti,
             'showAlert1' => $showAlert1,
             'showAlert2' => $showAlert2,
-            'showAlert3' => $showAlert3
+            'showAlert3' => $showAlert3,
+            'showAlert4' => $showAlert4
         ];
     }
 

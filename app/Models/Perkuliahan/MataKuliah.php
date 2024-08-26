@@ -124,7 +124,6 @@ class MataKuliah extends Model
                     // ->pluck('ips')
                     ->first();
 
-        
                 // dd($ips);
                     
         // $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
