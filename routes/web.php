@@ -505,6 +505,12 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/sync-rencana', [App\Http\Controllers\Universitas\KurikulumController::class, 'sync_rencana'])->name('univ.mata-kuliah.sync-rencana');
             });
 
+            Route::prefix('monitoring')->group(function(){
+                Route::prefix('pengisian-krs')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs'])->name('univ.monitoring.pengisian-krs');
+                });
+            });
+
             Route::prefix('perkuliahan')->group(function () {
 
                 Route::prefix('nilai-perkuliahan')->group(function(){
