@@ -25,18 +25,18 @@ class MonitoringController extends Controller
                             DB::raw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa) 
                                     FROM peserta_kelas_kuliahs
                                     JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
-                                    WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi 
+                                    WHERE peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi 
                                     AND kelas_kuliahs.id_semester = "'.$semester_aktif->id_semester.'") AS jumlah_mahasiswa_isi_krs'),
                             DB::raw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa) 
                                     FROM peserta_kelas_kuliahs
                                     JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
-                                    WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi 
+                                    WHERE peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi 
                                     AND kelas_kuliahs.id_semester = "'.$semester_aktif->id_semester.'"
                                     AND peserta_kelas_kuliahs.approved = "1") AS jumlah_mahasiswa_approved'),
                             DB::raw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa) 
                                     FROM peserta_kelas_kuliahs
                                     JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
-                                    WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi 
+                                    WHERE peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi 
                                     AND kelas_kuliahs.id_semester = "'.$semester_aktif->id_semester.'" 
                                     AND peserta_kelas_kuliahs.approved = "0") AS jumlah_mahasiswa_not_approved')
                         )
