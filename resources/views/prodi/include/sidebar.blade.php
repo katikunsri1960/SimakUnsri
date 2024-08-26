@@ -176,7 +176,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" target="_blank">
+                        <a href="http://repository.unsri.ac.id/id/eprint/155513" target="_blank">
                             <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
                             <span>Panduan Aplikasi</span>
                         </a>

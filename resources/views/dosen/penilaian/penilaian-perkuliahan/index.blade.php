@@ -69,7 +69,11 @@ Penilaian Perkuliahan Mahasiswa
                                             <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
                                             <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
                                             <td class="text-center align-middle">
-                                                <a class="btn btn-sm btn-rounded btn-info-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
+                                                @if(count($d->kelas_kuliah->peserta_kelas_approved) > 0)
+                                                    <a class="btn btn-sm btn-rounded btn-info-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
+                                                @else
+                                                    <button class="btn btn-sm btn-rounded btn-info-light" disabled><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</button>
+                                                @endif
                                             </td>
                                             <td class="text-start align-middle">
                                                 @if ($d->kelas_kuliah->dosen_pengajar)
@@ -81,33 +85,32 @@ Penilaian Perkuliahan Mahasiswa
                                                 @endif
                                             </td>
                                             <td class="text-center align-middle">
-                                                @php
-                                                    echo count($d->kelas_kuliah->peserta_kelas_approved)
-                                                @endphp
+                                                {{count($d->kelas_kuliah->peserta_kelas_approved)}}
                                             </td>
                                             <td class="text-center align-middle">
-                                                <!-- <div class="row" style="white-space:nowrap;">
-                                                    <div class="col-md-12 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-warning-light"
-                                                href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
-                                                title="Komponen Evaluasi" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-clipboard-list"></i> Rencana Pembelajaran</a>
-                                                    </div>
-                                                </div> -->
                                                 <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-12 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-warning-light "
-                                                href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
-                                                title="Komponen Evaluasi" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</a>
+                                                        @if(date('Y-m-d') <= $semester_aktif->batas_isi_nilai)
+                                                            <a class="btn btn-sm btn-rounded bg-warning-light " href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Komponen Evaluasi"><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</a>
+                                                        @else
+                                                            <button class="btn btn-sm btn-rounded bg-warning-light" disabled><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</button>
+                                                        @endif
                                                     </div>
                                                 </div>
                                                 <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-6 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi])}}"
-                                                    title="Download DPNA" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-download"></i> Download</a>
+                                                        @if(date('Y-m-d') <= $semester_aktif->batas_isi_nilai)
+                                                            <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi])}}" title="Download DPNA"><i class="fa fa-download"></i> Download</a>
+                                                        @else
+                                                            <button class="btn btn-sm btn-rounded bg-success-light" disabled><i class="fa fa-download"></i> Download</button>
+                                                        @endif
                                                     </div>
                                                     <div class="col-md-6 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}"
-                                                    title="Upload DPNA" {{ $batas_pengisian >= 0 ? '' : 'disabled' }}><i class="fa fa-upload"></i> Upload</a>
+                                                        @if(date('Y-m-d') <= $semester_aktif->batas_isi_nilai)
+                                                            <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Upload DPNA"><i class="fa fa-upload"></i> Upload</a>
+                                                        @else
+                                                            <button class="btn btn-sm btn-rounded bg-primary-light" disabled><i class="fa fa-upload"></i> Upload</button>
+                                                        @endif
                                                     </div>
                                                 </div>
                                             </td>
