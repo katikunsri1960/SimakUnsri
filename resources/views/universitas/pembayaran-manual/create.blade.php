@@ -26,6 +26,12 @@
                             <option value="1">Lunas</option>
                         </select>
                     </div>
+                    <div class="mb-3">
+                        <label for="tanggal_pembayaran" class="col-sm-2 col-form-label">Date</label>
+                        <div class="col-sm-10">
+                          <input class="form-control" type="date" name="tanggal_pembayaran"  id="tanggal_pembayaran" placeholder="-- Tanggal Pembayaran --">
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
