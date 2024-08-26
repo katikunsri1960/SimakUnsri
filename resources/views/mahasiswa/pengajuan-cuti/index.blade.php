@@ -134,6 +134,15 @@ Pengajuan Cuti Mahasiswa
             }, function() {
                 window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
             });
+        @elseif ($showAlert4)
+            swal({
+                title: 'Pengajuan Cuti Tidak Diizinkan',
+                text: 'Anda tidak bisa mengajukan cuti, karena belum menyelesaikan 50% dari SKS Total Yang harus ditempuh.',
+                type: 'warning',
+                button: 'OK'
+            }, function() {
+                window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
+            });
         @endif
 
         $('.delete-form').submit(function(e){
