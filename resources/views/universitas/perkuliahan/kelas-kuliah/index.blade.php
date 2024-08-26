@@ -119,9 +119,9 @@ Kelas Kuliah
                 }
             },
             columns: [
-                {data: 'nama_semester', name: 'nama_semester', class: 'text-center', searchable: false},
-                {data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', class: 'text-center', searchable: true},
-                {data: 'nama_mata_kuliah', name: 'nama_mata_kuliah', class: 'text-start'},
+                {data: 'semester.nama_semester', name: 'nama_semester', class: 'text-center', searchable: false},
+                {data: 'matkul.kode_mata_kuliah', name: 'kode_mata_kuliah', class: 'text-center', searchable: true},
+                {data: 'matkul.nama_mata_kuliah', name: 'nama_mata_kuliah', class: 'text-start'},
                 {data: 'nama_kelas_kuliah', name: 'nama_kelas_kuliah', class: 'text-center'},
                 {data: 'nama_dosen', name: 'nama_dosen', class: 'text-start', searchable: false, orderable: false},
                 {data: 'peserta_kelas_count', name: 'peserta_kelas_count', class: 'text-center', searchable: false, orderable: false},

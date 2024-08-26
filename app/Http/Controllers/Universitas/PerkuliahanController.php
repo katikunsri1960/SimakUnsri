@@ -158,7 +158,7 @@ class PerkuliahanController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = KelasKuliah::with('dosen_pengajar', 'prodi', 'semester', 'dosen_pengajar.dosen')
+        $query = KelasKuliah::with('dosen_pengajar', 'prodi', 'semester', 'dosen_pengajar.dosen', 'matkul')
                             ->withCount('peserta_kelas');
 
         if ($request->filled('id_prodi')) {

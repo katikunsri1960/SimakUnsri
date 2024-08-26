@@ -11,7 +11,7 @@
 
     <link rel="icon" href="images/unsri.png">
 
-    <title>{{ config('app.name', 'SIAKAD') }} - @yield('title')</title>
+    <title>{{ config('app.name', 'SIMAK') }} - @yield('title')</title>
 
 	<!-- Vendors Style-->
 	<link rel="stylesheet" href="{{asset('assets/css/vendors_css.css')}}">

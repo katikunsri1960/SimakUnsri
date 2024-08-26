@@ -32,9 +32,7 @@
         <div id="loader"></div>
 
         @include('fakultas.include.header')
-
         @include('fakultas.include.sidebar')
-
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
