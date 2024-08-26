@@ -13,18 +13,39 @@ class MonitoringController extends Controller
     {
         $semester_aktif = SemesterAktif::first();
 
-        $data = DB::table('riwayat_pendidikans as rp')
-            ->join('peserta_kelas_kuliahs as pk', 'rp.id_registrasi_mahasiswa', '=', 'pk.id_registrasi_mahasiswa')
-            ->join('kelas_kuliahs as kk', 'pk.id_kelas_kuliah', '=', 'kk.id_kelas_kuliah')
-            ->select(
-                'rp.id_prodi','rp.nama_program_studi',
-                DB::raw('COUNT(DISTINCT CASE WHEN pk.approved = 1 THEN rp.id_registrasi_mahasiswa END) as jumlah_mahasiswa_approved'),
-                DB::raw('COUNT(DISTINCT CASE WHEN pk.approved = 0 THEN rp.id_registrasi_mahasiswa END) as jumlah_mahasiswa_not_approved')
-            )
-            ->where('kk.id_semester', $semester_aktif->id_semester)
-            ->groupBy('rp.id_prodi','rp.nama_program_studi')
-            ->orderBy('rp.nama_program_studi')
-            ->get();
+        $data = DB::table('program_studis')->select(
+                            'fakultas.id',
+                            'fakultas.nama_fakultas',
+                            'program_studis.id_prodi',
+                            DB::raw('CONCAT(program_studis.nama_jenjang_pendidikan, " - ", program_studis.nama_program_studi) AS nama_prodi'),
+                            DB::raw('(SELECT COUNT(riwayat_pendidikans.id_registrasi_mahasiswa) 
+                                    FROM riwayat_pendidikans 
+                                    WHERE riwayat_pendidikans.id_prodi = program_studis.id_prodi 
+                                    AND riwayat_pendidikans.id_jenis_keluar IS NULL) AS jumlah_mahasiswa'),
+                            DB::raw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa) 
+                                    FROM peserta_kelas_kuliahs
+                                    JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+                                    WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi 
+                                    AND kelas_kuliahs.id_semester = "'.$semester_aktif->id_semester.'") AS jumlah_mahasiswa_isi_krs'),
+                            DB::raw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa) 
+                                    FROM peserta_kelas_kuliahs
+                                    JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+                                    WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi 
+                                    AND kelas_kuliahs.id_semester = "'.$semester_aktif->id_semester.'"
+                                    AND peserta_kelas_kuliahs.approved = "1") AS jumlah_mahasiswa_approved'),
+                            DB::raw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa) 
+                                    FROM peserta_kelas_kuliahs
+                                    JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+                                    WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi 
+                                    AND kelas_kuliahs.id_semester = "'.$semester_aktif->id_semester.'" 
+                                    AND peserta_kelas_kuliahs.approved = "0") AS jumlah_mahasiswa_not_approved')
+                        )
+                        ->join('fakultas', 'fakultas.id', '=', 'program_studis.fakultas_id')
+                        ->where('program_studis.status', 'A')
+                        ->orderBy('fakultas.id')
+                        ->orderBy('nama_prodi', 'ASC')
+                        ->get();
+        // dd($data);
 
         return view('universitas.monitoring.pengisian-krs.index', [
             'data' => $data,

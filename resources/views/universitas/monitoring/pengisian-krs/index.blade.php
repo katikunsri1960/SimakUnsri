@@ -29,7 +29,9 @@ Monitoring Pengisian KRS
                           <thead>
                              <tr>
                                 <th class="text-center align-middle">No</th>
+                                <th class="text-center align-middle">Nama Fakultas</th>
                                 <th class="text-center align-middle">Nama Program Studi</th>
+                                <th class="text-center align-middle">Jumlah Mahasiswa Aktif</th>
                                 <th class="text-center align-middle">Jumlah Mahasiswa (Yang melakukan pengisian KRS)</th>
                                 <th class="text-center align-middle">Jumlah Mahasiswa Sudah di Setujui</th>
                                 <th class="text-center align-middle">Jumlah Mahasiswa Belum di Setujui</th>
@@ -37,13 +39,15 @@ Monitoring Pengisian KRS
                           </thead>
                           <tbody>
                             @foreach ($data as $d)
-                            <tr>
-                                <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                <td class="text-center align-middle">{{$d->nama_program_studi}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_mahasiswa_approved+$d->jumlah_mahasiswa_not_approved}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_mahasiswa_approved}}</td>
-                                <td class="text-center align-middle">{{$d->jumlah_mahasiswa_not_approved}}</td>
-                            </tr>
+                                <tr>
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-start align-middle">{{$d->id}} - {{$d->nama_fakultas}}</td>
+                                    <td class="text-start align-middle">{{$d->nama_prodi}}</td>
+                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa}}</td>
+                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_isi_krs}}</td>
+                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_approved}}</td>
+                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_not_approved}}</td>
+                                </tr>
                             @endforeach
                           </tbody>
                       </table>
