@@ -148,6 +148,15 @@
                             </span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*') ? 'active' : ''}}">
+                        <a href="{{route('univ.pembayaran-manual')}}">
+                            <i class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Pembayaran Manual</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.monitoring.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-television"><span class="path1"></span><span class="path2"></span></i>
@@ -161,7 +170,7 @@
                                 <a href="{{route('univ.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS Mahasiswa</a>
                             </li>
                         </ul>
-                    </li>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.pengaturan.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-cog"><span class="path1"></span><span class="path2"></span></i>
