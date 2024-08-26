@@ -328,7 +328,6 @@ class KrsController extends Controller
     }
 
 
-
     private function cekApakahKelasSudahDiambil($id_registrasi_mahasiswa, $id_matkul)
     {
         $kelasDiambil = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
