@@ -43,6 +43,9 @@ class AktivitasMBKMController extends Controller
                 })
                 ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20'])
                 ->get();
+
+        $jumlah_data=$data->first();
+                // dd($jumlah_data);
                 // dd($data);
 
         
@@ -60,7 +63,7 @@ class AktivitasMBKMController extends Controller
 
         // dd($batas_isi_krs);
 
-        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.non-pertukaran.index', ['data' => $data, 'semester_aktif' => $semester_aktif,'today'=>$today ,'batas_isi_krs'=>$batas_isi_krs ]);
+        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.non-pertukaran.index', ['data' => $data, 'jumlah_data' =>$jumlah_data,'semester_aktif' => $semester_aktif,'today'=>$today ,'batas_isi_krs'=>$batas_isi_krs ]);
     }
 
     public function tambah()
@@ -413,7 +416,10 @@ class AktivitasMBKMController extends Controller
                 })
                 ->whereIn('id_jenis_aktivitas',['21'])
                 ->get();
-                // dd($data);
+                
+
+        $jumlah_data=$data->first();
+        // dd($jumlah_data);
 
         $today = Carbon::now()->toDateString();
 
@@ -429,7 +435,7 @@ class AktivitasMBKMController extends Controller
 
         // dd($data);
 
-        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.index', ['data' => $data, 'semester_aktif' => $semester_aktif, 'today'=>$today ,'batas_isi_krs'=>$batas_isi_krs ]);
+        return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.index', ['data' => $data, 'jumlah_data' =>$jumlah_data,'semester_aktif' => $semester_aktif, 'today'=>$today ,'batas_isi_krs'=>$batas_isi_krs ]);
     }
 
     public function tambah_pertukaran()

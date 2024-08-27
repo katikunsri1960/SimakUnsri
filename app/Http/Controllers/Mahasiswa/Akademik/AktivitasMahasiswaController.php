@@ -369,7 +369,7 @@ class AktivitasMahasiswaController extends Controller
                         $id_kategori_kegiatan=110407;
                         $nama_kategori_kegiatan='Skripsi (pembimbing pendamping)';
                     }
-                }elseif($prodi->nama_jenjang_pendidikan == 'S2'){
+                }elseif($prodi->nama_jenjang_pendidikan == 'S2' || $prodi->nama_jenjang_pendidikan == 'Sp-1'||$prodi->nama_jenjang_pendidikan == 'Sp-2'){
                     if($i==0){
                         $id_kategori_kegiatan=110402;
                         $nama_kategori_kegiatan='Tesis (pembimbing utama)';

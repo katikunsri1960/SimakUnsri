@@ -271,6 +271,12 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/get-dosen', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'get_dosen'])->name('dosen.pembimbing.bimbingan-tugas-akhir.get-dosen');
                 });
 
+                Route::prefix('bimbingan-non-tugas-akhir')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_aktivitas'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir');
+                    Route::post('/approve-pembimbing/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'approve_pembimbing'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.approve-pembimbing');
+                    Route::post('/decline-pembimbing/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'pembatalan_pembimbing'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.decline-pembimbing');
+                });
+
             });
 
             //Route Bantuan

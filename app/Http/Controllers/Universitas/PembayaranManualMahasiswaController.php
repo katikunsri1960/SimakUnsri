@@ -24,7 +24,8 @@ class PembayaranManualMahasiswaController extends Controller
     {
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
-            'status' => 'required|in:0,1',
+            'status' => 'required | in:0,1',
+            'tanggal_pembayaran'=>'required | date'
         ]);
 
         $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
@@ -32,28 +33,30 @@ class PembayaranManualMahasiswaController extends Controller
         if ($check) {
             return redirect()->back()->with('error', 'Mahasiswa sudah ada pada data Lulus Do Feeder!!');
         }
+        // dd($request->tanggal_pembayaran);
         $data['id_semester'] = SemesterAktif::first()->id_semester;
         $data['nim'] = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first()->nim;
+        $data['tanggal_pembayaran'] = $request->tanggal_pembayaran;
 
         PembayaranManualMahasiswa::create($data);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
-    public function update(PembayaranManualMahasiswa $penundaan, Request $request)
+    public function update(PembayaranManualMahasiswa $idmanual, Request $request)
     {
         $data = $request->validate([
             'status' => 'required|in:0,1',
         ]);
 
-        $penundaan->update($data);
+        $idmanual->update($data);
 
         return redirect()->back()->with('success', 'Data berhasil diubah');
     }
 
-    public function destroy(PembayaranManualMahasiswa $penundaan)
+    public function destroy(PembayaranManualMahasiswa $idmanual)
     {
-        $penundaan->delete();
+        $idmanual->delete();
 
         return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
