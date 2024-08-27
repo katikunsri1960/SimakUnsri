@@ -25,14 +25,14 @@ Kartu Rencana Studi
     </div>
 </section>
 <section class="content" style="text-align-last: center; padding-bottom:20px">
-  <div class="row mx-20 mb-20" >
+  <div class="row mx-20" >
     <div class="col-12 px-25">
-        <div class="box no-shadow mb-0 bg-transparent">
+        <div class="box no-shadow mb-20 bg-transparent">
             <div class="box-header no-border px-0" style="text-align-last: left; padding-bottom:20px">
-            <a type="button" href="{{route('mahasiswa.perkuliahan.mbkm.view')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
+            <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
             <i class="fa-solid fa-arrow-left"></i>
             </a>
-            <h3 class="box-title px-3">Daftar Aktivitas MBKM Non Pertukaran Pelajar</h3>
+            <h3 class="box-title px-3">Daftar Aktivitas MBKM</h3>
             </div>
         </div>
     </div>
