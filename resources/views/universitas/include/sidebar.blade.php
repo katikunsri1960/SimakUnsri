@@ -166,8 +166,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('univ.monitoring.pengisian-krs') ? 'active' : ''}}">
-                                <a href="{{route('univ.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS Mahasiswa</a>
+                            <li class="{{request()->routeIs('univ.monitoring.pengisian-krs') || request()->routeIs('univ.monitoring.pengisian-krs.*') ? 'active' : ''}}">
+                                <a href="{{route('univ.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>
                             </li>
                         </ul>
                     </li>

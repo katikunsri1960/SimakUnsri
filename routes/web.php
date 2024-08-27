@@ -524,6 +524,8 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::prefix('pengisian-krs')->group(function () {
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs'])->name('univ.monitoring.pengisian-krs');
                     Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs_data'])->name('univ.monitoring.pengisian-krs.data');
+                    Route::get('/detail-mahasiswa-aktif/{prodi}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_mahasiswa_aktif'])->name('univ.monitoring.pengisian-krs.detail-mahasiswa-aktif');
+                    Route::get('/detail-aktif-min-tujuh/{prodi}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_aktif_min_tujuh'])->name('univ.monitoring.pengisian-krs.detail-aktif-min-tujuh');
                 });
             });
 

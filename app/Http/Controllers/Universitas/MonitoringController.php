@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -188,5 +189,39 @@ class MonitoringController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+    public function detail_mahasiswa_aktif(ProgramStudi $prodi)
+    {
+        $id_prodi = $prodi->id_prodi;
+
+        $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
+                ->whereNull('id_jenis_keluar')
+                ->orderBy('id_periode_masuk', 'ASC')
+                ->get();
+
+        return view('universitas.monitoring.pengisian-krs.detail-mahasiswa-aktif', [
+            'prodi' => $prodi,
+            'data' => $data
+        ]);
+    }
+
+    public function detail_aktif_min_tujuh(ProgramStudi $prodi)
+    {
+        $id_prodi = $prodi->id_prodi;
+
+        $angkatanAktif = date('Y') - 7;
+        $arrayTahun = range($angkatanAktif, date('Y'));
+
+        $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
+                ->whereNull('id_jenis_keluar')
+                ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
+                ->orderBy('id_periode_masuk', 'ASC')
+                ->get();
+
+        return view('universitas.monitoring.pengisian-krs.detail-aktif-min-tujuh', [
+            'prodi' => $prodi,
+            'data' => $data
+        ]);
     }
 }
