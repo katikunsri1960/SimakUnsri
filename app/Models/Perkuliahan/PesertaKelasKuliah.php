@@ -93,7 +93,12 @@ class PesertaKelasKuliah extends Model
                         'approve_krs' => '0',
                     ]);
                 }else{
-                    return redirect()->back()->with('error', 'Aktivitas Sudah di Setujui.');
+                    $result = [
+                        'status' => 'error',
+                        'message' => 'Aktivitas Sudah di Setujui.'
+                    ];
+
+                    return $result;
                 }   
             }
 
