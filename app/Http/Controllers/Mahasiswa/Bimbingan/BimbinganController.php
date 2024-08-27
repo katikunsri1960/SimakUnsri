@@ -28,7 +28,7 @@ class BimbinganController extends Controller
                     ->pluck('nim')
                     ->first();
 
-        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
+        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
 
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
         // dd($nim);

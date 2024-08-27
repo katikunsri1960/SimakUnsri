@@ -28,7 +28,7 @@ class BiayaKuliahController extends Controller
                     ->pluck('nim')
                     ->first();
                     
-        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
+        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
 
 
         // dd($id_test);
