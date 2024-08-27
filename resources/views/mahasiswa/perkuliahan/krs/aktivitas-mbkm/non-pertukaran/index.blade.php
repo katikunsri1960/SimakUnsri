@@ -45,6 +45,13 @@ Aktivitas MBKM - Non Pertukaran Pelajar
                         <div class="btn-group">
                             <a class="btn btn-rounded bg-success-light " href="{{route('mahasiswa.perkuliahan.mbkm.tambah-non-pertukaran')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Aktivitas MBKM</a>
                         </div>   
+                        @if ($jumlah_data != NULL)
+                            <div class="btn-group">
+                                <a href="#" id="print-krs-btn" class="waves-effect waves-light btn btn-rounded bg-primary-light float-end">
+                                    <i class="fa fa-print "></i> Cetak
+                                </a> 
+                            </div> 
+                        @endif
                     </div>                           
                 </div><br>
                 <div class="row">
@@ -141,7 +148,32 @@ Aktivitas MBKM - Non Pertukaran Pelajar
             // "scrollCollapse": true,
             // "scrollY": "550px",
         });
+    });
+    $(document).ready(function() {
+        $('#print-krs-btn').on('click', function(e) {
+            e.preventDefault(); // Mencegah link untuk langsung mengarahkan
 
+            $.ajax({
+                url: '{{ route("mahasiswa.krs.print.checkDosenPA", ["id_semester" => $semester_aktif->id_semester]) }}', // Buat route khusus untuk pengecekan
+                type: 'GET',
+                success: function(response) {
+                    if (response.error) {
+                        swal("Perhatian", 
+                            response.error, 
+                            "warning"
+                        ).then(() => {
+                            window.location.href = '{{ url()->previous() }}'; // Redirect ke halaman sebelumnya
+                        });
+                    } 
+                    else {
+                        window.open('{{ route("mahasiswa.krs.print", ["id_semester" => $semester_aktif->id_semester]) }}', '_blank'); // Jika tidak ada error, buka halaman print di tab baru
+                    }
+                },
+                error: function(xhr) {
+                    console.error('Error fetching data:', xhr);
+                }
+            });
+        });
     });
 </script>
 

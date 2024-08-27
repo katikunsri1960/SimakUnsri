@@ -672,13 +672,14 @@ class KrsController extends Controller
         $tgl_krs_regular = $krs_regular->first();
         $tgl_krs_merdeka = $krs_merdeka->first();
         $tgl_krs_akt = $krs_akt->first();
+        $tgl_krs_mbkm = $krs_aktivitas_mbkm->first();
 
         // if (empty($tgl_krs_regular) && empty($tgl_krs_merdeka) && empty($tgl_krs_akt) ) {
         //     return response()->json(['error' => 'KRS anda belum disetujui Dosen PA.']);
         // }
 
-        if (empty($krs_regular->first()) && empty($krs_merdeka->first()) && empty($krs_akt->first())) {
-            return redirect()->back()->with('error' , 'KRS tidak dapat dicetak,KRS belum disetujui Dosen PA');
+        if (empty($krs_regular->first()) && empty($krs_merdeka->first()) && empty($krs_akt->first())&& empty($krs_aktivitas_mbkm->first())) {
+            return redirect()->back()->with('error' , 'KRS tidak dapat dicetak, KRS belum disetujui Dosen PA');
         }
 
         if (!empty($tgl_krs_regular)) {
@@ -692,10 +693,16 @@ class KrsController extends Controller
         {
             $tanggal_approve = Carbon::parse($tgl_krs_akt->tanggal_approve);
         }
+        elseif (!empty($tgl_krs_mbkm))
+        {
+            $tanggal_approve = Carbon::parse($tgl_krs_mbkm->tanggal_approve);
+        }
         else
         {
             $tanggal_approve = '-';
         }
+
+        // dd($tgl_krs_mbkm);
         
         $pdf = PDF::loadview('mahasiswa.perkuliahan.krs.krs-regular.pdf', [
             'today'=> $today,
