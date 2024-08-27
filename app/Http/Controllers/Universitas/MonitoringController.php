@@ -107,7 +107,6 @@ class MonitoringController extends Controller
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
 
-
         $semester_aktif = SemesterAktif::first();
         $query = ProgramStudi::with('fakultas')
                 ->select('program_studis.*')
