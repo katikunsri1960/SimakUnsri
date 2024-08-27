@@ -361,4 +361,23 @@ class PembimbingMahasiswaController extends Controller
         }
     }
 
+    public function bimbingan_aktivitas(Request $request)
+    {
+        if ($request->has('semester') && $request->semester != '') {
+            $id_semester = $request->semester;
+        } else {
+            $id_semester = SemesterAktif::first()->id_semester;
+        }
+
+        $db = new AktivitasMahasiswa();
+        $data = $db->bimbing_non_ta(auth()->user()->fk_id, $id_semester);
+
+        $semester = Semester::orderBy('id_semester', 'desc')->get();
+        // dd($data);
+        return view('dosen.pembimbing.non-tugas-akhir.index', [
+            'data' => $data,
+            'semester' => $semester,
+            'id_semester' => $id_semester,
+        ]);
+    } 
 }
