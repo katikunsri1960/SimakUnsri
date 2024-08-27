@@ -136,6 +136,12 @@
                             <span>Pembimbing Karya Ilmiah</span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-non-tugas-akhir') | request()->routeIs('dosen.pembimbing.bimbingan-non-tugas-akhir.*') ? 'active' : ''}}">
+                        <a href="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir')}}">
+                            <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Pembimbing Aktivitas</span>
+                        </a>
+                    </li>
                     <li class="header">Bantuan</li>
                     <li class="{{request()->routeIs('dosen.bantuan.ganti-password') ? 'active' : ''}}">
                         <a href="{{route('dosen.bantuan.ganti-password')}}">

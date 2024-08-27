@@ -85,10 +85,16 @@ class PesertaKelasKuliah extends Model
         try {
             DB::beginTransaction();
 
+
             foreach ($aktivitas as $item) {
-                $item->update([
-                    'approve_krs' => '0',
-                ]);
+                $check_approved_pembimbing = BimbingMahasiswa::where('id_aktivitas', $item->id_aktivitas)->first();
+                if($check_approved_pembimbing->approved_dosen == 0 && $check_approved_pembimbing->approved == 0){
+                    $item->update([
+                        'approve_krs' => '0',
+                    ]);
+                }else{
+                    return redirect()->back()->with('error', 'Aktivitas Sudah di Setujui.');
+                }   
             }
 
             foreach ($data as $item) {
