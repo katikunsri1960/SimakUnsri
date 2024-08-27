@@ -71,7 +71,7 @@ Pembayaran Manual
                                 </span>
 
                                 </td>
-                                <td class="text-center align-middle">{{$d->terakhir_update}}</td>
+                                <td class="text-center align-middle">{{date('d-m-Y', strtotime($d->tanggal_pembayaran))}}</td>
                                 <td class="text-center align-middle">
                                     {{-- <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editRuang({{$d}}, {{$d->id}})">
                                         <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
