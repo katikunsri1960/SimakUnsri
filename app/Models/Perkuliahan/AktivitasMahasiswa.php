@@ -206,5 +206,23 @@ class AktivitasMahasiswa extends Model
 
         return $data;
     }
+
+    public function bimbing_non_ta($id_dosen, $semester)
+    {
+        // $kategori = [110403,110407,110402,110406,110401,110405];
+
+        return $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+                    ->whereHas('bimbing_mahasiswa', function($query) use ($id_dosen) {
+                        $query->where('id_dosen', $id_dosen)
+                                ->where('approved', 1);
+                    })->withCount([
+                        'bimbing_mahasiswa as count_approved' => function($query) use ($id_dosen) {
+                            $query->where('id_dosen', $id_dosen)->where('approved_dosen', 0);
+                        },
+                    ])
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [5,6,13,14,15,16,17,18,19,20,21])
+                    ->get();
+    }
     
 }
