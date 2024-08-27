@@ -332,7 +332,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan');
                     Route::get('/{id_matkul}/detail', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'detail_kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan.detail');
                     Route::get('/{id_maktul}/{id_kelas}/peserta', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'peserta_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.peserta');
-                    
+
                     Route::get('/{id_kelas}/absensi', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'download_absensi'])->name('prodi.data-akademik.kelas-penjadwalan.absensi');
                     // Route::get('/get-mata-kuliah', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'get_matkul'])->name('prodi.data-akademik.kelas-penjadwalan.get-matkul');
                     Route::get('/{id_matkul}/tambah', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'tambah_kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan.tambah');
@@ -447,6 +447,8 @@ Route::group(['middleware' => ['auth']], function() {
     Route::group(['middleware' => ['role:univ']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
         Route::prefix('universitas')->group(function () {
+
+            Route::get('/data-krs', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ.data-krs');
 
             Route::prefix('beasiswa')->group(function() {
                 Route::get('/', [App\Http\Controllers\Universitas\BeasiswaController::class, 'index'])->name('univ.beasiswa');

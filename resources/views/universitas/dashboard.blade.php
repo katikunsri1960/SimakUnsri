@@ -14,8 +14,7 @@ Dashboard
                         <div class="col-12 col-lg-9">
                             <h2>Hello {{auth()->user()->name}}, Welcome Back!</h2>
                             <p class="text-dark mb-0 fs-16">
-                                Your course Overcoming the fear of public speaking was completed by 11
-                                New users this week!
+
                             </p>
                         </div>
                     </div>
@@ -26,10 +25,53 @@ Dashboard
     <div class="row">
 
         <div class="col-12">
-            <div class="row">
+            <div class="row p-5">
+                <table class="table table-hover table-bordered" id="mahasiswaTable">
+                    <thead>
+                        <tr>
+                            <th>Prodi</th>
 
+                            <th>Jumlah Approved</th>
+                            <th>Jumlah Not Approved</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+                <canvas id="myChart" width="400" height="200"></canvas>
             </div>
         </div>
     </div>
 </section>
 @endsection
+@push('js')
+{{-- <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script> --}}
+<script>
+    $(document).ready(function() {
+        // Fetch data via AJAX
+        $.ajax({
+            url: "{{ route('univ.data-krs') }}",
+            method: 'GET',
+            success: function(data) {
+                // Check if data is an array
+                console.log(data);
+
+                // Clear existing table rows
+                $('#mahasiswaTable tbody').empty();
+
+                // Prepare data for table and chart
+                let labels = [];
+                let approvedData = [];
+                let notApprovedData = [];
+
+
+                // Display the chart using Chart.js
+
+            },
+            error: function(error) {
+                console.log('Error:', error);
+            }
+        });
+    });
+</script>
+@endpush
