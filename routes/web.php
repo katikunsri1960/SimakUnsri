@@ -517,6 +517,7 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('monitoring')->group(function(){
                 Route::prefix('pengisian-krs')->group(function () {
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs'])->name('univ.monitoring.pengisian-krs');
+                    Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs_data'])->name('univ.monitoring.pengisian-krs.data');
                 });
             });
 
