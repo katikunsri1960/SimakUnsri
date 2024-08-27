@@ -114,8 +114,9 @@ class KrsController extends Controller
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
         // dd($beasiswa);
 
-        $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test');
+        $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
+        // dd($id_test, $riwayat_pendidikan->nim);
         $tagihan = Tagihan::with('pembayaran')
             // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
             // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
@@ -123,7 +124,7 @@ class KrsController extends Controller
             // ->where('tagihan.nomor_pembayaran', '08051282328058')
             ->where('kode_periode', $semester_aktif->id_semester)
             ->first();
-            // dd($tagihan);
+            
 
 
         $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();

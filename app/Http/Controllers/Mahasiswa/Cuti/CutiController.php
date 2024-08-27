@@ -37,7 +37,7 @@ class CutiController extends Controller
         $nim = $user->username;
 
         // dd($riwayat_pendidikan);
-        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test');
+        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
         
         $id_semester = SemesterAktif::first()->id_semester;
 
