@@ -102,12 +102,28 @@ class MataKuliah extends Model
             $akm_sebelum = null;
         }
 
+        $akm_cuti = AktivitasKuliahMahasiswa::
+                    where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $akm_sebelum)
+                    ->where('id_status_mahasiswa', 'C')
+                    ->orderBy('id_semester', 'DESC')
+                    // ->pluck('ips')
+                    ->count();
+                
+
+        if($akm_cuti > 0){
+            $akm_sebelum = $akm[$index_semester_terakhir - 2];
+        }
+
+        // dd($akm_sebelum);
+
         $ips = AktivitasKuliahMahasiswa::select('ips')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $akm_sebelum)
                     ->orderBy('id_semester', 'DESC')
                     // ->pluck('ips')
                     ->first();
+
                 // dd($ips);
                     
         // $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();

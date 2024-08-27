@@ -8,6 +8,7 @@ use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
+use App\Models\PenundaanBayar;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
@@ -21,9 +22,9 @@ use App\Models\Mahasiswa\PengajuanCuti;
 use App\Models\Perkuliahan\KelasKuliah;
 use function PHPUnit\Framework\isEmpty;
 use Illuminate\Cache\RateLimiting\Limit;
+use App\Models\PembayaranManualMahasiswa;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\PenundaanBayar;
 use App\Models\Perkuliahan\PrasyaratMatkul;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
@@ -184,6 +185,11 @@ class KrsController extends Controller
         $penundaan_pembayaran = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
                                 ->count();
 
+        $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
+                                ->where('id_registrasi_mahasiswa', $id_reg)
+                                ->where('id_semester', $semester_aktif->id_semester)
+                                ->count();
+
         $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
                             ->where('id_jenis_daftar', '14')
                             ->count();
@@ -191,7 +197,7 @@ class KrsController extends Controller
         // dd($semester_aktif->krs_mulai);
         // dd($semester_aktif->tanggal_mulai_kprs);
         // dd($today);
-        // dd($non_gelar);
+        // dd($pembayaran_manual);
 
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
@@ -219,7 +225,8 @@ class KrsController extends Controller
             'tagihan', 
             'cuti',
             'transkrip',
-            'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran', 'non_gelar'
+            'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran', 'non_gelar',
+            'pembayaran_manual'
         ));
     }
 
@@ -326,7 +333,6 @@ class KrsController extends Controller
 
         return response()->json($kelasKuliah);
     }
-
 
 
     private function cekApakahKelasSudahDiambil($id_registrasi_mahasiswa, $id_matkul)

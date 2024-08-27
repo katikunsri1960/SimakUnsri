@@ -465,6 +465,13 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::delete('/delete/{penundaan}', [App\Http\Controllers\Universitas\PenundaanBayarController::class, 'destroy'])->name('univ.p-bayar.delete');
             });
 
+            Route::prefix('pembayaran-manual')->group(function(){
+                Route::get('/', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'index'])->name('univ.pembayaran-manual');
+                Route::post('/store', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'store'])->name('univ.pembayaran-manual.store');
+                Route::patch('/update/{idmanual}', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'update'])->name('univ.pembayaran-manual.update');
+                Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'destroy'])->name('univ.pembayaran-manual.delete');
+            });
+
             Route::prefix('kuisioner')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\KuisionerController::class, 'index'])->name('univ.kuisioner');
                 Route::post('/store', [App\Http\Controllers\Universitas\KuisionerController::class, 'store'])->name('univ.kuisioner.store');
@@ -505,6 +512,12 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/data', [App\Http\Controllers\Universitas\KurikulumController::class, 'matkul_data'])->name('univ.mata-kuliah.data');
                 Route::get('/sync-mata-kuliah', [App\Http\Controllers\Universitas\KurikulumController::class, 'sync_mata_kuliah'])->name('univ.mata-kuliah.sync');
                 Route::get('/sync-rencana', [App\Http\Controllers\Universitas\KurikulumController::class, 'sync_rencana'])->name('univ.mata-kuliah.sync-rencana');
+            });
+
+            Route::prefix('monitoring')->group(function(){
+                Route::prefix('pengisian-krs')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs'])->name('univ.monitoring.pengisian-krs');
+                });
             });
 
             Route::prefix('perkuliahan')->group(function () {
