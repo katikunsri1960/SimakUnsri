@@ -1,35 +1,20 @@
 @extends('layouts.prodi')
 @section('title')
-@if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-Skripsi
-@elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-Tesis
-@elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-Disertasi
-@else
-Tugas Akhir
-@endif
+Dosen Pengajar Kelas Kuliah
 @endsection
 @section('content')
 @include('swal')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Ubah Detail Aktvitas @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-                Skripsi
-                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-                Tesis
-                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-                Disertasi
-                @else
-                Tugas Akhir
-                @endif Mahasiswa</h3>
+            <h3 class="page-title">Ubah Dosen Pengajar Kelas Kuliah</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.tugas-akhir')}}">Data Akademik</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.tugas-akhir')}}">@if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.non-tugas-akhir')}}">Data Akademik</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.non-tugas-akhir')}}">Kelas dan Penjadwalan</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Ubah Detail Aktivitas Non @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
                         Skripsi
                         @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
                         Tesis
@@ -37,16 +22,7 @@ Tugas Akhir
                         Disertasi
                         @else
                         Tugas Akhir
-                        @endif Mahasiswa</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Ubah Detail Aktivitas @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-                        Skripsi
-                        @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-                        Tesis
-                        @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-                        Disertasi
-                        @else
-                        Tugas Akhir
-                        @endif Mahasiswa</li>
+                        @endif</li>
                     </ol>
                 </nav>
             </div>
@@ -57,10 +33,10 @@ Tugas Akhir
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('prodi.data-akademik.tugas-akhir.update-detail', ['aktivitas' => $d->id_aktivitas])}}" id="update-detail-tesis" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{route('prodi.data-akademik.non-tugas-akhir.update-detail', ['aktivitas' => $d->id_aktivitas])}}" id="update-detail" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body">
-                        <h3 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Detail @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
+                        <h3 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Detail Aktivitas Non @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
                         Skripsi
                         @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
                         Tesis
@@ -68,7 +44,7 @@ Tugas Akhir
                         Disertasi
                         @else
                         Tugas Akhir
-                        @endif Mahasiswa</h3>
+                        @endif</h3>
                         <hr class="my-15">
                         <div class="form-group">
                             <div class="mb-4">
@@ -203,7 +179,7 @@ Tugas Akhir
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('prodi.data-akademik.tugas-akhir')}}" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('prodi.data-akademik.non-tugas-akhir')}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
@@ -219,20 +195,12 @@ Tugas Akhir
                     <div class="row mb-2">
                         <div class="col-lg-6">
                             <div class="d-flex justify-content-start">
-                                <h3 class="text-info mb-0"><i class="fa fa-user"></i> Dosen Pembimbing @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-                                Skripsi
-                                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-                                Tesis
-                                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-                                Disertasi
-                                @else
-                                Tugas Akhir
-                                @endif Mahasiswa</h3>
+                                <h3 class="text-info mb-0"><i class="fa fa-user"></i> Dosen Pembimbing Mahasiswa</h3>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="d-flex justify-content-end">
-                                <a type="button" class="btn btn-success" href="{{route('prodi.data-akademik.tugas-akhir.tambah-dosen', $d->id_aktivitas)}}"><i class="fa fa-plus"></i> Tambah Dosen</a>
+                                <a type="button" class="btn btn-success" href="{{route('prodi.data-akademik.non-tugas-akhir.tambah-dosen', $d->id_aktivitas)}}"><i class="fa fa-plus"></i> Tambah Dosen</a>
                             </div>
                         </div>
                     </div>
@@ -264,19 +232,19 @@ Tugas Akhir
                                     <td class="text-center align-middle">
                                         @if ($b->approved == 0 && $b->approved_dosen == 0)
                                         <span class="badge badge-lg badge-danger">Belum Disetujui</span>
-                                        @elseif ($b->approved == 1 && $b->approved_dosen == 2)
-                                        <span class="badge badge-lg badge-danger">Dibatalkan Dosen</span>
+                                        @elseif ($b->approved == 0 && $b->approved_dosen > 0)
+                                        <span class="badge badge-lg badge-warning">Menunggu Persetujuan Prodi</span>
                                         @else
                                         <span class="badge badge-lg badge-success">Approved</span>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center px-3">
-                                            @if (($b->approved == 1 && $b->approved_dosen == 2) || ($b->approved == 0 && $b->approved_dosen == 0))
-                                                <a href="{{route('prodi.data-akademik.tugas-akhir.edit-dosen', $b->id)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i
+                                            @if (($b->approved == 0 && $b->approved_dosen > 0) || ($b->approved == 0 && $b->approved_dosen == 0))
+                                                <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-dosen', $b->id)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i
                                                         class="fa fa-edit"></i> Edit
                                                 </a>
-                                                <form action="{{ route('prodi.data-akademik.tugas-akhir.delete-dosen', ['bimbing' => $b->id]) }}" method="POST" class="delete-form">
+                                                <form action="{{ route('prodi.data-akademik.non-tugas-akhir.delete-dosen', ['bimbing' => $b->id]) }}" method="POST" class="delete-form">
                                                     @csrf
                                                     @method('DELETE')
                                                     <div class="row">
@@ -307,7 +275,7 @@ Tugas Akhir
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script>
     $(document).ready(function(){
-        $('#update-detail-tesis').submit(function(e){
+        $('#update-detail').submit(function(e){
             e.preventDefault();
             swal({
                 title: 'Update Detail Aktivitas',
