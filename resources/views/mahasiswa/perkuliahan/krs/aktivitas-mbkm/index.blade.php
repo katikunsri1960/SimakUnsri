@@ -32,7 +32,7 @@ Kartu Rencana Studi
             <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
             <i class="fa-solid fa-arrow-left"></i>
             </a>
-            <h3 class="box-title px-3">Daftar Aktivitas MBKM</h3>
+            <h3 class="box-title px-3">Daftar Aktivitas MBKM Eksternal</h3>
             </div>
         </div>
     </div>
