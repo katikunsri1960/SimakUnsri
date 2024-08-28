@@ -55,8 +55,6 @@ class KelasPenjadwalanController extends Controller
         $prodi_id = auth()->user()->fk_id;
         $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
         $data = KelasKuliah::with(['peserta_kelas','dosen_pengajar', 'dosen_pengajar.dosen', 'ruang_perkuliahan', 'semester'])
-                            // ->leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
-                            // ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->where('id_matkul', $id_matkul)
                             ->where('id_prodi', $prodi_id)
                             ->where('id_semester', $semester_aktif->id_semester)
@@ -462,7 +460,7 @@ class KelasPenjadwalanController extends Controller
         // dd($id_matkul);
         $prodi_id = auth()->user()->fk_id;
         $evaluasi = JenisEvaluasi::get();
-        $kelas = KelasKuliah::with(['dosen_pengajar'])->leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
+        $kelas = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
                             ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
                             ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
                             ->select('*','kelas_kuliahs.tanggal_mulai_efektif','kelas_kuliahs.tanggal_akhir_efektif')
@@ -588,6 +586,146 @@ class KelasPenjadwalanController extends Controller
             return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
         }
 
+    }
+
+    public function ubah_dosen_pengajar_kelas($id_matkul,$nama_kelas_kuliah)
+    {
+        $prodi_id = auth()->user()->fk_id;
+        $kelas = KelasKuliah::with(['dosen_pengajar', 'ruang_perkuliahan', 'semester'])
+                            ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
+                            ->select('*','kelas_kuliahs.tanggal_mulai_efektif','kelas_kuliahs.tanggal_akhir_efektif')
+                            ->where('kelas_kuliahs.id_matkul', $id_matkul)
+                            ->where('kelas_kuliahs.nama_kelas_kuliah', $nama_kelas_kuliah)
+                            ->where('kelas_kuliahs.id_prodi', $prodi_id)
+                            ->get();
+
+        return view('prodi.data-akademik.kelas-penjadwalan.edit-dosen', ['kelas' => $kelas]);
+    }
+
+    public function tambah_dosen_pembimbing($aktivitas)
+    {
+        $prodi_id = auth()->user()->fk_id;
+        $evaluasi = JenisEvaluasi::get();
+        $kelas = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
+                            ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
+                            ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
+                            ->select('*','kelas_kuliahs.tanggal_mulai_efektif','kelas_kuliahs.tanggal_akhir_efektif')
+                            ->where('kelas_kuliahs.id_matkul', $id_matkul)
+                            ->where('kelas_kuliahs.nama_kelas_kuliah', $nama_kelas_kuliah)
+                            ->where('kelas_kuliahs.id_prodi', $prodi_id)
+                            ->get();
+        // dd($data);
+
+        return view('prodi.data-akademik.non-tugas-akhir.tambah-dosen', [
+            'd' => $data,
+            'kategori' => $kategori
+        ]);
+    }
+
+    public function store_dosen_pembimbing($aktivitas, Request $request)
+    {
+        $semester_aktif = SemesterAktif::first();
+        $data = $request->validate([
+                    'dosen_pembimbing.*' => 'required',
+                    'kategori.*' => 'required',
+                    'pembimbing_ke.*' => 'required',
+                ]);
+        try {
+            DB::beginTransaction();
+
+            $aktivitas_mahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
+
+            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
+
+            if($dosen_pembimbing->count() == 0 || $dosen_pembimbing->count() != count($request->dosen_pembimbing)){
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
+            }
+            //Count jumlah dosen pengajar kelas kuliah
+            $jumlah_dosen=count($request->dosen_pembimbing);
+
+            for($i=0;$i<$jumlah_dosen;$i++){
+                //Generate id aktivitas mengajar
+                $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
+                if(!$dosen)
+                {
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
+                }
+
+                $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
+                // dd($kategori);
+
+                //Store data to table tanpa substansi kuliah
+                BimbingMahasiswa::create(['feeder'=> 0, 'approved' => 0, 'approved_dosen' => 0,'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa, 'id_aktivitas'=> $aktivitas, 'judul' => $aktivitas_mahasiswa->judul, 'id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'pembimbing_ke' => $request->pembimbing_ke[$i], 'status_sync' => 'belum sync']);
+
+            }
+
+            DB::commit();
+
+            return redirect()->route('prodi.data-akademik.tugas-akhir.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+        }
+    }
+
+    public function edit_dosen_pembimbing($bimbing)
+    {
+        $semesterAktif = SemesterAktif::first();
+        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110405', '110403', '110406', '110402', '110401', '110407'])->get();
+        $data = BimbingMahasiswa::with(['anggota_aktivitas_personal'])->where('id', $bimbing)->first();
+        // dd($data);
+
+        return view('prodi.data-akademik.tugas-akhir.edit-dosen', [
+            'data' => $data,
+            'kategori' => $kategori
+        ]);
+    }
+
+    public function update_dosen_pembimbing($bimbing, $aktivitas, Request $request)
+    {
+        // dd($aktivitas);
+        $semester_aktif = SemesterAktif::first();
+        $data = $request->validate([
+                    'dosen_pembimbing' => 'required',
+                    'kategori.*' => 'required',
+                    'pembimbing_ke.*' => 'required',
+                ]);
+        try {
+            DB::beginTransaction();
+
+            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
+
+            if($dosen_pembimbing->count() == 0 || $dosen_pembimbing->count() != count($request->dosen_pembimbing)){
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
+            }
+            //Count jumlah dosen pengajar kelas kuliah
+            $jumlah_dosen=count($request->dosen_pembimbing);
+
+            for($i=0;$i<$jumlah_dosen;$i++){
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
+                if(!$dosen)
+                {
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
+                }
+
+                $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
+                // dd($kategori);
+
+                //Store data to table tanpa substansi kuliah
+                BimbingMahasiswa::where('id', $bimbing)->update(['id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'pembimbing_ke' => $request->pembimbing_ke[$i]]);
+
+            }
+
+            DB::commit();
+
+            return redirect()->route('prodi.data-akademik.tugas-akhir.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+        }
     }
 
     public function dosen_pengajar_destroy($id_matkul, $id_kelas)

@@ -354,7 +354,6 @@ Route::group(['middleware' => ['auth']], function() {
                 });
 
                 //Dosen Pengajar Kelas Kuliah
-
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'get_dosen'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-dosen');
                 Route::get('/get-substansi-kuliah', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'get_substansi'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-substansi');
                 Route::post('/kelas-penjadwalan/{id_matkul}/{nama_kelas_kuliah}/dosen-pengajar/store', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_store'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.store');

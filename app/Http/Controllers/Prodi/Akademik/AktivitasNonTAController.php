@@ -86,7 +86,7 @@ class AktivitasNonTAController extends Controller
     public function tambah_dosen_pembimbing($aktivitas)
     {
         $semesterAktif = SemesterAktif::first();
-        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110405', '110403', '110406', '110402', '110401', '110407'])->get();
+        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110300'])->get();
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
         // dd($data);
 

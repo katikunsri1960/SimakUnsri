@@ -87,19 +87,9 @@ class PesertaKelasKuliah extends Model
 
 
             foreach ($aktivitas as $item) {
-                $check_approved_pembimbing = BimbingMahasiswa::where('id_aktivitas', $item->id_aktivitas)->first();
-                if($check_approved_pembimbing->approved_dosen == 0 && $check_approved_pembimbing->approved == 0){
-                    $item->update([
-                        'approve_krs' => '0',
-                    ]);
-                }else{
-                    $result = [
-                        'status' => 'error',
-                        'message' => 'Aktivitas Sudah di Setujui.'
-                    ];
-
-                    return $result;
-                }   
+                $item->update([
+                    'approve_krs' => '0',
+                ]);
             }
 
             foreach ($data as $item) {
