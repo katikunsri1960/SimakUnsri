@@ -85,6 +85,30 @@ class MataKuliah extends Model
 
     public function getSksMax($id_reg, $id_semester, $id_periode_masuk)
     {
+        $prodi_fk = [
+                    '98223413-b27d-4afe-a2b8-d0d80173506e',
+                    'be779246-fe70-4e66-8fa2-8929d97779a2',
+                    'efd6f97f-d7fc-42c1-bea0-2e5837e569d6',
+                    '7c569912-fa48-4b93-8c16-1fc78969c337',
+                    'a8d4f70f-406c-43f6-95ee-15f8ad836db3',
+                    'c4bbd3bb-3b4b-4aa3-bc50-136842747c67',
+                    '6343967c-d7e3-447c-86a4-37c5c166ad7a',
+                    '947760c7-8b9b-40d2-af81-cdd141fddadb',
+                    '90c23123-fb1e-48ee-9bdc-f923e799cd2a',
+                    'a77fda16-ec5a-4d73-b076-51bac9b88ae4',
+                    '132e62cc-dfdc-437d-9df3-e5317f80a6ff',
+                    '67c6cb06-f882-48c2-8a8f-33ab9457d1a6',
+                    '95290672-5f13-4776-9c0e-9c84ff0611ed',
+                    'e2f2ac47-8844-456b-b525-482db9da0abf',
+                    'bb06fc41-9e48-443e-aa02-df83da6bb467',
+                    'b3dce9a8-25b8-4f27-96cc-2abe5e0d9fa9',
+                    '9965f1cf-563f-4671-9dca-4874e8c5d075',
+                    'fd61ecb4-d6b0-4135-b7e2-7e23665c3e0d',
+                    '40693f4c-5177-4bd3-b3df-7321320583a6',
+        ];
+
+        // dd($prodi_fk);
+
         $akm = Semester::orderBy('id_semester', 'ASC')
                     ->whereBetween('id_semester', [$id_periode_masuk, $id_semester])
                     ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
@@ -149,11 +173,10 @@ class MataKuliah extends Model
 
     //  dd($non_gelar);
 
-
     if ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' || 
         $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3' 
     ) {
-        $sks_max = 12;
+        $sks_max = 15;
     }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
         $sks_max = 20;
     } else {
