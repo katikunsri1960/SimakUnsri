@@ -115,7 +115,13 @@ class MataKuliah extends Model
             $akm_sebelum = $akm[$index_semester_terakhir - 2];
         }
 
-        // dd($akm_sebelum);
+        $riwayat_pendidikan = RiwayatPendidikan::with('prodi')            
+                            ->where('id_registrasi_mahasiswa', $id_reg)
+                            ->first();
+
+        $jenjang_pendidikan = $riwayat_pendidikan->prodi;
+
+        // dd($jenjang_pendidikan);
 
         $ips = AktivitasKuliahMahasiswa::select('ips')
                     ->where('id_registrasi_mahasiswa', $id_reg)
@@ -144,7 +150,11 @@ class MataKuliah extends Model
     //  dd($non_gelar);
 
 
-    if ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
+    if ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' || 
+        $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3' 
+    ) {
+        $sks_max = 12;
+    }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
         $sks_max = 20;
     } else {
         if ($ips_value !== null) {
@@ -156,7 +166,7 @@ class MataKuliah extends Model
                 $sks_max = 18;
             } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
                 $sks_max = 15;
-            } elseif ($ips_value < 1.50) {
+            } elseif ($ips_value < 1.50 ) {
                 $sks_max = 12;
             } else {
                 $sks_max = 0;

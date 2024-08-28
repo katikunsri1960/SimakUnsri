@@ -59,11 +59,11 @@ Aktivitas Pertukaran Pelajar
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Semester</th>
                                     <th class="text-center align-middle">Nama Aktivitas</th>
                                     <th class="text-center align-middle">Judul</th>
                                     <th class="text-center align-middle">Lokasi</th>
                                     <th class="text-center align-middle">SKS Konversi</th>
-                                    <th class="text-center align-middle">Semester</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Action</th>
                                 </tr>
@@ -76,6 +76,7 @@ Aktivitas Pertukaran Pelajar
                                 @foreach ($data as $data)
                                     <tr>
                                         <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
+                                        <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->semester->nama_semester }}</td>
                                         <td class="text-center align-middle" style="width:5%" style="white-space: nowrap;">{{ $data->nama_jenis_aktivitas }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->judul }}</td>
                                         <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->lokasi }}</td>
@@ -84,7 +85,6 @@ Aktivitas Pertukaran Pelajar
                                                 {{ $data->sks_aktivitas== NULL ? 'Tidak Diisi' : $data->sks_aktivitas }}
                                             </div>
                                         </td>
-                                        <td class="text-center align-middle" style="white-space: nowrap;">{{ $data->semester->nama_semester }}</td>
                                         <td class="text-center align-middle" style="width:10%">
                                             {{-- <div>
                                                 @if($data->approve_krs == 0)
