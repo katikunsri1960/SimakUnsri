@@ -13,7 +13,7 @@ class MonitoringController extends Controller
 {
     public function pengisian_krs()
     {
-        $semester_aktif = SemesterAktif::first();
+        $semesterAktif = SemesterAktif::first()->id_semester;
 
         // $data = ProgramStudi::with('fakultas')
         //         ->withCount([
@@ -50,53 +50,112 @@ class MonitoringController extends Controller
         // for ($i = $angkatanAktif; $i <= date('Y'); $i++) {
         //     $arrayTahun[] = $i;
         // }
-        // // $angkatanAktif = implode(',', $arrayTahun);
+        // $angkatanAktif = implode(',', $arrayTahun);
 
-        // $query = ProgramStudi::with('fakultas')
-        //         ->select('program_studis.*')
-        //         ->selectRaw('CONCAT(program_studis.nama_jenjang_pendidikan, " - ", program_studis.nama_program_studi) AS nama_prodi')
-        //             ->withCount([
-        //                 'mahasiswa as jumlah_mahasiswa' => function ($query) {
-        //                     $query->whereNull('id_jenis_keluar');
-        //                 },
-        //                 'mahasiswa as jumlah_mahasiswa_now' => function ($query) use ($arrayTahun) {
-        //                     $query->whereNull('id_jenis_keluar')
-        //                         ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun);
-        //                 },
-        //                 'peserta_kelas as jumlah_mahasiswa_isi_krs' => function ($query) use ($semester_aktif) {
-        //                     $query->join('kelas_kuliahs as kk1', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kk1.id_kelas_kuliah')
-        //                         ->where('kk1.id_semester', $semester_aktif->id_semester)
-        //                         ->distinct()
-        //                         ->select(DB::raw('COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)'));
-        //                 },
-        //                 'peserta_kelas as jumlah_mahasiswa_approved' => function ($query) use ($semester_aktif) {
-        //                     $query->join('kelas_kuliahs as kk2', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kk2.id_kelas_kuliah')
-        //                         ->where('kk2.id_semester', $semester_aktif->id_semester)
-        //                         ->where('peserta_kelas_kuliahs.approved', '1')
-        //                         ->distinct()
-        //                         ->select(DB::raw('COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)'));
-        //                 },
-        //                 'peserta_kelas as jumlah_mahasiswa_not_approved' => function ($query) use ($semester_aktif) {
-        //                     $query->join('kelas_kuliahs as kk3', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kk3.id_kelas_kuliah')
-        //                         ->where('kk3.id_semester', $semester_aktif->id_semester)
-        //                         ->where('peserta_kelas_kuliahs.approved', '0')
-        //                         ->distinct()
-        //                         ->select(DB::raw('COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)'));
-        //                 }
-        //             ])
-        //         ->where('program_studis.status', 'A')
-        //         ->orderBy('fakultas_id')
-        //         ->orderBy('kode_program_studi', 'ASC')
+        // // dd($angkatanAktif);
+
+        // $query = ProgramStudi::select(
+        //             'program_studis.id_prodi',
+        //             'fakultas.nama_fakultas',
+        //             DB::raw('CONCAT(program_studis.nama_jenjang_pendidikan, " - ", program_studis.nama_program_studi) AS nama_prodi'),
+        //             DB::raw("(SELECT COUNT(DISTINCT riwayat_pendidikans.id_registrasi_mahasiswa)
+        //                     FROM riwayat_pendidikans
+        //                     WHERE riwayat_pendidikans.id_prodi = program_studis.id_prodi
+        //                         AND riwayat_pendidikans.id_jenis_keluar IS NULL) AS jumlah_mahasiswa"),
+        //             DB::raw("(SELECT COUNT(DISTINCT riwayat_pendidikans.id_registrasi_mahasiswa)
+        //                         FROM riwayat_pendidikans
+        //                         WHERE riwayat_pendidikans.id_prodi = program_studis.id_prodi
+        //                             AND riwayat_pendidikans.id_jenis_keluar IS NULL AND LEFT(riwayat_pendidikans.id_periode_masuk, 4) IN ($angkatanAktif)) AS jumlah_mahasiswa_now"),
+        //             DB::raw("(CASE
+        //                     WHEN EXISTS (
+        //                         SELECT 1
+        //                         FROM peserta_kelas_kuliahs
+        //                         JOIN riwayat_pendidikans ON peserta_kelas_kuliahs.id_registrasi_mahasiswa = riwayat_pendidikans.id_registrasi_mahasiswa
+        //                     ) THEN (
+        //                         SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
+        //                         FROM peserta_kelas_kuliahs
+        //                         JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+        //                         WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi
+        //                             AND kelas_kuliahs.id_semester = '$semesterAktif'
+        //                     ) ELSE (
+        //                         SELECT COUNT(DISTINCT anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa)
+        //                         FROM anggota_aktivitas_mahasiswas
+        //                         JOIN aktivitas_mahasiswas ON anggota_aktivitas_mahasiswas.id_aktivitas = aktivitas_mahasiswas.id_aktivitas
+        //                         WHERE aktivitas_mahasiswas.id_semester = '$semesterAktif'
+        //                             AND aktivitas_mahasiswas.id_jenis_aktivitas IN (1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22)
+        //                     )
+        //                     END) AS jumlah_mahasiswa_isi_krs"),
+        //             DB::raw("(CASE
+        //                     WHEN EXISTS (
+        //                         SELECT 1
+        //                         FROM peserta_kelas_kuliahs
+        //                         JOIN riwayat_pendidikans ON peserta_kelas_kuliahs.id_registrasi_mahasiswa = riwayat_pendidikans.id_registrasi_mahasiswa
+        //                         WHERE peserta_kelas_kuliahs.approved = '1'
+        //                     ) THEN (
+        //                         SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
+        //                         FROM peserta_kelas_kuliahs
+        //                         JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+        //                         WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi
+        //                             AND kelas_kuliahs.id_semester = '$semesterAktif'
+        //                             AND peserta_kelas_kuliahs.approved = '1'
+        //                     ) ELSE (
+        //                         SELECT COUNT(DISTINCT anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa)
+        //                         FROM anggota_aktivitas_mahasiswas
+        //                         JOIN aktivitas_mahasiswas ON anggota_aktivitas_mahasiswas.id_aktivitas = aktivitas_mahasiswas.id_aktivitas
+        //                         WHERE aktivitas_mahasiswas.id_semester = '$semesterAktif'
+        //                             AND aktivitas_mahasiswas.approve_krs = '1'
+        //                             AND aktivitas_mahasiswas.id_jenis_aktivitas IN (1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22)
+        //                     )
+        //                     END) AS jumlah_mahasiswa_approved"),
+        //             DB::raw("(CASE
+        //                     WHEN EXISTS (
+        //                         SELECT 1
+        //                         FROM peserta_kelas_kuliahs
+        //                         JOIN riwayat_pendidikans ON peserta_kelas_kuliahs.id_registrasi_mahasiswa = riwayat_pendidikans.id_registrasi_mahasiswa
+        //                         WHERE peserta_kelas_kuliahs.approved = '0'
+        //                     ) THEN (
+        //                         SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
+        //                         FROM peserta_kelas_kuliahs
+        //                         JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+        //                         WHERE kelas_kuliahs.id_prodi = program_studis.id_prodi
+        //                             AND kelas_kuliahs.id_semester = '$semesterAktif'
+        //                             AND peserta_kelas_kuliahs.approved = '0'
+        //                     ) ELSE (
+        //                         SELECT COUNT(DISTINCT anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa)
+        //                         FROM anggota_aktivitas_mahasiswas
+        //                         JOIN aktivitas_mahasiswas ON anggota_aktivitas_mahasiswas.id_aktivitas = aktivitas_mahasiswas.id_aktivitas
+        //                         WHERE aktivitas_mahasiswas.id_semester = '$semesterAktif'
+        //                             AND aktivitas_mahasiswas.approve_krs = '0'
+        //                             AND aktivitas_mahasiswas.id_jenis_aktivitas IN (1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22)
+        //                     )
+        //                     END) AS jumlah_mahasiswa_not_approved")
+        //         )
+        //         ->join('fakultas', 'program_studis.fakultas_id', '=', 'fakultas.id')
+        //         ->orderBy('fakultas.id')
+        //         // ->orderBy('program_studis.kode_program_studi')
         //             ->limit(10)
         //             ->get();
 
-        // // //         // Inspect the final query and its bindings
+        // // // //         // Inspect the final query and its bindings
         //         dd($query);
 
+    //     $detailTHEN = DB::table('peserta_kelas_kuliahs as p')
+    //                 ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+    //                 ->where('k.id_prodi', 'ee87d53e-8dea-48ae-8310-11d3504220e3')
+    //                 ->where('k.id_semester', $semesterAktif)
+    //                 ->distinct('p.id_registrasi_mahasiswa')
+    //                 ->get();
+    //                 $detailELSE = DB::table('anggota_aktivitas_mahasiswas as aam')
+    // ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
+    // ->where('a.id_semester', $semesterAktif)
+    // ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
+    // ->distinct('aam.id_registrasi_mahasiswa')
+    // ->get();
+    //     DD($detailTHEN, $detailELSE);
 
         return view('universitas.monitoring.pengisian-krs.index', [
             // 'data' => $data,
-            'semester' => $semester_aktif
+            // 'semester' => $semester_aktif
         ]);
     }
 
@@ -106,61 +165,109 @@ class MonitoringController extends Controller
 
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
+        $angkatanAktif = implode(',', $arrayTahun);
 
-        $semester_aktif = SemesterAktif::first();
-        $query = ProgramStudi::with('fakultas')
-                ->select('program_studis.*')
-                ->selectRaw('CONCAT(program_studis.nama_jenjang_pendidikan, " - ", program_studis.nama_program_studi) AS nama_prodi')
-                // ->selectRaw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
-                //             FROM peserta_kelas_kuliahs
-                //             JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
-                //             WHERE peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi
-                //             AND kelas_kuliahs.id_semester = ?) AS jumlah_mahasiswa_isi_krs', [$semester_aktif->id_semester])
-                // ->selectRaw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
-                //             FROM peserta_kelas_kuliahs
-                //             JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
-                //             WHERE peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi
-                //             AND kelas_kuliahs.id_semester = ?
-                //             AND peserta_kelas_kuliahs.approved = "1") AS jumlah_mahasiswa_approved', [$semester_aktif->id_semester])
-                // ->selectRaw('(SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
-                //             FROM peserta_kelas_kuliahs
-                //             JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
-                //             WHERE peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi
-                //             AND kelas_kuliahs.id_semester = ?
-                //             AND peserta_kelas_kuliahs.approved = "0") AS jumlah_mahasiswa_not_approved', [$semester_aktif->id_semester])
-                    ->withCount([
-                        'mahasiswa as jumlah_mahasiswa' => function ($query) {
-                            $query->whereNull('id_jenis_keluar');
-                        },
-                        'mahasiswa as jumlah_mahasiswa_now' => function ($query) use ($arrayTahun) {
-                            $query->whereNull('id_jenis_keluar')
-                                ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun);
-                        },
-                        'peserta_kelas as jumlah_mahasiswa_isi_krs' => function ($query) use ($semester_aktif) {
-                            $query->join('kelas_kuliahs as kk1', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kk1.id_kelas_kuliah')
-                                ->where('kk1.id_semester', $semester_aktif->id_semester)
-                                ->distinct()
-                                ->select(DB::raw('COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)'));
-                        },
-                        'peserta_kelas as jumlah_mahasiswa_approved' => function ($query) use ($semester_aktif) {
-                            $query->join('kelas_kuliahs as kk2', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kk2.id_kelas_kuliah')
-                                ->where('kk2.id_semester', $semester_aktif->id_semester)
-                                ->where('peserta_kelas_kuliahs.approved', '1')
-                                ->distinct()
-                                ->select(DB::raw('COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)'));
-                        },
-                        'peserta_kelas as jumlah_mahasiswa_not_approved' => function ($query) use ($semester_aktif) {
-                            $query->join('kelas_kuliahs as kk3', 'peserta_kelas_kuliahs.id_kelas_kuliah', '=', 'kk3.id_kelas_kuliah')
-                                ->where('kk3.id_semester', $semester_aktif->id_semester)
-                                ->where('peserta_kelas_kuliahs.approved', '0')
-                                ->distinct()
-                                ->select(DB::raw('COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)'));
-                        }
-                    ])
-                ->where('program_studis.status', 'A')
-                ->orderBy('fakultas_id')
-                ->orderBy('kode_program_studi', 'ASC');
+        $semesterAktif = SemesterAktif::first()->id_semester;
+        $query = ProgramStudi::select(
+                        'program_studis.id_prodi', 'program_studis.id as id',
+                        'fakultas.nama_fakultas',
+                        DB::raw('CONCAT(program_studis.nama_jenjang_pendidikan, " - ", program_studis.nama_program_studi) AS nama_prodi')
+                    )
+                    ->join('fakultas', 'program_studis.fakultas_id', '=', 'fakultas.id')
+                    ->where('program_studis.status', 'A');
+                // ->orderBy('fakultas.id');
 
+        $query->addSelect(DB::raw("
+                (SELECT COUNT(DISTINCT riwayat_pendidikans.id_registrasi_mahasiswa)
+                 FROM riwayat_pendidikans
+                 WHERE riwayat_pendidikans.id_prodi = program_studis.id_prodi
+                   AND riwayat_pendidikans.id_jenis_keluar IS NULL) AS jumlah_mahasiswa
+            "));
+
+        $query->addSelect(DB::raw("
+            (SELECT COUNT(DISTINCT riwayat_pendidikans.id_registrasi_mahasiswa)
+             FROM riwayat_pendidikans
+             WHERE riwayat_pendidikans.id_prodi = program_studis.id_prodi AND LEFT(riwayat_pendidikans.id_periode_masuk, 4) IN (".$angkatanAktif.")
+               AND riwayat_pendidikans.id_jenis_keluar IS NULL) AS jumlah_mahasiswa_now
+        "));
+
+        $query->addSelect(DB::raw("
+            (CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM peserta_kelas_kuliahs,riwayat_pendidikans,kelas_kuliahs
+                        WHERE peserta_kelas_kuliahs.id_registrasi_mahasiswa = riwayat_pendidikans.id_registrasi_mahasiswa
+                        AND peserta_kelas_kuliahs.id_kelas_kuliah=kelas_kuliahs.id_kelas_kuliah
+                        AND kelas_kuliahs.id_semester=".$semesterAktif."
+                ) THEN (
+                   SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
+                    FROM peserta_kelas_kuliahs, kelas_kuliahs
+                    WHERE peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+                    AND peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi
+                    AND kelas_kuliahs.id_semester = ".$semesterAktif."
+                )
+                ELSE (
+                    SELECT COUNT(DISTINCT anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa)
+                    FROM anggota_aktivitas_mahasiswas, aktivitas_mahasiswas
+                    WHERE anggota_aktivitas_mahasiswas.id_aktivitas = aktivitas_mahasiswas.id_aktivitas
+                    AND aktivitas_mahasiswas.id_semester = ".$semesterAktif."
+                    AND aktivitas_mahasiswas.id_jenis_aktivitas IN (1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22)
+                )
+            END) AS jumlah_mahasiswa_isi_krs
+        "));
+
+        $query->addSelect(DB::raw("
+            (CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM peserta_kelas_kuliahs,riwayat_pendidikans,kelas_kuliahs
+                    WHERE peserta_kelas_kuliahs.id_registrasi_mahasiswa = riwayat_pendidikans.id_registrasi_mahasiswa
+                    AND peserta_kelas_kuliahs.id_kelas_kuliah=kelas_kuliahs.id_kelas_kuliah
+                    AND kelas_kuliahs.id_semester= ".$semesterAktif."
+                    AND peserta_kelas_kuliahs.approved = '1'
+                ) THEN (
+                     SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
+                    FROM peserta_kelas_kuliahs, kelas_kuliahs
+                    WHERE peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+                    AND peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi
+                    AND kelas_kuliahs.id_semester = ".$semesterAktif."
+                    AND peserta_kelas_kuliahs.approved = '1'
+                )
+                ELSE (
+                    SELECT COUNT(DISTINCT anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa)
+                    FROM anggota_aktivitas_mahasiswas, aktivitas_mahasiswas
+                    WHERE anggota_aktivitas_mahasiswas.id_aktivitas = aktivitas_mahasiswas.id_aktivitas
+                    AND aktivitas_mahasiswas.id_semester = ".$semesterAktif."
+                    AND aktivitas_mahasiswas.approve_krs = '1'
+                    AND aktivitas_mahasiswas.id_jenis_aktivitas IN (1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22)
+                )
+            END) AS jumlah_mahasiswa_approved
+        "));
+
+        $query->addSelect(DB::raw("
+            (CASE
+                WHEN EXISTS (
+                    SELECT 1 FROM peserta_kelas_kuliahs,riwayat_pendidikans,kelas_kuliahs
+                    WHERE peserta_kelas_kuliahs.id_registrasi_mahasiswa = riwayat_pendidikans.id_registrasi_mahasiswa
+                    AND peserta_kelas_kuliahs.id_kelas_kuliah=kelas_kuliahs.id_kelas_kuliah
+                    AND kelas_kuliahs.id_semester= ".$semesterAktif."
+                    AND peserta_kelas_kuliahs.approved = '0'
+                ) THEN (
+                       SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
+                    FROM peserta_kelas_kuliahs, kelas_kuliahs
+                    WHERE peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+                    AND peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi
+                    AND kelas_kuliahs.id_semester = ".$semesterAktif."
+                    AND peserta_kelas_kuliahs.approved = '0'
+                )
+                ELSE (
+                    SELECT COUNT(DISTINCT anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa)
+                    FROM anggota_aktivitas_mahasiswas, aktivitas_mahasiswas
+                    WHERE anggota_aktivitas_mahasiswas.id_aktivitas = aktivitas_mahasiswas.id_aktivitas
+                    AND aktivitas_mahasiswas.id_semester = ".$semesterAktif."
+                    AND aktivitas_mahasiswas.approve_krs = '0'
+                    AND aktivitas_mahasiswas.id_jenis_aktivitas IN (1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22)
+                )
+            END) AS jumlah_mahasiswa_not_approved
+        "));
 
         if ($searchValue) {
             $query = $query->where('nim', 'like', '%' . $searchValue . '%')
@@ -219,6 +326,61 @@ class MonitoringController extends Controller
                 ->get();
 
         return view('universitas.monitoring.pengisian-krs.detail-aktif-min-tujuh', [
+            'prodi' => $prodi,
+            'data' => $data
+        ]);
+    }
+
+    public function detail_isi_krs(ProgramStudi $prodi)
+    {
+        $id_prodi = $prodi->id_prodi;
+        $semesterAktif = SemesterAktif::first()->id_semester;
+
+        // $count = RiwayatPendidikan::where('id_prodi', $id_prodi)
+        //         ->whereNull('id_jenis_keluar')
+        //         ->where(function ($query) use ($semesterAktif) {
+        //             $query->whereExists(function ($subquery) use ($semesterAktif) {
+        //                 $subquery->select(DB::raw(1))
+        //                     ->from('peserta_kelas_kuliahs as p')
+        //                     ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+        //                     ->where('k.id_semester', $semesterAktif)
+        //                     ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+        //             })
+        //             ->orWhereExists(function ($subquery) use ($semesterAktif) {
+        //                 $subquery->select(DB::raw(1))
+        //                     ->from('anggota_aktivitas_mahasiswas as aam')
+        //                     ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
+        //                     ->where('a.id_semester', $semesterAktif)
+        //                     ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
+        //                     ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+        //             });
+        //         })
+        //         ->count();
+
+        //         dd($count);
+
+        $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
+                ->whereNull('id_jenis_keluar')
+                ->where(function ($query) use ($semesterAktif) {
+                    $query->whereExists(function ($subquery) use ($semesterAktif) {
+                        $subquery->select(DB::raw(1))
+                            ->from('peserta_kelas_kuliahs as p')
+                            ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+                            ->where('k.id_semester', $semesterAktif)
+                            ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                    })
+                    ->orWhereExists(function ($subquery) use ($semesterAktif) {
+                        $subquery->select(DB::raw(1))
+                            ->from('anggota_aktivitas_mahasiswas as aam')
+                            ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
+                            ->where('a.id_semester', $semesterAktif)
+                            ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
+                            ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                    });
+                })
+                ->get();
+        // dd($data);
+        return view('universitas.monitoring.pengisian-krs.detail-isi-krs', [
             'prodi' => $prodi,
             'data' => $data
         ]);

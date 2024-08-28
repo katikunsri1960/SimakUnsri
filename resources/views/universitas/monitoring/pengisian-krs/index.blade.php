@@ -83,7 +83,7 @@ Monitoring Pengisian KRS
             },
             columns: [
                 {data: 'DT_RowIndex', name: 'DT_RowIndex', class: 'text-center', searchable: false, orderable: false},
-                {data: 'fakultas.nama_fakultas', name: 'fakultas.nama_fakultas', class: 'text-start', searchable: true, orderData: [0]},
+                {data: 'nama_fakultas', name: 'nama_fakultas', class: 'text-start', searchable: true, orderData: [0]},
                 {data: 'nama_prodi', name: 'nama_prodi', class: 'text-start', searchable: true},
                 {
                     data: 'jumlah_mahasiswa',
@@ -109,7 +109,18 @@ Monitoring Pengisian KRS
                         return '<a href="' + url + '">' + data + '</a>';
                     }
                 },
-                {data: 'jumlah_mahasiswa_isi_krs', name: 'jumlah_mahasiswa_isi_krs', class: 'text-center', searchable: false, sortable:false},
+                {
+                    data: 'jumlah_mahasiswa_isi_krs',
+                    name: 'jumlah_mahasiswa_isi_krs',
+                    class: 'text-center',
+                    searchable: false,
+                    sortable: false,
+                    render: function(data, type, row) {
+                        var baseUrl = "{{ route('univ.monitoring.pengisian-krs.detail-isi-krs', ['prodi' => ':prodi']) }}";
+                        var url = baseUrl.replace(':prodi', row.id);
+                        return '<a href="' + url + '">' + data + '</a>';
+                    }
+                },
                 {data: 'jumlah_mahasiswa_approved', name: 'jumlah_mahasiswa_approved', class: "text-center align-middle", searchable: true},
                 {data: 'jumlah_mahasiswa_not_approved', name: 'jumlah_mahasiswa_not_approved', class: "text-center align-middle", searchable: true},
                 {
