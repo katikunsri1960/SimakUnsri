@@ -438,6 +438,10 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('monitoring')->group(function(){
                 Route::get('/entry-nilai', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'monitoring_nilai'])->name('prodi.monitoring.entry-nilai');
                 Route::get('/pengajaran-dosen', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'monitoring_pengajaran'])->name('prodi.monitoring.pengajaran-dosen');
+
+                Route::prefix('/pengisian-krs')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'pengisian_krs'])->name('prodi.monitoring.pengisian-krs');
+                });
             });
 
             //Route Bantuan

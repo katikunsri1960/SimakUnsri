@@ -165,6 +165,9 @@
                             <li class="{{request()->routeIs('prodi.monitoring.pengajaran-dosen') ? 'active' : ''}}">
                                 <a href="{{route('prodi.monitoring.pengajaran-dosen')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengajaran Dosen</a>
                             </li>
+                            <li class="{{request()->routeIs('prodi.monitoring.pengisian-krs') || request()->routeIs('prodi.monitoring.pengisian-krs.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>
+                            </li>
                         </ul>
                     </li>
 

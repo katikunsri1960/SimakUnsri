@@ -384,4 +384,44 @@ class MonitoringController extends Controller
             'data' => $data
         ]);
     }
+
+    public function detail_approve_krs(ProgramStudi $prodi)
+    {
+        $id_prodi = $prodi->id_prodi;
+        $semesterAktif = SemesterAktif::first()->id_semester;
+
+        $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
+                ->whereNull('id_jenis_keluar')
+                ->where(function ($query) use ($semesterAktif) {
+                    $query->whereExists(function ($subquery) use ($semesterAktif) {
+                        $subquery->select(DB::raw(1))
+                            ->from('peserta_kelas_kuliahs as p')
+                            ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+                            ->where('k.id_semester', $semesterAktif)
+                            ->where('p.approved', '1')
+                            ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                    })
+                    ->orWhere(function ($query) use ($semesterAktif) {
+                        $query->whereNotExists(function ($subquery) use ($semesterAktif) {
+                            $subquery->select(DB::raw(1))
+                                ->from('peserta_kelas_kuliahs as p')
+                                ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+                                ->where('k.id_semester', $semesterAktif)
+                                ->where('p.approved', '1')
+                                ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                        })
+                        ->whereExists(function ($subquery) use ($semesterAktif) {
+                            $subquery->select(DB::raw(1))
+                                ->from('anggota_aktivitas_mahasiswas as aam')
+                                ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
+                                ->where('a.id_semester', $semesterAktif)
+                                ->where('a.approve_krs', '1')
+                                ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
+                                ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                        });
+                    });
+                })
+                ->distinct()
+                ->get();
+    }
 }
