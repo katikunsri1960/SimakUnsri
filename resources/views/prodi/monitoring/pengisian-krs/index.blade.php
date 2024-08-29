@@ -39,43 +39,35 @@ Monitoring Pengisian KRS
                                     <th class="text-center align-middle">Persentase Approval</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="data-table">
                                 <tr>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif')}}">
-                                            {{$jumlah_mahasiswa}}
-                                        </a>
-
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif-min-tujuh')}}">
-                                            {{$jumlah_mahasiswa_now}}
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif')}}" id="jumlah_mahasiswa_link">
+                                            <span id="jumlah_mahasiswa">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.detail-isi-krs')}}">
-                                            {{-- {{$d->jumlah_mahasiswa_isi_krs}} --}}
-                                            {{$isi_krs}}
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif-min-tujuh')}}" id="jumlah_mahasiswa_now_link">
+                                            <span id="jumlah_mahasiswa_now">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.approve-krs')}}">
-                                            {{$approve}}
-                                            {{-- {{$d->jumlah_mahasiswa_approved}} --}}
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.detail-isi-krs')}}" id="isi_krs_link">
+                                            <span id="isi_krs">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.non-approve-krs')}}">
-                                            {{$non_approve}}
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.approve-krs')}}" id="approve_link">
+                                            <span id="approve">Loading...</span>
                                         </a>
-
                                     </td>
                                     <td class="text-center align-middle">
-                                        @if ($isi_krs == 0)
-                                        0%
-                                        @else
-                                        {{round(($approve / $isi_krs) * 100, 2)}}%
-                                        @endif
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.non-approve-krs')}}" id="non_approve_link">
+                                            <span id="non_approve">Loading...</span>
+                                        </a>
+                                    </td>
+                                    <td class="text-center align-middle" id="approve_percentage">
+                                        Loading...
                                     </td>
                                 </tr>
                             </tbody>
@@ -92,10 +84,27 @@ Monitoring Pengisian KRS
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-    $(function() {
-        "use strict";
+      $(document).ready(function() {
+        $.ajax({
+            url: '{{ route("prodi.monitoring.pengisian-krs.data") }}',
+            method: 'GET',
+            success: function(data) {
+                $('#jumlah_mahasiswa').text(data.jumlah_mahasiswa);
+                $('#jumlah_mahasiswa_now').text(data.jumlah_mahasiswa_now);
+                $('#isi_krs').text(data.isi_krs);
+                $('#approve').text(data.approve);
+                $('#non_approve').text(data.non_approve);
 
-        $('#data').DataTable();
+                if (data.isi_krs == 0) {
+                    $('#approve_percentage').text('0%');
+                } else {
+                    $('#approve_percentage').text((data.approve / data.isi_krs * 100).toFixed(2) + '%');
+                }
+            },
+            error: function() {
+                alert('Failed to fetch data.');
+            }
+        });
     });
 </script>
 @endpush

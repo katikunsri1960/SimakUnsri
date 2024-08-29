@@ -23,6 +23,11 @@ class MonitoringDosenController extends Controller
 
     public function pengisian_krs()
     {
+        return view('prodi.monitoring.pengisian-krs.index');
+    }
+
+    public function pengisian_krs_data()
+    {
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
         $semesterAktif = SemesterAktif::first()->id_semester;
@@ -140,14 +145,13 @@ class MonitoringDosenController extends Controller
                 ->distinct()
                 ->count();
 
-        return view('prodi.monitoring.pengisian-krs.index', [
-            'jumlah_mahasiswa' => $jumlah_mahasiswa,
-            'jumlah_mahasiswa_now' => $jumlah_mahasiswa_now,
-            'isi_krs' => $isi_krs,
-            'approve' => $approve,
-            'non_approve' => $non_approve
-        ]);
-
+            return response()->json([
+                'jumlah_mahasiswa' => $jumlah_mahasiswa,
+                'jumlah_mahasiswa_now' => $jumlah_mahasiswa_now,
+                'isi_krs' => $isi_krs,
+                'approve' => $approve,
+                'non_approve' => $non_approve
+            ]);
     }
 
 

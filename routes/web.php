@@ -441,6 +441,7 @@ Route::group(['middleware' => ['auth']], function() {
 
                 Route::prefix('/pengisian-krs')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'pengisian_krs'])->name('prodi.monitoring.pengisian-krs');
+                    Route::get('/data', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'pengisian_krs_data'])->name('prodi.monitoring.pengisian-krs.data');
                     Route::get('/mahasiswa-aktif', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'mahasiswa_aktif'])->name('prodi.monitoring.pengisian-krs.mahasiswa-aktif');
                     Route::get('/mahasiswa-aktif-min-tujuh', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'mahasiswa_aktif_min_tujuh'])->name('prodi.monitoring.pengisian-krs.mahasiswa-aktif-min-tujuh');
                     Route::get('/detail-isi-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'detail_isi_krs'])->name('prodi.monitoring.pengisian-krs.detail-isi-krs');
