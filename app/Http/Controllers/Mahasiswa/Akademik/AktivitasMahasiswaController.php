@@ -431,18 +431,19 @@ class AktivitasMahasiswaController extends Controller
     
     public function hapusAktivitas($id)
     {
-        $aktivitas=AktivitasMahasiswa::where('id', $id)->first();
+        $aktivitas=AktivitasMahasiswa::with(['bimbing_mahasiswa'])->where('id', $id)->first();
         $id_aktivitas=$aktivitas->where('id', $id)->pluck('id_aktivitas');
         
+        // dd($aktivitas->bimbing_mahasiswa);
         
         DB::beginTransaction();
 
         try {
 
             if ($aktivitas->approve_krs ==1) {
-                // return redirect()->back()->with('error', 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.');
-                // return response()->json(['message' => 'Anda tidak dapat menghapus Mata Kuliah ini.'], 400);
                 return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas ini, Aktivitas telah disetujui Dosen Pembimbing Akademik');
+            } elseif ($aktivitas->bimbing_mahasiswa->first()->approved == 1) {
+                return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas ini, Aktivitas telah disetujui oleh KoProdi');
             }
     
             // Menghapus bimbingan mahasiswa

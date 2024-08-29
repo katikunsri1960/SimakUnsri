@@ -98,17 +98,23 @@ Aktivitas MBKM - Non Pertukaran Pelajar
                                             @endforeach
                                         </td>
                                         <td class="text-center align-middle" style="width:10%">
-                                            @if ($data->approve_krs == 0)
-                                                <span class="badge badge-lg badge-danger-light">Belum Disetujui</span>
-                                            @elseif ($data->bimbing_mahasiswa->first()->approved == 0)
-                                                <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi Koprodi</span>
-                                            @elseif ($data->approve_krs == 1 && $data->bimbing_mahasiswa->first()->approved_dosen == 0)
-                                                <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
-                                            @elseif ($data->approve_krs == 1 && $data->bimbing_mahasiswa->first()->approved_dosen == 2)
-                                                <span class="badge badge-lg badge-danger-light">Ditolak dosen pembimbing</span>
-                                            @else
-                                                <span class="badge badge-lg badge-success-light">Disetujui</span>
-                                            @endif
+                                            @foreach ($data->bimbing_mahasiswa as $dosen_bimbing)
+                                                <div class="mb-20">
+                                                    @if ($data->approve_krs == 0 && $dosen_bimbing->approved == 0)
+                                                        <span class="badge badge-lg badge-danger-light">Belum Disetujui</span>
+                                                    @elseif ($dosen_bimbing->approved == 0)
+                                                        <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi Koprodi</span>
+                                                    @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 0)
+                                                        <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
+                                                    @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 2)
+                                                        <span class="badge badge-lg badge-danger-light">Ditolak dosen pembimbing</span>
+                                                    @elseif ($data->approve_krs == 0 && $dosen_bimbing->approved == 1)
+                                                        <span class="badge badge-lg badge-warning-light">Dibatalkan Dosen PA</span>
+                                                    @else
+                                                        <span class="badge badge-lg badge-success-light">Disetujui</span>
+                                                    @endif
+                                                </div>
+                                            @endforeach
                                         </td>
                                         <td class="text-center align-middle" style="width:3%">
                                             <form action="{{route('mahasiswa.perkuliahan.mbkm.hapus-aktivitas',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">

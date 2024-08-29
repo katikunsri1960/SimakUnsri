@@ -130,16 +130,21 @@ Pengajuan Aktivitas MBKM
                             </div>
                         </div>
 
-                        {{-- <h4 class="text-info mt-40"><i class="fa fa-user"></i>  Dosen Pembimbing</h4>
+                        {{-- <h4 class="text-info mt-40"><i class="fa fa-user"></i>  Dosen Pembimbing Akademik</h4>
                         <hr class="my-15">
                         <div class="form-group">
-                            <div id="dosen-fields">
-                                <div class="dosen-field row">
-                                    <label for="dosen_bimbing_aktivitas" class="form-label">Nama Dosen</label>
-                                    <div class="col-md-12 mb-2">
-                                        <select class="form-select" name="dosen_bimbing_aktivitas" id="dosen_bimbing_aktivitas" required></select>
-                                    </div>
-                                </div>
+                            <div class=" col-lg-12 mb-3">
+                                <label for="dosen-pa" class="form-label">Nama Dosen</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="prodi"
+                                    id="prodi"
+                                    aria-describedby="helpId"
+                                    value="{{$dosen_pembimbing->nidn}} - {{$dosen_pembimbing->nama_dosen}}"
+                                    disabled
+                                    required
+                                />
                             </div>
                         </div> --}}
                     </div>

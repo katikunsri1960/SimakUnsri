@@ -42,6 +42,7 @@ class AktivitasMBKMController extends Controller
                     $query->where('id_registrasi_mahasiswa', $id_reg);
                 })
                 ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20'])
+                ->orderBy('id_semester', 'DESC')
                 ->get();
 
         $jumlah_data=$data->first();
@@ -251,15 +252,26 @@ class AktivitasMBKMController extends Controller
                             ->first();
                             // dd($aktivitas_mbkm);
 
+                if($aktivitas_mbkm->id_jenis_aktivitas == 13 ||
+                    $aktivitas_mbkm->id_jenis_aktivitas == 14 ||
+                    $aktivitas_mbkm->id_jenis_aktivitas == 17||
+                    $aktivitas_mbkm->id_jenis_aktivitas == 18){
+
+                        $program_mbkm=1;
+                        $nama_program_mbkm='Flagship';
+                }else{
+                        $program_mbkm=0;
+                        $nama_program_mbkm='Mandiri';
+                }
+
             // Simpan data ke tabel aktivitas_mahasiswas
                 $aktivitas=AktivitasMahasiswa::create([
                     'approve_krs' =>0,
                     'approve_sidang' =>0,
                     'feeder'=>0,
                     'id_aktivitas' => $id_aktivitas,
-                    // 'judul' => $request->judul_skripsi,
-                    'program_mbkm'=>0,
-                    'nama_program_mbkm'=>'Mandiri',//tanyakan dirapat
+                    'program_mbkm'=>$program_mbkm,
+                    'nama_program_mbkm'=>$nama_program_mbkm,
                     'jenis_anggota'=>0,
                     'nama_jenis_anggota'=>'Personal',//tanyakan dirapat
                     'id_jenis_aktivitas'=>$aktivitas_mbkm->id_jenis_aktivitas,
@@ -331,7 +343,6 @@ class AktivitasMBKMController extends Controller
                     'status_sync'=>'belum sync',
                 ]);
                     
-                
                 // $bimbing_urut=$bimbing->orderBy('pembimbing_ke', 'ASC')->get();
                 // dd($bimbing);
                 
@@ -369,7 +380,11 @@ class AktivitasMBKMController extends Controller
             }
 
             // Menghapus bimbingan mahasiswa
-           $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
+            $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
+            if ($bimbing->first()->approved==1) {
+                return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas MBKM ini, Aktivitas MBKM telah disetujui oleh KoProdi');
+            }
+
             if ($bimbing) {
                 $bimbing->delete();
             }
@@ -415,9 +430,9 @@ class AktivitasMBKMController extends Controller
                     $query->where('id_registrasi_mahasiswa', $id_reg);
                 })
                 ->whereIn('id_jenis_aktivitas',['21'])
+                ->orderBy('id_semester', 'DESC')
                 ->get();
                 
-
         $jumlah_data=$data->first();
         // dd($jumlah_data);
 
@@ -473,7 +488,13 @@ class AktivitasMBKMController extends Controller
                                 "10", 
                                 "20"
                             ];
-                            // dd($data_aktivitas_mbkm);
+
+        // $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
+        //             // ->leftJoin()
+        //             ->where('id_dosen', $data->dosen_pa)
+        //             ->first();
+
+        // dd($dosen_pembimbing);
 
         $jumlah_aktivitas_mbkm=$data_aktivitas_mbkm->count();
 
@@ -514,7 +535,8 @@ class AktivitasMBKMController extends Controller
         return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.store', [
             'data' => $data, 
             'aktivitas_mbkm'=>$aktivitas_mbkm,
-            'sks_aktivitas_mbkm'=>$sks_aktivitas_mbkm
+            'sks_aktivitas_mbkm'=>$sks_aktivitas_mbkm,
+            // 'dosen_pembimbing'=>$dosen_pembimbing
         ]);
     }
 
@@ -643,6 +665,30 @@ class AktivitasMBKMController extends Controller
                     'nama_jenis_peran'=>'Anggota',
                     'status_sync'=>'belum sync',
                 ]);   
+
+
+                //Generate id aktivitas mengajar
+                // $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
+                
+                // $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)
+                //                 ->where('id_dosen', $riwayat_pendidikan->dosen_pa)
+                //                 ->first();
+
+                // BimbingMahasiswa::create([
+                //     'feeder'=>0,
+                //     'approved'=>1,
+                //     'approved_dosen'=>1,
+                //     'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
+                //     'id_aktivitas'=>$aktivitas->id_aktivitas,
+                //     'judul'=>$aktivitas->judul,
+                //     'id_kategori_kegiatan'=>110300,
+                //     'nama_kategori_kegiatan'=>'Membimbing Kuliah Kerja Nyata, Praktek Kerja Nyata, Praktek Kerja Lapangan, termasuk membimbing pelatihan militer mahasiswa, pertukaran mahasiswa,  Magang, kuliah berbasis penelitian, wirausaha, dan bentuk lain pengabdian kepada masyarakat, dan sejenisnya',
+                //     'id_dosen'=>$dosen_pembimbing->id_dosen, 
+                //     'nidn'=>$dosen_pembimbing->nidn,
+                //     'nama_dosen'=>$dosen_pembimbing->nama_dosen,
+                //     'pembimbing_ke'=>1,
+                //     'status_sync'=>'belum sync',
+                // ]);
             });
 
             // Jika berhasil, kembalikan respons sukses
@@ -682,7 +728,11 @@ class AktivitasMBKMController extends Controller
             }
 
             // Menghapus bimbingan mahasiswa
-           $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
+            $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
+            // if ($bimbing->first()->approved==1) {
+            //     return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas MBKM ini, Aktivitas MBKM telah disetujui oleh KoProdi');
+            // }
+
             if ($bimbing) {
                 $bimbing->delete();
             }

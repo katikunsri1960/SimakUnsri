@@ -64,6 +64,7 @@ Aktivitas Pertukaran Pelajar
                                     <th class="text-center align-middle">Judul</th>
                                     <th class="text-center align-middle">Lokasi</th>
                                     <th class="text-center align-middle">SKS Konversi</th>
+                                    {{-- <th class="text-center align-middle">Dosen Pembimbing</th> --}}
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Action</th>
                                 </tr>
@@ -85,24 +86,40 @@ Aktivitas Pertukaran Pelajar
                                                 {{ $data->sks_aktivitas== NULL ? 'Tidak Diisi' : $data->sks_aktivitas }}
                                             </div>
                                         </td>
+                                        {{-- <td class="text-start align-middle"  style="white-space: nowrap; width:20%">
+                                            @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
+                                                <ul>
+                                                    <li>
+                                                        {{$dosen_bimbing->nama_dosen}} 
+                                                    </li>
+                                                </ul> 
+                                            @endforeach
+                                        </td> --}}
                                         <td class="text-center align-middle" style="width:10%">
-                                            {{-- <div>
-                                                @if($data->approve_krs == 0)
-                                                    <span class="badge badge-xl badge-danger-light rounded-10 mb-5">Belum Disetujui</span>
-                                                @else
-                                                    <span class="badge badge-xl badge-success-light rounded-10 mb-5">Disetujui</span>
-                                                @endif
-                                            </div> --}}
-
                                             @if ($data->approve_krs == 0)
                                                 <span class="badge badge-lg badge-danger">Belum Disetujui</span>
-                                            {{-- @elseif ($data->approve_krs == 1 && $data->approved_dosen > 0)
-                                                <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
-                                            @elseif ($data->approve_krs == 0 && $data->decline_dosen > 0)
-                                                <span class="badge badge-lg badge-danger-light">Bimbingan dibatalkan dosen</span> --}}
                                             @else
                                                 <span class="badge badge-lg badge-success">Disetujui</span>
                                             @endif
+
+                                            {{-- PEMBIMBING PMM --}}
+                                            {{-- @foreach ($data->bimbing_mahasiswa as $dosen_bimbing)
+                                                <div class="mb-20">
+                                                    @if ($data->approve_krs == 0 && $dosen_bimbing->approved == 0)
+                                                        <span class="badge badge-lg badge-danger-light">Belum Disetujui</span>
+                                                    @elseif ($dosen_bimbing->approved == 0)
+                                                        <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi Koprodi</span>
+                                                    @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 0)
+                                                        <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
+                                                    @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 2)
+                                                        <span class="badge badge-lg badge-danger-light">Ditolak dosen pembimbing</span>
+                                                    @elseif ($data->approve_krs == 0 && $dosen_bimbing->approved == 1)
+                                                        <span class="badge badge-lg badge-warning-light">Dibatalkan Dosen PA</span>
+                                                    @else
+                                                        <span class="badge badge-lg badge-success-light">Disetujui</span>
+                                                    @endif
+                                                </div>
+                                            @endforeach --}}
                                         </td>
                                         <td class="text-center align-middle" style="width:3%">
                                             <form action="{{route('mahasiswa.perkuliahan.mbkm.hapus-aktivitas-pertukaran',['id'=>$data->id])}}" method="post" class="delete-form" data-id="{{$data->id}}" id="deleteForm{{$data->id}}">
