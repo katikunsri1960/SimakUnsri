@@ -443,6 +443,9 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'pengisian_krs'])->name('prodi.monitoring.pengisian-krs');
                     Route::get('/mahasiswa-aktif', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'mahasiswa_aktif'])->name('prodi.monitoring.pengisian-krs.mahasiswa-aktif');
                     Route::get('/mahasiswa-aktif-min-tujuh', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'mahasiswa_aktif_min_tujuh'])->name('prodi.monitoring.pengisian-krs.mahasiswa-aktif-min-tujuh');
+                    Route::get('/detail-isi-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'detail_isi_krs'])->name('prodi.monitoring.pengisian-krs.detail-isi-krs');
+                    Route::get('/approve-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'approve_krs'])->name('prodi.monitoring.pengisian-krs.approve-krs');
+                    Route::get('/non-approve-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'non_approve_krs'])->name('prodi.monitoring.pengisian-krs.non-approve-krs');
                 });
             });
 

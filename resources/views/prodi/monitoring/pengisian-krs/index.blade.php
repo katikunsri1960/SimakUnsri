@@ -54,14 +54,29 @@ Monitoring Pengisian KRS
                                             {{$d->jumlah_mahasiswa_now}}
                                         </a>
                                     </td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_isi_krs}}</td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_approved}}</td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_not_approved}}</td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.detail-isi-krs')}}">
+                                            {{-- {{$d->jumlah_mahasiswa_isi_krs}} --}}
+                                            {{$isi_krs}}
+                                        </a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.approve-krs')}}">
+                                            {{$approve}}
+                                            {{-- {{$d->jumlah_mahasiswa_approved}} --}}
+                                        </a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.non-approve-krs')}}">
+                                            {{$non_approve}}
+                                        </a>
+
+                                    </td>
                                     <td class="text-center align-middle">
                                         @if ($d->jumlah_mahasiswa_isi_krs == 0)
                                             0%
                                         @else
-                                            {{round(($d->jumlah_mahasiswa_approved / $d->jumlah_mahasiswa_isi_krs) * 100, 2)}}%
+                                            {{round(($approve / $isi_krs) * 100, 2)}}%
                                         @endif
                                     </td>
                                 </tr>
