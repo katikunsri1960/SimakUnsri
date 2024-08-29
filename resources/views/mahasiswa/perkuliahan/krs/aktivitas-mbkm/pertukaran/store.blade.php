@@ -130,7 +130,7 @@ Pengajuan Aktivitas MBKM
                             </div>
                         </div>
 
-                        {{-- <h4 class="text-info mt-40"><i class="fa fa-user"></i>  Dosen Pembimbing Akademik</h4>
+                        <h4 class="text-info mt-40"><i class="fa fa-user"></i>  Dosen Pembimbing Akademik</h4>
                         <hr class="my-15">
                         <div class="form-group">
                             <div class=" col-lg-12 mb-3">
@@ -146,7 +146,7 @@ Pengajuan Aktivitas MBKM
                                     required
                                 />
                             </div>
-                        </div> --}}
+                        </div>
                     </div>
                     <div class="box-footer">
                         <a type="button" href="{{route('mahasiswa.perkuliahan.mbkm.pertukaran')}}" class="btn btn-danger waves-effect waves-light">

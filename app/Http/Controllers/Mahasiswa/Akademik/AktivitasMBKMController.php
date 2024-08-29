@@ -489,10 +489,10 @@ class AktivitasMBKMController extends Controller
                                 "20"
                             ];
 
-        // $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
-        //             // ->leftJoin()
-        //             ->where('id_dosen', $data->dosen_pa)
-        //             ->first();
+        $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
+                    // ->leftJoin()
+                    ->where('id_dosen', $data->dosen_pa)
+                    ->first();
 
         // dd($dosen_pembimbing);
 
@@ -536,7 +536,7 @@ class AktivitasMBKMController extends Controller
             'data' => $data, 
             'aktivitas_mbkm'=>$aktivitas_mbkm,
             'sks_aktivitas_mbkm'=>$sks_aktivitas_mbkm,
-            // 'dosen_pembimbing'=>$dosen_pembimbing
+            'dosen_pembimbing'=>$dosen_pembimbing
         ]);
     }
 
@@ -668,27 +668,27 @@ class AktivitasMBKMController extends Controller
 
 
                 //Generate id aktivitas mengajar
-                // $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
+                $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
                 
-                // $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)
-                //                 ->where('id_dosen', $riwayat_pendidikan->dosen_pa)
-                //                 ->first();
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)
+                                ->where('id_dosen', $riwayat_pendidikan->dosen_pa)
+                                ->first();
 
-                // BimbingMahasiswa::create([
-                //     'feeder'=>0,
-                //     'approved'=>1,
-                //     'approved_dosen'=>1,
-                //     'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
-                //     'id_aktivitas'=>$aktivitas->id_aktivitas,
-                //     'judul'=>$aktivitas->judul,
-                //     'id_kategori_kegiatan'=>110300,
-                //     'nama_kategori_kegiatan'=>'Membimbing Kuliah Kerja Nyata, Praktek Kerja Nyata, Praktek Kerja Lapangan, termasuk membimbing pelatihan militer mahasiswa, pertukaran mahasiswa,  Magang, kuliah berbasis penelitian, wirausaha, dan bentuk lain pengabdian kepada masyarakat, dan sejenisnya',
-                //     'id_dosen'=>$dosen_pembimbing->id_dosen, 
-                //     'nidn'=>$dosen_pembimbing->nidn,
-                //     'nama_dosen'=>$dosen_pembimbing->nama_dosen,
-                //     'pembimbing_ke'=>1,
-                //     'status_sync'=>'belum sync',
-                // ]);
+                BimbingMahasiswa::create([
+                    'feeder'=>0,
+                    'approved'=>1,
+                    'approved_dosen'=>1,
+                    'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
+                    'id_aktivitas'=>$aktivitas->id_aktivitas,
+                    'judul'=>$aktivitas->judul,
+                    'id_kategori_kegiatan'=>110300,
+                    'nama_kategori_kegiatan'=>'Membimbing Kuliah Kerja Nyata, Praktek Kerja Nyata, Praktek Kerja Lapangan, termasuk membimbing pelatihan militer mahasiswa, pertukaran mahasiswa,  Magang, kuliah berbasis penelitian, wirausaha, dan bentuk lain pengabdian kepada masyarakat, dan sejenisnya',
+                    'id_dosen'=>$dosen_pembimbing->id_dosen, 
+                    'nidn'=>$dosen_pembimbing->nidn,
+                    'nama_dosen'=>$dosen_pembimbing->nama_dosen,
+                    'pembimbing_ke'=>1,
+                    'status_sync'=>'belum sync',
+                ]);
             });
 
             // Jika berhasil, kembalikan respons sukses
@@ -729,9 +729,9 @@ class AktivitasMBKMController extends Controller
 
             // Menghapus bimbingan mahasiswa
             $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
-            // if ($bimbing->first()->approved==1) {
-            //     return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas MBKM ini, Aktivitas MBKM telah disetujui oleh KoProdi');
-            // }
+            if ($bimbing->first()->approved==1) {
+                return redirect()->back()->with('error', 'Aktivitas MBKM tidak dapat dihapus ');
+            }
 
             if ($bimbing) {
                 $bimbing->delete();
