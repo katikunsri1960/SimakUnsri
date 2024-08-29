@@ -32,7 +32,7 @@ use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\RencanaPembelajaran;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
 
 class KrsController extends Controller
 {
@@ -535,7 +535,12 @@ class KrsController extends Controller
                 ->where('approved', '1')
                 ->exists();
 
-        if ($mataKuliahDipenuhi) {
+        $mataKuliahDipenuhi_2 = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                ->whereIn('id_matkul', $prasyarat)
+                // ->where('approved', '1')
+                ->exists();
+
+        if ($mataKuliahDipenuhi || $mataKuliahDipenuhi_2) {
             return response()->json(['prasyarat_dipenuhi' => true]);
         } else {
             // Dapatkan nama mata kuliah prasyarat yang belum diambil

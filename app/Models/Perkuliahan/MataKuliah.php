@@ -85,6 +85,10 @@ class MataKuliah extends Model
 
     public function getSksMax($id_reg, $id_semester, $id_periode_masuk)
     {
+        $riwayat_pendidikan = RiwayatPendidikan::with('prodi')            
+                            ->where('id_registrasi_mahasiswa', $id_reg)
+                            ->first();
+
         $prodi_fk = [
                     '98223413-b27d-4afe-a2b8-d0d80173506e',
                     'be779246-fe70-4e66-8fa2-8929d97779a2',
@@ -107,7 +111,11 @@ class MataKuliah extends Model
                     '40693f4c-5177-4bd3-b3df-7321320583a6',
         ];
 
-        // dd($prodi_fk);
+        // $mhs_fk= RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+        //             ->whereIn('id_prodi', $prodi_fk)
+        //             ->first();
+
+        // dd($mhs_fk);
 
         $akm = Semester::orderBy('id_semester', 'ASC')
                     ->whereBetween('id_semester', [$id_periode_masuk, $id_semester])
@@ -139,13 +147,10 @@ class MataKuliah extends Model
             $akm_sebelum = $akm[$index_semester_terakhir - 2];
         }
 
-        $riwayat_pendidikan = RiwayatPendidikan::with('prodi')            
-                            ->where('id_registrasi_mahasiswa', $id_reg)
-                            ->first();
-
+        
         $jenjang_pendidikan = $riwayat_pendidikan->prodi;
 
-        // dd($jenjang_pendidikan);
+        // dd($riwayat_pendidikan);
 
         $ips = AktivitasKuliahMahasiswa::select('ips')
                     ->where('id_registrasi_mahasiswa', $id_reg)
@@ -173,6 +178,10 @@ class MataKuliah extends Model
 
     //  dd($non_gelar);
 
+
+    if ( in_array($riwayat_pendidikan->id_prodi, $prodi_fk) ) {
+        $sks_max = 24;
+    }else
     if ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' || 
         $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3' 
     ) {
@@ -198,7 +207,9 @@ class MataKuliah extends Model
             $sks_max = 0;
         }
     }
+    // dd($sks_max);
         return $sks_max;
+         
     }
 
      
