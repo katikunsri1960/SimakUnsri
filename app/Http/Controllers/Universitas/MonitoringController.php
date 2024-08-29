@@ -136,22 +136,8 @@ class MonitoringController extends Controller
         //             ->limit(10)
         //             ->get();
 
-        // // // //         // Inspect the final query and its bindings
+        // Inspect the final query and its bindings
         //         dd($query);
-
-    //     $detailTHEN = DB::table('peserta_kelas_kuliahs as p')
-    //                 ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
-    //                 ->where('k.id_prodi', 'ee87d53e-8dea-48ae-8310-11d3504220e3')
-    //                 ->where('k.id_semester', $semesterAktif)
-    //                 ->distinct('p.id_registrasi_mahasiswa')
-    //                 ->get();
-    //                 $detailELSE = DB::table('anggota_aktivitas_mahasiswas as aam')
-    // ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
-    // ->where('a.id_semester', $semesterAktif)
-    // ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
-    // ->distinct('aam.id_registrasi_mahasiswa')
-    // ->get();
-    //     DD($detailTHEN, $detailELSE);
 
         return view('universitas.monitoring.pengisian-krs.index', [
             // 'data' => $data,
@@ -194,23 +180,26 @@ class MonitoringController extends Controller
         $query->addSelect(DB::raw("
             (CASE
                 WHEN EXISTS (
-                    SELECT 1 FROM peserta_kelas_kuliahs,riwayat_pendidikans,kelas_kuliahs
-                        WHERE peserta_kelas_kuliahs.id_registrasi_mahasiswa = riwayat_pendidikans.id_registrasi_mahasiswa
-                        AND peserta_kelas_kuliahs.id_kelas_kuliah=kelas_kuliahs.id_kelas_kuliah
-                        AND kelas_kuliahs.id_semester=".$semesterAktif."
+                      SELECT 1
+                        FROM peserta_kelas_kuliahs
+                        JOIN riwayat_pendidikans ON peserta_kelas_kuliahs.id_registrasi_mahasiswa = riwayat_pendidikans.id_registrasi_mahasiswa
+                        JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+                        WHERE kelas_kuliahs.id_semester = ".$semesterAktif."
+                        AND riwayat_pendidikans.id_prodi = program_studis.id_prodi
                 ) THEN (
-                   SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
-                    FROM peserta_kelas_kuliahs, kelas_kuliahs
-                    WHERE peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
-                    AND peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi
-                    AND kelas_kuliahs.id_semester = ".$semesterAktif."
+                     SELECT COUNT(DISTINCT peserta_kelas_kuliahs.id_registrasi_mahasiswa)
+                        FROM peserta_kelas_kuliahs
+                        JOIN kelas_kuliahs ON peserta_kelas_kuliahs.id_kelas_kuliah = kelas_kuliahs.id_kelas_kuliah
+                        WHERE kelas_kuliahs.id_semester = ".$semesterAktif."
+                        AND peserta_kelas_kuliahs.id_prodi = program_studis.id_prodi
                 )
                 ELSE (
                     SELECT COUNT(DISTINCT anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa)
-                    FROM anggota_aktivitas_mahasiswas, aktivitas_mahasiswas
-                    WHERE anggota_aktivitas_mahasiswas.id_aktivitas = aktivitas_mahasiswas.id_aktivitas
-                    AND aktivitas_mahasiswas.id_semester = ".$semesterAktif."
+                    FROM anggota_aktivitas_mahasiswas
+                    JOIN aktivitas_mahasiswas ON anggota_aktivitas_mahasiswas.id_aktivitas = aktivitas_mahasiswas.id_aktivitas
+                    WHERE aktivitas_mahasiswas.id_semester = ".$semesterAktif."
                     AND aktivitas_mahasiswas.id_jenis_aktivitas IN (1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22)
+                    AND aktivitas_mahasiswas.id_prodi = program_studis.id_prodi
                 )
             END) AS jumlah_mahasiswa_isi_krs
         "));
@@ -369,17 +358,27 @@ class MonitoringController extends Controller
                             ->where('k.id_semester', $semesterAktif)
                             ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
                     })
-                    ->orWhereExists(function ($subquery) use ($semesterAktif) {
-                        $subquery->select(DB::raw(1))
-                            ->from('anggota_aktivitas_mahasiswas as aam')
-                            ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
-                            ->where('a.id_semester', $semesterAktif)
-                            ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
-                            ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                    ->orWhere(function ($query) use ($semesterAktif) {
+                        $query->whereNotExists(function ($subquery) use ($semesterAktif) {
+                            $subquery->select(DB::raw(1))
+                                ->from('peserta_kelas_kuliahs as p')
+                                ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+                                ->where('k.id_semester', $semesterAktif)
+                                ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                        })
+                        ->whereExists(function ($subquery) use ($semesterAktif) {
+                            $subquery->select(DB::raw(1))
+                                ->from('anggota_aktivitas_mahasiswas as aam')
+                                ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
+                                ->where('a.id_semester', $semesterAktif)
+                                ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
+                                ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                        });
                     });
                 })
+                ->distinct()
                 ->get();
-        // dd($data);
+
         return view('universitas.monitoring.pengisian-krs.detail-isi-krs', [
             'prodi' => $prodi,
             'data' => $data
