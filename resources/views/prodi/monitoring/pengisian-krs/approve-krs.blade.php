@@ -1,18 +1,18 @@
 @extends('layouts.prodi')
 @section('title')
-List Mahasiswa Isi KRS
+List Mahasiswa Sudah di Setujui
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">List Mahasiswa Isi KRS</h3>
+            <h3 class="page-title">List Mahasiswa sudah Disetujui</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('univ.monitoring.pengisian-krs')}}">Pengisian KRS</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.monitoring.pengisian-krs')}}">Pengisian KRS</a></li>
                         <li class="breadcrumb-item active" aria-current="page">List Mahasiswa Isi KRS</li>
                     </ol>
                 </nav>
