@@ -29,8 +29,7 @@ Monitoring Pengisian KRS
                           <thead>
                              <tr>
                                 <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">Nama Fakultas</th>
-                                <th class="text-center align-middle">Nama Program Studi</th>
+
                                 <th class="text-center align-middle">Jumlah Mahasiswa Aktif</th>
                                 <th class="text-center align-middle">Jumlah Mahasiswa Aktif {{date('Y') - 7}} - {{date('Y')}}</th>
                                 <th class="text-center align-middle">Jumlah Mahasiswa (Yang melakukan pengisian KRS)</th>
@@ -43,10 +42,18 @@ Monitoring Pengisian KRS
                             @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-start align-middle">{{$d->nama_fakultas}}</td>
-                                    <td class="text-start align-middle">{{$d->nama_prodi}}</td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa}}</td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_now}}</td>
+
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif')}}">
+                                            {{$d->jumlah_mahasiswa}}
+                                        </a>
+
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif-min-tujuh')}}">
+                                            {{$d->jumlah_mahasiswa_now}}
+                                        </a>
+                                    </td>
                                     <td class="text-center align-middle">{{$d->jumlah_mahasiswa_isi_krs}}</td>
                                     <td class="text-center align-middle">{{$d->jumlah_mahasiswa_approved}}</td>
                                     <td class="text-center align-middle">{{$d->jumlah_mahasiswa_not_approved}}</td>
