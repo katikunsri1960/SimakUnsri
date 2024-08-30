@@ -29,7 +29,7 @@
                                 @foreach ($jenisBeasiswa as $j)
                                 <option value="{{$j->id}}" {{ in_array($j->id, old('jenis_beasiswa',
                                     request()->get('jenis_beasiswa', []))) ? 'selected' : '' }}>
-                                   {{$p->nama_jenis_beasiswa}}
+                                   {{$j->nama_jenis_beasiswa}}
                                 </option>
                                 @endforeach
                             </select>
@@ -53,6 +53,13 @@
     $(document).ready(function () {
         $('#prodi').select2({
             placeholder: '-- Pilih Prodi -- ',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#filter-button')
+        });
+
+        $('#jenis_beasiswa').select2({
+            placeholder: '-- Pilih Jenis Beasiswa -- ',
             allowClear: true,
             width: '100%',
             dropdownParent: $('#filter-button')
