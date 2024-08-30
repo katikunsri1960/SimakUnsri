@@ -25,12 +25,16 @@ Pengaturan Akun
 @include('universitas.pengaturan.akun.create-mahasiswa')
 @include('universitas.pengaturan.akun.create-prodi')
 @include('universitas.pengaturan.akun.create-dosen')
+@include('universitas.pengaturan.akun.create-lain')
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
+                        <button class="btn btn-dark waves-effect waves-light" type="button" data-bs-toggle="modal"
+                        data-bs-target="#createLain"><i class="fa fa-plus"></i> Tambah Akun Lainnya</button>
+                        <span class="divider-line mx-1"></span>
                         <button class="btn btn-warning waves-effect waves-light" type="button" data-bs-toggle="modal"
                         data-bs-target="#createFakultas"><i class="fa fa-plus"></i> Tambah Akun Fakultas</button>
                         <span class="divider-line mx-1"></span>
