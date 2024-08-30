@@ -547,7 +547,6 @@ class KelasPenjadwalanController extends Controller
             return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
         }
 
-
         // dd($rencana_pertemuan);
         try {
             DB::beginTransaction();
@@ -569,7 +568,7 @@ class KelasPenjadwalanController extends Controller
                     $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_kelas_kuliah[$i])->first();
                 }
 
-                $dosen_pengajar = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas[0]['id_kelas_kuliah'])->get();
+                $dosen_pengajar = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas[0]['id_kelas_kuliah'])->where('id_dosen','!=',$dosen->id_dosen)->get();
                 $count_dosen_pengajar = count($dosen_pengajar);
                 $dosen_rencana_ajar = 0;
 
@@ -665,11 +664,11 @@ class KelasPenjadwalanController extends Controller
             return redirect()->back()->with('error', 'Rencana Pertemuan tidak boleh 0');
         }
 
-        if ((int) $request->rencana_minggu_pertemuan[0] > $rencana_prodi->jumlah_minggu_pertemuan) {
+        if ((int) $request->rencana_minggu_pertemuan[0] > $rencana_prodi->jumlah_minggu_pertemuan+1) {
             return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
         }
 
-        if ((int) $request->realisasi_minggu_pertemuan[0] > $rencana_prodi->jumlah_minggu_pertemuan) {
+        if ((int) $request->realisasi_minggu_pertemuan[0] > $rencana_prodi->jumlah_minggu_pertemuan+1) {
             return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
         }
         // dd($rencana_pertemuan);
@@ -700,25 +699,34 @@ class KelasPenjadwalanController extends Controller
                 $total_rencana_pertemuan = (int) $request->rencana_minggu_pertemuan[0] + $dosen_rencana_ajar;
                 $total_realisasi_pertemuan = (int) $request->realisasi_minggu_pertemuan[0] + $dosen_realisasi_ajar;
         
-                if ($total_rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
+                if ($total_rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan+1) {
                     return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
                 }
 
-                if ($total_realisasi_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
+                if ($total_realisasi_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan+1) {
                     return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
                 }
             }
-        
+
             // Update the DosenPengajarKelasKuliah
-            DosenPengajarKelasKuliah::where('id', $id) // Ensure to specify which record to update
+            if($data_dosen->feeder == 1){
+                DosenPengajarKelasKuliah::where('id', $id) // Ensure to specify which record to update
+                                    ->update([
+                                        'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
+                                        'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
+                                        'id_jenis_evaluasi' => $request->evaluasi[0]
+                                    ]);
+            }else{
+                DosenPengajarKelasKuliah::where('id', $id) // Ensure to specify which record to update
                                     ->update([
                                         'id_registrasi_dosen' => $dosen->id_registrasi_dosen,
                                         'id_dosen' => $dosen->id_dosen,
                                         'urutan' => $count_dosen_pengajar + 1,
                                         'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
                                         'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
-                                        'id_jenis_evaluasi' => $request->evaluasi[0],
+                                        'id_jenis_evaluasi' => $request->evaluasi[0]
                                     ]);
+            }
 
             DB::commit();
 
@@ -732,6 +740,10 @@ class KelasPenjadwalanController extends Controller
 
     public function dosen_pengajar_destroy($id)
     {
+        $dosen = DosenPengajarKelasKuliah::where('id', $id)->first();
+        if($dosen->feeder == 1){
+            return redirect()->back()->with('error', 'Data Dosen Sudah di Sinkronisasi.');
+        }
         try {
             DB::beginTransaction();
 
