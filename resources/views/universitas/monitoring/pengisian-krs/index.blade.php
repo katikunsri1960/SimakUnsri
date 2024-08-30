@@ -35,7 +35,6 @@ Monitoring Pengisian KRS
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
                           <thead>
                              <tr>
-                                <th class="text-center align-middle">No</th>
                                 <th class="text-center align-middle">Nama Fakultas</th>
                                 <th class="text-center align-middle">Nama Program Studi</th>
                                 <th class="text-center align-middle">Jumlah Mahasiswa Aktif</th>
@@ -55,7 +54,7 @@ Monitoring Pengisian KRS
                                 }
                             @endphp
                                 <tr class="@if ($persentase_approval < 50) table-danger @endif">
-                                    <td class="text-center align-middle"></td>
+
                                     <td class="text-start align-middle">{{$d->id}} - {{$d->nama_fakultas}}</td>
                                     <td class="text-start align-middle">{{$d->nama_jenjang_pendidikan}} {{$d->nama_program_studi}}</td>
                                     <td class="text-center align-middle">
@@ -116,16 +115,7 @@ Monitoring Pengisian KRS
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
     $(document).ready(function(){
-        $('#data').DataTable({
-            "columnDefs": [
-                { "orderable": false, "targets": 0 } // Disable sorting on the first column
-            ],
-            "order": [], // Disable initial sorting
-            "rowCallback": function(row, data, index) {
-                // Add numbering to the first column
-                $('td:eq(0)', row).html(index + 1);
-            }
-        });
+        $('#data').DataTable();
         let step = 0;
         let totalSteps = {{ $prodi->count() }}; // Jumlah total prodi
 
