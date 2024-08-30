@@ -60,7 +60,7 @@ List Mahasiswa Isi KRS
                                     <td class="text-center align-middle">{{$d->angkatan}}</td>
                                     <td class="text-center align-middle">{{$d->nim}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
-                                    <td class="text-start align-middle">{{$d->pembimbing_akademik->nama_dosen}}</td>
+                                    <td class="text-start align-middle">{{$d->pembimbing_akademik ? $d->pembimbing_akademik->nama_dosen : " - "}}</td>
                                 </tr>
                             @endforeach
                           </tbody>
