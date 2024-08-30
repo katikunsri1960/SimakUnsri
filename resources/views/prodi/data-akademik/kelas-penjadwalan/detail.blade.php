@@ -101,20 +101,10 @@ Kelas Penjadwalan
                                         </td>
                                         <td class="text-center align-middle">
 
-                                            @if ($d->dosen_pengajar->count() > 0 && $d->feeder == 0)
-                                            <form action="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form-dosen px-3 my-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteFormDosen{{$d->id_kelas_kuliah}}">
-                                                @csrf
-                                                @method('delete')
-                                                <div class="row">
-                                                <button type="submit" class="btn btn-sm btn-rounded btn-warning waves-effect waves-light"><i class="fa fa-users"></i> Hapus Dosen</button>
-                                                </div>
-                                            </form>
-                                            @else
-                                            <div class="row my-3 px-3">
-                                            <a type="button" class="btn btn-sm btn-rounded btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar', ['id_matkul' => $d->id_matkul, 'nama_kelas_kuliah' => $d->nama_kelas_kuliah])}}" title="Manajemen Dosen Kelas"><i class="fa fa-user"></i> Tambah Pengajar</a>
-                                            </div>
-                                            @endif
                                             @if ($d->feeder == 0)
+                                            <div class="row my-3 px-3">
+                                                <a type="button" class="btn btn-sm btn-rounded btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', [ 'id_kelas'=> $d->id_kelas_kuliah])}}" title="Manajemen Dosen Kelas"><i class="fa fa-pencil-square-o"></i> Dosen Pengajar</a>
+                                            </div>
                                             <div class="row my-3 px-3">
                                                 <a href="{{route('prodi.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Edit Kelas</a>
                                             </div>
@@ -126,13 +116,15 @@ Kelas Penjadwalan
                                                 <button type="submit" class="btn btn-sm btn-rounded btn-danger waves-effect waves-light"><i class="fa fa-trash"></i> Hapus Kelas</button>
                                                 </div>
                                             </form>
+                                            @else
+                                                <h4>Data Sudah di Sinkronisasi</h4>
                                             @endif
 
                                         </td>
                                     </tr>
                                 @endforeach
                             </tbody>
-                      </table>
+                        </table>
                       </div>
                 </div>
 
@@ -163,27 +155,6 @@ Kelas Penjadwalan
             }, function(isConfirm){
                 if (isConfirm) {
                     $(`#deleteForm${formId}`).unbind('submit').submit();
-                    $('#spinner').show();
-                }
-            });
-        });
-
-        $('.delete-form-dosen').submit(function(e){
-            var formId = $(this).data('id');
-            console.log(formId);
-            e.preventDefault();
-
-            swal({
-                title: 'Apakah Anda Yakin??',
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Lanjutkan',
-                cancelButtonText: 'Batal'
-            }, function(isConfirm){
-                if (isConfirm) {
-                    $(`#deleteFormDosen${formId}`).unbind('submit').submit();
                     $('#spinner').show();
                 }
             });

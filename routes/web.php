@@ -345,8 +345,12 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/{id_matkul}/store', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_store'])->name('prodi.data-akademik.kelas-penjadwalan.store');
 
                     Route::delete('/{id_matkul}/{id_kelas}/delete', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_destroy'])->name('prodi.data-akademik.kelas-penjadwalan.delete');
+
                     Route::get('/{id_matkul}/{nama_kelas_kuliah}/dosen-pengajar', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar');
-                    Route::delete('/{id_matkul}/{id_kelas}/dosen-pengajar/delete', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_destroy'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.delete');
+                    Route::get('/{id_kelas}/manajemen-dosen-pengajar', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'manajemen_dosen_pengajar_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen');
+                    Route::get('/edit-dosen/{id}', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'edit_dosen_pengajar'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.edit');
+                    Route::post('/update-dosen/{id}', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'update_dosen_pengajar'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.update');
+                    Route::delete('/dp/delete/{id}', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'dosen_pengajar_destroy'])->name('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.destroy');
 
                     Route::get('/{id_matkul}/{id_kelas}/edit-kelas', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'edit_kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan.edit');
                     Route::post('/{id_matkul}/{id_kelas}/update', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_update'])->name('prodi.data-akademik.kelas-penjadwalan.update');

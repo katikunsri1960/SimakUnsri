@@ -1,53 +1,65 @@
 @extends('layouts.prodi')
 @section('title')
-Dosen Pembimbing Mahasiswa
+Ubah Dosen Pengajar Mahasiswa
 @endsection
 @section('content')
 @include('swal')
 @push('header')
 <div class="mx-4">
-    <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', ['aktivitas' => $data->id_aktivitas])}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+    <a href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_kelas' => $data->id_kelas_kuliah])}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('prodi.data-akademik.non-tugas-akhir.update-dosen', ['bimbing' => $data->id, 'aktivitas' => $data->id_aktivitas])}}" id="ubah-dosen-pembimbing" method="POST">
+                <form class="form" action="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.update', ['id' => $data->id])}}" id="ubah-dosen-pengajar" method="POST">
                     @csrf
                     <div class="box-body">
-                        <h4 class="text-info mb-0"><i class="fa fa-user"></i> Ubah Dosen Pembimbing Mahasiswa ({{$data->anggota_aktivitas_personal->nim}} - {{$data->anggota_aktivitas_personal->nama_mahasiswa}})</h4>
+                        <h4 class="text-info mb-0"><i class="fa fa-user"></i> Ubah Dosen Pengajar Kelas ({{$data->kelas_kuliah->matkul->nama_mata_kuliah}} - {{$data->kelas_kuliah->nama_kelas_kuliah}})</h4>
                         <hr class="my-15">
                         <div class="form-group">
                             <div id="dosen-fields">
                                 <div class="dosen-field row">
-                                    <div class="col-md-5 mb-2">
-                                        <label for="dosen_pembimbing" class="form-label">Nama Dosen Pembimbing</label>
-                                        <select class="form-select" name="dosen_pembimbing[]" id="dosen_pembimbing" required>
-                                            <option value="{{ $data->id_dosen }}" 
-                                                {{ $data->id_dosen != '' ? 'selected' : '' }}>
-                                                ({{ $data->nidn }}) - {{ $data->nama_dosen }}
+                                    <div class="col-md-3 mb-2">
+                                        <label for="dosen_pengajar" class="form-label">Nama Dosen Pengajar</label>
+                                        <select class="form-select" name="dosen_pengajar[]" id="dosen_pengajar" required>
+                                            <option value="{{ $data->id_registrasi_dosen }}" 
+                                                {{ $data->id_registrasi_dosen != '' ? 'selected' : '' }}>
+                                                ({{ $data->dosen->nidn }}) - {{ $data->dosen->nama_dosen }}
                                             </option>
                                         </select>
                                     </div>
-                                    <div class="col-md-4 mb-2">
-                                        <label for="kategori" class="form-label">Kategori Dosen Pembimbing</label>
-                                        <select class="form-select" name="kategori[]" id="evaluasi" required>
-                                            <option value="">-- Pilih Jenis Kategori --</option>
-                                            @foreach($kategori as $k)
-                                                <option value="{{$k->id_kategori_kegiatan}}" {{$k->id_kategori_kegiatan == $data->id_kategori_kegiatan ? 'selected' : ''}}>{{$k->nama_kategori_kegiatan}}</option>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="evaluasi" class="form-label">Jenis Evaluasi</label>
+                                        <select class="form-select" name="evaluasi[]" id="evaluasi" required>
+                                            <option value="">-- Pilih Jenis Evaluasi --</option>
+                                            @foreach($evaluasi as $e)
+                                                <option value="{{$e->id_jenis_evaluasi}}" {{$e->id_jenis_evaluasi == $data->id_jenis_evaluasi ? 'selected' : ''}}>{{$e->nama_jenis_evaluasi}}</option>
                                             @endforeach
                                         </select>
                                     </div>
                                     <div class="col-md-3 mb-2">
-                                        <label for="pembimbing_ke" class="form-label">Pembimbing Ke - </label>
+                                        <label for="rencana_minggu_pertemuan" class="form-label">Rencana Minggu Pertemuan</label>
                                         <input
                                             type="number"
                                             class="form-control"
-                                            name="pembimbing_ke[]"
-                                            id="pembimbing_ke"
+                                            name="rencana_minggu_pertemuan[]"
+                                            id="rencana_minggu_pertemuan"
                                             aria-describedby="helpId"
-                                            value="{{$data->pembimbing_ke}}"
+                                            value="{{$data->rencana_minggu_pertemuan}}"
+                                            required
+                                        />
+                                    </div>
+                                    <div class="col-md-3 mb-2">
+                                        <label for="realisasi_minggu_pertemuan" class="form-label">Realisasi Minggu Pertemuan</label>
+                                        <input
+                                            type="number"
+                                            class="form-control"
+                                            name="realisasi_minggu_pertemuan[]"
+                                            id="realisasi_minggu_pertemuan"
+                                            aria-describedby="helpId"
+                                            value="{{$data->realisasi_minggu_pertemuan}}"
                                             required
                                         />
                                     </div>
@@ -56,7 +68,7 @@ Dosen Pembimbing Mahasiswa
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', ['aktivitas' => $data->id_aktivitas])}}" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_kelas' => $data->id_kelas_kuliah])}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
@@ -82,7 +94,7 @@ Dosen Pembimbing Mahasiswa
                 placeholder : '-- Pilih Dosen --',
                 minimumInputLength: 3,
                 ajax: {
-                    url: "{{route('prodi.data-akademik.non-tugas-akhir.get-dosen')}}",
+                    url: "{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.get-dosen')}}",
                     type: "GET",
                     dataType: 'json',
                     delay: 250,
@@ -97,7 +109,7 @@ Dosen Pembimbing Mahasiswa
                             results: $.map(data, function (item) {
                                 return {
                                     text: item.nama_dosen + " ( " + item.nama_program_studi + " )",
-                                    id: item.id_dosen
+                                    id: item.id_registrasi_dosen
                                 }
                             })
                         };
@@ -107,7 +119,7 @@ Dosen Pembimbing Mahasiswa
         }
 
         // Initialize Select2 for the first select element
-        var initialSelect = initializeSelect2($('#dosen_pembimbing'));
+        var initialSelect = initializeSelect2($('#dosen_pengajar'));
 
         // Example function to collect selected values
         function collectSelectedValues() {
@@ -119,11 +131,11 @@ Dosen Pembimbing Mahasiswa
             console.log(selectedValues);
         }
 
-        $('#ubah-dosen-pembimbing').submit(function(e){
+        $('#ubah-dosen-pengajar').submit(function(e){
             e.preventDefault();
             swal({
-                title: 'Manajemen Dosen Pembimbing',
-                text: "Apakah anda yakin ingin menambahkan dosen pembimbing?",
+                title: 'Manajemen Dosen pengajar',
+                text: "Apakah anda yakin ingin merubah dosen pengajar?",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -133,7 +145,7 @@ Dosen Pembimbing Mahasiswa
             },function(isConfirmed){
                 if (isConfirmed) {
                     collectSelectedValues();
-                    $('#ubah-dosen-pembimbing').unbind('submit').submit();
+                    $('#ubah-dosen-pengajar').unbind('submit').submit();
                     $('#spinner').show();
                 }
             });

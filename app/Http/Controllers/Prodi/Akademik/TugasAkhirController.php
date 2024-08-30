@@ -188,7 +188,7 @@ class TugasAkhirController extends Controller
                 // dd($kategori);
 
                 //Store data to table tanpa substansi kuliah
-                BimbingMahasiswa::where('id', $bimbing)->update(['id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'pembimbing_ke' => $request->pembimbing_ke[$i]]);
+                BimbingMahasiswa::where('id', $bimbing)->update(['approved' => 0,'approved_dosen' => 0,'id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'pembimbing_ke' => $request->pembimbing_ke[$i]]);
 
             }
 
