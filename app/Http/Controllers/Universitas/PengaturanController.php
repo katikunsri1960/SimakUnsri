@@ -333,4 +333,21 @@ class PengaturanController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
+
+    public function akun_lain_create(Request $request)
+    {
+        $data = $request->validate([
+            'username' => 'required|unique:users,username',
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+            'role' => 'required',
+        ]);
+
+        $data['password'] = bcrypt($data['password']);
+
+        User::create($data);
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
 }

@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::prefix('beasiswa')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\BeasiswaController::class, 'index'])->name('bak.beasiswa');
+                Route::get('/data', [App\Http\Controllers\Bak\BeasiswaController::class, 'data'])->name('bak.beasiswa.data');
             });
 
             Route::prefix('transkrip-nilai')->group(function(){
@@ -605,6 +606,8 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_store'])->name('univ.pengaturan.akun.store');
                     Route::patch('/update/{user}', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_update'])->name('univ.pengaturan.akun.update');
                     Route::delete('/delete/{user}', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_destroy'])->name('univ.pengaturan.akun.delete');
+
+                    Route::post('/create-lain', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_lain_create'])->name('univ.pengaturan.akun.create-lain');
 
                     Route::post('/dosen-store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_dosen_create'])->name('univ.pengaturan.akun.dosen-store');
                     Route::get('/get-dosen', [App\Http\Controllers\Universitas\PengaturanController::class, 'get_dosen'])->name('univ.pengaturan.akun.get-dosen');
