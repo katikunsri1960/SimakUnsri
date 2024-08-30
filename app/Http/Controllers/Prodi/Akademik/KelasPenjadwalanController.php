@@ -10,6 +10,7 @@ use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Perkuliahan\SubstansiKuliah;
+use App\Models\Referensi\PeriodePerkuliahan;
 use App\Models\RuangPerkuliahan;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Semester;
@@ -519,6 +520,7 @@ class KelasPenjadwalanController extends Controller
         $prodi_id = auth()->user()->fk_id;
         $kelas = KelasKuliah::where('id_prodi',$prodi_id)->where('id_matkul',$id_matkul)->where('nama_kelas_kuliah',$nama_kelas_kuliah)->get();
         $semester_aktif = SemesterAktif::first();
+        $rencana_prodi = PeriodePerkuliahan::where('id_semester', $semester_aktif->id_semester)->where('id_prodi', $prodi_id)->first();
 
         //Validate request data
         $data = $request->validate([
@@ -533,13 +535,19 @@ class KelasPenjadwalanController extends Controller
         //Validasi jumlah total recana minggu pertemuan dosen
         $jumlah_data_pertemuan=count($request->rencana_minggu_pertemuan);
         $rencana_pertemuan = 0;
-        for($i=0;$i<$jumlah_data_pertemuan;$i++){
-            $rencana_pertemuan = $rencana_pertemuan + $request->rencana_minggu_pertemuan[$i];
+        for($j=0;$j<$jumlah_data_pertemuan;$j++){
+            $rencana_pertemuan = $rencana_pertemuan + $request->rencana_minggu_pertemuan[$j];
         }
 
         if ($rencana_pertemuan == 0) {
             return redirect()->back()->with('error', 'Rencana Pertemuan tidak boleh 0');
         }
+
+        if ($rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
+            return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+        }
+
+
         // dd($rencana_pertemuan);
         try {
             DB::beginTransaction();
@@ -561,26 +569,40 @@ class KelasPenjadwalanController extends Controller
                     $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_kelas_kuliah[$i])->first();
                 }
 
+                $dosen_pengajar = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas[0]['id_kelas_kuliah'])->get();
+                $count_dosen_pengajar = count($dosen_pengajar);
+                $dosen_rencana_ajar = 0;
+
+                if($dosen_pengajar){
+                    for($k=0;$k<$count_dosen_pengajar;$k++){
+                        $dosen_rencana_ajar = $dosen_rencana_ajar + $dosen_pengajar[$k]['rencana_minggu_pertemuan'];
+                    }
+
+                    $total_rencana_pertemuan = $rencana_pertemuan + $dosen_rencana_ajar;
+
+                    if ($total_rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
+                        return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+                    }
+                }
+
                 if(is_null($request->substansi_kuliah)){
                     //Store data to table tanpa substansi kuliah
-                    DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
 
                 }else{
                     //Get sks substansi total
                     $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
 
                     //Store data to table dengan substansi kuliah
-                    DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $i+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
                 }
 
             }
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_matkul' => $id_matkul, 'id_kelas' => $kelas[0]['id_kelas_kuliah']])->with('success', 'Data Berhasil di Tambahkan');
 
-
-            //
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
@@ -588,139 +610,119 @@ class KelasPenjadwalanController extends Controller
 
     }
 
-    public function ubah_dosen_pengajar_kelas($id_matkul,$nama_kelas_kuliah)
+    public function manajemen_dosen_pengajar_kelas($id_kelas)
     {
-        $prodi_id = auth()->user()->fk_id;
-        $kelas = KelasKuliah::with(['dosen_pengajar', 'ruang_perkuliahan', 'semester'])
+        // dd($id_matkul);
+        // $prodi_id = auth()->user()->fk_id;
+        $kelas = KelasKuliah::with(['peserta_kelas','dosen_pengajar.dosen', 'ruang_perkuliahan', 'semester'])
                             ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
                             ->select('*','kelas_kuliahs.tanggal_mulai_efektif','kelas_kuliahs.tanggal_akhir_efektif')
-                            ->where('kelas_kuliahs.id_matkul', $id_matkul)
-                            ->where('kelas_kuliahs.nama_kelas_kuliah', $nama_kelas_kuliah)
-                            ->where('kelas_kuliahs.id_prodi', $prodi_id)
-                            ->get();
+                            // ->where('kelas_kuliahs.id_matkul', $id_matkul)
+                            ->where('kelas_kuliahs.id_kelas_kuliah', $id_kelas)
+                            // ->where('kelas_kuliahs.id_prodi', $prodi_id)
+                            ->first();
+        // dd($kelas)
 
-        return view('prodi.data-akademik.kelas-penjadwalan.edit-dosen', ['kelas' => $kelas]);
+        return view('prodi.data-akademik.kelas-penjadwalan.manajemen-dosen', ['kelas' => $kelas]);
     }
 
-    public function tambah_dosen_pembimbing($aktivitas)
+    public function edit_dosen_pengajar($id)
     {
-        $prodi_id = auth()->user()->fk_id;
         $evaluasi = JenisEvaluasi::get();
-        $kelas = KelasKuliah::leftjoin('ruang_perkuliahans','ruang_perkuliahans.id','ruang_perkuliahan_id')
-                            ->leftjoin('semesters','semesters.id_semester','kelas_kuliahs.id_semester')
-                            ->leftjoin('mata_kuliahs','mata_kuliahs.id_matkul','kelas_kuliahs.id_matkul')
-                            ->select('*','kelas_kuliahs.tanggal_mulai_efektif','kelas_kuliahs.tanggal_akhir_efektif')
-                            ->where('kelas_kuliahs.id_matkul', $id_matkul)
-                            ->where('kelas_kuliahs.nama_kelas_kuliah', $nama_kelas_kuliah)
-                            ->where('kelas_kuliahs.id_prodi', $prodi_id)
-                            ->get();
+        $data = DosenPengajarKelasKuliah::with(['dosen','kelas_kuliah','kelas_kuliah.matkul'])
+                                        ->where('dosen_pengajar_kelas_kuliahs.id', $id)
+                                        ->first();
+        
         // dd($data);
 
-        return view('prodi.data-akademik.non-tugas-akhir.tambah-dosen', [
-            'd' => $data,
-            'kategori' => $kategori
-        ]);
-    }
-
-    public function store_dosen_pembimbing($aktivitas, Request $request)
-    {
-        $semester_aktif = SemesterAktif::first();
-        $data = $request->validate([
-                    'dosen_pembimbing.*' => 'required',
-                    'kategori.*' => 'required',
-                    'pembimbing_ke.*' => 'required',
-                ]);
-        try {
-            DB::beginTransaction();
-
-            $aktivitas_mahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
-
-            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
-
-            if($dosen_pembimbing->count() == 0 || $dosen_pembimbing->count() != count($request->dosen_pembimbing)){
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
-            }
-            //Count jumlah dosen pengajar kelas kuliah
-            $jumlah_dosen=count($request->dosen_pembimbing);
-
-            for($i=0;$i<$jumlah_dosen;$i++){
-                //Generate id aktivitas mengajar
-                $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
-                if(!$dosen)
-                {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
-                }
-
-                $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
-                // dd($kategori);
-
-                //Store data to table tanpa substansi kuliah
-                BimbingMahasiswa::create(['feeder'=> 0, 'approved' => 0, 'approved_dosen' => 0,'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa, 'id_aktivitas'=> $aktivitas, 'judul' => $aktivitas_mahasiswa->judul, 'id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'pembimbing_ke' => $request->pembimbing_ke[$i], 'status_sync' => 'belum sync']);
-
-            }
-
-            DB::commit();
-
-            return redirect()->route('prodi.data-akademik.tugas-akhir.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
-
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
-        }
-    }
-
-    public function edit_dosen_pembimbing($bimbing)
-    {
-        $semesterAktif = SemesterAktif::first();
-        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110405', '110403', '110406', '110402', '110401', '110407'])->get();
-        $data = BimbingMahasiswa::with(['anggota_aktivitas_personal'])->where('id', $bimbing)->first();
-        // dd($data);
-
-        return view('prodi.data-akademik.tugas-akhir.edit-dosen', [
+        return view('prodi.data-akademik.kelas-penjadwalan.edit-dosen-pengajar', [
             'data' => $data,
-            'kategori' => $kategori
+            'evaluasi' => $evaluasi
         ]);
     }
 
-    public function update_dosen_pembimbing($bimbing, $aktivitas, Request $request)
+    public function update_dosen_pengajar($id, Request $request)
     {
-        // dd($aktivitas);
+        // dd($id);
+        $prodi_id = auth()->user()->fk_id;
+        $data_dosen = DosenPengajarKelasKuliah::where('id',$id)->first();
         $semester_aktif = SemesterAktif::first();
+        $rencana_prodi = PeriodePerkuliahan::where('id_semester', $semester_aktif->id_semester)->where('id_prodi', $prodi_id)->first();
+
+        //Validate request data
         $data = $request->validate([
-                    'dosen_pembimbing' => 'required',
-                    'kategori.*' => 'required',
-                    'pembimbing_ke.*' => 'required',
-                ]);
+            'dosen_pengajar' => 'required',
+            'rencana_minggu_pertemuan' => 'required',
+            'realisasi_minggu_pertemuan' => 'required',
+            'evaluasi.*' => [
+                'required',
+                Rule::in(['1','2','3','4'])
+            ]
+        ]);
+
+        //Validasi jumlah total recana dan realisasi minggu pertemuan dosen
+        if ((int) $request->rencana_minggu_pertemuan[0] == 0) {
+            return redirect()->back()->with('error', 'Rencana Pertemuan tidak boleh 0');
+        }
+
+        if ((int) $request->rencana_minggu_pertemuan[0] > $rencana_prodi->jumlah_minggu_pertemuan) {
+            return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+        }
+
+        if ((int) $request->realisasi_minggu_pertemuan[0] > $rencana_prodi->jumlah_minggu_pertemuan) {
+            return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+        }
+        // dd($rencana_pertemuan);
         try {
             DB::beginTransaction();
-
-            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
-
-            if($dosen_pembimbing->count() == 0 || $dosen_pembimbing->count() != count($request->dosen_pembimbing)){
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
+            
+            $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_pengajar)->first();
+            
+            if(!$dosen)
+            {
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_pengajar)->first();
             }
-            //Count jumlah dosen pengajar kelas kuliah
-            $jumlah_dosen=count($request->dosen_pembimbing);
 
-            for($i=0;$i<$jumlah_dosen;$i++){
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
-                if(!$dosen)
-                {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
+            $dosen_pengajar = DosenPengajarKelasKuliah::with('kelas_kuliah')->where('dosen_pengajar_kelas_kuliahs.id', '!=', $id)
+                                                ->whereHas('kelas_kuliah', function ($query) use ($data_dosen) {
+                                                    $query->where('id_kelas_kuliah', $data_dosen->id_kelas_kuliah);
+                                                })->get();
+            $count_dosen_pengajar = count($dosen_pengajar);
+            $dosen_rencana_ajar = 0;
+            $dosen_realisasi_ajar = 0;
+
+            if ($dosen_pengajar) {
+                foreach ($dosen_pengajar as $pengajar) {
+                    $dosen_rencana_ajar += $pengajar['rencana_minggu_pertemuan'];
+                    $dosen_realisasi_ajar += $pengajar['realisasi_minggu_pertemuan'];
+                }
+        
+                $total_rencana_pertemuan = (int) $request->rencana_minggu_pertemuan[0] + $dosen_rencana_ajar;
+                $total_realisasi_pertemuan = (int) $request->realisasi_minggu_pertemuan[0] + $dosen_realisasi_ajar;
+        
+                if ($total_rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
+                    return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
                 }
 
-                $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
-                // dd($kategori);
-
-                //Store data to table tanpa substansi kuliah
-                BimbingMahasiswa::where('id', $bimbing)->update(['id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'pembimbing_ke' => $request->pembimbing_ke[$i]]);
-
+                if ($total_realisasi_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
+                    return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+                }
             }
+        
+            // Update the DosenPengajarKelasKuliah
+            DosenPengajarKelasKuliah::where('id', $id) // Ensure to specify which record to update
+                                    ->update([
+                                        'id_registrasi_dosen' => $dosen->id_registrasi_dosen,
+                                        'id_dosen' => $dosen->id_dosen,
+                                        'urutan' => $count_dosen_pengajar + 1,
+                                        'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
+                                        'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
+                                        'id_jenis_evaluasi' => $request->evaluasi[0],
+                                    ]);
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.tugas-akhir.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_kelas' => $data_dosen->id_kelas_kuliah])->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Throwable $th) {
             DB::rollback();
@@ -728,16 +730,16 @@ class KelasPenjadwalanController extends Controller
         }
     }
 
-    public function dosen_pengajar_destroy($id_matkul, $id_kelas)
+    public function dosen_pengajar_destroy($id)
     {
         try {
             DB::beginTransaction();
 
-            DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+            DosenPengajarKelasKuliah::where('id', $id)->where('feeder', 0)->delete();
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Pengajar Berhasil di Hapus!!');
+            return redirect()->back()->with('success', 'Data Pengajar Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', 'Data Pengajar Gagal di Hapus. '. $th->getMessage());
@@ -843,7 +845,7 @@ class KelasPenjadwalanController extends Controller
             // dd((int) $request->kapasitas_kelas >= $data_kelas);
 
             if((int) $request->kapasitas_kelas >= $data_kelas){
-                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->update(['ruang_perkuliahan_id' => $request->ruang_kelas,'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->where('feeder', 0)->update(['ruang_perkuliahan_id' => $request->ruang_kelas,'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
             }else{
                 return redirect()->back()->with('error', 'Ubah kapasitas tidak boleh lebih kecil dari jumlah peserta kelas kuliah!!');
             }
