@@ -24,7 +24,14 @@ Monitoring Pengisian KRS
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
-                    <div class="table-responsive">
+                    <button id="start-process" class="btn btn-primary">Mulai Proses</button>
+
+                    <div class="progress mt-3">
+                        <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                    </div>
+
+
+                    <div class="table-responsive mt-5">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
                           <thead>
                              <tr>
@@ -40,17 +47,25 @@ Monitoring Pengisian KRS
                              </tr>
                           </thead>
                           <tbody>
-                            {{-- @foreach ($data as $d)
-                                <tr>
-                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                            @foreach ($data as $d)
+                            @php
+                                $persentase_approval = 0;
+                                if($d->isi_krs > 0) {
+                                    $persentase_approval = round(($d->krs_approved / $d->isi_krs) * 100);
+                                }
+                            @endphp
+                                <tr class="@if ($persentase_approval < 50) table-danger @endif">
+                                    <td class="text-center align-middle"></td>
                                     <td class="text-start align-middle">{{$d->id}} - {{$d->nama_fakultas}}</td>
-                                    <td class="text-start align-middle">{{$d->nama_prodi}}</td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa}}</td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_isi_krs}}</td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_approved}}</td>
-                                    <td class="text-center align-middle">{{$d->jumlah_mahasiswa_not_approved}}</td>
+                                    <td class="text-start align-middle">{{$d->nama_jenjang_pendidikan}} {{$d->nama_program_studi}}</td>
+                                    <td class="text-center align-middle">{{$d->mahasiswa_aktif}}</td>
+                                    <td class="text-center align-middle">{{$d->mahasiswa_aktif_min_7}}</td>
+                                    <td class="text-center align-middle">{{$d->isi_krs}}</td>
+                                    <td class="text-center align-middle">{{$d->krs_approved}}</td>
+                                    <td class="text-center align-middle">{{$d->krs_not_approved}}</td>
+                                    <td class="text-center align-middle">{{$persentase_approval}}%</td>
                                 </tr>
-                            @endforeach --}}
+                            @endforeach
                           </tbody>
                       </table>
                       </div>
@@ -65,90 +80,91 @@ Monitoring Pengisian KRS
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-     $(function() {
-        "use strict";
-
+    $(document).ready(function(){
         $('#data').DataTable({
-            processing: true,
-            serverSide: true,
-            ajax: {
-                url: '{{route('univ.monitoring.pengisian-krs.data')}}',
-                type: 'GET',
-                data: function (d) {
-                    d.prodi = $('#prodi').val();
-                },
-                error: function (xhr, error, thrown) {
-                    alert('An error occurred. ' + thrown);
-                }
-            },
-            columns: [
-                {data: 'DT_RowIndex', name: 'DT_RowIndex', class: 'text-center', searchable: false, orderable: false},
-                {data: 'nama_fakultas', name: 'nama_fakultas', class: 'text-start', searchable: true, orderData: [0]},
-                {data: 'nama_prodi', name: 'nama_prodi', class: 'text-start', searchable: true},
-                {
-                    data: 'jumlah_mahasiswa',
-                    name: 'jumlah_mahasiswa',
-                    class: 'text-center',
-                    searchable: false,
-                    sortable: false,
-                    render: function(data, type, row) {
-                        var baseUrl = "{{ route('univ.monitoring.pengisian-krs.detail-mahasiswa-aktif', ['prodi' => ':prodi']) }}";
-                        var url = baseUrl.replace(':prodi', row.id);
-                        return '<a href="' + url + '">' + data + '</a>';
-                    }
-                },
-                {
-                    data: 'jumlah_mahasiswa_now',
-                    name: 'jumlah_mahasiswa_now',
-                    class: 'text-center',
-                    searchable: false,
-                    sortable: false,
-                    render: function(data, type, row) {
-                        var baseUrl = "{{ route('univ.monitoring.pengisian-krs.detail-aktif-min-tujuh', ['prodi' => ':prodi']) }}";
-                        var url = baseUrl.replace(':prodi', row.id);
-                        return '<a href="' + url + '">' + data + '</a>';
-                    }
-                },
-                {
-                    data: 'jumlah_mahasiswa_isi_krs',
-                    name: 'jumlah_mahasiswa_isi_krs',
-                    class: 'text-center',
-                    searchable: false,
-                    sortable: false,
-                    render: function(data, type, row) {
-                        var baseUrl = "{{ route('univ.monitoring.pengisian-krs.detail-isi-krs', ['prodi' => ':prodi']) }}";
-                        var url = baseUrl.replace(':prodi', row.id);
-                        return '<a href="' + url + '">' + data + '</a>';
-                    }
-                },
-                {data: 'jumlah_mahasiswa_approved', name: 'jumlah_mahasiswa_approved', class: "text-center align-middle", searchable: true},
-                {data: 'jumlah_mahasiswa_not_approved', name: 'jumlah_mahasiswa_not_approved', class: "text-center align-middle", searchable: true},
-                {
-                    data: null,
-                    name: 'persentase_approval',
-                    class: 'text-center',
-                    searchable: false,
-                    sortable: false,
-                    render: function(data, type, row) {
-                        var jumlah_mahasiswa_approved = row.jumlah_mahasiswa_approved || 0;
-                        var jumlah_mahasiswa_isi_krs = row.jumlah_mahasiswa_isi_krs || 1; // Avoid division by zero
-                        var percentage = (jumlah_mahasiswa_approved / jumlah_mahasiswa_isi_krs) * 100;
-                        return percentage.toFixed(2) + '%';
-                    },
-                }
+            "columnDefs": [
+                { "orderable": false, "targets": 0 } // Disable sorting on the first column
             ],
-            rowCallback: function(row, data, index) {
-                var table = $('#data').DataTable();
-                var pageInfo = table.page.info();
-                $('td:eq(0)', row).html(pageInfo.start + index + 1);
-                var jumlah_mahasiswa_approved = data.jumlah_mahasiswa_approved || 0;
-                var jumlah_mahasiswa_isi_krs = data.jumlah_mahasiswa_isi_krs || 1; // Avoid division by zero
-                var percentage = (jumlah_mahasiswa_approved / jumlah_mahasiswa_isi_krs) * 100;
-                if (percentage < 50) {
-                    $('td:eq(8)', row).addClass('table-danger'); // Assuming this is the 8th column (0-indexed)
-                }
+            "order": [], // Disable initial sorting
+            "rowCallback": function(row, data, index) {
+                // Add numbering to the first column
+                $('td:eq(0)', row).html(index + 1);
             }
         });
+        let step = 0;
+        let totalSteps = {{ $prodi->count() }}; // Jumlah total prodi
+
+        function executeStep() {
+            $.ajax({
+                url: '{{ route("univ.monitoring.pengisian-krs.generate-data") }}',
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    step: step
+                },
+                success: function(response) {
+                    let progress = response.progress;
+                    $('#progress-bar').css('width', progress + '%').attr('aria-valuenow', progress).text(progress + '%');
+
+                    if(response.completed) {
+                        $('#start-process').prop('disabled', false);
+                        $('body').css('pointer-events', 'auto'); // Mengembalikan interaksi
+
+                        swal({
+                            title: 'Proses Selesai',
+                            type: 'success',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Lanjutkan!',
+                        }, function(isConfirm){
+                            if (isConfirm) {
+                                window.location.reload();
+                            }
+                        });
+
+
+                    } else {
+                        step++;
+                        executeStep(); // Panggil langkah berikutnya
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+
+                    // Enable tombol kembali dan memungkinkan interaksi pengguna saat terjadi error
+                    $('#start-process').prop('disabled', false);
+                    $('body').css('pointer-events', 'auto');
+                }
+            });
+        }
+
+        $('#start-process').on('click', function() {
+            swal({
+                title: 'Apakah Anda Yakin?',
+                type: 'warning',
+                text: 'Proses ini mungkin memakan waktu beberapa menit.',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Ya, simpan!',
+                cancelButtonText: 'Batal',
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#start-process').prop('disabled', true);
+                    $('body').css('pointer-events', 'none'); // Mencegah interaksi
+
+                    // Reset progress bar dan step sebelum memulai
+                    step = 0;
+                    $('#progress-bar').css('width', '0%').attr('aria-valuenow', '0').text('0%');
+
+                    // Mulai proses
+                    executeStep();
+                }
+            });
+
+        }); // Mulai proses
     });
+    
 </script>
 @endpush
