@@ -538,6 +538,8 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/detail-mahasiswa-aktif/{prodi}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_mahasiswa_aktif'])->name('univ.monitoring.pengisian-krs.detail-mahasiswa-aktif');
                     Route::get('/detail-aktif-min-tujuh/{prodi}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_aktif_min_tujuh'])->name('univ.monitoring.pengisian-krs.detail-aktif-min-tujuh');
                     Route::get('/detail-isi-krs/{prodi}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_isi_krs'])->name('univ.monitoring.pengisian-krs.detail-isi-krs');
+                    Route::get('/detail-approved-krs/{prodi}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_approved_krs'])->name('univ.monitoring.pengisian-krs.detail-approved-krs');
+                    Route::get('/detail-not-approved-krs/{prodi}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_not_approved_krs'])->name('univ.monitoring.pengisian-krs.detail-not-approved-krs');
 
                     Route::post('/generate-data', [App\Http\Controllers\Universitas\MonitoringController::class, 'generateDataIsiKrs'])->name('univ.monitoring.pengisian-krs.generate-data');
                     Route::get('/check-progress', [App\Http\Controllers\Universitas\MonitoringController::class, 'checkProgress'])->name('univ.monitoring.pengisian-krs.check-progress');

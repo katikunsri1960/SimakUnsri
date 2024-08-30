@@ -58,11 +58,46 @@ Monitoring Pengisian KRS
                                     <td class="text-center align-middle"></td>
                                     <td class="text-start align-middle">{{$d->id}} - {{$d->nama_fakultas}}</td>
                                     <td class="text-start align-middle">{{$d->nama_jenjang_pendidikan}} {{$d->nama_program_studi}}</td>
-                                    <td class="text-center align-middle">{{$d->mahasiswa_aktif}}</td>
-                                    <td class="text-center align-middle">{{$d->mahasiswa_aktif_min_7}}</td>
-                                    <td class="text-center align-middle">{{$d->isi_krs}}</td>
-                                    <td class="text-center align-middle">{{$d->krs_approved}}</td>
-                                    <td class="text-center align-middle">{{$d->krs_not_approved}}</td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('univ.monitoring.pengisian-krs.detail-mahasiswa-aktif', ['prodi' => $d->prodi->id])}}">
+                                            {{$d->mahasiswa_aktif}}
+                                        </a>
+
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('univ.monitoring.pengisian-krs.detail-aktif-min-tujuh', ['prodi' => $d->prodi->id])}}">
+                                            {{$d->mahasiswa_aktif_min_7}}
+                                        </a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->isi_krs > 0)
+                                        <a href="{{route('univ.monitoring.pengisian-krs.detail-isi-krs', ['prodi' => $d->prodi->id])}}">
+                                            {{$d->isi_krs}}
+                                        </a>
+                                        @else
+                                            0
+                                        @endif
+
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->krs_approved > 0)
+                                        <a href="{{route('univ.monitoring.pengisian-krs.detail-approved-krs', ['prodi' => $d->prodi->id])}}">
+                                        {{$d->krs_approved}}
+                                        </a>
+                                        @else
+                                            0
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->krs_not_approved > 0)
+                                        <a href="{{route('univ.monitoring.pengisian-krs.detail-not-approved-krs', ['prodi' => $d->prodi->id])}}">
+                                            {{$d->krs_not_approved}}
+                                            </a>
+                                        @else
+                                            0
+                                        @endif
+
+                                    </td>
                                     <td class="text-center align-middle">{{$persentase_approval}}%</td>
                                 </tr>
                             @endforeach
@@ -165,6 +200,6 @@ Monitoring Pengisian KRS
 
         }); // Mulai proses
     });
-    
+
 </script>
 @endpush

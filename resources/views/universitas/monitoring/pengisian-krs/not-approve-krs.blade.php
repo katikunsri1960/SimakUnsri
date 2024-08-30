@@ -1,19 +1,19 @@
 @extends('layouts.universitas')
 @section('title')
-List Mahasiswa Isi KRS
+List Mahasiswa Belum di Setujui
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">List Mahasiswa Isi KRS</h3>
+            <h3 class="page-title">List Mahasiswa Belum Disetujui</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('univ.monitoring.pengisian-krs')}}">Pengisian KRS</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">List Mahasiswa Isi KRS</li>
+                        <li class="breadcrumb-item active" aria-current="page">List Mahasiswa Belum Disetujui KRS</li>
                     </ol>
                 </nav>
             </div>
@@ -60,7 +60,7 @@ List Mahasiswa Isi KRS
                                     <td class="text-center align-middle">{{$d->angkatan}}</td>
                                     <td class="text-center align-middle">{{$d->nim}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
-                                    <td class="text-start align-middle">{{$d->pembimbing_akademik->nama_dosen}}</td>
+                                    <td class="text-start align-middle">{{$d->pembimbing_akademik ? $d->pembimbing_akademik->nama_dosen : '-'}}</td>
                                 </tr>
                             @endforeach
                           </tbody>
