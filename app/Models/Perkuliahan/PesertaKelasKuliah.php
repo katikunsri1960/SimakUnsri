@@ -10,6 +10,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Connection\Registrasi;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
@@ -43,24 +44,36 @@ class PesertaKelasKuliah extends Model
     {
         $semester_aktif = SemesterAktif::first();
 
-        if (now()->isBefore($semester_aktif->krs_mulai)) {
+        $today = Carbon::now()->toDateString();
+        // // dd($total_sks);
+        // if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
+        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // }
+        // elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
+        //     $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
+        // }else
+        // {
+        //     $batas_isi_krs =  NULL;
+        // }
+
+        if ($today < $semester_aktif->krs_mulai) {
             return [
                 'status' => 'error',
                 'message' => 'Masa Pengisian KRS Belum Dimulai!!',
             ];
         }
 
-        if (now()->isBefore($semester_aktif->tanggal_mulai_kprs)) {
+        if ($today < $semester_aktif->tanggal_mulai_kprs) {
             return [
                 'status' => 'error',
                 'message' => 'Masa KPRS Belum Dimulai. Pembatalan hanya bisa dilakukan saat masa KPRS!!',
             ];
         }
 
-        if (now()->isAfter($semester_aktif->tanggal_akhir_kprs)) {
+        if ($today > $semester_aktif->tanggal_akhir_kprs) {
             return [
                 'status' => 'error',
-                'message' => 'Masa Pengisian KRS & KPRS Telah Berakhir!!',
+                'message' => 'Masa Pengisian KRS dan KPRS Telah Berakhir!!',
             ];
         }
 

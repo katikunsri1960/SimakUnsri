@@ -78,7 +78,6 @@ class ReferensiController extends Controller
             ['act' => 'GetPekerjaan' , 'primary' => 'id_pekerjaan', 'model' => \App\Models\Referensi\Pekerjaan::class],
             ['act' => 'GetJenisPrestasi' , 'primary' => 'id_jenis_prestasi', 'model' => \App\Models\Referensi\JenisPrestasi::class],
             ['act' => 'GetTingkatPrestasi' , 'primary' => 'id_tingkat_prestasi', 'model' => \App\Models\Referensi\TingkatPrestasi::class],
-
         ];
 
         foreach ($ref as $r) {
