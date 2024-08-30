@@ -16,7 +16,18 @@ Ubah Dosen Pengajar Mahasiswa
                 <form class="form" action="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.update', ['id' => $data->id])}}" id="ubah-dosen-pengajar" method="POST">
                     @csrf
                     <div class="box-body">
-                        <h4 class="text-info mb-0"><i class="fa fa-user"></i> Ubah Dosen Pengajar Kelas ({{$data->kelas_kuliah->matkul->nama_mata_kuliah}} - {{$data->kelas_kuliah->nama_kelas_kuliah}})</h4>
+                        <div class="row mb-2">
+                            <div class="col-lg-6">
+                                <div class="d-flex justify-content-start">
+                                    <h4 class="text-info mb-0"><i class="fa fa-user"></i> Ubah Dosen Pengajar Kelas ({{$data->kelas_kuliah->matkul->nama_mata_kuliah}} - {{$data->kelas_kuliah->nama_kelas_kuliah}})</h4>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="d-flex justify-content-end">
+                                    <p class="text-danger">* Dosen Pengajar dapat di ganti saat status data belum di sinkronisasi</p>
+                                </div>
+                            </div>
+                        </div>
                         <hr class="my-15">
                         <div class="form-group">
                             <div id="dosen-fields">
