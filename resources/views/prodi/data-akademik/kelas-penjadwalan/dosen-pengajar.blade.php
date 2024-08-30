@@ -1,16 +1,17 @@
 @extends('layouts.prodi')
 @section('title')
-Dosen Kelas Perkuliahan
+Tambah Dosen Kelas Perkuliahan
 @endsection
 @section('content')
 @include('swal')
 @php
     $id_matkul = $kelas[0]['id_matkul'];
+    $id_kelas = $kelas[0]['id_kelas_kuliah'];
 @endphp
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Dosen Kelas Perkuliahan</h3>
+            <h3 class="page-title">Tambah Dosen Kelas Perkuliahan</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
@@ -18,7 +19,8 @@ Dosen Kelas Perkuliahan
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul])}}">Detail Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Dosen Pengajar Kelas</li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_kelas' => $id_kelas])}}">Manajemen Dosen Pengajar Kelas</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Tambah Dosen Pengajar Kelas</li>
                     </ol>
                 </nav>
             </div>

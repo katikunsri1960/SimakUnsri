@@ -249,15 +249,15 @@ Tugas Akhir
                                     <td class="text-center align-middle">
                                         @if ($b->approved == 0 && $b->approved_dosen == 0)
                                         <span class="badge badge-lg badge-danger">Belum Disetujui</span>
-                                        @elseif ($b->approved == 0 && $b->approved_dosen > 0)
-                                        <span class="badge badge-lg badge-warning">Menunggu Persetujuan Prodi</span>
+                                        @elseif ($b->approved == 1 && $b->approved_dosen == 2)
+                                        <span class="badge badge-lg badge-danger">Dibatalkan Dosen</span>
                                         @else
                                         <span class="badge badge-lg badge-success">Approved</span>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center px-3">
-                                            @if (($b->approved == 0 && $b->approved_dosen > 0) || ($b->approved == 0 && $b->approved_dosen == 0))
+                                            @if (($b->approved == 1 && $b->approved_dosen == 2) || ($b->approved == 0 && $b->approved_dosen == 0))
                                                 <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-dosen', $b->id)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i
                                                         class="fa fa-edit"></i> Edit
                                                 </a>
@@ -305,7 +305,7 @@ Tugas Akhir
                 cancelButtonText: 'Batal'
             },function(isConfirmed){
                 if (isConfirmed) {
-                    $('#update-detail-tesis').unbind('submit').submit();
+                    $('#update-detail').unbind('submit').submit();
                     $('#spinner').show();
                 }
             });

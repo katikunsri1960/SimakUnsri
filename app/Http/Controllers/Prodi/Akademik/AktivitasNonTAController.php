@@ -86,7 +86,7 @@ class AktivitasNonTAController extends Controller
     public function tambah_dosen_pembimbing($aktivitas)
     {
         $semesterAktif = SemesterAktif::first();
-        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110300'])->get();
+        $kategori = KategoriKegiatan::where('id_kategori_kegiatan', '110300')->get();
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
         // dd($data);
 
@@ -136,7 +136,7 @@ class AktivitasNonTAController extends Controller
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.tugas-akhir.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('prodi.data-akademik.non-tugas-akhir.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Throwable $th) {
             DB::rollback();
@@ -147,7 +147,7 @@ class AktivitasNonTAController extends Controller
     public function edit_dosen_pembimbing($bimbing)
     {
         $semesterAktif = SemesterAktif::first();
-        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110405', '110403', '110406', '110402', '110401', '110407'])->get();
+        $kategori = KategoriKegiatan::where('id_kategori_kegiatan', '110300')->get();
         $data = BimbingMahasiswa::with(['anggota_aktivitas_personal'])->where('id', $bimbing)->first();
         // dd($data);
 
@@ -188,13 +188,13 @@ class AktivitasNonTAController extends Controller
                 // dd($kategori);
 
                 //Store data to table tanpa substansi kuliah
-                BimbingMahasiswa::where('id', $bimbing)->update(['id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'pembimbing_ke' => $request->pembimbing_ke[$i]]);
+                BimbingMahasiswa::where('id', $bimbing)->update(['approved' => 0,'approved_dosen' => 0,'id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'pembimbing_ke' => $request->pembimbing_ke[$i]]);
 
             }
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.tugas-akhir.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('prodi.data-akademik.non-tugas-akhir.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Throwable $th) {
             DB::rollback();
