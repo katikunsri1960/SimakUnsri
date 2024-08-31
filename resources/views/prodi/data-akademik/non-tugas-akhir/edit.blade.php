@@ -178,17 +178,12 @@ Tugas Akhir
                                             </select>
                                         </div>
                                         <div class="col-sm-4 mb-2">
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                name="tahun_sk"
-                                                id="tahun_sk"
-                                                aria-describedby="helpId"
-                                                placeholder="Tahun"
-                                                value="{{date('Y')}}"
-                                                disabled
-                                                required
-                                            />
+                                        <select class="form-select" name="tahun_sk" id="tahun_sk" required>
+                                                <option value="">Tahun</option>
+                                                @for($i=date('Y')-10;$i <= date('Y');$i++)
+                                                    <option value="{{$i}}" {{ substr($d->tanggal_sk_tugas, 0, 4) == $i ? 'selected' : '' }}>{{$i}}</option>
+                                                @endfor
+                                            </select>
                                         </div>
                                     </div>
                                 </div>

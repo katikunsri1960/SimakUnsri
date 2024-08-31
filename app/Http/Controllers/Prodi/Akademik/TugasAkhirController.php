@@ -48,15 +48,14 @@ class TugasAkhirController extends Controller
 
     public function update_detail_tugas_akhir($aktivitas, Request $request)
     {
-        $tahun_aktif = date('Y');
-
         $data = $request->validate([
                     'sk_tugas' => 'required',
                     'tanggal_sk' => 'required',
                     'bulan_sk' => 'required',
+                    'tahun_sk' => 'required'
                 ]);
         //Generate tanggal sk tugas
-        $tanggal_sk_tugas = $tahun_aktif."-".$request->bulan_sk."-".$request->tanggal_sk;
+        $tanggal_sk_tugas = $request->tahun_sk."-".$request->bulan_sk."-".$request->tanggal_sk;
 
         AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->update(['sk_tugas' => $request->sk_tugas, 'tanggal_sk_tugas' => $tanggal_sk_tugas]);
 
