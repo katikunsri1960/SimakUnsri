@@ -1,4 +1,4 @@
-<div class="modal fade" id="pembatalanModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
+<div class="modal fade" id="pembatalanModal{{$d->id}}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
     aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
@@ -8,7 +8,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir.decline-pembimbing', $d->id_aktivitas)}}" method="post" id="decline-class">
+            <form action="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir.decline-pembimbing', $d->id_aktivitas)}}" method="post" id="decline-class-{{$d->id}}">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -32,7 +32,7 @@
 </div>
 @push('js')
 <script>
-    $('#decline-class').submit(function(e){
+    $('#decline-class-{{$d->id}}').submit(function(e){
         e.preventDefault();
         swal({
             title: 'Melakukan pembatalan bimbingan mahasiswa',
@@ -45,7 +45,7 @@
             cancelButtonText: 'Batal'
         }, function(isConfirm){
             if (isConfirm) {
-                $('#decline-class').unbind('submit').submit();
+                $('#decline-class-{{$d->id}}').unbind('submit').submit();
                 $('#spinner').show();
             }
         });

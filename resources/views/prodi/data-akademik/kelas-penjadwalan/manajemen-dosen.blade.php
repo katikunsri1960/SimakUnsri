@@ -119,6 +119,7 @@ Manajemen Dosen Kelas Perkuliahan
                                     <th class="text-center align-middle">NAMA PENGAJAR</th>
                                     <th class="text-center align-middle">RENCANA MINGGU PERTEMUAN</th>
                                     <th class="text-center align-middle">REALISASI MINGGU PERTEMUAN</th>
+                                    <th class="text-center align-middle">STATUS SYNC</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -136,6 +137,13 @@ Manajemen Dosen Kelas Perkuliahan
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->realisasi_minggu_pertemuan}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->feeder > 0)
+                                            <span class="badge badge-lg badge-success">Sync</span>
+                                        @else
+                                            <span class="badge badge-lg badge-danger">Belum Sync</span>
+                                        @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center px-3">
