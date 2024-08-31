@@ -186,7 +186,8 @@ class MonitoringDosenController extends Controller
                 ->get();
 
         return view('prodi.monitoring.pengisian-krs.mahasiswa-aktif-min-tujuh', [
-            $data
+            'data' => $data,
+            'prodi' => $prodi
         ]);
     }
 
