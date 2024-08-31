@@ -332,8 +332,12 @@ class MonitoringDosenController extends Controller
         $id_prodi = $prodi->id_prodi;
         $semesterAktif = SemesterAktif::first()->id_semester;
 
+        $angkatanAktif = date('Y') - 7;
+        $arrayTahun = range($angkatanAktif, date('Y'));
+
         $data = RiwayatPendidikan::with('pembimbing_akademik')->where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereNotExists(function ($subquery) use ($semesterAktif) {
                         $subquery->select(DB::raw(1))

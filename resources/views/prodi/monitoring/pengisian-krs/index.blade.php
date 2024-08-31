@@ -99,7 +99,7 @@ Monitoring Pengisian KRS
                 $('#jumlah_mahasiswa').text(data.jumlah_mahasiswa);
                 $('#jumlah_mahasiswa_now').text(data.jumlah_mahasiswa_now);
                 $('#isi_krs').text(data.isi_krs);
-                var tidak_isi_krs = data.jumlah_mahasiswa - data.isi_krs;
+                var tidak_isi_krs = data.jumlah_mahasiswa_now - data.isi_krs;
                 $('#tidak_isi_krs').text(tidak_isi_krs);
                 $('#approve').text(data.approve);
                 $('#non_approve').text(data.non_approve);
