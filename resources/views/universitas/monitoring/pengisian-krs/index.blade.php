@@ -51,7 +51,7 @@ Monitoring Pengisian KRS
                             @php
                                 $persentase_approval = 0;
                                 if($d->isi_krs > 0) {
-                                    $persentase_approval = round(($d->krs_approved / $d->isi_krs) * 100);
+                                    $persentase_approval = ($d->krs_approved / $d->isi_krs) * 100;
                                 }
                             @endphp
                                 <tr class="@if ($persentase_approval < 50) table-danger @endif">
@@ -98,7 +98,7 @@ Monitoring Pengisian KRS
                                         @endif
 
                                     </td>
-                                    <td class="text-center align-middle">{{$persentase_approval}}%</td>
+                                    <td class="text-center align-middle">{{number_format($persentase_approval, 2, ',','.')}}%</td>
                                 </tr>
                             @endforeach
                           </tbody>
