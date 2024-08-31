@@ -34,6 +34,8 @@ Monitoring Pengisian KRS
                                         {{date('Y')}}</th>
                                     <th class="text-center align-middle">Jumlah Mahasiswa (Yang melakukan pengisian KRS)
                                     </th>
+                                    <th class="text-center align-middle">Jumlah Mahasiswa (Tidak isi KRS)
+                                    </th>
                                     <th class="text-center align-middle">Jumlah Mahasiswa Sudah di Setujui</th>
                                     <th class="text-center align-middle">Jumlah Mahasiswa Belum di Setujui</th>
                                     <th class="text-center align-middle">Persentase Approval</th>
@@ -54,6 +56,11 @@ Monitoring Pengisian KRS
                                     <td class="text-center align-middle">
                                         <a href="{{route('prodi.monitoring.pengisian-krs.detail-isi-krs')}}" id="isi_krs_link">
                                             <span id="isi_krs">Loading...</span>
+                                        </a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.tidak-isi-krs')}}" id="tidak_isi_krs_link">
+                                            <span id="tidak_isi_krs">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
@@ -92,6 +99,8 @@ Monitoring Pengisian KRS
                 $('#jumlah_mahasiswa').text(data.jumlah_mahasiswa);
                 $('#jumlah_mahasiswa_now').text(data.jumlah_mahasiswa_now);
                 $('#isi_krs').text(data.isi_krs);
+                var tidak_isi_krs = data.jumlah_mahasiswa - data.isi_krs;
+                $('#tidak_isi_krs').text(tidak_isi_krs);
                 $('#approve').text(data.approve);
                 $('#non_approve').text(data.non_approve);
 

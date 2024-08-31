@@ -139,6 +139,10 @@ KHS Mahasiswa
                             <div class="row mt-5" id="akmDiv">
 
                             </div>
+
+                            <div class="row mt-5" id="totalDiv">
+                                
+                            </div>
                         </div>
                     </div>
                 </div>
