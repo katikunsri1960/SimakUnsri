@@ -44,32 +44,32 @@ Monitoring Pengisian KRS
                             <tbody id="data-table">
                                 <tr>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif')}}" id="jumlah_mahasiswa_link">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif')}}" id="jumlah_mahasiswa_link" target="_blank">
                                             <span id="jumlah_mahasiswa">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif-min-tujuh')}}" id="jumlah_mahasiswa_now_link">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.mahasiswa-aktif-min-tujuh')}}" id="jumlah_mahasiswa_now_link" target="_blank">
                                             <span id="jumlah_mahasiswa_now">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.detail-isi-krs')}}" id="isi_krs_link">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.detail-isi-krs')}}" id="isi_krs_link" target="_blank">
                                             <span id="isi_krs">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.tidak-isi-krs')}}" id="tidak_isi_krs_link">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.tidak-isi-krs')}}" id="tidak_isi_krs_link" target="_blank">
                                             <span id="tidak_isi_krs">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.approve-krs')}}" id="approve_link">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.approve-krs')}}" id="approve_link" target="_blank">
                                             <span id="approve">Loading...</span>
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.pengisian-krs.non-approve-krs')}}" id="non_approve_link">
+                                        <a href="{{route('prodi.monitoring.pengisian-krs.non-approve-krs')}}" id="non_approve_link" target="_blank">
                                             <span id="non_approve">Loading...</span>
                                         </a>
                                     </td>
