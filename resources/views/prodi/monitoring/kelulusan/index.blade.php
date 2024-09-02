@@ -41,16 +41,19 @@ Mahasiswa Lulus DO
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
+                        <table id="data" class="table table-bordered table-hover margin-top-10 w-p100" style="font-size: 11px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama</th>
-                                    <th class="text-center align-middle">Angkatan</th>
+                                    <th class="text-center align-middle">ANGKATAN</th>
                                     <th class="text-center align-middle">Jenis Keluar</th>
-                                    <th class="text-center align-middle">Tanggal Keluar</th>
+                                    <th class="text-center align-middle">Tgl Keluar</th>
                                     <th class="text-center align-middle">Periode Keluar</th>
+                                    <th class="text-center align-middle">No SK</th>
+                                    <th class="text-center align-middle">Tgl SK</th>
+                                    <th class="text-center align-middle">PIN</th>
                                     <th class="text-center align-middle">Keterangan</th>
                                 </tr>
                             </thead>
@@ -144,7 +147,10 @@ Mahasiswa Lulus DO
                 {data: 'nama_jenis_keluar', name: 'nama_jenis_keluar', class: "text-center align-middle", searchable: true, orderData: [3]},
                 {data: 'tanggal_keluar', name: 'tanggal_keluar', class: "text-center align-middle", searchable: true, orderData: [4]},
                 {data: 'nm_smt', name: 'nm_smt', class: "text-center align-middle", searchable: true, orderData: [5]},
-                {data: 'keterangan', name: 'keterangan', class: "text-start align-middle", searchable: true, orderData: [6]},
+                {data: 'sk_yudisium', name: 'sk_yudisium', class: "text-start align-middle", searchable: true, orderData: [6]},
+                {data: 'tgl_sk_yudisium', name: 'tgl_sk_yudisium', class: "text-start align-middle", searchable: true, orderData: [7]},
+                {data: 'no_seri_ijazah', name: 'no_seri_ijazah', class: "text-start align-middle", searchable: true, orderData: [8]},
+                {data: 'keterangan', name: 'keterangan', class: "text-start align-middle", searchable: true, orderData: [9]},
             ],
         });
 
