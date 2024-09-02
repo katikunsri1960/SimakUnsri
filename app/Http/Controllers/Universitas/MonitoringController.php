@@ -528,6 +528,11 @@ class MonitoringController extends Controller
             $jenis_keluar_counts->whereIn('angkatan', $filter);
         }
 
+        if($request->has('jenis_keluar') && !empty($request->jenis_keluar)) {
+            $filter = $request->jenis_keluar;
+            $jenis_keluar_counts->whereIn('id_jenis_keluar', $filter);
+        }
+
         $jenis_keluar_counts = $jenis_keluar_counts->get();
 
         $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
@@ -561,6 +566,11 @@ class MonitoringController extends Controller
         if ($request->has('angkatan') && !empty($request->angkatan)) {
             $filter = $request->angkatan;
             $query->whereIn('angkatan', $filter);
+        }
+
+        if($request->has('jenis_keluar') && !empty($request->jenis_keluar)) {
+            $filter = $request->jenis_keluar;
+            $query->whereIn('id_jenis_keluar', $filter);
         }
 
         $recordsFiltered = $query->count();

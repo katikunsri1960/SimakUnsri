@@ -9,26 +9,9 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('univ.monitoring.lulus-do')}}" method="get">
+            <form action="{{route('prodi.monitoring.lulus-do')}}" method="get">
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
-                        <div class="mb-3">
-                            <label for="id_prodi" class="form-label">Program Studi</label>
-                            <select
-                                multiple
-                                class="form-select"
-                                name="id_prodi[]"
-                                id="id_prodi"
-                            >
-                                @foreach ($prodi as $p)
-                                <option value="{{$p->id_prodi}}" {{ in_array($p->id_prodi, old('id_prodi', request()->get('id_prodi', []))) ? 'selected' : '' }}>
-                                    {{$p->kode_program_studi}} - {{$p->nama_program_studi}} ({{$p->nama_jenjang_pendidikan}})
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
                     <div class="col-md-6">
                         <div class="mb-3">
                             <label for="angkatan" class="form-label">Angkatan</label>

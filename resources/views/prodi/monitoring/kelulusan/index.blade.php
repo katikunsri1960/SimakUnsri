@@ -1,4 +1,4 @@
-@extends('layouts.universitas')
+@extends('layouts.prodi')
 @section('title')
 Mahasiswa Lulus DO
 @endsection
@@ -10,7 +10,7 @@ Mahasiswa Lulus DO
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a>
+                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
                         <li class="breadcrumb-item active" aria-current="page">Lulus Do</li>
@@ -32,22 +32,21 @@ Mahasiswa Lulus DO
                             data-bs-target="#filter-button">
                             <i class="fa fa-filter"></i> Filter
                         </button>
-                        @include('universitas.monitoring.kelulusan.filter')
+                        @include('prodi.monitoring.kelulusan.filter')
                         <span class="divider-line mx-1"></span>
-                        <a href="{{route('univ.monitoring.lulus-do')}}" class="btn btn-warning waves-effect waves-light" >
+                        <a href="{{route('prodi.monitoring.lulus-do')}}" class="btn btn-warning waves-effect waves-light" >
                             <i class="fa fa-refresh"></i> Reset Filter
                         </a>
                     </div>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table  table-hover margin-top-10 w-p100">
+                        <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama</th>
-                                    <th class="text-center align-middle">Program Studi</th>
                                     <th class="text-center align-middle">Angkatan</th>
                                     <th class="text-center align-middle">Jenis Keluar</th>
                                     <th class="text-center align-middle">Tanggal Keluar</th>
@@ -98,14 +97,6 @@ Mahasiswa Lulus DO
     $(function () {
         // "use strict";
 
-
-        $('#id_prodi').select2({
-            placeholder: 'Pilih Program Studi',
-            allowClear: true,
-            width: '100%',
-            dropdownParent: $('#filter-button')
-        });
-
         $('#angkatan').select2({
             placeholder: 'Pilih Angkatan',
             allowClear: true,
@@ -128,10 +119,9 @@ Mahasiswa Lulus DO
             processing: true,
             serverSide: true,
             ajax: {
-                url: '{{route('univ.monitoring.lulus-do.data')}}',
+                url: '{{route('prodi.monitoring.lulus-do.data')}}',
                 type: 'GET',
                 data: function (d) {
-                    d.id_prodi = $('#id_prodi').val();
                     d.angkatan = $('#angkatan').val();
                     d.jenis_keluar = $('#jenis_keluar').val();
                 },
@@ -150,16 +140,11 @@ Mahasiswa Lulus DO
                 }},
                 {data: 'nim', name: 'nim', class: 'text-center', searchable: true, orderData: [0]},
                 {data: 'nama_mahasiswa', name: 'nama_mahasiswa', class: 'text-start', searchable: true, orderData: [1]},
-                {data: null, name: 'nama_program_studi', class: "text-start align-middle", searchable: true, orderData: [2],
-                    render: function(data, type, row) {
-                        return data.prodi.nama_jenjang_pendidikan + ' ' + data.prodi.nama_program_studi;
-                    }
-                },
-                {data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [3]},
-                {data: 'nama_jenis_keluar', name: 'nama_jenis_keluar', class: "text-center align-middle", searchable: true, orderData: [4]},
-                {data: 'tanggal_keluar', name: 'tanggal_keluar', class: "text-center align-middle", searchable: true, orderData: [5]},
-                {data: 'nm_smt', name: 'nm_smt', class: "text-center align-middle", searchable: true, orderData: [6]},
-                {data: 'keterangan', name: 'keterangan', class: "text-start align-middle", searchable: true, orderData: [7]},
+                {data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [2]},
+                {data: 'nama_jenis_keluar', name: 'nama_jenis_keluar', class: "text-center align-middle", searchable: true, orderData: [3]},
+                {data: 'tanggal_keluar', name: 'tanggal_keluar', class: "text-center align-middle", searchable: true, orderData: [4]},
+                {data: 'nm_smt', name: 'nm_smt', class: "text-center align-middle", searchable: true, orderData: [5]},
+                {data: 'keterangan', name: 'keterangan', class: "text-start align-middle", searchable: true, orderData: [6]},
             ],
         });
 

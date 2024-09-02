@@ -455,6 +455,11 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/non-approve-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'non_approve_krs'])->name('prodi.monitoring.pengisian-krs.non-approve-krs');
 
                 });
+
+                Route::prefix('lulus-do')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'lulus_do'])->name('prodi.monitoring.lulus-do');
+                    Route::get('/data', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'lulus_do_data'])->name('prodi.monitoring.lulus-do.data');
+                });
             });
 
             //Route Bantuan
