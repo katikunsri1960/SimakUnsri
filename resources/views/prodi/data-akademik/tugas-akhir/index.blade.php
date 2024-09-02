@@ -61,6 +61,7 @@ Tugas Akhir
                                     <th class="text-center align-middle">NO</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
+                                    <th class="text-center align-middle">NAMA AKTIVITAS<br>(MK Konversi)</th>
                                     <th class="text-center align-middle">NO SK<br>(Tanggal SK)</th>
                                     <th class="text-center align-middle">Pembimbing</th>
                                     <th class="text-center align-middle">Status Pembimbing</th>
@@ -76,6 +77,9 @@ Tugas Akhir
                                     </td>
                                     <td class="text-start align-middle" style="width: 15%">
                                         {{$d->anggota_aktivitas_personal->nama_mahasiswa}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})

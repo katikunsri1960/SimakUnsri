@@ -48,6 +48,7 @@ Pembimbingan Karya Ilmiah Mahasiswa
                                 <tr>
                                     <th class="text-center align-middle">PRODI</th>
                                     <th class="text-center align-middle">MAHASISWA</th>
+                                    <th class="text-center align-middle">NAMA AKTIVITAS<br>(MK Konversi)</th>
                                     <th class="text-center align-middle">NO SK<br>(Tanggal SK)</th>
                                     <th class="text-center align-middle">Pembimbing</th>
                                     <th class="text-center align-middle">Status</th>
@@ -61,6 +62,9 @@ Pembimbingan Karya Ilmiah Mahasiswa
 
                                     <td class="text-center align-middle" style="width: 10%">{{$d->nama_prodi}}</td>
                                     <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal->nim}}<br>{{$d->anggota_aktivitas_personal->nama_mahasiswa}}</td>
+                                    <td class="text-center align-middle">
+                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                    </td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
                                     </td>
