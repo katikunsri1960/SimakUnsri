@@ -454,7 +454,6 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/approve-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'approve_krs'])->name('prodi.monitoring.pengisian-krs.approve-krs');
                     Route::get('/non-approve-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'non_approve_krs'])->name('prodi.monitoring.pengisian-krs.non-approve-krs');
 
-
                 });
             });
 
@@ -549,6 +548,11 @@ Route::group(['middleware' => ['auth']], function() {
 
                     Route::post('/generate-data', [App\Http\Controllers\Universitas\MonitoringController::class, 'generateDataIsiKrs'])->name('univ.monitoring.pengisian-krs.generate-data');
                     Route::get('/check-progress', [App\Http\Controllers\Universitas\MonitoringController::class, 'checkProgress'])->name('univ.monitoring.pengisian-krs.check-progress');
+                });
+
+                Route::prefix('lulus-do')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'lulus_do'])->name('univ.monitoring.lulus-do');
+                    Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'lulus_do_data'])->name('univ.monitoring.lulus-do.data');
                 });
             });
 
