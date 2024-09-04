@@ -43,6 +43,23 @@
                             </span>
                         </a>
                     </li>
+                    <li class="treeview {{request()->routeIs('bak.monitoring.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-television"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Monitoring</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('bak.monitoring.pengisian-krs') || request()->routeIs('bak.monitoring.pengisian-krs.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>
+                            </li>
+                            {{-- <li class="{{request()->routeIs('bak.monitoring.lulus-do') || request()->routeIs('bak.monitoring.lulus-do.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.monitoring.lulus-do')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus Do</a>
+                            </li> --}}
+                        </ul>
+                    </li>
                     {{-- <li class="treeview {{request()->routeIs('dosen.profile.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-user"><span class="path1"></span><span
