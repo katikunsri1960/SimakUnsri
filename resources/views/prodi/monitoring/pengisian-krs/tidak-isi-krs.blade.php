@@ -10,9 +10,11 @@ List Mahasiswa Tidak KRS
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i
+                                    class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.monitoring.pengisian-krs')}}">Pengisian KRS</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a
+                                href="{{route('prodi.monitoring.pengisian-krs')}}">Pengisian KRS</a></li>
                         <li class="breadcrumb-item active" aria-current="page">List Mahasiswa Tidak KRS</li>
                     </ol>
                 </nav>
@@ -36,7 +38,8 @@ List Mahasiswa Tidak KRS
                                 <tr>
                                     <td>Program Studi</td>
                                     <td>:</td>
-                                    <td>{{$prodi->nama_jenjang_pendidikan}} - {{$prodi->nama_program_studi}} ({{$prodi->kode_program_studi}})</td>
+                                    <td>{{$prodi->nama_jenjang_pendidikan}} - {{$prodi->nama_program_studi}}
+                                        ({{$prodi->kode_program_studi}})</td>
                                 </tr>
                             </table>
                         </div>
@@ -44,28 +47,45 @@ List Mahasiswa Tidak KRS
                     </div>
                     <div class="table-responsive">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
-                          <thead>
-                             <tr>
-                                <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">Angkatan</th>
-                                <th class="text-center align-middle">NIM</th>
-                                <th class="text-center align-middle">Nama</th>
-                                <th class="text-center align-middle">Dosen PA</th>
-                             </tr>
-                          </thead>
-                          <tbody>
-                            @foreach ($data as $d)
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Angkatan</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Nama</th>
+                                    <th class="text-center align-middle">Dosen PA</th>
+                                    <th class="text-center align-middle">Status Pembayaran</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$d->angkatan}}</td>
                                     <td class="text-center align-middle">{{$d->nim}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
-                                    <td class="text-start align-middle">{{$d->pembimbing_akademik ? $d->pembimbing_akademik->nama_dosen : '-'}}</td>
+                                    <td class="text-start align-middle">{{$d->pembimbing_akademik ?
+                                        $d->pembimbing_akademik->nama_dosen : '-'}}</td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->beasiswa)
+                                        <h5><span
+                                                class="badge bg-primary">{{$d->beasiswa->jenis_beasiswa->nama_jenis_beasiswa}}</span>
+                                        </h5>
+                                        @else
+                                        @if ($d->tagihan)
+                                        @if ($d->tagihan->pembayaran)
+                                        <h5><span class="badge bg-success">Lunas</span></h5>
+                                        @else
+                                        <h5><span class="badge bg-danger">Belum Bayar</span></h5>
+                                        @endif
+                                        @endif
+                                        @endif
+                                    </td>
                                 </tr>
-                            @endforeach
-                          </tbody>
-                      </table>
-                      </div>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -77,7 +97,7 @@ List Mahasiswa Tidak KRS
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-     $(function() {
+    $(function() {
         "use strict";
 
         $('#data').DataTable();
