@@ -107,33 +107,8 @@ class MonitoringController extends Controller
         $id_prodi = $prodi->id_prodi;
         $semesterAktif = SemesterAktif::first()->id_semester;
 
-        $angkatanAktif = date('Y') - 7;
-        $arrayTahun = range($angkatanAktif, date('Y'));
-
-        $data = RiwayatPendidikan::with('pembimbing_akademik')->where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
-                ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
-                ->where(function ($query) use ($semesterAktif) {
-                    $query->whereNotExists(function ($subquery) use ($semesterAktif) {
-                        $subquery->select(DB::raw(1))
-                            ->from('peserta_kelas_kuliahs as p')
-                            ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
-                            ->where('k.id_semester', $semesterAktif)
-                            ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
-                    })
-                    ->where(function ($query) use ($semesterAktif) {
-                        $query->whereNotExists(function ($subquery) use ($semesterAktif) {
-                            $subquery->select(DB::raw(1))
-                                ->from('anggota_aktivitas_mahasiswas as aam')
-                                ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
-                                ->where('a.id_semester', $semesterAktif)
-                                ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
-                                ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
-                        });
-                    });
-                })
-                ->distinct()
-                ->get();
+        $db = new RiwayatPendidikan();
+        $data = $db->tidak_isi_krs($id_prodi, $semesterAktif);
 
         return view('bak.monitoring.pengisian-krs.tidak-isi-krs', [
             'prodi' => $prodi,

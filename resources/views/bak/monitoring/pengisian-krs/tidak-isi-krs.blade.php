@@ -51,6 +51,7 @@ List Mahasiswa Tidak KRS
                                 <th class="text-center align-middle">NIM</th>
                                 <th class="text-center align-middle">Nama</th>
                                 <th class="text-center align-middle">Dosen PA</th>
+                                <th class="text-center align-middle">Status Pembayaran</th>
                              </tr>
                           </thead>
                           <tbody>
@@ -61,6 +62,19 @@ List Mahasiswa Tidak KRS
                                     <td class="text-center align-middle">{{$d->nim}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
                                     <td class="text-start align-middle">{{$d->pembimbing_akademik ? $d->pembimbing_akademik->nama_dosen : '-'}}</td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->beasiswa)
+                                            <h5><span class="badge bg-primary">{{$d->beasiswa->jenis_beasiswa->nama_jenis_beasiswa}}</span></h5>
+                                        @else
+                                            @if ($d->tagihan)
+                                                @if ($d->tagihan->pembayaran)
+                                                    <h5><span class="badge bg-success">Lunas</span></h5>
+                                                @else
+                                                <h5><span class="badge bg-danger">Belum Bayar</span></h5>
+                                                @endif
+                                            @endif
+                                        @endif
+                                    </td>
                                 </tr>
                             @endforeach
                           </tbody>
