@@ -72,13 +72,17 @@ List Mahasiswa Tidak KRS
                                                 class="badge bg-primary">{{$d->beasiswa->jenis_beasiswa->nama_jenis_beasiswa}}</span>
                                         </h5>
                                         @else
-                                        @if ($d->tagihan)
-                                        @if ($d->tagihan->pembayaran)
-                                        <h5><span class="badge bg-success">Lunas</span></h5>
-                                        @else
-                                        <h5><span class="badge bg-danger">Belum Bayar</span></h5>
-                                        @endif
-                                        @endif
+                                            @if ($d->tagihan)
+                                                @if ($d->tagihan->pembayaran)
+                                                <h5><span class="badge bg-success">Lunas</span></h5>
+                                                @else
+                                                    @if ($d->penundaan_bayar == 1)
+                                                    <h5><span class="badge bg-warning">Penundaan Bayar</span></h5>
+                                                    @else
+                                                    <h5><span class="badge bg-danger">Belum Bayar</span></h5>
+                                                    @endif
+                                                @endif
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

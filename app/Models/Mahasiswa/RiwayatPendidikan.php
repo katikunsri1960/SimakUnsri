@@ -9,6 +9,7 @@ use App\Models\Dosen\BiodataDosen;
 use App\Models\Semester;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\JalurMasuk;
+use App\Models\PenundaanBayar;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\ListKurikulum;
@@ -241,7 +242,7 @@ class RiwayatPendidikan extends Model
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
 
-        $data = $this->with(['pembimbing_akademik', 'beasiswa'])->where('id_prodi', $id_prodi)
+        $data = $this->with(['pembimbing_akademik', 'beasiswa', ])->where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
                 ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                 ->where(function ($query) use ($semesterAktif) {
@@ -274,7 +275,9 @@ class RiwayatPendidikan extends Model
                         ->where('tagihan.kode_periode', $semesterAktif)
                         ->first();
 
-
+            $value->penundaan_bayar = PenundaanBayar::where('id_registrasi_mahasiswa', $value->id_registrasi_mahasiswa)
+                                    ->where('id_semester', $semesterAktif)
+                                    ->first() ? 1 : 0;
         }
         // dd($data);
         return $data;
