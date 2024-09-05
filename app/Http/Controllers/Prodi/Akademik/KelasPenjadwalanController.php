@@ -478,16 +478,15 @@ class KelasPenjadwalanController extends Controller
     public function get_dosen(Request $request)
     {
         $search = $request->get('q');
-        // $prodi_id = auth()->user()->fk_id;
         $tahun_ajaran = SemesterAktif::with('semester')->first();
-        // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
+        $tahun_berjalan = $tahun_ajaran->semester->id_tahun_ajaran;
 
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1)
-                                ->orderby('nama_dosen', 'asc');
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_berjalan)
+                                ->orderBy('nama_dosen', 'asc');
+
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
-                  ->orWhere('nama_program_studi', 'like', "%{$search}%")
-                  ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1);
+                  ->orWhere('nama_program_studi', 'like', "%{$search}%");
         }
 
         $data = $query->get();

@@ -225,4 +225,51 @@ class AktivitasMahasiswa extends Model
                     ->get();
     }
     
+    public function uji_sidang($id_dosen, $semester)
+    {
+        // $kategori = [110403,110407,110402,110406,110401,110405];
+
+        return $this->with(['uji_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+                    ->whereHas('uji_mahasiswa', function($query) use ($id_dosen) {
+                        $query->where('id_dosen', $id_dosen)
+                                ->where('approved', 1);
+                    })->withCount([
+                        'uji_mahasiswa as count_approved' => function($query) use ($id_dosen) {
+                            $query->where('id_dosen', $id_dosen)->where('approved_dosen', 0);
+                        },
+                    ])
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
+                    ->get();
+    }
+
+    public function sidang($id_prodi, $semester)
+    {
+        $data = $this->with(['uji_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+                    ->withCount([
+                        'uji_mahasiswa as approved' => function($query) {
+                            $query->where('approved', 0);
+                        },
+                        'uji_mahasiswa as approved_dosen' => function($query) {
+                            $query->where('approved_dosen', 0);
+                        },
+                        'uji_mahasiswa as decline_dosen' => function($query) {
+                            $query->where('approved_dosen', 2);
+                        },
+                    ])
+                    ->where('id_prodi', $id_prodi)
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
+                    ->get();
+
+        return $data;
+    }
+
+    public function approve_penguji($id_aktivitas)
+    {
+        $data = $this->where('id_aktivitas', $id_aktivitas)->first();
+        $data->uji_mahasiswa()->update(['approved' => 1]);
+
+        return $data;
+    }
 }

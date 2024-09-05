@@ -6,10 +6,12 @@ use App\Http\Controllers\Controller;
 use App\Models\AsistensiAkhir;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\Connection\Usept;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -282,6 +284,11 @@ class PembimbingMahasiswaController extends Controller
             if (!$aktivitasMahasiswa) {
                 return redirect()->back()->with('error', 'Aktivitas Mahasiswa tidak ditemukan.');
             }
+
+            $data_mahasiswa = AnggotaAktivitasMahasiswa::with('mahasiswa')->where('id_aktivitas', $aktivitas)->first();
+            $nilai_usept = Usept::where('nim', $data_mahasiswa->nim)->get();
+
+            dd($nilai_usept);
 
             $aktivitasMahasiswa->update(['approve_sidang' => 1]);
 
