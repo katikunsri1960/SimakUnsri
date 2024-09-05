@@ -55,6 +55,7 @@ List Mahasiswa Tidak KRS
                                     <th class="text-center align-middle">Nama</th>
                                     <th class="text-center align-middle">Dosen PA</th>
                                     <th class="text-center align-middle">Status Pembayaran</th>
+                                    <th class="text-center align-middle">Nominal UKT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -83,6 +84,11 @@ List Mahasiswa Tidak KRS
                                                     @endif
                                                 @endif
                                             @endif
+                                        @endif
+                                    </td>
+                                    <td class="text-end align-middle">
+                                        @if ($d->tagihan)
+                                        {{number_format($d->tagihan->total_nilai_tagihan, 0, ',', '.')}}
                                         @endif
                                     </td>
                                 </tr>

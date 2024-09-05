@@ -275,6 +275,10 @@ class RiwayatPendidikan extends Model
                         ->where('tagihan.kode_periode', $semesterAktif)
                         ->first();
 
+            // if ($value->tagihan) {
+            // dd($value->tagihan);
+            // }
+
             $value->penundaan_bayar = PenundaanBayar::where('id_registrasi_mahasiswa', $value->id_registrasi_mahasiswa)
                                     ->where('id_semester', $semesterAktif)
                                     ->first() ? 1 : 0;
