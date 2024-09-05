@@ -29,33 +29,35 @@ Pengajuan Cuti Fakultas
                         <h3 class="fw-500 text-dark mt-0">Daftar Pengajuan Cuti Fakultas</h3>
                     </div>                             
                 </div>
-                <div class="row mb-5">
+                {{-- <div class="row mb-5">
                     <div class="col-xl-12 col-lg-12 text-end">
                         <div class="btn-group">
                             <a class="btn btn-rounded bg-success-light " href="{{route('fakultas.pengajuan-cuti.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Pengajuan Cuti</a>
                         </div>   
                     </div>                           
-                </div><br>
+                </div><br> --}}
                 <div class="row">
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
                                     <th>No</th>
+                                    <th>NIM</th>
                                     <th>Nama Mahasiswa</th>
                                     <th>Program Studi</th>
                                     <th>Semester</th>
                                     <th>Alasan Pengajuan Cuti</th>
                                     <th>Status Pengajuan Cuti</th>
-                                    {{-- <th>Lokasi File</th> --}}
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($data as $d)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
+                                        <td class="text-start align-middle">{{$d->riwayat_pendidikan->nim}}</td>
                                         <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
-                                        <td class="text-start align-middle">{{$d->nama_program_studi}}</td>
+                                        <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} - {{$d->prodi->nama_program_studi}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>
                                         <td class="text-start align-middle">{{$d->alasan_cuti}}</td>
                                         <td class="text-center align-middle" style="width:10%">
@@ -66,12 +68,21 @@ Pengajuan Cuti Fakultas
                                             @elseif($d->approved == 2)
                                                 <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
                                             @endif
-                                            {{-- <div>
-                                                {!! $d->approved == 0 ? '' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
-                                            </div> --}}
                                         </td>
-                                        {{-- <td>{{$d->file_pendukung}}</td> --}}
-
+                                        <td class="text-center align-middle text-nowrap">
+                                            <div class="row">
+                                                @if($d->approved == 0)
+                                                <form action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.approve-pembimbing', $d)}}" method="post" id="approveForm{{$d->id_aktivitas}}" class="approve-class" data-id='{{$d->id_aktivitas}}'>
+                                                    @csrf
+                                                    <div class="row">
+                                                        <button type="submit" class="btn btn-sm btn-primary" title="Setujui Bimbingan"><i class="fa fa-thumbs-up"></i> Approve</button>
+                                                    </div>
+                                                </form>
+                                                @endif
+                                                <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
+                                                <a href="#" class="btn btn-secondary btn-sm my-2" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="detailFunc({{$d}})"><i class="fa fa-eye"></i> Detail</a>
+                                            </div>
+                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>

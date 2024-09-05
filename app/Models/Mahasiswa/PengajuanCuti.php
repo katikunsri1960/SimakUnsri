@@ -2,12 +2,23 @@
 
 namespace App\Models\Mahasiswa;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PengajuanCuti extends Model
 {
     use HasFactory;
     protected $table = 'cuti_kuliahs';
     protected $guarded = [];
+
+    public function riwayat_pendidikan()
+    {
+        return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+    
+    public function prodi()
+    {
+        return $this->belongsTo(ProgramStudi::class, 'id_prodi', 'id_prodi');
+    }
 }

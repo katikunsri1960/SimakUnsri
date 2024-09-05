@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Fakultas;
 
 use Ramsey\Uuid\Uuid;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Http\Controllers\Controller;
@@ -14,10 +15,15 @@ class CutiController extends Controller
     public function index()
     {
         // dd($semester_aktif->id_semester);
-        $id_reg = auth()->user()->fk_id;
+        $fak_id = auth()->user()->fk_id;
+
+        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->orderBy('id_jenjang_pendidikan')
+                    ->orderBy('nama_program_studi')
+                    ->pluck('id_prodi');
         
-        $data = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('approved',1)->get();
-        // dd($data_mahasiswa->biodata->id_mahasiswa);
+        $data = PengajuanCuti::with(['prodi', 'riwayat_pendidikan'])->whereIn('id_prodi', $id_prodi_fak)->get();
+        // dd($data);
 
         return view('fakultas.pengajuan-cuti.index', ['data' => $data]);
     }
