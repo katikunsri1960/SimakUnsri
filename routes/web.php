@@ -59,6 +59,11 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/mahasiswa-up-tujuh/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'mahasiswa_up_tujuh'])->name('bak.monitoring.pengisian-krs.mahasiswa-up-tujuh');
                 });
             });
+
+            Route::prefix('usept-prodi')->group(function(){
+                Route::get('/', [App\Http\Controllers\Bak\UseptController::class, 'index'])->name('bak.usept-prodi');
+                Route::post('/store/{kurikulum}', [App\Http\Controllers\Bak\UseptController::class, 'store'])->name('bak.usept-prodi.store');
+            });
         });
     });
 

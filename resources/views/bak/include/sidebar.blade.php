@@ -13,6 +13,16 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('bak.usept-prodi') || request()->routeIs('bak.usept-prodi.*') ? 'active' : ''}}">
+                        <a href="{{route('bak.usept-prodi')}}">
+                            <i class="fa fa-pen-square"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>USEPT Prodi</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
                     <li class="{{request()->routeIs('bak.transkrip-nilai') ? 'active' : ''}}">
                         <a href="{{route('bak.transkrip-nilai')}}">
                             <i class="fa fa-list-alt"><span class="path1"></span><span
