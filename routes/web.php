@@ -58,6 +58,11 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/tidak-isi-krs/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'tidak_isi_krs'])->name('bak.monitoring.pengisian-krs.tidak-isi-krs');
                     Route::get('/mahasiswa-up-tujuh/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'mahasiswa_up_tujuh'])->name('bak.monitoring.pengisian-krs.mahasiswa-up-tujuh');
                 });
+
+                Route::prefix('lulus-do')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'lulus_do'])->name('bak.monitoring.lulus-do');
+                    Route::get('/data', [App\Http\Controllers\Bak\MonitoringController::class, 'lulus_do_data'])->name('bak.monitoring.lulus-do.data');
+                });
             });
 
             Route::prefix('usept-prodi')->group(function(){
