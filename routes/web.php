@@ -46,6 +46,19 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('pengajuan-cuti')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\PengajuanCutiController::class, 'index'])->name('bak.pengajuan-cuti');
             });
+
+            Route::prefix('monitoring')->group(function(){
+                Route::prefix('pengisian-krs')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'pengisian_krs'])->name('bak.monitoring.pengisian-krs');
+                    Route::get('/detail-mahasiswa-aktif/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_mahasiswa_aktif'])->name('bak.monitoring.pengisian-krs.detail-mahasiswa-aktif');
+                    Route::get('/detail-aktif-min-tujuh/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_aktif_min_tujuh'])->name('bak.monitoring.pengisian-krs.detail-aktif-min-tujuh');
+                    Route::get('/detail-isi-krs/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_isi_krs'])->name('bak.monitoring.pengisian-krs.detail-isi-krs');
+                    Route::get('/detail-approved-krs/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_approved_krs'])->name('bak.monitoring.pengisian-krs.detail-approved-krs');
+                    Route::get('/detail-not-approved-krs/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_not_approved_krs'])->name('bak.monitoring.pengisian-krs.detail-not-approved-krs');
+                    Route::get('/tidak-isi-krs/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'tidak_isi_krs'])->name('bak.monitoring.pengisian-krs.tidak-isi-krs');
+                    Route::get('/mahasiswa-up-tujuh/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'mahasiswa_up_tujuh'])->name('bak.monitoring.pengisian-krs.mahasiswa-up-tujuh');
+                });
+            });
         });
     });
 

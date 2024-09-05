@@ -49,8 +49,8 @@ class KRSController extends Controller
                 })
                 ->where('id_semester', $semester)
                 ->whereIn('id_jenis_aktivitas', [1,2,3,4,5,6,22])
-                ->get(); 
-    
+                ->get();
+
         $aktivitas_mbkm = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
                     ->whereHas('anggota_aktivitas_personal', function($query) use ($riwayat) {
                         $query->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa);
@@ -85,7 +85,7 @@ class KRSController extends Controller
         $nim = $request->nim;
         $semester = $request->semester;
 
-        $riwayat = RiwayatPendidikan::where('nim', $nim)->first();
+        $riwayat = RiwayatPendidikan::where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
 
         if(!$riwayat) {
             return response()->json([
@@ -94,48 +94,9 @@ class KRSController extends Controller
             ]);
         }
 
-        $krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                ->whereHas('kelas_kuliah', function($query) use ($semester) {
-                    $query->where('id_semester', $semester);
-                })
-                ->where('approved', '0')
-                ->get();
+        $db = new PesertaKelasKuliah();
 
-        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
-                ->whereHas('anggota_aktivitas_personal', function($query) use ($riwayat) {
-                    $query->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa);
-                })
-                ->where('id_semester', $semester)
-                ->get();
-
-        if($krs->isEmpty() && $aktivitas->isEmpty()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data KRS tidak ditemukan',
-            ]);
-        }
-
-        DB::beginTransaction();
-
-        foreach($krs as $item) {
-            $item->approved = 1;
-            $item->save();
-        }
-
-        foreach($aktivitas as $ak) {
-            $ak->update([
-                'approve_krs' => 1,
-                'tanggal_approve' => now(),
-            ]);
-        }
-
-        DB::commit();
-
-
-        $response = [
-            'status' => 'success',
-            'message' => 'KRS berhasil diapprove',
-        ];
+        $response = $db->approve_all($riwayat->id_registrasi_mahasiswa);
 
         return response()->json($response);
     }
