@@ -156,6 +156,7 @@ Transkrip Nilai
 </section>
 @endsection
 @push('js')
+<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
     <script>
         $(document).ready(function () {
             $('#btnCari').click(function () {
@@ -209,40 +210,54 @@ Transkrip Nilai
                                 <img class="rounded20 bg-light img-fluid w-80" src="` + imagePath + `" alt="" onerror="this.onerror=null;this.src='{{ asset('images/images/avatar/avatar-15.png') }}';">
                             `);
 
+                              // Initialize DataTable
+                             // Initialize DataTable with no pagination and custom draw callback
+                             var table = $('#krs-regular').DataTable({
+                                paging: false,
+                                info: false,
+                                columnDefs: [
+                                    { orderable: false, targets: 0 } // Make the first column non-sortable
+                                ],
+                                order: [], // Disable initial sorting
+                                drawCallback: function(settings) {
+                                    var api = this.api();
+                                    api.rows({ page: 'current' }).every(function (rowIdx, tableLoop, rowLoop) {
+                                        var data = this.data();
+                                        data[0] = rowIdx + 1; // Update the first column with the row number
+                                        this.invalidate();
+                                    });
+                                }
+                            });
+                            table.clear().draw(); // Clear existing data
                             // count response.krs.approved
                             var approved = 0;
                             var no = 1;
                             var totalSks = 0;
 
-                            console.log(response.konversi);
-
-                            response.data.forEach(function(krs, index){
+                            response.data.forEach(function (krs, index) {
                                 var trClass = '';
-                                if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
-                                {
+                                if (krs.nilai_huruf == 'F' || krs.nilai_huruf == null) {
                                     trClass = 'bg-danger';
                                 }
-                                $('#krs-regular tbody').append(`
-                                    <tr class="${trClass}">
-                                        <td class="text-center align-middle">${no}</td>
-                                        <td class="text-center align-middle">${krs.kode_mata_kuliah}</td>
-                                        <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
-                                        <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
-                                        <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
-                                        <td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>
-                                        <td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>
-                                    </tr>
-                                `);
-                                no++;
-                                // make sks_mata_kuliah to number
-                                krs.sks_mata_kuliah = parseInt(krs.sks_mata_kuliah);
-                                totalSks += krs.sks_mata_kuliah;
+                                table.row.add([
+                                    `<td class="text-center align-middle"></td>`,
+                                    `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
+                                    `<td class="text-start align-middle">${krs.nama_mata_kuliah}</td>`,
+                                    `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
+                                    `<td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>`,
+                                    `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
+                                    `<td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>`
+                                ]).node().className = trClass;
+
+                                totalSks += parseInt(krs.sks_mata_kuliah);
                             });
 
+                            table.draw(); // Redraw the DataTable with new data
                             $('#totalSks').text(totalSks);
 
                         }
                     });
+
                 }
             });
         });
