@@ -1,4 +1,4 @@
-@extends('layouts.fakultas')
+@extends('layouts.prodi')
 @section('title')
 Transkrip Mahasiswa
 @endsection

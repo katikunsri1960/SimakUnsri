@@ -87,49 +87,50 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/set-kurikulum-angkatan', [App\Http\Controllers\Fakultas\DataMasterController::class, 'set_kurikulum_angkatan'])->name('fakultas.data-master.mahasiswa.set-kurikulum-angkatan');
                 });
 
-                Route::prefix('mata-kuliah')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul'])->name('fakultas.data-master.mata-kuliah');
-                    Route::get('/{kurikulum}/{matkul}/tambah-prasyarat', [App\Http\Controllers\Fakultas\DataMasterController::class, 'tambah_prasyarat'])->name('fakultas.data-master.mata-kuliah.tambah-prasyarat');
-                    Route::post('/{matkul}/store-prasyarat', [App\Http\Controllers\Fakultas\DataMasterController::class, 'tambah_prasyarat_store'])->name('fakultas.data-master.mata-kuliah.store-prasyarat');
-                    Route::delete('/{matkul}/delete-prasyarat', [App\Http\Controllers\Fakultas\DataMasterController::class, 'hapus_prasyarat'])->name('fakultas.data-master.mata-kuliah.delete-prasyarat');
-                    Route::get('/{matkul}/lihat-rps', [App\Http\Controllers\Fakultas\DataMasterController::class, 'lihat_rps'])->name('fakultas.data-master.mata-kuliah.lihat-rps');
-                    Route::post('/{matkul}/approved-all', [App\Http\Controllers\Fakultas\DataMasterController::class, 'approved_rps'])->name('fakultas.data-master.mata-kuliah.approved-all');
-                });
+                // Route::prefix('mata-kuliah')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul'])->name('fakultas.data-master.mata-kuliah');
+                //     Route::get('/{kurikulum}/{matkul}/tambah-prasyarat', [App\Http\Controllers\Fakultas\DataMasterController::class, 'tambah_prasyarat'])->name('fakultas.data-master.mata-kuliah.tambah-prasyarat');
+                //     Route::post('/{matkul}/store-prasyarat', [App\Http\Controllers\Fakultas\DataMasterController::class, 'tambah_prasyarat_store'])->name('fakultas.data-master.mata-kuliah.store-prasyarat');
+                //     Route::delete('/{matkul}/delete-prasyarat', [App\Http\Controllers\Fakultas\DataMasterController::class, 'hapus_prasyarat'])->name('fakultas.data-master.mata-kuliah.delete-prasyarat');
+                //     Route::get('/{matkul}/lihat-rps', [App\Http\Controllers\Fakultas\DataMasterController::class, 'lihat_rps'])->name('fakultas.data-master.mata-kuliah.lihat-rps');
+                //     Route::post('/{matkul}/approved-all', [App\Http\Controllers\Fakultas\DataMasterController::class, 'approved_rps'])->name('fakultas.data-master.mata-kuliah.approved-all');
+                // });
 
-                Route::prefix('matkul-merdeka')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul_merdeka'])->name('fakultas.data-master.matkul-merdeka');
-                    Route::post('/store', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul_merdeka_store'])->name('fakultas.data-master.matkul-merdeka.store');
-                    Route::delete('/{matkul_merdeka}/delete', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul_merdeka_destroy'])->name('fakultas.data-master.matkul-merdeka.delete');
-                });
+                // Route::prefix('matkul-merdeka')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul_merdeka'])->name('fakultas.data-master.matkul-merdeka');
+                //     Route::post('/store', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul_merdeka_store'])->name('fakultas.data-master.matkul-merdeka.store');
+                //     Route::delete('/{matkul_merdeka}/delete', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul_merdeka_destroy'])->name('fakultas.data-master.matkul-merdeka.delete');
+                // });
 
-                //Ruang Perkuliahan
-                Route::prefix('ruang-perkuliahan')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan'])->name('fakultas.data-master.ruang-perkuliahan');
-                    Route::post('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_store'])->name('fakultas.data-master.ruang-perkuliahan.store');
-                    Route::patch('/{ruang_perkuliahan}/update', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_update'])->name('fakultas.data-master.ruang-perkuliahan.update');
-                    Route::delete('/{ruang_perkuliahan}/delete', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_destroy'])->name('fakultas.data-master.ruang-perkuliahan.delete');
-                });
+                // //Ruang Perkuliahan
+                // Route::prefix('ruang-perkuliahan')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan'])->name('fakultas.data-master.ruang-perkuliahan');
+                //     Route::post('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_store'])->name('fakultas.data-master.ruang-perkuliahan.store');
+                //     Route::patch('/{ruang_perkuliahan}/update', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_update'])->name('fakultas.data-master.ruang-perkuliahan.update');
+                //     Route::delete('/{ruang_perkuliahan}/delete', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_destroy'])->name('fakultas.data-master.ruang-perkuliahan.delete');
+                // });
 
-                Route::prefix('kurikulum')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'kurikulum'])->name('fakultas.data-master.kurikulum');
-                    Route::get('/detail/{kurikulum}', [App\Http\Controllers\Fakultas\DataMasterController::class, 'detail_kurikulum'])->name('fakultas.data-master.kurikulum.detail');
-                });
+                // Route::prefix('kurikulum')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'kurikulum'])->name('fakultas.data-master.kurikulum');
+                //     Route::get('/detail/{kurikulum}', [App\Http\Controllers\Fakultas\DataMasterController::class, 'detail_kurikulum'])->name('fakultas.data-master.kurikulum.detail');
+                // });
             });
 
 
             //ROUTE AKADEMIK
-            Route::prefix('data-akademik')->group(function(){
-                Route::prefix('/transkrip-mahasiswa')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('fakultas.data-akademik.transkrip-mahasiswa');
-                    // Route::get('/mahasiswa-data', [App\Http\Controllers\Fakultas\DataMasterController::class, 'mahasiswa_data'])->name('fakultas.data-master.mahasiswa.data');
-                    // Route::post('/set-pa/{mahasiswa}', [App\Http\Controllers\Fakultas\DataMasterController::class, 'set_pa'])->name('fakultas.data-master.mahasiswa.set-pa');
-                    // Route::post('/set-kurikulum/{mahasiswa}', [App\Http\Controllers\Fakultas\DataMasterController::class, 'set_kurikulum'])->name('fakultas.data-master.mahasiswa.set-kurikulum');
-                    // Route::post('/set-kurikulum-angkatan', [App\Http\Controllers\Fakultas\DataMasterController::class, 'set_kurikulum_angkatan'])->name('fakultas.data-master.mahasiswa.set-kurikulum-angkatan');
-                });
+            Route::prefix('transkrip-nilai')->group(function(){
+                Route::get('/', [App\Http\Controllers\Fakultas\TranskripController::class, 'index'])->name('fakultas.transkrip-nilai');
+                Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Fakultas\TranskripController::class, 'data'])->name('fakultas.transkrip-nilai.get');
+            });
+
+            Route::prefix('beasiswa')->group(function(){
+                Route::get('/', [App\Http\Controllers\Fakultas\BeasiswaController::class, 'index'])->name('fakultas.beasiswa');
+                Route::get('/data', [App\Http\Controllers\Fakultas\BeasiswaController::class, 'data'])->name('fakultas.beasiswa.data');
             });
 
             Route::get('/pengajuan-cuti', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
             Route::get('/pengajuan-cuti/tambah', [App\Http\Controllers\Fakultas\CutiController::class, 'tambah'])->name('fakultas.pengajuan-cuti.tambah');
+            Route::get('/pengajuan-cuti/update/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'update'])->name('fakultas.pengajuan-cuti.approve');
 
 
             //Route Bantuan

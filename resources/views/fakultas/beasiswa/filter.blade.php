@@ -9,7 +9,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('fakultas.data-master.mahasiswa')}}" method="get">
+            <form action="{{route('fakultas.beasiswa')}}" method="get">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 mb-3">
@@ -24,20 +24,18 @@
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">
-                            <label for="angkatan" class="form-label">Angkatan</label>
-                            <select multiple class="form-select" name="angkatan[]" id="angkatan">
-                                <option value="">
-                                    -- Pilih Angkatan --
-                                </option>
-                                @foreach ($angkatan as $p)
-                                <option value="{{$p->angkatan}}" {{ in_array($p->angkatan, old('angkatan',
-                                    request()->get('angkatan', []))) ? 'selected' : '' }}>
-                                    {{$p->angkatan}}
+                            <label for="jenis_beasiswa" class="form-label">Jenis Beasiswa</label>
+                            <select multiple class="form-select" name="jenis_beasiswa[]" id="jenis_beasiswa">
+                                @foreach ($jenisBeasiswa as $j)
+                                <option value="{{$j->id}}" {{ in_array($j->id, old('jenis_beasiswa',
+                                    request()->get('jenis_beasiswa', []))) ? 'selected' : '' }}>
+                                   {{$j->nama_jenis_beasiswa}}
                                 </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -60,17 +58,11 @@
             dropdownParent: $('#filter-button')
         });
 
-        $('#angkatan').select2({
-            placeholder: '-- Pilih Angkatan -- ',
+        $('#jenis_beasiswa').select2({
+            placeholder: '-- Pilih Jenis Beasiswa -- ',
             allowClear: true,
             width: '100%',
             dropdownParent: $('#filter-button')
-        });
-        $('#tahun_angkatan').select2({
-            placeholder: '-- Pilih Angkatan -- ',
-            allowClear: true,
-            width: '100%',
-            dropdownParent: $('#setAngkatanModal')
         });
     });
 

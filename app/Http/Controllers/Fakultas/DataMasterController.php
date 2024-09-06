@@ -28,17 +28,59 @@ class DataMasterController extends Controller
         ]);
     }
 
+    public function mahasiswa(Request $request)
+    {
+        $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->orderBy('id_jenjang_pendidikan')
+                    ->orderBy('nama_program_studi')
+                    ->get();
+        
+        $id_prodi_fak=$prodi_fak->pluck('id_prodi');
+        
+        $query = RiwayatPendidikan::with('kurikulum',
+        //  'dosen_pa'
+         )
+            // ->Addselect(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
+            ->whereIn('id_prodi', $id_prodi_fak)
+            ->orderBy('nama_program_studi', 'ASC')
+            ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
+
+        $mahasiswa=$query->get();
+        // dd($mahasiswa);
+        
+
+        $angkatan = RiwayatPendidikan::with(['prodi.fakultas'])
+                    ->whereIn('id_prodi', $id_prodi_fak)
+                    ->select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
+                    ->distinct()
+                    ->orderBy('angkatan_raw', 'desc')
+                    ->get();
+
+        $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+
+        $dosDb = new BiodataDosen();
+        $dosen = $dosDb->get();
+
+        return view('fakultas.data-master.mahasiswa.index', [
+            'angkatan' => $angkatan,
+            'prodi' => $prodi_fak,
+            'kurikulum' => $kurikulum,
+            'dosen' => $dosen,
+            'mahasiswa'=>$mahasiswa
+        ]);
+    }
+
     public function mahasiswa_data(Request $request)
     {
         $searchValue = $request->input('search.value');
 
-        $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+        $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
                     ->orderBy('id_jenjang_pendidikan')
                     ->orderBy('nama_program_studi')
                     ->pluck('id_prodi');
 
         $query = RiwayatPendidikan::with('kurikulum', 'pembimbing_akademik')
-            ->whereIn('id_prodi', $prodi_fak)
+            ->whereIn('id_prodi', $prodi)
             ->orderBy('nama_program_studi', 'ASC')
             // ->orderBy('id_jenjang_pendidikan', 'ASC')
             ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
@@ -48,6 +90,11 @@ class DataMasterController extends Controller
                 $q->where('nim', 'like', '%' . $searchValue . '%')
                 ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
             });
+        }
+
+        if ($request->has('prodi') && !empty($request->prodi)) {
+            $filter = $request->prodi;
+            $query->whereIn('id_prodi', $filter);
         }
 
         if ($request->has('angkatan') && !empty($request->angkatan)) {
@@ -99,48 +146,6 @@ class DataMasterController extends Controller
         ];
 
         return response()->json($response);
-    }
-
-    public function mahasiswa(Request $request)
-    {
-        $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                    ->orderBy('id_jenjang_pendidikan')
-                    ->orderBy('nama_program_studi')
-                    ->get();
-        
-        $id_prodi_fak=$prodi_fak->pluck('id_prodi');
-        
-        $query = RiwayatPendidikan::with('kurikulum',
-        //  'dosen_pa'
-         )
-            // ->Addselect(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
-            ->whereIn('id_prodi', $id_prodi_fak)
-            ->orderBy('nama_program_studi', 'ASC')
-            ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
-
-        $mahasiswa=$query->get();
-        // dd($mahasiswa);
-        
-
-        $angkatan = RiwayatPendidikan::with(['prodi.fakultas'])
-                    ->where('id_prodi', auth()->user()->fk_id)
-                    ->select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
-                    ->distinct()
-                    ->orderBy('angkatan_raw', 'desc')
-                    ->get();
-
-        $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
-
-        $dosDb = new BiodataDosen();
-        $dosen = $dosDb->get();
-
-        return view('fakultas.data-master.mahasiswa.index', [
-            'angkatan' => $angkatan,
-            'prodi_fak' => $prodi_fak,
-            'kurikulum' => $kurikulum,
-            'dosen' => $dosen,
-            'mahasiswa'=>$mahasiswa
-        ]);
     }
 
 

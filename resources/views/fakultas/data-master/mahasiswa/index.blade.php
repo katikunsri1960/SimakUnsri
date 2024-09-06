@@ -21,26 +21,26 @@ Mahasiswa Prodi
     </div>
 </div>
 @include('swal')
-@include('fakultas.data-master.mahasiswa.set-pa')
-@include('fakultas.data-master.mahasiswa.set-kurikulum')
+{{-- @include('fakultas.data-master.mahasiswa.set-pa')
+@include('fakultas.data-master.mahasiswa.set-kurikulum') --}}
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                {{-- <div class="box-header with-border d-flex justify-content-between">
-                    <div class="d-flex justify-content-start">
-                        <!-- Modal trigger button -->
-                        <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-toggle="modal"
-                            data-bs-target="#filter-button">
-                            <i class="fa fa-filter"></i> Filter
-                        </button>
-                        @include('fakultas.data-master.mahasiswa.filter')
-                    </div>
+                {{-- <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
-                        <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#" data-bs-toggle="modal" data-bs-target="#setAngkatanModal"><i class="fa fa-plus"></i>
-                            Set Kurikulum Angkatan</button>
-                        @include('fakultas.data-master.mahasiswa.set-angkatan')
+                        <div class="d-flex justify-content-start">
+                            <!-- Modal trigger button -->
+                            <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal"
+                                data-bs-target="#filter-button">
+                                <i class="fa fa-filter"></i> Filter
+                            </button>
+                            <span class="divider-line mx-1"></span>
+                            <a href="{{route('fakultas.data-master.mahasiswa')}}" class="btn btn-warning waves-effect waves-light" >
+                                <i class="fa fa-rotate"></i> Reset Filter
+                            </a>
+                            @include('fakultas.data-master.mahasiswa.filter')
+                        </div>
                     </div>
                 </div> --}}
                 <div class="box-body">
