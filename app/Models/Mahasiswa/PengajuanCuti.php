@@ -3,8 +3,9 @@
 namespace App\Models\Mahasiswa;
 
 use App\Models\ProgramStudi;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class PengajuanCuti extends Model
 {
@@ -12,7 +13,7 @@ class PengajuanCuti extends Model
     protected $table = 'cuti_kuliahs';
     protected $guarded = [];
 
-    public function riwayat()
+    public function riwayat_pendidikan()
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }

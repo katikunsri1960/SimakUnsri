@@ -13,16 +13,62 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    {{-- <li class="{{request()->routeIs('fakultas.transkrip-nilai') ? 'active' : ''}}">
-                        <a href="{{route('fakultas.transkrip-nilai')}}">
-                            <i class="fa fa-list-alt"><span class="path1"></span><span
+                    <li class="treeview {{request()->routeIs('fakultas.data-master.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-database"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Transkrip Nilai</span>
+                            <span>Data Master</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('fakultas.data-master.dosen') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.dosen')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Dosen</a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.data-master.mahasiswa') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.mahasiswa')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Mahasiswa</a>
+                            </li>
+                            {{-- <li class="{{request()->routeIs('fakultas.data-master.kurikulum') || request()->routeIs('fakultas.data-master.kurikulum.*') ?  'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.kurikulum')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Kurikulum</a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.data-master.mata-kuliah') || request()->routeIs('fakultas.data-master.mata-kuliah.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.mata-kuliah')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Mata Kuliah</a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.data-master.matkul-merdeka') || request()->routeIs('fakultas.data-master.matkul-merdeka.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.matkul-merdeka')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>MK MBKM</a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.data-master.ruang-perkuliahan') || request()->routeIs('fakultas.data-master.ruang-perkuliahan.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a>
+                            </li> --}}
+                            {{-- <!-- <li class="{{request()->routeIs('fakultas.data-master.ruang-perkuliahan') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Pengumuman</a>
+                            </li> --> --}}
+                        </ul>
                     </li>
+                    <li class="treeview {{request()->routeIs('prodi.data-akademik.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-graduation-cap"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Data Akademik</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('fakultas.transkrip-nilai') || request()->routeIs('fakultas.transkrip-nilai.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.transkrip-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Transkrip Nilai</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="header">LAIN-LAIN</li>
                     <li class="{{request()->routeIs('fakultas.pengajuan-cuti') ? 'active' : ''}}">
                         <a href="{{route('fakultas.pengajuan-cuti')}}">
                             <i class="fa fa-exclamation-triangle"><span class="path1"></span><span
@@ -32,95 +78,24 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
-                    </li> --}}
-                    {{-- <li class="treeview {{request()->routeIs('dosen.profile.*') ? 'active menu-open' : ''}}">
-                        <a href="#">
-                            <i span class="fa fa-user"><span class="path1"></span><span
+                    </li>
+                    <li class="{{request()->routeIs('fakultas.beasiswa') ? 'active' : ''}}">
+                        <a href="{{route('fakultas.beasiswa')}}">
+                            <i class="fa fa-book"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Profile Dosen</span>
+                            <span>Beasiswa</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('dosen.profile.biodata') ? 'active' : ''}}"><a href="{{route('dosen.profile.biodata')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Biodata Dosen</a>
-                            </li>
-                        </ul>
-                    </li> --}}
-                    {{-- <li class="header">Perkuliahan</li>
-                    <li class="treeview {{request()->routeIs('dosen.perkuliahan.jadwal-kuliah') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-kuliah') ? 'active menu-open' : ''}}">
-                        <a href="#">
-                            <i class="fa fa-calendar-o"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Jadwal Dosen</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('dosen.perkuliahan.jadwal-kuliah') | request()->routeIs('dosen.perkuliahan.kesediaan-waktu-kuliah') ? 'active' : ''}}">
-                                <a href="{{route('dosen.perkuliahan.jadwal-kuliah')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Jadwal Mengajar</a>
-                            </li>
-                        </ul>
                     </li>
-                    <li class="{{request()->routeIs('dosen.perkuliahan.rencana-pembelajaran') ? 'active' : ''}}">
-                        <a href="{{route('dosen.perkuliahan.rencana-pembelajaran')}}">
-                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                            <span>RPS</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://elearning.unsri.ac.id/" target="_blank">
-                            <i class="fa fa-desktop"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>E-Learning UNSRI</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="https://uscamz.unsri.ac.id/b/signin" target="_blank">
-                            <i class="fa fa-video-camera"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>USCAMZ UNSRI</span>
-                        </a>
-                    </li>
-                    <li class="header">Penilaian Mahasiswa</li>
-                    <li class="{{request()->routeIs('dosen.penilaian.penilaian-perkuliahan') | request()->routeIs('dosen.penilaian.penilaian-perkuliahan.*')  ? 'active' : ''}}">
-                        <a href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
-                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Penilaian Perkuliahan</span>
-                        </a>
-                    </li>
-                    <li class="{{request()->routeIs('dosen.penilaian.penilaian-sidang') ? 'active' : ''}}">
-                        <a href="{{route('dosen.penilaian.penilaian-sidang')}}">
-                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Penilaian Sidang</span>
-                        </a>
-                    </li>
-                    <li class="header">Pembimbing Mahasiswa</li>
-                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-akademik') ? 'active' : ''}}">
-                        <a href="{{route('dosen.pembimbing.bimbingan-akademik')}}">
-                            <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Bimbingan Akademik</span>
-                        </a>
-                    </li>
-                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-tugas-akhir') | request()->routeIs('dosen.pembimbing.bimbingan-tugas-akhir.*') ? 'active' : ''}}">
-                        <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir')}}">
-                            <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Bimbingan Tugas Akhir</span>
-                        </a>
-                    </li>
-                    <li class="header">Bantuan</li>
-                    <li class="{{request()->routeIs('dosen.bantuan.ganti-password') ? 'active' : ''}}">
-                        <a href="{{route('dosen.bantuan.ganti-password')}}">
+                    <li class="header">BANTUAN</li>
+                    <li class="{{request()->routeIs('fakultas.bantuan.ganti-password') ? 'active' : ''}}">
+                        <a href="{{route('fakultas.bantuan.ganti-password')}}">
                             <i class="fa fa-key"><span class="path1"></span><span class="path2"></span></i>
                             <span>Ganti Password</span>
                         </a>
-                    </li> --}}
-                    {{-- <li>
-                        <a href="#" target="_blank">
-                            <i class="fa fa-question"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Panduan Aplikasi</span>
-                        </a>
-                    </li> --}}
+                    </li>
                 </ul>
             </div>
         </div>
