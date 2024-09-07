@@ -292,7 +292,6 @@ Route::group(['middleware' => ['auth']], function() {
 
                 //Detail Fitur
                 Route::get('/kesediaan-waktu-bimbingan', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_bimbingan'])->name('dosen.perkuliahan.kesediaan-waktu-bimbingan');
-                // Route::get('/kesediaan-waktu-kuliah', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_kuliah'])->name('dosen.perkuliahan.kesediaan-waktu-kuliah');
 
                 Route::prefix('rencana-pembelajaran')->group(function () {
                     Route::get('/', [App\Http\Controllers\Dosen\Perkuliahan\RencanaPembelajaranController::class, 'rencana_pembelajaran'])->name('dosen.perkuliahan.rencana-pembelajaran');
@@ -309,9 +308,9 @@ Route::group(['middleware' => ['auth']], function() {
 
             //Route Penilaian
             Route::prefix('penilaian')->group(function () {
+                //Penilaian Perkuliahan Mahasiswa
                 Route::get('/penilaian-perkuliahan', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'penilaian_perkuliahan'])->name('dosen.penilaian.penilaian-perkuliahan');
                 Route::get('/penilaian-perkuliahan/detail/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'detail_penilaian_perkuliahan'])->name('dosen.penilaian.penilaian-perkuliahan.detail');
-                Route::get('/penilaian-sidang', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'penilaian_sidang'])->name('dosen.penilaian.penilaian-sidang');
 
                 //Detail Fitur
                 //Komponen Evaluasi
@@ -324,8 +323,18 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/upload-dpna/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'upload_dpna'])->name('dosen.penilaian.penilaian-perkuliahan.upload-dpna');
                 Route::post('/upload-dpna/store/{kelas}/{matkul}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'upload_dpna_store'])->name('dosen.penilaian.penilaian-perkuliahan.upload-dpna.store');
 
+                //Sidang Mahasiswa
+                Route::prefix('sidang-mahasiswa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'index'])->name('dosen.penilaian.sidang-mahasiswa');
+                    Route::post('/approve-penguji/{aktivitas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'approve_penguji'])->name('dosen.penilaian.sidang-mahasiswa.approve-penguji');
+                    Route::post('/decline-penguji/{aktivitas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'pembatalan_penguji'])->name('dosen.penilaian.sidang-mahasiswa.decline-penguji');
 
-                // Route::get('/kesediaan-waktu-kuliah', [App\Http\Controllers\Dosen\Perkuliahan\KesediaanWaktuDosenController::class, 'kesediaan_waktu_kuliah'])->name('dosen.perkuliahan.kesediaan-waktu-kuliah');
+                    Route::prefix('penilaian-sidang')->group(function(){
+                        Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi');
+                        Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.store');
+                        Route::post('/approve-asistensi/{asistensi}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_approve'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.approve');
+                    });
+                });
             });
 
             //Route Pembimbing Mahasiswa

@@ -78,13 +78,13 @@ Pembimbingan Karya Ilmiah Mahasiswa
                                     <td class="text-center align-middle" style="width: 10%">
                                         @foreach($d->bimbing_mahasiswa as $db)
                                             @if ($db->approved == 1 && $db->approved_dosen == 0)
-                                                <span class="badge bg-warning">Menunggu Persetujuan Dosen</span>
+                                                <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-warning">Menunggu Persetujuan Dosen</span></li>
                                             @elseif ($db->approved == 1 && $db->approved_dosen == 1)
-                                                <span class="badge bg-success">Disetujui</span>
+                                                <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-success">Disetujui</span></li>
                                             @elseif ($db->approved == 1 && $db->approved_dosen == 2)
-                                                <span class="badge bg-danger">Dibatalkan</span>
+                                                <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-danger">Dibatalkan</span></li>
                                             @else
-                                                <span class="badge bg-warning">{{$db->approved_dosen}}</span>
+                                                <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-warning">{{$db->approved_dosen}}</span></li>
                                             @endif
                                         @endforeach
                                     </td>
