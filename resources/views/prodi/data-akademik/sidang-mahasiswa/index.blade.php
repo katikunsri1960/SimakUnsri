@@ -1,59 +1,142 @@
 @extends('layouts.prodi')
 @section('title')
-Sidang Mahasiswa
+Sidang
+@if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
+Skripsi
+@elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
+Tesis
+@elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
+Disertasi
+@else
+Tugas Akhir
+@endif
 @endsection
 @section('content')
+@include('swal')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Sidang Mahasiswa</h3>
+            <h3 class="page-title">
+                Sidang
+                @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
+                Skripsi
+                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
+                Tesis
+                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
+                Disertasi
+                @else
+                Tugas Akhir
+                @endif Mahasiswa</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i
+                                    class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
-                        <li class="breadcrumb-item active" aria-current="page">Sidang Mahasiswa</li>
+                        <li class="breadcrumb-item active" aria-current="page">
+                            Sidang
+                            @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
+                            Skripsi
+                            @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
+                            Tesis
+                            @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
+                            Disertasi
+                            @else
+                            Tugas Akhir
+                            @endif Mahasiswa</li>
                     </ol>
                 </nav>
             </div>
         </div>
-
     </div>
 </div>
-
+@include('prodi.data-akademik.sidang-mahasiswa.detail')
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
-                    {{-- <div class="d-flex justify-content-end">
-                        <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form>
-                        <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button>
-                    </div> --}}
-                </div>
+
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-hover margin-top-10 w-p100">
-                          <thead>
-                             <tr>
-                                <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">NIM</th>
-                                <th class="text-center align-middle">NAMA MAHASISWA</th>
-                                <th class="text-center align-middle">ANGKATAN</th>
-                                <th class="text-center align-middle">JUDUL</th>
-                                <th class="text-center align-middle">DOSEN PEMBIMBING</th>
-                                <th class="text-center align-middle">DOSEN PENGUJI</th>
-                                <th class="text-center align-middle">AKSI</th>
-                             </tr>
-                          </thead>
-                          <tbody>
-
-                          </tbody>
-                      </table>
-                      </div>
+                        <table id="data" class="table table-bordered table-hover margin-top-10 w-p100"
+                            style="font-size: 11px">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">NO</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">NAMA</th>
+                                    <th class="text-center align-middle">NAMA AKTIVITAS<br>(MK Konversi)</th>
+                                    <th class="text-center align-middle">Pembimbing</th>
+                                    <th class="text-center align-middle">Penguji</th>
+                                    <th class="text-center align-middle">Status Penguji</th>
+                                    <th class="text-center align-middle">Act</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $d)
+                                <tr>
+                                    <td class="text-center align-middle"></td>
+                                    <td class="text-center align-middle">
+                                        {{$d->anggota_aktivitas_personal->nim}}
+                                    </td>
+                                    <td class="text-start align-middle" style="width: 15%">
+                                        {{$d->anggota_aktivitas_personal->nama_mahasiswa}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                    </td>
+                                    <td class="text-start align-middle">
+                                        <ul>
+                                            @foreach ($d->bimbing_mahasiswa as $p)
+                                            <li>Pembimbing {{$p->pembimbing_ke}} :<br>{{$p->nama_dosen}}</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td class="text-start align-middle">
+                                        <ul>
+                                            @foreach ($d->uji_mahasiswa as $u)
+                                            <li>{{$u->nama_kategori_kegiatan}} :<br>{{$u->nama_dosen}}</li>
+                                            @endforeach
+                                        </ul>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->status_uji > 0)
+                                            <span class="badge badge-lg badge-danger">Belum Disetujui</span>
+                                        @elseif ($d->approved_prodi > 0)
+                                            <span class="badge badge-lg badge-warning">Menunggu konfirmasi dosen</span>
+                                        @elseif ($d->decline_dosen > 0)
+                                            <span class="badge badge-lg badge-danger">Dibatalkan dosen</span>
+                                        @else
+                                            <span class="badge badge-lg badge-success">Approved</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <div class="row d-flex justify-content-center">
+                                            @if ($d->status_uji > 0 || $d->decline_dosen > 0)
+                                            <form
+                                                action="{{route('prodi.data-akademik.sidang-mahasiswa.approve-penguji', $d)}}"
+                                                method="post" id="approveForm{{$d->id}}" data-id="{{$d->id}}"
+                                                class="approve-class">
+                                                @csrf
+                                                <div class="row">
+                                                    <button type="submit" class="btn btn-sm my-2 btn-success ">Approve
+                                                        Penguji</button>
+                                                </div>
+                                            </form>
+                                            @endif
+                                            <a href="{{route('prodi.data-akademik.sidang-mahasiswa.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
+                                            <a href="#" class="btn btn-info btn-sm my-2" title="Detail-Sidang"
+                                                data-bs-toggle="modal" data-bs-target="#detailSidangModal"
+                                                onclick="detailFunc1({{$d}})">
+                                                <i class="fa fa-eye"></i> Detail
+                                            </a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -65,10 +148,55 @@ Sidang Mahasiswa
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
+    function detailFunc1(data) {
+        $('#detail_judul').val(data.judul);
+        $('#edit_tanggal_mulai').val(data.id_tanggal_mulai);
+        $('#edit_tanggal_selesai').val(data.id_tanggal_selesai);
+        $('#edit_lokasi').val(data.lokasi);
+    }
+
     $(function() {
         "use strict";
-        
-        $('#data').DataTable();
+
+        $('#data').DataTable({
+            // default sort by column 6 desc
+            "order": [[ 5, "desc" ]],
+            "columnDefs": [{
+                "targets": 0,
+                "searchable": false,
+                "orderable": false,
+                "render": function (data, type, full, meta) {
+                    return meta.settings._iDisplayStart + meta.row + 1;
+                }
+            }],
+            "drawCallback": function (settings) {
+                var api = this.api();
+                var startIndex = api.context[0]._iDisplayStart;
+                api.column(0, {page: 'current'}).nodes().each(function (cell, i) {
+                    cell.innerHTML = startIndex + i + 1;
+                });
+            }
+        });
+
+        $('.approve-class').on('submit', function(e) {
+            e.preventDefault();
+            var formId = $(this).data('id');
+            swal({
+                title: 'Apakah Anda Yakin??',
+                text: "Setelah disetujui, penguji tidak bisa diubah lagi!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $(`#approveForm${formId}`).unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
+        });
     });
 </script>
 @endpush

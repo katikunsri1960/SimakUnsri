@@ -467,9 +467,21 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/approve', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'approve'])->name('prodi.data-akademik.krs.approve');
                 });
 
-                Route::get('/sidang-mahasiswa', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'sidang_mahasiswa'])->name('prodi.data-akademik.sidang-mahasiswa');
                 Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('prodi.data-akademik.transkrip-mahasiswa');
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
+
+                Route::prefix('sidang-mahasiswa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'index'])->name('prodi.data-akademik.sidang-mahasiswa');
+                    Route::post('/approve-penguji/{aktivitasMahasiswa}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'approve_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.approve-penguji');
+                    Route::get('/edit-detail/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'ubah_detail_sidang'])->name('prodi.data-akademik.sidang-mahasiswa.edit-detail');
+                    Route::post('/update-detail/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'update_detail_sidang'])->name('prodi.data-akademik.sidang-mahasiswa.update-detail');
+                    Route::get('/get-nama-dosen', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'get_dosen'])->name('prodi.data-akademik.sidang-mahasiswa.get-dosen');
+                    Route::get('/tambah-dosen/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'tambah_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.tambah-dosen');
+                    Route::post('/store-dosen/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'store_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.store-dosen');
+                    Route::get('/edit-dosen/{uji}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'edit_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.edit-dosen');
+                    Route::post('/update-dosen/{uji}/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'update_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.update-dosen');
+                    Route::delete('/delete-dosen/{uji}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'delete_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.delete-dosen');
+                });
 
                 Route::prefix('tugas-akhir')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\Akademik\TugasAkhirController::class, 'index'])->name('prodi.data-akademik.tugas-akhir');

@@ -10,6 +10,7 @@ use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Connection\Usept;
 use App\Models\Semester;
@@ -285,12 +286,23 @@ class PembimbingMahasiswaController extends Controller
                 return redirect()->back()->with('error', 'Aktivitas Mahasiswa tidak ditemukan.');
             }
 
-            $data_mahasiswa = AnggotaAktivitasMahasiswa::with('mahasiswa')->where('id_aktivitas', $aktivitas)->first();
-            $nilai_usept = Usept::where('nim', $data_mahasiswa->nim)->get();
+            $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])->where('id_aktivitas', $aktivitas)->first();
+            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->mahasiswa->id_kurikulum)->first();
+            $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->get();
+            $check_nilai_usept = false;
+            // dd($nilai_usept_mhs);
 
-            dd($nilai_usept);
+            foreach($nilai_usept_mhs as $n){
+                if($n->score >= $nilai_usept_prodi->nilai_usept){
+                    $aktivitasMahasiswa->update(['approve_sidang' => 1]);
+                    $check_nilai_usept = true;
+                    break; // Exit the loop when the condition is met
+                }
+            }
 
-            $aktivitasMahasiswa->update(['approve_sidang' => 1]);
+            if(!$check_nilai_usept){
+                return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
+            }
 
             if (!empty($request->dosen_penguji) && !empty($request->penguji_ke)) {
 
