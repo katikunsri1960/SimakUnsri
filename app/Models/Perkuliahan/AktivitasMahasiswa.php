@@ -82,12 +82,19 @@ class AktivitasMahasiswa extends Model
     {
         $id_semester = SemesterAktif::where('id',1)->pluck('id_semester')->first() ?? (date('m') >= 8 ? (date('Y').'1') : (date('Y')-1).'2');
 
-        return $this->with(['uji_mahasiswa', 'uji_mahasiswa.dosen', 'prodi', 'semester', 'jenis_aktivitas_mahasiswa', 'anggota_aktivitas', 'anggota_aktivitas.mahasiswa'])
+        return $this->with(['uji_mahasiswa', 'uji_mahasiswa.dosen', 'prodi', 'semester', 'jenis_aktivitas_mahasiswa', 'anggota_aktivitas', 'anggota_aktivitas.mahasiswa', 'konversi'])
                     ->where('id_semester', $id_semester)
+                    ->where('approve_sidang', 1)
                     ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
                     ->whereHas('uji_mahasiswa', function ($query) use ($id_dosen) {
-                        $query->whereIn('id_dosen', [$id_dosen]);
-                    })->get();
+                        $query->whereIn('id_dosen', [$id_dosen])
+                              ->whereIn('status_uji_mahasiswa', [1,2,3]);
+                        })->withCount([
+                            'uji_mahasiswa as count_approved' => function($query) use ($id_dosen) {
+                                $query->where('id_dosen', $id_dosen)->where('status_uji_mahasiswa', 1);
+                            },
+                        ])
+                    ->get();
     }
 
     public function bimbing_ta($id_dosen, $semester)
@@ -224,5 +231,35 @@ class AktivitasMahasiswa extends Model
                     ->whereIn('id_jenis_aktivitas', [5,6,13,14,15,16,17,18,19,20,21])
                     ->get();
     }
-    
+
+    public function sidang($id_prodi, $semester)
+    {
+        $data = $this->with(['uji_mahasiswa', 'bimbing_mahasiswa','anggota_aktivitas_personal', 'prodi'])
+                    ->withCount([
+                        'uji_mahasiswa as status_uji' => function($query) {
+                            $query->where('status_uji_mahasiswa', 0);
+                        },
+                        'uji_mahasiswa as approved_prodi' => function($query) {
+                            $query->where('status_uji_mahasiswa', 1);
+                        },
+                        'uji_mahasiswa as decline_dosen' => function($query) {
+                            $query->where('status_uji_mahasiswa', 3);
+                        },
+                    ])
+                    ->where('id_prodi', $id_prodi)
+                    ->where('approve_sidang', 1)
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
+                    ->get();
+
+        return $data;
+    }
+
+    public function approve_penguji($id_aktivitas)
+    {
+        $data = $this->where('id_aktivitas', $id_aktivitas)->first();
+        $data->uji_mahasiswa()->update(['status_uji_mahasiswa' => 1]);
+
+        return $data;
+    }
 }

@@ -18,6 +18,11 @@ class UjiMahasiswa extends Model
         return $this->belongsTo(AktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
     }
 
+    public function anggota_aktivitas_personal()
+    {
+        return $this->hasOne(AnggotaAktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
+    }
+
     public function kategori_kegiatan()
     {
         return $this->belongsTo(KategoriKegiatan::class, 'id_kategori_kegiatan', 'id_kategori_kegiatan');
