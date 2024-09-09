@@ -59,6 +59,8 @@
 <link rel="stylesheet" href="{{asset('assets/js/flatpickr/flatpickr.min.css')}}">
 @endpush
 @push('js')
+<script src="{{asset('assets/vendor_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<script src="{{asset('assets/vendor_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
 <script src="{{asset('assets/js/flatpickr/flatpickr.js')}}"></script>
 <script>
     flatpickr("#tanggal", {

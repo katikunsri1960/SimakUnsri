@@ -69,9 +69,11 @@ Kartu Rencana Studi
                 <div class="row mx-20 ">
                     <div class="col-12 px-25">
                         <div class="box no-shadow mb-0 bg-transparent">
-                            <div class="d-flex justify-content-end mt-10 mr-0">
-                                <span class="badge badge-warning-light">Periode pengisian KRS hingga tanggal <strong style="color: red">{{ date('d M Y', strtotime($batas_isi_krs)) }}</strong></span>
-                            </div>                            
+                            @if ($today<=$batas_isi_krs)
+                                <div class="d-flex justify-content-end mt-10 mr-0">
+                                    <span class="badge badge-warning-light">Periode pengisian KRS hingga tanggal <strong style="color: red">{{ date('d M Y', strtotime($batas_isi_krs)) }}</strong></span>
+                                </div>   
+                            @endif                         
                             <div class="box-header no-border px-0">
                                 <a type="button" href="{{route('mahasiswa.krs')}}" class="btn btn-warning btn-rounded waves-effect waves-light">
                                 <i class="fa-solid fa-arrow-left"></i>
