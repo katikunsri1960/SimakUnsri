@@ -78,7 +78,7 @@ class TranskripController extends Controller
             'total_sks' => $total_sks,
          ])
          ->setPaper('a4', 'portrait');
-             $tanggal = date('d-m-Y');
-         return $pdf->stream('transkrip-'.$tanggal.'.pdf');
+         
+         return $pdf->stream('transkrip-'.$riwayat->nim.'.pdf');
     }
 }
