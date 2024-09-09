@@ -94,11 +94,10 @@ Transkrip Nilai
                                                 <th class="text-center align-middle">No</th>
                                                 <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                 <th class="text-center align-middle">Nama Mata Kuliah</th>
-
-                                                <th class="text-center align-middle">SKS</th>
-                                                <th class="text-center align-middle">Nilai Angka</th>
-                                                <th class="text-center align-middle">Nilai Index</th>
+                                                <th class="text-center align-middle">SKS (K)</th>
+                                                <th class="text-center align-middle">Nilai Index (B)</th>
                                                 <th class="text-center align-middle">Nilai Huruf</th>
+                                                <th class="text-center align-middle">K x B</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -220,15 +219,20 @@ Transkrip Nilai
                                 {
                                     trClass = 'bg-danger';
                                 }
+                                // Pastikan nilai indeks dan sks_mata_kuliah adalah angka
+                                var nilaiIndeks = parseFloat(krs.nilai_indeks) || 0;  // Jika null, maka menjadi 0
+                                var sksMataKuliah = parseInt(krs.sks_mata_kuliah) || 0;  // Jika null, maka menjadi 0
+                                var hasilPerkalian = nilaiIndeks * sksMataKuliah;
+
                                 $('#krs-regular tbody').append(`
                                     <tr class="${trClass}">
                                         <td class="text-center align-middle">${no}</td>
                                         <td class="text-center align-middle">${krs.kode_mata_kuliah}</td>
                                         <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
-                                        <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
-                                        <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
-                                        <td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>
+                                        <td class="text-center align-middle">${sksMataKuliah}</td>
+                                        <td class="text-center align-middle">${nilaiIndeks ? nilaiIndeks.toFixed(2) : '-'}</td>
                                         <td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>
+                                        <td class="text-center align-middle">${hasilPerkalian.toFixed(0)}</td>
                                     </tr>
                                 `);
                                 no++;
