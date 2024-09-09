@@ -613,6 +613,13 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'destroy'])->name('univ.pembayaran-manual.delete');
             });
 
+            Route::prefix('krs-manual')->group(function(){
+                Route::get('/', [App\Http\Controllers\Universitas\KRSManualController::class, 'index'])->name('univ.krs-manual');
+                Route::post('/store', [App\Http\Controllers\Universitas\KRSManualController::class, 'store'])->name('univ.krs-manual.store');
+                Route::patch('/update/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'update'])->name('univ.krs-manual.update');
+                Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'destroy'])->name('univ.krs-manual.delete');
+            });
+
             Route::prefix('kuisioner')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\KuisionerController::class, 'index'])->name('univ.kuisioner');
                 Route::post('/store', [App\Http\Controllers\Universitas\KuisionerController::class, 'store'])->name('univ.kuisioner.store');

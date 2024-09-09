@@ -88,15 +88,8 @@ Pengajuan Cuti Fakultas
                                                 </form>
                                                 @endif
                                                 @if($d->approved < 3)
-                                                <form action="{{route('fakultas.pengajuan-cuti.decline', $d)}}" method="post" id="declineForm{{$d->id_cuti}}" class="decline-class" data-id='{{$d->id_cuti}}'>
-                                                    @csrf
-                                                    <div class="row mb-5">
-                                                        <button type="submit" class="btn btn-sm btn-danger" title="Tolak Pengajuan Cuti"><i class="fa fa-ban"></i> Decline</button>
-                                                    </div>
-                                                </form>
+                                                    <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
                                                 @endif
-                                                <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
-                                                {{-- <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan Cuti" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a> --}}
                                                 <a href="{{ asset($d->file_pendukung) }}" target="_blank" class="btn btn-primary">
                                                     <i class="fa fa-file-pdf-o"></i> File Pendukung
                                                 </a>                                                

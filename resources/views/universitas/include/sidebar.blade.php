@@ -157,6 +157,15 @@
                             </span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active' : ''}}">
+                        <a href="{{route('univ.krs-manual')}}">
+                            <i class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Batas Isi KRS Manual</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.monitoring.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-television"><span class="path1"></span><span class="path2"></span></i>
