@@ -130,7 +130,8 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::prefix('pengajuan-cuti')->group(function(){
                 Route::get('/', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
-                Route::get('/approve/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'cuti_approve'])->name('fakultas.pengajuan-cuti.approve');
+                Route::post('/approve/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'cuti_approve'])->name('fakultas.pengajuan-cuti.approve');
+                Route::post('/decline/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'pembatalan_cuti'])->name('fakultas.pengajuan-cuti.decline');
             });
 
             // Route::get('/pengajuan-cuti', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
