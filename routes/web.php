@@ -128,9 +128,14 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/data', [App\Http\Controllers\Fakultas\BeasiswaController::class, 'data'])->name('fakultas.beasiswa.data');
             });
 
-            Route::get('/pengajuan-cuti', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
-            Route::get('/pengajuan-cuti/tambah', [App\Http\Controllers\Fakultas\CutiController::class, 'tambah'])->name('fakultas.pengajuan-cuti.tambah');
-            Route::get('/pengajuan-cuti/update/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'update'])->name('fakultas.pengajuan-cuti.approve');
+            Route::prefix('pengajuan-cuti')->group(function(){
+                Route::get('/', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
+                Route::post('/approve/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'cuti_approve'])->name('fakultas.pengajuan-cuti.approve');
+            });
+
+            // Route::get('/pengajuan-cuti', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
+            // Route::get('/pengajuan-cuti/tambah', [App\Http\Controllers\Fakultas\CutiController::class, 'tambah'])->name('fakultas.pengajuan-cuti.tambah');
+            
 
 
             //Route Bantuan

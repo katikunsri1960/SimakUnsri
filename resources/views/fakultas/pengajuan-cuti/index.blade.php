@@ -71,17 +71,17 @@ Pengajuan Cuti Fakultas
                                         </td>
                                         <td class="text-center align-middle text-nowrap">
                                             <div class="row">
-                                                {{-- @if($d->approved == 0)
-                                                <form action="{{route('fakultas.pengajuan-cuti.approve', $d)}}" method="post" id="approveForm{{$d->id_aktivitas}}" class="approve-class" data-id='{{$d->id_aktivitas}}'>
+                                                @if($d->approved == 0)
+                                                <form action="{{route('fakultas.pengajuan-cuti.approve', $d)}}" method="post" id="approveForm{{$d->id_cuti}}" class="approve-class" data-id='{{$d->id_cuti}}'>
                                                     @csrf
                                                     <div class="row">
                                                         <button 
                                                         type="submit" 
-                                                        class="btn btn-sm btn-primary" title="Setujui Bimbingan"><i class="fa fa-thumbs-up"></i> Approve</button>
+                                                        class="btn btn-sm btn-primary" title="Setujui Pengajuan Cuti"><i class="fa fa-thumbs-up"></i> Approve</button>
                                                     </div>
                                                 </form>
-                                                @endif --}}
-                                                <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
+                                                @endif
+                                                <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan Cuti" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
                                                 <a href="#" class="btn btn-secondary btn-sm my-2" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="detailFunc({{$d}})"><i class="fa fa-eye"></i> Detail</a>
                                             </div>
                                         </td>

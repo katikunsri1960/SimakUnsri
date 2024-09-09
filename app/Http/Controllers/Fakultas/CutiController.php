@@ -28,13 +28,36 @@ class CutiController extends Controller
         return view('fakultas.pengajuan-cuti.index', ['data' => $data]);
     }
 
-    public function tambah()
+    public function cuti_approve(PengajuanCuti $cuti)
     {
-        // dd($semester_aktif->id_semester);
-        $id_reg = auth()->user()->fk_id;
-        $data = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
+        // $dosen = auth()->user()->fk_id;
 
-        return view('fakultas.pengajuan-cuti.store', ['data' => $data]);
+        // $pembimbing_ke = PengajuanCuti::where('id_aktivitas', $cuti->id_cuti)
+        //                     ->where('id_dosen', $dosen)
+        //                     ->first()->pembimbing_ke;
+
+        // if ($cuti->id_dosen != $dosen && $pembimbing_ke != 1) {
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Anda tidak memiliki akses untuk menyetujui asistensi ini'
+        //     ]);
+        // }
+
+        $store = $cuti->update([
+            'approved' => 1
+        ]);
+
+        if ($store) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Pengajuan Cuti berhasil disetujui!'
+            ]);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat menyetujui Pengajuan Cuti'
+            ]);
+        }
     }
 
     public function store(Request $request)
