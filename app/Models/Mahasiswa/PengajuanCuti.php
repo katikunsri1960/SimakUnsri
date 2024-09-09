@@ -13,7 +13,7 @@ class PengajuanCuti extends Model
     protected $table = 'cuti_kuliahs';
     protected $guarded = [];
 
-    public function riwayat_pendidikan()
+    public function riwayat()
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
