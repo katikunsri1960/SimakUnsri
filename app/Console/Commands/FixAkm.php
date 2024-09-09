@@ -1,140 +1,78 @@
 <?php
 
-namespace App\Models\Perkuliahan;
+namespace App\Console\Commands;
 
-use App\Models\Semester;
-use App\Models\Perkuliahan\MataKuliah;
-use App\Models\SemesterAktif;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Connection\Registrasi;
 use App\Models\BeasiswaMahasiswa;
+use App\Models\Connection\Registrasi;
 use App\Models\Connection\Tagihan;
-use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\ProgramStudi;
+use App\Models\SemesterAktif;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
-class PesertaKelasKuliah extends Model
+class FixAkm extends Command
 {
-    use HasFactory;
-    protected $guarded = [];
+    /**
+     * The name and signature of the console command.
+     *
+     * @var string
+     */
+    protected $signature = 'app:fix-akm';
 
-    public function kelas_kuliah()
+    /**
+     * The console command description.
+     *
+     * @var string
+     */
+    protected $description = 'Command description';
+
+    /**
+     * Execute the console command.
+     */
+    public function handle()
     {
-        return $this->belongsTo(KelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
-    }
+        // ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2048M');
 
-    public function mahasiswa()
-    {
-        return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
-    }
+        $semesterAktif = SemesterAktif::first()->id_semester;
 
-    public function matkul()
-    {
-        $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');
-    }
+        $db = new RiwayatPendidikan();
 
-    public function nilai_perkuliahan()
-    {
-        return $this->hasMany(NilaiPerkuliahan::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
-    }
+        $p = ProgramStudi::where('status', 'A')->get();
 
-    public function batal_approve($id_reg)
-    {
-        $semester_aktif = SemesterAktif::first();
+        $allData = AktivitasKuliahMahasiswa::where('id_semester', $semesterAktif)
+            ->get()
+            ->keyBy('id_registrasi_mahasiswa');
 
-        $today = Carbon::now()->toDateString();
-        // // dd($total_sks);
-        // if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
-        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-        // }
-        // elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
-        //     $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
-        // }else
-        // {
-        //     $batas_isi_krs =  NULL;
-        // }
+        $file = fopen('public/akm_no_transkrip.txt', 'a');
 
-        if ($today < $semester_aktif->krs_mulai) {
-            return [
-                'status' => 'error',
-                'message' => 'Masa Pengisian KRS Belum Dimulai!!',
-            ];
-        }
-
-        if ($today < $semester_aktif->tanggal_mulai_kprs) {
-            return [
-                'status' => 'error',
-                'message' => 'Masa KPRS Belum Dimulai. Pembatalan hanya bisa dilakukan saat masa KPRS!!',
-            ];
-        }
-
-        if ($today > $semester_aktif->tanggal_akhir_kprs) {
-            return [
-                'status' => 'error',
-                'message' => 'Masa Pengisian KRS dan KPRS Telah Berakhir!!',
-            ];
-        }
-
-
-        $data = $this->with(['kelas_kuliah', 'kelas_kuliah.matkul'])
-                    ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
-                        $query->where('id_semester', $semester_aktif->id_semester);
-                    })
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->orderBy('kode_mata_kuliah')
-                    ->get();
-
-        $db_akt = new AktivitasMahasiswa();
-
-        $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
-                        ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
-                            $query->where('id_registrasi_mahasiswa', $id_reg);
-                        })
-                        ->where('id_semester', $semester_aktif->id_semester)
-                        ->get();
-
-        try {
-            DB::beginTransaction();
-
-
-            foreach ($aktivitas as $item) {
-                $item->update([
-                    'approve_krs' => '0',
-                ]);
-            }
+        foreach ($p as $prodi) {
+            $id_prodi = $prodi->id_prodi;
+            $data = $db->detail_isi_krs($id_prodi, $semesterAktif);
 
             foreach ($data as $item) {
-                $item->update([
-                    'approved' => '0',
-                ]);
+                if (!isset($allData[$item->id_registrasi_mahasiswa])) {
+                    $req = $this->approve($item->id_registrasi_mahasiswa);
+                    if ($req['status'] == 'No Transkrip!') {
+                        fwrite($file, $req['nim'] . ' - ' . $req['nama_mahasiswa'] . "\n");
+                    }
+                    $this->info($req['status'] . ' - ' . $req['nim'] . ' - ' . $req['nama_mahasiswa']);
+                }
             }
-
-            DB::commit();
-
-            $result = [
-                'status' => 'success',
-                'message' => 'Persetujuan KRS berhasil dibatalkan!',
-            ];
-
-            return $result;
-
-        } catch (\Exception $e) {
-
-            DB::rollBack();
-
-            $result = [
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan! '. $e->getMessage(),
-            ];
-
-            return $result;
         }
+
+        fclose($file);
 
     }
 
-    public function approve_all($id_reg)
+    private function approve($id_reg)
     {
         $semester_aktif = SemesterAktif::first();
         $data = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
@@ -151,12 +89,40 @@ class PesertaKelasKuliah extends Model
         $akm_aktif= AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $semester_aktif->id_semester)
                 ->first();
+
+
                 // dd($akm_aktif);
 
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
                 ->where('id_registrasi_mahasiswa', $id_reg)
                 ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                 ->first();
+
+        if($akm_aktif){
+            return [
+                'status' => 'AKM sudah ada!',
+                'nim' => $riwayat_pendidikan->nim,
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+            ];
+        }
+
+        $transkrip = TranskripMahasiswa::select(
+                        DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
+                        DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
+                    )
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->whereNotIn('nilai_huruf', ['F', ''])
+                    ->groupBy('id_registrasi_mahasiswa')
+                    ->first();
+
+        if ((!$transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester) {
+            return [
+                'status' => 'No Transkrip!',
+                'nim' => $riwayat_pendidikan->nim,
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+            ];
+
+        }
 
         $data_mbkm = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
                     ->whereHas('kelas_kuliah', function($query) use ($semester_aktif,$riwayat_pendidikan) {
@@ -189,21 +155,7 @@ class PesertaKelasKuliah extends Model
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-        $transkrip = TranskripMahasiswa::select(
-                        DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
-                        DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
-                    )
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->whereNotIn('nilai_huruf', ['F', ''])
-                    ->groupBy('id_registrasi_mahasiswa')
-                    ->first();
 
-        if ((!$transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester) {
-            return [
-                'status' => 'error',
-                'message' => 'Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
-            ];
-        }
 
         $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
                     ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
@@ -235,10 +187,14 @@ class PesertaKelasKuliah extends Model
                 }
 
                 foreach ($data as $item) {
-                    $item->update([
-                        'approved' => '1',
-                        'tanggal_approve' => date('Y-m-d')
-                    ]);
+                    $tgl_approve = '2024-09-06';
+                    if ($item->tanggal_approve == null) {
+                        $item->update([
+                            // 'approved' => '1',
+                            'tanggal_approve' => $tgl_approve
+                        ]);
+                    }
+
                 }
 
                 if($data_mbkm > 0){
@@ -436,10 +392,13 @@ class PesertaKelasKuliah extends Model
                 }
 
                 foreach ($data as $item) {
-                    $item->update([
-                        'approved' => '1',
-                        'tanggal_approve' => date('Y-m-d')
-                    ]);
+                    $tgl_approve = '2024-09-06';
+                    if ($item->tanggal_approve == null) {
+                        $item->update([
+                            // 'approved' => '1',
+                            'tanggal_approve' => $tgl_approve
+                        ]);
+                    }
                 }
                 if($data_mbkm > 0){
                     if($beasiswa){
@@ -632,7 +591,8 @@ class PesertaKelasKuliah extends Model
 
             $result = [
                 'status' => 'success',
-                'message' => 'Semua data berhasil disetujui!',
+                'nim' => $riwayat_pendidikan->nim,
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
             ];
 
         } catch (\Exception $e) {
@@ -640,8 +600,9 @@ class PesertaKelasKuliah extends Model
             DB::rollBack();
 
             $result = [
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan!'. $e->getMessage(),
+                'status' => 'gagal',
+                'nim' => $riwayat_pendidikan->nim,
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
             ];
 
             return $result;
@@ -650,6 +611,5 @@ class PesertaKelasKuliah extends Model
         }
 
         return $result;
-
     }
 }
