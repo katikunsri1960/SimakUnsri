@@ -57,7 +57,7 @@ Pengajuan Cuti Fakultas
                                 @include('fakultas.pengajuan-cuti.pembatalan-cuti')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td class="text-start align-middle">{{$d->riwayat_pendidikan->nim}}</td>
+                                        <td class="text-start align-middle">{{$d->riwayat->nim}}</td>
                                         <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
                                         <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} - {{$d->prodi->nama_program_studi}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>

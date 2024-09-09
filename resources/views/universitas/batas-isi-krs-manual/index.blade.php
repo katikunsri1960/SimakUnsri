@@ -29,8 +29,8 @@ Batas Isi KRS Manual
                         data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
                     </div>
                 </div>
-                @include('universitas.krs-manual.create')
-                @include('universitas.krs-manual.edit')
+                @include('universitas.batas-isi-krs-manual.create')
+                @include('universitas.batas-isi-krs-manual.edit')
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
@@ -80,7 +80,7 @@ Batas Isi KRS Manual
                                     {{-- <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editBatas({{$d}}, {{$d->id}})">
                                         <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
                                     </button> --}}
-                                    <form action="{{route('univ.krs-manual.delete', $d->id)}}" method="POST" id="delete-form-{{$d->id}}">
+                                    <form action="{{route('univ.batas-isi-krs-manual.delete', $d->id)}}" method="POST" id="delete-form-{{$d->id}}">
                                         @csrf
                                         @method('delete')
                                         <button type="submit" class="btn btn-rounded bg-danger" title="Delete Data">
