@@ -40,8 +40,7 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::prefix('transkrip-nilai')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\TranskripController::class, 'index'])->name('bak.transkrip-nilai');
-                Route::get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'data'])->name('bak.transkrip-nilai.get');
-                Route::get('/download', [App\Http\Controllers\Bak\TranskripController::class, 'download'])->name('bak.transkrip-nilai.download');
+                Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'data'])->name('bak.transkrip-nilai.get');
             });
 
             Route::prefix('pengajuan-cuti')->group(function(){
@@ -132,11 +131,12 @@ Route::group(['middleware' => ['auth']], function() {
             Route::prefix('pengajuan-cuti')->group(function(){
                 Route::get('/', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
                 Route::post('/approve/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'cuti_approve'])->name('fakultas.pengajuan-cuti.approve');
+                Route::post('/decline/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'pembatalan_cuti'])->name('fakultas.pengajuan-cuti.decline');
             });
 
             // Route::get('/pengajuan-cuti', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
             // Route::get('/pengajuan-cuti/tambah', [App\Http\Controllers\Fakultas\CutiController::class, 'tambah'])->name('fakultas.pengajuan-cuti.tambah');
-
+            
 
 
             //Route Bantuan
