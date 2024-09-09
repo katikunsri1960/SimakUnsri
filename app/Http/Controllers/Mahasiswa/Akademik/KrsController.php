@@ -64,7 +64,6 @@ class KrsController extends Controller
         $total_sks_regular=0;
         $total_sks_merdeka=0;
 
-
         //DATA AKTIVITAS
         $db = new MataKuliah();
 
@@ -78,7 +77,6 @@ class KrsController extends Controller
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
                     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                     ->get();
-        
 
         // $pembimbing= $krs_akt->bimbing_mahasiswa;
 
@@ -172,16 +170,21 @@ class KrsController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        // dd($total_sks);
-        if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
+        $krs_manual = ['07031282126204'];
+        
+
+        if(in_array($riwayat_pendidikan->nim, $krs_manual)){
+            // $batas_isi_krs =  Carbon::parse($today)->addDay()->toDateString();
+            $batas_isi_krs =  $today;
+        } elseif($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-        }
-        elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
+        } elseif($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
-        }else
-        {
+        } else {
             $batas_isi_krs =  NULL;
         }
+
+        // dd($batas_isi_krs);
 
         $batas_pembayaran = Carbon::parse($semester_aktif->batas_bayar_ukt)->toDateString();
         
@@ -231,7 +234,7 @@ class KrsController extends Controller
             'cuti',
             'transkrip',
             'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran', 'non_gelar',
-            'pembayaran_manual'
+            'pembayaran_manual', 'nim_krs_manual'
         ));
     }
 

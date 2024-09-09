@@ -14,16 +14,12 @@
                 @csrf
                 <div class="modal-body">
                     <div class="form-group row">
-                        <label class="col-form-label col-md-2">Tanggal</label>
-                        <div class="col-md-10">
-                            <div class="input-group">
-                                <input type="text" class="form-control" name="tanggal" id="tanggal"
-                                    aria-describedby="helpId" placeholder="" />
-                                <span class="input-group-text" id="basic-addon1" id="tanggal"><i
-                                        class="fa fa-calendar"></i></span>
-                            </div>
-                        </div>
-                    </div>
+						<label class="col-form-label col-md-2">Tanggal</label>
+						<div class="col-md-10">
+							<input class="form-control" type="date" name="tanggal">
+							{{-- <span class="form-text text-muted">Using <code>input type="date"</code></span> --}}
+						</div>
+					</div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-2">Dosen Pembimbing</label>
                         <div class="col-md-10">
@@ -59,14 +55,14 @@
 <link rel="stylesheet" href="{{asset('assets/js/flatpickr/flatpickr.min.css')}}">
 @endpush
 @push('js')
-<script src="{{asset('assets/vendor_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
-<script src="{{asset('assets/vendor_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script>
+{{-- <script src="{{asset('assets/vendor_components/bootstrap-daterangepicker/daterangepicker.js')}}"></script>
+<script src="{{asset('assets/vendor_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')}}"></script> --}}
 <script src="{{asset('assets/js/flatpickr/flatpickr.js')}}"></script>
 <script>
-    flatpickr("#tanggal", {
-            dateFormat: "d-m-Y",
-            maxDate: "today",
-        });
+    // flatpickr("#tanggal", {
+    //         dateFormat: "d-m-Y",
+    //         maxDate: "today",
+    //     });
 
     $(document).ready(function() {
         $('.select2').select2();
