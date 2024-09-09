@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Models\PenundaanBayar;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\BatasIsiKRSManual;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
 use App\Models\Dosen\BiodataDosen;
@@ -31,8 +32,8 @@ use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\RencanaPembelajaran;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
 class KrsController extends Controller
 {
@@ -172,13 +173,16 @@ class KrsController extends Controller
 
         $nim_krs_manual = [
             // '07031282126204', 
-            '06151382025060',
+            '02012682125099',//Mahasiswa Terlambat Isi KRS Karena Sakit
+            '06151382025060',//Mahasiswa Terlambat Isi KRS Karena Hamil
             '03041381823070'//Mahasiswa Perpanjangan Studi
         ];
-        
-        if(in_array($riwayat_pendidikan->nim, $nim_krs_manual)){
-            // $batas_isi_krs =  Carbon::parse($today)->addDay()->toDateString();
-            $batas_isi_krs =  $today;
+
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->first();
+        // dd($batas_isi_krs_manual);
+
+        if($batas_isi_krs_manual != NULL){
+            $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
         } elseif($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
         } elseif($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
