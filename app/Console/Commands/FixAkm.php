@@ -180,11 +180,11 @@ class FixAkm extends Command
                     return $result;
                 }
 
-                foreach ($aktivitas as $item) {
-                    $item->update([
-                        'approve_krs' => '1'
-                    ]);
-                }
+                // foreach ($aktivitas as $item) {
+                //     $item->update([
+                //         'approve_krs' => '1'
+                //     ]);
+                // }
 
                 foreach ($data as $item) {
                     $tgl_approve = '2024-09-06';
@@ -385,11 +385,11 @@ class FixAkm extends Command
 
             }else{
 
-                foreach ($aktivitas as $item) {
-                    $item->update([
-                        'approve_krs' => '1'
-                    ]);
-                }
+                // foreach ($aktivitas as $item) {
+                //     $item->update([
+                //         'approve_krs' => '1'
+                //     ]);
+                // }
 
                 foreach ($data as $item) {
                     $tgl_approve = '2024-09-06';
