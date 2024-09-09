@@ -159,7 +159,7 @@
                     </li>
                     <li class="{{request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active' : ''}}">
                         <a href="{{route('univ.krs-manual')}}">
-                            <i class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
+                            <i class="fa fa-calendar"><span class="path1"></span><span class="path2"></span></i>
                             <span>Batas Isi KRS Manual</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>

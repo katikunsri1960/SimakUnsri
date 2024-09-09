@@ -615,9 +615,9 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::prefix('krs-manual')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\KRSManualController::class, 'index'])->name('univ.krs-manual');
-                Route::post('/store', [App\Http\Controllers\Universitas\KRSManualController::class, 'store'])->name('univ.krs-manual.store');
-                Route::patch('/update/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'update'])->name('univ.krs-manual.update');
-                Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'destroy'])->name('univ.krs-manual.delete');
+                Route::post('/store', [App\Http\Controllers\Universitas\KRSManualController::class, 'store'])->name('univ.batas-isi-krs-manual.store');
+                Route::patch('/update/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'update'])->name('univ.batas-isi-krs-manual.update');
+                Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'destroy'])->name('univ.batas-isi-krs-manual.delete');
             });
 
             Route::prefix('kuisioner')->group(function(){

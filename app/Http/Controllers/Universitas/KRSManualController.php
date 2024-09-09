@@ -17,7 +17,7 @@ class KRSManualController extends Controller
         $data = BatasIsiKRSManual::with(['riwayat'])->get();
         // $semester = Semester::orderBy('id_semester', 'desc')->get();
 
-        return view('universitas.krs-manual.index', compact('data'));
+        return view('universitas.batas-isi-krs-manual.index', compact('data'));
     }
 
     public function store(Request $request)

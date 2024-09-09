@@ -22,7 +22,7 @@ class CutiController extends Controller
                     ->orderBy('nama_program_studi')
                     ->pluck('id_prodi');
         
-        $data = PengajuanCuti::with(['prodi', 'riwayat_pendidikan'])->whereIn('id_prodi', $id_prodi_fak)->get();
+        $data = PengajuanCuti::with(['prodi', 'riwayat'])->whereIn('id_prodi', $id_prodi_fak)->get();
         // dd($data);
 
         return view('fakultas.pengajuan-cuti.index', ['data' => $data]);
