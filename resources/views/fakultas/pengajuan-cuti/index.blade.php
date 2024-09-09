@@ -3,6 +3,7 @@
 Pengajuan Cuti Fakultas
 @endsection
 @section('content')
+@include('swal')
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-12">
@@ -53,6 +54,7 @@ Pengajuan Cuti Fakultas
                             </thead>
                             <tbody>
                                 @foreach($data as $d)
+                                @include('fakultas.pengajuan-cuti.pembatalan-cuti')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-start align-middle">{{$d->riwayat_pendidikan->nim}}</td>
@@ -67,6 +69,10 @@ Pengajuan Cuti Fakultas
                                                 <span class="badge badge-xl badge-warning-light mb-5">Disetujui Fakultas</span>
                                             @elseif($d->approved == 2)
                                                 <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
+                                            @elseif($d->approved == 3)
+                                                <span class="badge badge-xl badge-danger-light mb-5">Ditolak Fakultas</span>
+                                            @elseif($d->approved == 4)
+                                                <span class="badge badge-xl badge-danger-light mb-5">Ditolak BAK</span>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle text-nowrap">
@@ -74,15 +80,26 @@ Pengajuan Cuti Fakultas
                                                 @if($d->approved == 0)
                                                 <form action="{{route('fakultas.pengajuan-cuti.approve', $d)}}" method="post" id="approveForm{{$d->id_cuti}}" class="approve-class" data-id='{{$d->id_cuti}}'>
                                                     @csrf
-                                                    <div class="row">
+                                                    <div class="row  mb-5">
                                                         <button 
                                                         type="submit" 
                                                         class="btn btn-sm btn-primary" title="Setujui Pengajuan Cuti"><i class="fa fa-thumbs-up"></i> Approve</button>
                                                     </div>
                                                 </form>
                                                 @endif
-                                                <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan Cuti" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
-                                                <a href="#" class="btn btn-secondary btn-sm my-2" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="detailFunc({{$d}})"><i class="fa fa-eye"></i> Detail</a>
+                                                @if($d->approved < 3)
+                                                <form action="{{route('fakultas.pengajuan-cuti.decline', $d)}}" method="post" id="declineForm{{$d->id_cuti}}" class="decline-class" data-id='{{$d->id_cuti}}'>
+                                                    @csrf
+                                                    <div class="row mb-5">
+                                                        <button type="submit" class="btn btn-sm btn-danger" title="Tolak Pengajuan Cuti"><i class="fa fa-ban"></i> Decline</button>
+                                                    </div>
+                                                </form>
+                                                @endif
+                                                <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
+                                                {{-- <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan Cuti" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a> --}}
+                                                <a href="{{ asset($d->file_pendukung) }}" target="_blank" class="btn btn-primary">
+                                                    <i class="fa fa-file-pdf-o"></i> File Pendukung
+                                                </a>                                                
                                             </div>
                                         </td>
                                     </tr>
@@ -99,15 +116,16 @@ Pengajuan Cuti Fakultas
 @push('js')
 
 <script>
-      $(document).ready(function() {
+    $(function () {
         $('#data').DataTable({
             "paging": true,
-            "ordering": true,
+            "lengthChange": true,
             "searching": true,
-            // "scrollCollapse": true,
-            // "scrollY": "550px",
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+            "responsive": true,
         });
-
     });
 </script>
 
