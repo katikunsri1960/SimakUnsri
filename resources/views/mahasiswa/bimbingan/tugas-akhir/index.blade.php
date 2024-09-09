@@ -187,8 +187,17 @@ Bimbingan Tugas Akhir
 <script src="{{ asset('assets/vendor_components/sweetalert/sweetalert.min.js') }}"></script>
 <script src="{{ asset('assets/vendor_components/select2/dist/js/select2.full.min.js') }}"></script>
 <script>
-    $(document).ready(function() {
+    $(document).ready(function() {        
         $('.select2').select2();
+
+        $('#dt').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+        });
 
         // Check payment status and show SweetAlert if not paid
         @if ($statusPembayaran == NULL && $beasiswa == 0)
@@ -236,16 +245,8 @@ Bimbingan Tugas Akhir
                     $('#tambahAsistensiModal').modal('show');
                 }
             });
-        @endif   
 
-        $('#dt').DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": true,
-        });
+        @endif   
     });
 </script>
 @endpush
