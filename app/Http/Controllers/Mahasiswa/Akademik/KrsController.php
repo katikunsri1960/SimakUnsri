@@ -171,12 +171,12 @@ class KrsController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        $nim_krs_manual = [
-            // '07031282126204', 
-            '02012682125099',//Mahasiswa Terlambat Isi KRS Karena Sakit
-            '06151382025060',//Mahasiswa Terlambat Isi KRS Karena Hamil
-            '03041381823070'//Mahasiswa Perpanjangan Studi
-        ];
+        // $nim_krs_manual = [
+        //     // '07031282126204', 
+        //     '02012682125099',//Mahasiswa Terlambat Isi KRS Karena Sakit
+        //     '06151382025060',//Mahasiswa Terlambat Isi KRS Karena Hamil
+        //     '03041381823070'//Mahasiswa Perpanjangan Studi
+        // ];
 
         $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->first();
         // dd($batas_isi_krs_manual);
