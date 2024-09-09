@@ -170,9 +170,8 @@ class KrsController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        $nim_krs_manual = ['07031282126204'];
+        $nim_krs_manual = ['07031282126204', '06151382025060'];
         
-
         if(in_array($riwayat_pendidikan->nim, $nim_krs_manual)){
             // $batas_isi_krs =  Carbon::parse($today)->addDay()->toDateString();
             $batas_isi_krs =  $today;
