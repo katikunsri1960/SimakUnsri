@@ -184,7 +184,7 @@ class KrsController extends Controller
             $batas_isi_krs =  NULL;
         }
 
-        dd($batas_isi_krs);
+        // dd($batas_isi_krs);
 
         $batas_pembayaran = Carbon::parse($semester_aktif->batas_bayar_ukt)->toDateString();
         
