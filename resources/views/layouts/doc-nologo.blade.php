@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" href="{{public_path('assets/plugins/bootstrap/css/bootstrap.min.css')}}">
     <title>@yield('title', 'Document')</title>
     <style>
         header {
@@ -24,7 +23,7 @@
         .text-judul2
         {
             font-size: 12pt;
-            font-weight: 600; 
+            font-weight: 600;
             text-transform: uppercase;
             font-family: Arial, Helvetica, sans-serif;
             clear: both;
@@ -62,7 +61,7 @@
             font-family: Arial, Helvetica, sans-serif;
             text-transform: uppercase;
         }
-        
+
         .table-pdf {
             border: 1px solid;
             padding-left: 5px;

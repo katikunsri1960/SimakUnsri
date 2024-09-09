@@ -36,10 +36,17 @@ Transkrip Nilai
                             </div>
                         </div>
                     </div>
+
                     <div class="table-responsive mt-5">
                         <div class="box-body text-center">
                             <div class="table-responsive">
                                 <div id="krsDiv" hidden>
+                                    <div class="row mb-2">
+                                        <form action="{{route('bak.transkrip-nilai.download')}}" method="get" id="cetakForm" target="_blank">
+                                            <input type="hidden" name="nim" id="nimCetak">
+                                            <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
+                                        </form>
+                                    </div>
                                     <h3 class="text-center">Transkrip Mahasiswa</h3>
                                     <div class="row">
                                         <div class="col-md-2" id="foto">
@@ -185,7 +192,7 @@ Transkrip Nilai
                                 });
                                 return false;
                             }
-
+                            $('#nimCetak').val(nim);
                             $('#krsDiv').removeAttr('hidden');
                             // append response.krs to table of krs-regular
                             $('#nimKrs').text(response.riwayat.nim);
