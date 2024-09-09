@@ -40,7 +40,8 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::prefix('transkrip-nilai')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\TranskripController::class, 'index'])->name('bak.transkrip-nilai');
-                Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'data'])->name('bak.transkrip-nilai.get');
+                Route::get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'data'])->name('bak.transkrip-nilai.get');
+                Route::get('/download', [App\Http\Controllers\Bak\TranskripController::class, 'download'])->name('bak.transkrip-nilai.download');
             });
 
             Route::prefix('pengajuan-cuti')->group(function(){
@@ -136,7 +137,7 @@ Route::group(['middleware' => ['auth']], function() {
 
             // Route::get('/pengajuan-cuti', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
             // Route::get('/pengajuan-cuti/tambah', [App\Http\Controllers\Fakultas\CutiController::class, 'tambah'])->name('fakultas.pengajuan-cuti.tambah');
-            
+
 
 
             //Route Bantuan
