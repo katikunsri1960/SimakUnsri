@@ -129,18 +129,9 @@
                             </span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ.beasiswa') ? 'active' : ''}}">
-                        <a href="{{route('univ.beasiswa')}}">
-                            <i class="fa fa-book"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Beasiswa</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                    </li>
                     <li class="treeview {{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*')
-                                        | request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') | request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*') ? 'active menu-open' : ''}}">
+                                        | request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') | request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*')
+                                        | request()->routeIs('univ.beasiswa') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
                             <span>Manual KRS</span>
@@ -160,6 +151,10 @@
                             <li class="{{request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*') ? 'active' : ''}}"><a
                                 href="{{route('univ.p-bayar')}}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Penundaan Bayar</a>
+                            </li>
+                            <li class="{{request()->routeIs('univ.beasiswa') ? 'active' : ''}}"><a
+                                href="{{route('univ.beasiswa')}}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Beasiswa</a>
                             </li>
 
                         </ul>
