@@ -86,7 +86,7 @@
                     </li>
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i span class="icon-Library"><span class="path1"></span><span class="path2"></span></i>
+                            <i span class="fa fa-asterisk"><span class="path1"></span><span class="path2"></span></i>
                             <span>Referensi</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
@@ -139,34 +139,8 @@
                             </span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*') ? 'active' : ''}}">
-                        <a href="{{route('univ.p-bayar')}}">
-                            <i class="fa fa-plane-slash"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Penundaan Bayar</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                    </li>
-                    {{-- <li class="{{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*') ? 'active' : ''}}">
-                        <a href="{{route('univ.pembayaran-manual')}}">
-                            <i class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Pembayaran Manual</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                    </li> --}}
-                    {{-- <li class="{{request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active' : ''}}">
-                        <a href="{{route('univ.krs-manual')}}">
-                            <i class="fa fa-calendar"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Batas Isi KRS Manual</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                    </li> --}}
-                    <li class="treeview {{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*') | request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*')
+                                        | request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') | request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
                             <span>Manual KRS</span>
@@ -182,6 +156,10 @@
                             <li class="{{request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active' : ''}}"><a
                                     href="{{route('univ.krs-manual')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Batas Isi KRS Manual</a>
+                            </li>
+                            <li class="{{request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*') ? 'active' : ''}}"><a
+                                href="{{route('univ.p-bayar')}}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Penundaan Bayar</a>
                             </li>
 
                         </ul>
