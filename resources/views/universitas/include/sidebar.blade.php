@@ -148,7 +148,7 @@
                             </span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*') ? 'active' : ''}}">
                         <a href="{{route('univ.pembayaran-manual')}}">
                             <i class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
                             <span>Pembayaran Manual</span>
@@ -156,8 +156,8 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
-                    </li>
-                    <li class="{{request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active' : ''}}">
+                    </li> --}}
+                    {{-- <li class="{{request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active' : ''}}">
                         <a href="{{route('univ.krs-manual')}}">
                             <i class="fa fa-calendar"><span class="path1"></span><span class="path2"></span></i>
                             <span>Batas Isi KRS Manual</span>
@@ -165,6 +165,26 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
+                    </li> --}}
+                    <li class="treeview {{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*') | request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Manual KRS</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*') ? 'active' : ''}}"><a
+                                    href="{{route('univ.pembayaran-manual')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Pembayaran Manual</a>
+                            </li>
+                            <li class="{{request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') ? 'active' : ''}}"><a
+                                    href="{{route('univ.krs-manual')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Batas Isi KRS Manual</a>
+                            </li>
+
+                        </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.monitoring.*') ? 'active menu-open' : ''}}">
                         <a href="#">
@@ -182,7 +202,7 @@
                                 <a href="{{route('univ.monitoring.lulus-do')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus Do</a>
                             </li>
                         </ul>
-                    </li>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.pengaturan.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-cog"><span class="path1"></span><span class="path2"></span></i>
@@ -207,7 +227,7 @@
                             <li class="{{request()->routeIs('univ.pengaturan.akun') ? 'active' : ''}}"><a
                                 href="{{route('univ.pengaturan.akun')}}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Akun</a>
-                        </li>
+                            </li>
                         </ul>
                     </li>
                 </ul>
