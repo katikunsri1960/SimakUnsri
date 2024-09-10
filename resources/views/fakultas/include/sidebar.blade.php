@@ -31,6 +31,10 @@
                                 <a href="{{route('fakultas.data-master.mahasiswa')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Mahasiswa</a>
                             </li>
+                            <li class="{{request()->routeIs('fakultas.data-master.mahasiswa') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.mahasiswa')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Pejabat Fakultas</a>
+                            </li>
                             {{-- <li class="{{request()->routeIs('fakultas.data-master.kurikulum') || request()->routeIs('fakultas.data-master.kurikulum.*') ?  'active' : ''}}">
                                 <a href="{{route('fakultas.data-master.kurikulum')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Kurikulum</a>
@@ -88,6 +92,56 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
+                    </li>
+
+                    <li class="header">Report & Monitoring</li>
+                    <li class="treeview {{request()->routeIs('prodi.report.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-file-text-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Report</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('prodi.report.kemahasiswaan') ? 'active' : ''}}"><a href="{{route('prodi.report.kemahasiswaan')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Data Kemahasiswaan</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.report.mahasiswa-aktif') ? 'active' : ''}}">
+                                <a href="{{route('prodi.report.mahasiswa-aktif')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Mahasiswa Aktif</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.report.perkuliahan') ? 'active' : ''}}">
+                                <a href="{{route('prodi.report.perkuliahan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Kuliah Mahasiswa</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.report.aktivitas-mahasiswa') ? 'active' : ''}}">
+                                <a href="{{route('prodi.report.aktivitas-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Aktivitas Mahasiswa</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="treeview {{request()->routeIs('prodi.monitoring.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-television"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Monitoring</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('prodi.monitoring.entry-nilai') ? 'active' : ''}}">
+                                <a href="{{route('prodi.monitoring.entry-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Entry Nilai Dosen</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.monitoring.pengajaran-dosen') ? 'active' : ''}}">
+                                <a href="{{route('prodi.monitoring.pengajaran-dosen')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengajaran Dosen</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.monitoring.pengisian-krs') || request()->routeIs('prodi.monitoring.pengisian-krs.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.monitoring.lulus-do') || request()->routeIs('prodi.monitoring.lulus-do.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.monitoring.lulus-do')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus DO</a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="header">BANTUAN</li>
                     <li class="{{request()->routeIs('fakultas.bantuan.ganti-password') ? 'active' : ''}}">

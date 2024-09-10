@@ -241,7 +241,7 @@ class KrsController extends Controller
             'cuti',
             'transkrip',
             'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran', 'non_gelar',
-            'pembayaran_manual', 'nim_krs_manual'
+            'pembayaran_manual'
         ));
     }
 
