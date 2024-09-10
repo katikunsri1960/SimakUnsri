@@ -1,45 +1,88 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Dashboard
+Nilai USEPT Mahasiswa
 @endsection
 @section('content')
-<div class="row align-items-end">
-    <div class="col-xl-12 col-12">
-        <div class="box bg-primary-light pull-up">
-            <div class="box-body p-xl-0">
-                <div class="row align-items-center">
-                    <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
-                    </div>
-                    <div class="col-12 col-lg-9">
-                        <h2>Halaman Nilai Suliet,  {{auth()->user()->name}}</h2>
-                        <p class="text-dark mb-0 fs-16">
-                            Universitas Sriwijaya
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-<section class="content">
-    <div class="row">
+<section class="content bg-white">
+    <div class="row align-items-end">
         <div class="col-12">
-            <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
-                    {{-- <div class="d-flex justify-content-end">
-                        <form action="{{route('univ.mata-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
-                        </form>
-                        <span class="divider-line mx-1"></span>
-                        <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button>
-                    </div> --}}
+			<div class="box pull-up">
+				<div class="box-body bg-img bg-primary-light">
+					<div class="d-lg-flex align-items-center justify-content-between">
+						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
+			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
+							<div class="ms-30">
+								<h2 class="mb-10">Histori Nilai USEPT Mahasiswa,  {{auth()->user()->name}}</h2>
+								<p class="mb-0 text-fade fs-18">SIMAK Universitas Sriwijaya</p>
+							</div>
+						</div>
+					<div>
+				</div>
+			</div>							
+		</div>
+    </div>
+    <div class="row">
+        <div class="col-xxl-12">
+            <div class="box box-body mb-0">
+                <div class="row mb-5">
+                    <div class="col-xl-6 col-lg-12">
+                        <h3 class="fw-500 text-dark mt-0">Daftar Nilai USEPT Mahasiswa</h3>
+                        <h4 class="mb-5">Nilai Kelulusan USEPT Prodi {{$mahasiswa->nama_program_studi}} : {{$usept_prodi->nilai_usept}}</h4>
+                    </div>                             
                 </div>
-                <div class="box-body text-center">
-                    <h1>UNDER DEVELOPMENT</h1>
+                <div class="row">
+                    <div class="table-responsive">
+                        <table id="data" class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>NIM</th>
+                                    <th>Nama Mahasiswa</th>                                    
+                                    <th>Tanggal Ujian</th>
+                                    <th>Skor USEPT</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($data as $d)
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td class="text-center align-middle" style="white-space:nowrap;">{{$mahasiswa->nim}}</td>
+                                        <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
+                                        <td>{{$d->tgl_test}}</td>
+                                        <td>{{$d->score}}</td>
+                                        <td class="text-center align-middle"> 
+                                            @if ($d->score < $usept_prodi->nilai_usept)
+                                                <span class="badge bg-danger">Belum Lulus</span>
+                                            @else
+                                                <span class="badge bg-success">Lulus</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+					  </table>
+                    </div>
                 </div>
-
             </div>
         </div>
-    </div>
+    </div>			
 </section>
 @endsection
+@push('js')
+
+<script>
+      $(document).ready(function() {
+        $('#data').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            // "scrollCollapse": true,
+            // "scrollY": "550px",
+        });
+
+    });
+</script>
+
+@endpush
+
