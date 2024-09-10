@@ -103,8 +103,8 @@
                             <span>Nilai Perkuliahan</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-usept.devop') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.perkuliahan.nilai-usept.devop')}}">
+                    <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-usept') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.perkuliahan.nilai-usept')}}">
                             <i class="fa fa-chart-line"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Nilai USEPT</span>
