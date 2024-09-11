@@ -114,7 +114,7 @@
                     <li class="{{request()->routeIs('dosen.penilaian.sidang-mahasiswa') || request()->routeIs('dosen.penilaian.sidang-mahasiswa.*') ? 'active' : ''}}">
                         <a href="{{route('dosen.penilaian.sidang-mahasiswa')}}">
                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Sidang Mahasiswa</span>
+                            <span>Penguji Sidang Mahasiswa</span>
                         </a>
                     </li>
                     <li class="header">Pembimbing Mahasiswa</li>

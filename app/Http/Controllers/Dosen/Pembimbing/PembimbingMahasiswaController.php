@@ -233,9 +233,9 @@ class PembimbingMahasiswaController extends Controller
 
     public function ajuan_sidang(AktivitasMahasiswa $aktivitas)
     {
-        $data = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']);
+        $data = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa', 'prodi']);
 
-        // dd($pembimbing_ke);
+        // dd($data);
         return view('dosen.pembimbing.tugas-akhir.pengajuan-sidang', [
             'data' => $data
         ]);
@@ -274,106 +274,106 @@ class PembimbingMahasiswaController extends Controller
 
     public function ajuan_sidang_store(Request $request, $aktivitas)
     {
-        // dd($request->all());
+        // dd($request->judul);
+        $data = $request->validate([
+            'judul' => 'required',
+            'dosen_penguji' => 'nullable',
+            'dosen_penguji.*' => 'required_if:dosen_penguji,!=,null',
+            'penguji_ke' => 'nullable',
+            'penguji_ke' => 'required_if:penguji_ke,!=,null'
+        ]);       
 
         try {
             DB::beginTransaction();
 
-            $aktivitasMahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
-            // dd($aktivitasMahasiswa);
-
+            $aktivitasMahasiswa = AktivitasMahasiswa::find($aktivitas);
+            $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
+            $ujiMahasiswa = UjiMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
+            // dd($aktivitas, $aktivitasMahasiswa);
             if (!$aktivitasMahasiswa) {
                 return redirect()->back()->with('error', 'Aktivitas Mahasiswa tidak ditemukan.');
             }
 
-            $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])->where('id_aktivitas', $aktivitas)->first();
-            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->mahasiswa->id_kurikulum)->first();
-            $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->get();
-            $check_nilai_usept = false;
-            // dd($nilai_usept_mhs);
+            $pembimbing = $bimbingMahasiswa->where('id_dosen', auth()->user()->fk_id)->first();
 
-            foreach($nilai_usept_mhs as $n){
-                if($n->score >= $nilai_usept_prodi->nilai_usept){
-                    $aktivitasMahasiswa->update(['approve_sidang' => 1]);
-                    $check_nilai_usept = true;
-                    break; // Exit the loop when the condition is met
-                }
+            if (!$pembimbing || $pembimbing->pembimbing_ke != 1) {
+                return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat mengajukan.');
             }
 
-            if(!$check_nilai_usept){
+            $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])
+                                ->where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)
+                                ->first();
+
+            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->mahasiswa->id_kurikulum)->first();
+            $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->max('score');
+
+            // dd($nilai_usept_mhs);
+            
+            if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
+                // dd('masuk');
+                $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+                $data_mahasiswa->update(['judul' => $data['judul']]);
+
+                foreach ($bimbingMahasiswa as $b) {
+                    $b->update(['judul' => $data['judul']]);
+                }
+
+                if($ujiMahasiswa){
+                    foreach ($ujiMahasiswa as $u) {
+                        $u->update(['judul' => $data['judul']]);
+                    }
+                }
+
+            }else{
                 return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
             }
 
-            if (!empty($request->dosen_penguji) && !empty($request->penguji_ke)) {
+            if (!empty($data['dosen_penguji']) && !empty($request->penguji_ke)) {
+                $semester_aktif = SemesterAktif::first();
 
-                $pembimbing = BimbingMahasiswa::where('id_aktivitas', $aktivitas)
-                                ->where('id_dosen', auth()->user()->fk_id)
-                                ->first();
-                // dd($pembimbing->pembimbing_ke);
-                if ($pembimbing->pembimbing_ke != 1) {
+                $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran)
+                                ->whereIn('id_registrasi_dosen', $data['dosen_penguji'])
+                                ->get();
 
-                    return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat mengajukan.');
-
-                }else{
-                    $semester_aktif = SemesterAktif::first();
-
-                    $data = $request->validate([
-                        'dosen_penguji.*' => 'required',
-                        'penguji_ke.*' => 'required'
-                    ]);
-
-                    $data_aktivitas = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
-
-                    $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran)
-                                    ->whereIn('id_registrasi_dosen', $request->dosen_penguji)
+                if ($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($data['dosen_penguji'])) {
+                    $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran - 1)
+                                    ->whereIn('id_registrasi_dosen', $data['dosen_penguji'])
                                     ->get();
-
-                    if ($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($request->dosen_penguji)) {
-                        $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran - 1)
-                                        ->whereIn('id_registrasi_dosen', $request->dosen_penguji)
-                                        ->get();
-                    }
-
-                    $jumlah_dosen = count($request->dosen_penguji);
-
-                    for ($i = 0; $i < $jumlah_dosen; $i++) {
-                        $id_uji_mahasiswa = Uuid::uuid4()->toString();
-                        $dosen = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran)
-                                    ->where('id_registrasi_dosen', $request->dosen_penguji[$i])
-                                    ->first();
-                        if (!$dosen) {
-                            $dosen = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran - 1)
-                                        ->where('id_registrasi_dosen', $request->dosen_penguji[$i])
-                                        ->first();
-                        }
-
-                        $kategori_kegiatan = $request->penguji_ke[$i] == '1' ? '110501' : '110502';
-                        $nama_kategori_kegiatan = $request->penguji_ke[$i] == '1' ? 'Ketua Penguji' : 'Anggota Penguji';
-
-                        UjiMahasiswa::create([
-                            'feeder' => 0,
-                            'id_uji' => $id_uji_mahasiswa,
-                            'id_aktivitas' => $aktivitas,
-                            'judul' => $data_aktivitas->judul,
-                            'id_kategori_kegiatan' => $kategori_kegiatan,
-                            'nama_kategori_kegiatan' => $nama_kategori_kegiatan,
-                            'id_dosen' => $dosen->id_dosen,
-                            'nidn' => $dosen->nidn,
-                            'nama_dosen' => $dosen->nama_dosen,
-                            'penguji_ke' => $request->penguji_ke[$i],
-                            'status_uji_mahasiswa' => 0,
-                            'status_sync' => 'Belum Sync'
-                        ]);
-                    }
                 }
-            }else{
-                return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+
+                $jumlah_dosen = count($data['dosen_penguji']);
+
+                for ($i = 0; $i < $jumlah_dosen; $i++) {
+                    $id_uji_mahasiswa = Uuid::uuid4()->toString();
+                    $dosen = $dosen_penguji->firstWhere('id_registrasi_dosen', $data['dosen_penguji'][$i]);
+
+                    if (!$dosen) {
+                        $dosen = $dosen_pengajar->firstWhere('id_registrasi_dosen', $data['dosen_penguji'][$i]);
+                    }
+
+                    $kategori_kegiatan = $request->penguji_ke[$i] == '1' ? '110501' : '110502';
+                    $nama_kategori_kegiatan = $request->penguji_ke[$i] == '1' ? 'Ketua Penguji' : 'Anggota Penguji';
+
+                    UjiMahasiswa::create([
+                        'feeder' => 0,
+                        'id_uji' => $id_uji_mahasiswa,
+                        'id_aktivitas' => $aktivitas,
+                        'judul' => $data['judul'],
+                        'id_kategori_kegiatan' => $kategori_kegiatan,
+                        'nama_kategori_kegiatan' => $nama_kategori_kegiatan,
+                        'id_dosen' => $dosen->id_dosen,
+                        'nidn' => $dosen->nidn,
+                        'nama_dosen' => $dosen->nama_dosen,
+                        'penguji_ke' => $request->penguji_ke[$i],
+                        'status_uji_mahasiswa' => 0,
+                        'status_sync' => 'Belum Sync'
+                    ]);
+                }
             }
 
             DB::commit();
 
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
-
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
