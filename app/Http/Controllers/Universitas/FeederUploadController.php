@@ -63,10 +63,10 @@ class FeederUploadController extends Controller
 
         // return response()->json(['message' => $semester.' - '.$prodi]);
 
-        $data = AktivitasKuliahMahasiswa::where('feeder', 1)
+        $data = AktivitasKuliahMahasiswa::where('feeder', 0)
             ->where('id_semester', $semester)
             ->where('id_prodi', $prodi)
-            ->whereNotNull('id_pembiayaan')
+            // ->whereNotNull('id_pembiayaan')
             ->get();
 
         $totalData = $data->count();
