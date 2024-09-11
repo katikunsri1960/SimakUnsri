@@ -37,8 +37,8 @@
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
-
-    <div id="spinner" class="centered" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); z-index: 9999;">
+    <div id="spinner" class="centered"
+        style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.5); z-index: 9999;">
         <div class="spinner-border text-primary" role="status">
             <span class="sr-only">Loading...</span>
         </div>
@@ -78,7 +78,13 @@
     <script src="{{asset('assets/js/pages/data-table.js')}}"></script>
     {{-- <script src="{{asset('assets/js/pages/chart-widgets.js')}}"></script> --}}
     <script src="{{asset('assets/js/pages/chartjs-int.js')}}"></script>
-
+    <script>
+        $(document).ajaxStart(function() {
+             $("#spinner").show();
+         }).ajaxStop(function() {
+             $("#spinner").hide();
+         });
+    </script>
     @stack('js')
     <!-- EduAdmin App -->
 

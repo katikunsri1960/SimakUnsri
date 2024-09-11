@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Fakultas;
+namespace App\Http\Controllers\Fakultas\LainLain;
 
 use Ramsey\Uuid\Uuid;
 use App\Models\ProgramStudi;
@@ -25,7 +25,7 @@ class CutiController extends Controller
         $data = PengajuanCuti::with(['prodi', 'riwayat'])->whereIn('id_prodi', $id_prodi_fak)->get();
         // dd($data);
 
-        return view('fakultas.pengajuan-cuti.index', ['data' => $data]);
+        return view('fakultas.lain-lain.pengajuan-cuti.index', ['data' => $data]);
     }
 
     public function cuti_approve(PengajuanCuti $cuti)

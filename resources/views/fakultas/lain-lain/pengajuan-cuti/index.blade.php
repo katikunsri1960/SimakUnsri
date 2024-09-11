@@ -54,7 +54,7 @@ Pengajuan Cuti Fakultas
                             </thead>
                             <tbody>
                                 @foreach($data as $d)
-                                @include('fakultas.pengajuan-cuti.pembatalan-cuti')
+                                @include('fakultas.lain-lain.pengajuan-cuti.pembatalan-cuti')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-start align-middle">{{$d->riwayat->nim}}</td>

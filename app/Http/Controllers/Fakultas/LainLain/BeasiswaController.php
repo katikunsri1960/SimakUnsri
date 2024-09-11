@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Fakultas;
+namespace App\Http\Controllers\Fakultas\LainLain;
 
 use App\Http\Controllers\Controller;
 use App\Models\BeasiswaMahasiswa;
@@ -13,14 +13,16 @@ class BeasiswaController extends Controller
     public function index(Request $request)
     {
         $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                    ->orderBy('id_jenjang_pendidikan')
-                    ->orderBy('nama_program_studi')
                     ->pluck('id_prodi');
 
-        $prodi = ProgramStudi::whereIn('id_prodi', $prodi_fak)->get();
+        $prodi = ProgramStudi::whereIn('id_prodi', $prodi_fak)
+                    ->where('status', 'A')
+                    ->orderBy('id_jenjang_pendidikan')
+                    ->orderBy('nama_program_studi')
+                    ->get();
         
         $jenisBeasiswa = JenisBeasiswaMahasiswa::all();
-        return view('fakultas.beasiswa.index', [
+        return view('fakultas.lain-lain.beasiswa.index', [
             'prodi' => $prodi,
             'jenisBeasiswa' => $jenisBeasiswa,
         ]);
