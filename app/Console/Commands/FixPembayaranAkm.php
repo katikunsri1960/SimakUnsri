@@ -6,6 +6,7 @@ use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Registrasi;
 use App\Models\Connection\Tagihan;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PembayaranManualMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\SemesterAktif;
 use Carbon\Carbon;
@@ -68,6 +69,21 @@ class FixPembayaranAkm extends Command
             return [
                 'status' => 'success',
                 'message' => 'Beasiswa',
+                'data' => $nim->nim.' - '.$nim->nama_mahasiswa
+            ];
+        }
+
+        $manual_pembayaran = PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif)->first();
+
+        if ($manual_pembayaran) {
+            $akm->update([
+                'id_pembiayaan' => 1,
+                'biaya_kuliah_smt' => $manual_pembayaran->nominal_ukt,
+            ]);
+
+            return [
+                'status' => 'success',
+                'message' => 'Manual Pembayaran',
                 'data' => $nim->nim.' - '.$nim->nama_mahasiswa
             ];
         }
