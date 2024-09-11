@@ -357,7 +357,7 @@ class PembimbingMahasiswaController extends Controller
                     UjiMahasiswa::create([
                         'feeder' => 0,
                         'id_uji' => $id_uji_mahasiswa,
-                        'id_aktivitas' => $aktivitas,
+                        'id_aktivitas' => $aktivitasMahasiswa->id_aktivitas,
                         'judul' => $data['judul'],
                         'id_kategori_kegiatan' => $kategori_kegiatan,
                         'nama_kategori_kegiatan' => $nama_kategori_kegiatan,
