@@ -8,6 +8,7 @@ use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use App\Services\Feeder\FeederUpload;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
@@ -35,20 +36,36 @@ class FeederUploadController extends Controller
 
     public function akm_data(Request $request)
     {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
         $data = AktivitasKuliahMahasiswa::leftJoin('pembiayaans', 'aktivitas_kuliah_mahasiswas.id_pembiayaan', 'pembiayaans.id_pembiayaan')->where('feeder', 0)
             ->where('id_semester', $request->id_semester)
-            ->where('id_prodi', $request->id_prodi)
+            ->where('id_prodi', $prodi)
             ->get();
 
         return response()->json($data);
     }
 
+    public function upload_akm_ajax(Request $request)
+    {
+        // Start the upload process and return a response immediately
+        // The actual progress updates will be handled by the uploadAkmProgress method
+        Log::info('Request data in upload_akm:', $request->all());
+        return response()->json(['message' => 'Upload started']);
+    }
+
+
     public function upload_akm(Request $request)
     {
 
-        $data = AktivitasKuliahMahasiswa::where('feeder', 0)
-            ->where('id_semester', '20241')
-            ->where('id_prodi', 'b68efc34-c0f0-4334-9970-e02d769e3f49')
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = AktivitasKuliahMahasiswa::where('feeder', 1)
+            ->where('id_semester', $semester)
+            ->where('id_prodi', $prodi)
             ->whereNotNull('id_pembiayaan')
             ->get();
 
@@ -105,12 +122,6 @@ class FeederUploadController extends Controller
 
     }
 
-    public function upload_akm_ajax(Request $request)
-    {
-        // Start the upload process and return a response immediately
-        // The actual progress updates will be handled by the uploadAkmProgress method
-        return response()->json(['message' => 'Upload started']);
-    }
 
     public function kelas()
     {

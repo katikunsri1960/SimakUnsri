@@ -31,14 +31,16 @@ FEEDER UPLOAD - AKM
                         <div class="col-md-12 mb-5">
                             <form id="uploadAkmForm">
                                 @csrf
+                                <input type="hidden" name="id_prodi" id="form_id_prodi" required>
+                                <input type="hidden" name="id_semester" id="form_id_semester" required>
                                 <div class="col-md-6">
                                     <div class="row">
-                                        <button type="submit" class="btn btn-primary btn-sm"> <i
+                                        <button type="submit" class="btn btn-primary btn-sm" disabled id="buttonSubmitForm"> <i
                                                 class="fa fa-upload me-3"></i>Upload AKM</button>
                                     </div>
                                 </div>
                             </form>
-                            <div class="row">
+                            <div class="row mt-3">
                                 <div id="progressContainer" style="display: none;">
                                     <div class="progress">
                                         <div id="progressBar" class="progress-bar" role="progressbar" style="width: 0%;"
@@ -61,7 +63,7 @@ FEEDER UPLOAD - AKM
                                 <select class="form-select" name="id_prodi" id="id_prodi">
                                     <option value="" selected>Select one</option>
                                     @foreach ($prodi as $p)
-                                    <option value="{{$p->id_prodi}}">
+                                    <option value="{{$p->id}}">
                                         {{$p->kode_program_studi}} - {{$p->nama_program_studi}}
                                         ({{$p->nama_jenjang_pendidikan}})
                                     </option>
@@ -152,6 +154,16 @@ FEEDER UPLOAD - AKM
                     var data = response;
                     var html = '';
                     var no = 1;
+                    console.log(data);
+                    if (response.length > 0) {
+                        $('#buttonSubmitForm').prop('disabled', false);
+                        $('#form_id_prodi').val(id_prodi);
+                        $('#form_id_semester').val(id_semester);
+                    } else {
+                        $('#buttonSubmitForm').prop('disabled', true);
+                        $('#form_id_prodi').val('');
+                        $('#form_id_semester').val('');
+                    }
 
                     $.each(data, function(i, item) {
                         html += '<tr>';
@@ -203,6 +215,8 @@ FEEDER UPLOAD - AKM
         $('#uploadAkmForm').on('submit', function(e) {
             e.preventDefault();
             var form = $(this);
+            var submitButton = form.find('button[type="submit"]');
+
             swal({
                 title: 'Sinkronisasi Data',
                 text: "Apakah anda yakin ingin melakukan sinkronisasi?",
@@ -215,13 +229,25 @@ FEEDER UPLOAD - AKM
             }, function(isConfirm){
                 if (isConfirm) {
                     $('#progressContainer').show();
+                    submitButton.prop('disabled', true);
+
+                     // Serialize form data and log it to the console
+                     var formData = form.serialize();
+                    console.log('Serialized form data:', formData);
 
                     $.ajax({
                         url: "{{ route('univ.feeder-upload.akm.upload-ajax') }}",
                         type: 'POST',
-                        data: form.serialize(),
+                        data: formData,
                         success: function(response) {
-                            var source = new EventSource("{{ route('univ.feeder-upload.akm.upload') }}");
+                            var id_prodi = $('#id_prodi').val();
+                            var id_semester = $('#id_semester').val();
+
+                            var eventSourceUrl = "{{ route('univ.feeder-upload.akm.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
+                            console.log('EventSource URL:', eventSourceUrl);
+
+                            // Initialize the EventSource with the constructed URL
+                            var source = new EventSource(eventSourceUrl);
 
                             source.onmessage = function(event) {
                                 var data = JSON.parse(event.data);
@@ -239,6 +265,7 @@ FEEDER UPLOAD - AKM
                                         confirmButtonColor: '#3085d6',
                                         confirmButtonText: 'OK'
                                     });
+                                    submitButton.prop('disabled', true);
                                 }
                             };
 
