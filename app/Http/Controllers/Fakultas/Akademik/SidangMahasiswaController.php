@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Prodi\Akademik;
+namespace App\Http\Controllers\Fakultas\Akademik;
 
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
@@ -22,7 +22,7 @@ class SidangMahasiswaController extends Controller
         $db = new AktivitasMahasiswa();
         $data = $db->sidang(auth()->user()->fk_id, $semester );
         // dd($data);
-        return view('prodi.data-akademik.sidang-mahasiswa.index', [
+        return view('fakultas.data-akademik.sidang-mahasiswa.index', [
             'data' => $data,
             'semester' => $semester,
         ]);
@@ -42,7 +42,7 @@ class SidangMahasiswaController extends Controller
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'uji_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
         // dd($data);
 
-        return view('prodi.data-akademik.sidang-mahasiswa.edit', [
+        return view('fakultas.data-akademik.sidang-mahasiswa.edit', [
             'd' => $data
         ]);
     }
@@ -55,6 +55,7 @@ class SidangMahasiswaController extends Controller
         $data = $request->validate([
                     'tanggal_ujian' => 'required',
                     'bulan_ujian' => 'required',
+                    'tahun_ujian' => 'required',
                     'jam_mulai' => 'required',
                     'menit_mulai' => 'required',
                     'jam_selesai' => 'required',
@@ -99,7 +100,7 @@ class SidangMahasiswaController extends Controller
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'uji_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
         // dd($data);
 
-        return view('prodi.data-akademik.sidang-mahasiswa.tambah-dosen', [
+        return view('fakultas.data-akademik.sidang-mahasiswa.tambah-dosen', [
             'd' => $data,
             'kategori' => $kategori
         ]);
@@ -161,7 +162,7 @@ class SidangMahasiswaController extends Controller
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.sidang-mahasiswa.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('fakultas.data-akademik.sidang-mahasiswa.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Throwable $th) {
             DB::rollback();
@@ -176,7 +177,7 @@ class SidangMahasiswaController extends Controller
         $data = UjiMahasiswa::with(['anggota_aktivitas_personal'])->where('id', $uji)->first();
         // dd($data);
 
-        return view('prodi.data-akademik.sidang-mahasiswa.edit-dosen', [
+        return view('fakultas.data-akademik.sidang-mahasiswa.edit-dosen', [
             'data' => $data,
             'kategori' => $kategori
         ]);
@@ -219,7 +220,7 @@ class SidangMahasiswaController extends Controller
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.sidang-mahasiswa.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('fakultas.data-akademik.sidang-mahasiswa.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Throwable $th) {
             DB::rollback();

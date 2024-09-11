@@ -27,7 +27,7 @@ Pengajuan Sidang Mahasiswa
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang.store', ['aktivitas' => $data->id_aktivitas])}}" id="approve-sidang" method="POST">
+                <form class="form" action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang.store', ['aktivitas' => $data->id])}}" id="approve-sidang" method="POST">
                     @csrf
                     <div class="box-body">
                         <h4 class="text-info mb-0"><i class="fa fa-university"></i> Detail Bimbing Mahasiswa</h4>
@@ -71,7 +71,7 @@ Pengajuan Sidang Mahasiswa
                                     name="angkatan"
                                     id="angkatan"
                                     aria-describedby="helpId"
-                                    value="{{$data->anggota_aktivitas_personal->angkatan}}"
+                                    value="{{substr($data->anggota_aktivitas_personal->mahasiswa->id_periode_masuk,0,4)}}"
                                     disabled
                                     required
                                 />
@@ -87,7 +87,6 @@ Pengajuan Sidang Mahasiswa
                                     id="judul"
                                     aria-describedby="helpId"
                                     value="{{$data->judul}}"
-                                    disabled
                                     required
                                 />
                             </div>

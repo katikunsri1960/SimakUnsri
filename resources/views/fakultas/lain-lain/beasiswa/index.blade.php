@@ -36,7 +36,7 @@ BEASISWA
                             <a href="{{route('fakultas.beasiswa')}}" class="btn btn-warning waves-effect waves-light" >
                                 <i class="fa fa-rotate"></i> Reset Filter
                             </a>
-                            @include('fakultas.beasiswa.filter')
+                            @include('fakultas.lain-lain.beasiswa.filter')
                         </div>
                     </div>
                 </div>

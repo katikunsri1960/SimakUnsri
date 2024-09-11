@@ -28,9 +28,19 @@ class NilaiController extends Controller
                         ->where('id_registrasi_mahasiswa',$id_reg_mhs)
                         ->orderBy('id_semester','asc')
                         ->get();
+
+        
         $transkrip_mahasiswa=NilaiPerkuliahan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
 
-        return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer]);
+        $total_sks_transfer = $nilai_transfer->whereNotIn('nilai_angka_diakui', [0, NULL] )->sum('sks_mata_kuliah_diakui');
+        $total_sks_konversi = $nilai_konversi->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
+        $total_sks_transkrip = $transkrip_mahasiswa->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
+        
+        $total_sks = $total_sks_transfer + $total_sks_konversi + $total_sks_transkrip ;
+        // dd($total_sks);
+        
+
+        return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks'=>$total_sks]);
     }
 
     public function lihat_khs($id_semester)

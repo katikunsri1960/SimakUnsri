@@ -311,27 +311,12 @@ class PesertaKelasKuliah extends Model
                             'status_sync' => 'belum sync',
                         ]);
                     }else{
-                        $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
-                            'feeder' => 0,
-                            'id_registrasi_mahasiswa' => $id_reg,
-                            'nim' => $riwayat_pendidikan->nim,
-                            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                            'id_prodi' => $riwayat_pendidikan->id_prodi,
-                            'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                            'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
-                            'id_status_mahasiswa' => 'M',
-                            'nama_status_mahasiswa' => 'Kampus Merdeka',
-                            'ips'=> '0.00',
-                            'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                            'biaya_kuliah_smt' => 0,
-                            'id_pembiayaan' => NULL,
-                            'status_sync' => 'belum sync',
-                        ]);
+                        $result = [
+                            'status' => 'error',
+                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa!',
+                        ];
+    
+                        return $result;
                     }
                 }else{
                     if($beasiswa){
@@ -403,27 +388,12 @@ class PesertaKelasKuliah extends Model
                             'status_sync' => 'belum sync',
                         ]);
                     }else{
-                        $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
-                            'feeder' => 0,
-                            'id_registrasi_mahasiswa' => $id_reg,
-                            'nim' => $riwayat_pendidikan->nim,
-                            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                            'id_prodi' => $riwayat_pendidikan->id_prodi,
-                            'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                            'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
-                            'id_status_mahasiswa' => 'A',
-                            'nama_status_mahasiswa' => 'Aktif',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                            'biaya_kuliah_smt' => 0,
-                            'id_pembiayaan' => NULL,
-                            'status_sync' => 'belum sync',
-                        ]);
+                        $result = [
+                            'status' => 'error',
+                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa!',
+                        ];
+    
+                        return $result;
                     }
                 }
 

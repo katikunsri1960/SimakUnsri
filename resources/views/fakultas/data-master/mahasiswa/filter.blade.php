@@ -18,7 +18,7 @@
                                 @foreach ($prodi as $p)
                                 <option value="{{$p->id_prodi}}" {{ in_array($p->id_prodi, old('prodi',
                                     request()->get('prodi', []))) ? 'selected' : '' }}>
-                                    {{$p->nama_jenjang_pendidikan}} {{$p->nama_program_studi}} ({{$p->kode_program_studi}})
+                                    {{$p->nama_jenjang_pendidikan}} - {{$p->nama_program_studi}} ({{$p->kode_program_studi}})
                                 </option>
                                 @endforeach
                             </select>
@@ -30,10 +30,10 @@
                                     -- Pilih Angkatan --
                                 </option>
                                 @foreach ($angkatan as $p)
-                                <option value="{{$p->angkatan}}" {{ in_array($p->angkatan, old('angkatan',
-                                    request()->get('angkatan', []))) ? 'selected' : '' }}>
-                                    {{$p->angkatan}}
-                                </option>
+                                    <option value="{{$p->angkatan_raw}}" {{ in_array($p->angkatan_raw, old('angkatan',
+                                        request()->get('angkatan', []))) ? 'selected' : '' }}>
+                                        {{$p->angkatan_raw}}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -65,12 +65,6 @@
             allowClear: true,
             width: '100%',
             dropdownParent: $('#filter-button')
-        });
-        $('#tahun_angkatan').select2({
-            placeholder: '-- Pilih Angkatan -- ',
-            allowClear: true,
-            width: '100%',
-            dropdownParent: $('#setAngkatanModal')
         });
     });
 

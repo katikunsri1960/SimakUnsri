@@ -1,26 +1,26 @@
 @extends('layouts.fakultas')
 @section('title')
-Underdevelopment
+Yudisium Mahasiswa
 @endsection
 @section('content')
-<div class="row align-items-end">
-    <div class="col-xl-12 col-12">
-        <div class="box bg-primary-light pull-up">
-            <div class="box-body p-xl-0">
-                <div class="row align-items-center">
-                    <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
-                    </div>
-                    <div class="col-12 col-lg-9">
-                        <h2>Halaman Sedang Dalam Pengerjaan</h2>
-                        <p class="text-dark mb-0 fs-16">
-                            Universitas Sriwijaya
-                        </p>
-                    </div>
-                </div>
+<div class="content-header">
+    <div class="d-flex align-items-center">
+        <div class="me-auto">
+            <h3 class="page-title">Yudisium Mahasiswa</h3>
+            <div class="d-inline-block align-items-center">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{route('fakultas')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
+                        <li class="breadcrumb-item active" aria-current="page">Yudisium Mahasiswa</li>
+                    </ol>
+                </nav>
             </div>
         </div>
+
     </div>
 </div>
+
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -35,7 +35,7 @@ Underdevelopment
                     </div> --}}
                 </div>
                 <div class="box-body text-center">
-                    <h1>UNDER DEVELOPMENT</h1>
+                   <h1>UNDER DEVELOPMENT</h1>
                 </div>
 
             </div>
@@ -43,3 +43,14 @@ Underdevelopment
     </div>
 </section>
 @endsection
+@push('js')
+<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script>
+    $(function() {
+        "use strict";
+
+        $('#data').DataTable();
+    });
+</script>
+@endpush
