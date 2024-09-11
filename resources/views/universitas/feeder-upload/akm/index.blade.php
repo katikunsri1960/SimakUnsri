@@ -101,6 +101,7 @@ FEEDER UPLOAD - AKM
                             <thead>
                                 <tr>
                                     <th class="text-center-align-middle">No</th>
+                                    <th class="text-center-align-middle">Status Sync</th>
                                     <th class="text-center-align-middle">NIM</th>
                                     <th class="text-center-align-middle">Nama</th>
                                     <th class="text-center-align-middle">Angkatan</th>
@@ -168,6 +169,7 @@ FEEDER UPLOAD - AKM
                     $.each(data, function(i, item) {
                         html += '<tr>';
                         html += '<td class="text-center">' + no + '</td>';
+                        html += '<td>' + item.status_sync + '</td>';
                         html += '<td>' + item.nim + '</td>';
                         html += '<td>' + item.nama_mahasiswa + '</td>';
                         html += '<td class="text-center">' + item.angkatan + '</td>';
