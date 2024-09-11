@@ -273,6 +273,9 @@ FEEDER UPLOAD - AKM
 
                             source.onerror = function(event) {
                                 source.close();
+                                // trigger getData() to refresh the data
+                                getData();
+                                
                                 swal({
                                     title: 'Sinkronisasi Data',
                                     text: "Sinkronisasi data gagal!",
