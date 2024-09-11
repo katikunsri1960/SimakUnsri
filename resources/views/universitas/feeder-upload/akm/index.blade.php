@@ -246,7 +246,7 @@ FEEDER UPLOAD - AKM
                             var id_semester = $('#id_semester').val();
 
                             var eventSourceUrl = "{{ route('univ.feeder-upload.akm.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
-                            console.log('EventSource URL:', eventSourceUrl);
+                            // console.log('EventSource URL:', eventSourceUrl);
 
                             // Initialize the EventSource with the constructed URL
                             var source = new EventSource(eventSourceUrl);
