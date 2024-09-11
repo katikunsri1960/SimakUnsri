@@ -186,8 +186,8 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::delete('/delete-dosen/{bimbing}', [App\Http\Controllers\Fakultas\Akademik\AktivitasNonTAController::class, 'delete_dosen_pembimbing'])->name('fakultas.data-akademik.non-tugas-akhir.delete-dosen');
                 });
             });
-            
-            //ROUTE MONITORING 
+
+            //ROUTE MONITORING
             Route::prefix('monitoring')->group(function(){
                 Route::get('/entry-nilai', [App\Http\Controllers\Fakultas\MonitoringController::class, 'monitoring_nilai'])->name('fakultas.monitoring.entry-nilai');
                 Route::get('/pengajaran-dosen', [App\Http\Controllers\Fakultas\MonitoringController::class, 'monitoring_pengajaran'])->name('fakultas.monitoring.pengajaran-dosen');
@@ -204,7 +204,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/generate-data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'generateDataIsiKrs'])->name('fakultas.monitoring.pengisian-krs.generate-data');
                     Route::get('/check-progress', [App\Http\Controllers\Fakultas\MonitoringController::class, 'checkProgress'])->name('fakultas.monitoring.pengisian-krs.check-progress');
                 });
-            
+
                 Route::prefix('lulus-do')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do'])->name('fakultas.monitoring.lulus-do');
                     Route::get('/data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do_data'])->name('fakultas.monitoring.lulus-do.data');
@@ -769,6 +769,8 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::prefix('akm')->group(function(){
                     Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'akm'])->name('univ.feeder-upload.akm');
                     Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'akm_data'])->name('univ.feeder-upload.akm.data');
+                    Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_akm'])->name('univ.feeder-upload.akm.upload');
+                    Route::post('/upload-ajax', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_akm_ajax'])->name('univ.feeder-upload.akm.upload-ajax');
                 });
                 Route::get('/kelas', [App\Http\Controllers\Universitas\FeederUploadController::class, 'kelas'])->name('univ.feeder-upload.kelas');
             });

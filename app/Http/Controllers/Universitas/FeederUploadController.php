@@ -4,87 +4,112 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\ProgramStudi;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use App\Services\Feeder\FeederUpload;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FeederUploadController extends Controller
 {
 
     public function akm()
     {
-        $count = AktivitasKuliahMahasiswa::where('feeder', 0)->count();
-
+        $semesterAktif = SemesterAktif::first();
+        // $count = AktivitasKuliahMahasiswa::where('feeder', 0)->count();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        // $angkatan = AktivitasKuliahMahasiswa::select('angkatan')->distinct()->orderBy('angkatan', 'desc')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+        // $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa', 'nama_status_mahasiswa')->distinct()->orderBy('id_status_mahasiswa')->get();
         return view('universitas.feeder-upload.akm.index',
         [
-            'count' => $count
+            // 'count' => $count,
+            'prodi' => $prodi,
+            // 'angkatan' => $angkatan,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+            // 'status_mahasiswa' => $status_mahasiswa
         ]);
     }
 
     public function akm_data(Request $request)
     {
-        $searchValue = $request->input('search.value');
+        $data = AktivitasKuliahMahasiswa::leftJoin('pembiayaans', 'aktivitas_kuliah_mahasiswas.id_pembiayaan', 'pembiayaans.id_pembiayaan')->where('feeder', 0)
+            ->where('id_semester', $request->id_semester)
+            ->where('id_prodi', $request->id_prodi)
+            ->get();
 
-        $query = AktivitasKuliahMahasiswa::with('pembiayaan')->where('feeder', 0)->leftJoin('pembiayaans', 'aktivitas_kuliah_mahasiswas.id_pembiayaan', 'pembiayaans.id_pembiayaan');
+        return response()->json($data);
+    }
 
-        if ($searchValue) {
-            $query = $query->where('nim', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
+    public function upload_akm(Request $request)
+    {
+
+        $data = AktivitasKuliahMahasiswa::where('feeder', 0)
+            ->where('id_semester', '20241')
+            ->where('id_prodi', 'b68efc34-c0f0-4334-9970-e02d769e3f49')
+            ->whereNotNull('id_pembiayaan')
+            ->get();
+
+        $totalData = $data->count();
+
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
 
-        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
-            $filter = $request->id_prodi;
-            $query->whereIn('id_prodi', $filter);
-        }
+        $act = 'InsertPerkuliahanMahasiswa';
+        $actGet = 'GetAktivitasKuliahMahasiswa';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
 
-        if ($request->has('semester') && !empty($request->semester)) {
-            $filter = $request->semester;
-            $query->whereIn('id_semester', $filter);
-        }
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+                $record = [
+                    'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
+                    'id_semester' => $d->id_semester,
+                    'id_status_mahasiswa' => $d->id_status_mahasiswa,
+                    'ips' => $d->ips,
+                    'ipk' => $d->ipk,
+                    'sks_semester' => $d->sks_semester,
+                    'total_sks' => $d->sks_total,
+                    'biaya_kuliah_smt' => $d->biaya_kuliah_smt,
+                    'id_pembiayaan' => $d->id_pembiayaan,
+                ];
 
-        if ($request->has('angkatan') && !empty($request->angkatan)) {
-            $filter = $request->angkatan;
-            $query->whereIn('angkatan', $filter);
-        }
+                $recordGet = "id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."' AND id_semester = '".$d->id_semester."'";
 
-        if ($request->has('status_mahasiswa') && !empty($request->status_mahasiswa)) {
-            $filter = $request->status_mahasiswa;
-            $query->whereIn('id_status_mahasiswa', $filter);
-        }
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadAkm();
 
-        $recordsFiltered = $query->count();
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+                    // $d->update(['feeder' => 1]);
+                    $dataBerhasil++;
+                } else {
+                    $dataGagal++;
+                }
 
-        $limit = $request->input('length');
-        $offset = $request->input('start');
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
 
-        // Define the column names that correspond to the DataTables column indices
-        if ($request->has('order')) {
-            $orderColumn = $request->input('order.0.column');
-            $orderDirection = $request->input('order.0.dir');
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
 
-            // Define the column names that correspond to the DataTables column indices
-            $columns = ['nim','nama_mahasiswa', 'nama_program_studi', 'angkatan', 'nama_semester', 'nama_status_mahasiswa', 'ips', 'ipk', 'sks_semester', 'sks_total'];
+        return $response;
 
-            // if ($columns[$orderColumn] == 'prodi') {
-            //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
-            //         ->orderBy('prodi.nama_jenjang_pendidikan', $orderDirection)
-            //         ->orderBy('prodi.nama_program_studi', $orderDirection)
-            //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
-            // } else {
-                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
-            // }
-        }
+    }
 
-        $data = $query->skip($offset)->take($limit)->get();
-
-        $recordsTotal = AktivitasKuliahMahasiswa::where('feeder', 0)->count();
-
-        $response = [
-            'draw' => $request->input('draw'),
-            'recordsTotal' => $recordsTotal,
-            'recordsFiltered' => $recordsFiltered,
-            'data' => $data,
-        ];
-
-        return response()->json($response);
+    public function upload_akm_ajax(Request $request)
+    {
+        // Start the upload process and return a response immediately
+        // The actual progress updates will be handled by the uploadAkmProgress method
+        return response()->json(['message' => 'Upload started']);
     }
 
     public function kelas()
