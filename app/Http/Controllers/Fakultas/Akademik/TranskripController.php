@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Fakultas;
+namespace App\Http\Controllers\Fakultas\Akademik;
 
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
@@ -13,7 +13,7 @@ class TranskripController extends Controller
 {
     public function index()
     {
-        return view('fakultas.transkrip.index');
+        return view('fakultas.data-akademik.transkrip.index');
     }
 
     public function data(Request $request)

@@ -14,6 +14,7 @@ Transkrip Nilai
                         </div>
                         <div class="col-12 col-lg-9">
                             <h2>Transkrip Nilai Mahasiswa</h2>
+
                         </div>
                     </div>
                 </div>
@@ -35,13 +36,21 @@ Transkrip Nilai
                             </div>
                         </div>
                     </div>
+
                     <div class="table-responsive mt-5">
                         <div class="box-body text-center">
                             <div class="table-responsive">
                                 <div id="krsDiv" hidden>
+                                    {{-- <div class="row mb-2">
+                                        <form action="{{route('fakultas.transkrip-nilai.download')}}" method="get" id="cetakForm" target="_blank">
+                                            <input type="hidden" name="nim" id="nimCetak">
+                                            <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
+                                        </form>
+                                    </div> --}}
                                     <h3 class="text-center">Transkrip Mahasiswa</h3>
                                     <div class="row">
                                         <div class="col-md-2" id="foto">
+
                                         </div>
                                         <div class="col-md-10">
                                             <table style="width:100%" class="mb-3">
@@ -94,10 +103,11 @@ Transkrip Nilai
                                                 <th class="text-center align-middle">No</th>
                                                 <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                 <th class="text-center align-middle">Nama Mata Kuliah</th>
-                                                <th class="text-center align-middle">SKS (K)</th>
-                                                <th class="text-center align-middle">Nilai Index (B)</th>
+
+                                                <th class="text-center align-middle">SKS</th>
+                                                <th class="text-center align-middle">Nilai Angka</th>
+                                                <th class="text-center align-middle">Nilai Index</th>
                                                 <th class="text-center align-middle">Nilai Huruf</th>
-                                                <th class="text-center align-middle">K x B</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -153,6 +163,7 @@ Transkrip Nilai
 </section>
 @endsection
 @push('js')
+<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
     <script>
         $(document).ready(function () {
             $('#btnCari').click(function () {
@@ -181,7 +192,7 @@ Transkrip Nilai
                                 });
                                 return false;
                             }
-
+                            $('#nimCetak').val(nim);
                             $('#krsDiv').removeAttr('hidden');
                             // append response.krs to table of krs-regular
                             $('#nimKrs').text(response.riwayat.nim);
@@ -206,43 +217,54 @@ Transkrip Nilai
                                 <img class="rounded20 bg-light img-fluid w-80" src="` + imagePath + `" alt="" onerror="this.onerror=null;this.src='{{ asset('images/images/avatar/avatar-15.png') }}';">
                             `);
 
+                              // Initialize DataTable
+                             // Initialize DataTable with no pagination and custom draw callback
+                             var table = $('#krs-regular').DataTable({
+                                paging: false,
+                                info: false,
+                                columnDefs: [
+                                    { orderable: false, targets: 0 } // Make the first column non-sortable
+                                ],
+                                order: [], // Disable initial sorting
+                                drawCallback: function(settings) {
+                                    var api = this.api();
+                                    api.rows({ page: 'current' }).every(function (rowIdx, tableLoop, rowLoop) {
+                                        var data = this.data();
+                                        data[0] = rowIdx + 1; // Update the first column with the row number
+                                        this.invalidate();
+                                    });
+                                }
+                            });
+                            table.clear().draw(); // Clear existing data
                             // count response.krs.approved
                             var approved = 0;
                             var no = 1;
                             var totalSks = 0;
 
-                            console.log(response.konversi);
-
-                            response.data.forEach(function(krs, index){
+                            response.data.forEach(function (krs, index) {
                                 var trClass = '';
-                                if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
-                                {
+                                if (krs.nilai_huruf == 'F' || krs.nilai_huruf == null) {
                                     trClass = 'bg-danger';
                                 }
-                                // Pastikan nilai indeks dan sks_mata_kuliah adalah angka
-                                var nilaiIndeks = parseFloat(krs.nilai_indeks) || 0;  // Jika null, maka menjadi 0
-                                var sksMataKuliah = parseInt(krs.sks_mata_kuliah) || 0;  // Jika null, maka menjadi 0
-                                var hasilPerkalian = nilaiIndeks * sksMataKuliah;
+                                table.row.add([
+                                    `<td class="text-center align-middle"></td>`,
+                                    `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
+                                    `<td class="text-start align-middle">${krs.nama_mata_kuliah}</td>`,
+                                    `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
+                                    `<td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>`,
+                                    `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
+                                    `<td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>`
+                                ]).node().className = trClass;
 
-                                $('#krs-regular tbody').append(`
-                                    <tr class="${trClass}">
-                                        <td class="text-center align-middle">${no}</td>
-                                        <td class="text-center align-middle">${krs.kode_mata_kuliah}</td>
-                                        <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
-                                        <td class="text-center align-middle">${sksMataKuliah}</td>
-                                        <td class="text-center align-middle">${nilaiIndeks ? nilaiIndeks.toFixed(2) : '-'}</td>
-                                        <td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>
-                                        <td class="text-center align-middle">${hasilPerkalian.toFixed(0)}</td>
-                                    </tr>
-                                `);
-                                no++;
-                                // make sks_mata_kuliah to number
-                                krs.sks_mata_kuliah = parseInt(krs.sks_mata_kuliah);
-                                totalSks += krs.sks_mata_kuliah;
+                                totalSks += parseInt(krs.sks_mata_kuliah);
                             });
+
+                            table.draw(); // Redraw the DataTable with new data
                             $('#totalSks').text(totalSks);
+
                         }
                     });
+
                 }
             });
         });
