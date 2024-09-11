@@ -88,6 +88,8 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/set-kurikulum-angkatan', [App\Http\Controllers\Fakultas\DataMasterController::class, 'set_kurikulum_angkatan'])->name('fakultas.data-master.mahasiswa.set-kurikulum-angkatan');
                 });
 
+                Route::get('/', [App\Http\Controllers\Fakultas\UnderDevelopmentController::class, 'index'])->name('fakultas.under-development');
+
                 // Route::prefix('mata-kuliah')->group(function(){
                 //     Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'matkul'])->name('fakultas.data-master.mata-kuliah');
                 //     Route::get('/{kurikulum}/{matkul}/tambah-prasyarat', [App\Http\Controllers\Fakultas\DataMasterController::class, 'tambah_prasyarat'])->name('fakultas.data-master.mata-kuliah.tambah-prasyarat');
@@ -124,6 +126,28 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Fakultas\TranskripController::class, 'data'])->name('fakultas.transkrip-nilai.get');
             });
 
+            //ROUTE MONITORING 
+            Route::prefix('monitoring')->group(function(){
+                Route::prefix('pengisian-krs')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_krs'])->name('fakultas.monitoring.pengisian-krs');
+                    Route::get('/data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_krs_data'])->name('fakultas.monitoring.pengisian-krs.data');
+                    Route::get('/detail-mahasiswa-aktif/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_mahasiswa_aktif'])->name('fakultas.monitoring.pengisian-krs.detail-mahasiswa-aktif');
+                    Route::get('/detail-aktif-min-tujuh/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_aktif_min_tujuh'])->name('fakultas.monitoring.pengisian-krs.detail-aktif-min-tujuh');
+                    Route::get('/detail-isi-krs/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_isi_krs'])->name('fakultas.monitoring.pengisian-krs.detail-isi-krs');
+                    Route::get('/detail-approved-krs/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_approved_krs'])->name('fakultas.monitoring.pengisian-krs.detail-approved-krs');
+                    Route::get('/detail-not-approved-krs/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_not_approved_krs'])->name('fakultas.monitoring.pengisian-krs.detail-not-approved-krs');
+
+                    Route::post('/generate-data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'generateDataIsiKrs'])->name('fakultas.monitoring.pengisian-krs.generate-data');
+                    Route::get('/check-progress', [App\Http\Controllers\Fakultas\MonitoringController::class, 'checkProgress'])->name('fakultas.monitoring.pengisian-krs.check-progress');
+                });
+            
+                Route::prefix('lulus-do')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do'])->name('fakultas.monitoring.lulus-do');
+                    Route::get('/data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do_data'])->name('fakultas.monitoring.lulus-do.data');
+                });
+            });
+
+            //ROUTE LAIN-LAIN
             Route::prefix('beasiswa')->group(function(){
                 Route::get('/', [App\Http\Controllers\Fakultas\BeasiswaController::class, 'index'])->name('fakultas.beasiswa');
                 Route::get('/data', [App\Http\Controllers\Fakultas\BeasiswaController::class, 'data'])->name('fakultas.beasiswa.data');
@@ -135,12 +159,7 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::post('/decline/{cuti}', [App\Http\Controllers\Fakultas\CutiController::class, 'pembatalan_cuti'])->name('fakultas.pengajuan-cuti.decline');
             });
 
-            // Route::get('/pengajuan-cuti', [App\Http\Controllers\Fakultas\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
-            // Route::get('/pengajuan-cuti/tambah', [App\Http\Controllers\Fakultas\CutiController::class, 'tambah'])->name('fakultas.pengajuan-cuti.tambah');
-
-
-
-            //Route Bantuan
+            //ROUTE BANTUAN
             Route::prefix('bantuan')->group(function () {
                 Route::get('/ganti-password', [App\Http\Controllers\Fakultas\Bantuan\GantiPasswordController::class, 'ganti_password'])->name('fakultas.bantuan.ganti-password');
                 Route::post('/proses-ganti-password', [App\Http\Controllers\Fakultas\Bantuan\GantiPasswordController::class, 'proses_ganti_password'])->name('fakultas.bantuan.proses-ganti-password');

@@ -24,10 +24,17 @@ Nilai USEPT Mahasiswa
     <div class="row">
         <div class="col-xxl-12">
             <div class="box box-body mb-0">
-                <div class="row mb-5">
-                    <div class="col-xl-6 col-lg-12">
+                <div class="row mb-50">
+                    <div class="col-xl-12 col-lg-12">
                         <h3 class="fw-500 text-dark mt-0">Daftar Nilai USEPT Mahasiswa</h3>
-                        <h4 class="mb-5">Nilai Kelulusan USEPT Prodi {{$mahasiswa->nama_program_studi}} : {{$usept_prodi->nilai_usept}}</h4>
+                        <h4 class="mb-5">
+                            Nilai Kelulusan USEPT Prodi {{$mahasiswa->nama_program_studi}} :
+                            @if(empty($usept_prodi->nilai_usept))
+                                <span class="badge badge-xl badge-danger mb-5">Nilai Kelulusan Belum diatur</span>
+                            @else
+                                <span class="badge badge-xl badge-success mb-5 px-20">{{ $usept_prodi->nilai_usept }}</span>
+                            @endif
+                        </h4>
                     </div>                             
                 </div>
                 <div class="row">
@@ -49,12 +56,14 @@ Nilai USEPT Mahasiswa
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-center align-middle" style="white-space:nowrap;">{{$mahasiswa->nim}}</td>
                                         <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
-                                        <td>{{$d->tgl_test}}</td>
+                                        <td>{{ date('d M Y', strtotime($d->tgl_test)) }}</td>
                                         <td>{{$d->score}}</td>
                                         <td class="text-center align-middle"> 
                                             @if ($d->score < $usept_prodi->nilai_usept)
                                                 <span class="badge bg-danger">Belum Lulus</span>
-                                            @else
+                                            @elseif ($usept_prodi->nilai_usept == NULL)
+                                                <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
+                                            @elseif ($d->score >= $usept_prodi->nilai_usept)
                                                 <span class="badge bg-success">Lulus</span>
                                             @endif
                                         </td>

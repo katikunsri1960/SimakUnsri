@@ -35,6 +35,7 @@ class DataMasterController extends Controller
                     ->orderBy('nama_program_studi')
                     ->get();
         
+
         $id_prodi_fak=$prodi_fak->pluck('id_prodi');
         
         $query = RiwayatPendidikan::with('kurikulum',
@@ -47,14 +48,14 @@ class DataMasterController extends Controller
 
         $mahasiswa=$query->get();
         // dd($mahasiswa);
-        
 
-        $angkatan = RiwayatPendidikan::with(['prodi.fakultas'])
+        $angkatan = RiwayatPendidikan::with(['prodi'])
                     ->whereIn('id_prodi', $id_prodi_fak)
                     ->select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
                     ->distinct()
                     ->orderBy('angkatan_raw', 'desc')
                     ->get();
+        // dd($request->prodi);
 
         $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
 
@@ -136,7 +137,7 @@ class DataMasterController extends Controller
 
         $data = $data->slice($offset, $limit)->values();
 
-        $recordsTotal = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)->count();
+        $recordsTotal = RiwayatPendidikan::whereIn('id_prodi', $prodi)->count();
 
         $response = [
             'draw' => $request->input('draw'),

@@ -27,7 +27,7 @@ Mahasiswa Prodi
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                {{-- <div class="box-header with-border">
+                <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
                         <div class="d-flex justify-content-start">
                             <!-- Modal trigger button -->
@@ -42,7 +42,7 @@ Mahasiswa Prodi
                             @include('fakultas.data-master.mahasiswa.filter')
                         </div>
                     </div>
-                </div> --}}
+                </div>
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover margin-top-10 w-p100 table-bordered" style="font-size: 11px">
@@ -96,6 +96,7 @@ Mahasiswa Prodi
                 url: '{{route('fakultas.data-master.mahasiswa.data')}}',
                 type: 'GET',
                 data: function (d) {
+                    d.prodi = $('#prodi').val();
                     d.angkatan = $('#angkatan').val();
                 },
                 error: function (xhr, error, thrown) {
@@ -188,69 +189,6 @@ Mahasiswa Prodi
                 //     searchable: false
                 // }
             ],
-        });
-
-
-    });
-
-    function setDosenPa(data, id) {
-        data = data.replace(/&#39;/g, "'");
-        // console.log('setDosenPa called with data:', data, 'and id:', id);
-        $('#edit_id_dosen').val(data.dosen_pa).trigger('change');
-        // Populate other fields...
-        document.getElementById('editForm').action = '/prodi/data-master/mahasiswa/set-pa/' + id;
-    }
-
-    function setKurikulum(data, id){
-        data = data.replace(/&#39;/g, "'");
-        parserData = JSON.parse(data);
-        console.log(parserData);
-        // console.log('setKurikulum called with data:', data, 'and id:', id);
-        $('#edit_set_id_kurikulum').val(parserData.id_kurikulum).trigger('change');
-        $('#edit_nim').val(parserData.nim);
-        $('#edit_nama_mahasiswa').val(parserData.nama_mahasiswa);
-        // Populate other fields...
-        document.getElementById('kurForm').action = '/prodi/data-master/mahasiswa/set-kurikulum/' + id;
-    }
-
-    $('#kurForm').on('submit', function(e) {
-        e.preventDefault(); // Prevent default form submission
-
-        var form = $(this);
-        var url = form.attr('action');
-        var formData = form.serialize();
-
-        // Show confirmation dialog
-        swal({
-            title: 'Apakah Anda Yakin?',
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Simpan',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                // If confirmed, proceed with AJAX request
-                $('#setKurilukumModal').modal('hide');
-                $.ajax({
-                    type: 'POST',
-                    url: url,
-                    data: formData,
-                    success: function(response) {
-                        console.log(response); // Log the response for debugging
-                        if (response.status === 'success') {
-                            $('#data').DataTable().draw(false); // Redraw DataTable without resetting pagination
-                            alert(response.message);
-                        } else {
-                            alert(response.message);
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        alert('Gagal menyimpan data!!. ' + xhr.responseJSON.message);
-                    }
-                });
-            }
         });
     });
 </script>

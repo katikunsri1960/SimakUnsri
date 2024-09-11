@@ -1,4 +1,4 @@
-@extends('layouts.mahasiswa')
+@extends('layouts.fakultas')
 @section('title')
 Underdevelopment
 @endsection
@@ -11,7 +11,7 @@ Underdevelopment
                     <div class="col-12 col-lg-3"><img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                     </div>
                     <div class="col-12 col-lg-9">
-                        <h2>Halaman Under Development</h2>
+                        <h2>Halaman Sedang Dalam Pengerjaan</h2>
                         <p class="text-dark mb-0 fs-16">
                             Universitas Sriwijaya
                         </p>

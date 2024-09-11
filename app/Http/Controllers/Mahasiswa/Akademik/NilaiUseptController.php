@@ -17,6 +17,7 @@ class NilaiUseptController extends Controller
         $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->id_kurikulum)->first();
         $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->biodata->nik])->get();
 
+        // dd($nilai_usept_prodi);
         return view('mahasiswa.perkuliahan.nilai-usept.index', ['data' => $nilai_usept_mhs, 'usept_prodi' => $nilai_usept_prodi, 'mahasiswa' => $data_mahasiswa]);
     }
 
