@@ -40,6 +40,7 @@ Pembayaran Manual
                                 <th class="text-center align-middle">Semester</th>
                                 <th class="text-center align-middle">NIM</th>
                                 <th class="text-center align-middle">Nama Mahasiswa</th>
+                                <th class="text-center align-middle">Nominal UKT</th>
                                 <th class="text-center align-middle">Status</th>
                                 <th class="text-center align-middle">Terakhir Update</th>
                                 <th class="text-center align-middle">AKSI</th>
@@ -52,6 +53,7 @@ Pembayaran Manual
                                 <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
                                 <td class="text-center align-middle">{{$d->nim}}</td>
                                 <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
+                                <td class="text-end align-middle">{{$d->nf_nominal_ukt}}</td>
                                 <td class="text-center align-middle">
                                     @php
                                     switch ($d->status) {
@@ -103,9 +105,17 @@ Pembayaran Manual
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/js/cleave.min.js')}}"></script>
 <script>
      $(function() {
-        "use strict";
+        // "use strict";
+
+        var nominal = new Cleave('#nominal_ukt', {
+                numeral: true,
+                numeralThousandsGroupStyle: 'thousand',
+                numeralDecimalMark: ',',
+                delimiter: '.'
+            });
 
         $('#data').DataTable();
 

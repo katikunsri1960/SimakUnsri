@@ -23,6 +23,11 @@ class PembayaranManualMahasiswa extends Model
         return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');
     }
 
+    public function getNfNominalUktAttribute()
+    {
+        return number_format($this->nominal_ukt, 0, ',', '.');
+    }
+
     public function getStatusTextAttribute()
     {
         $status = [

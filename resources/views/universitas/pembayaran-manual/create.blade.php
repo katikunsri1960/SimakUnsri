@@ -27,8 +27,14 @@
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="nominal_ukt" class="col-sm-2 col-form-label">Nominal UKT</label>
+                        <div class="col-sm-12">
+                          <input class="form-control" type="text" name="nominal_ukt"  id="nominal_ukt" >
+                        </div>
+                    </div>
+                    <div class="mb-3">
                         <label for="tanggal_pembayaran" class="col-sm-2 col-form-label">Date</label>
-                        <div class="col-sm-10">
+                        <div class="col-sm-12">
                           <input class="form-control" type="date" name="tanggal_pembayaran"  id="tanggal_pembayaran" placeholder="-- Tanggal Pembayaran --">
                         </div>
                     </div>

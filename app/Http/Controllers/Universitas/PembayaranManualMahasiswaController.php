@@ -25,7 +25,8 @@ class PembayaranManualMahasiswaController extends Controller
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status' => 'required | in:0,1',
-            'tanggal_pembayaran'=>'required | date'
+            'tanggal_pembayaran'=>'required | date',
+            'nominal_ukt' => 'required'
         ]);
 
         $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
@@ -34,6 +35,7 @@ class PembayaranManualMahasiswaController extends Controller
             return redirect()->back()->with('error', 'Mahasiswa sudah ada pada data Lulus Do Feeder!!');
         }
         // dd($request->tanggal_pembayaran);
+        $data['nominal_ukt'] = str_replace('.', '', $data['nominal_ukt']);
         $data['id_semester'] = SemesterAktif::first()->id_semester;
         $data['nim'] = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first()->nim;
         $data['tanggal_pembayaran'] = $request->tanggal_pembayaran;
