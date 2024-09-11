@@ -90,11 +90,6 @@ KRS Mahasiswa
                                     <td class="text-start align-middle" id="semesterKrs" style="width: 30%; padding-left: 10px"></td>
                                 </tr>
                             </table>
-                            <div class="d-flex justify-content-end align-middle">
-                                <div class="">
-                                    <button class="btn btn-primary btn-rounded" type="button" id="btnApprove" disabled>Setujui Semua KRS</button>
-                                </div>
-                            </div>
                             <table class="table table-bordered mt-4" id="krs-regular">
                                 <thead>
                                     <tr>
@@ -146,7 +141,10 @@ KRS Mahasiswa
     {
         var nim = $('#nim').val();
         var semester = $('#semester').val();
+        var riwayat = $('#riwayat').val();
+        
         if(nim == '' || semester == ''){
+            // console.log(riwayat);
             swal({
                 title: "Peringatan!",
                 text: "Nomor Induk Mahasiswa dan Tahun Akademik harus diisi!",
@@ -168,7 +166,7 @@ KRS Mahasiswa
                 success: function(response){
                     if (response.status == 'error') {
                         $('#krsDiv').attr('hidden', true);
-
+                        // console.log(riwayat);
                         swal({
                             title: "Peringatan!",
                             text: response.message,

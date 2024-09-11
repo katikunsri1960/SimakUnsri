@@ -28,7 +28,7 @@ KHS Mahasiswa
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="row">
-                        {{-- <div class="col-md-4">
+                        <div class="col-md-4">
                             <div class="mb-3">
                                 <label for="semester" class="form-label">Tahun Akademik</label>
                                 <select class="form-select" name="semester" id="semester">
@@ -41,7 +41,7 @@ KHS Mahasiswa
                                     @endforeach
                                 </select>
                             </div>
-                        </div> --}}
+                        </div>
                         <div class="col-md-4">
                             <label for="nim" class="form-label">Nomor Induk Mahasiswa</label>
                             <div class="input-group mb-3">
@@ -199,7 +199,7 @@ KHS Mahasiswa
                     $('#nimKrs').text(response.riwayat.nim);
                     // remove "Fakultas " from nama_fakultas
                     var fakultas = response.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '');
-                    $('#fakultasKrs').text(fakultas);
+                    $('#fakultasKrs').text(fakultas.toUpperCase());
                     $('#namaKrs').text(response.riwayat.nama_mahasiswa);
                     var jurusan = response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-';
                     $('#jurusanKrs').text(jurusan);
@@ -207,14 +207,16 @@ KHS Mahasiswa
                     $('#nippaKrs').text(nip_pa);
                     var dosen_pa = response.riwayat.dosen_pa ? response.riwayat.dosen_pa.nama_dosen : '-';
                     $('#dosenpaKrs').text(dosen_pa);
-                    $('#prodiKrs').text(response.riwayat.prodi.nama_program_studi);
+                    $('#prodiKrs').text(response.riwayat.prodi.nama_program_studi.toUpperCase());
                     var semesterText =  $('#semester option:selected').text();
-                    $('#semesterKrs').text(semesterText);
+                    $('#semesterKrs').text(semesterText.toUpperCase());
                     $('#krs-regular tbody').empty();
 
                     // count response.krs.approved
                     var approved = 0;
                     var no = 1;
+                    // var totalSks = 0;
+
 
                     console.log(response.konversi);
 
@@ -241,7 +243,6 @@ KHS Mahasiswa
                     });
 
                     if (response.konversi.length > 0) {
-
                         $('#krs-regular tbody').append(`
                             <tr>
                                 <th class="text-center align-middle" colspan="8">Konversi Aktivitas</th>

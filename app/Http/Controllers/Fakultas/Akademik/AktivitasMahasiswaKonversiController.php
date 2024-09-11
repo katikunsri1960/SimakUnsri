@@ -22,8 +22,10 @@ class AktivitasMahasiswaKonversiController extends Controller
      */
     public function index()
     {
-        $prodi_id = auth()->user()->fk_id;
-        $data = Konversi::where('id_prodi', $prodi_id)->get();
+        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                        ->pluck('id_prodi');
+
+        $data = Konversi::where('id_prodi', $id_prodi_fak)->get();
         // dd($data);
 
         return view('fakultas.data-aktivitas.aktivitas-mahasiswa.index', compact('data'));

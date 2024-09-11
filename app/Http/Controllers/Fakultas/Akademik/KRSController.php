@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Fakultas\Akademik;
 
+use App\Models\Semester;
+use App\Models\ProgramStudi;
+use Illuminate\Http\Request;
+use App\Models\SemesterAktif;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
-use App\Models\Semester;
-use App\Models\SemesterAktif;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class KRSController extends Controller
 {
@@ -25,12 +26,18 @@ class KRSController extends Controller
 
     public function data(Request $request)
     {
+        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->pluck('id_prodi');
+
         $semester = $request->semester;
         $nim = $request->nim;
 
-        $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')->where('nim', $nim)->first();
+        $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')
+                    ->where('nim', $nim)
+                    ->whereIn('id_prodi', $id_prodi_fak)
+                    ->first();
         // dd($riwayat);
-        if (!$riwayat || $riwayat->id_prodi != auth()->user()->fk_id) {
+        if (!$riwayat) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data mahasiswa tidak ditemukan',
@@ -80,24 +87,4 @@ class KRSController extends Controller
         return response()->json($response);
     }
 
-    public function approve(Request $request)
-    {
-        $nim = $request->nim;
-        $semester = $request->semester;
-
-        $riwayat = RiwayatPendidikan::where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
-
-        if(!$riwayat) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data mahasiswa tidak ditemukan',
-            ]);
-        }
-
-        $db = new PesertaKelasKuliah();
-
-        $response = $db->approve_all($riwayat->id_registrasi_mahasiswa);
-
-        return response()->json($response);
-    }
 }
