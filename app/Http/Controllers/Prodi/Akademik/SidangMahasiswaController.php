@@ -55,7 +55,6 @@ class SidangMahasiswaController extends Controller
         $data = $request->validate([
                     'tanggal_ujian' => 'required',
                     'bulan_ujian' => 'required',
-                    'tahun_ujian' => 'required',
                     'jam_mulai' => 'required',
                     'menit_mulai' => 'required',
                     'jam_selesai' => 'required',
