@@ -100,7 +100,7 @@ class FeederUploadController extends Controller
                 $result = $req->uploadAkm();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
-                    // $d->update(['feeder' => 1]);
+                    $d->update(['feeder' => 1]);
                     $dataBerhasil++;
                 } else {
                     $dataGagal++;
