@@ -1,15 +1,6 @@
 @extends('layouts.fakultas')
 @section('title')
-Sidang
-@if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-Skripsi
-@elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-Tesis
-@elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-Disertasi
-@else
-Tugas Akhir
-@endif
+Sidang Tugas Akhir
 @endsection
 @section('content')
 @include('swal')
@@ -17,33 +8,16 @@ Tugas Akhir
     <div class="d-flex align-items-center">
         <div class="me-auto">
             <h3 class="page-title">
-                Sidang
-                @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-                Skripsi
-                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-                Tesis
-                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-                Disertasi
-                @else
-                Tugas Akhir
-                @endif Mahasiswa</h3>
+                Sidang Tugas Akhir Mahasiswa</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('fakultas')}}"><i
-                                    class="mdi mdi-home-outline"></i></a></li>
+                            class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Sidang
-                            @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-                            Skripsi
-                            @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-                            Tesis
-                            @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-                            Disertasi
-                            @else
-                            Tugas Akhir
-                            @endif Mahasiswa</li>
+                            Sidang Tugas Akhir Mahasiswa
+                        </li>
                     </ol>
                 </nav>
             </div>
@@ -69,7 +43,6 @@ Tugas Akhir
                                     <th class="text-center align-middle">Pembimbing</th>
                                     <th class="text-center align-middle">Penguji</th>
                                     <th class="text-center align-middle">Status Penguji</th>
-                                    <th class="text-center align-middle">Act</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,28 +82,6 @@ Tugas Akhir
                                         @else
                                             <span class="badge badge-lg badge-success">Approved</span>
                                         @endif
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <div class="row d-flex justify-content-center">
-                                            @if ($d->status_uji > 0 || $d->decline_dosen > 0)
-                                            <form
-                                                action="{{route('fakultas.data-akademik.sidang-mahasiswa.approve-penguji', $d)}}"
-                                                method="post" id="approveForm{{$d->id}}" data-id="{{$d->id}}"
-                                                class="approve-class">
-                                                @csrf
-                                                <div class="row">
-                                                    <button type="submit" class="btn btn-sm my-2 btn-success ">Approve
-                                                        Penguji</button>
-                                                </div>
-                                            </form>
-                                            @endif
-                                            <a href="{{route('fakultas.data-akademik.sidang-mahasiswa.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
-                                            <a href="#" class="btn btn-info btn-sm my-2" title="Detail-Sidang"
-                                                data-bs-toggle="modal" data-bs-target="#detailSidangModal"
-                                                onclick="detailFunc1({{$d}})">
-                                                <i class="fa fa-eye"></i> Detail
-                                            </a>
-                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach

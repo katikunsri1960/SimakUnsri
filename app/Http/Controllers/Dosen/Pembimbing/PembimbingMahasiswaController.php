@@ -11,6 +11,7 @@ use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Perkuliahan\NilaiSidangMahasiswa;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Connection\Usept;
 use App\Models\Semester;
@@ -169,14 +170,16 @@ class PembimbingMahasiswaController extends Controller
     {
         $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->get();
 
-        $aktivitas = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi']);
+        $aktivitas = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi', 'konversi', 'uji_mahasiswa']);
+        $data_pelaksanaan_sidang = $aktivitas->load(['revisi_sidang', 'notulensi_sidang', 'penilaian_sidang', 'revisi_sidang.dosen', 'penilaian_sidang.dosen']);
 
         $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
                             ->where('id_dosen', auth()->user()->fk_id)
                             ->first()->pembimbing_ke;
-        // dd($pembimbing_ke);
+        // dd($data_pelaksanaan_sidang);
         return view('dosen.pembimbing.tugas-akhir.asistensi', [
             'data' => $data,
+            'data_pelaksanaan' => $data_pelaksanaan_sidang,
             'aktivitas' => $aktivitas,
             'pembimbing_ke' => $pembimbing_ke,
         ]);
@@ -399,4 +402,60 @@ class PembimbingMahasiswaController extends Controller
             'id_semester' => $id_semester,
         ]);
     } 
+
+    public function penilaian_sidang($aktivitas)
+    {
+        $id_dosen = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa'])
+                                    ->where('id', $aktivitas)->first();
+        $bobot_kualitas_skripsi = round((7/15)*100,2);
+        $bobot_presentasi_diskusi = round((5/15)*100,2);
+        $bobot_performansi = round((3/15)*100,2);
+        // dd($penguji);
+        return view('dosen.pembimbing.tugas-akhir.penilaian-sidang', [
+            'data' => $data,
+            'bobot_kualitas_skripsi' => $bobot_kualitas_skripsi,
+            'bobot_presentasi_diskusi' => $bobot_presentasi_diskusi,
+            'bobot_performansi' => $bobot_performansi
+        ]);
+    }
+
+    public function penilaian_sidang_store(Request $request, $aktivitas)
+    {
+        $id_dosen = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::where('id', $aktivitas)->first();
+        $pembimbing = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen', $id_dosen)->first();
+
+        $validate = $request->validate([
+            'proses_bimbingan' => 'required',
+            'kualitas_skripsi' => 'required',
+            'presentasi' => 'required',
+            'performansi' => 'required'
+        ]);
+
+        //Generate tanggal penilaian
+        $tanggal_penilaian = date('Y-m-d');
+
+        //Generate nilai akhir sidang
+        $bobot_kualitas_skripsi = round((7/15),2);
+        $bobot_presentasi_diskusi = round((5/15),2);
+        $bobot_performansi = round((3/15),2);
+
+        $nilai_akhir_sidang = ($request->kualitas_skripsi * $bobot_kualitas_skripsi) + ($request->presentasi * $bobot_presentasi_diskusi)+ ($request->performansi * $bobot_performansi);
+
+        try {
+            DB::beginTransaction();
+
+            BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen', $pembimbing->id_dosen)->update(['nilai_proses_bimbingan' => $request->proses_bimbingan]);
+            
+            NilaiSidangMahasiswa::create(['approved_prodi' => 0, 'id_aktivitas' => $data->id_aktivitas, 'id_dosen' => $pembimbing->id_dosen, 'id_kategori_kegiatan' => $pembimbing->id_kategori_kegiatan,'nilai_kualitas_skripsi' => $request->kualitas_skripsi, 'nilai_presentasi_dan_diskusi' => $request->presentasi, 'nilai_performansi' => $request->performansi, 'nilai_akhir_dosen' => $nilai_akhir_sidang, 'tanggal_penilaian_sidang' => $tanggal_penilaian]);
+
+            DB::commit();
+
+            return redirect()->route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi', $data)->with('success', 'Data Berhasil di Tambahkan');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+        }
+    }
 }
