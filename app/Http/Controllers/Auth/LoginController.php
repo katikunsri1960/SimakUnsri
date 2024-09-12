@@ -53,7 +53,7 @@ class LoginController extends Controller
         $username = $input['username'];
         // check left 2 digit of username
         $left2digit = substr($username, 0, 2);
-        
+
         if (in_array($left2digit, $nim)) {
             $user = RiwayatPendidikan::where('nim', $username)->first();
             $akun = User::where('username', $username)->first();

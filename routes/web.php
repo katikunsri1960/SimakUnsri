@@ -782,7 +782,16 @@ Route::group(['middleware' => ['auth']], function() {
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'rps_data'])->name('univ.feeder-upload.mata-kuliah.rps.data');
                     });
                 });
-                Route::get('/kelas', [App\Http\Controllers\Universitas\FeederUploadController::class, 'kelas'])->name('univ.feeder-upload.kelas');
+                Route::prefix('perkuliahan')->group(function(){
+                    Route::prefix('kelas')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'kelas'])->name('univ.feeder-upload.perkuliahan.kelas');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'kelas_data'])->name('univ.feeder-upload.perkuliahan.kelas.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'kelas_upload'])->name('univ.feeder-upload.perkuliahan.kelas.upload');
+                    });
+
+
+                });
+
             });
 
             Route::prefix('perkuliahan')->group(function () {

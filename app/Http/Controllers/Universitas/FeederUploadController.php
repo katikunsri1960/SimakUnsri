@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
+use App\Models\KuisonerAnswer;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\RencanaPembelajaran;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
@@ -228,11 +233,132 @@ class FeederUploadController extends Controller
 
     public function kelas()
     {
-        return view('universitas.feeder-upload.kelas.index');
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.perkuliahan.kelas', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
     }
 
-    public function data(Request $request)
+    public function kelas_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = KelasKuliah::join('mata_kuliahs as m', 'kelas_kuliahs.id_matkul', 'm.id_matkul')
+                ->join('semesters as s', 'kelas_kuliahs.id_semester', 's.id_semester')
+                ->select('kelas_kuliahs.*', 'm.kode_mata_kuliah as kode_matkul', 'm.nama_mata_kuliah as nama_matkul', 's.nama_semester as nm_semester')
+                ->where('kelas_kuliahs.id_semester', $request->id_semester)
+                ->where('kelas_kuliahs.id_prodi', $prodi)
+                ->where('kelas_kuliahs.feeder', 0)
+                ->get();
+
+        return response()->json($data);
+    }
+
+    public function kelas_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = KelasKuliah::join('mata_kuliahs as m', 'kelas_kuliahs.id_matkul', 'm.id_matkul')
+                ->select('kelas_kuliahs.*', 'm.sks_mata_kuliah as sks_mk', 'm.sks_tatap_muka as sks_tm', 'm.sks_praktek as sks_prak', 'm.sks_praktek_lapangan as sks_prak_lap', 'm.sks_simulasi as sks_sim')
+                ->where('feeder', 0)
+                ->where('kelas_kuliahs.id_prodi', $prodi)
+                ->where('kelas_kuliahs.id_semester', $semester)
+                ->whereIn('kelas_kuliahs.id_matkul', ['685adb41-9f6a-4dde-9f67-8083ba38a559'])
+                // ->where('kelas_kuliahs.id_kelas_kuliah', '4e24a587-aff5-466c-badf-a1ef6187043d')
+                ->get();
+
+        $totalData = $data->count();
+        // dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertKelasKuliah';
+        $actGet = 'GetDetailKelasKuliah';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+                $id_kelas_lama = $d->id_kelas_kuliah;
+                $record = [
+                    "id_prodi" => $d->id_prodi,
+                    "id_semester" => $d->id_semester,
+                    "id_matkul" => $d->id_matkul,
+                    "nama_kelas_kuliah" => $d->nama_kelas_kuliah,
+                    "sks_mk" => $d->sks_mk,
+                    "sks_tm" => $d->sks_tm,
+                    "sks_prak" => $d->sks_prak,
+                    "sks_prak_lap" => $d->sks_prak_lap,
+                    "sks_sim" => $d->sks_sim,
+                    "bahasan" => $d->bahasan,
+                    // "a_selenggara_pditt" => '',
+                    "apa_untuk_pditt" => $d->apa_untuk_pditt,
+                    "kapasitas" => $d->kapasitas,
+                    "tanggal_mulai_efektif" => $d->tanggal_mulai_efektif,
+                    "tanggal_akhir_efektif" => $d->tanggal_akhir_efektif,
+                    // "id_mou" => '',
+                    "lingkup" => $d->lingkup,
+                    "mode" => $d->mode,
+                ];
+
+                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadKelas();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    $d->update([
+                        'id_kelas_kuliah' => $result['data']['id_kelas_kuliah'],
+                        'feeder' => 1
+                    ]);
+
+                    KuisonerAnswer::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    NilaiPerkuliahan::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+
+                    $dataBerhasil++;
+                } else {
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+
+    public function krs()
     {
         $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.perkuliahan.krs', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+        ]);
     }
 }

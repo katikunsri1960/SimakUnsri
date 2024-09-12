@@ -184,8 +184,18 @@
                                     </li>
                                 </ul>
                             </li>
-                            <li class="{{request()->routeIs('univ.feeder-upload.kelas') ? 'active' : ''}}">
-                                <a href="{{route('univ.feeder-upload.kelas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kelas Kuliah</a>
+                            <li class="treeview {{request()->routeIs('univ.feeder-upload.kelas') | request()->routeIs('univ.feeder-upload.kelas.*') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Perkuliahan
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('univ.feeder-upload.perkuliahan.*') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.perkuliahan.kelas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kelas</a>
+                                    </li>
+                                </ul>
                             </li>
                         </ul>
                     </li>
