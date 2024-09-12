@@ -34,6 +34,7 @@ class FixPembayaranAkm extends Command
     public function handle()
     {
         ini_set('memory_limit', '2048M');
+
         $semester_aktif = SemesterAktif::first();
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::where('feeder', 0)
@@ -62,7 +63,7 @@ class FixPembayaranAkm extends Command
         if($beasiswa){
 
             $akm->update([
-                'id_pembiayaan' => 2,
+                'id_pembiayaan' => 3,
                 'biaya_kuliah_smt' => 0,
             ]);
 
