@@ -171,6 +171,19 @@
                             <li class="{{request()->routeIs('univ.feeder-upload.akm') ? 'active' : ''}}">
                                 <a href="{{route('univ.feeder-upload.akm')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>AKM</a>
                             </li>
+                            <li class="treeview {{request()->routeIs('univ.feeder-upload.mata-kuliah.*') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Matakuliah
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('univ.feeder-upload.mata-kuliah.rps') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.mata-kuliah.rps')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>RPS</a>
+                                    </li>
+                                </ul>
+                            </li>
                             <li class="{{request()->routeIs('univ.feeder-upload.kelas') ? 'active' : ''}}">
                                 <a href="{{route('univ.feeder-upload.kelas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kelas Kuliah</a>
                             </li>

@@ -1,19 +1,20 @@
 @extends('layouts.universitas')
 @section('title')
-FEEDER UPLOAD - AKM
+FEEDER UPLOAD - RPS
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">FEEDER UPLOAD - AKM</h3>
+            <h3 class="page-title">FEEDER UPLOAD - RPS</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">Feeder Upload</li>
-                        <li class="breadcrumb-item active" aria-current="page">Aktivitas Kuliah Mahasiswa</li>
+                        <li class="breadcrumb-item" aria-current="page">Matakuliah</li>
+                        <li class="breadcrumb-item active" aria-current="page">RPS</li>
                     </ol>
                 </nav>
             </div>
@@ -21,7 +22,6 @@ FEEDER UPLOAD - AKM
     </div>
 </div>
 @include('swal')
-{{-- @include('universitas.feeder-upload.akm.filter') --}}
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -32,11 +32,10 @@ FEEDER UPLOAD - AKM
                             <form id="uploadAkmForm">
                                 @csrf
                                 <input type="hidden" name="id_prodi" id="form_id_prodi" required>
-                                <input type="hidden" name="id_semester" id="form_id_semester" required>
                                 <div class="col-md-6">
                                     <div class="row">
                                         <button type="submit" class="btn btn-primary btn-sm" disabled id="buttonSubmitForm"> <i
-                                                class="fa fa-upload me-3"></i>Upload AKM</button>
+                                                class="fa fa-upload me-3"></i>Upload RPS</button>
                                     </div>
                                 </div>
                             </form>
@@ -73,20 +72,6 @@ FEEDER UPLOAD - AKM
                             </div>
                         </div>
                         <div class="form-group row">
-                            <label for="example-search-input" class="col-sm-2 col-form-label">Semester</label>
-                            <div class="col-sm-4">
-                                <select class="form-select" name="id_semester" id="id_semester">
-                                    <option value="" selected>Select one</option>
-                                    @foreach ($semester as $s)
-                                    <option value="{{$s->id_semester}}" @if ($s->id_semester == $semesterAktif->id_semester) selected
-                                        @endif>
-                                        {{$s->nama_semester}}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group row">
                             <label for="example-search-input" class="col-sm-2 col-form-label">&nbsp;</label>
                             <div class="col-sm-4">
                                 <div class="row mx-1">
@@ -100,18 +85,17 @@ FEEDER UPLOAD - AKM
                             style="font-size: 10pt">
                             <thead>
                                 <tr>
-                                    <th class="text-center-align-middle">No</th>
-                                    <th class="text-center-align-middle">Status Sync</th>
-                                    <th class="text-center-align-middle">NIM</th>
-                                    <th class="text-center-align-middle">Nama</th>
-                                    <th class="text-center-align-middle">Angkatan</th>
-                                    <th class="text-center-align-middle">Semester</th>
-                                    <th class="text-center-align-middle">Status</th>
-                                    <th class="text-center-align-middle">IPS</th>
-                                    <th class="text-center-align-middle">IPK</th>
-                                    <th class="text-center-align-middle">SKS Semester</th>
-                                    <th class="text-center-align-middle">SKS Total</th>
-                                    <th class="text-center-align-middle">Jenis Pembiayaan</th>
+                                    <th rowspan="2" class="text-center align-middle">No</th>
+                                    <th rowspan="2" class="text-center align-middle">Status Sync</th>
+                                    <th colspan="2" class="text-center align-middle">Matakuliah</th>
+                                    <th rowspan="2" class="text-center align-middle">Pertemuan ke</th>
+                                    <th rowspan="2" class="text-center align-middle">Materi Indonesia</th>
+                                    <th rowspan="2" class="text-center align-middle">Materi Inggris</th>
+                                    <th rowspan="2" class="text-center align-middle">Prodi</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center align-middle">Kode</th>
+                                    <th class="text-center align-middle">Nama</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -137,18 +121,16 @@ FEEDER UPLOAD - AKM
 <script>
     function getData(){
         var id_prodi = $('#id_prodi').val();
-        var id_semester = $('#id_semester').val();
 
         // remove existing rows
         $('#dataAkm tbody').html('');
         $('#dataAkm').DataTable().destroy();
 
         $.ajax({
-            url: "{{ route('univ.feeder-upload.akm.data') }}",
+            url: "{{ route('univ.feeder-upload.mata-kuliah.rps.data') }}",
             type: 'GET',
             data: {
                 id_prodi: id_prodi,
-                id_semester: id_semester
             },
             success: function(response) {
                 // console.log(response);
@@ -159,27 +141,21 @@ FEEDER UPLOAD - AKM
                 if (response.length > 0) {
                     $('#buttonSubmitForm').prop('disabled', false);
                     $('#form_id_prodi').val(id_prodi);
-                    $('#form_id_semester').val(id_semester);
                 } else {
                     $('#buttonSubmitForm').prop('disabled', true);
                     $('#form_id_prodi').val('');
-                    $('#form_id_semester').val('');
                 }
 
                 $.each(data, function(i, item) {
                     html += '<tr>';
                     html += '<td class="text-center">' + no + '</td>';
                     html += '<td>' + item.status_sync + '</td>';
-                    html += '<td>' + item.nim + '</td>';
-                    html += '<td>' + item.nama_mahasiswa + '</td>';
-                    html += '<td class="text-center">' + item.angkatan + '</td>';
-                    html += '<td>' + item.nama_semester + '</td>';
-                    html += '<td class="text-center">' + item.nama_status_mahasiswa + '</td>';
-                    html += '<td class="text-center">' + item.ips + '</td>';
-                    html += '<td class="text-center">' + item.ipk + '</td>';
-                    html += '<td class="text-center">' + item.sks_semester + '</td>';
-                    html += '<td class="text-center">' + item.sks_total + '</td>';
-                    html += '<td class="text-center">' + item.nama_pembiayaan + '</td>';
+                    html += '<td class="text-center">' + item.kode_mata_kuliah + '</td>';
+                    html += '<td>' + item.nama_mata_kuliah + '</td>';
+                    html += '<td class="text-center">' + item.pertemuan + '</td>';
+                    html += '<td class="text-start">' + item.materi_indonesia + '</td>';
+                    html += '<td class="text-start">' + item.materi_inggris + '</td>';
+                    html += '<td class="text-start">' + item.nama_program_studi + '</td>';
                     html += '</tr>';
                     no++;
                 });
@@ -238,14 +214,14 @@ FEEDER UPLOAD - AKM
                     console.log('Serialized form data:', formData);
 
                     $.ajax({
-                        url: "{{ route('univ.feeder-upload.akm.upload-ajax') }}",
+                        url: "{{ route('univ.feeder-upload.ajax') }}",
                         type: 'POST',
                         data: formData,
                         success: function(response) {
                             var id_prodi = $('#id_prodi').val();
                             var id_semester = $('#id_semester').val();
 
-                            var eventSourceUrl = "{{ route('univ.feeder-upload.akm.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
+                            var eventSourceUrl = "{{ route('univ.feeder-upload.mata-kuliah.rps.upload') }}" + "?prodi=" + id_prodi;
                             // console.log('EventSource URL:', eventSourceUrl);
 
                             // Initialize the EventSource with the constructed URL

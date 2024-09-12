@@ -772,6 +772,16 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_akm'])->name('univ.feeder-upload.akm.upload');
                     Route::post('/upload-ajax', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_akm_ajax'])->name('univ.feeder-upload.akm.upload-ajax');
                 });
+
+                Route::post('/ajax', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_ajax'])->name('univ.feeder-upload.ajax');
+
+                Route::prefix('mata-kuliah')->group(function(){
+                    Route::prefix('rps')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'rps'])->name('univ.feeder-upload.mata-kuliah.rps');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'rps_upload'])->name('univ.feeder-upload.mata-kuliah.rps.upload');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'rps_data'])->name('univ.feeder-upload.mata-kuliah.rps.data');
+                    });
+                });
                 Route::get('/kelas', [App\Http\Controllers\Universitas\FeederUploadController::class, 'kelas'])->name('univ.feeder-upload.kelas');
             });
 

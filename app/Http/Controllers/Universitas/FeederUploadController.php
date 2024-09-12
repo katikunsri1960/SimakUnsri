@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\RencanaPembelajaran;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
@@ -49,7 +50,7 @@ class FeederUploadController extends Controller
     {
         // Start the upload process and return a response immediately
         // The actual progress updates will be handled by the uploadAkmProgress method
-        Log::info('Request data in upload_akm:', $request->all());
+        // Log::info('Request data in upload_akm:', $request->all());
         return response()->json(['message' => 'Upload started']);
     }
 
@@ -127,6 +128,104 @@ class FeederUploadController extends Controller
 
     }
 
+    public function rps()
+    {
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+
+        return view('universitas.feeder-upload.mata-kuliah.rps', [
+            'prodi' => $prodi
+        ]);
+    }
+
+    public function rps_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = RencanaPembelajaran::where('feeder', 0)
+                ->where('id_prodi', $prodi)
+                ->where('approved', 1)
+                ->orderBy('id_matkul')
+                ->orderBy('pertemuan')
+                ->get();
+
+        return response()->json($data);
+    }
+
+    public function rps_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        // $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = RencanaPembelajaran::where('feeder', 0)
+                ->where('approved', 1)
+                ->where('id_prodi', $prodi)
+                // ->whereNotNull('id_pembiayaan')
+                ->get();
+
+        $totalData = $data->count();
+
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertRencanaPembelajaran';
+        $actGet = 'GetListRencanaPembelajaran';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+                $record = [
+                    "id_matkul" => $d->id_matkul,
+                    "pertemuan" => $d->pertemuan,
+                    "materi_indonesia" => $d->materi_indonesia,
+                    "materi_inggris" => $d->materi_inggris,
+                ];
+
+                $recordGet = "id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."' AND id_semester = '".$d->id_semester."'";
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadRps();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+                    $d->update([
+                        'id_rencana_ajar' => $result['data']['id_rencana_ajar'],
+                        'feeder' => 1
+                    ]);
+                    $dataBerhasil++;
+                } else {
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]
+                        );
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+
+    public function upload_ajax(Request $request)
+    {
+        // Start the upload process and return a response immediately
+        // The actual progress updates will be handled by the uploadProgress method
+        return response()->json(['message' => 'Upload started']);
+    }
+
 
     public function kelas()
     {
@@ -135,6 +234,6 @@ class FeederUploadController extends Controller
 
     public function data(Request $request)
     {
-
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
     }
 }
