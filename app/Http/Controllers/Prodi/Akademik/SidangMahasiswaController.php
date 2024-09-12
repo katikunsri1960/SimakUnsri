@@ -8,6 +8,7 @@ use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Perkuliahan\NilaiSidangMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Referensi\KategoriKegiatan;
 use App\Models\SemesterAktif;
@@ -260,10 +261,11 @@ class SidangMahasiswaController extends Controller
 
     public function approve_hasil_sidang($aktivitas)
     {
-        $data = AktivitasMahasiswa::where('id', $aktivitas)->first();
+        $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id', $aktivitas)->first();
         $data_nilai_sidang = NilaiSidangMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $pembimbing = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $penguji = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+        $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
 
         //Generate nilai akhir sidang
         $bobot_penguji = round((60/count($penguji)),2);
@@ -274,7 +276,9 @@ class SidangMahasiswaController extends Controller
         $nilai_pembimbing = 0;
 
         foreach($data_nilai_sidang as $n){
-            if($n->id_kategori_kegiatan == '110501' || $n->id_kategori_kegiatan == '110501'){
+            $n->update(['approved_prodi' => 1]);
+            
+            if($n->id_kategori_kegiatan == '110501' || $n->id_kategori_kegiatan == '110502'){
                 $nilai_penguji = $nilai_penguji + (($bobot_penguji/100)*$n->nilai_akhir_dosen);
             }else{
                 $nilai_pembimbing = $nilai_pembimbing + (($bobot_pembimbing/100)*$n->nilai_akhir_dosen);
@@ -289,16 +293,45 @@ class SidangMahasiswaController extends Controller
 
         $nilai_akhir_sidang = $nilai_penguji + $nilai_pembimbing + $nilai_bimbingan;
 
-        dd($nilai_akhir_sidang);
+        if($nilai_akhir_sidang > 100){
+            $nilai_akhir_sidang = 100;
+        }
+
+        if($nilai_akhir_sidang >= 86 && $nilai_akhir_sidang <=100){
+            $nilai_indeks = '4.00';
+            $nilai_huruf = 'A';
+        }
+        else if($nilai_akhir_sidang >= 71 && $nilai_akhir_sidang < 86){
+            $nilai_indeks = '3.00';
+            $nilai_huruf = 'B';
+        }
+        else if($nilai_akhir_sidang >= 56 && $nilai_akhir_sidang < 71){
+            $nilai_indeks = '2.00';
+            $nilai_huruf = 'C';
+        }
+        else if($nilai_akhir_sidang >= 41 && $nilai_akhir_sidang < 56){
+            $nilai_indeks = '1.00';
+            $nilai_huruf = 'D';
+        }
+        else if($nilai_akhir_sidang >= 0 && $nilai_akhir_sidang < 41){
+            $nilai_indeks = '1.00';
+            $nilai_huruf = 'D';
+        }else{
+            return redirect()->back()->with('error', 'Nilai di luar range skala nilai.');
+        }
+
+        // dd($nilai_indeks);
 
         try {
             DB::beginTransaction();
+
+            $id_konversi_aktivitas = Uuid::uuid4()->toString();
             
-            KonversiAktivitas::create(['approved_prodi' => 0, 'id_aktivitas' => $data->id_aktivitas, 'id_dosen' => $penguji->id_dosen, 'id_kategori_kegiatan' => $penguji->id_kategori_kegiatan,'nilai_kualitas_skripsi' => $request->kualitas_skripsi, 'nilai_presentasi_dan_diskusi' => $request->presentasi, 'nilai_performansi' => $request->performansi, 'nilai_akhir_dosen' => $nilai_akhir_sidang, 'tanggal_penilaian_sidang' => $tanggal_penilaian]);
+            KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_akhir_sidang, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
 
             DB::commit();
 
-            return redirect()->route('dosen.penilaian.sidang-mahasiswa.detail-sidang', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
