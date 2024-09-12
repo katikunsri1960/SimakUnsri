@@ -15,15 +15,7 @@ Tugas Akhir
     <div class="d-flex align-items-center">
         <div class="me-auto">
             <h3 class="page-title">
-                Aktivitas Non @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-                Skripsi
-                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-                Tesis
-                @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-                Disertasi
-                @else
-                Tugas Akhir
-                @endif
+                Aktivitas Non Tugas Akhir
             </h3>
             <div class="d-inline-block align-items-center">
                 <nav>
@@ -32,15 +24,7 @@ Tugas Akhir
                                     class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
                         <li class="breadcrumb-item active" aria-current="page">
-                            Aktivitas Non @if (Auth::user()->fk->nama_jenjang_pendidikan == 'S1')
-                            Skripsi
-                            @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')
-                            Tesis
-                            @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S3')
-                            Disertasi
-                            @else
-                            Tugas Akhir
-                            @endif
+                            Aktivitas Non Tugas Akhir
                         </li>
                     </ol>
                 </nav>
@@ -68,7 +52,6 @@ Tugas Akhir
                                     <th class="text-center align-middle">NO SK<br>(Tanggal SK)</th>
                                     <th class="text-center align-middle">Pembimbing</th>
                                     <th class="text-center align-middle">Status Pembimbing</th>
-                                    <th class="text-center align-middle">Act</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -109,28 +92,6 @@ Tugas Akhir
                                         @else
                                             <span class="badge badge-lg badge-success">Approved</span>
                                         @endif
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <div class="row d-flex justify-content-center">
-                                            @if ($d->approved > 0 || $d->decline_dosen > 0)
-                                            <form
-                                                action="{{route('fakultas.data-akademik.non-tugas-akhir.approve-pembimbing', $d)}}"
-                                                method="post" id="approveForm{{$d->id}}" data-id="{{$d->id}}"
-                                                class="approve-class">
-                                                @csrf
-                                                <div class="row">
-                                                    <button type="submit" class="btn btn-sm my-2 btn-success ">Approve
-                                                        pembimbing</button>
-                                                </div>
-                                            </form>
-                                            @endif
-                                            <a href="{{route('fakultas.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
-                                            <a href="#" class="btn btn-info btn-sm my-2" title="Detail"
-                                                data-bs-toggle="modal" data-bs-target="#detailModal"
-                                                onclick="detailFunc({{$d}})">
-                                                <i class="fa fa-eye"></i> Detail
-                                            </a>
-                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach

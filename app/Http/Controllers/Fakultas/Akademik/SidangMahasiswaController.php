@@ -2,25 +2,45 @@
 
 namespace App\Http\Controllers\Fakultas\Akademik;
 
-use App\Http\Controllers\Controller;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\BimbingMahasiswa;
-use App\Models\Perkuliahan\UjiMahasiswa;
-use App\Models\Dosen\PenugasanDosen;
-use App\Models\Referensi\KategoriKegiatan;
-use App\Models\SemesterAktif;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use App\Models\ProgramStudi;
+use Illuminate\Http\Request;
+use App\Models\SemesterAktif;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Models\Dosen\PenugasanDosen;
+use App\Models\Perkuliahan\UjiMahasiswa;
+use App\Models\Referensi\KategoriKegiatan;
+use App\Models\Perkuliahan\BimbingMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 
 class SidangMahasiswaController extends Controller
 {
     public function index(Request $request)
     {
+        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->pluck('id_prodi');
+
         $semesterAktif = SemesterAktif::first();
         $semester = $semesterAktif->id_semester;
-        $db = new AktivitasMahasiswa();
-        $data = $db->sidang(auth()->user()->fk_id, $semester );
+        
+        $data = AktivitasMahasiswa::with(['uji_mahasiswa', 'bimbing_mahasiswa','anggota_aktivitas_personal', 'prodi'])
+                    ->withCount([
+                        'uji_mahasiswa as status_uji' => function($query) {
+                            $query->where('status_uji_mahasiswa', 0);
+                        },
+                        'uji_mahasiswa as approved_prodi' => function($query) {
+                            $query->where('status_uji_mahasiswa', 1);
+                        },
+                        'uji_mahasiswa as decline_dosen' => function($query) {
+                            $query->where('status_uji_mahasiswa', 3);
+                        },
+                    ])
+                    ->whereIn('id_prodi', $id_prodi_fak)
+                    ->where('approve_sidang', 1)
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
+                    ->get();
         // dd($data);
         return view('fakultas.data-akademik.sidang-mahasiswa.index', [
             'data' => $data,

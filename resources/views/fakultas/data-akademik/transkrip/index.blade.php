@@ -41,12 +41,12 @@ Transkrip Nilai
                         <div class="box-body text-center">
                             <div class="table-responsive">
                                 <div id="krsDiv" hidden>
-                                    {{-- <div class="row mb-2">
+                                    <div class="row mb-2">
                                         <form action="{{route('fakultas.transkrip-nilai.download')}}" method="get" id="cetakForm" target="_blank">
                                             <input type="hidden" name="nim" id="nimCetak">
                                             <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
                                         </form>
-                                    </div> --}}
+                                    </div>
                                     <h3 class="text-center">Transkrip Mahasiswa</h3>
                                     <div class="row">
                                         <div class="col-md-2" id="foto">

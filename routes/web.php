@@ -124,6 +124,7 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::prefix('transkrip-nilai')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'index'])->name('fakultas.transkrip-nilai');
                     Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'data'])->name('fakultas.transkrip-nilai.get');
+                    Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'download'])->name('fakultas.transkrip-nilai.download');
                 });
 
                 Route::prefix('khs')->group(function(){
@@ -133,7 +134,7 @@ Route::group(['middleware' => ['auth']], function() {
 
                 Route::get('', [App\Http\Controllers\Fakultas\Akademik\KRSController::class, 'krs'])->name('fakultas.data-akademik.krs');
                 Route::get('/sidang-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'sidang_mahasiswa'])->name('fakultas.data-akademik.sidang-mahasiswa');
-                Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('fakultas.data-akademik.transkrip-mahasiswa');
+                // Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('fakultas.data-akademik.transkrip-mahasiswa');
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('fakultas.data-akademik.yudisium-mahasiswa');
 
 
@@ -144,7 +145,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/approve', [App\Http\Controllers\Fakultas\Akademik\KRSController::class, 'approve'])->name('fakultas.data-akademik.krs.approve');
                 });
 
-                Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('fakultas.data-akademik.transkrip-mahasiswa');
+                // Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('fakultas.data-akademik.transkrip-mahasiswa');
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('fakultas.data-akademik.yudisium-mahasiswa');
 
                 Route::prefix('sidang-mahasiswa')->group(function(){
