@@ -199,8 +199,7 @@ class FeederUploadController extends Controller
                     $d->update(
                             [
                                 'status_sync' => $result['error_desc'],
-                            ]
-                        );
+                            ]);
                     $dataGagal++;
                 }
 
