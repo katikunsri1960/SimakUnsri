@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Fakultas\Akademik;
 
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -34,7 +35,7 @@ class TranskripController extends Controller
                     ->first();
 
         // dd($riwayat);
-        if(!$riwayat) {
+        if(!$riwayat ) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data Mahasiswa tidak ditemukan!!',
@@ -55,5 +56,39 @@ class TranskripController extends Controller
         ];
 
         return response()->json($data);
+    }
+
+    public function download(Request $request)
+    {
+        $request->validate([
+            'nim' => 'required',
+        ]);
+
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('nim', $request->nim)->orderBy('id_periode_masuk', 'desc')->first();
+
+        if(!$riwayat) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Mahasiswa tidak ditemukan!!',
+            ]);
+        }
+
+        $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
+
+        $total_sks = $transkrip->sum('sks_mata_kuliah');
+
+        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                ->orderBy('id_semester', 'desc')
+                ->get();
+
+        $pdf = PDF::loadview('fakultas.data-akademik.transkrip.pdf', [
+            'transkrip' => $transkrip,
+            'riwayat' => $riwayat,
+            'akm' => $akm,
+            'total_sks' => $total_sks,
+         ])
+         ->setPaper('a4', 'portrait');
+         
+         return $pdf->stream('transkrip-'.$riwayat->nim.'.pdf');
     }
 }

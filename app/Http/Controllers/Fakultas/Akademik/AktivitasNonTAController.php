@@ -2,24 +2,42 @@
 
 namespace App\Http\Controllers\Fakultas\Akademik;
 
+use Ramsey\Uuid\Uuid;
+use App\Models\ProgramStudi;
+use Illuminate\Http\Request;
+use App\Models\SemesterAktif;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Referensi\KategoriKegiatan;
-use App\Models\SemesterAktif;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Ramsey\Uuid\Uuid;
+use App\Models\Perkuliahan\BimbingMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 
 class AktivitasNonTAController extends Controller
 {
     public function index(Request $request)
     {
+        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->pluck('id_prodi');
+
         $semesterAktif = SemesterAktif::first();
         $semester = $semesterAktif->id_semester;
-        $db = new AktivitasMahasiswa();
-        $data = $db->aktivitas_non_ta(auth()->user()->fk_id, $semester );
+        $data = AktivitasMahasiswa::with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+                    ->withCount([
+                        'bimbing_mahasiswa as approved' => function($query) {
+                            $query->where('approved', 0);
+                        },
+                        'bimbing_mahasiswa as approved_dosen' => function($query) {
+                            $query->where('approved_dosen', 0);
+                        },
+                        'bimbing_mahasiswa as decline_dosen' => function($query) {
+                            $query->where('approved_dosen', 2);
+                        },
+                    ])
+                    ->whereIn('id_prodi', $id_prodi_fak)
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [5,6,13,14,15,16,17,18,19,20,21])
+                    ->get();
         // dd($data);
         return view('fakultas.data-akademik.non-tugas-akhir.index', [
             'data' => $data,

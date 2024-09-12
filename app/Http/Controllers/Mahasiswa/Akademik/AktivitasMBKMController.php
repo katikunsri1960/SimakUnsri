@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
+use App\Models\BatasIsiKRSManual;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -73,13 +74,16 @@ class AktivitasMBKMController extends Controller
         $semester_aktif = SemesterAktif::first();
         $today = Carbon::now()->toDateString();
 
-        if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->first();
+        // dd($batas_isi_krs_manual);
+
+        if($batas_isi_krs_manual != NULL){
+            $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+        } elseif($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-        }
-        elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
+        } elseif($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
-        }else
-        {
+        } else {
             $batas_isi_krs =  NULL;
         }
 
@@ -459,13 +463,16 @@ class AktivitasMBKMController extends Controller
         $semester_aktif = SemesterAktif::first();
         $today = Carbon::now()->toDateString();
 
-        if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->first();
+        // dd($batas_isi_krs_manual);
+
+        if($batas_isi_krs_manual != NULL){
+            $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+        } elseif($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-        }
-        elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
+        } elseif($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
-        }else
-        {
+        } else {
             $batas_isi_krs =  NULL;
         }
 
