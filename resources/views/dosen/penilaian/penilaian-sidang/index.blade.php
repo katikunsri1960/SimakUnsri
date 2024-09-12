@@ -62,7 +62,7 @@ Sidang Mahasiswa
                                             </li>
                                         @endforeach
                                         </ul>
-                                    </td> 
+                                    </td>
                                     <td class="text-start align-middle">
                                         <p style="text-align: justify">
                                             {{$d->judul}}
@@ -89,20 +89,23 @@ Sidang Mahasiswa
                                         </ul>
                                     </td>
                                     <td>
-                                        @if($d->count_approved > 0)
-                                            <form action="{{route('dosen.penilaian.sidang-mahasiswa.approve-penguji', $d)}}" method="post" id="approveForm{{$d->id_aktivitas}}" class="approve-class" data-id='{{$d->id_aktivitas}}'>
+                                        <div class="row">
+                                            @if($d->count_approved > 0)
+                                                <form action="{{route('dosen.penilaian.sidang-mahasiswa.approve-penguji', $d)}}" method="post" id="approveForm{{$d->id_aktivitas}}" class="approve-class" data-id='{{$d->id_aktivitas}}'>
+                                                    @csrf
+                                                    <div class="row">
+                                                        <button type="submit" class="btn btn-sm btn-primary" title="Setujui Pengujian"><i class="fa fa-thumbs-up"></i> Approve</button>
+                                                    </div>
+                                                </form>
+                                            @endif
+                                            <form action="{{route('dosen.penilaian.sidang-mahasiswa.decline-penguji', $d)}}" method="post" id="declineForm{{$d->id_aktivitas}}" class="decline-class" data-id='{{$d->id_aktivitas}}'>
                                                 @csrf
                                                 <div class="row">
-                                                    <button type="submit" class="btn btn-sm btn-primary" title="Setujui Pengujian"><i class="fa fa-thumbs-up"></i> Approve</button>
+                                                    <button type="submit" class="btn btn-sm btn-danger my-2" title="Tolak Pengujian"><i class="fa fa-ban"></i> Decline</button>
                                                 </div>
                                             </form>
-                                        @endif
-                                        <form action="{{route('dosen.penilaian.sidang-mahasiswa.decline-penguji', $d)}}" method="post" id="declineForm{{$d->id_aktivitas}}" class="decline-class" data-id='{{$d->id_aktivitas}}'>
-                                            @csrf
-                                            <div class="row">
-                                                <button type="submit" class="btn btn-sm btn-danger my-2" title="Tolak Pengujian"><i class="fa fa-ban"></i> Decline</button>
-                                            </div>
-                                        </form>
+                                            <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang', $d)}}" class="btn btn-sm btn-secondary my-2" title="Detail Sidang"><i class="fa fa-eye"></i> Detail</a>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach

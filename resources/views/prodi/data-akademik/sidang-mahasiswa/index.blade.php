@@ -50,7 +50,6 @@ Tugas Akhir
         </div>
     </div>
 </div>
-@include('prodi.data-akademik.sidang-mahasiswa.detail')
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -125,9 +124,7 @@ Tugas Akhir
                                             </form>
                                             @endif
                                             <a href="{{route('prodi.data-akademik.sidang-mahasiswa.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
-                                            <a href="#" class="btn btn-info btn-sm my-2" title="Detail-Sidang"
-                                                data-bs-toggle="modal" data-bs-target="#detailSidangModal"
-                                                onclick="detailFunc1({{$d}})">
+                                            <a href="{{route('prodi.data-akademik.sidang-mahasiswa.detail', $d->id)}}" class="btn btn-secondary btn-sm my-2">
                                                 <i class="fa fa-eye"></i> Detail
                                             </a>
                                         </div>
@@ -148,12 +145,6 @@ Tugas Akhir
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-    function detailFunc1(data) {
-        $('#detail_judul').val(data.judul);
-        $('#edit_tanggal_mulai').val(data.id_tanggal_mulai);
-        $('#edit_tanggal_selesai').val(data.id_tanggal_selesai);
-        $('#edit_lokasi').val(data.lokasi);
-    }
 
     $(function() {
         "use strict";
