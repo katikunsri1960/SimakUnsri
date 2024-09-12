@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\UjiMahasiswa;
+use App\Models\Perkuliahan\NilaiSidangMahasiswa;
+use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Referensi\KategoriKegiatan;
 use App\Models\SemesterAktif;
@@ -239,6 +241,67 @@ class SidangMahasiswaController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                              ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function detail_sidang($aktivitas)
+    {
+        $id_dosen = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa', 'konversi', 'uji_mahasiswa'])->where('id', $aktivitas)->first();
+        $data_pelaksanaan_sidang = AktivitasMahasiswa::with(['revisi_sidang', 'notulensi_sidang', 'penilaian_sidang', 'revisi_sidang.dosen', 'penilaian_sidang.dosen'])->where('id', $aktivitas)->first();
+        $penguji = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen', $id_dosen)->first();
+        // dd($penguji);
+        return view('prodi.data-akademik.sidang-mahasiswa.detail', [
+            'data' => $data,
+            'data_pelaksanaan' => $data_pelaksanaan_sidang,
+            'penguji' => $penguji
+        ]);
+    }
+
+    public function approve_hasil_sidang($aktivitas)
+    {
+        $data = AktivitasMahasiswa::where('id', $aktivitas)->first();
+        $data_nilai_sidang = NilaiSidangMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+        $pembimbing = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+        $penguji = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+
+        //Generate nilai akhir sidang
+        $bobot_penguji = round((60/count($penguji)),2);
+        $bobot_pembimbing = round((30/count($pembimbing)),2);
+        $bobot_proses_bimbingan = round((10/count($pembimbing)),2);
+
+        $nilai_penguji = 0;
+        $nilai_pembimbing = 0;
+
+        foreach($data_nilai_sidang as $n){
+            if($n->id_kategori_kegiatan == '110501' || $n->id_kategori_kegiatan == '110501'){
+                $nilai_penguji = $nilai_penguji + (($bobot_penguji/100)*$n->nilai_akhir_dosen);
+            }else{
+                $nilai_pembimbing = $nilai_pembimbing + (($bobot_pembimbing/100)*$n->nilai_akhir_dosen);
+            }
+        }
+
+        $nilai_bimbingan = 0;
+
+        foreach($pembimbing as $p){
+            $nilai_bimbingan = $nilai_bimbingan + (($bobot_proses_bimbingan/100)*$p->nilai_proses_bimbingan);
+        }
+
+        $nilai_akhir_sidang = $nilai_penguji + $nilai_pembimbing + $nilai_bimbingan;
+
+        dd($nilai_akhir_sidang);
+
+        try {
+            DB::beginTransaction();
+            
+            KonversiAktivitas::create(['approved_prodi' => 0, 'id_aktivitas' => $data->id_aktivitas, 'id_dosen' => $penguji->id_dosen, 'id_kategori_kegiatan' => $penguji->id_kategori_kegiatan,'nilai_kualitas_skripsi' => $request->kualitas_skripsi, 'nilai_presentasi_dan_diskusi' => $request->presentasi, 'nilai_performansi' => $request->performansi, 'nilai_akhir_dosen' => $nilai_akhir_sidang, 'tanggal_penilaian_sidang' => $tanggal_penilaian]);
+
+            DB::commit();
+
+            return redirect()->route('dosen.penilaian.sidang-mahasiswa.detail-sidang', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
         }
     }
 }

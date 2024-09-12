@@ -28,6 +28,21 @@ class AktivitasMahasiswa extends Model
         return $this->belongsTo(MataKuliah::class, 'mk_konversi', 'id_matkul');
     }
 
+    public function notulensi_sidang()
+    {
+        return $this->hasMany(NotulensiSidangMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
+    }
+
+    public function revisi_sidang()
+    {
+        return $this->hasMany(RevisiSidangMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
+    }
+
+    public function penilaian_sidang()
+    {
+        return $this->hasMany(NilaiSidangMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
+    }
+
     public function getIdTanggalSkTugasAttribute()
     {
         return date('d-m-Y', strtotime($this->tanggal_sk_tugas));

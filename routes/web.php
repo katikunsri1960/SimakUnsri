@@ -419,10 +419,14 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/approve-penguji/{aktivitas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'approve_penguji'])->name('dosen.penilaian.sidang-mahasiswa.approve-penguji');
                     Route::post('/decline-penguji/{aktivitas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'pembatalan_penguji'])->name('dosen.penilaian.sidang-mahasiswa.decline-penguji');
 
-                    Route::prefix('penilaian-sidang')->group(function(){
-                        Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi');
-                        Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.store');
-                        Route::post('/approve-asistensi/{asistensi}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'asistensi_approve'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.approve');
+                    Route::prefix('detail-sidang')->group(function(){
+                        Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'detail_sidang'])->name('dosen.penilaian.sidang-mahasiswa.detail-sidang');
+                        Route::get('/{aktivitas}/notulensi', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'notulensi_sidang'])->name('dosen.penilaian.sidang-mahasiswa.detail-sidang.notulensi');
+                        Route::post('/{aktivitas}/notulensi-store', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'notulensi_sidang_store'])->name('dosen.penilaian.sidang-mahasiswa.detail-sidang.notulensi.store');
+                        Route::get('/{aktivitas}/revisi', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'revisi_sidang'])->name('dosen.penilaian.sidang-mahasiswa.detail-sidang.revisi');
+                        Route::post('/{aktivitas}/revisi-store', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'revisi_sidang_store'])->name('dosen.penilaian.sidang-mahasiswa.detail-sidang.revisi.store');
+                        Route::get('/{aktivitas}/penilaian-sidang', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'penilaian_sidang'])->name('dosen.penilaian.sidang-mahasiswa.detail-sidang.penilaian-sidang');
+                        Route::post('/{aktivitas}/penilaian-sidang-store', [App\Http\Controllers\Dosen\Penilaian\PenilaianSidangController::class, 'penilaian_sidang_store'])->name('dosen.penilaian.sidang-mahasiswa.detail-sidang.penilaian-sidang.store');
                     });
                 });
             });
@@ -452,6 +456,11 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::prefix('ajuan-sidang')->group(function(){
                         Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'ajuan_sidang'])->name('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang');
                         Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'ajuan_sidang_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang.store');
+                    });
+
+                    Route::prefix('penilaian-sidang')->group(function(){
+                        Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_sidang'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang');
+                        Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_sidang_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang.store');
                     });
 
                     Route::get('/get-dosen', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'get_dosen'])->name('dosen.pembimbing.bimbingan-tugas-akhir.get-dosen');
@@ -580,6 +589,8 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/edit-dosen/{uji}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'edit_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.edit-dosen');
                     Route::post('/update-dosen/{uji}/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'update_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.update-dosen');
                     Route::delete('/delete-dosen/{uji}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'delete_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.delete-dosen');
+                    Route::get('/detail/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'detail_sidang'])->name('prodi.data-akademik.sidang-mahasiswa.detail');
+                    Route::post('/approve-hasil-sidang/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'approve_hasil_sidang'])->name('prodi.data-akademik.sidang-mahasiswa.approve-hasil-sidang');
                 });
 
                 Route::prefix('tugas-akhir')->group(function(){

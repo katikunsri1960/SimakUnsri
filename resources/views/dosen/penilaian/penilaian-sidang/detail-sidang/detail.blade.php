@@ -1,4 +1,4 @@
-@extends('layouts.prodi')
+@extends('layouts.dosen')
 @section('title')
 Dashboard
 @endsection
@@ -10,7 +10,7 @@ Dashboard
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
                     <form class="form" action="#" id="update-detail-sidang" method="POST">
-                        <a href="{{route('prodi.data-akademik.sidang-mahasiswa')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+                        <a href="{{route('dosen.penilaian.sidang-mahasiswa')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
                         <h3 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Detail Sidang Mahasiswa</h3>
                         <hr class="my-15">
                         <div class="row">
@@ -329,53 +329,27 @@ Dashboard
                             </table>
                         </div>
                     </div>
-                </div>
-                <div class="box-footer text-end">
-                    <form action="{{route('prodi.data-akademik.sidang-mahasiswa.approve-hasil-sidang', $data->id)}}"
-                        method="post" id="approve-hasil-sidang">
-                        @csrf
-                        <a type="button" href="{{route('prodi.data-akademik.sidang-mahasiswa')}}" class="btn btn-danger waves-effect waves-light">
-                            Batal
-                        </a>
-                        @if($data->jadwal_ujian == date('Y-m-d'))
-                            <button type="submit" class="btn btn-primary waves-effect waves-light">Approve Hasil</button>
+                    <hr class="my-15">
+                    <div class="text-end">
+                        @if($penguji->id_kategori_kegiatan == '110501')
+                            @if($data->jadwal_ujian == date('Y-m-d'))
+                                <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang.notulensi', $data->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
+                            @else
+                                <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light" disabled><i class="fa fa-play"></i> Mulai Sidang</button>
+                            @endif
+                        @elseif($penguji->id_kategori_kegiatan == '110502')
+                            @if($data->jadwal_ujian == date('Y-m-d'))
+                                <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang.revisi', $data->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
+                            @else
+                                <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light" disabled><i class="fa fa-play"></i> Mulai Sidang</button>
+                            @endif
                         @else
-                            <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light" disabled> Approve Hasil</button>
+                            <h4 class="text-danger">Anda Tidak Berhak Untuk Memberikan Nilai</h4>
                         @endif
-                    </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
 @endsection
-@push('js')
-<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
-<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
-<script>
-
-    $(function() {
-        "use strict";
-
-        // Form submission with SweetAlert confirmation
-        $('#approve-hasil-sidang').submit(function(e){
-            e.preventDefault();
-            swal({
-                title: 'Persetujuan Hasil Sidang Mahasiswa',
-                text: "Apakah anda yakin ingin melanjutkan?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Lanjutkan',
-                cancelButtonText: 'Batal'
-            },function(isConfirmed){
-                if (isConfirmed) {
-                    $('#approve-hasil-sidang').unbind('submit').submit();
-                    $('#spinner').show();
-                }
-            });
-        });
-    });
-</script>
-@endpush

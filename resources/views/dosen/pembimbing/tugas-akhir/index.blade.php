@@ -76,17 +76,21 @@ Pembimbingan Karya Ilmiah Mahasiswa
                                             </ul>
                                     </td>
                                     <td class="text-center align-middle" style="width: 10%">
-                                        @foreach($d->bimbing_mahasiswa as $db)
-                                            @if ($db->approved == 1 && $db->approved_dosen == 0)
-                                                <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-warning">Menunggu Persetujuan Dosen</span></li>
-                                            @elseif ($db->approved == 1 && $db->approved_dosen == 1)
-                                                <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-success">Disetujui</span></li>
-                                            @elseif ($db->approved == 1 && $db->approved_dosen == 2)
-                                                <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-danger">Dibatalkan</span></li>
-                                            @else
-                                                <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-warning">{{$db->approved_dosen}}</span></li>
-                                            @endif
-                                        @endforeach
+                                        @if($d->approve_sidang != 1)
+                                            @foreach($d->bimbing_mahasiswa as $db)
+                                                @if ($db->approved == 1 && $db->approved_dosen == 0)
+                                                    <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-warning">Menunggu Persetujuan Dosen</span></li>
+                                                @elseif ($db->approved == 1 && $db->approved_dosen == 1)
+                                                    <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-success">Disetujui</span></li>
+                                                @elseif ($db->approved == 1 && $db->approved_dosen == 2)
+                                                    <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-danger">Dibatalkan</span></li>
+                                                @else
+                                                    <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-warning">{{$db->approved_dosen}}</span></li>
+                                                @endif
+                                            @endforeach
+                                        @else
+                                            <li><span class="badge bg-primary">Sidang Mahasiswa</span> : {{$d->jadwal_ujian}} ({{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}})</li>
+                                        @endif
                                     </td>
                                     <td class="text-center align-middle text-nowrap">
                                         <div class="row">

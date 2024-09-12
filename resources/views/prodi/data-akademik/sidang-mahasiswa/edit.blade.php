@@ -303,7 +303,7 @@ Tugas Akhir
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-            <div class="box-header with-border">
+                <div class="box-header with-border">
                     <div class="row mb-2">
                         <div class="col-lg-6">
                             <div class="d-flex justify-content-start">
