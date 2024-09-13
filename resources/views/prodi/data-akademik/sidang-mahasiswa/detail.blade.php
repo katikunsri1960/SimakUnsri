@@ -337,11 +337,12 @@ Dashboard
                         <a type="button" href="{{route('prodi.data-akademik.sidang-mahasiswa')}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
-                        @if($data->jadwal_ujian == date('Y-m-d'))
+                        <button type="submit" class="btn btn-primary waves-effect waves-light">Approve Hasil</button>
+                        {{--@if($data->jadwal_ujian == date('Y-m-d'))
                             <button type="submit" class="btn btn-primary waves-effect waves-light">Approve Hasil</button>
                         @else
                             <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light" disabled> Approve Hasil</button>
-                        @endif
+                        @endif--}}
                     </form>
                 </div>
             </div>

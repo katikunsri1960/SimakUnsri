@@ -332,17 +332,19 @@ Dashboard
                     <hr class="my-15">
                     <div class="text-end">
                         @if($penguji->id_kategori_kegiatan == '110501')
-                            @if($data->jadwal_ujian == date('Y-m-d'))
+                            <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang.notulensi', $data->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
+                            {{--@if($data->jadwal_ujian == date('Y-m-d'))
                                 <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang.notulensi', $data->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
                             @else
                                 <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light" disabled><i class="fa fa-play"></i> Mulai Sidang</button>
-                            @endif
+                            @endif--}}
                         @elseif($penguji->id_kategori_kegiatan == '110502')
-                            @if($data->jadwal_ujian == date('Y-m-d'))
+                            <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang.revisi', $data->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
+                            {{--@if($data->jadwal_ujian == date('Y-m-d'))
                                 <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang.revisi', $data->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
                             @else
                                 <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light" disabled><i class="fa fa-play"></i> Mulai Sidang</button>
-                            @endif
+                            @endif--}}
                         @else
                             <h4 class="text-danger">Anda Tidak Berhak Untuk Memberikan Nilai</h4>
                         @endif
