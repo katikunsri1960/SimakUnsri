@@ -80,11 +80,12 @@ Bimbingan Tugas Akhir Dosen
                                 <a class="btn btn-rounded bg-primary-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang', ['aktivitas' => $aktivitas])}}"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
                             </div>
                         @else
-                            @if($aktivitas->jadwal_ujian == date('Y-m-d'))
+                            <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang', $aktivitas->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
+                            {{--@if($aktivitas->jadwal_ujian == date('Y-m-d'))
                                 <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang', $aktivitas->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
                             @else
                                 <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light" disabled><i class="fa fa-play"></i> Mulai Sidang</button>
-                            @endif
+                            @endif--}}
                         @endif
                     </div>
                 </div>
