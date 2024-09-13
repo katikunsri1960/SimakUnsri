@@ -801,7 +801,17 @@ Route::group(['middleware' => ['auth']], function() {
                         Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'kelas_upload'])->name('univ.feeder-upload.perkuliahan.kelas.upload');
                     });
 
+                    Route::prefix('krs')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'krs'])->name('univ.feeder-upload.perkuliahan.krs');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'krs_data'])->name('univ.feeder-upload.perkuliahan.krs.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'krs_upload'])->name('univ.feeder-upload.perkuliahan.krs.upload');
+                    });
 
+                    Route::prefix('dosen-ajar')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar'])->name('univ.feeder-upload.perkuliahan.dosen-ajar');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar_data'])->name('univ.feeder-upload.perkuliahan.dosen-ajar.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar_upload'])->name('univ.feeder-upload.perkuliahan.dosen-ajar.upload');
+                    });
                 });
 
             });

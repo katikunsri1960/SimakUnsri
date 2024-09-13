@@ -271,7 +271,7 @@ class FeederUploadController extends Controller
                 ->where('feeder', 0)
                 ->where('kelas_kuliahs.id_prodi', $prodi)
                 ->where('kelas_kuliahs.id_semester', $semester)
-                ->whereIn('kelas_kuliahs.id_matkul', ['685adb41-9f6a-4dde-9f67-8083ba38a559'])
+                // ->whereIn('kelas_kuliahs.id_matkul', ['685adb41-9f6a-4dde-9f67-8083ba38a559'])
                 // ->where('kelas_kuliahs.id_kelas_kuliah', '4e24a587-aff5-466c-badf-a1ef6187043d')
                 ->get();
 
@@ -353,12 +353,205 @@ class FeederUploadController extends Controller
 
     public function krs()
     {
+        $semesterAktif = SemesterAktif::first();
         $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
         $semester = Semester::orderBy('id_semester', 'desc')->get();
 
         return view('universitas.feeder-upload.perkuliahan.krs', [
             'prodi' => $prodi,
             'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
         ]);
+    }
+
+    public function krs_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = PesertaKelasKuliah::join('kelas_kuliahs as k', 'peserta_kelas_kuliahs.id_kelas_kuliah', 'k.id_kelas_kuliah')
+                ->join('semesters as s', 'k.id_semester', 's.id_semester')
+                ->join('riwayat_pendidikans as r', 'peserta_kelas_kuliahs.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
+                ->where('k.id_semester', $request->id_semester)
+                ->where('k.id_prodi', $prodi)
+                ->where('peserta_kelas_kuliahs.feeder', 0)
+                ->where('peserta_kelas_kuliahs.approved', 1)
+                ->select('peserta_kelas_kuliahs.*', 'k.nama_kelas_kuliah', 's.nama_semester', 'r.nama_program_studi as nama_program_studi_mhs')
+                ->get();
+
+        return response()->json($data);
+    }
+
+    public function krs_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = PesertaKelasKuliah::join('kelas_kuliahs as k', 'peserta_kelas_kuliahs.id_kelas_kuliah', 'k.id_kelas_kuliah')
+                ->where('k.id_semester', $semester)
+                ->where('k.id_prodi', $prodi)
+                // ->where('peserta_kelas_kuliahs.id_kelas_kuliah', 'be7c41f0-bb74-4471-b23a-488e61a30ccc')
+                ->where('peserta_kelas_kuliahs.feeder', 0)
+                ->where('peserta_kelas_kuliahs.approved', 1)
+                ->select('peserta_kelas_kuliahs.*')
+                ->get();
+
+        $totalData = $data->count();
+        // dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertPesertaKelasKuliah';
+        $actGet = 'GetPesertaKelasKuliah';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+
+                $record = [
+                    "id_registrasi_mahasiswa" => $d->id_registrasi_mahasiswa,
+                    "id_kelas_kuliah" => $d->id_kelas_kuliah,
+                ];
+
+                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadGeneral();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    $d->update([
+                        'feeder' => 1
+                    ]);
+
+                    $dataBerhasil++;
+                } else {
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+
+    public function dosen_ajar()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.perkuliahan.dosen-ajar', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function dosen_ajar_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = DosenPengajarKelasKuliah::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliah.id_kelas_kuliah')
+                ->where('k.id_semester', $request->id_semester)
+                ->where('k.id_prodi', $prodi)
+                ->where('dosen_pengajar_kelas_kuliah.feeder', 0)
+                ->select('dosen_pengajar_kelas_kuliah.*')
+                ->get();
+
+        return response()->json($data);
+    }
+
+    public function dosen_ajar_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = DosenPengajarKelasKuliah::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliah.id_kelas_kuliah')
+                ->where('k.id_semester', $request->id_semester)
+                ->where('k.id_prodi', $prodi)
+                ->where('dosen_pengajar_kelas_kuliah.feeder', 0)
+                ->select('dosen_pengajar_kelas_kuliah.*')
+                ->get();
+
+        $totalData = $data->count();
+        // dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertPesertaKelasKuliah';
+        $actGet = 'GetPesertaKelasKuliah';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+
+                $record = [
+                    'id_registrasi_dosen' => $d->id_registrasi_dosen,
+                    'id_kelas_kuliah' => $d->id_kelas_kuliah,
+                    'sks_substansi_total' => $d->sks_substansi_total,
+/*											   'sks_tm_subst' => 0,
+                    'sks_prak_subst' => 0,
+                'sks_prak_lap_subst' => 0,
+                    'sks_sim_subst' => 0,*/
+                    'rencana_minggu_pertemuan' => $d->rencana_minggu_pertemuan,
+                    'realisasi_minggu_pertemuan' => $d->tatap_muka_real,
+                    'id_jenis_evaluasi' => $d->id_jenis_evaluasi,
+                ];
+
+                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadGeneral();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    $d->update([
+                        'id_aktivitas_mengajar' => $result['data']['id_aktivitas_mengajar'],
+                        'feeder' => 1
+                    ]);
+
+                    $dataBerhasil++;
+                } else {
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
     }
 }
