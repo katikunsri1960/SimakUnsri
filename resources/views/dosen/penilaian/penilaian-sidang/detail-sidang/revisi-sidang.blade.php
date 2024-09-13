@@ -138,11 +138,16 @@ Catatan Perbaikan Mahasiswa
                         <i class="fa fa-sign-out"></i> Keluar
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-hdd-o"></i> Simpan</button>
-                        @if($data->jadwal_ujian == date('Y-m-d') && $count_revisi > 0)
+                        @if($count_revisi > 0)
                             <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang.penilaian-sidang', $data->id)}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Selanjutnya</a>
                         @else
                             <button type="submit" id="submit-button" class="btn btn-warning btn-rounded waves-effect waves-light" disabled><i class="fa fa-play"></i> Selanjutnya</button>
                         @endif
+                        {{--@if($data->jadwal_ujian == date('Y-m-d') && $count_revisi > 0)
+                            <a href="{{route('dosen.penilaian.sidang-mahasiswa.detail-sidang.penilaian-sidang', $data->id)}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Selanjutnya</a>
+                        @else
+                            <button type="submit" id="submit-button" class="btn btn-warning btn-rounded waves-effect waves-light" disabled><i class="fa fa-play"></i> Selanjutnya</button>
+                        @endif--}}
                     </div>
                 </form>
             </div>
