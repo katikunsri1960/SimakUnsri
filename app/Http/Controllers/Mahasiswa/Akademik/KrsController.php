@@ -478,6 +478,7 @@ class KrsController extends Controller
             DB::beginTransaction();
 
             $peserta = PesertaKelasKuliah::create([
+                'feeder' => 0,
                 'approved' => 0,
                 'id_kelas_kuliah' => $idKelasKuliah,
                 'id_registrasi_mahasiswa' => $id_reg,
