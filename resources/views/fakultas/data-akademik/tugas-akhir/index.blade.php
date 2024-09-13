@@ -37,8 +37,9 @@ Tugas Akhir
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">NAMA AKTIVITAS<br>(MK Konversi)</th>
                                     <th class="text-center align-middle">NO SK<br>(Tanggal SK)</th>
-                                    <th class="text-center align-middle">Pembimbing</th>
-                                    <th class="text-center align-middle">Status Pembimbing</th>
+                                    <th class="text-center align-middle">NAMA<br>PROGRAM STUDI</th>
+                                    <th class="text-center align-middle">PEMBIMBING</th>
+                                    <th class="text-center align-middle">STATUS PEMBIMBING</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -56,6 +57,9 @@ Tugas Akhir
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$d->nama_prodi}}
                                     </td>
                                     <td class="text-start align-middle">
                                         <ul>
