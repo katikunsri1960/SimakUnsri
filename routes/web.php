@@ -464,6 +464,11 @@ Route::group(['middleware' => ['auth']], function() {
                         Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_sidang_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang.store');
                     });
 
+                    Route::prefix('penilaian-langsung')->group(function(){
+                        Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung');
+                        Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung.store');
+                    });
+
                     Route::get('/get-dosen', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'get_dosen'])->name('dosen.pembimbing.bimbingan-tugas-akhir.get-dosen');
                 });
 

@@ -174,6 +174,15 @@ class PesertaKelasKuliah extends Model
                     ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
                     ->where('kode_periode', $semester_aktif->id_semester)
                     ->first();
+        
+        $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                    ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
+                            $query->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    // ->where('approve_krs', 1)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
+                    ->get();
 
         list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
@@ -186,8 +195,9 @@ class PesertaKelasKuliah extends Model
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
+        $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
+        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm; 
 
         $transkrip = TranskripMahasiswa::select(
                         DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
