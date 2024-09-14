@@ -40,21 +40,28 @@ class BimbinganController extends Controller
             ->first();
        
 
+        if ($tagihan) {
+            $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+        }else{
+            $statusPembayaran = NULL;
+        }
         
-        $statusPembayaran = $tagihan->pembayaran ? $tagihan->pembayaran->status_pembayaran : null;
         // dd($statusPembayaran);
 
 
-        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas', 'jenis_aktivitas_mahasiswa', 'bimbing_mahasiswa')
+        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas', 'jenis_aktivitas_mahasiswa', 'bimbing_mahasiswa', 'uji_mahasiswa')
             ->whereHas('anggota_aktivitas', function($q) use($user) {
                 $q->where('id_registrasi_mahasiswa', $user->fk_id);
             })
             ->whereHas('bimbing_mahasiswa', function($q) {
                 $q->where('approved', '1');
             })
-            ->whereIn('id_jenis_aktivitas', ['2', '3', '4', '22'])
+            ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4', '22'])
             ->where('id_semester', $id_semester)
             ->first();
+
+            // dd($aktivitas);
+
 
         if (!$aktivitas) {
             return view('mahasiswa.bimbingan.tugas-akhir.index', [
