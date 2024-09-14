@@ -39,19 +39,17 @@ class PenilaianPerkuliahanController extends Controller
 
     public function download_dpna(string $kelas, string $prodi)
     {
-        $data_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->get();
+        $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
         $semester_aktif = SemesterAktif::first();
 
         //Check batas pengisian nilai
-        $hari_proses = Carbon::now();
-        $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
-        $interval = $hari_proses->diffInDays($batas_nilai);
-        $akhir_pengisian = $hari_proses->lte($batas_nilai);
+        $hari_proses = date('Y-m-d');
+        $batas_nilai = $semester_aktif->batas_isi_nilai;
 
         if(!$data_komponen->isEmpty()){
-            if($interval >= 0){
-                return Excel::download(new ExportDPNA($kelas, $prodi), 'DPNA_'.$data_kelas[0]['nama_program_studi'].'_'.$data_kelas[0]['kode_mata_kuliah'].'_'.$data_kelas[0]['nama_kelas_kuliah'].'.xlsx');
+            if($hari_proses <= $batas_nilai){
+                return Excel::download(new ExportDPNA($kelas, $prodi), 'DPNA_'.$data_kelas->nama_program_studi.'_'.$data_kelas->matkul->kode_mata_kuliah.'_'.$data_kelas->matkul->nama_mata_kuliah.'_'.$data_kelas->nama_kelas_kuliah.'.xlsx');
             }else{
                 return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Telah Berakhir');
             }
