@@ -184,6 +184,9 @@ class PesertaKelasKuliah extends Model
                     ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                     ->get();
 
+        $data_mbkm_eksternal =  $krs_aktivitas_mbkm->count();
+        
+
         list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
@@ -251,7 +254,7 @@ class PesertaKelasKuliah extends Model
                     ]);
                 }
 
-                if($data_mbkm > 0){
+                if($data_mbkm > 0 || $data_mbkm_eksternal > 0){
                     if($beasiswa){
                         if($beasiswa->id_pembiayaan == '3'){
                             $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
