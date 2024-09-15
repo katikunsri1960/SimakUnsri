@@ -203,12 +203,12 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'nilai_komp_eval' => $row['nilai_hasil_proyek'],
                         ]);
                     }else if($komponen_evaluasi[$i]['nomor_urut'] == 3){
-                        NilaiKomponenEvaluasi::update([
-                            'nilai_komp_eval' => $row['nilai_tugas'],
-                        ])->where('id_komponen_evaluasi', $komponen_evaluasi[$i]['id_komponen_evaluasi'])
+                        NilaiKomponenEvaluasi::where('id_komponen_evaluasi', $komponen_evaluasi[$i]['id_komponen_evaluasi'])
                         ->where('id_kelas', $this->kelas)
                         ->where('id_matkul', $this->matkul)
-                        ->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa);
+                        ->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)->update([
+                            'nilai_komp_eval' => $row['nilai_tugas'],
+                        ]);
                     }else if($komponen_evaluasi[$i]['nomor_urut'] == 4){
                         NilaiKomponenEvaluasi::where('id_komponen_evaluasi', $komponen_evaluasi[$i]['id_komponen_evaluasi'])
                         ->where('id_kelas', $this->kelas)
