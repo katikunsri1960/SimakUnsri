@@ -33,12 +33,12 @@ Pengisian Nilai Perkuliahan
                     </div>
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
-                            <h3 class="fw-500 text-dark mt-0">Upload DPNA Kelas Kuliah ({{$kelas[0]['nama_mata_kuliah']}} - {{$kelas[0]['nama_kelas_kuliah']}})</h3>
+                            <h3 class="fw-500 text-dark mt-0">Upload DPNA Kelas Kuliah ({{$kelas->matkul->nama_mata_kuliah}} - {{$kelas->nama_kelas_kuliah}})</h3>
                         </div>                             
                     </div>
                 </div>
                 <!-- /.box-header -->
-                <form class="form" method="POST" id="upload-dpna-store" action="{{ route('dosen.penilaian.penilaian-perkuliahan.upload-dpna.store', ['kelas' => $kelas[0]['id_kelas_kuliah'], 'matkul' => $kelas[0]['id_matkul']]) }}" enctype="multipart/form-data">
+                <form class="form" method="POST" id="upload-dpna-store" action="{{ route('dosen.penilaian.penilaian-perkuliahan.upload-dpna.store', ['kelas' => $kelas->id_kelas_kuliah, 'matkul' => $kelas->id_matkul]) }}" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body">
                         <div class="row">

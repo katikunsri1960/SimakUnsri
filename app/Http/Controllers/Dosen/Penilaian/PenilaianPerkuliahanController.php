@@ -61,21 +61,17 @@ class PenilaianPerkuliahanController extends Controller
     public function upload_dpna(string $kelas)
     {
         $semester_aktif = SemesterAktif::first();
-        $data_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->get();
+        $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->get();
 
-        //Check batas pengisian nilai
-        $hari_proses = Carbon::now();
-        $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
-        $interval = $hari_proses->diffInDays($batas_nilai);
-        $akhir_pengisian = $hari_proses->gt($batas_nilai);
+         //Check batas pengisian nilai
+         $batas_nilai = $semester_aktif->batas_isi_nilai;
 
         // dd($interval);
         return view('dosen.penilaian.penilaian-perkuliahan.upload-dpna', [
             'data' => $nilai_komponen,
             'kelas' => $data_kelas,
-            'interval' => $interval,
-            'batas_pengisian' => $akhir_pengisian
+            'batas_pengisian' => $batas_nilai
         ]);
     }
 
