@@ -33,14 +33,14 @@ Komponen Evaluasi Kelas Perkuliahan
                     </div>
                     <div class="row">
                         <div class="col-xl-12 col-lg-12">
-                            <h3 class="fw-500 text-dark mt-0">Komponen Evaluasi Kelas ({{$kelas[0]['nama_mata_kuliah']}} - {{$kelas[0]['nama_kelas_kuliah']}})</h3>
+                            <h3 class="fw-500 text-dark mt-0">Komponen Evaluasi Kelas ({{$kelas->matkul->nama_mata_kuliah}} - {{$kelas->nama_kelas_kuliah}})</h3>
                             <p class="mb-0 text-fade fs-18">Total Keseluruhan Komponen Evaluasi Sama Dengan 100 %</p>
                         </div>
                     </div>
                 </div>
                 <!-- /.box-header -->
                 @if($data->isEmpty())
-                    <form class="form" method="POST" id="komponen-evaluasi-store" action="{{ route('dosen.penilaian.komponen-evaluasi.store', ['kelas' => $kelas[0]['id_kelas_kuliah']]) }}">
+                    <form class="form" method="POST" id="komponen-evaluasi-store" action="{{ route('dosen.penilaian.komponen-evaluasi.store', ['kelas' => $kelas->id_kelas_kuliah]) }}">
                         @csrf
                         <div class="box-body">
                             <div class="row">
@@ -150,7 +150,7 @@ Komponen Evaluasi Kelas Perkuliahan
                         </div>
                     </form>
                 @else
-                    <form class="form" method="POST" id="komponen-evaluasi-update" action="{{ route('dosen.penilaian.komponen-evaluasi.update', ['kelas' => $kelas[0]['id_kelas_kuliah']]) }}">
+                    <form class="form" method="POST" id="komponen-evaluasi-update" action="{{ route('dosen.penilaian.komponen-evaluasi.update', ['kelas' => $kelas->id_kelas_kuliah]) }}">
                         @csrf
                         <div class="box-body">
                         <div class="row">
