@@ -54,7 +54,7 @@ Pengisian Nilai Perkuliahan
                         <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
                             <i class="ti-trash"></i> Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary" @if($batas_pengisian) disabled @endif>
+                        <button type="submit" class="btn btn-primary" @disabled(now()->toDateString() > $batas_pengisian)>
                             <i class="ti-save-alt"></i> Save
                         </button>
                     </div> 
