@@ -824,6 +824,12 @@ Route::group(['middleware' => ['auth']], function() {
                         Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_komponen_upload'])->name('univ.feeder-upload.perkuliahan.nilai-komponen.upload');
                     });
 
+                    Route::prefix('nilai-kelas')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_kelas'])->name('univ.feeder-upload.perkuliahan.nilai-kelas');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_kelas_data'])->name('univ.feeder-upload.perkuliahan.nilai-kelas.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_kelas_upload'])->name('univ.feeder-upload.perkuliahan.nilai-kelas.upload');
+                    });
+
                     Route::prefix('dosen-ajar')->group(function(){
                         Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar'])->name('univ.feeder-upload.perkuliahan.dosen-ajar');
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar_data'])->name('univ.feeder-upload.perkuliahan.dosen-ajar.data');

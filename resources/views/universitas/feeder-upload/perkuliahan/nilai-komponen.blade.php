@@ -101,18 +101,21 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                             style="font-size: 10pt">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">Status Sync</th>
-                                    <th class="text-center align-middle">NIM</th>
-                                    <th class="text-center align-middle">Nama MHS</th>
-                                    <th class="text-center align-middle">Semester</th>
-                                    <th class="text-center align-middle">Nama Kelas</th>
-                                    <th class="text-center align-middle">Kode MK</th>
-                                    <th class="text-center align-middle">Nama MK</th>
-                                    <th class="text-center align-middle">Basis Evaluasi</th>
-                                    <th class="text-center align-middle">Komponen</th>
-                                    <th class="text-center align-middle">Nilai Komp Eval</th>
-                                    <th class="text-center align-middle">Prodi</th>
+                                    <th rowspan="2" class="text-center align-middle">No</th>
+                                    <th rowspan="2" class="text-center align-middle">Status Sync</th>
+                                    <th rowspan="2" class="text-center align-middle">NIM</th>
+                                    <th rowspan="2" class="text-center align-middle">Nama MHS</th>
+                                    <th rowspan="2" class="text-center align-middle">Semester</th>
+                                    <th rowspan="2" class="text-center align-middle">Nama Kelas</th>
+                                    <th rowspan="2" class="text-center align-middle">Kode MK</th>
+                                    <th rowspan="2" class="text-center align-middle">Nama MK</th>
+                                    <th colspan="3" class="text-center align-middle">Nilai</th>
+                                    <th rowspan="2" class="text-center align-middle">Prodi</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">Angka</th>
+                                    <th class="text-center">Huruf</th>
+                                    <th class="text-center">Indeks</th>
                                 </tr>
                             </thead>
                             <tbody>

@@ -815,4 +815,35 @@ class FeederUploadController extends Controller
 
         return $response;
     }
+
+    public function nilai_kelas()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.perkuliahan.nilai-kelas', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function nilai_kelas_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = NilaiPerkuliahan::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'nilai_perkuliahans.id_kelas_kuliah')
+                ->join('program_studis as p', 'k.id_prodi', 'p.id_prodi')
+                ->join('semesters as s', 'k.id_semester', 's.id_semester')
+                ->join('mata_kuliahs as m', 'k.id_matkul', 'm.id_matkul')
+                ->where('k.id_semester', $request->id_semester)
+                ->where('k.id_prodi', $prodi)
+                ->where('nilai_perkuliahans.feeder', 0)
+                ->select('nilai_perkuliahan.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas_kuliah',
+                        'm.kode_mata_kuliah as kode_mata_kuliah', 'm.nama_mata_kuliah as nama_mata_kuliah')
+                ->orderBy('k.id_kelas_kuliah')
+                ->get();
+
+        return response()->json($data);
+    }
 }
