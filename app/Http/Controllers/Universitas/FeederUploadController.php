@@ -7,6 +7,8 @@ use App\Models\KuisonerAnswer;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\RencanaPembelajaran;
@@ -16,6 +18,7 @@ use App\Models\SemesterAktif;
 use App\Services\Feeder\FeederUpload;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FeederUploadController extends Controller
@@ -317,6 +320,8 @@ class FeederUploadController extends Controller
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
+                    DB::beginTransaction();
+
                     $d->update([
                         'id_kelas_kuliah' => $result['data']['id_kelas_kuliah'],
                         'feeder' => 1
@@ -326,6 +331,10 @@ class FeederUploadController extends Controller
                     NilaiPerkuliahan::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    NilaiKomponenEvaluasi::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+
+                    DB::commit();
 
                     $dataBerhasil++;
                 } else {
