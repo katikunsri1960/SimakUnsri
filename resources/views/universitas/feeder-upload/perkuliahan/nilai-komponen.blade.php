@@ -103,6 +103,8 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Status Sync</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Nama MHS</th>
                                     <th class="text-center align-middle">Semester</th>
                                     <th class="text-center align-middle">Nama Kelas</th>
                                     <th class="text-center align-middle">Kode MK</th>
@@ -170,6 +172,8 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                     html += '<tr>';
                     html += '<td class="text-center">' + no + '</td>';
                     html += '<td>' + status + '</td>';
+                    html += '<td class="text-center">' + item.nim + '</td>';
+                    html += '<td class="text-star">' + item.nama_mahasiswa + '</td>';
                     html += '<td class="text-center">' + item.nama_semester + '</td>';
                     html += '<td class="text-center">' + item.nama_kelas_kuliah + '</td>';
                     html += '<td class="text-center">' + item.kode_mata_kuliah + '</td>';
