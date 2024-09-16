@@ -332,7 +332,7 @@ class FeederUploadController extends Controller
                     DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    NilaiKomponenEvaluasi::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    NilaiKomponenEvaluasi::where('id_kelas', $id_kelas_lama)->update(['id_kelas' => $result['data']['id_kelas_kuliah']]);
 
                     DB::commit();
 
