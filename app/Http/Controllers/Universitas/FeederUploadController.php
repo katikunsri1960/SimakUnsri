@@ -633,6 +633,7 @@ class FeederUploadController extends Controller
             foreach ($data as $index => $d) {
 
                 $record = [
+                    'id_komponen_evaluasi' => $d->id_komponen_evaluasi,
                     'id_kelas_kuliah' => $d->id_kelas_kuliah,
                     'id_jenis_evaluasi' => $d->id_jenis_evaluasi,
                     'nama' => $d->nama == '-' ? '' : $d->nama,
@@ -644,7 +645,8 @@ class FeederUploadController extends Controller
                 $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-                $result = $req->uploadGeneral();
+
+                $result = $req->uploadKomponen();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 

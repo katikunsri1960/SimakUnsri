@@ -292,6 +292,87 @@ class FeederUpload {
         }
     }
 
+    public function uploadKomponen()
+    {
+        $client = new Client();
+        $params = [
+            "act" => "GetToken",
+            "username" => $this->username,
+            "password" => $this->password,
+        ];
+
+        $req = $client->post( $this->url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode($params)
+        ]);
+
+        $response = $req->getBody();
+        $result = json_decode($response,true);
+
+        if($result['error_code'] == 0) {
+            $token = $result['data']['token'];
+
+            $id_evaluasi = $this->record['id_komponen_evaluasi'];
+            unset($this->record['id_komponen_evaluasi']);
+            $params = [
+                "token" => $token,
+                "act"   => $this->act,
+                "record" => $this->record
+            ];
+
+            $req = $client->post( $this->url, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'body' => json_encode($params)
+            ]);
+
+            $response = $req->getBody();
+
+            $result = json_decode($response,true);
+
+            if(isset($result['error_code']) && $result['error_code'] == 1260)
+            {
+                $params = [
+                    "token" => $token,
+                    "act"   => 'UpdatePerkuliahanMahasiswa',
+                    "key" => [
+                        "id_komponen_evaluasi" => $id_evaluasi,
+                    ],
+                    "record" => [
+                        'id_kelas_kuliah' => $this->record['id_kelas_kuliah'],
+                        'id_jenis_evaluasi' => $this->record['id_jenis_evaluasi'],
+                        'nama' => $this->record['nama'],
+                        'nama_inggris' =>$this->record['nama_inggris'],
+                        'nomor_urut' => $this->record['nomor_urut'],
+                        'bobot_evaluasi' => $this->record['bobot_evaluasi'],
+                    ]
+                ];
+
+                $req = $client->post( $this->url, [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => json_encode($params)
+                ]);
+
+                $response = $req->getBody();
+
+                $result = json_decode($response,true);
+
+            }
+
+            // error_codee 1260 = data sudah ada
+
+            return $result;
+        }
+    }
+
     public function uploadGeneral()
     {
         $client = new Client();
