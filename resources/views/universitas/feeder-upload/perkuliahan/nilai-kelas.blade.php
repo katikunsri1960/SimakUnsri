@@ -37,7 +37,7 @@ FEEDER UPLOAD - NILAI KELAS
                                 <div class="col-md-6">
                                     <div class="row">
                                         <button type="submit" class="btn btn-primary btn-sm" disabled id="buttonSubmitForm"> <i
-                                                class="fa fa-upload me-3"></i>Upload Nilai Komponen Evaluasi</button>
+                                                class="fa fa-upload me-3"></i>Upload Nilai</button>
                                     </div>
                                 </div>
                             </form>
