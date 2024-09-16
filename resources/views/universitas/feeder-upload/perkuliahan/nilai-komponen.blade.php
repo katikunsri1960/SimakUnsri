@@ -180,7 +180,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                     html += '<td>' + item.nama_mata_kuliah + '</td>';
                     html += '<td>' + item.nama_jenis_evaluasi + '</td>';
                     html += '<td>' + item.nama + '</td>';
-                    html += '<td class="text-center">' + item.nilai_komponen_eval + '</td>';
+                    html += '<td class="text-center">' + item.nilai_komp_eval + '</td>';
                     html += '<td>' + item.nama_jenjang_pendidikan + ' ' + item.nama_program_studi + '</td>';
                     html += '</tr>';
                     no++;
