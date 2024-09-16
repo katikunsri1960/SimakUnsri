@@ -169,6 +169,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
 
                 $.each(data, function(i, item) {
                     var status = item.status_sync ?? "belum upload";
+                    var nilai = item.nilai_komp_eval != null ? item.nilai_komp_eval : 0;
                     html += '<tr>';
                     html += '<td class="text-center">' + no + '</td>';
                     html += '<td>' + status + '</td>';
@@ -180,7 +181,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                     html += '<td>' + item.nama_mata_kuliah + '</td>';
                     html += '<td>' + item.nama_jenis_evaluasi + '</td>';
                     html += '<td>' + item.nama + '</td>';
-                    html += '<td class="text-center">' + item.nilai_komp_eval + '</td>';
+                    html += '<td class="text-center">' + nilai + '</td>';
                     html += '<td>' + item.nama_jenjang_pendidikan + ' ' + item.nama_program_studi + '</td>';
                     html += '</tr>';
                     no++;
