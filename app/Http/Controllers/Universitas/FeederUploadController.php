@@ -321,20 +321,21 @@ class FeederUploadController extends Controller
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
                     DB::beginTransaction();
-                    
+
                     KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-
-                    $d->update([
-                        'id_kelas_kuliah' => $result['data']['id_kelas_kuliah'],
-                        'feeder' => 1
-                    ]);
-
                     KuisonerAnswer::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     NilaiPerkuliahan::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
 
                     NilaiKomponenEvaluasi::where('id_kelas', $id_kelas_lama)->update(['id_kelas' => $result['data']['id_kelas_kuliah']]);
+                    
+                    $d->update([
+                        'id_kelas_kuliah' => $result['data']['id_kelas_kuliah'],
+                        'feeder' => 1
+                    ]);
+
+
 
                     DB::commit();
 
