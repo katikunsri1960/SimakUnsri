@@ -198,6 +198,9 @@
                                     <li class="{{request()->routeIs('univ.feeder-upload.perkuliahan.krs') ? 'active' : ''}}">
                                         <a href="{{route('univ.feeder-upload.perkuliahan.krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>KRS</a>
                                     </li>
+                                    <li class="{{request()->routeIs('univ.feeder-upload.perkuliahan.komponen-evaluasi') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.perkuliahan.komponen-evaluasi')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Komponen Evaluasi</a>
+                                    </li>
                                     {{-- <li class="{{request()->routeIs('univ.feeder-upload.perkuliahan.dosen-ajar') ? 'active' : ''}}">
                                         <a href="{{route('univ.feeder-upload.perkuliahan.dosen-ajar')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Dosen Ajar</a>
                                     </li> --}}

@@ -566,4 +566,37 @@ class FeederUploadController extends Controller
 
         return $response;
     }
+
+    public function komponen_evaluasi()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.perkuliahan.komponen-evaluasi', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function komponen_evaluasi_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = KomponenEvaluasiKelas::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'komponen_evaluasi_kelas.id_kelas_kuliah')
+                ->join('program_studis as p', 'k.id_prodi', 'p.id_prodi')
+                ->join('semesters as s', 'k.id_semester', 's.id_semester')
+                ->join('mata_kuliahs as m', 'k.id_matkul', 'm.id_matkul')
+                ->join('jenis_evaluasis as j', 'komponen_evaluasi_kelas.id_jenis_evaluasi', 'j.id_jenis_evaluasi')
+                ->where('k.id_semester', $request->id_semester)
+                ->where('k.id_prodi', $prodi)
+                ->where('komponen_evaluasi_kelas.feeder', 0)
+                ->select('komponen_evaluasi_kelas.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas_kuliah',
+                        'm.kode_mata_kuliah as kode_mata_kuliah', 'm.nama_mata_kuliah as nama_mata_kuliah', 'j.nama_jenis_evaluasi as nama_jenis_evaluasi')
+                ->orderBy('komponen_evaluasi_kelas.id_kelas_kuliah')
+                ->orderBy('komponen_evaluasi_kelas.nomor_urut')
+                ->get();
+
+        return response()->json($data);
+    }
 }
