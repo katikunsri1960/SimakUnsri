@@ -610,7 +610,7 @@ class FeederUploadController extends Controller
         // return response()->json(['message' => $semester.' - '.$prodi]);
 
         $data = KomponenEvaluasiKelas::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'komponen_evaluasi_kelas.id_kelas_kuliah')
-                ->where('k.id_semester', $request->id_semester)
+                ->where('k.id_semester', $semester)
                 ->where('k.id_prodi', $prodi)
                 ->where('komponen_evaluasi_kelas.feeder', 0)
                 ->select('komponen_evaluasi_kelas.*')
