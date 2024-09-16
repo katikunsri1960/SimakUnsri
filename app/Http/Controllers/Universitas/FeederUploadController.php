@@ -654,10 +654,18 @@ class FeederUploadController extends Controller
 
                     $komponen_lama = $d->id_komponen_evaluasi;
 
-                    $d->update([
-                        'id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi'],
-                        'feeder' => 1
-                    ]);
+                    if (isset($result['data']['id_komponen_evaluasi'])) {
+                        $d->update([
+                            'id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi'],
+                            'feeder' => 1
+                        ]);
+                    } else
+                    {
+                        $d->update([
+                            'feeder' => 1
+                        ]);
+                    }
+
 
                     NilaiKomponenEvaluasi::where('id_komponen_evaluasi', $komponen_lama)->update(['id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi']]);
                     DB::commit();
