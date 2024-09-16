@@ -339,7 +339,7 @@ class FeederUpload {
             {
                 $params = [
                     "token" => $token,
-                    "act"   => 'UpdatePerkuliahanMahasiswa',
+                    "act"   => 'UpdateKomponenEvaluasiKelas',
                     "key" => [
                         "id_komponen_evaluasi" => $id_evaluasi,
                     ],
