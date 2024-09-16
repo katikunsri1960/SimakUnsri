@@ -341,6 +341,7 @@ class FeederUploadController extends Controller
 
                     $dataBerhasil++;
                 } else {
+                    // DB::rollback();
                     $d->update(
                             [
                                 'status_sync' => $result['error_desc'],
@@ -598,5 +599,97 @@ class FeederUploadController extends Controller
                 ->get();
 
         return response()->json($data);
+    }
+
+    public function komponen_evaluasi_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = KomponenEvaluasiKelas::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'komponen_evaluasi_kelas.id_kelas_kuliah')
+                ->join('program_studis as p', 'k.id_prodi', 'p.id_prodi')
+                ->join('semesters as s', 'k.id_semester', 's.id_semester')
+                ->join('mata_kuliahs as m', 'k.id_matkul', 'm.id_matkul')
+                ->join('jenis_evaluasis as j', 'komponen_evaluasi_kelas.id_jenis_evaluasi', 'j.id_jenis_evaluasi')
+                ->where('k.id_semester', $request->id_semester)
+                ->where('k.id_prodi', $prodi)
+                ->where('komponen_evaluasi_kelas.feeder', 0)
+                ->select('komponen_evaluasi_kelas.*')
+                ->orderBy('komponen_evaluasi_kelas.id_kelas_kuliah')
+                ->orderBy('komponen_evaluasi_kelas.nomor_urut')
+                ->get();
+
+        $totalData = $data->count();
+        // dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertKomponenEvaluasiKelas';
+        $actGet = 'GetListKomponenEvaluasiKelas';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+
+                $record = [
+                    'id_kelas_kuliah' => $d->id_kelas_kuliah,
+                    'id_jenis_evaluasi' => $d->id_jenis_evaluasi,
+                    'nama' => $d->nama == '-' ? '' : $d->nama,
+                    'nama_inggris' => $d->nama_inggris,
+                    'nomor_urut' => $d->nomor_urut,
+                    'bobot' => $d->bobot_evaluasi*100,
+                ];
+
+                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadGeneral();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    DB::beginTransaction();
+
+                    $komponen_lama = $d->id_komponen_evaluasi;
+
+                    $d->update([
+                        'id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi'],
+                        'feeder' => 1
+                    ]);
+
+                    NilaiKomponenEvaluasi::where('id_komponen_evaluasi', $komponen_lama)->update(['id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi']]);
+                    DB::commit();
+
+                    $dataBerhasil++;
+
+
+                } else {
+
+                    // DB::rollback();
+
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
     }
 }
