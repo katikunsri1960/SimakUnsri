@@ -697,4 +697,38 @@ class FeederUploadController extends Controller
 
         return $response;
     }
+
+    public function nilai_komponen()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.perkuliahan.nilai-komponen', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function nilai_komponen_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = NilaiKomponenEvaluasi::join('komponen_evaluasi_kelas as k', 'k.id_komponen_evaluasi', 'nilai_komponen_evaluasis.id_komponen_evaluasi')
+                ->join('kelas_kuliahs as kk', 'kk.id_kelas_kuliah', 'k.id_kelas_kuliah')
+                ->join('program_studis as p', 'kk.id_prodi', 'p.id_prodi')
+                ->join('semesters as s', 'kk.id_semester', 's.id_semester')
+                ->join('mata_kuliahs as m', 'kk.id_matkul', 'm.id_matkul')
+                ->join('jenis_evaluasis as j', 'k.id_jenis_evaluasi', 'j.id_jenis_evaluasi')
+                ->where('kk.id_semester', $request->id_semester)
+                ->where('kk.id_prodi', $prodi)
+                ->where('nilai_komponen_evaluasis.feeder', 0)
+                ->select('nilai_komponen_evaluasis.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester', 'kk.nama_kelas_kuliah as nama_kelas_kuliah',
+                        'm.kode_mata_kuliah as kode_mata_kuliah', 'm.nama_mata_kuliah as nama_mata_kuliah', 'j.nama_jenis_evaluasi as nama_jenis_evaluasi')
+                ->orderBy('k.id_kelas_kuliah')
+                ->orderBy('k.nomor_urut')
+                ->get();
+
+        return response()->json($data);
+    }
 }
