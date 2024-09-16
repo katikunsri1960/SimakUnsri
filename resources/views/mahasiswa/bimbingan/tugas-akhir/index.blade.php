@@ -127,6 +127,33 @@ Bimbingan Tugas Akhir
                                             </ul>
                                         </td>
                                     </tr>
+                                    <tr>
+                                        <td class="text-left text-nowrap">Status Sidang</td>
+                                        <td class="text-center">:</td>
+                                        <td class="text-left align-middle">
+                                            @if ($aktivitas->approve_sidang == 0)
+                                                <span class="badge bg-warning mx-5">Belum Diajukan Sidang</span>
+                                            @elseif ($aktivitas->approve_sidang == 1)
+                                                <span class="badge bg-primary mx-5">Sudah Diajukan Sidang</span>
+                                                <ul style="padding: 0; padding-left:0.8rem">
+                                                    @foreach ($aktivitas->uji_mahasiswa as $uji)
+                                                    <li>Penguji Ke-{{$uji->penguji_ke}} : {{$uji->nama_dosen}}  
+                                                        @if ($uji->status_uji_mahasiswa == 0)
+                                                            <span class="badge bg-warning mx-5">Belum Disetujui</span>
+                                                        @elseif ($uji->status_uji_mahasiswa == 1)
+                                                            <span class="badge bg-success mx-5">Sudah Disetujui KoProdi</span>
+                                                        @elseif ($uji->status_uji_mahasiswa == 2)
+                                                            <span class="badge bg-success mx-5">Sudah Disetujui Dosen Penguji</span>
+                                                        @elseif ($uji->status_uji_mahasiswa == 1)
+                                                            <span class="badge bg-danger mx-5">Diabtalkan Oleh Dosen Penguji</span>
+                                                        @endif
+                                                    </li>
+                                                    @endforeach
+                                                </ul>
+                                            @endif
+                                            
+                                        </td>
+                                    </tr>
                                 </table>
                             </div>
                         </div>

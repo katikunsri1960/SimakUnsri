@@ -40,9 +40,10 @@ Sidang Tugas Akhir
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">NAMA AKTIVITAS<br>(MK Konversi)</th>
-                                    <th class="text-center align-middle">Pembimbing</th>
-                                    <th class="text-center align-middle">Penguji</th>
-                                    <th class="text-center align-middle">Status Penguji</th>
+                                    <th class="text-center align-middle">NAMA<br>PROGRAM STUDI</th>
+                                    <th class="text-center align-middle">PEMBIMBING</th>
+                                    <th class="text-center align-middle">PENGUJI</th>
+                                    <th class="text-center align-middle">STATUS PENGUJI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -57,6 +58,9 @@ Sidang Tugas Akhir
                                     </td>
                                     <td class="text-center align-middle">
                                         {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$d->nama_prodi}}
                                     </td>
                                     <td class="text-start align-middle">
                                         <ul>

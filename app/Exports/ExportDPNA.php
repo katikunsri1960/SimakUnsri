@@ -104,8 +104,8 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
     {
         //Get kelas information (kelas, peserta kelas, nilai komponen evaluasi)
         $data_kelas = KelasKuliah::select([
-            'kelas_kuliahs.kode_mata_kuliah',
-            'kelas_kuliahs.nama_mata_kuliah',
+            'mata_kuliahs.kode_mata_kuliah',
+            'mata_kuliahs.nama_mata_kuliah',
             'kelas_kuliahs.nama_kelas_kuliah',
             'peserta_kelas_kuliahs.nim',
             'peserta_kelas_kuliahs.nama_mahasiswa',
@@ -145,6 +145,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
                         AND nilai_komponen_evaluasis.urutan = '6') AS nilai_uas"),
         ])
         ->LeftJoin('peserta_kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
+        ->LeftJoin('mata_kuliahs', 'kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
         ->where('kelas_kuliahs.id_kelas_kuliah', $this->kelas)
         ->get();
         

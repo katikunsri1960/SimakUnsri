@@ -15,7 +15,7 @@ class PresentasePenilaianController extends Controller
     public function komponen_evaluasi(string $kelas)
     {
         $semester_aktif = SemesterAktif::first();
-        $data_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->get();
+        $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
 
          //Check batas pengisian nilai

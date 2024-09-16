@@ -88,7 +88,9 @@ Detail Penilaian Perkuliahan Mahasiswa
                                                         @php
                                                             $nilaiKomponen = $nilaiPerkuliahan->nilai_komponen->where('urutan', $i)->first();
                                                         @endphp
-                                                        <td class="text-center align-middle">{{$nilaiKomponen ? $nilaiKomponen->nilai_komp_eval : '0'}}</td>
+                                                        <td class="text-center align-middle">
+                                                            {{ optional($nilaiKomponen)->nilai_komp_eval ?? '0' }}
+                                                        </td>
                                                     @endfor
 
                                                     <td class="text-center align-middle">{{$nilaiPerkuliahan->nilai_angka}}</td>

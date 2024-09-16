@@ -12,6 +12,8 @@ use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\NilaiSidangMahasiswa;
+use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Connection\Usept;
 use App\Models\Semester;
@@ -453,6 +455,74 @@ class PembimbingMahasiswaController extends Controller
             DB::commit();
 
             return redirect()->route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi', $data)->with('success', 'Data Berhasil di Tambahkan');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+        }
+    }
+
+    public function penilaian_langsung($aktivitas)
+    {
+        $id_dosen = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa'])
+                                    ->where('id', $aktivitas)->first();
+
+        $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
+        // dd($penguji);
+        return view('dosen.pembimbing.tugas-akhir.penilaian-langsung', [
+            'data' => $data,
+            'data_nilai' => $data_nilai
+        ]);
+    }
+
+    public function penilaian_langsung_store(Request $request, $aktivitas)
+    {
+        $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id', $aktivitas)->first();
+        $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
+
+        $validate = $request->validate([
+            'nilai_langsung' => 'required'
+        ]);
+
+        $nilai_langsung = $request->nilai_langsung;
+
+        if($nilai_langsung > 100){
+            $nilai_langsung = 100;
+        }
+
+        if($nilai_langsung >= 86 && $nilai_langsung <=100){
+            $nilai_indeks = '4.00';
+            $nilai_huruf = 'A';
+        }
+        else if($nilai_langsung >= 71 && $nilai_langsung < 86){
+            $nilai_indeks = '3.00';
+            $nilai_huruf = 'B';
+        }
+        else if($nilai_langsung >= 56 && $nilai_langsung < 71){
+            $nilai_indeks = '2.00';
+            $nilai_huruf = 'C';
+        }
+        else if($nilai_langsung >= 41 && $nilai_langsung < 56){
+            $nilai_indeks = '1.00';
+            $nilai_huruf = 'D';
+        }
+        else if($nilai_langsung >= 0 && $nilai_langsung < 41){
+            $nilai_indeks = '1.00';
+            $nilai_huruf = 'D';
+        }else{
+            return redirect()->back()->with('error', 'Nilai di luar range skala nilai.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            $id_konversi_aktivitas = Uuid::uuid4()->toString();
+            
+            KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_langsung, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
