@@ -636,7 +636,7 @@ class FeederUploadController extends Controller
                     'id_komponen_evaluasi' => $d->id_komponen_evaluasi,
                     'id_kelas_kuliah' => $d->id_kelas_kuliah,
                     'id_jenis_evaluasi' => $d->id_jenis_evaluasi,
-                    'nama' => $d->nama == '-' ? '' : $d->nama,
+                    'nama' => $d->nama,
                     'nama_inggris' => $d->nama_inggris,
                     'nomor_urut' => $d->nomor_urut,
                     'bobot_evaluasi' => $d->bobot_evaluasi*100,
