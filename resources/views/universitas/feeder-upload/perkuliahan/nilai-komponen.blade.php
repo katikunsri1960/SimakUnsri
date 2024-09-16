@@ -111,7 +111,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                                     <th class="text-center align-middle">Nama MK</th>
                                     <th class="text-center align-middle">Basis Evaluasi</th>
                                     <th class="text-center align-middle">Komponen</th>
-                                    <th class="text-center align-middle">Bobot</th>
+                                    <th class="text-center align-middle">Nilai Komp Eval</th>
                                     <th class="text-center align-middle">Prodi</th>
                                 </tr>
                             </thead>
@@ -180,7 +180,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                     html += '<td>' + item.nama_mata_kuliah + '</td>';
                     html += '<td>' + item.nama_jenis_evaluasi + '</td>';
                     html += '<td>' + item.nama + '</td>';
-                    html += '<td class="text-center">' + item.persen_bobot_evaluasi + '</td>';
+                    html += '<td class="text-center">' + item.nilai_komponen_eval + '</td>';
                     html += '<td>' + item.nama_jenjang_pendidikan + ' ' + item.nama_program_studi + '</td>';
                     html += '</tr>';
                     no++;
