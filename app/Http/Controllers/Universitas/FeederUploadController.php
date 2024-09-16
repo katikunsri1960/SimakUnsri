@@ -767,7 +767,7 @@ class FeederUploadController extends Controller
                 $record = [
                     'id_komponen_evaluasi' => $d->id_komponen_evaluasi,
                     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                    'nilai_komponen_evaluasi' => $d->nilai_komp_eval,
+                    'nilai_komponen_evaluasi' => $d->nilai_komp_eval != null ? $d->nilai_komp_eval : 0,
                     'id_kelas' => $d->id_kelas,
                 ];
 
