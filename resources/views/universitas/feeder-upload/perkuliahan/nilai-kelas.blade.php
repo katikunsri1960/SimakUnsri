@@ -182,9 +182,9 @@ FEEDER UPLOAD - NILAI KELAS
                     html += '<td class="text-center">' + item.nama_kelas_kuliah + '</td>';
                     html += '<td class="text-center">' + item.kode_mata_kuliah + '</td>';
                     html += '<td>' + item.nama_mata_kuliah + '</td>';
-                    html += '<td>' + item.nama_jenis_evaluasi + '</td>';
-                    html += '<td>' + item.nama + '</td>';
-                    html += '<td class="text-center">' + nilai + '</td>';
+                    html += '<td class="text-center">' + item.nilai_angka + '</td>';
+                    html += '<td class="text-center">' + item.nilai_huruf + '</td>';
+                    html += '<td class="text-center">' + item.nilai_indeks + '</td>';
                     html += '<td>' + item.nama_jenjang_pendidikan + ' ' + item.nama_program_studi + '</td>';
                     html += '</tr>';
                     no++;
