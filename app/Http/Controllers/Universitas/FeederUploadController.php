@@ -751,7 +751,7 @@ class FeederUploadController extends Controller
                 ->get();
 
         $totalData = $data->count();
-        dd($data);
+        // dd($data);
         if ($totalData == 0) {
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
