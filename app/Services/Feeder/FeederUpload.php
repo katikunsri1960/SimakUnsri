@@ -316,7 +316,9 @@ class FeederUpload {
             $token = $result['data']['token'];
 
             $id_evaluasi = $this->record['id_komponen_evaluasi'];
+
             unset($this->record['id_komponen_evaluasi']);
+            
             $params = [
                 "token" => $token,
                 "act"   => $this->act,
@@ -335,7 +337,7 @@ class FeederUpload {
 
             $result = json_decode($response,true);
 
-            if(isset($result['error_code']) && $result['error_code'] == 1260)
+            if(isset($result['error_code']) && $result['error_code'] != 0)
             {
                 $params = [
                     "token" => $token,
