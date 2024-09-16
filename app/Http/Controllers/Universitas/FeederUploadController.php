@@ -839,7 +839,7 @@ class FeederUploadController extends Controller
                 ->where('k.id_semester', $request->id_semester)
                 ->where('k.id_prodi', $prodi)
                 ->where('nilai_perkuliahans.feeder', 0)
-                ->select('nilai_perkuliahan.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas_kuliah',
+                ->select('nilai_perkuliahans.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas_kuliah',
                         'm.kode_mata_kuliah as kode_mata_kuliah', 'm.nama_mata_kuliah as nama_mata_kuliah')
                 ->orderBy('k.id_kelas_kuliah')
                 ->get();

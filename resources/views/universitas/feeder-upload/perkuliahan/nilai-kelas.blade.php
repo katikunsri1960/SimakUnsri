@@ -1,12 +1,12 @@
 @extends('layouts.universitas')
 @section('title')
-FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
+FEEDER UPLOAD - NILAI KELAS
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS</h3>
+            <h3 class="page-title">FEEDER UPLOAD - NILAI KELAS</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
@@ -14,7 +14,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                         </li>
                         <li class="breadcrumb-item" aria-current="page">Feeder Upload</li>
                         <li class="breadcrumb-item" aria-current="page">Perkuliahan</li>
-                        <li class="breadcrumb-item active" aria-current="page">Nilai Komponen Evaluasi</li>
+                        <li class="breadcrumb-item active" aria-current="page">Nilai Kelas</li>
                     </ol>
                 </nav>
             </div>
@@ -101,18 +101,21 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                             style="font-size: 10pt">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">Status Sync</th>
-                                    <th class="text-center align-middle">NIM</th>
-                                    <th class="text-center align-middle">Nama MHS</th>
-                                    <th class="text-center align-middle">Semester</th>
-                                    <th class="text-center align-middle">Nama Kelas</th>
-                                    <th class="text-center align-middle">Kode MK</th>
-                                    <th class="text-center align-middle">Nama MK</th>
-                                    <th class="text-center align-middle">Basis Evaluasi</th>
-                                    <th class="text-center align-middle">Komponen</th>
-                                    <th class="text-center align-middle">Nilai Komp Eval</th>
-                                    <th class="text-center align-middle">Prodi</th>
+                                    <th rowspan="2" class="text-center align-middle">No</th>
+                                    <th rowspan="2" class="text-center align-middle">Status Sync</th>
+                                    <th rowspan="2" class="text-center align-middle">NIM</th>
+                                    <th rowspan="2" class="text-center align-middle">Nama MHS</th>
+                                    <th rowspan="2" class="text-center align-middle">Semester</th>
+                                    <th rowspan="2" class="text-center align-middle">Nama Kelas</th>
+                                    <th rowspan="2" class="text-center align-middle">Kode MK</th>
+                                    <th rowspan="2" class="text-center align-middle">Nama MK</th>
+                                    <th colspan="3" class="text-center align-middle">Nilai</th>
+                                    <th rowspan="2" class="text-center align-middle">Prodi</th>
+                                </tr>
+                                <tr>
+                                    <th class="text-center">Angka</th>
+                                    <th class="text-center">Huruf</th>
+                                    <th class="text-center">Indeks</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -145,7 +148,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
         $('#dataAkm').DataTable().destroy();
 
         $.ajax({
-            url: "{{ route('univ.feeder-upload.perkuliahan.nilai-komponen.data') }}",
+            url: "{{ route('univ.feeder-upload.perkuliahan.nilai-kelas.data') }}",
             type: 'GET',
             data: {
                 id_prodi: id_prodi,
@@ -248,7 +251,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                             var id_prodi = $('#id_prodi').val();
                             var id_semester = $('#id_semester').val();
 
-                            var eventSourceUrl = "{{ route('univ.feeder-upload.perkuliahan.nilai-komponen.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
+                            var eventSourceUrl = "{{ route('univ.feeder-upload.perkuliahan.nilai-kelas.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
                             // console.log('EventSource URL:', eventSourceUrl);
 
                             // Initialize the EventSource with the constructed URL

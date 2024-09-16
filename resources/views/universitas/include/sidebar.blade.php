@@ -204,6 +204,9 @@
                                     <li class="{{request()->routeIs('univ.feeder-upload.perkuliahan.nilai-komponen') ? 'active' : ''}}">
                                         <a href="{{route('univ.feeder-upload.perkuliahan.nilai-komponen')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai Komponen</a>
                                     </li>
+                                    <li class="{{request()->routeIs('univ.feeder-upload.perkuliahan.nilai-kelas') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.perkuliahan.nilai-kelas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai Kelas</a>
+                                    </li>
                                     {{-- <li class="{{request()->routeIs('univ.feeder-upload.perkuliahan.dosen-ajar') ? 'active' : ''}}">
                                         <a href="{{route('univ.feeder-upload.perkuliahan.dosen-ajar')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Dosen Ajar</a>
                                     </li> --}}
