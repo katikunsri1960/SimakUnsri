@@ -69,8 +69,10 @@ class CutiController extends Controller
         // $ = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
             // dd($tagihan);
     
-        if ($tagihan) {
-            $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+        if($tagihan){
+            if($tagihan->pembayaran){
+                $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+            }
         }else{
             $statusPembayaran = NULL;
         }

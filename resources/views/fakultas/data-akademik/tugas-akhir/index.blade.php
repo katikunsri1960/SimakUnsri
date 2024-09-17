@@ -25,7 +25,22 @@ Tugas Akhir
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-
+                <div class="box-header with-border">
+                    <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-start">
+                            <!-- Modal trigger button -->
+                            <button type="button" class="btn btn-primary waves-effect waves" data-bs-toggle="modal"
+                                data-bs-target="#filter-button">
+                                <i class="fa fa-filter"></i> Filter
+                            </button>
+                            <span class="divider-line mx-1"></span>
+                            <a href="{{route('fakultas.data-akademik.tugas-akhir')}}" class="btn btn-warning waves-effect waves" >
+                                <i class="fa fa-rotate"></i> Reset Filter
+                            </a>
+                            @include('fakultas.data-akademik.tugas-akhir.filter')
+                        </div>
+                    </div>
+                </div>
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100"
@@ -40,6 +55,7 @@ Tugas Akhir
                                     <th class="text-center align-middle">NAMA<br>PROGRAM STUDI</th>
                                     <th class="text-center align-middle">PEMBIMBING</th>
                                     <th class="text-center align-middle">STATUS PEMBIMBING</th>
+                                    <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -68,16 +84,31 @@ Tugas Akhir
                                             @endforeach
                                         </ul>
                                     </td>
+                                    <td class="text-center align-middle" >
+                                        @foreach ($d->bimbing_mahasiswa as $p)
+                                            @if ($d->approve_krs == 0 && $p->approved == 0) 
+                                                <span class="badge badge-lg badge-danger mb-10">Belum Disetujui</span><br>
+                                            @elseif ($p->approved == 0) 
+                                                <span class="badge badge-lg badge-warning mb-10">Menunggu konfirmasi Koprodi</span><br>
+                                            @elseif ($d->approve_krs == 1 && $p->approved_dosen == 0)
+                                                <span class="badge badge-lg badge-warning mb-10">Menunggu konfirmasi dosen</span><br>
+                                            @elseif ($d->approve_krs == 1 && $p->approved_dosen == 2)
+                                                <span class="badge badge-lg badge-danger mb-10">Ditolak dosen pembimbing</span><br>
+                                            @elseif ($d->approve_krs == 0 && $p->approved == 1)
+                                                <span class="badge badge-lg badge-warning mb-10">Dibatalkan Dosen PA</span><br>
+                                            @else
+                                                <span class="badge badge-lg badge-success mb-10">Disetujui</span><br>
+                                            @endif
+                                        @endforeach
+                                    </td>
                                     <td class="text-center align-middle">
-                                        @if ($d->approved > 0)
-                                            <span class="badge badge-lg badge-danger">Belum Disetujui</span>
-                                        @elseif ($d->approved == 0 && $d->approved_dosen > 0)
-                                            <span class="badge badge-lg badge-warning">Menunggu konfirmasi dosen</span>
-                                        @elseif ($d->approved == 0 && $d->decline_dosen > 0)
-                                            <span class="badge badge-lg badge-danger">Bimbingan dibatalkan dosen</span>
-                                        @else
-                                            <span class="badge badge-lg badge-success">Approved</span>
-                                        @endif
+                                        <div class="row d-flex justify-content-center">
+                                            <a href="#" class="btn btn-info btn-sm my-2" title="Detail"
+                                                data-bs-toggle="modal" data-bs-target="#detailModal"
+                                                onclick="detailFunc({{$d}})">
+                                                <i class="fa fa-eye"></i> Detail
+                                            </a>
+                                        </div>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -91,9 +122,13 @@ Tugas Akhir
     </div>
 </section>
 @endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     function detailFunc(data) {
         $('#detail_judul').val(data.judul);

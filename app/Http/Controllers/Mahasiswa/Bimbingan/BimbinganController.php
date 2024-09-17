@@ -40,8 +40,10 @@ class BimbinganController extends Controller
             ->first();
        
 
-        if ($tagihan) {
-            $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+        if($tagihan){
+            if($tagihan->pembayaran){
+                $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+            }
         }else{
             $statusPembayaran = NULL;
         }

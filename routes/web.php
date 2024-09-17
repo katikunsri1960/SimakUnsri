@@ -150,15 +150,7 @@ Route::group(['middleware' => ['auth']], function() {
 
                 Route::prefix('sidang-mahasiswa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'index'])->name('fakultas.data-akademik.sidang-mahasiswa');
-                    Route::post('/approve-penguji/{aktivitasMahasiswa}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'approve_penguji'])->name('fakultas.data-akademik.sidang-mahasiswa.approve-penguji');
-                    Route::get('/edit-detail/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'ubah_detail_sidang'])->name('fakultas.data-akademik.sidang-mahasiswa.edit-detail');
-                    Route::post('/update-detail/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'update_detail_sidang'])->name('fakultas.data-akademik.sidang-mahasiswa.update-detail');
-                    Route::get('/get-nama-dosen', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'get_dosen'])->name('fakultas.data-akademik.sidang-mahasiswa.get-dosen');
-                    Route::get('/tambah-dosen/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'tambah_dosen_penguji'])->name('fakultas.data-akademik.sidang-mahasiswa.tambah-dosen');
-                    Route::post('/store-dosen/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'store_dosen_penguji'])->name('fakultas.data-akademik.sidang-mahasiswa.store-dosen');
-                    Route::get('/edit-dosen/{uji}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'edit_dosen_penguji'])->name('fakultas.data-akademik.sidang-mahasiswa.edit-dosen');
-                    Route::post('/update-dosen/{uji}/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'update_dosen_penguji'])->name('fakultas.data-akademik.sidang-mahasiswa.update-dosen');
-                    Route::delete('/delete-dosen/{uji}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'delete_dosen_penguji'])->name('fakultas.data-akademik.sidang-mahasiswa.delete-dosen');
+                    Route::get('/detail/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'detail_sidang'])->name('fakultas.data-akademik.sidang-mahasiswa.detail');
                 });
 
                 Route::prefix('tugas-akhir')->group(function(){
@@ -176,6 +168,7 @@ Route::group(['middleware' => ['auth']], function() {
 
                 Route::prefix('non-tugas-akhir')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\AktivitasNonTAController::class, 'index'])->name('fakultas.data-akademik.non-tugas-akhir');
+                    Route::get('/mahasiswa-data', [App\Http\Controllers\Fakultas\Akademik\AktivitasNonTAController::class, 'non_tugas_akhir_data'])->name('fakultas.data-akademik.non-tugas-akhir.data');
                     Route::post('/approve-pembimbing/{aktivitasMahasiswa}', [App\Http\Controllers\Fakultas\Akademik\AktivitasNonTAController::class, 'approve_pembimbing'])->name('fakultas.data-akademik.non-tugas-akhir.approve-pembimbing');
                     Route::get('/edit-detail/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\AktivitasNonTAController::class, 'ubah_detail_non_tugas_akhir'])->name('fakultas.data-akademik.non-tugas-akhir.edit-detail');
                     Route::post('/update-detail/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\AktivitasNonTAController::class, 'update_detail_non_tugas_akhir'])->name('fakultas.data-akademik.non-tugas-akhir.update-detail');
