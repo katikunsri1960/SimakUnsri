@@ -24,12 +24,26 @@ Sidang Tugas Akhir
         </div>
     </div>
 </div>
-@include('fakultas.data-akademik.sidang-mahasiswa.detail')
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-
+                <div class="box-header with-border">
+                    <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-start">
+                            <!-- Modal trigger button -->
+                            <button type="button" class="btn btn-primary waves-effect waves" data-bs-toggle="modal"
+                                data-bs-target="#filter-button">
+                                <i class="fa fa-filter"></i> Filter
+                            </button>
+                            <span class="divider-line mx-1"></span>
+                            <a href="{{route('fakultas.data-akademik.sidang-mahasiswa')}}" class="btn btn-warning waves-effect waves" >
+                                <i class="fa fa-rotate"></i> Reset Filter
+                            </a>
+                            @include('fakultas.data-akademik.sidang-mahasiswa.filter')
+                        </div>
+                    </div>
+                </div>
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100"
@@ -44,6 +58,7 @@ Sidang Tugas Akhir
                                     <th class="text-center align-middle">PEMBIMBING</th>
                                     <th class="text-center align-middle">PENGUJI</th>
                                     <th class="text-center align-middle">STATUS PENGUJI</th>
+                                    <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -87,6 +102,13 @@ Sidang Tugas Akhir
                                             <span class="badge badge-lg badge-success">Approved</span>
                                         @endif
                                     </td>
+                                    <td class="text-center align-middle">
+                                        <div class="row d-flex justify-content-center">
+                                            <a href="{{route('fakultas.data-akademik.sidang-mahasiswa.detail', $d->id)}}" class="btn btn-secondary btn-sm my-2">
+                                                <i class="fa fa-eye"></i> Detail
+                                            </a>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -99,9 +121,13 @@ Sidang Tugas Akhir
     </div>
 </section>
 @endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     function detailFunc1(data) {
         $('#detail_judul').val(data.judul);

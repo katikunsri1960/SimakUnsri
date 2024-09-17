@@ -18,8 +18,12 @@ class SidangMahasiswaController extends Controller
 {
     public function index(Request $request)
     {
-        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                    ->pluck('id_prodi');
+        $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+        ->orderBy('id_jenjang_pendidikan')
+        ->orderBy('nama_program_studi')
+        ->get();
+
+        $id_prodi_fak=$prodi_fak->pluck('id_prodi');
 
         $semesterAktif = SemesterAktif::first();
         $semester = $semesterAktif->id_semester;
@@ -36,230 +40,38 @@ class SidangMahasiswaController extends Controller
                             $query->where('status_uji_mahasiswa', 3);
                         },
                     ])
-                    ->whereIn('id_prodi', $id_prodi_fak)
+                    // ->whereIn('id_prodi', $id_prodi_fak)
                     ->where('approve_sidang', 1)
                     ->where('id_semester', $semester)
-                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
-                    ->get();
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,22]);
+
+        if ($request->has('prodi') && !empty($request->prodi)) {
+            $filter = $request->prodi;
+            $data->whereIn('id_prodi', $filter);
+        }else{
+            $data = $data->whereIn('id_prodi', $id_prodi_fak);
+        }
+
+        $data=$data->get();
         // dd($data);
         return view('fakultas.data-akademik.sidang-mahasiswa.index', [
             'data' => $data,
+            'prodi' => $prodi_fak,
             'semester' => $semester,
         ]);
     }
 
-    public function approve_penguji(AktivitasMahasiswa $aktivitasMahasiswa)
+    public function detail_sidang($aktivitas)
     {
-        $db = new AktivitasMahasiswa();
-        $result = $db->approve_penguji($aktivitasMahasiswa->id_aktivitas);
-
-        return redirect()->back()->with('success', 'Data berhasil disimpan');
-    }
-
-    public function ubah_detail_sidang($aktivitas)
-    {
-        $semesterAktif = SemesterAktif::first();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'uji_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
-        // dd($data);
-
-        return view('fakultas.data-akademik.sidang-mahasiswa.edit', [
-            'd' => $data
-        ]);
-    }
-
-    public function update_detail_sidang($aktivitas, Request $request)
-    {
-        $detik = "00";
-        $tahun_aktif = date('Y');
-
-        $data = $request->validate([
-                    'tanggal_ujian' => 'required',
-                    'bulan_ujian' => 'required',
-                    'tahun_ujian' => 'required',
-                    'jam_mulai' => 'required',
-                    'menit_mulai' => 'required',
-                    'jam_selesai' => 'required',
-                    'menit_selesai' => 'required'
-                ]);
-        //Generate tanggal ujian
-        $tanggal_ujian = $tahun_aktif."-".$request->bulan_ujian."-".$request->tanggal_ujian;
-
-        //Generate jam pelaksanaan
-        $jam_mulai_sidang = $request->jam_mulai.":".$request->menit_mulai.":".$detik;
-        $jam_selesai_sidang = $request->jam_selesai.":".$request->menit_selesai.":".$detik;
-
-        AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->update(['tanggal_selesai' => $tanggal_ujian, 'jadwal_ujian' => $tanggal_ujian, 'jadwal_jam_mulai' => $jam_mulai_sidang, 'jadwal_jam_selesai' => $jam_selesai_sidang]);
-
-        return redirect()->back()->with('success', 'Data berhasil disimpan');
-    }
-
-    public function get_dosen(Request $request)
-    {
-        $search = $request->get('q');
-        // $prodi_id = auth()->user()->fk_id;
-        $tahun_ajaran = SemesterAktif::with('semester')->first();
-        // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
-
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran)
-                                ->orderby('nama_dosen', 'asc');
-        if ($search) {
-            $query->where('nama_dosen', 'like', "%{$search}%")
-                  ->orWhere('nama_program_studi', 'like', "%{$search}%")
-                  ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran);
-        }
-
-        $data = $query->get();
-
-        return response()->json($data);
-    }
-
-    public function tambah_dosen_penguji($aktivitas)
-    {
-        $semesterAktif = SemesterAktif::first();
-        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110501', '110502'])->get();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'uji_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
-        // dd($data);
-
-        return view('fakultas.data-akademik.sidang-mahasiswa.tambah-dosen', [
-            'd' => $data,
-            'kategori' => $kategori
-        ]);
-    }
-
-    public function store_dosen_penguji($aktivitas, Request $request)
-    {
-        $semester_aktif = SemesterAktif::first();
-        $data = $request->validate([
-                    'dosen_penguji.*' => 'required',
-                    'kategori.*' => 'required',
-                    'penguji_ke.*' => 'required',
-                ]);
-        try {
-            DB::beginTransaction();
-
-            $aktivitas_mahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
-
-            $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_penguji)->get();
-
-            if($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($request->dosen_penguji)){
-                $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_penguji)->get();
-            }
-            //Count jumlah dosen penguji
-            $jumlah_dosen=count($request->dosen_penguji);
-
-            for($i=0;$i<$jumlah_dosen;$i++){
-                //Generate id uji mahasiswa
-                $id_uji_mahasiswa = Uuid::uuid4()->toString();
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_penguji[$i])->first();
-                if(!$dosen)
-                {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_penguji[$i])->first();
-                }
-
-                $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
-                // dd($kategori);
-
-                $kategori_kegiatan = $request->penguji_ke[$i] == '1' ? '110501' : '110502';
-                $nama_kategori_kegiatan = $request->penguji_ke[$i] == '1' ? 'Ketua Penguji' : 'Anggota Penguji';
-
-                //Store data to table tanpa substansi kuliah
-                UjiMahasiswa::create([
-                    'feeder' => 0,
-                    'id_uji' => $id_uji_mahasiswa,
-                    'id_aktivitas' => $aktivitas,
-                    'judul' => $aktivitas_mahasiswa->judul,
-                    'id_kategori_kegiatan' => $kategori_kegiatan,
-                    'nama_kategori_kegiatan' => $nama_kategori_kegiatan,
-                    'id_dosen' => $dosen->id_dosen,
-                    'nidn' => $dosen->nidn,
-                    'nama_dosen' => $dosen->nama_dosen,
-                    'penguji_ke' => $request->penguji_ke[$i],
-                    'status_uji_mahasiswa' => 0,
-                    'status_sync' => 'Belum Sync'
-                ]);
-
-            }
-
-            DB::commit();
-
-            return redirect()->route('fakultas.data-akademik.sidang-mahasiswa.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
-
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
-        }
-    }
-
-    public function edit_dosen_penguji($uji)
-    {
-        $semesterAktif = SemesterAktif::first();
-        $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110501','110502'])->get();
-        $data = UjiMahasiswa::with(['anggota_aktivitas_personal'])->where('id', $uji)->first();
-        // dd($data);
-
-        return view('fakultas.data-akademik.sidang-mahasiswa.edit-dosen', [
+        $id_dosen = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa', 'konversi', 'uji_mahasiswa'])->where('id', $aktivitas)->first();
+        $data_pelaksanaan_sidang = AktivitasMahasiswa::with(['revisi_sidang', 'notulensi_sidang', 'penilaian_sidang', 'revisi_sidang.dosen', 'penilaian_sidang.dosen'])->where('id', $aktivitas)->first();
+        $penguji = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen', $id_dosen)->first();
+        // dd($data_pelaksanaan_sidang);
+        return view('fakultas.data-akademik.sidang-mahasiswa.detail', [
             'data' => $data,
-            'kategori' => $kategori
+            'data_pelaksanaan' => $data_pelaksanaan_sidang,
+            'penguji' => $penguji
         ]);
-    }
-
-    public function update_dosen_penguji($uji, $aktivitas, Request $request)
-    {
-        // dd($aktivitas);
-        $semester_aktif = SemesterAktif::first();
-        $data = $request->validate([
-                    'dosen_penguji' => 'required',
-                    'kategori.*' => 'required',
-                    'penguji_ke.*' => 'required',
-                ]);
-        try {
-            DB::beginTransaction();
-
-            $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_penguji)->get();
-
-            if($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($request->dosen_penguji)){
-                $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_dosen', $request->dosen_penguji)->get();
-            }
-            //Count jumlah dosen pengajar kelas kuliah
-            $jumlah_dosen=count($request->dosen_penguji);
-
-            for($i=0;$i<$jumlah_dosen;$i++){
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_dosen', $request->dosen_penguji[$i])->first();
-                if(!$dosen)
-                {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_dosen', $request->dosen_penguji[$i])->first();
-                }
-
-                $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
-                // dd($kategori);
-
-                //Store data to table tanpa substansi kuliah
-                UjiMahasiswa::where('id', $uji)->update(['id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'penguji_ke' => $request->penguji_ke[$i], 'status_uji_mahasiswa' => 0]);
-
-            }
-
-            DB::commit();
-
-            return redirect()->route('fakultas.data-akademik.sidang-mahasiswa.edit-detail', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
-
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
-        }
-    }
-
-    public function delete_dosen_penguji($uji)
-    {
-        // dd($aktivitas);
-        try {
-            $aktivitas = UjiMahasiswa::findOrFail($uji);
-            $aktivitas->delete();
-
-            return redirect()->back()
-                             ->with('success', 'Data berhasil dihapus');
-        } catch (\Exception $e) {
-            return redirect()->back()
-                             ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
-        }
     }
 }
