@@ -42,6 +42,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                 if($nilai_komponen->isEmpty()){
                     if($komponen_evaluasi[$i]['nomor_urut'] == 1){
                         NilaiKomponenEvaluasi::create([
+                            'feeder' => 0,
                             'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa,
                             'id_komponen_evaluasi' => $komponen_evaluasi[$i]['id_komponen_evaluasi'],
                             'nilai_komp_eval' => $row['nilai_aktivitas_partisipatif'],
@@ -66,6 +67,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         ]);
                     }else if($komponen_evaluasi[$i]['nomor_urut'] == 2){
                         NilaiKomponenEvaluasi::create([
+                            'feeder' => 0,
                             'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa,
                             'id_komponen_evaluasi' => $komponen_evaluasi[$i]['id_komponen_evaluasi'],
                             'nilai_komp_eval' => $row['nilai_hasil_proyek'],
@@ -90,6 +92,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         ]);
                     }else if($komponen_evaluasi[$i]['nomor_urut'] == 3){
                         NilaiKomponenEvaluasi::create([
+                            'feeder' => 0,
                             'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa,
                             'id_komponen_evaluasi' => $komponen_evaluasi[$i]['id_komponen_evaluasi'],
                             'nilai_komp_eval' => $row['nilai_tugas'],
@@ -114,6 +117,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         ]);
                     }else if($komponen_evaluasi[$i]['nomor_urut'] == 4){
                         NilaiKomponenEvaluasi::create([
+                            'feeder' => 0,
                             'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa,
                             'id_komponen_evaluasi' => $komponen_evaluasi[$i]['id_komponen_evaluasi'],
                             'nilai_komp_eval' => $row['nilai_kuis'],
@@ -138,6 +142,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         ]);
                     }else if($komponen_evaluasi[$i]['nomor_urut'] == 5){
                         NilaiKomponenEvaluasi::create([
+                            'feeder' => 0,
                             'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa,
                             'id_komponen_evaluasi' => $komponen_evaluasi[$i]['id_komponen_evaluasi'],
                             'nilai_komp_eval' => $row['nilai_uts'],
@@ -162,6 +167,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         ]);
                     }else if($komponen_evaluasi[$i]['nomor_urut'] == 6){
                         NilaiKomponenEvaluasi::create([
+                            'feeder' => 0,
                             'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa,
                             'id_komponen_evaluasi' => $komponen_evaluasi[$i]['id_komponen_evaluasi'],
                             'nilai_komp_eval' => $row['nilai_uas'],
@@ -240,6 +246,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
             if($nilai_perkuliahan->isEmpty()){
                 // Insert nilai perkuliahan
                 NilaiPerkuliahan::create([
+                    'feeder' => 0,
                     'id_prodi' => $mahasiswa_kelas->id_prodi,
                     'nama_program_studi' => $mahasiswa_kelas->nama_program_studi,
                     'id_semester' => $this->semester_kelas,
