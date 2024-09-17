@@ -291,7 +291,7 @@ class PembimbingMahasiswaController extends Controller
         try {
             DB::beginTransaction();
 
-            $aktivitasMahasiswa = AktivitasMahasiswa::find($aktivitas);
+            $aktivitasMahasiswa = AktivitasMahasiswa::with('prodi')->where('id', $aktivitas)->first();
             $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
             $ujiMahasiswa = UjiMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
             // dd($aktivitas, $aktivitasMahasiswa);
@@ -313,25 +313,54 @@ class PembimbingMahasiswaController extends Controller
             $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->max('score');
 
             // dd($nilai_usept_mhs);
-            
-            if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
-                // dd('masuk');
+            if (in_array($aktivitasMahasiswa->prodi->id_jenjang_pendidikan, [31, 32, 37])) 
+            {
                 $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
                 $data_mahasiswa->update(['judul' => $data['judul']]);
-
+            
                 foreach ($bimbingMahasiswa as $b) {
                     $b->update(['judul' => $data['judul']]);
                 }
-
-                if($ujiMahasiswa){
+            
+                if ($ujiMahasiswa) {
                     foreach ($ujiMahasiswa as $u) {
                         $u->update(['judul' => $data['judul']]);
                     }
                 }
-
-            }else{
-                return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
+            } else {
+                if($aktivitasMahasiswa->id_jenis_aktivitas == 2){
+                    $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+                    $data_mahasiswa->update(['judul' => $data['judul']]);
+                
+                    foreach ($bimbingMahasiswa as $b) {
+                        $b->update(['judul' => $data['judul']]);
+                    }
+                
+                    if ($ujiMahasiswa) {
+                        foreach ($ujiMahasiswa as $u) {
+                            $u->update(['judul' => $data['judul']]);
+                        }
+                    }
+                }else{
+                    if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
+                        $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+                        $data_mahasiswa->update(['judul' => $data['judul']]);
+                
+                        foreach ($bimbingMahasiswa as $b) {
+                            $b->update(['judul' => $data['judul']]);
+                        }
+                
+                        if ($ujiMahasiswa) {
+                            foreach ($ujiMahasiswa as $u) {
+                                $u->update(['judul' => $data['judul']]);
+                            }
+                        }
+                    } else {
+                        return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
+                    }
+                }
             }
+            
 
             if (!empty($data['dosen_penguji']) && !empty($request->penguji_ke)) {
                 $semester_aktif = SemesterAktif::first();
