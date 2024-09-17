@@ -427,6 +427,7 @@ class PembimbingMahasiswaController extends Controller
         $id_dosen = auth()->user()->fk_id;
         $data = AktivitasMahasiswa::where('id', $aktivitas)->first();
         $pembimbing = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen', $id_dosen)->first();
+        $nilai_sidang = NilaiSidangMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen',$id_dosen)->first();
 
         $validate = $request->validate([
             'proses_bimbingan' => 'required',
@@ -450,7 +451,16 @@ class PembimbingMahasiswaController extends Controller
 
             BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen', $pembimbing->id_dosen)->update(['nilai_proses_bimbingan' => $request->proses_bimbingan]);
             
-            NilaiSidangMahasiswa::create(['approved_prodi' => 0, 'id_aktivitas' => $data->id_aktivitas, 'id_dosen' => $pembimbing->id_dosen, 'id_kategori_kegiatan' => $pembimbing->id_kategori_kegiatan,'nilai_kualitas_skripsi' => $request->kualitas_skripsi, 'nilai_presentasi_dan_diskusi' => $request->presentasi, 'nilai_performansi' => $request->performansi, 'nilai_akhir_dosen' => $nilai_akhir_sidang, 'tanggal_penilaian_sidang' => $tanggal_penilaian]);
+            if(!$nilai_sidang){
+                NilaiSidangMahasiswa::create(['approved_prodi' => 0, 'id_aktivitas' => $data->id_aktivitas, 'id_dosen' => $pembimbing->id_dosen, 'id_kategori_kegiatan' => $pembimbing->id_kategori_kegiatan,'nilai_kualitas_skripsi' => $request->kualitas_skripsi, 'nilai_presentasi_dan_diskusi' => $request->presentasi, 'nilai_performansi' => $request->performansi, 'nilai_akhir_dosen' => $nilai_akhir_sidang, 'tanggal_penilaian_sidang' => $tanggal_penilaian]);
+            }else{
+                if($nilai_sidang->approved_prodi == 0){
+                    NilaiSidangMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen',$id_dosen)->update(['nilai_kualitas_skripsi' => $request->kualitas_skripsi, 'nilai_presentasi_dan_diskusi' => $request->presentasi, 'nilai_performansi' => $request->performansi, 'nilai_akhir_dosen' => $nilai_akhir_sidang, 'tanggal_penilaian_sidang' => $tanggal_penilaian]);
+                }else{
+                    return redirect()->back()->with('error', 'Data nilai sudah disetujui prodi.');
+                }  
+            }
+            
 
             DB::commit();
 
