@@ -466,7 +466,7 @@ class PembimbingMahasiswaController extends Controller
         ]);
 
         //Generate tanggal penilaian
-        $tanggal_penilaian = date('Y-m-d');
+        $tanggal_penilaian = $data->jadwal_ujian;
 
         //Generate nilai akhir sidang
         $bobot_kualitas_skripsi = round((7/15),2);
