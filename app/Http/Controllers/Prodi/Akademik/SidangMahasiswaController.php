@@ -111,6 +111,8 @@ class SidangMahasiswaController extends Controller
     public function store_dosen_penguji($aktivitas, Request $request)
     {
         $semester_aktif = SemesterAktif::first();
+        $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $aktivitas)->get();
+
         $data = $request->validate([
                     'dosen_penguji.*' => 'required',
                     'kategori.*' => 'required',
@@ -133,9 +135,16 @@ class SidangMahasiswaController extends Controller
                 //Generate id uji mahasiswa
                 $id_uji_mahasiswa = Uuid::uuid4()->toString();
                 $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_penguji[$i])->first();
+
                 if(!$dosen)
                 {
                     $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_penguji[$i])->first();
+                }
+
+                $pembimbing = $bimbingMahasiswa->where('id_dosen', $dosen->id_dosen)->first();
+
+                if($pembimbing){
+                    return redirect()->back()->with('error', 'Dosen Pembimbing Tidak Bisa Menjadi Penguji.');
                 }
 
                 $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
@@ -189,6 +198,8 @@ class SidangMahasiswaController extends Controller
     {
         // dd($aktivitas);
         $semester_aktif = SemesterAktif::first();
+        $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $aktivitas)->get();
+
         $data = $request->validate([
                     'dosen_penguji' => 'required',
                     'kategori.*' => 'required',
@@ -210,6 +221,12 @@ class SidangMahasiswaController extends Controller
                 if(!$dosen)
                 {
                     $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_dosen', $request->dosen_penguji[$i])->first();
+                }
+
+                $pembimbing = $bimbingMahasiswa->where('id_dosen', $dosen->id_dosen)->first();
+
+                if($pembimbing){
+                    return redirect()->back()->with('error', 'Dosen Pembimbing Tidak Bisa Menjadi Penguji.');
                 }
 
                 $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();

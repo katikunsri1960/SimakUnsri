@@ -385,6 +385,12 @@ class PembimbingMahasiswaController extends Controller
                         $dosen = $dosen_pengajar->firstWhere('id_registrasi_dosen', $data['dosen_penguji'][$i]);
                     }
 
+                    $pembimbing = $bimbingMahasiswa->where('id_dosen', $dosen->id_dosen)->first();
+
+                    if($pembimbing){
+                        return redirect()->back()->with('error', 'Dosen Pembimbing Tidak Bisa Menjadi Penguji.');
+                    }
+
                     $kategori_kegiatan = $request->penguji_ke[$i] == '1' ? '110501' : '110502';
                     $nama_kategori_kegiatan = $request->penguji_ke[$i] == '1' ? 'Ketua Penguji' : 'Anggota Penguji';
 
