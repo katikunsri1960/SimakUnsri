@@ -41,7 +41,7 @@ Detail Penilaian Perkuliahan Mahasiswa
                         <div class="row mb-5">
                             <div class="col-xl-4 col-lg-12">
                                 <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
-                            </div>                             
+                            </div>
                         </div><br>
                         <div class="row">
                             <div class="table-responsive">
@@ -75,8 +75,32 @@ Detail Penilaian Perkuliahan Mahasiswa
                                                 <td class="text-start align-middle">{{$p->nama_mahasiswa}}</td>
                                                 <td class="text-start align-middle">{{$p->nama_kelas_kuliah}}</td>
                                                 <td class="text-center align-middle">{{$p->angkatan}}</td>
+                                                @if ($data->nilai_komponen)
+                                                    @php
+                                                        $nilaiKomponen = $data->nilai_komponen->where('id_registrasi_mahasiswa', $p->id_registrasi_mahasiswa);
+                                                    @endphp
+                                                    @if ($nilaiKomponen->count() == 0)
+                                                        <td class="text-center align-middle" colspan="6">DATA NILAI BELUM DI UPLOAD</td>
+                                                    @endif
+                                                    @foreach ($data->nilai_komponen->where('id_registrasi_mahasiswa', $p->id_registrasi_mahasiswa) as $nk)
+                                                    <td class="text-center align-middle">
+                                                        {{ $nk->nilai_komp_eval ?? '0' }}
+                                                    </td>
+                                                    @endforeach
+                                                @endif
+                                                @if ($data->nilai_perkuliahan)
+                                                    @php
+                                                        $nilaiPerkuliahan = $data->nilai_perkuliahan->where('id_registrasi_mahasiswa', $p->id_registrasi_mahasiswa)->first();
+                                                    @endphp
+                                                    @if (is_null($nilaiPerkuliahan))
+                                                        <td class="text-center align-middle" colspan="2">DATA NILAI BELUM DI UPLOAD</td>
+                                                    @else
+                                                        <td class="text-center align-middle">{{$nilaiPerkuliahan->nilai_angka}}</td>
+                                                        <td class="text-center align-middle">{{$nilaiPerkuliahan->nilai_huruf}}</td>
+                                                    @endif
+                                                @endif
 
-                                                @php
+                                                {{-- @php
                                                     // Find the corresponding nilai_perkuliahan for this peserta_kelas
                                                     $nilaiPerkuliahan = $data->nilai_perkuliahan->where('id_peserta_kelas', $p->id_peserta_kelas)->first();
                                                 @endphp
@@ -95,13 +119,13 @@ Detail Penilaian Perkuliahan Mahasiswa
 
                                                     <td class="text-center align-middle">{{$nilaiPerkuliahan->nilai_angka}}</td>
                                                     <td class="text-center align-middle">{{$nilaiPerkuliahan->nilai_huruf}}</td>
-                                                @endif
+                                                @endif --}}
                                             </tr>
                                         @endforeach
                                     </tbody>
                                 </table>
                             </div>
-                        </div>                             
+                        </div>
                     </div>
                 </div>
             </div>

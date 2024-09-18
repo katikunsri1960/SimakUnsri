@@ -75,7 +75,9 @@ class KelasKuliah extends Model
                 $query->where('approved', 1);
             },
             'nilai_perkuliahan',
-            'nilai_komponen'
+            'nilai_komponen' => function($query) {
+                $query->orderBy('urutan');
+            },
         ])
         ->where('id_kelas_kuliah', $kelas)
         ->first();
