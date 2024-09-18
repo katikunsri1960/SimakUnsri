@@ -273,7 +273,7 @@ class AktivitasMahasiswa extends Model
     public function approve_penguji($id_aktivitas)
     {
         $data = $this->where('id_aktivitas', $id_aktivitas)->first();
-        $data->uji_mahasiswa()->update(['status_uji_mahasiswa' => 1]);
+        $data->uji_mahasiswa()->where('status_uji_mahasiswa', '!=', '2')->update(['status_uji_mahasiswa' => 1]);
 
         return $data;
     }
