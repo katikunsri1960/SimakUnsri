@@ -67,6 +67,18 @@ Konversi Aktivitas
                                     </div>
                                 </div>
                             </div>
+                            <div id="tipe-penilaian-fields">
+                                <div class="tipe-penilaian-field row">
+                                    <div class="col-md-12 mb-10">
+                                        <label>Penilaian Langsung</label>
+                                        <select id="tipe_penilaian" name="tipe_penilaian" class="form-select" required>
+                                            <option value="" disabled selected>-- Pilih Kurikulum --</option>
+                                            <option value="1">Ya</option>
+                                            <option value="0">Tidak</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="box-footer">

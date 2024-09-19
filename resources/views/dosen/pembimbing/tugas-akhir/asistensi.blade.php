@@ -75,9 +75,10 @@ Bimbingan Tugas Akhir Dosen
                         @if($aktivitas->approve_sidang != 1)
                             <div class="btn-group">
                                 <a class="btn btn-rounded bg-success-light" href="#" data-bs-toggle="modal" data-bs-target="#tambahAsistensiModal"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Asistensi</a>
-                                <a class="btn btn-rounded bg-primary-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang', ['aktivitas' => $aktivitas])}}"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
-                                @if($aktivitas->id_jenis_aktivitas == 2)
+                                @if($aktivitas->id_jenis_aktivitas == 2 && $penilaian_langsung->penilaian_langsung == 1)
                                     <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung', $aktivitas->id)}}"><i class="fa fa-list"></i> Penilaian Langsung</a>
+                                @else
+                                    <a class="btn btn-rounded bg-primary-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang', ['aktivitas' => $aktivitas])}}"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
                                 @endif
                             </div>
                         @else

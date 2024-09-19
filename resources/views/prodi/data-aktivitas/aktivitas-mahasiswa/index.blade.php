@@ -44,6 +44,7 @@ Aktivitas Mahasiswa
                                     <th class="text-center align-middle">Nama Mata Kuliah</th>
                                     <th class="text-center align-middle">SKS</th>
                                     <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">Penilaian Langsung</th>
                                     <th class="text-center align-middle">Action</th>
                                 </tr>
                             </thead>
@@ -62,6 +63,7 @@ Aktivitas Mahasiswa
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_mata_kuliah }}</td>
                                         <td class="text-center align-middle" style="width:3%">{{ $d->sks_mata_kuliah }}</td>
                                         <td class="text-center align-middle" style="width:3%">{{ $d->semester }}</td>
+                                        <td class="text-center align-middle" style="width:3%">{{ $d->penilaian_langsung == 0 ? 'Tidak' : 'Ya' }}</td>
                                         <td class="text-center align-middle" style="width:3%">
                                             <form action="{{ route('prodi.data-aktivitas.aktivitas-mahasiswa.ubah', ['rencana_ajar' => $d->id]) }}" method="POST" class="delete-form">
                                                 @csrf

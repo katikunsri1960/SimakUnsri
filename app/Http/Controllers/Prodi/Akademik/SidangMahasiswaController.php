@@ -283,6 +283,7 @@ class SidangMahasiswaController extends Controller
         $pembimbing = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $penguji = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
+        $nilai_akhir = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->where('nim', $data->anggota_aktivitas_personal->nim)->first();
 
         //Generate nilai akhir sidang
         $bobot_penguji = round((60/count($penguji)),2);
@@ -342,9 +343,15 @@ class SidangMahasiswaController extends Controller
         try {
             DB::beginTransaction();
 
+            $data->update(['tanggal_selesai' => $data->jadwal_ujian]);
+
             $id_konversi_aktivitas = Uuid::uuid4()->toString();
             
-            KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_akhir_sidang, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
+            if(!$nilai_akhir){
+                KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_akhir_sidang, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
+            }else{
+                $nilai_akhir->update(['nilai_angka' => $nilai_akhir_sidang, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf]);
+            }
 
             DB::commit();
 
