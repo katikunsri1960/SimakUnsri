@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Services\Feeder\FeederAPI;
 use App\Models\ProgramStudi;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
@@ -506,6 +507,8 @@ class PerkuliahanController extends Controller
         ini_set('memory_limit', '1G');
 
         $act = 'GetTranskripMahasiswa';
+
+        TranskripMahasiswa::truncate();
 
         $matkul = MataKuliah::pluck('id_matkul')->toArray();
         $matkul = array_chunk($matkul, 12);

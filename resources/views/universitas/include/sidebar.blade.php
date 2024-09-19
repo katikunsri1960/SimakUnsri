@@ -212,6 +212,20 @@
                                     </li> --}}
                                 </ul>
                             </li>
+
+                            <li class="treeview {{request()->routeIs('univ.feeder-upload.aktivitas.*') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('univ.feeder-upload.aktivitas') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.aktivitas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Mahasiswa</a>
+                                    </li>
+                                </ul>
+                            </li>
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.monitoring.*') ? 'active menu-open' : ''}}">

@@ -25,7 +25,20 @@ Transkrip Nilai
         <div class="col-12">
             <div class="box">
                 <div class="box-body py-10">
+                    @if ($statusSync == 1)
+                    <div class="alert alert-warning mt-4">
+                        <h3 class="alert-heading">Perhatian!</h3>
+                        <hr>
+                        <p class="mb-0">Data Transkrip sedang proses sinkronisasi. Harap menunggu terlebih dahulu!</p>
+                        {{-- progress bar --}}
+                        <div class="progress mt-3">
+                            <div id="sync-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
+                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    @else
                     <div class="col-md-6 mt-5">
+
                         <div class="form-group row">
                             <label class="col-form-label col-md-2">NIM</label>
                             <div class="col-md-10">
@@ -36,6 +49,8 @@ Transkrip Nilai
                             </div>
                         </div>
                     </div>
+                    @endif
+
 
                     <div class="table-responsive mt-5">
                         <div class="box-body text-center">
@@ -165,6 +180,49 @@ Transkrip Nilai
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
     <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var statusSync = @json($statusSync);
+            var idBatch = @json($id_batch); // Assuming you have $idBatch available in your Blade template
+
+            if (statusSync == 1) {
+                checkSync(idBatch);
+            }
+        });
+
+        function checkSync(id_batch) {
+            $.ajax({
+                url: '{{ route('bak.check-sync') }}',
+                type: 'GET',
+                data: {
+                    id_batch: id_batch
+                },
+                success: function(response) {
+                    // Handle the response here
+                    console.log('Sync check response:', response);
+
+                    // Update the progress bar
+                    var progressBar = document.getElementById('sync-progress-bar');
+                    progressBar.style.width = response.progress + '%';
+                    progressBar.setAttribute('aria-valuenow', response.progress);
+                    // set text percentage
+                    progressBar.innerHTML = response.progress + '%';
+
+                    if (response.progress < 100) {
+                        setTimeout(function() {
+                            checkSync(id_batch);
+                        }, 3000); // Request every 2 seconds
+                    } else {
+                        console.log('Sync completed');
+                        // reload page
+                        location.reload();
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error checking sync:', error);
+                }
+            });
+        }
         $(document).ready(function () {
             $('#btnCari').click(function () {
                 var nim = $('#nim').val();
