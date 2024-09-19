@@ -684,6 +684,8 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
         Route::prefix('universitas')->group(function () {
 
+            Route::get('/check-sync', [App\Http\Controllers\Universitas\DashboardController::class, 'check_sync'])->name('univ.check-sync');
+
             Route::get('/data-krs', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ.data-krs');
 
             Route::prefix('beasiswa')->group(function() {

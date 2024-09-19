@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Universitas;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
@@ -49,5 +50,19 @@ class DashboardController extends Controller
                 ->groupBy('riwayat_pendidikans.id_prodi')
                 ->get();
         return response()->json($data);
+    }
+
+    public function check_sync(Request $request)
+    {
+        $id_batch = $request->id_batch;
+        $batching = Bus::findBatch($id_batch);
+
+        return [
+            'total' => $batching->totalJobs,
+            'job_processed' => $batching->processedJobs(),
+            'job_pending' => $batching->pendingJobs,
+            'progress' => $batching->progress(),
+        ];
+
     }
 }
