@@ -81,7 +81,8 @@ class AktivitasMahasiswaKonversiController extends Controller
         $validated = $request->validate([
             'kurikulum' =>'required',
             'jenis_aktivitas' => 'required',
-            'mk_konversi' => 'required', 
+            'mk_konversi' => 'required',
+            'tipe_penilaian' => 'required',
         ]);
 
         try {
@@ -117,6 +118,7 @@ class AktivitasMahasiswaKonversiController extends Controller
                     'nama_mata_kuliah' =>$mk_konversi->nama_mata_kuliah,
                     'sks_mata_kuliah' =>$mk_konversi->sks_mata_kuliah,
                     'semester' =>$mk_konversi->semester,
+                    'penilaian_langsung' =>$request->tipe_penilaian
                 ]);
                 // dd($koversi);
             });
@@ -172,7 +174,8 @@ class AktivitasMahasiswaKonversiController extends Controller
         $validated = $request->validate([
             'kurikulum' =>'required',
             'jenis_aktivitas' => 'required',
-            'mk_konversi' => 'required', 
+            'mk_konversi' => 'required',
+            'tipe_penilaian' => 'required', 
         ]);       
 
         // try {
@@ -208,6 +211,7 @@ class AktivitasMahasiswaKonversiController extends Controller
                     'nama_mata_kuliah' =>$mk_konversi->nama_mata_kuliah,
                     'sks_mata_kuliah' =>$mk_konversi->sks_mata_kuliah,
                     'semester' =>$mk_konversi->semester,
+                    'penilaian_langsung' =>$request->tipe_penilaian
                 ]);
                 // dd($koversi);
         
