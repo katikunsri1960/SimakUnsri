@@ -111,39 +111,6 @@ Transkrip Mahasiswa
     }
 
     $(function () {
-        // "use strict";
-
-       // $('#data').DataTable({
-            // dom: 'Bfrtip',
-            // buttons: [
-            //     'copy', 'csv', 'excel', 'pdf', 'print'
-            // ],
-            // processing: true,
-            // serverSide: true,
-            // ajax: {
-            //     url: '{{route('univ.mata-kuliah.data')}}',
-            //     type: 'GET',
-            //     data: function (d) {
-            //         d.prodi = $('#prodi').val();
-            //     },
-            //     error: function (xhr, error, thrown) {
-            //         alert('An error occurred. ' + thrown);
-            //     }
-            // },
-            // columns: [
-            //     {data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', searchable: true},
-            //     {data: 'nama_mata_kuliah', name: 'nama_mata_kuliah', searchable: true},
-            //     {data: 'sks_mata_kuliah', name: 'sks_mata_kuliah', class: 'text-center'},
-            //     {
-            //         data: null,
-            //         name: 'prodi',
-            //         searchable: true,
-            //         render: function (data, type, row, meta) {
-            //             return data.prodi.nama_jenjang_pendidikan + ' ' + data.prodi.nama_program_studi ;
-            //         }
-            //     }
-            // ],
-        //});
 
         // sweet alert sync-form
         $('#sync-form').submit(function(e){
