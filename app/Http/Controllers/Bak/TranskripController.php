@@ -8,12 +8,25 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 
 class TranskripController extends Controller
 {
     public function index()
     {
-        return view('bak.transkrip.index');
+        // check job batch queue with name transkrip-mahasiswa
+        // if not exist, create new job batch queue
+        $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
+
+        $statusSync = $jobData ? 1 : 0;
+
+        $id_batch = $jobData ? $jobData->id : null;
+
+        return view('bak.transkrip.index', [
+            'statusSync' => $statusSync,
+            'id_batch' => $id_batch,
+        ]);
     }
 
     public function data(Request $request)
@@ -78,7 +91,7 @@ class TranskripController extends Controller
             'total_sks' => $total_sks,
          ])
          ->setPaper('a4', 'portrait');
-         
+
          return $pdf->stream('transkrip-'.$riwayat->nim.'.pdf');
     }
 }

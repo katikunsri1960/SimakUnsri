@@ -65,11 +65,7 @@
     <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
     <script src="{{asset('assets/js/confirmSubmit.js')}}"></script>
     <script>
-        $(document).ajaxStart(function() {
-             $("#spinner").show();
-         }).ajaxStop(function() {
-             $("#spinner").hide();
-         });
+        
     </script>
     @stack('js')
     <!-- EduAdmin App -->
