@@ -6,8 +6,8 @@
     </center>
 </div>
 <div class="container-fluid table-responsive ml-3 text-pdf">
-    <div class="row mt-3">
-        <table style="width:100%" class="mb-3">
+    <div class="row mt-3" style="align-content: center">
+        <table class="table" style="width:100%" class="mb-3">
             <tr>
                 <td class="text-start align-middle" style="width: 12%">NIM</td>
                 <td>:</td>
@@ -70,6 +70,12 @@
                 <tr>
                     <th colspan="3" class="text-center align-middle table-pdf text-pdf">Total SKS</th>
                     <th class="text-center align-middle table-pdf text-pdf" id="totalSks">{{$total_sks}}</th>
+                    <th class="text-center align-middle table-pdf text-pdf"></th>
+                    <th class="text-center align-middle table-pdf text-pdf"></th>
+                </tr>
+                <tr>
+                    <th colspan="3" class="text-center align-middle table-pdf text-pdf">IPK</th>
+                    <th class="text-center align-middle table-pdf text-pdf" id="totalSks">{{$ipk}}</th>
                     <th class="text-center align-middle table-pdf text-pdf"></th>
                     <th class="text-center align-middle table-pdf text-pdf"></th>
                 </tr>

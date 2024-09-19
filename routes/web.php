@@ -33,6 +33,8 @@ Route::group(['middleware' => ['auth']], function() {
         Route::prefix('bak')->group(function(){
             Route::get('/', [App\Http\Controllers\Bak\DashboardController::class, 'index'])->name('bak');
 
+            Route::get('/check-sync', [App\Http\Controllers\Bak\DashboardController::class, 'check_sync'])->name('bak.check-sync');
+
             Route::prefix('beasiswa')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\BeasiswaController::class, 'index'])->name('bak.beasiswa');
                 Route::get('/data', [App\Http\Controllers\Bak\BeasiswaController::class, 'data'])->name('bak.beasiswa.data');
@@ -682,6 +684,8 @@ Route::group(['middleware' => ['auth']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
         Route::prefix('universitas')->group(function () {
 
+            Route::get('/check-sync', [App\Http\Controllers\Universitas\DashboardController::class, 'check_sync'])->name('univ.check-sync');
+
             Route::get('/data-krs', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ.data-krs');
 
             Route::prefix('beasiswa')->group(function() {
@@ -827,6 +831,19 @@ Route::group(['middleware' => ['auth']], function() {
                         Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar'])->name('univ.feeder-upload.perkuliahan.dosen-ajar');
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar_data'])->name('univ.feeder-upload.perkuliahan.dosen-ajar.data');
                         Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar_upload'])->name('univ.feeder-upload.perkuliahan.dosen-ajar.upload');
+                    });
+
+                });
+
+                Route::prefix('aktivitas')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'aktivitas'])->name('univ.feeder-upload.aktivitas');
+                    Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'aktivitas_data'])->name('univ.feeder-upload.aktivitas.data');
+                    Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'aktivitas_upload'])->name('univ.feeder-upload.aktivitas.upload');
+
+                    Route::prefix('anggota')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'anggota'])->name('univ.feeder-upload.aktivitas.anggota');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'anggota_data'])->name('univ.feeder-upload.aktivitas.anggota.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'anggota_upload'])->name('univ.feeder-upload.aktivitas.anggota.upload');
                     });
                 });
 

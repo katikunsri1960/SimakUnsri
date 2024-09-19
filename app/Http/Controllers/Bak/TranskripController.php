@@ -8,12 +8,25 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 
 class TranskripController extends Controller
 {
     public function index()
     {
-        return view('bak.transkrip.index');
+        // check job batch queue with name transkrip-mahasiswa
+        // if not exist, create new job batch queue
+        $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
+
+        $statusSync = $jobData ? 1 : 0;
+
+        $id_batch = $jobData ? $jobData->id : null;
+
+        return view('bak.transkrip.index', [
+            'statusSync' => $statusSync,
+            'id_batch' => $id_batch,
+        ]);
     }
 
     public function data(Request $request)
@@ -33,6 +46,11 @@ class TranskripController extends Controller
 
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
+        $total_sks = $transkrip->sum('sks_mata_kuliah');
+        $total_indeks = $transkrip->sum('nilai_indeks');
+
+        $ipk = ($total_sks * $total_indeks) / $total_sks;
+
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester', 'desc')
                 ->get();
@@ -42,6 +60,8 @@ class TranskripController extends Controller
             'data' => $transkrip,
             'akm' => $akm,
             'riwayat' => $riwayat,
+            'total_sks' => $total_sks,
+            'ipk' => $ipk,
         ];
 
         return response()->json($data);
@@ -66,6 +86,13 @@ class TranskripController extends Controller
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
+        $bobot = 0;
+
+        foreach ($transkrip as $t) {
+            $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+        }
+
+        $ipk = number_format($bobot / $total_sks, 2);
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester', 'desc')
@@ -76,9 +103,10 @@ class TranskripController extends Controller
             'riwayat' => $riwayat,
             'akm' => $akm,
             'total_sks' => $total_sks,
+            'ipk' => $ipk,
          ])
          ->setPaper('a4', 'portrait');
-         
+
          return $pdf->stream('transkrip-'.$riwayat->nim.'.pdf');
     }
 }

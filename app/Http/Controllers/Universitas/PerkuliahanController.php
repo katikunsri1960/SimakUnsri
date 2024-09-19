@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Services\Feeder\FeederAPI;
 use App\Models\ProgramStudi;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
@@ -14,6 +15,7 @@ use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
 
 class PerkuliahanController extends Controller
 {
@@ -497,7 +499,16 @@ class PerkuliahanController extends Controller
 
     public function transkrip()
     {
-        return view('universitas.perkuliahan.transkrip.index');
+        $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
+
+        $statusSync = $jobData ? 1 : 0;
+
+        $id_batch = $jobData ? $jobData->id : null;
+
+        return view('universitas.perkuliahan.transkrip.index',[
+            'statusSync' => $statusSync,
+            'id_batch' => $id_batch
+        ]);
     }
 
     public function sync_transkrip()
@@ -506,6 +517,8 @@ class PerkuliahanController extends Controller
         ini_set('memory_limit', '1G');
 
         $act = 'GetTranskripMahasiswa';
+
+        TranskripMahasiswa::truncate();
 
         $matkul = MataKuliah::pluck('id_matkul')->toArray();
         $matkul = array_chunk($matkul, 12);
