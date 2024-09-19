@@ -17,6 +17,7 @@ use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\Konversi;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Connection\Usept;
+use App\Models\Connection\CourseUsept;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -290,7 +291,7 @@ class PembimbingMahasiswaController extends Controller
             'dosen_penguji.*' => 'required_if:dosen_penguji,!=,null',
             'penguji_ke' => 'nullable',
             'penguji_ke' => 'required_if:penguji_ke,!=,null'
-        ]);       
+        ]);
 
         try {
             DB::beginTransaction();
@@ -315,8 +316,9 @@ class PembimbingMahasiswaController extends Controller
 
             $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->mahasiswa->id_kurikulum)->first();
             $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->max('score');
+            $db_course_usept = new CourseUsept;
+            $nilai_course = $db_course_usept->whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->get();
 
-            // dd($nilai_usept_mhs);
             if (in_array($aktivitasMahasiswa->prodi->id_jenjang_pendidikan, [31, 32, 37])) 
             {
                 $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
@@ -360,7 +362,37 @@ class PembimbingMahasiswaController extends Controller
                             }
                         }
                     } else {
-                        return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
+                        if($nilai_course){
+                            foreach($nilai_course as $n){
+                                $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
+                                
+                                // Jika nilai course sudah memenuhi syarat, lanjutkan
+                                if($nilai_hasil_course >= $nilai_usept_prodi->nilai_usept){
+                                    $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+                                    $data_mahasiswa->update(['judul' => $data['judul']]);
+                        
+                                    foreach ($bimbingMahasiswa as $b) {
+                                        $b->update(['judul' => $data['judul']]);
+                                    }
+                        
+                                    if ($ujiMahasiswa) {
+                                        foreach ($ujiMahasiswa as $u) {
+                                            $u->update(['judul' => $data['judul']]);
+                                        }
+                                    }
+                                    // Hentikan loop karena syarat sudah terpenuhi
+                                    break;
+                                }
+                            }
+                        
+                            // Cek setelah loop jika tidak ada nilai yang memenuhi syarat
+                            if ($nilai_hasil_course < $nilai_usept_prodi->nilai_usept) {
+                                return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
+                            }
+
+                        } else {
+                            return redirect()->back()->with('error', 'Mahasiswa belum memiliki data course untuk nilai USEPT.');
+                        }                        
                     }
                 }
             }
@@ -528,6 +560,13 @@ class PembimbingMahasiswaController extends Controller
     {
         $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id', $aktivitas)->first();
         $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
+        $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
+
+        $pembimbing = $bimbingMahasiswa->where('id_dosen', auth()->user()->fk_id)->first();
+
+        if (!$pembimbing || $pembimbing->pembimbing_ke != 1) {
+            return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat memberikan nilai.');
+        }
 
         $validate = $request->validate([
             'nilai_langsung' => 'required'
