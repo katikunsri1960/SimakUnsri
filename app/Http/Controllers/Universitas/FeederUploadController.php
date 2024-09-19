@@ -955,4 +955,9 @@ class FeederUploadController extends Controller
 
         return response()->json($data);
     }
+
+    public function aktivitas_upload(Request $request)
+    {
+        
+    }
 }
