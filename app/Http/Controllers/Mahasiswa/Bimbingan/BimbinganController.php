@@ -21,7 +21,9 @@ class BimbinganController extends Controller
     public function bimbingan_tugas_akhir(Request $request)
     {
         $user = auth()->user();
-
+        $nim = $user->username;
+        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
+        
         if ($request->has('semester') && $request->semester != '') {
             $id_semester = $request->semester;
         } else {
@@ -41,13 +43,41 @@ class BimbinganController extends Controller
                     ->where('id_semester', $id_semester)
                     ->get();
 
-        // Pengecekan apakah $data ada atau tidak
-        if (!$data) {
-            // Handle jika tidak ada data
+        // Pengecekan apakah $data kosong atau tidak
+        if ($data->isEmpty()) {
             return redirect()->back()->with('error', 'Data tidak ditemukan.');
         }
 
         $semester = Semester::orderBy('id_semester', 'desc')->get();
+
+        // PENGECEKAN STATUS PEMBAYARAN
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
+
+        $tagihan = Tagihan::with('pembayaran')
+            ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
+            ->where('kode_periode', $id_semester)
+            ->first();
+        
+        $statusPembayaran = NULL;
+        if ($tagihan && $tagihan->pembayaran) {
+            $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+        }
+
+        // Jika belum ada pembayaran dan tidak ada beasiswa
+        if ($statusPembayaran == NULL ) {
+            return redirect()->back()->with('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
+        }
+
+        // foreach ($data as $d){
+        //     foreach($d->bimbing_mahasiswa){
+        //         if ( $bimbingan->approved == 0) {
+        //             return redirect()->back()->with('error', 'Dosen pembimbing Anda belum disetujui oleh Koordinator Program Studi!');
+        //         };
+        //     };
+        // };
+        
+        // dd($tagihan);
+
 
         return view('mahasiswa.bimbingan.tugas-akhir.index', [
             'data' => $data,
@@ -55,6 +85,7 @@ class BimbinganController extends Controller
             'id_semester' => $id_semester,
         ]);
     }
+
 
     
     public function asistensi(AktivitasMahasiswa $aktivitas)
@@ -68,7 +99,6 @@ class BimbinganController extends Controller
         $data_pelaksanaan_sidang = $aktivitas->load(['revisi_sidang', 'notulensi_sidang', 'penilaian_sidang', 'revisi_sidang.dosen', 'penilaian_sidang.dosen']);
 
         $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
-                            // ->where('id_dosen', auth()->user()->fk_id)
                             ->first()->pembimbing_ke;
                     
         $dosen_pembimbing = $aktivitas->load(['bimbing_mahasiswa']);
