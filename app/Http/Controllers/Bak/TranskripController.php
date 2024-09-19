@@ -46,6 +46,11 @@ class TranskripController extends Controller
 
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
+        $total_sks = $transkrip->sum('sks_mata_kuliah');
+        $total_indeks = $transkrip->sum('nilai_indeks');
+
+        $ipk = ($total_sks * $total_indeks) / $total_sks;
+
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester', 'desc')
                 ->get();
@@ -55,6 +60,8 @@ class TranskripController extends Controller
             'data' => $transkrip,
             'akm' => $akm,
             'riwayat' => $riwayat,
+            'total_sks' => $total_sks,
+            'ipk' => $ipk,
         ];
 
         return response()->json($data);
@@ -79,6 +86,13 @@ class TranskripController extends Controller
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
+        $bobot = 0;
+
+        foreach ($transkrip as $t) {
+            $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+        }
+
+        $ipk = number_format($bobot / $total_sks, 2);
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester', 'desc')
@@ -89,6 +103,7 @@ class TranskripController extends Controller
             'riwayat' => $riwayat,
             'akm' => $akm,
             'total_sks' => $total_sks,
+            'ipk' => $ipk,
          ])
          ->setPaper('a4', 'portrait');
 

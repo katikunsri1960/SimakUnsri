@@ -136,6 +136,13 @@ Transkrip Nilai
                                                 <th ></th>
                                                 <th ></th>
                                             </tr>
+                                            <tr>
+                                                <th colspan="3" class="text-center align-middle">IPK</th>
+                                                <th class="text-center align-middle" id="ipk"></th>
+                                                <th ></th>
+                                                <th ></th>
+                                                <th ></th>
+                                            </tr>
                                         </tfoot>
                                     </table>
                                     <hr>
@@ -236,7 +243,7 @@ Transkrip Nilai
                             nim: nim
                         },
                         success: function (response) {
-
+                            console.log(response);
                             if (response.status == 'error') {
                                 swal({
                                     title: "Peringatan!",
@@ -298,6 +305,8 @@ Transkrip Nilai
                             var approved = 0;
                             var no = 1;
                             var totalSks = 0;
+                            var nilai_bobot = 0;
+                            var ipk = 0;
 
                             response.data.forEach(function (krs, index) {
                                 var trClass = '';
@@ -314,11 +323,15 @@ Transkrip Nilai
                                     `<td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>`
                                 ]).node().className = trClass;
 
+                                var nilai_bobot_temp = parseInt(krs.sks_mata_kuliah) * parseFloat(krs.nilai_indeks);
+                                nilai_bobot += nilai_bobot_temp;
                                 totalSks += parseInt(krs.sks_mata_kuliah);
                             });
 
                             table.draw(); // Redraw the DataTable with new data
+                            ipk = nilai_bobot / totalSks;
                             $('#totalSks').text(totalSks);
+                            $('#ipk').text(ipk.toFixed(2));
 
                         }
                     });
