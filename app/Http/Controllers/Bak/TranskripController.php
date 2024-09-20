@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Perpus\BebasPustaka;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
@@ -55,6 +56,8 @@ class TranskripController extends Controller
                 ->orderBy('id_semester', 'desc')
                 ->get();
 
+        $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
+
         $data = [
             'status' => 'success',
             'data' => $transkrip,
@@ -62,6 +65,7 @@ class TranskripController extends Controller
             'riwayat' => $riwayat,
             'total_sks' => $total_sks,
             'ipk' => $ipk,
+            'bebas_pustaka' => $bebas_pustaka,
         ];
 
         return response()->json($data);
@@ -98,12 +102,14 @@ class TranskripController extends Controller
                 ->orderBy('id_semester', 'desc')
                 ->get();
 
+
         $pdf = PDF::loadview('bak.transkrip.pdf', [
             'transkrip' => $transkrip,
             'riwayat' => $riwayat,
             'akm' => $akm,
             'total_sks' => $total_sks,
             'ipk' => $ipk,
+            'bebas_pustaka' => BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first(),
          ])
          ->setPaper('a4', 'portrait');
 

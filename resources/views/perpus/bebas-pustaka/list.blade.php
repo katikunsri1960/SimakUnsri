@@ -51,6 +51,7 @@ BEBAS PUSTAKA - LIST
                                     <th class="text-center align-middle">Nama</th>
                                     <th class="text-center align-middle">File Bebas Pustaka</th>
                                     <th class="text-center align-middle">Link Repo</th>
+                                    <th class="text-center align-middle">Verified By</th>
                                     <th class="text-center align-middle">Act</th>
                                 </tr>
                             </thead>
@@ -129,6 +130,7 @@ $(function () {
                         return '<a href="' + data + '" target="_blank" class="btn btn-primary btn-outline btn-sm"><i class="fa fa-link pe-1"></i> Link Repo </a>';
                     }
                 },
+                { data: 'nama_user', name: 'nama_user', class: 'text-center', searchable: true,  sortable: false,},
                 {
                     data: 'id',
                     name: 'id',
