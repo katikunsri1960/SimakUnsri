@@ -23,12 +23,12 @@ Bimbingan Tugas Akhir Mahasiswa
 			</div>
 		</div>
     </div>
-    @if ($data == NULL)
+    @if (empty($data[0]->id_jenis_aktivitas))
         <!-- Bagian ini ditampilkan jika $aktivitas == NULL -->
-        <section class="content">
+        <section class="content bg-primary-light rounded20">
             <div class="row mb-20">
                 <div class="col-xxl-12">
-                    <div class="box box-body mb-0 bg-white">
+                    <div class="box box-body bg-white">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12">
                                 <h3 class="fw-500 text-dark mb-20">Bimbingan Tugas Akhir</h3>
@@ -57,7 +57,41 @@ Bimbingan Tugas Akhir Mahasiswa
                 </div>
             </div>
         </section>
-    @else
+    @elseif ($statusPembayaran == 0 && $beasiswa == 0)
+        <!-- Bagian ini ditampilkan jika $aktivitas == NULL -->
+        <section class="content bg-primary-light rounded20">
+            <div class="row mb-20">
+                <div class="col-xxl-12">
+                    <div class="box box-body bg-white">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12">
+                                <h3 class="fw-500 text-dark mb-20">Bimbingan Tugas Akhir</h3>
+                            </div>
+                        </div>
+                        <div class="row ">
+                            <div class="col-lg-12 col-lg-12 col-lg-12 p-20 m-0">
+                                <div class="box box-body bg-warning-light">
+                                    <div class="row" style="align-items: center;">
+                                        <div class="col-lg-1 text-right" style="text-align-last: end;">
+                                            <i class="fa-solid fa-2xl fa-circle-exclamation fa-danger" style="color: #d10000;"></i></i>
+                                        </div>
+                                        <div class="col-lg-10 text-left text-danger">
+                                            <label>
+                                                Anda Belum Melakukan Pembayaran!
+                                            </label><br>
+                                            <label>
+                                                Silahkan melakukan Pembayaran UKT sebelum periode pembayaran selesai!
+                                            </label><br>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    @elseif ($statusPembayaran > 0 || $beasiswa > 0)
         <div class="row">
             <div class="col-12">
                 <div class="box box-outline-success bs-3 border-success">
