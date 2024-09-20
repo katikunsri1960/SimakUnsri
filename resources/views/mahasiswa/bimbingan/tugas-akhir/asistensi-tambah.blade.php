@@ -9,13 +9,13 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir.store', $aktivitas)}}" method="post"
+            <form action="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi.store', $aktivitas)}}" method="post"
                 id="asistensiForm">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group row">
 						<label class="col-form-label col-md-2">Tanggal</label>
-						<div class="col-md-10">
+						<div class="col-md-4">
 							<input class="form-control" type="date" name="tanggal">
 							{{-- <span class="form-text text-muted">Using <code>input type="date"</code></span> --}}
 						</div>
@@ -32,7 +32,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-form-label col-md-2">Keterangan</label>
+                        <label class="col-form-label col-md-2">Uraian Asistensi</label>
                         <div class="col-md-10">
                             <textarea class="form-control" name="uraian" id="uraian" rows="3"></textarea>
                         </div>

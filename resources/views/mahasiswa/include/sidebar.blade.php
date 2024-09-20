@@ -126,11 +126,11 @@
                                 <a href="{{route('mahasiswa.prestasi.prestasi-non-pendanaan')}}"><i class="fa fa-trophy"><span
                                             class="path1"></span><span class="path2"></span></i>Prestasi Non Pendanaan</a>
                             </li>
-                            <!-- <li class="{{request()->routeIs('mahasiswa.prestasi.prestasi-non-pendanaan')
+                            {{-- <!-- <li class="{{request()->routeIs('mahasiswa.prestasi.prestasi-non-pendanaan')
                                 ? 'active' : ''}}">
                                 <a href="{{route('mahasiswa.prestasi.prestasi-non-pendanaan')}}"><i class="fa fa-trophy"><span
                                             class="path1"></span><span class="path2"></span></i>Prestasi Pendanaan UNSRI</a>
-                            </li> -->
+                            </li> --> --}}
                         </ul>
                     </li>
                     {{-- <li class="treeview">
@@ -163,7 +163,7 @@
                             <span>Bimbingan Akademik</span>
                         </a>
                     </li> --}}
-                    <li class="{{request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir') | request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir')}}">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Bimbingan Tugas Akhir</span>

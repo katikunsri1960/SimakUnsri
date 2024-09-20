@@ -23,8 +23,8 @@ Nilai USEPT Mahasiswa
     </div>
     <div class="row">
         <div class="col-xxl-12">
-            <div class="box box-body mb-0">
-                <div class="row mb-50">
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-header">
                     <div class="col-xl-12 col-lg-12">
                         <h3 class="fw-500 text-dark mt-0">Daftar Nilai USEPT Mahasiswa</h3>
                         <h4 class="mb-5">
@@ -37,9 +37,11 @@ Nilai USEPT Mahasiswa
                         </h4>
                     </div>                             
                 </div>
-                <div class="row">
+                <div class="box-body">
+                    <h3 class="text-info mb-25"><i class="fa fa-book"></i> Daftar Nilai Tes USEPT</h3>
+                    <hr class="my-15">
                     <div class="table-responsive">
-                        <table id="data" class="table table-bordered table-striped text-center">
+                        <table id="test" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -70,7 +72,49 @@ Nilai USEPT Mahasiswa
                                     </tr>
                                 @endforeach
                             </tbody>
-					  </table>
+					    </table>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <h3 class="text-info mb-25"><i class="fa fa-book"></i> Daftar Nilai Course USEPT</h3>
+                    {{-- <hr class="my-15"> --}}
+                    <div class="table-responsive">
+                        <table id="course" class="table table-bordered table-striped text-center">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>NIM</th>
+                                    <th>Nama Mahasiswa</th>
+                                    <th>Tanggal Upload</th>                                    
+                                    <th>Nilai Angka</th>
+                                    <th>Nilai Huruf</th>
+                                    <th>Nilai Konversi USEPT</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach($course_data as $c)
+                                    <tr>
+                                        <td>{{$loop->iteration}}</td>
+                                        <td class="text-center align-middle" style="white-space:nowrap;">{{$mahasiswa->nim}}</td>
+                                        <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
+                                        <td>{{ date('d M Y', strtotime($c->tgl_upload)) }}</td>
+                                        <td>{{$c->total_score}}</td>
+                                        <td>{{$c->grade}}</td>
+                                        <td>{{$c->konversi}}</td>
+                                        <td class="text-center align-middle"> 
+                                            @if ($c->konversi < $usept_prodi->nilai_usept)
+                                                <span class="badge bg-danger">Belum Lulus</span>
+                                            @elseif ($usept_prodi->nilai_usept == NULL)
+                                                <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
+                                            @elseif ($c->konversi >= $usept_prodi->nilai_usept)
+                                                <span class="badge bg-success">Lulus</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+					    </table>
                     </div>
                 </div>
             </div>
@@ -82,7 +126,15 @@ Nilai USEPT Mahasiswa
 
 <script>
       $(document).ready(function() {
-        $('#data').DataTable({
+        $('#test').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            // "scrollCollapse": true,
+            // "scrollY": "550px",
+        });
+
+        $('#course').DataTable({
             "paging": true,
             "ordering": true,
             "searching": true,

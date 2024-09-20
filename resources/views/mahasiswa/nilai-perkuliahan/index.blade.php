@@ -30,7 +30,7 @@ Dashboard
                 <li class="nav-item bg-secondary-light"> <a class="nav-link active" data-bs-toggle="tab" href="#khs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="hidden-xs-down ms-15">Kartu Hasil Studi</span></a> </li>
                 <li class="nav-item bg-secondary-light"> <a class="nav-link" data-bs-toggle="tab" href="#transkrip-mahasiswa" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="hidden-xs-down ms-15">Transkrip Mahasiswa</span></a> </li>
             </ul>
-            <div class="box">
+            <div class="box box-outline-success bs-3 border-success">
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
                     @include('mahasiswa.nilai-perkuliahan.include.khs')

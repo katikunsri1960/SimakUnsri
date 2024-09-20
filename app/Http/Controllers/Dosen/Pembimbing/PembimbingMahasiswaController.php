@@ -14,8 +14,10 @@ use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\NilaiSidangMahasiswa;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\Konversi;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Connection\Usept;
+use App\Models\Connection\CourseUsept;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -172,17 +174,20 @@ class PembimbingMahasiswaController extends Controller
     {
         $data = AsistensiAkhir::where('id_aktivitas', $aktivitas->id_aktivitas)->get();
 
-        $aktivitas = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi', 'konversi', 'uji_mahasiswa']);
+        $aktivitas = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa', 'prodi', 'konversi', 'uji_mahasiswa']);
         $data_pelaksanaan_sidang = $aktivitas->load(['revisi_sidang', 'notulensi_sidang', 'penilaian_sidang', 'revisi_sidang.dosen', 'penilaian_sidang.dosen']);
+
+        $penilaian_langsung = Konversi::where('id_kurikulum', $aktivitas->anggota_aktivitas_personal->mahasiswa->id_kurikulum)->where('id_matkul', $aktivitas->konversi->id_matkul)->first();
 
         $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
                             ->where('id_dosen', auth()->user()->fk_id)
                             ->first()->pembimbing_ke;
-        // dd($data_pelaksanaan_sidang);
+        // dd($penilaian_langsung);
         return view('dosen.pembimbing.tugas-akhir.asistensi', [
             'data' => $data,
             'data_pelaksanaan' => $data_pelaksanaan_sidang,
             'aktivitas' => $aktivitas,
+            'penilaian_langsung' => $penilaian_langsung,
             'pembimbing_ke' => $pembimbing_ke,
         ]);
     }
@@ -276,7 +281,6 @@ class PembimbingMahasiswaController extends Controller
         return response()->json($data);
     }
 
-
     public function ajuan_sidang_store(Request $request, $aktivitas)
     {
         // dd($request->judul);
@@ -286,7 +290,7 @@ class PembimbingMahasiswaController extends Controller
             'dosen_penguji.*' => 'required_if:dosen_penguji,!=,null',
             'penguji_ke' => 'nullable',
             'penguji_ke' => 'required_if:penguji_ke,!=,null'
-        ]);       
+        ]);
 
         try {
             DB::beginTransaction();
@@ -308,58 +312,102 @@ class PembimbingMahasiswaController extends Controller
             $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])
                                 ->where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)
                                 ->first();
-
-            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->mahasiswa->id_kurikulum)->first();
-            $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->max('score');
-
-            // dd($nilai_usept_mhs);
-            if (in_array($aktivitasMahasiswa->prodi->id_jenjang_pendidikan, [31, 32, 37])) 
-            {
-                $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
-                $data_mahasiswa->update(['judul' => $data['judul']]);
             
-                foreach ($bimbingMahasiswa as $b) {
-                    $b->update(['judul' => $data['judul']]);
-                }
-            
-                if ($ujiMahasiswa) {
-                    foreach ($ujiMahasiswa as $u) {
-                        $u->update(['judul' => $data['judul']]);
-                    }
-                }
-            } else {
-                if($aktivitasMahasiswa->id_jenis_aktivitas == 2){
-                    $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
-                    $data_mahasiswa->update(['judul' => $data['judul']]);
-                
-                    foreach ($bimbingMahasiswa as $b) {
-                        $b->update(['judul' => $data['judul']]);
-                    }
-                
-                    if ($ujiMahasiswa) {
-                        foreach ($ujiMahasiswa as $u) {
-                            $u->update(['judul' => $data['judul']]);
-                        }
-                    }
-                }else{
-                    if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
-                        $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
-                        $data_mahasiswa->update(['judul' => $data['judul']]);
-                
-                        foreach ($bimbingMahasiswa as $b) {
-                            $b->update(['judul' => $data['judul']]);
-                        }
-                
-                        if ($ujiMahasiswa) {
-                            foreach ($ujiMahasiswa as $u) {
-                                $u->update(['judul' => $data['judul']]);
-                            }
-                        }
-                    } else {
-                        return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
-                    }
+            $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+            $data_mahasiswa->update(['judul' => $data['judul']]);
+        
+            foreach ($bimbingMahasiswa as $b) {
+                $b->update(['judul' => $data['judul']]);
+            }
+        
+            if ($ujiMahasiswa) {
+                foreach ($ujiMahasiswa as $u) {
+                    $u->update(['judul' => $data['judul']]);
                 }
             }
+
+            // $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->mahasiswa->id_kurikulum)->first();
+            // $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->max('score');
+            // $db_course_usept = new CourseUsept;
+            // $nilai_course = $db_course_usept->whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->get();
+
+            // if (in_array($aktivitasMahasiswa->prodi->id_jenjang_pendidikan, [31, 32, 37])) 
+            // {
+            //     $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+            //     $data_mahasiswa->update(['judul' => $data['judul']]);
+            
+            //     foreach ($bimbingMahasiswa as $b) {
+            //         $b->update(['judul' => $data['judul']]);
+            //     }
+            
+            //     if ($ujiMahasiswa) {
+            //         foreach ($ujiMahasiswa as $u) {
+            //             $u->update(['judul' => $data['judul']]);
+            //         }
+            //     }
+            // } else {
+            //     if($aktivitasMahasiswa->id_jenis_aktivitas == 2){
+            //         $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+            //         $data_mahasiswa->update(['judul' => $data['judul']]);
+                
+            //         foreach ($bimbingMahasiswa as $b) {
+            //             $b->update(['judul' => $data['judul']]);
+            //         }
+                
+            //         if ($ujiMahasiswa) {
+            //             foreach ($ujiMahasiswa as $u) {
+            //                 $u->update(['judul' => $data['judul']]);
+            //             }
+            //         }
+            //     }else{
+            //         if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
+            //             $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+            //             $data_mahasiswa->update(['judul' => $data['judul']]);
+                
+            //             foreach ($bimbingMahasiswa as $b) {
+            //                 $b->update(['judul' => $data['judul']]);
+            //             }
+                
+            //             if ($ujiMahasiswa) {
+            //                 foreach ($ujiMahasiswa as $u) {
+            //                     $u->update(['judul' => $data['judul']]);
+            //                 }
+            //             }
+            //         } else {
+            //             if($nilai_course){
+            //                 foreach($nilai_course as $n){
+            //                     $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
+                                
+            //                     // Jika nilai course sudah memenuhi syarat, lanjutkan
+            //                     if($nilai_hasil_course >= $nilai_usept_prodi->nilai_usept){
+            //                         $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+            //                         $data_mahasiswa->update(['judul' => $data['judul']]);
+                        
+            //                         foreach ($bimbingMahasiswa as $b) {
+            //                             $b->update(['judul' => $data['judul']]);
+            //                         }
+                        
+            //                         if ($ujiMahasiswa) {
+            //                             foreach ($ujiMahasiswa as $u) {
+            //                                 $u->update(['judul' => $data['judul']]);
+            //                             }
+            //                         }
+            //                         // Hentikan loop karena syarat sudah terpenuhi
+            //                         break;
+            //                     }
+            //                 }
+                        
+            //                 // Cek setelah loop jika tidak ada nilai yang memenuhi syarat
+            //                 if ($nilai_hasil_course < $nilai_usept_prodi->nilai_usept) {
+            //                     return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
+            //                 }
+
+            //             } else {
+            //                 return redirect()->back()->with('error', 'Mahasiswa belum memiliki data course untuk nilai USEPT.');
+            //             }                        
+            //         }
+            //     }
+            // }
             
 
             if (!empty($data['dosen_penguji']) && !empty($request->penguji_ke)) {
@@ -432,11 +480,15 @@ class PembimbingMahasiswaController extends Controller
         $data = $db->bimbing_non_ta(auth()->user()->fk_id, $id_semester);
 
         $semester = Semester::orderBy('id_semester', 'desc')->get();
-        // dd($data);
+
+        $penilaian_langsung = Konversi::where('id_kurikulum', $data[0]->anggota_aktivitas_personal->mahasiswa->id_kurikulum)->where('id_matkul', $data[0]->konversi->id_matkul)->first();
+
+        // dd($penilaian_langsung);
         return view('dosen.pembimbing.non-tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
             'id_semester' => $id_semester,
+            'penilaian_langsung' => $penilaian_langsung
         ]);
     } 
 
@@ -520,10 +572,32 @@ class PembimbingMahasiswaController extends Controller
         ]);
     }
 
+    public function penilaian_langsung_aktivitas($aktivitas)
+    {
+        $id_dosen = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa'])
+                                    ->where('id', $aktivitas)->first();
+
+        $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
+        // dd($penguji);
+        return view('dosen.pembimbing.non-tugas-akhir.penilaian-langsung', [
+            'data' => $data,
+            'data_nilai' => $data_nilai
+        ]);
+    }
+
     public function penilaian_langsung_store(Request $request, $aktivitas)
     {
         $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id', $aktivitas)->first();
         $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
+        $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+        $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
+
+        $pembimbing = $bimbingMahasiswa->where('id_dosen', auth()->user()->fk_id)->first();
+
+        if (!$pembimbing || $pembimbing->pembimbing_ke != 1) {
+            return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat memberikan nilai.');
+        }
 
         $validate = $request->validate([
             'nilai_langsung' => 'required'
@@ -561,9 +635,20 @@ class PembimbingMahasiswaController extends Controller
         try {
             DB::beginTransaction();
 
+            $data->update(['tanggal_selesai' => $data->jadwal_ujian]);
+
             $id_konversi_aktivitas = Uuid::uuid4()->toString();
             
-            KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_langsung, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
+            if(!$data_nilai){
+                KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_langsung, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
+            }else{
+                if($data_nilai->feeder == 0){
+                    $data_nilai->update(['nilai_angka' => $nilai_langsung, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf]);
+                }else{
+                    return redirect()->back()->with('error', 'Nilai sudah di sinkronisasi.');
+                }  
+            }
+            
 
             DB::commit();
 

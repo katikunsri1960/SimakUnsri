@@ -323,11 +323,41 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/prestasi-non-pendanaan/store', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'store_prestasi_mahasiswa_non_pendanaan'])->name('mahasiswa.prestasi.prestasi-non-pendanaan.store');
             });
 
-            Route::prefix('bimbingan-tugas-akhir')->group(function () {
-                Route::get('/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'index'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir');
-                    Route::prefix('asistensi')->group(function(){
-                        Route::post('/{aktivitas}/store', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'store'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.store');
-                    });
+            // Route::prefix('bimbingan-tugas-akhir')->group(function () {
+            //     Route::get('/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'index'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir');
+            //         Route::prefix('asistensi')->group(function(){
+            //             Route::post('/{aktivitas}/store', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'store'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.store');
+            //             Route::get('/asistensi/detail/{aktivitas}/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi');
+            //             Route::get('/asistensi/{aktivitas}/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'sidebar'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.sidebar');
+
+            //         });
+            // // });
+
+            Route::prefix('bimbingan-tugas-akhir')->group(function(){
+                Route::get('/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'bimbingan_tugas_akhir'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir');
+            
+                Route::prefix('asistensi')->group(function(){
+                    Route::get('/{aktivitas}', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi');
+                    Route::post('/{aktivitas}/store', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi_store'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi.store');
+                    // Route::post('/approve-asistensi/{asistensi}', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi_approve'])->name('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.approve');
+                });
+
+                // Route::prefix('ajuan-sidang')->group(function(){
+                //     Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'ajuan_sidang'])->name('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang');
+                //     Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'ajuan_sidang_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang.store');
+                // });
+
+                // Route::prefix('penilaian-sidang')->group(function(){
+                //     Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_sidang'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang');
+                //     Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_sidang_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang.store');
+                // });
+
+                // Route::prefix('penilaian-langsung')->group(function(){
+                //     Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung');
+                //     Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung_store'])->name('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung.store');
+                // });
+
+                // Route::get('/get-dosen', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'get_dosen'])->name('dosen.pembimbing.bimbingan-tugas-akhir.get-dosen');
             });
 
             //Route for prestasi mahasiswa
@@ -481,6 +511,11 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_aktivitas'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir');
                     Route::post('/approve-pembimbing/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'approve_pembimbing'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.approve-pembimbing');
                     Route::post('/decline-pembimbing/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'pembatalan_pembimbing'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.decline-pembimbing');
+
+                    Route::prefix('penilaian-langsung')->group(function(){
+                        Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung_aktivitas'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung');
+                        Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung_store'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung.store');
+                    });
                 });
 
             });

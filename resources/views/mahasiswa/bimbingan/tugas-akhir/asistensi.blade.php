@@ -1,16 +1,16 @@
-@extends('layouts.dosen')
+@extends('layouts.mahasiswa')
 @section('title')
-Bimbingan Tugas Akhir Dosen
+Bimbingan Tugas Akhir Mahasiswa
 @endsection
 @section('content')
 @push('header')
 <div class="mx-4">
-    <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir')}}"
+    <a href="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir')}}"
         class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush
 @include('swal')
-@include('dosen.pembimbing.tugas-akhir.asistensi-tambah')
+@include('mahasiswa.bimbingan.tugas-akhir.asistensi-tambah')
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-md-12">
@@ -34,8 +34,10 @@ Bimbingan Tugas Akhir Dosen
     </div>
     <div class="row">
         <div class="col-xxl-12">
-            <div class="box box-body mb-0">
-                <div class="row mb-2">
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="row box-body">
+                    <h3 class="text-info mb-0"><i class="fa fa-book"></i> Detail Aktivitas {{$aktivitas->nama_jenis_aktivitas}}</h3>
+                    <hr class="my-15">
                     <div class="col-xl-12 col-lg-12 d-flex justify-content-between">
                         <div class="d-flex justify-content-start">
                             <table class="table">
@@ -60,48 +62,69 @@ Bimbingan Tugas Akhir Dosen
                                     <td class="text-center align-middle">:</td>
                                     <td class="text-left align-middle">
                                         <ul style="padding: 0; padding-left:0.8rem">
-                                            @foreach ($aktivitas->bimbing_mahasiswa as $p)
-                                            <li>Pembimbing {{$p->pembimbing_ke}} : {{$p->nama_dosen}}</li>
+                                            @foreach ($aktivitas->bimbing_mahasiswa as $bimbingan)
+                                            <li>Pembimbing {{$bimbingan->pembimbing_ke}} : {{$bimbingan->nama_dosen}}  
+                                                @if ($bimbingan->approved == 0)
+                                                    <span class="badge bg-warning mx-5">Menunggu Persetujuan</span>
+                                                @elseif ($bimbingan->approved == 1)
+                                                    <span class="badge bg-success mx-5">Disetujui</span>
+                                                @endif
+                                            </li>
                                             @endforeach
                                         </ul>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left text-nowrap">Status Sidang</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left align-middle">
+                                        @if ($aktivitas->approve_sidang == 0)
+                                            <span class="badge bg-warning mx-5">Belum Diajukan Sidang</span>
+                                        @elseif ($aktivitas->approve_sidang == 1)
+                                            <span class="badge bg-primary mx-5">Sudah Diajukan Sidang</span>
+                                            <ul style="padding: 0; padding-left:0.8rem">
+                                                @foreach ($aktivitas->uji_mahasiswa as $uji)
+                                                <li>Penguji Ke-{{$uji->penguji_ke}} : {{$uji->nama_dosen}}  
+                                                    @if ($uji->status_uji_mahasiswa == 0)
+                                                        <span class="badge bg-warning mx-5">Belum Disetujui</span>
+                                                    @elseif ($uji->status_uji_mahasiswa == 1)
+                                                        <span class="badge bg-success mx-5">Sudah Disetujui KoProdi</span>
+                                                    @elseif ($uji->status_uji_mahasiswa == 2)
+                                                        <span class="badge bg-success mx-5">Sudah Disetujui Dosen Penguji</span>
+                                                    @elseif ($uji->status_uji_mahasiswa == 1)
+                                                        <span class="badge bg-danger mx-5">Diabtalkan Oleh Dosen Penguji</span>
+                                                    @endif
+                                                </li>
+                                                @endforeach
+                                            </ul>
+                                        @endif
+                                        
                                     </td>
                                 </tr>
                             </table>
                         </div>
                     </div>
                 </div>
-                <div class="row mb-5">
-                    <div class="col-xl-12 col-lg-12 text-end">
+                <div class="row mt-2 box-body">
+                    <h3 class="text-info mb-0"><i class="fa fa-pencil"></i> Daftar Asistensi {{$aktivitas->nama_jenis_aktivitas}}</h3>
+                    <hr class="my-15">
+                    <div class="col-xl-12 col-lg-12 mb-15 text-end">
                         @if($aktivitas->approve_sidang != 1)
                             <div class="btn-group">
                                 <a class="btn btn-rounded bg-success-light" href="#" data-bs-toggle="modal" data-bs-target="#tambahAsistensiModal"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Asistensi</a>
-                                @if($aktivitas->id_jenis_aktivitas == 2 && $penilaian_langsung->penilaian_langsung == 1)
-                                    <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung', $aktivitas->id)}}"><i class="fa fa-list"></i> Penilaian Langsung</a>
-                                @else
-                                    <a class="btn btn-rounded bg-primary-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang', ['aktivitas' => $aktivitas])}}"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
-                                @endif
                             </div>
-                        @else
-                            <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang', $aktivitas->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
-                            {{--@if($aktivitas->jadwal_ujian == date('Y-m-d'))
-                                <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-sidang', $aktivitas->id)}}" class="btn btn-primary btn-rounded waves-effect waves-light"><i class="fa fa-play"></i> Mulai Sidang</a>
-                            @else
-                                <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light" disabled><i class="fa fa-play"></i> Mulai Sidang</button>
-                            @endif--}}
                         @endif
                     </div>
-                </div>
-                <div class="row mt-2">
                     <div class="table-responsive">
                         <table id="dt" class="table table-bordered table-striped" style="font-size: 12px">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle" style="width: 5%">No</th>
                                     <th class="text-center align-middle">Tanggal</th>
-                                    <th class="text-center align-middle">Keterangan</th>
+                                    <th class="text-center align-middle">Uraian Asistensi</th>
                                     <th class="text-center align-middle">Pembimbing</th>
                                     <th class="text-center align-middle">Status</th>
-                                    <th class="text-center align-middle">Aksi</th>
+                                    {{-- <th class="text-center align-middle">Aksi</th> --}}
                                 </tr>
                             </thead>
                             <tbody>
@@ -118,15 +141,6 @@ Bimbingan Tugas Akhir Dosen
                                         <span class="badge bg-success">Disetujui</span>
                                         @endif
                                     </td>
-                                    <td class="text-center align-middle">
-                                        @if ($d->approved == 0)
-                                        <div class="btn-group">
-                                            <a href="#" class="btn btn-sm btn-rounded bg-info-light" onclick="approveAsistensi({{$d}})">
-                                                <i class="fa fa-check-circle-o">
-                                                </i> Approve</a>
-                                        </div>
-                                        @endif
-                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -136,9 +150,10 @@ Bimbingan Tugas Akhir Dosen
             </div>
         </div>
     </div>
+    @if ($aktivitas->approve_sidang == 1)
     <div class="row mt-5">
         <div class="col-12">
-            <div class="box">
+            <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
                     <form class="form" action="#" id="update-detail-sidang" method="POST">
                         <h3 class="text-info mb-0"><i class="fa fa-user"></i> Detail Sidang Mahasiswa</h3>
@@ -347,6 +362,7 @@ Bimbingan Tugas Akhir Dosen
             </div>
         </div>
     </div>
+    @endif
 </section>
 @endsection
 @push('css')
@@ -355,50 +371,17 @@ Bimbingan Tugas Akhir Dosen
 @push('js')
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
-    function approveAsistensi(data)
-    {
-        swal({
-            title: "Apakah anda yakin?",
-            text: "Data tidak bisa diubah lagi setelah disimpan!",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya, Simpan!',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#spinner').show();
-                $.ajax({
-                    url: "{{route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi.approve', '')}}/" + data.id,
-                    type: "POST",
-                    data: {
-                        _token: "{{ csrf_token() }}",
-                        id: data.id
-                    },
-                    success: function (response) {
-                        $('#spinner').hide();
-                        alert(response.message);
-                        location.reload();
-                    },
-                    error: function (xhr, status, error) {
-                        $('#spinner').hide();
-                        alert(xhr.responseJSON.message);
-                    }
-                });
-            }
+    $(document).ready(function() {        
+        $('.select2').select2();
+
+        $('#dt').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
         });
-        // ajax request form post approve asistensi
-
-    }
-
-    $('#dt').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": true,
     });
 
 </script>
