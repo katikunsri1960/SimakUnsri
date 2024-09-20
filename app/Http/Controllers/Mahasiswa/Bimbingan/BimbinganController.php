@@ -42,8 +42,8 @@ class BimbinganController extends Controller
 
         // Query untuk mendapatkan data
         $data = AktivitasMahasiswa::with('anggota_aktivitas', 'jenis_aktivitas_mahasiswa', 'bimbing_mahasiswa', 'uji_mahasiswa')
-                    ->whereHas('anggota_aktivitas', function($q) use($user) {
-                        $q->where('id_registrasi_mahasiswa', $user->fk_id);
+                    ->whereHas('anggota_aktivitas', function($q) use($riwayat_pendidikan) {
+                        $q->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa);
                     })
                     ->whereHas('bimbing_mahasiswa', function($q) {
                         $q->where('approved', '1');
@@ -61,21 +61,19 @@ class BimbinganController extends Controller
             ->where('kode_periode', $semester_select)
             ->first();
         
-        if ($tagihan){
-            if ($tagihan->pembayaran){
-                if($tagihan->pembayaran->status_pembayaran == 1) {
-                    $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+            if($tagihan){
+                if($tagihan->pembayaran){
+                    $pembayaran = $tagihan->pembayaran;
                 }
+                else{
+                    $pembayaran = NULL;
+                }
+            }else{
+                $pembayaran = NULL;
             }
-            else{
-                $statusPembayaran = 0;
-            }
-        }else{
-            $statusPembayaran = 0;
-        }
-        // $statusPembayaran = NULL;
+        // $pembayaran = NULL;
 
-        // dd($statusPembayaran, $data, $beasiswa);
+        // dd($pembayaran, $data, $beasiswa);
 
         // Pengecekan apakah $data kosong atau tidak
         if ($data->isEmpty()) {
@@ -83,26 +81,16 @@ class BimbinganController extends Controller
         }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if ($statusPembayaran == 0 && $beasiswa == 0) {
+        if ($pembayaran == NULL && $beasiswa == 0) {
             session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
 
-        // foreach ($data as $d){
-        //     foreach($d->bimbing_mahasiswa){
-        //         if ( $bimbingan->approved == 0) {
-        //             return redirect()->back()->with('error', 'Dosen pembimbing Anda belum disetujui oleh Koordinator Program Studi!');
-        //         };
-        //     };
-        // };
-        
         // dd($tagihan);
-
-
         return view('mahasiswa.bimbingan.tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
             'id_semester' => $semester_select,
-            'statusPembayaran'=> $statusPembayaran,
+            'pembayaran'=> $pembayaran,
             'beasiswa'=>$beasiswa
         ]);
     }
