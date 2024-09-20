@@ -323,16 +323,6 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/prestasi-non-pendanaan/store', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'store_prestasi_mahasiswa_non_pendanaan'])->name('mahasiswa.prestasi.prestasi-non-pendanaan.store');
             });
 
-            // Route::prefix('bimbingan-tugas-akhir')->group(function () {
-            //     Route::get('/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'index'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir');
-            //         Route::prefix('asistensi')->group(function(){
-            //             Route::post('/{aktivitas}/store', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'store'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.store');
-            //             Route::get('/asistensi/detail/{aktivitas}/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi');
-            //             Route::get('/asistensi/{aktivitas}/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'sidebar'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.sidebar');
-
-            //         });
-            // // });
-
             Route::prefix('bimbingan-tugas-akhir')->group(function(){
                 Route::get('/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'bimbingan_tugas_akhir'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir');
             
