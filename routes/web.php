@@ -35,6 +35,7 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::prefix('bebas-pustaka')->group(function(){
                 Route::get('/', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'index'])->name('perpus.bebas-pustaka');
+                Route::get('/get-data', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'getData'])->name('perpus.bebas-pustaka.get-data');
             });
         });
     });
@@ -335,7 +336,7 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::prefix('bimbingan-tugas-akhir')->group(function(){
                 Route::get('/', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'bimbingan_tugas_akhir'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir');
-            
+
                 Route::prefix('asistensi')->group(function(){
                     Route::get('/{aktivitas}', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi');
                     Route::post('/{aktivitas}/store', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi_store'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi.store');

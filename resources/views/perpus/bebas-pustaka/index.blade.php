@@ -183,7 +183,7 @@ BEBAS PUSTAKA
                     swal('Peringatan', 'NIM tidak boleh kosong', 'warning');
                 } else {
                     $.ajax({
-                        url: '{{route('bak.transkrip-nilai.get')}}',
+                        url: '{{route('perpus.bebas-pustaka.get-data')}}',
                         type: 'GET',
                         data: {
                             nim: nim
