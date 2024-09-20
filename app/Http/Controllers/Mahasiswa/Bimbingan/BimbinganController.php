@@ -68,14 +68,14 @@ class BimbinganController extends Controller
                 }
             }
             else{
-                $statusPembayaran = NULL;
+                $statusPembayaran = 0;
             }
         }else{
-            $statusPembayaran = NULL;
+            $statusPembayaran = 0;
         }
         // $statusPembayaran = NULL;
 
-        // dd($statusPembayaran, $tagihan, $data, $beasiswa);
+        // dd($statusPembayaran, $data, $beasiswa);
 
         // Pengecekan apakah $data kosong atau tidak
         if ($data->isEmpty()) {
@@ -83,7 +83,7 @@ class BimbinganController extends Controller
         }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if ($statusPembayaran == NULL && $beasiswa == 0) {
+        if ($statusPembayaran == 0 && $beasiswa == 0) {
             session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
 
