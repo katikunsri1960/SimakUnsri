@@ -35,7 +35,13 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::prefix('bebas-pustaka')->group(function(){
                 Route::get('/', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'index'])->name('perpus.bebas-pustaka');
+                Route::get('/list', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'list'])->name('perpus.bebas-pustaka.list');
+                Route::get('/list-data', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'listData'])->name('perpus.bebas-pustaka.list-data');
+                Route::post('/store', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'store'])->name('perpus.bebas-pustaka.store');
                 Route::get('/get-data', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'getData'])->name('perpus.bebas-pustaka.get-data');
+
+                Route::delete('/delete/{bebasPustaka}', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'delete'])->name('perpus.bebas-pustaka.delete');
+                
             });
         });
     });

@@ -10,7 +10,8 @@ Mahasiswa
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a>
+                        </li>
                         <li class="breadcrumb-item" aria-current="page">Mahasiswa</li>
                         <li class="breadcrumb-item active" aria-current="page">Daftar</li>
                     </ol>
@@ -27,11 +28,13 @@ Mahasiswa
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-end">
                         <form action="{{route('univ.mahasiswa.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
+                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i
+                                    class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
                         <form action="{{route('univ.mahasiswa.sync-prestasi')}}" method="get" id="sync-form-2">
-                            <button class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Prestasi</button>
+                            <button class="btn btn-success waves-effect waves-light" type="submit"><i
+                                    class="fa fa-refresh"></i> Sinkronisasi Prestasi</button>
                         </form>
                     </div>
                 </div>
@@ -53,11 +56,11 @@ Mahasiswa
                                     <th class="text-center align-middle">Angkatan</th>
                                 </tr>
                             </thead>
-                          <tbody>
+                            <tbody>
 
-                          </tbody>
-                      </table>
-                      </div>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>

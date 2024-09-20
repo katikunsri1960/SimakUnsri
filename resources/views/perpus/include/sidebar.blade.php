@@ -13,7 +13,7 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('perpus.bebas-pustaka') || request()->routeIs('perpus.bebas-pustaka.*') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('perpus.bebas-pustaka') || request()->routeIs('perpus.bebas-pustaka.*') ? 'active' : ''}}">
                         <a href="{{route('perpus.bebas-pustaka')}}">
                             <i class="fa fa-pen-square"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -22,8 +22,24 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
+                    </li> --}}
+                    <li class="treeview {{request()->routeIs('perpus.bebas-pustaka') || request()->routeIs('perpus.bebas-pustaka.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-pen-square"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Bebas Pustaka</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('perpus.bebas-pustaka') ? 'active' : ''}}">
+                                <a href="{{route('perpus.bebas-pustaka')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Tambah Data</a>
+                            </li>
+                            <li class="{{request()->routeIs('perpus.bebas-pustaka.list') ? 'active' : ''}}">
+                                <a href="{{route('perpus.bebas-pustaka.list')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>List Bebas Pustaka</a>
+                            </li>
+                        </ul>
                     </li>
-
                     {{-- <li class="{{request()->routeIs('bak.transkrip-nilai') ? 'active' : ''}}">
                         <a href="{{route('bak.transkrip-nilai')}}">
                             <i class="fa fa-list-alt"><span class="path1"></span><span
