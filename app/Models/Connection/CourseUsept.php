@@ -25,7 +25,7 @@ class CourseUsept extends Model
             $nilai_hasil_course = ((475-375)/(85.99-71)) * ($nilai_angka - 71) + 375;
         }
         else{
-            $nilai_hasil_course = 0;
+            $nilai_hasil_course = 310;
         }        
 
         return round($nilai_hasil_course,0);

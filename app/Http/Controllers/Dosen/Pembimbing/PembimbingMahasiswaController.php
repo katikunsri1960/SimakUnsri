@@ -281,7 +281,6 @@ class PembimbingMahasiswaController extends Controller
         return response()->json($data);
     }
 
-
     public function ajuan_sidang_store(Request $request, $aktivitas)
     {
         // dd($request->judul);
@@ -481,11 +480,15 @@ class PembimbingMahasiswaController extends Controller
         $data = $db->bimbing_non_ta(auth()->user()->fk_id, $id_semester);
 
         $semester = Semester::orderBy('id_semester', 'desc')->get();
-        // dd($data);
+
+        $penilaian_langsung = Konversi::where('id_kurikulum', $data[0]->anggota_aktivitas_personal->mahasiswa->id_kurikulum)->where('id_matkul', $data[0]->konversi->id_matkul)->first();
+
+        // dd($penilaian_langsung);
         return view('dosen.pembimbing.non-tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
             'id_semester' => $id_semester,
+            'penilaian_langsung' => $penilaian_langsung
         ]);
     } 
 
@@ -569,11 +572,26 @@ class PembimbingMahasiswaController extends Controller
         ]);
     }
 
+    public function penilaian_langsung_aktivitas($aktivitas)
+    {
+        $id_dosen = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa'])
+                                    ->where('id', $aktivitas)->first();
+
+        $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
+        // dd($penguji);
+        return view('dosen.pembimbing.non-tugas-akhir.penilaian-langsung', [
+            'data' => $data,
+            'data_nilai' => $data_nilai
+        ]);
+    }
+
     public function penilaian_langsung_store(Request $request, $aktivitas)
     {
         $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id', $aktivitas)->first();
         $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
-        $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
+        $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+        $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
 
         $pembimbing = $bimbingMahasiswa->where('id_dosen', auth()->user()->fk_id)->first();
 
@@ -621,7 +639,16 @@ class PembimbingMahasiswaController extends Controller
 
             $id_konversi_aktivitas = Uuid::uuid4()->toString();
             
-            KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_langsung, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
+            if(!$data_nilai){
+                KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_langsung, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
+            }else{
+                if($data_nilai->feeder == 0){
+                    $data_nilai->update(['nilai_angka' => $nilai_langsung, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf]);
+                }else{
+                    return redirect()->back()->with('error', 'Nilai sudah di sinkronisasi.');
+                }  
+            }
+            
 
             DB::commit();
 
