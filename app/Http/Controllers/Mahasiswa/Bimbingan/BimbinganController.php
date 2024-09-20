@@ -62,6 +62,9 @@ class BimbinganController extends Controller
                     $statusPembayaran = NULL;
                 }
             }
+            else{
+                $statusPembayaran = NULL;
+            }
         }else{
             $statusPembayaran = NULL;
         }
