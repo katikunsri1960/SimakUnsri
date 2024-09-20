@@ -48,6 +48,7 @@ Pembimbingan Aktivitas Mahasiswa
                                 <tr>
                                     <th class="text-center align-middle">PRODI</th>
                                     <th class="text-center align-middle">MAHASISWA</th>
+                                    <th class="text-center align-middle">JENIS AKTIVITAS</th>
                                     <th class="text-center align-middle">NO SK<br>(Tanggal SK)</th>
                                     <th class="text-center align-middle">Pembimbing</th>
                                     <th class="text-center align-middle">Status</th>
@@ -61,6 +62,13 @@ Pembimbingan Aktivitas Mahasiswa
 
                                     <td class="text-center align-middle" style="width: 10%">{{$d->nama_prodi}}</td>
                                     <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal->nim}}<br>{{$d->anggota_aktivitas_personal->nama_mahasiswa}}</td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6')
+                                            <span class="badge badge-lg badge-warning">{{$d->nama_jenis_aktivitas}}<br> ({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})</span>
+                                        @else
+                                            <span class="badge badge-lg badge-success">MBKM</span>
+                                        @endif
+                                    </td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
                                     </td>
@@ -93,6 +101,9 @@ Pembimbingan Aktivitas Mahasiswa
                                                     <button type="submit" class="btn btn-sm btn-primary" title="Setujui Bimbingan"><i class="fa fa-thumbs-up"></i> Approve</button>
                                                 </div>
                                             </form>
+                                            @endif
+                                            @if (($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6') && $penilaian_langsung->penilaian_langsung == 1)
+                                                <a class="btn btn-sm btn-warning my-2" href="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung', $d->id)}}"><i class="fa fa-list"></i> Penilaian Langsung</a>
                                             @endif
                                             <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
                                             <a href="#" class="btn btn-secondary btn-sm my-2" data-bs-toggle="modal" data-bs-target="#detailModal" onclick="detailFunc({{$d}})"><i class="fa fa-eye"></i> Detail</a>

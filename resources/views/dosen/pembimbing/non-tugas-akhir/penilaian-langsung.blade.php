@@ -5,7 +5,7 @@ Penilaian Langsung Mahasiswa
 @section('content')
 @push('header')
 <div class="mx-4">
-    <a href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi', ['aktivitas' => $data])}}"
+    <a href="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir')}}"
         class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush
@@ -14,7 +14,7 @@ Penilaian Langsung Mahasiswa
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung.store', ['aktivitas' => $data->id])}}" id="penilaian-langsung" method="POST">
+                <form class="form" action="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung.store', ['aktivitas' => $data->id])}}" id="penilaian-langsung" method="POST">
                     @csrf
                     <div class="box-body">
                         <h4 class="text-info mb-0"><i class="fa fa-university"></i> Detail Aktivitas Mahasiswa</h4>
@@ -120,7 +120,7 @@ Penilaian Langsung Mahasiswa
                             </strong>
                         </div>
                     <div class="box-footer text-end">
-                        <a type="button" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi', ['aktivitas' => $data])}}" class="btn btn-danger btn-rounded waves-effect waves-light">
+                        <a type="button" href="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir')}}" class="btn btn-danger btn-rounded waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light" 

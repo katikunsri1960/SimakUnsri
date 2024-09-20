@@ -146,6 +146,7 @@ class AktivitasMahasiswa extends Model
                     ])
                     ->where('id_prodi', $id_prodi)
                     ->where('id_semester', $semester)
+                    ->where('approve_krs', 1)
                     ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
                     ->get();
 
@@ -223,6 +224,7 @@ class AktivitasMahasiswa extends Model
                     ])
                     ->where('id_prodi', $id_prodi)
                     ->where('id_semester', $semester)
+                    ->where('approve_krs', 1)
                     ->whereIn('id_jenis_aktivitas', [5,6,13,14,15,16,17,18,19,20,21])
                     ->get();
 
@@ -233,7 +235,7 @@ class AktivitasMahasiswa extends Model
     {
         // $kategori = [110403,110407,110402,110406,110401,110405];
 
-        return $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+        return $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa', 'prodi', 'konversi'])
                     ->whereHas('bimbing_mahasiswa', function($query) use ($id_dosen) {
                         $query->where('id_dosen', $id_dosen)
                                 ->where('approved', 1);
@@ -243,6 +245,7 @@ class AktivitasMahasiswa extends Model
                         },
                     ])
                     ->where('id_semester', $semester)
+                    ->where('approve_krs', 1)
                     ->whereIn('id_jenis_aktivitas', [5,6,13,14,15,16,17,18,19,20,21])
                     ->get();
     }
