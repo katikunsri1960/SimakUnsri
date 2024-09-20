@@ -16,7 +16,7 @@
                             <label for="" class="form-label">Role</label>
                             <select class="form-select" name="role" id="role" required>
                                 <option value="" disabled selected>Select one</option>
-                                <option value="univ">Admin Univ</option>
+                                <option value="perpus">Perpustakaan</option>
                                 <option value="bak">Bak</option>
                             </select>
                         </div>

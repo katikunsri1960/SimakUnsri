@@ -34,6 +34,8 @@ class RedirectIfAuthenticated
                     return redirect(RouteServiceProvider::MAHASISWA);
                 }elseif (auth()->user()->role === 'bak') {
                     return redirect(RouteServiceProvider::BAAK);
+                }elseif (auth()->user()->role === 'perpus') {
+                    return redirect(RouteServiceProvider::PERPUS);
                 }
 
             }

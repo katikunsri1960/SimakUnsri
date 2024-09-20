@@ -27,7 +27,17 @@ Auth::routes([
 ]);
 
 Route::group(['middleware' => ['auth']], function() {
-    // route for mahasiswa
+    // Route Perpustakaan
+
+    Route::group(['middleware' => ['role:perpus']], function(){
+        Route::prefix('perpus')->group(function(){
+            Route::get('/', [App\Http\Controllers\Perpus\DashboardController::class, 'index'])->name('perpus');
+
+            Route::prefix('bebas-pustaka')->group(function(){
+                Route::get('/', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'index'])->name('perpus.bebas-pustaka');
+            });
+        });
+    });
 
     Route::group(['middleware' => ['role:bak']], function(){
         Route::prefix('bak')->group(function(){
