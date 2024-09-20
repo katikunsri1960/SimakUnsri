@@ -57,7 +57,7 @@ Bimbingan Tugas Akhir Mahasiswa
                 </div>
             </div>
         </section>
-    @elseif ($statusPembayaran == 0 && $beasiswa == 0)
+    @elseif ($pembayaran == NULL && $beasiswa == 0)
         <!-- Bagian ini ditampilkan jika $aktivitas == NULL -->
         <section class="content bg-primary-light rounded20">
             <div class="row mb-20">
@@ -91,7 +91,7 @@ Bimbingan Tugas Akhir Mahasiswa
                 </div>
             </div>
         </section>
-    @elseif ($statusPembayaran > 0 || $beasiswa > 0)
+    @else
         <div class="row">
             <div class="col-12">
                 <div class="box box-outline-success bs-3 border-success">
