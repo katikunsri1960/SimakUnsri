@@ -23,12 +23,12 @@ Bimbingan Tugas Akhir Mahasiswa
 			</div>
 		</div>
     </div>
-    @if (empty($data))
+    @if (empty($data[0]->id_jenis_aktivitas))
         <!-- Bagian ini ditampilkan jika $aktivitas == NULL -->
-        <section class="content">
+        <section class="content bg-primary-light rounded20">
             <div class="row mb-20">
                 <div class="col-xxl-12">
-                    <div class="box box-body mb-0 bg-white">
+                    <div class="box box-body bg-white">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12">
                                 <h3 class="fw-500 text-dark mb-20">Bimbingan Tugas Akhir</h3>
@@ -59,10 +59,10 @@ Bimbingan Tugas Akhir Mahasiswa
         </section>
     @elseif ($statusPembayaran == NULL && $beasiswa == 0)
         <!-- Bagian ini ditampilkan jika $aktivitas == NULL -->
-        <section class="content">
+        <section class="content bg-primary-light rounded20">
             <div class="row mb-20">
                 <div class="col-xxl-12">
-                    <div class="box box-body mb-0 bg-white">
+                    <div class="box box-body bg-white">
                         <div class="row">
                             <div class="col-xl-12 col-lg-12">
                                 <h3 class="fw-500 text-dark mb-20">Bimbingan Tugas Akhir</h3>
@@ -91,7 +91,7 @@ Bimbingan Tugas Akhir Mahasiswa
                 </div>
             </div>
         </section>
-    @else
+    @elseif ($statusPembayaran == 1 || $beasiswa == 1)
         <div class="row">
             <div class="col-12">
                 <div class="box box-outline-success bs-3 border-success">
