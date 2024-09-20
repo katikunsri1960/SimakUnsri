@@ -23,11 +23,21 @@ class BimbinganController extends Controller
         $user = auth()->user();
         $nim = $user->username;
         $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
+        $semester_aktif = SemesterAktif::first();
+        $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
+                    ->select('riwayat_pendidikans.*')
+                    ->where('id_registrasi_mahasiswa', $user->fk_id)
+                    ->first();
         
+        $semester = Semester::orderBy('id_semester', 'DESC')
+                    ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                    // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                    ->get();
+
         if ($request->has('semester') && $request->semester != '') {
-            $id_semester = $request->semester;
+            $semester_select = $request->semester;
         } else {
-            $id_semester = SemesterAktif::first()->id_semester;
+            $semester_select = SemesterAktif::first()->id_semester;
         }
 
         // Query untuk mendapatkan data
@@ -40,26 +50,21 @@ class BimbinganController extends Controller
                     })
                     ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4', '22'])
                     ->orderBy('id_jenis_aktivitas', 'ASC')
-                    ->where('id_semester', $id_semester)
+                    ->where('id_semester', $semester_select)
                     ->get();
-
-        $semester = Semester::orderBy('id_semester', 'desc')->get();
 
         // PENGECEKAN STATUS PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
 
         $tagihan = Tagihan::with('pembayaran')
             ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
-            ->where('kode_periode', $id_semester)
+            ->where('kode_periode', $semester_select)
             ->first();
         
         if ($tagihan){
             if ($tagihan->pembayaran){
                 if($tagihan->pembayaran->status_pembayaran == 1) {
                     $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
-                }
-                elseif($tagihan->pembayaran->status_pembayaran == 0) {
-                    $statusPembayaran = NULL;
                 }
             }
             else{
@@ -68,15 +73,18 @@ class BimbinganController extends Controller
         }else{
             $statusPembayaran = NULL;
         }
+        // $statusPembayaran = NULL;
+
+        // dd($statusPembayaran, $tagihan, $data, $beasiswa);
 
         // Pengecekan apakah $data kosong atau tidak
         if ($data->isEmpty()) {
-            return redirect()->back()->with('error', 'Data Aktivitas Mahasiswa tidak ditemukan.');
-        }      
+            session()->flash('error', 'Data Aktivitas Mahasiswa tidak ditemukan.');
+        }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if ($statusPembayaran == NULL && $beasiswa > 0) {
-            return redirect()->back()->with('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
+        if ($statusPembayaran == NULL && $beasiswa == 0) {
+            session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
 
         // foreach ($data as $d){
@@ -93,7 +101,7 @@ class BimbinganController extends Controller
         return view('mahasiswa.bimbingan.tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
-            'id_semester' => $id_semester,
+            'id_semester' => $semester_select,
             'statusPembayaran'=> $statusPembayaran,
             'beasiswa'=>$beasiswa
         ]);
