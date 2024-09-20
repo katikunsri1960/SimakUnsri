@@ -23,8 +23,8 @@ Nilai USEPT Mahasiswa
     </div>
     <div class="row">
         <div class="col-xxl-12">
-            <div class="box box-body mb-0">
-                <div class="row mb-10">
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-header">
                     <div class="col-xl-12 col-lg-12">
                         <h3 class="fw-500 text-dark mt-0">Daftar Nilai USEPT Mahasiswa</h3>
                         <h4 class="mb-5">
@@ -37,15 +37,11 @@ Nilai USEPT Mahasiswa
                         </h4>
                     </div>                             
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12">
-                        <h3 class="fw-500 text-dark my-10">Nilai Hasil Tes USEPT</h3>
-                    </div>                             
-                </div>
-                <div class="row">
+                <div class="box-body">
+                    <h3 class="text-info mb-25"><i class="fa fa-book"></i> Daftar Nilai Tes USEPT</h3>
+                    <hr class="my-15">
                     <div class="table-responsive">
-                        <table id="data" class="table table-bordered table-striped text-center">
+                        <table id="test" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -76,18 +72,14 @@ Nilai USEPT Mahasiswa
                                     </tr>
                                 @endforeach
                             </tbody>
-					  </table>
+					    </table>
                     </div>
                 </div>
-                <hr>
-                <div class="row">
-                    <div class="col-xl-12 col-lg-12">
-                        <h3 class="fw-500 text-dark my-10">Nilai Hasil Les USEPT</h3>
-                    </div>                             
-                </div>
-                <div class="row">
+                <div class="box-footer">
+                    <h3 class="text-info mb-25"><i class="fa fa-book"></i> Daftar Nilai Course USEPT</h3>
+                    {{-- <hr class="my-15"> --}}
                     <div class="table-responsive">
-                        <table id="data" class="table table-bordered table-striped text-center">
+                        <table id="course" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
                                     <th>No</th>
@@ -122,7 +114,7 @@ Nilai USEPT Mahasiswa
                                     </tr>
                                 @endforeach
                             </tbody>
-					  </table>
+					    </table>
                     </div>
                 </div>
             </div>
@@ -134,7 +126,15 @@ Nilai USEPT Mahasiswa
 
 <script>
       $(document).ready(function() {
-        $('#data').DataTable({
+        $('#test').DataTable({
+            "paging": true,
+            "ordering": true,
+            "searching": true,
+            // "scrollCollapse": true,
+            // "scrollY": "550px",
+        });
+
+        $('#course').DataTable({
             "paging": true,
             "ordering": true,
             "searching": true,

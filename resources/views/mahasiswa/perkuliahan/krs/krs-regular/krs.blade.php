@@ -1,6 +1,6 @@
 <div class="tab-pane active" id="krs" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
-        <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
+        <div class="bg-primary-light rounded20 big-side-section">
             <div class="row">
                 <div class="row">
                     @php
@@ -8,10 +8,10 @@
                         // $batas_isi_krs = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                         // $batas_pembayaran = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                     @endphp
-                    <div class="col-xxl-12 col-xl-12 col-lg-12 py-10 mx-10">
+                    <div class="col-xxl-12 py-10 mx-10 rounded20">
                         @if(!empty($beasiswa) ||$pembayaran_manual > 0|| $non_gelar > 0|| $penundaan_pembayaran > 0 || !empty($tagihan->pembayaran->status_pembayaran) || $semester_select != $semester_aktif->id_semester)
                             <div class="row mb-20">
-                                <div class="col-xxl-12">
+                                <div class="col-xl-12">
                                     <div class="box box-body mb-0 bg-white">
                                         <div class="row">
                                             <div class="col-xl-12 col-lg-12">
@@ -144,7 +144,7 @@
                                 </div>
                             </div>
                             {{-- @endif --}}
-                            <div class="row mb-20">
+                            <div class="row mb-5">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
                                         <div class="row">
@@ -242,7 +242,7 @@
                                 </div>
                             </div>
                         @else
-                            <div class="row mb-20">
+                            <div class="row mb-5">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
                                         <div class="row">

@@ -64,7 +64,8 @@ Bimbingan Tugas Akhir Mahasiswa
                     <div class="box-header">
                         <div class="col-xl-12 col-lg-12 d-flex justify-content-between">
                             <div class="d-flex justify-content-start">
-                                <h4 class="fw-500 text-dark mt-0">Daftar Bimbingan Tugas Akhir Mahasiswa</h4>
+                                <h3 class="text-info my-0"><i class="fa fa-users"></i> Daftar Bimbingan Tugas Akhir Mahasiswa</h3>
+                                <hr class="my-15">
                             </div>
                             <div class="d-flex justify-content-end px-3">
                                 <select name="semester" id="semester_select" class="form-select">
