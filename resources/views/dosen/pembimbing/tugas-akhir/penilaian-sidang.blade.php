@@ -129,7 +129,7 @@ Penilaian Sidang Mahasiswa
                                 <h4>1.</h4>
                             </div>
                             <div class="col-md-5">
-                                <h4>Kualitas Skripsi</h4>
+                                <h4>Kualitas Karya Ilmiah</h4>
                                 <ul>
                                     <li>Orisinalitas judul</li>
                                     <li>Keterkaitan antara judul, masalah, tujuan, manfaat, hasil, dan serta kesimpulan dan saran</li>
