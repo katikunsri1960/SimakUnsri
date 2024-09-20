@@ -216,52 +216,6 @@ Bimbingan Tugas Akhir Mahasiswa
             var id = $(this).val();
             window.location.href = "{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir')}}?semester=" + id;
         });
-
-        // Check payment status and show SweetAlert if not paid
-        @if ($statusPembayaran == NULL && $beasiswa == 0)
-        //console.log('masook')
-            swal({
-                title: 'Pembayaran Belum Lunas',
-                text: 'Anda belum menyelesaikan pembayaran untuk semester ini.',
-                type: 'warning',
-                confirmButtonText: 'OK'
-            }, function() {
-                window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
-            });
-        // Check if $aktivitas is NULL
-        @elseif ($aktivitas == NULL)
-        // console.log('masook juga')
-            swal({
-                title: 'Aktivitas Tidak Ditemukan',
-                text: 'Anda belum mengambil aktivitas. Silakan ambil aktivitas terlebih dahulu.',
-                type: 'warning',
-                confirmButtonText: 'OK'
-            // }, function() {
-            //     window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
-            });
-        @else
-            $('#btnTambahAsistensi').click(function(e) {
-                e.preventDefault();  // Prevent the default action
-                let bimbinganApproved = true;
-                
-                @foreach ($aktivitas->bimbing_mahasiswa as $bimbingan)
-                    if ({{ $bimbingan->approved }} === 0) {
-                        bimbinganApproved = false;
-                        break;  // Exit the loop early if any approval is pending
-                    }
-                @endforeach
-                if (!bimbinganApproved) {
-                    swal({
-                        title: 'Dosen Pembimbing Belum Disetujui!',
-                        text: 'Dosen pembimbing Anda belum disetujui oleh Koordinator Program Studi.',
-                        type: 'warning',
-                        confirmButtonText: 'OK'
-                    });
-                } else {
-                    $('#tambahAsistensiModal').modal('show');
-                }
-            });
-        @endif   
     });
 </script>
 @endpush
