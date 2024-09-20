@@ -297,7 +297,7 @@ Dashboard
                                         <th>No</th>
                                         <th>Nama Dosen</th>
                                         <th>Tanggal Penilaian</th>
-                                        <th>Nilai Kualitas Skripsi</th>
+                                        <th>Nilai Kualitas Karya Ilmiah</th>
                                         <th>Nilai Presentasi dan Diskusi</th>
                                         <th>Nilai Performansi</th>
                                         <th>Nilai Akhir Dosen (Jumlah dari BxN)</th>
