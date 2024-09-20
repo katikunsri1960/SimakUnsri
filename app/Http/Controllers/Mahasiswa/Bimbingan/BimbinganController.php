@@ -54,11 +54,13 @@ class BimbinganController extends Controller
             ->first();
         
         if ($tagihan){
-            if($tagihan->pembayaran->status_pembayaran == 1) {
-                $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
-            }
-            elseif($tagihan->pembayaran->status_pembayaran == 0) {
-                $statusPembayaran = NULL;
+            if ($tagihan->pembayaran){
+                if($tagihan->pembayaran->status_pembayaran == 1) {
+                    $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+                }
+                elseif($tagihan->pembayaran->status_pembayaran == 0) {
+                    $statusPembayaran = NULL;
+                }
             }
         }else{
             $statusPembayaran = NULL;
