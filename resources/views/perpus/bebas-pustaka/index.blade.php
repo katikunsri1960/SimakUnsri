@@ -141,6 +141,7 @@ BEBAS PUSTAKA
     $(document).ready(function () {
             $('#btnCari').click(function () {
                 var nim = $('#nim').val();
+                $('#krsDiv').attr('hidden', 'hidden');
                 if (nim == '') {
                     swal('Peringatan', 'NIM tidak boleh kosong', 'warning');
                 } else {
@@ -151,7 +152,8 @@ BEBAS PUSTAKA
                             nim: nim
                         },
                         success: function (response) {
-                            console.log(response);
+                            // clear krsDiv
+
                             if (response.status == 'error') {
                                 swal({
                                     title: "Peringatan!",

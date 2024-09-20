@@ -21,6 +21,15 @@ class BebasPustakaController extends Controller
 
         $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('nim', $request->nim)->orderBy('id_periode_masuk', 'desc')->first();
 
+        $check = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
+
+        if($check) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Bebas Pustaka sudah ada!!',
+            ]);
+        }
+        
         if(!$riwayat) {
             return response()->json([
                 'status' => 'error',
