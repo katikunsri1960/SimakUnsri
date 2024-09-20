@@ -43,11 +43,6 @@ class BimbinganController extends Controller
                     ->where('id_semester', $id_semester)
                     ->get();
 
-        // Pengecekan apakah $data kosong atau tidak
-        if ($data->isEmpty()) {
-            return redirect()->back()->with('error', 'Data tidak ditemukan.');
-        }
-
         $semester = Semester::orderBy('id_semester', 'desc')->get();
 
         // PENGECEKAN STATUS PEMBAYARAN
@@ -58,13 +53,29 @@ class BimbinganController extends Controller
             ->where('kode_periode', $id_semester)
             ->first();
         
-        $statusPembayaran = NULL;
-        if ($tagihan && $tagihan->pembayaran) {
-            $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+        if ($tagihan){
+            if ($tagihan->pembayaran){
+                if($tagihan->pembayaran->status_pembayaran == 1) {
+                    $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+                }
+                elseif($tagihan->pembayaran->status_pembayaran == 0) {
+                    $statusPembayaran = NULL;
+                }
+            }
+            else{
+                $statusPembayaran = NULL;
+            }
+        }else{
+            $statusPembayaran = NULL;
         }
 
+        // Pengecekan apakah $data kosong atau tidak
+        if ($data->isEmpty()) {
+            return redirect()->back()->with('error', 'Data Aktivitas Mahasiswa tidak ditemukan.');
+        }      
+
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if ($statusPembayaran == NULL ) {
+        if ($statusPembayaran == NULL && $beasiswa > 0) {
             return redirect()->back()->with('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
 
@@ -83,6 +94,8 @@ class BimbinganController extends Controller
             'data' => $data,
             'semester' => $semester,
             'id_semester' => $id_semester,
+            'statusPembayaran'=> $statusPembayaran,
+            'beasiswa'=>$beasiswa
         ]);
     }
 
