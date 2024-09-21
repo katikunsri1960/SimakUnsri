@@ -49,14 +49,27 @@ class CourseUsept extends Model
     public function KonversiNilaiUsept($nilai_huruf,$nilai_angka)
     {
         // dd($nilai_angka);
+        // if($nilai_huruf == 'A'){
+        //     $nilai_hasil_course = ((525-476)/(100-86)) * ($nilai_angka - 86) + 476;
+        // }
+        // else if($nilai_huruf == 'B'){
+        //     $nilai_hasil_course = ((475-375)/(85.99-71)) * ($nilai_angka - 71) + 375;
+        // }
+        // else{
+        //     $nilai_hasil_course = 0;
+        // }
+
+        // return round($nilai_hasil_course,0);
+
+        // dd($nilai_angka);
         if($nilai_huruf == 'A'){
-            $nilai_hasil_course = ((525-476)/(100-86)) * ($nilai_angka - 86) + 476;
+            $nilai_hasil_course = ((600-525)/(100-86)) * ($nilai_angka - 86) + 525;
         }
         else if($nilai_huruf == 'B'){
-            $nilai_hasil_course = ((475-375)/(85.99-71)) * ($nilai_angka - 71) + 375;
+            $nilai_hasil_course = ((524-475)/(85.99-71)) * ($nilai_angka - 71) + 475;
         }
         else{
-            $nilai_hasil_course = 0;
+            $nilai_hasil_course = 474;
         }
 
         return round($nilai_hasil_course,0);
