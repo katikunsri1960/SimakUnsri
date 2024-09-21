@@ -52,7 +52,7 @@ Pembayaran Manual
                                 <td class="text-center align-middle">{{$loop->iteration}}</td>
                                 <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
                                 <td class="text-center align-middle">{{$d->nim}}</td>
-                                <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
+                                <td class="text-start align-middle">{{$d->riwayat ? $d->riwayat->nama_mahasiswa : ''}}</td>
                                 <td class="text-end align-middle">{{$d->nf_nominal_ukt}}</td>
                                 <td class="text-center align-middle">
                                     @php
