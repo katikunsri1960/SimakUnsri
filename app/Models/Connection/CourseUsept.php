@@ -37,10 +37,10 @@ class CourseUsept extends Model
             $nilai_hasil_course = ((600-525)/(100-86)) * ($nilai_angka - 86) + 525;
         }
         else if($nilai_huruf == 'B'){
-            $nilai_hasil_course = ((524-475)/(85.99-71)) * ($nilai_angka - 71) + 475;
+            $nilai_hasil_course = ((524-450)/(85.99-71)) * ($nilai_angka - 71) + 450;
         }
         else{
-            $nilai_hasil_course = 474;
+            $nilai_hasil_course = 449;
         }
 
         return round($nilai_hasil_course,0);
@@ -66,10 +66,10 @@ class CourseUsept extends Model
             $nilai_hasil_course = ((600-525)/(100-86)) * ($nilai_angka - 86) + 525;
         }
         else if($nilai_huruf == 'B'){
-            $nilai_hasil_course = ((524-475)/(85.99-71)) * ($nilai_angka - 71) + 475;
+            $nilai_hasil_course = ((524-450)/(85.99-71)) * ($nilai_angka - 71) + 450;
         }
         else{
-            $nilai_hasil_course = 474;
+            $nilai_hasil_course = 449;
         }
 
         return round($nilai_hasil_course,0);
