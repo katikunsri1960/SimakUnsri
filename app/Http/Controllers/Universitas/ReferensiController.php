@@ -8,6 +8,7 @@ use App\Models\LevelWilayah;
 use App\Models\Negara;
 use App\Services\Feeder\FeederAPI;
 use App\Http\Controllers\Controller;
+use App\Models\Referensi\AllPt;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -52,6 +53,30 @@ class ReferensiController extends Controller
 
     }
 
+    public function sync_all_pt()
+    {
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '1G');
+
+        $act = 'GetAllPT';
+        $offset = 0;
+        $limit = 500;
+        $order = 'id_perguruan_tinggi';
+        $countAct = "GetCountPerguruanTinggi";
+
+        $count = $this->sync($countAct, $limit, $offset, "");
+        // dd($count);
+        for ($i = 0; $i < $count['data']; $i += $limit) {
+            $req = $this->sync($act, $limit, $i, $order);
+
+            if (isset($req['data']) && is_array($req['data'])) {
+                AllPt::upsert($req['data'], 'id_perguruan_tinggi');
+            }
+        }
+
+        return redirect()->route('univ.referensi.prodi')->with('success', 'Sinkronisasi Data Perguruan Tinggi Berhasil!');
+    }
+
     public function sync_referensi()
     {
         ini_set('max_execution_time', 0);
@@ -78,6 +103,7 @@ class ReferensiController extends Controller
             ['act' => 'GetPekerjaan' , 'primary' => 'id_pekerjaan', 'model' => \App\Models\Referensi\Pekerjaan::class],
             ['act' => 'GetJenisPrestasi' , 'primary' => 'id_jenis_prestasi', 'model' => \App\Models\Referensi\JenisPrestasi::class],
             ['act' => 'GetTingkatPrestasi' , 'primary' => 'id_tingkat_prestasi', 'model' => \App\Models\Referensi\TingkatPrestasi::class],
+            // ['act' => 'GetAllPT', 'primary' => 'id_perguruan_tinggi', 'model' => \App\Models\Referensi\AllPt::class],
         ];
 
         foreach ($ref as $r) {

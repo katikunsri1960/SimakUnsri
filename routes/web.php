@@ -41,7 +41,7 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/get-data', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'getData'])->name('perpus.bebas-pustaka.get-data');
 
                 Route::delete('/delete/{bebasPustaka}', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'delete'])->name('perpus.bebas-pustaka.delete');
-                
+
             });
         });
     });
@@ -785,6 +785,7 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/prodi', [App\Http\Controllers\Universitas\ReferensiController::class, 'prodi'])->name('univ.referensi.prodi');
                 Route::get('/sync-prodi', [App\Http\Controllers\Universitas\ReferensiController::class, 'sync_prodi'])->name('univ.referensi.prodi.sync');
                 Route::get('/sync-referensi', [App\Http\Controllers\Universitas\ReferensiController::class, 'sync_referensi'])->name('univ.referensi.sync');
+                Route::get('/sync-all-pt', [App\Http\Controllers\Universitas\ReferensiController::class, 'sync_all_pt'])->name('univ.referensi.sync-all-pt');
             });
 
             Route::prefix('kurikulum')->group(function () {

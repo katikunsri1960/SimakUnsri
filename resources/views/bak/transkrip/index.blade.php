@@ -78,7 +78,6 @@ Transkrip Nilai
                                                 <tr>
                                                     <td class="text-start align-middle" style="width: 12%">NIM</td>
                                                     <td>:</td>
-                                                    <td class="text-start" id="nimKrs"
                                                         style="width: 45%; padding-left: 10px"></td>
                                                     <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
                                                     <td>:</td>
@@ -188,7 +187,7 @@ Transkrip Nilai
                                                 <tr>
                                                     <th class="text-center align-middle">No</th>
                                                     <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                    <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                    <th class="text-start align-middle">Nama Mata Kuliah</th>
                                                     <th class="text-center align-middle">Semester</th>
                                                     <th class="text-center align-middle">SKS Diakui</th>
                                                     <th class="text-center align-middle">Nilai Index Diakui</th>
