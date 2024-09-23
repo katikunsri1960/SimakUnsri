@@ -40,7 +40,7 @@ class CourseUsept extends Model
             $nilai_hasil_course = ((524-450)/(85.99-71)) * ($nilai_angka - 71) + 450;
         }
         else{
-            $nilai_hasil_course = 449;
+            $nilai_hasil_course = 300;
         }
 
         return round($nilai_hasil_course,0);
@@ -69,7 +69,7 @@ class CourseUsept extends Model
             $nilai_hasil_course = ((524-450)/(85.99-71)) * ($nilai_angka - 71) + 450;
         }
         else{
-            $nilai_hasil_course = 449;
+            $nilai_hasil_course = 300;
         }
 
         return round($nilai_hasil_course,0);
