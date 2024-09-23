@@ -3,6 +3,7 @@
 Program Studi
 @endsection
 @section('content')
+@include('swal')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
