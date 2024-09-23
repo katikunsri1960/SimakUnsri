@@ -34,7 +34,7 @@ class CourseUsept extends Model
         $nilai_huruf = $this->grade;
         // dd($nilai_angka);
         if($nilai_huruf == 'A'){
-            $nilai_hasil_course = ((600-525)/(100-86)) * ($nilai_angka - 86) + 525;
+            $nilai_hasil_course = ((677-525)/(100-86)) * ($nilai_angka - 86) + 525;
         }
         else if($nilai_huruf == 'B'){
             $nilai_hasil_course = ((524-450)/(85.99-71)) * ($nilai_angka - 71) + 450;
@@ -63,7 +63,7 @@ class CourseUsept extends Model
 
         // dd($nilai_angka);
         if($nilai_huruf == 'A'){
-            $nilai_hasil_course = ((600-525)/(100-86)) * ($nilai_angka - 86) + 525;
+            $nilai_hasil_course = ((677-525)/(100-86)) * ($nilai_angka - 86) + 525;
         }
         else if($nilai_huruf == 'B'){
             $nilai_hasil_course = ((524-450)/(85.99-71)) * ($nilai_angka - 71) + 450;

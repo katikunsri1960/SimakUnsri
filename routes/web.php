@@ -730,6 +730,11 @@ Route::group(['middleware' => ['auth']], function() {
 
             Route::get('/data-krs', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ.data-krs');
 
+            Route::prefix('cuti-kuliah')->group(function(){
+                Route::get('/', [App\Http\Controllers\Universitas\CutiController::class, 'index'])->name('univ.cuti-kuliah');
+                Route::post('/store', [App\Http\Controllers\Universitas\CutiController::class, 'store'])->name('univ.cuti-kuliah.store');
+            });
+
             Route::prefix('beasiswa')->group(function() {
                 Route::get('/', [App\Http\Controllers\Universitas\BeasiswaController::class, 'index'])->name('univ.beasiswa');
                 Route::post('/store', [App\Http\Controllers\Universitas\BeasiswaController::class, 'store'])->name('univ.beasiswa.store');
