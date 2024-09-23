@@ -99,18 +99,24 @@ Nilai USEPT Mahasiswa
                                         <td class="text-center align-middle" style="white-space:nowrap;">{{$mahasiswa->nim}}</td>
                                         <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
                                         <td>{{ date('d M Y', strtotime($c->tgl_upload)) }}</td>
-                                        <td>{{$c->total_score}}</td>
-                                        <td>{{$c->grade}}</td>
-                                        <td>{{$c->konversi}}</td>
-                                        <td class="text-center align-middle"> 
-                                            @if ($c->konversi < $usept_prodi->nilai_usept)
+                                        @if($c->total_score < 71)
+                                            <td class="text-center align-middle" colspan="4"> 
                                                 <span class="badge bg-danger">Belum Lulus</span>
-                                            @elseif ($usept_prodi->nilai_usept == NULL)
-                                                <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
-                                            @elseif ($c->konversi >= $usept_prodi->nilai_usept)
-                                                <span class="badge bg-success">Lulus</span>
-                                            @endif
-                                        </td>
+                                            </td> 
+                                        @else
+                                            <td>{{$c->total_score}}</td>
+                                            <td>{{$c->grade}}</td>
+                                            <td>{{$c->konversi}}</td>
+                                            <td class="text-center align-middle"> 
+                                                @if ($c->konversi < $usept_prodi->nilai_usept)
+                                                    <span class="badge bg-danger">Belum Lulus</span>
+                                                @elseif ($usept_prodi->nilai_usept == NULL)
+                                                    <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
+                                                @elseif ($c->konversi >= $usept_prodi->nilai_usept)
+                                                    <span class="badge bg-success">Lulus</span>
+                                                @endif
+                                            </td>
+                                        @endif
                                     </tr>
                                 @endforeach
                             </tbody>
