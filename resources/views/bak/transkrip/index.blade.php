@@ -78,6 +78,7 @@ Transkrip Nilai
                                                 <tr>
                                                     <td class="text-start align-middle" style="width: 12%">NIM</td>
                                                     <td>:</td>
+                                                    <td class="text-start" id="nimKrs"
                                                         style="width: 45%; padding-left: 10px"></td>
                                                     <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
                                                     <td>:</td>
@@ -110,8 +111,8 @@ Transkrip Nilai
                                                     <td>:</td>
                                                     <td class="text-start" id="dosenpaKrs"
                                                         style="width: 45%; padding-left: 10px"></td>
-                                                    <td class="text-start align-middle" style="width: 18%">SEMESTER</td>
-                                                    <td>:</td>
+                                                    <td class="text-start align-middle" style="width: 18%"></td>
+                                                    <td></td>
                                                     <td class="text-start align-middle" id="semesterKrs"
                                                         style="width: 30%; padding-left: 10px"></td>
                                                 </tr>
@@ -120,14 +121,14 @@ Transkrip Nilai
                                     </div>
                                     <hr>
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <div class="me-15 bg-primary-light h-50 w-50 l-h-60 rounded text-center">
-                                                <span class="icon-Library fs-24"><span class="path1"></span><span
-                                                        class="path2"></span></span>
+                                        <div class="col-md-2 text-center">
+                                            <div class="bg-primary rounded p-2">
+                                                <i class="fa fa-qrcode" style="font-size: 45px"></i>
                                             </div>
+
                                         </div>
                                         <div class="col-md-10">
-                                            <table style="width:100%" class="mb-3">
+                                            <table style="width:100%; text-size: 15pt" class="mb-3">
                                                 <tr>
                                                     <td class="text-start align-middle" style="width: 12%">Bebas Pustaka
                                                     </td>
@@ -141,7 +142,18 @@ Transkrip Nilai
                                                         <div id="uploadRepo"></div>
                                                     </td>
                                                 </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" style="width: 12%">Nilai USEPT</td>
+                                                    <td>:</td>
+                                                    <td class="text-start"
+                                                        style="width: 45%; padding-left: 10px"> <div id="nilaiUsept"></div> </td>
+                                                    <td class="text-start align-middle" style="width: 18%"></td>
+                                                    <td></td>
+                                                    <td class="text-start align-middle"
+                                                        style="width: 30%; padding-left: 10px">
 
+                                                    </td>
+                                                </tr>
                                             </table>
                                         </div>
                                     </div>
@@ -290,7 +302,7 @@ Transkrip Nilai
                                 });
                                 return false;
                             }
-                            $('#nimCetak').val(nim);
+                            $('#nimCetak').val(response.riwayat.nim);
                             $('#krsDiv').removeAttr('hidden');
                             // append response.krs to table of krs-regular
                             $('#nimKrs').text(response.riwayat.nim);
@@ -304,7 +316,8 @@ Transkrip Nilai
                             $('#nippaKrs').text(nip_pa);
                             var dosen_pa = response.riwayat.pembimbing_akademik ? response.riwayat.pembimbing_akademik.nama_dosen : '-';
                             $('#dosenpaKrs').text(dosen_pa);
-                            $('#prodiKrs').text(response.riwayat.prodi.nama_program_studi);
+                            var fullProdi = response.riwayat.prodi.nama_jenjang_pendidikan + ' ' + response.riwayat.prodi.nama_program_studi;
+                            $('#prodiKrs').text(fullProdi);
                             var semesterText =  $('#semester option:selected').text();
                             $('#semesterKrs').text(semesterText);
                             $('#krs-regular tbody').empty();
@@ -316,6 +329,10 @@ Transkrip Nilai
                                 $('#statusBebasPustaka').html('<a class="btn btn-success btn-sm" href="' + '{{ asset('storage') }}/' + response.bebas_pustaka.file_bebas_pustaka + '" target="_blank">Sudah Bebas Pustaka</a>');
                                 $('#uploadRepo').html('<a class="btn btn-success btn-sm" href="' + response.bebas_pustaka.link_repo + '" target="_blank">Sudah Upload Repository</a>');
                             }
+
+                            $('#nilaiUsept').html(`
+                                <span class="badge bg-${response.usept.class}">${response.usept.score} (${response.usept.status})</span>
+                                `);
 
 
                             // append foto

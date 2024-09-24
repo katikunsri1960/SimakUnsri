@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Bak;
 
 use App\Http\Controllers\Controller;
+use App\Models\Connection\CourseUsept;
+use App\Models\Connection\Usept;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perpus\BebasPustaka;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -45,6 +48,20 @@ class TranskripController extends Controller
             ]);
         }
 
+        $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
+        $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
+        $nilai_course = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get()->pluck('konversi');
+
+        // Combine the scores and find the maximum
+        $all_scores = $nilai_usept_mhs->merge($nilai_course);
+        $usept = $all_scores->max();
+
+        $useptData = [
+            'score' => $usept,
+            'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
+            'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
+        ];
+
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
@@ -66,6 +83,7 @@ class TranskripController extends Controller
             'total_sks' => $total_sks,
             'ipk' => $ipk,
             'bebas_pustaka' => $bebas_pustaka,
+            'usept' => $useptData,
         ];
 
         return response()->json($data);
