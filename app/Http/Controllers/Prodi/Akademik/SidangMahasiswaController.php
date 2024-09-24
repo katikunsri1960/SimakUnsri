@@ -293,13 +293,17 @@ class SidangMahasiswaController extends Controller
         $nilai_penguji = 0;
         $nilai_pembimbing = 0;
 
-        foreach($data_nilai_sidang as $n){
-            $n->update(['approved_prodi' => 1]);
-            
-            if($n->id_kategori_kegiatan == '110501' || $n->id_kategori_kegiatan == '110502'){
-                $nilai_penguji = $nilai_penguji + (($bobot_penguji/100)*$n->nilai_akhir_dosen);
-            }else{
-                $nilai_pembimbing = $nilai_pembimbing + (($bobot_pembimbing/100)*$n->nilai_akhir_dosen);
+        if($data->jadwal_ujian->is_null()){
+            return redirect()->back()->with('error', 'Jadwal Ujian Tidak Boleh Kosong.');
+        }else{
+            foreach($data_nilai_sidang as $n){
+                $n->update(['approved_prodi' => 1]);
+                
+                if($n->id_kategori_kegiatan == '110501' || $n->id_kategori_kegiatan == '110502'){
+                    $nilai_penguji = $nilai_penguji + (($bobot_penguji/100)*$n->nilai_akhir_dosen);
+                }else{
+                    $nilai_pembimbing = $nilai_pembimbing + (($bobot_pembimbing/100)*$n->nilai_akhir_dosen);
+                }
             }
         }
 
