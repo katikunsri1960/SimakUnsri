@@ -278,6 +278,9 @@ Transkrip Nilai
         $(document).ready(function () {
             $('#btnCari').click(function () {
                 var nim = $('#nim').val();
+                // fix error cannot reinitialize DataTable
+                $('#krs-regular').DataTable().clear().destroy();
+              
                 if (nim == '') {
                     swal('Peringatan', 'NIM tidak boleh kosong', 'warning');
                 } else {
