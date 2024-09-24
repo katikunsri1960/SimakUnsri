@@ -58,7 +58,7 @@ Mahasiswa Prodi
                                     <th class="text-center align-middle">DOSEN P.A.</th>
                                     <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">STATUS<br>PEMBAYARAN</th>
-                                    
+                                    <th class="text-center align-middle">NOMINAL UKT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -99,6 +99,9 @@ Mahasiswa Prodi
                     d.prodi = $('#prodi').val();
                     d.angkatan = $('#angkatan').val();
                 },
+                // success: function(response) {
+                //     console.log(response); // Menampilkan respon data di console
+                // },
                 error: function (xhr, error, thrown) {
                     alert('An error occurred. ' + thrown);
                 }
@@ -157,37 +160,56 @@ Mahasiswa Prodi
                         return data ? data : 'Aktif';
                     }
                 },
-                {data: null, searchable: false, sortable:false, class:"text-center align-middle", render: function(data, type, row, meta) {
-                        return "";
-                }},
-                // {
-                //     data: null,
-                //     render: function(data, type, row) {
-                //         var buttonClass = data.dosen_pa ? 'warning' : 'primary';
-                //         var buttonText = data.dosen_pa ? 'Ubah' : 'Assign';
-                //         var buttonKurClass = data.id_kurikulum ? 'secondary' : 'primary';
-                //         var buttonKurText = data.id_kurikulum ? 'Ubah' : 'Set';
-                //         var jsonData = encodeURIComponent(JSON.stringify(data).replace(/'/g, '&#39;'));
-                //         return `
-                //         <div class="row justify-content-center px-2">
-                //             <button class="m-2 btn btn-sm btn-rounded btn-${buttonClass} text-nowrap"
-                //                     data-bs-toggle="modal"
-                //                     data-bs-target="#assignDosenPa"
-                //                     onclick="setDosenPa(decodeURIComponent('${jsonData}'), ${data.id})">
-                //                 <i class="fa fa-user-graduate"></i> ${buttonText} PA
-                //             </button>
-                //             <button class="m-2 btn btn-sm btn-rounded btn-${buttonKurClass} text-nowrap"
-                //                     data-bs-toggle="modal"
-                //                     data-bs-target="#setKurilukumModal"
-                //                     onclick="setKurikulum(decodeURIComponent('${jsonData}'), ${data.id})">
-                //                 <i class="fa fa-plus"></i> ${buttonKurText} Kurikulum
-                //             </button>
-                //         </div>
-                //         `;
-                //     },
-                //     orderable: false,
-                //     searchable: false
-                // }
+                {
+                    data: null,
+                    searchable: false,
+                    // sortable: false,
+                    class: "text-center align-middle",
+                    render: function(data, type, row, meta) {
+                        let result = "";
+
+                        // Jika ada beasiswa
+                        if (row.beasiswa) {
+                            result = `<h5><span class="badge bg-primary">${row.beasiswa.jenis_beasiswa.nama_jenis_beasiswa}</span></h5>`;
+                        } else {
+                            // Jika ada tagihan
+                            if (row.tagihan) {
+                                // Jika pembayaran ada
+                                if (row.tagihan.pembayaran) {
+                                    result = `<h5><span class="badge bg-success">Lunas</span></h5>`;
+                                } else {
+                                    // Jika penundaan bayar ada
+                                    if (row.penundaan_bayar == 1) {
+                                        result = `<h5><span class="badge bg-warning">Penundaan Bayar</span></h5>`;
+                                    } else {
+                                        result = `<h5><span class="badge bg-danger">Belum Bayar</span></h5>`;
+                                    }
+                                }
+                            }
+                        }
+
+                        return result;
+                    }
+                },
+                {
+                    data: 'tagihan.pembayaran.total_nilai_pembayaran',
+                    name: 'tagihan.pembayaran.total_nilai_pembayaran',
+                    class: 'text-start',
+                    searchable: false,
+                    sortable: false,
+                    render: function(data, type, row) {
+                        if (data) {
+                            // Memformat nilai ke dalam Rupiah
+                            return parseInt(data).toLocaleString('id-ID', {
+                                style: 'currency',
+                                currency: 'IDR',
+                                minimumFractionDigits: 0
+                            }).replace('IDR', '').trim();
+                        } else {
+                            return '-';
+                        }
+                    }
+                }
             ],
         });
     });

@@ -24,6 +24,5 @@ class DashboardController extends Controller
             'job_pending' => $batching->pendingJobs,
             'progress' => $batching->progress(),
         ];
-
     }
 }

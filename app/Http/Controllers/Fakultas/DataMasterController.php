@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers\Fakultas;
 
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
+use App\Models\SemesterAktif;
+use App\Models\PenundaanBayar;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
+use App\Models\Connection\Tagihan;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Connection\Registrasi;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\PrasyaratMatkul;
 use App\Models\Perkuliahan\RencanaPembelajaran;
-use App\Models\ProgramStudi;
 
 class DataMasterController extends Controller
 {
@@ -30,6 +34,8 @@ class DataMasterController extends Controller
 
     public function mahasiswa(Request $request)
     {
+        $semesterAktif = SemesterAktif::first()->id_semester;
+
         $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
                     ->orderBy('id_jenjang_pendidikan')
                     ->orderBy('nama_program_studi')
@@ -38,16 +44,31 @@ class DataMasterController extends Controller
 
         $id_prodi_fak=$prodi_fak->pluck('id_prodi');
         
-        $query = RiwayatPendidikan::with('kurikulum',
-        //  'dosen_pa'
-         )
-            // ->Addselect(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
-            ->whereIn('id_prodi', $id_prodi_fak)
-            ->orderBy('nama_program_studi', 'ASC')
-            ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
+        // $query = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik', 'beasiswa'])
+        //     ->whereIn('id_prodi',  $id_prodi_fak)
+        //     ->orderBy('nama_program_studi', 'ASC')
+        //     // ->orderBy('id_jenjang_pendidikan', 'ASC')
+        //     ->orderBy('id_periode_masuk', 'desc') // Pastikan orderBy di sini
+        //     ->limit(10)
+        //     ;
+        
+        // $data=$query->get();
+        
 
-        $mahasiswa=$query->get();
-        // dd($mahasiswa);
+        // foreach($data as $key => $value) {
+        //     $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
+
+        //     $value->tagihan = Tagihan::with('pembayaran')
+        //                 ->whereIn('tagihan.nomor_pembayaran', [$value->rm_no_test, $value->nim])
+        //                 ->where('tagihan.kode_periode', $semesterAktif)
+        //                 ->first();
+
+        //     $value->penundaan_bayar = PenundaanBayar::where('id_registrasi_mahasiswa', $value->id_registrasi_mahasiswa)
+        //                             ->where('id_semester', $semesterAktif)
+        //                             ->first() ? 1 : 0;
+        // }
+
+        // dd($data);
 
         $angkatan = RiwayatPendidikan::with(['prodi'])
                     ->whereIn('id_prodi', $id_prodi_fak)
@@ -67,7 +88,7 @@ class DataMasterController extends Controller
             'prodi' => $prodi_fak,
             'kurikulum' => $kurikulum,
             'dosen' => $dosen,
-            'mahasiswa'=>$mahasiswa
+            // 'mahasiswa'=>$data
         ]);
     }
 
@@ -75,17 +96,21 @@ class DataMasterController extends Controller
     {
         $searchValue = $request->input('search.value');
 
+        $semesterAktif = SemesterAktif::first()->id_semester;
+        
         $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
                     ->orderBy('id_jenjang_pendidikan')
                     ->orderBy('nama_program_studi')
                     ->pluck('id_prodi');
 
-        $query = RiwayatPendidikan::with('kurikulum', 'pembimbing_akademik')
-            ->whereIn('id_prodi', $prodi)
-            ->orderBy('nama_program_studi', 'ASC')
-            // ->orderBy('id_jenjang_pendidikan', 'ASC')
-            ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
-
+        $query = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik', 'beasiswa'])
+                    ->whereIn('id_prodi',  $prodi)
+                    ->orderBy('nama_program_studi', 'ASC')
+                    // ->orderBy('id_jenjang_pendidikan', 'ASC')
+                    ->orderBy('id_periode_masuk', 'desc') // Pastikan orderBy di sini
+                    // ->limit(10)
+                    ;
+                
         if ($searchValue) {
             $query = $query->where(function($q) use ($searchValue) {
                 $q->where('nim', 'like', '%' . $searchValue . '%')
@@ -106,7 +131,9 @@ class DataMasterController extends Controller
         $limit = $request->input('length');
         $offset = $request->input('start');
 
-        $data = $query->get();
+        $data=$query->get();
+        
+    
 
         if ($request->has('order')) {
             $orderColumn = $request->input('order.0.column');
@@ -133,9 +160,24 @@ class DataMasterController extends Controller
             }
         }
 
+        // dd($data);
+
         $recordsFiltered = $data->count();
 
         $data = $data->slice($offset, $limit)->values();
+
+        foreach($data as $key => $value) {
+            $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
+
+            $value->tagihan = Tagihan::with('pembayaran')
+                        ->whereIn('tagihan.nomor_pembayaran', [$value->rm_no_test, $value->nim])
+                        ->where('tagihan.kode_periode', $semesterAktif)
+                        ->first();
+
+            $value->penundaan_bayar = PenundaanBayar::where('id_registrasi_mahasiswa', $value->id_registrasi_mahasiswa)
+                                    ->where('id_semester', $semesterAktif)
+                                    ->first() ? 1 : 0;
+        }
 
         $recordsTotal = RiwayatPendidikan::whereIn('id_prodi', $prodi)->count();
 
@@ -149,218 +191,15 @@ class DataMasterController extends Controller
         return response()->json($response);
     }
 
-
-    public function matkul()
+    //PEJABAT KULIAH
+    public function pejabat_fakultas(Request $request)
     {
-        $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.prasyarat_matkul', 'mata_kuliah.prasyarat_matkul.matkul_prasyarat'])
-                            ->where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
-            // dd($data);
-        return view('fakultas.data-master.mata-kuliah.index', [
-            'data' => $data
-        ]);
+        return view('fakultas.data-master.pejabat-fakultas.devop');
     }
 
-    public function lihat_rps($matkul)
+    //BIAYA KULIAH
+    public function biaya_kuliah(Request $request)
     {
-        $data_matkul = MataKuliah::where('id_matkul', $matkul)->first();
-        $data = RencanaPembelajaran::where('id_matkul', $matkul)->get();
-            // dd($data);
-        return view('fakultas.data-master.mata-kuliah.lihat-rps', [
-            'data' => $data,
-            'matkul' => $data_matkul
-        ]);
-    }
-
-    public function approved_rps(RencanaPembelajaran $rps, $matkul)
-    {
-        $rps->where('id_matkul', $matkul)->update([
-            'approved' => 1,
-        ]);
-            // dd($data);
-        return redirect()->back()->with('success', 'Data berhasil disimpan');
-    }
-
-    public function matkul_merdeka()
-    {
-        $id_prodi = auth()->user()->fk_id;
-
-        $data = MatkulMerdeka::with('matkul')
-            ->where('id_prodi', $id_prodi)
-            ->get();
-
-        $idMatkulArray = $data->pluck('id_matkul')->toArray();
-        // dd($idMatkulArray);
-        $matkul = ListKurikulum::with(['mata_kuliah' => function($query) use ($idMatkulArray) {
-                $query->whereNotIn('mata_kuliahs.id_matkul', $idMatkulArray);
-            }])
-            ->where('id_prodi', $id_prodi)
-            ->where('is_active', 1)
-            ->get();
-
-        // $kurikulum = ListKurikulum::with(['matkul_kurikulum'])->where('id_prodi', $id_prodi)
-        //     ->where('is_active', 1)
-        //     ->pluck('id_kurikulum');
-
-        // $matkul = MataKuliah::with(['kurikulum'])->where('id_prodi', $id_prodi)
-        //     ->whereNotIn('id_matkul', function($query) use ($id_prodi) {
-        //         $query->select('id_matkul')
-        //             ->from(with(new MatkulMerdeka)->getTable())
-        //             ->where('id_prodi', $id_prodi);
-        //     })->whereHas('kurikulum', function($query) use ($kurikulum){
-        //         $query->whereIn('list_kurikulums.id_kurikulum', $kurikulum);
-        //     })
-        //     ->orderBy('kode_mata_kuliah')
-        //     ->get();
-
-        return view('fakultas.data-master.matkul-merdeka.index', compact('matkul', 'data'));
-    }
-
-    public function matkul_merdeka_store(Request $request)
-    {
-
-        $data = $request->validate([
-                    'id_matkul' => 'required',
-                ]);
-
-        $data['id_prodi'] = auth()->user()->fk_id;
-
-        MatkulMerdeka::create($data);
-
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
-    }
-
-    public function matkul_merdeka_destroy(MatkulMerdeka $matkul_merdeka)
-    {
-        $matkul_merdeka->delete();
-
-        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
-    }
-
-    public function ruang_perkuliahan()
-    {
-        $prodi_id = auth()->user()->fk_id;
-        $data = RuangPerkuliahan::where('id_prodi',$prodi_id)->get();
-
-        return view('fakultas.data-master.ruang-perkuliahan.index', [
-            'data' => $data
-        ]);
-    }
-
-    public function ruang_perkuliahan_store(Request $request)
-    {
-        $prodi_id = auth()->user()->fk_id;
-        $data = $request->validate([
-            'nama_ruang' => 'required',
-            'lokasi' => [
-                'required',
-                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$prodi_id) {
-                    return $query->where('nama_ruang', $request->nama_ruang)
-                    ->where('lokasi', $request->lokasi)
-                    ->where('id_prodi', $prodi_id);
-                }),
-            ],
-        ]);
-
-        RuangPerkuliahan::create(['nama_ruang'=> $request->nama_ruang, 'lokasi'=> $request->lokasi, 'id_prodi'=> $prodi_id]);
-
-        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
-    }
-
-    public function ruang_perkuliahan_update(Request $request, RuangPerkuliahan $ruang_perkuliahan)
-    {
-        $prodi_id = auth()->user()->fk_id;
-        $data = $request->validate([
-            'nama_ruang' => 'required',
-            'lokasi' => [
-                'required',
-                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$prodi_id,$ruang_perkuliahan) {
-                    return $query->where('nama_ruang', $request->nama_ruang)
-                    ->where('lokasi', $request->lokasi)
-                    ->where('id_prodi', $prodi_id)
-                    ->whereNotIn('id', [$ruang_perkuliahan->id]);
-                }),
-            ],
-        ]);
-
-        $ruang_perkuliahan->update($data);
-
-        return redirect()->back()->with('success', 'Data Berhasil di Rubah');
-    }
-
-    public function ruang_perkuliahan_destroy(RuangPerkuliahan $ruang_perkuliahan)
-    {
-        $ruang_perkuliahan->delete();
-
-        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
-    }
-
-    public function kurikulum()
-    {
-        $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
-        return view('fakultas.data-master.kurikulum.index',
-        [
-            'data' => $data
-        ]);
-    }
-
-    public function detail_kurikulum(ListKurikulum $kurikulum)
-    {
-        if ($kurikulum->id_prodi != auth()->user()->fk_id) {
-            abort(403);
-        }
-
-        $data = $kurikulum->load('matkul_kurikulum');
-
-        return view('fakultas.data-master.kurikulum.detail-kurikulum', [
-            'data' => $data,
-        ]);
-    }
-
-    public function tambah_prasyarat(ListKurikulum $kurikulum, MataKuliah $matkul)
-    {
-        $id_prodi = auth()->user()->fk_id;
-
-        $db = new MataKuliah();
-        // $prasyarat = $db->matkul_prodi($id_prodi);
-        $prasyarat = ListKurikulum::with('mata_kuliah')
-                    ->whereHas('mata_kuliah', function($query) use ($matkul) {
-                        $query->where('mata_kuliahs.id_matkul', $matkul->id_matkul);
-                    })
-                    ->where('id_prodi', $id_prodi)->where('id_kurikulum', $kurikulum->id_kurikulum)->first();
-        // dd($prasyarat);
-        return view('fakultas.data-master.mata-kuliah.tambah-prasyarat', [
-            'matkul' => $matkul,
-            'prasyarat' => $prasyarat
-        ]);
-    }
-
-    public function tambah_prasyarat_store(Request $request, MataKuliah $matkul)
-    {
-        $data = $request->validate([
-            'prasyarat' => 'required',
-            'prasyarat.*' => 'required|exists:mata_kuliahs,id_matkul'
-        ]);
-        $db = new PrasyaratMatkul();
-
-        $store = $db->prasyarat_store($matkul->id_matkul, $data['prasyarat']);
-
-        return redirect()->route('fakultas.data-master.mata-kuliah')->with($store['status'], $store['message']);
-    }
-
-    public function hapus_prasyarat(MataKuliah $matkul)
-    {
-        $db = new PrasyaratMatkul();
-
-        $data = $db->prasyarat_destroy($matkul->id_matkul);
-
-        return redirect()->back()->with($data['status'], $data['message']);
-    }
-
-    public function kurikulum_angkatan()
-    {
-        $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)
-                    ->where('is_active', 1)->get();
-
-        return view('fakultas.data-master.kurikulum-angkatan.index',);
+        return view('fakultas.data-master.biaya-kuliah.devop');
     }
 }

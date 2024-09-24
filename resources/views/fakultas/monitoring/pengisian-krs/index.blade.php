@@ -24,11 +24,11 @@ Monitoring Pengisian KRS
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
-                    <button id="start-process" class="btn btn-primary">Mulai Proses</button>
+                    {{-- <button id="start-process" class="btn btn-primary">Mulai Proses</button>
 
                     <div class="progress mt-3">
                         <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
-                    </div>
+                    </div> --}}
 
 
                     <div class="table-responsive mt-5">
