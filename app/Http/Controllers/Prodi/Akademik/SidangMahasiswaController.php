@@ -293,6 +293,10 @@ class SidangMahasiswaController extends Controller
         $nilai_penguji = 0;
         $nilai_pembimbing = 0;
 
+        if($data->sk_tugas->is_null()){
+            return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
+        }
+
         if($data->jadwal_ujian->is_null()){
             return redirect()->back()->with('error', 'Jadwal Ujian Tidak Boleh Kosong.');
         }else{

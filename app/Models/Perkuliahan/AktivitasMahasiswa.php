@@ -276,7 +276,11 @@ class AktivitasMahasiswa extends Model
     public function approve_penguji($id_aktivitas)
     {
         $data = $this->where('id_aktivitas', $id_aktivitas)->first();
-        
+
+        if($data->sk_tugas->is_null()){
+            return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
+        }
+
         if($data->jadwal_ujian->is_null()){
             return redirect()->back()->with('error', 'Jadwal Ujian Belum di Atur.');
         }else{
