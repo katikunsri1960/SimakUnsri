@@ -9,7 +9,6 @@ class UnderDevelopmentController extends Controller
 {
     public function index(Request $request)
     {
-       
         return view('fakultas.devop');
     }
 }

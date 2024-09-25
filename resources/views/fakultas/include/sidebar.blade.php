@@ -31,35 +31,16 @@
                                 <a href="{{route('fakultas.data-master.mahasiswa')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Mahasiswa</a>
                             </li>
-                            <li class="{{request()->routeIs
-                            // ('fakultas.data-master.mahasiswa')
+                            <li class="{{request()->routeIs('fakultas.data-master.pejabat-fakultas.devop')
                              ? 'active' : ''}}">
-                                <a href="{{route
-                                // ('fakultas.data-master.mahasiswa')
-                                ('fakultas.under-development')
-                                }}"><i class="icon-Commit"><span
+                                <a href="{{route('fakultas.data-master.pejabat-fakultas.devop')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Pejabat Fakultas</a>
                             </li>
-                            {{-- <li class="{{request()->routeIs('fakultas.data-master.kurikulum') || request()->routeIs('fakultas.data-master.kurikulum.*') ?  'active' : ''}}">
-                                <a href="{{route('fakultas.data-master.kurikulum')}}"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Kurikulum</a>
-                            </li>
-                            <li class="{{request()->routeIs('fakultas.data-master.mata-kuliah') || request()->routeIs('fakultas.data-master.mata-kuliah.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-master.mata-kuliah')}}"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Mata Kuliah</a>
-                            </li>
-                            <li class="{{request()->routeIs('fakultas.data-master.matkul-merdeka') || request()->routeIs('fakultas.data-master.matkul-merdeka.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-master.matkul-merdeka')}}"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>MK MBKM</a>
-                            </li>
-                            <li class="{{request()->routeIs('fakultas.data-master.ruang-perkuliahan') || request()->routeIs('fakultas.data-master.ruang-perkuliahan.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a>
+                            {{-- <li class="{{request()->routeIs('fakultas.data-master.biaya-kuliah.devop')
+                                ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.biaya-kuliah.devop') }}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Biaya Kuliah</a>
                             </li> --}}
-                            {{-- <!-- <li class="{{request()->routeIs('fakultas.data-master.ruang-perkuliahan') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Pengumuman</a>
-                            </li> --> --}}
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('fakultas.data-akademik.*') ? 'active menu-open' : ''}}">
@@ -73,25 +54,44 @@
                         </a>
                         <ul class="treeview-menu">
                             <li class="{{request()->routeIs('fakultas.data-akademik.krs') || request()->routeIs('fakultas.data-akademik.krs.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-akademik.krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Rencana Studi</a>
+                                <a href="{{route('fakultas.data-akademik.krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Kartu Rencana Studi
+                                </a>
                             </li>
                             <li class="{{request()->routeIs('fakultas.data-akademik.khs') || request()->routeIs('fakultas.data-akademik.khs.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
+                                <a href="{{route('fakultas.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Kartu Hasil Studi
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.data-akademik.nilai-usept') || request()->routeIs('fakultas.data-akademik.nilai-usept.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-akademik.nilai-usept')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Nilai USEPT
+                                </a>
                             </li>
                             <li class="{{request()->routeIs('fakultas.data-akademik.tugas-akhir') || request()->routeIs('fakultas.data-akademik.tugas-akhir.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-akademik.tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Tugas Akhir</a>
+                                <a href="{{route('fakultas.data-akademik.tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Aktivitas Tugas Akhir
+                                </a>
                             </li>
                             <li class="{{request()->routeIs('fakultas.data-akademik.non-tugas-akhir') || request()->routeIs('fakultas.data-akademik.non-tugas-akhir.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-akademik.non-tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Non Tugas Akhir</a>
+                                <a href="{{route('fakultas.data-akademik.non-tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Aktivitas Non Tugas Akhir
+                                </a>
                             </li>
                             <li class="{{request()->routeIs('fakultas.data-akademik.sidang-mahasiswa') || request()->routeIs('fakultas.data-akademik.sidang-mahasiswa.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-akademik.sidang-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Sidang Mahasiswa</a>
+                                <a href="{{route('fakultas.data-akademik.sidang-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Sidang Mahasiswa
+                                </a>
                             </li>
                             <li class="{{request()->routeIs('fakultas.data-akademik.yudisium-mahasiswa') || request()->routeIs('fakultas.data-akademik.yudisium-mahasiswa.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-akademik.yudisium-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Yudisium Mahasiswa</a>
+                                <a href="{{route('fakultas.data-akademik.yudisium-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Yudisium Mahasiswa
+                                </a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.transkrip-nilai') || request()->routeIs('fakultas.transkrip-nilai.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.transkrip-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Transkrip Nilai</a>
+                            <li class="{{request()->routeIs('fakultas.data-akademik.transkrip-nilai') || request()->routeIs('fakultas.data-akademik.transkrip-nilai.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-akademik.transkrip-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Daftar Transkrip Nilai
+                                </a>
                             </li>
                         </ul>
                     </li>
