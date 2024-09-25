@@ -8,6 +8,7 @@ use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Perkuliahan\NotulensiSidangMahasiswa;
 use App\Models\Perkuliahan\RevisiSidangMahasiswa;
 use App\Models\Perkuliahan\NilaiSidangMahasiswa;
+use App\Models\Perpus\BebasPustaka;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
@@ -51,9 +52,11 @@ class PenilaianSidangController extends Controller
         $data = AktivitasMahasiswa::with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa', 'konversi', 'uji_mahasiswa'])->where('id', $aktivitas)->first();
         $data_pelaksanaan_sidang = AktivitasMahasiswa::with(['revisi_sidang', 'notulensi_sidang', 'penilaian_sidang', 'revisi_sidang.dosen', 'penilaian_sidang.dosen'])->where('id', $aktivitas)->first();
         $penguji = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen', $id_dosen)->first();
+        $repository = BebasPustaka::where('id_registrasi_mahasiswa', $data->anggota_aktivitas_personal->id_registrasi_mahasiswa)->first();
         // dd($penguji);
         return view('dosen.penilaian.penilaian-sidang.detail-sidang.detail', [
             'data' => $data,
+            'repository' => $repository,
             'data_pelaksanaan' => $data_pelaksanaan_sidang,
             'penguji' => $penguji
         ]);

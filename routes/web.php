@@ -454,6 +454,8 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::get('/detail/{riwayat}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_akademik_detail'])->name('dosen.pembimbing.bimbingan-akademik.detail');
                     Route::post('/approve-all/{riwayat}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_akademik_approve_all'])->name('dosen.pembimbing.bimbingan-akademik.approve-all');
                     Route::post('/batal-krs/{riwayat}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_akademik_batal_approve'])->name('dosen.pembimbing.bimbingan-akademik.batal-krs');
+                    Route::get('/lihat-khs/{riwayat}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'nilai_perkuliahan'])->name('dosen.pembimbing.bimbingan-akademik.lihat-khs');
+                    Route::get('{riwayat}/detail-khs/{semester}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'lihat_khs'])->name('dosen.pembimbing.bimbingan-akademik.detail-khs');
                 });
 
                 Route::get('/bimbingan-non-akademik', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'bimbingan_non_akademik'])->name('dosen.pembimbing.bimbingan-non-akademik');
