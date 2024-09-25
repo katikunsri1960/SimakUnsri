@@ -276,7 +276,16 @@ class AktivitasMahasiswa extends Model
     public function approve_penguji($id_aktivitas)
     {
         $data = $this->where('id_aktivitas', $id_aktivitas)->first();
-        $data->uji_mahasiswa()->where('status_uji_mahasiswa', '!=', '2')->update(['status_uji_mahasiswa' => 1]);
+
+        if($data->sk_tugas->is_null()){
+            return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
+        }
+
+        if($data->jadwal_ujian->is_null()){
+            return redirect()->back()->with('error', 'Jadwal Ujian Belum di Atur.');
+        }else{
+            $data->uji_mahasiswa()->where('status_uji_mahasiswa', '!=', '2')->update(['status_uji_mahasiswa' => 1]);
+        }
 
         return $data;
     }

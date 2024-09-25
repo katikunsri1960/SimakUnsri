@@ -147,6 +147,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         ->LeftJoin('peserta_kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
         ->LeftJoin('mata_kuliahs', 'kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
         ->where('kelas_kuliahs.id_kelas_kuliah', $this->kelas)
+        ->orderBy('peserta_kelas_kuliahs.nim', 'ASC')
         ->get();
         
         return $data_kelas;
