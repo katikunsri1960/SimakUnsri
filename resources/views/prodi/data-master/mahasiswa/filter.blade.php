@@ -11,20 +11,37 @@
             </div>
             <form action="{{route('prodi.data-master.mahasiswa')}}" method="get">
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="angkatan" class="form-label">Angkatan</label>
-                        <select multiple class="form-select" name="angkatan[]" id="angkatan">
-                            <option value="">
-                                -- Pilih Angkatan --
-                            </option>
-                            @foreach ($angkatan as $p)
-                            <option value="{{$p->angkatan}}" {{ in_array($p->angkatan, old('angkatan',
-                                request()->get('angkatan', []))) ? 'selected' : '' }}>
-                                {{$p->angkatan}}
-                            </option>
-                            @endforeach
-                        </select>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="angkatan" class="form-label">Angkatan</label>
+                            <select multiple class="form-select" name="angkatan[]" id="angkatanFilter">
+                                <option value="">
+                                    -- Pilih Angkatan --
+                                </option>
+                                @foreach ($angkatan as $p)
+                                <option value="{{$p->angkatan_raw}}" {{ in_array($p->angkatan_raw, old('angkatan',
+                                    request()->get('angkatan', []))) ? 'selected' : '' }}>
+                                    {{$p->angkatan_raw}}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        {{-- <div class="col-md-12 mb-3">
+                            <label for="status" class="form-label">Status Mahasiswa</label>
+                            <select multiple class="form-select" name="status[]" id="statusFilter">
+                                <option value="">
+                                    -- Pilih Status Mahasiswa --
+                                </option>
+                                @foreach ($status as $s)
+                                <option value="{{$s['id']}}" {{ in_array($s['id'], old('status',
+                                    request()->get('status', []))) ? 'selected' : '' }}>
+                                    {{$s['nama']}}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
                     </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
@@ -40,8 +57,14 @@
 
 <script>
     $(document).ready(function () {
-        $('#angkatan').select2({
+        $('#angkatanFilter').select2({
             placeholder: '-- Pilih Angkatan -- ',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#filter-button')
+        });
+        $('#statusFilter').select2({
+            placeholder: '-- Pilih Status Mahasiswa -- ',
             allowClear: true,
             width: '100%',
             dropdownParent: $('#filter-button')

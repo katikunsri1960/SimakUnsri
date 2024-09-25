@@ -34,6 +34,8 @@ Mahasiswa Prodi
                             data-bs-target="#filter-button">
                             <i class="fa fa-filter"></i> Filter
                         </button>
+                        <span class="divider-line mx-1"></span>
+                        <a href="{{route('prodi.data-master.mahasiswa')}}" class="btn btn-warning waves-effect waves-light"><i class="fa fa-refresh"></i> Reset Filter</a>
                         @include('prodi.data-master.mahasiswa.filter')
                     </div>
                     <div class="d-flex justify-content-end">
@@ -84,6 +86,8 @@ Mahasiswa Prodi
     $(function() {
         "use strict";
 
+
+
         $('#data').DataTable({
             // dom: 'Bfrtip',
             // buttons: [
@@ -95,7 +99,8 @@ Mahasiswa Prodi
                 url: '{{route('prodi.data-master.mahasiswa.data')}}',
                 type: 'GET',
                 data: function (d) {
-                    d.angkatan = $('#angkatan').val();
+                    d.angkatan = $('#angkatanFilter').val();
+                    d.status = $('#statusFilter').val();
                 },
                 error: function (xhr, error, thrown) {
                     alert('An error occurred. ' + thrown);

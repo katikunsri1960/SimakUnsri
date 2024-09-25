@@ -49,6 +49,17 @@ class DataMasterController extends Controller
             $query->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $filter);
         }
 
+        // if($request->has('status') && !empty($request->status)) {
+        //     // if there is aktif value in the status, change it to ''
+        //     if (in_array('aktif', $request->status)) {
+        //         $key = array_search('aktif', $request->status);
+        //         $request->status[$key] = '';
+        //     }
+        //     $filterStatus = $request->status;
+
+        //     $query->whereIn('id_jenis_keluar', $filterStatus);
+        // }
+
         $limit = $request->input('length');
         $offset = $request->input('start');
 
@@ -104,7 +115,21 @@ class DataMasterController extends Controller
                     ->orderBy('angkatan_raw', 'desc')
                     ->get();
 
+        // dd($angkatan);
+
         $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+
+        $status = [
+            ['id' => 'aktif', 'nama' => 'Aktif'],
+            ['id' => '1', 'nama' => 'Lulus'],
+            ['id' => '2', 'nama' => 'Mutasi'],
+            ['id' => '3', 'nama' => 'Dikeluarkan'],
+            ['id' => '4', 'nama' => 'Mengundurkan diri'],
+            ['id' => '5', 'nama' => 'Putus Studi'],
+            ['id' => '6', 'nama' => 'Wafat'],
+            ['id' => '7', 'nama' => 'Hilang'],
+            ['id' => 'Z', 'nama' => 'Lainnya'],
+        ];
 
         $dosDb = new BiodataDosen();
         $dosen = $dosDb->get();
@@ -113,6 +138,7 @@ class DataMasterController extends Controller
             'angkatan' => $angkatan,
             'kurikulum' => $kurikulum,
             'dosen' => $dosen,
+            'status' => $status
         ]);
     }
 
@@ -127,7 +153,7 @@ class DataMasterController extends Controller
         ]);
 
         return redirect()->back()->with('success', "Data Berhasil di tambahkan");
-    } 
+    }
 
     public function set_kurikulum(RiwayatPendidikan $mahasiswa, Request $request)
     {
