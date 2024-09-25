@@ -104,7 +104,10 @@ FEEDER UPLOAD - AKTIVITAS MAHASISWA
                                     <th class="text-center-align-middle">Semester</th>
                                     <th class="text-center-align-middle">Jenis</th>
                                     <th class="text-center-align-middle">Judul</th>
+                                    <th class="text-center-align-middle">Lokasi</th>
                                     <th class="text-center-align-middle">Tanggal SK</th>
+                                    <th class="text-center-align-middle">Tanggal Mulai</th>
+                                    <th class="text-center-align-middle">Tanggal Selesai</th>
                                     <th class="text-center-align-middle">Prodi</th>
                                 </tr>
                             </thead>
@@ -167,7 +170,10 @@ FEEDER UPLOAD - AKTIVITAS MAHASISWA
                     html += '<td class="text-center">' + item.nama_semester + '</td>';
                     html += '<td>' + item.nama_jenis_aktivitas + '</td>';
                     html += '<td class="text-start">' + item.judul + '</td>';
+                    html += '<td class="text-start">' + item.lokasi + '</td>';
                     html += '<td class="text-center">' + item.tanggal_sk_tugas + '</td>';
+                    html += '<td class="text-center">' + item.tanggal_mulai + '</td>';
+                    html += '<td class="text-center">' + item.tanggal_selesai + '</td>';
                     html += '<td class="text-center">' + item.nama_prodi + '</td>';
                     html += '</tr>';
                     no++;

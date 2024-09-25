@@ -958,6 +958,101 @@ class FeederUploadController extends Controller
 
     public function aktivitas_upload(Request $request)
     {
-        
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = AktivitasMahasiswa::where('id_prodi', $prodi)
+                ->where('id_semester', $request->id_semester)
+                ->where('approve_krs', 1)
+                ->where('feeder', 0)
+                ->get();
+
+        $totalData = $data->count();
+        // dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertKelasKuliah';
+        $actGet = 'GetDetailKelasKuliah';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+                $id_kelas_lama = $d->id_kelas_kuliah;
+                $record = [
+                    "id_prodi" => $d->id_prodi,
+                    "id_semester" => $d->id_semester,
+                    "id_matkul" => $d->id_matkul,
+                    "nama_kelas_kuliah" => $d->nama_kelas_kuliah,
+                    "sks_mk" => $d->sks_mk,
+                    "sks_tm" => $d->sks_tm,
+                    "sks_prak" => $d->sks_prak,
+                    "sks_prak_lap" => $d->sks_prak_lap,
+                    "sks_sim" => $d->sks_sim,
+                    "bahasan" => $d->bahasan,
+                    // "a_selenggara_pditt" => '',
+                    "apa_untuk_pditt" => $d->apa_untuk_pditt,
+                    "kapasitas" => $d->kapasitas,
+                    "tanggal_mulai_efektif" => $d->tanggal_mulai_efektif,
+                    "tanggal_akhir_efektif" => $d->tanggal_akhir_efektif,
+                    // "id_mou" => '',
+                    "lingkup" => $d->lingkup,
+                    "mode" => $d->mode,
+                ];
+
+                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadKelas();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    DB::beginTransaction();
+
+                    // KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    KuisonerAnswer::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    NilaiPerkuliahan::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+
+                    NilaiKomponenEvaluasi::where('id_kelas', $id_kelas_lama)->update(['id_kelas' => $result['data']['id_kelas_kuliah']]);
+
+                    $d->update([
+                        'id_kelas_kuliah' => $result['data']['id_kelas_kuliah'],
+                        'feeder' => 1
+                    ]);
+
+
+
+                    DB::commit();
+
+                    $dataBerhasil++;
+                } else {
+                    // DB::rollback();
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
     }
 }
