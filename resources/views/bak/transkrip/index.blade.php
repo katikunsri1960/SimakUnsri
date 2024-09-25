@@ -280,7 +280,7 @@ Transkrip Nilai
                 var nim = $('#nim').val();
                 // fix error cannot reinitialize DataTable
                 $('#krs-regular').DataTable().clear().destroy();
-              
+
                 if (nim == '') {
                     swal('Peringatan', 'NIM tidak boleh kosong', 'warning');
                 } else {
@@ -330,7 +330,7 @@ Transkrip Nilai
                                 $('#uploadRepo').html('<span class="badge bg-danger">Belum Upload Repository</span>');
                             }else{
                                 $('#statusBebasPustaka').html('<a class="btn btn-success btn-sm" href="' + '{{ asset('storage') }}/' + response.bebas_pustaka.file_bebas_pustaka + '" target="_blank">Sudah Bebas Pustaka</a>');
-                                $('#uploadRepo').html('<a class="btn btn-success btn-sm" href="' + response.bebas_pustaka.link_repo + '" target="_blank">Sudah Upload Repository</a>');
+                                $('#uploadRepo').html('<a class="btn btn-success btn-sm" href="' + response.bebas_pustaka.link_repo + '" target="_blank">'+ response.bebas_pustaka.link_repo +'</a>');
                             }
 
                             $('#nilaiUsept').html(`

@@ -63,7 +63,10 @@ Pembimbingan Karya Ilmiah Mahasiswa
                                     <td class="text-center align-middle" style="width: 10%">{{$d->nama_prodi}}</td>
                                     <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal->nim}}<br>{{$d->anggota_aktivitas_personal->nama_mahasiswa}}</td>
                                     <td class="text-center align-middle">
-                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>
+                                        @if ($d->konversi)
+                                        ({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                        @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
