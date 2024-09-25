@@ -291,7 +291,7 @@ Transkrip Nilai
                             nim: nim
                         },
                         success: function (response) {
-                            console.log(response);
+                            // console.log(response);
                             if (response.status == 'error') {
                                 swal({
                                     title: "Peringatan!",
@@ -330,12 +330,18 @@ Transkrip Nilai
                                 $('#uploadRepo').html('<span class="badge bg-danger">Belum Upload Repository</span>');
                             }else{
                                 $('#statusBebasPustaka').html('<a class="btn btn-success btn-sm" href="' + '{{ asset('storage') }}/' + response.bebas_pustaka.file_bebas_pustaka + '" target="_blank">Sudah Bebas Pustaka</a>');
-                                $('#uploadRepo').html('<a class="btn btn-success btn-sm" href="' + response.bebas_pustaka.link_repo + '" target="_blank">Sudah Upload Repository</a>');
+                                $('#uploadRepo').html('<a class="btn btn-success btn-sm" href="' + response.bebas_pustaka.link_repo + '" target="_blank">'+ response.bebas_pustaka.link_repo + '</a>');
                             }
 
-                            $('#nilaiUsept').html(`
+                            if(response.riwayat.id_kurikulum == null){
+                                $('#nilaiUsept').html(`
+                                <span class="badge bg-danger">Kurikulum Belum Diatur</span>
+                                `);
+                            }else{
+                                $('#nilaiUsept').html(`
                                 <span class="badge bg-${response.usept.class}">${response.usept.score} (${response.usept.status})</span>
                                 `);
+                            }
 
 
                             // append foto

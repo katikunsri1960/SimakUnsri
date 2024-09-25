@@ -56,7 +56,15 @@ class TranskripController extends Controller
             ]);
         }
 
-        $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
+        if(!$riwayat->id_kurikulum ) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Kurikulum Mahasiswa Belum Diatur!!',
+            ]);
+        }else{
+            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
+        }
+
         $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
         $nilai_course = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get()->pluck('konversi');
 

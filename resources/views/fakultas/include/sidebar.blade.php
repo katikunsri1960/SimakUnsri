@@ -96,52 +96,7 @@
                         </ul>
                     </li>
 
-                    <li class="header">Report & Monitoring</li>
-                    <li class="treeview {{request()->routeIs('fakultas.report.*') ? 'active menu-open' : ''}}">
-                        <a href="#">
-                            <i span class="fa fa-file-text-o"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Report</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{request()->routeIs
-                            // ('fakultas.report.kemahasiswaan')
-                             ? 'active' : ''}}"><a href="{{route
-                            // ('fakultas.report.kemahasiswaan')
-                            ('fakultas.under-development')
-                                }}"><i class="icon-Commit"><span
-                                            class="path1"></span><span class="path2"></span></i>Data Kemahasiswaan</a>
-                            </li>
-                            <li class="{{request()->routeIs
-                            // ('fakultas.report.mahasiswa-aktif')
-                             ? 'active' : ''}}">
-                                <a href="{{route
-                                // ('fakultas.report.mahasiswa-aktif')
-                                ('fakultas.under-development')
-                                }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Mahasiswa Aktif</a>
-                            </li>
-                            <li class="{{request()->routeIs
-                            // ('fakultas.report.perkuliahan')
-                             ? 'active' : ''}}">
-                                <a href="{{route
-                                // ('fakultas.report.perkuliahan')
-                                ('fakultas.under-development')
-                                }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Kuliah Mahasiswa</a>
-                            </li>
-                            <li class="{{request()->routeIs
-                            // ('fakultas.report.aktivitas-mahasiswa')
-                             ? 'active' : ''}}">
-                                <a href="{{route
-                                // ('fakultas.report.aktivitas-mahasiswa')
-                                ('fakultas.under-development')
-
-                                }}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Aktivitas Mahasiswa</a>
-                            </li>
-                        </ul>
-                    </li>
+                    <li class="header">Monitoring</li>
                     <li class="treeview {{request()->routeIs
                     // ('fakultas.monitoring.*')
                      ? 'active menu-open' : ''}}">
