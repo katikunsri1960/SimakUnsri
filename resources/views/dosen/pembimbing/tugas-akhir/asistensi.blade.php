@@ -42,7 +42,7 @@ Bimbingan Tugas Akhir Dosen
                                 <tr>
                                     <td class="text-left">Judul</td>
                                     <td class="text-center">:</td>
-                                    <td class="text-left" style="text-align: justify">{{$aktivitas->judul}}</td>
+                                    <td class="text-left" style="text-align: justify">{{$aktivitas->judul}} ({{!$repository ? 'Belum Upload Repositroy' : $repository->link_repo}})</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left text-nowrap">No. SK</td>
@@ -53,6 +53,12 @@ Bimbingan Tugas Akhir Dosen
                                     <td class="text-left text-nowrap">Tanggal Mulai</td>
                                     <td class="text-center">:</td>
                                     <td class="text-left" style="text-align: justify">{{$aktivitas->id_tanggal_mulai}}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left text-nowrap">Tanggal Selesai</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$aktivitas->id_tanggal_selesai}}
                                     </td>
                                 </tr>
                                 <tr>
@@ -113,9 +119,9 @@ Bimbingan Tugas Akhir Dosen
                                     <td class="text-center align-middle">{{$d->dosen ? $d->dosen->nama_dosen : '-'}}</td>
                                     <td class="text-center align-middle">
                                         @if ($d->approved == 0)
-                                        <span class="badge bg-warning">Menunggu Persetujuan</span>
+                                            <span class="badge bg-warning">Menunggu Persetujuan</span>
                                         @elseif ($d->approved == 1)
-                                        <span class="badge bg-success">Disetujui</span>
+                                            <span class="badge bg-success">Disetujui</span>
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
@@ -204,6 +210,7 @@ Bimbingan Tugas Akhir Dosen
                                         <th>Pembimbing Ke -</th>
                                         <th>Nama Dosen</th>
                                         <th>Kategori Pembimbing</th>
+                                        <th>Nilai Proses Bimbingan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -212,6 +219,7 @@ Bimbingan Tugas Akhir Dosen
                                             <td>{{$b->pembimbing_ke}}</td>
                                             <td>{{$b->nama_dosen}}<br>({{$b->nidn}})</td>
                                             <td>{{$b->nama_kategori_kegiatan}}</td>
+                                            <td>{{$b->nilai_proses_bimbingan == '' ? 0 : $b->nilai_proses_bimbingan}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

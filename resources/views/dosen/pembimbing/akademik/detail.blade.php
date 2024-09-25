@@ -47,21 +47,30 @@ Bimbingan Akademik Dosen
                                     <td class="px-3"><h4>:</h4></td>
                                     <td class="px-3"><h4>{{$riwayat->nim}}</h4></td>
                                 </tr>
+                                <tr>
+                                    <td><h4>Nilai USEPT</h4></td>
+                                    <td class="px-3"><h4>:</h4></td>
+                                    <td class="px-3"><h4>{{$nilai_usept}}</h4></td>
+                                </tr>
                             </table>
                         </div>
                         <div class="d-flex justify-content-end align-middle">
                             <div class="">
-                                @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count()+$aktivitas_mbkm->where('approve_krs', '0')->count() > 0)
-                                    <form action="{{route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat])}}" method="post" id="approveAll">
-                                    @csrf
-                                        <button class="btn btn-primary btn-rounded" type="submit" @if ($data->where('approved', '0')->count()+$aktivitas->where('approve_krs', '0')->count()+$aktivitas_mbkm->where('approve_krs', '0')->count() == 0)
-                                            disabled
-                                        @endif><i class="fa fa-check"></i> Setujui KRS</button>
+                                @if ($data->where('approved', '0')->count() + $aktivitas->where('approve_krs', '0')->count() + $aktivitas_mbkm->where('approve_krs', '0')->count() > 0)
+                                    <form action="{{ route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat]) }}" method="post" class="d-inline" id="approveAll">
+                                        @csrf
+                                        <button class="btn btn-primary btn-rounded" type="submit" 
+                                            @if ($data->where('approved', '0')->count() + $aktivitas->where('approve_krs', '0')->count() + $aktivitas_mbkm->where('approve_krs', '0')->count() == 0)
+                                                disabled
+                                            @endif>
+                                            <i class="fa fa-check"></i> Setujui KRS
+                                        </button>
                                     </form>
                                 @endif
-                                @if ($data->where('approved', '1')->count()+$aktivitas->where('approve_krs', '1')->count()+$aktivitas_mbkm->where('approve_krs', '1')->count() > 0)
-                                    <form action="{{route('dosen.pembimbing.bimbingan-akademik.batal-krs', ['riwayat' => $riwayat])}}" method="post" id="batalKRS">
-                                    @csrf
+
+                                @if ($data->where('approved', '1')->count() + $aktivitas->where('approve_krs', '1')->count() + $aktivitas_mbkm->where('approve_krs', '1')->count() > 0)
+                                    <form action="{{ route('dosen.pembimbing.bimbingan-akademik.batal-krs', ['riwayat' => $riwayat]) }}" method="post" class="d-inline" id="batalKRS">
+                                        @csrf
                                         <button class="btn btn-warning btn-rounded" type="submit"
                                             @if ($data->where('approved', '1')->count() + $aktivitas->where('approve_krs', '1')->count() + $aktivitas_mbkm->where('approve_krs', '1')->count() == 0 || date('Y-m-d') < $semester_aktif->tanggal_mulai_kprs)
                                                 disabled
@@ -70,6 +79,10 @@ Bimbingan Akademik Dosen
                                         </button>
                                     </form>
                                 @endif
+
+                                <a class="btn btn-info btn-rounded" href="{{ route('dosen.pembimbing.bimbingan-akademik.lihat-khs', ['riwayat' => $riwayat->id_registrasi_mahasiswa]) }}">
+                                    <i class="fa fa-list-alt"></i> Nilai Perkuliahan
+                                </a>
                             </div>
                         </div>
                     </div>
