@@ -538,6 +538,7 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/set-pa/{mahasiswa}', [App\Http\Controllers\Prodi\DataMasterController::class, 'set_pa'])->name('prodi.data-master.mahasiswa.set-pa');
                     Route::post('/set-kurikulum/{mahasiswa}', [App\Http\Controllers\Prodi\DataMasterController::class, 'set_kurikulum'])->name('prodi.data-master.mahasiswa.set-kurikulum');
                     Route::post('/set-kurikulum-angkatan', [App\Http\Controllers\Prodi\DataMasterController::class, 'set_kurikulum_angkatan'])->name('prodi.data-master.mahasiswa.set-kurikulum-angkatan');
+                    Route::get('/nilai-usept/{mahasiswa}', [App\Http\Controllers\Prodi\DataMasterController::class, 'histori_nilai_usept'])->name('prodi.data-master.mahasiswa.nilai-usept');
                 });
 
                 Route::prefix('mata-kuliah')->group(function(){

@@ -164,6 +164,7 @@ Mahasiswa Prodi
                         var buttonText = data.dosen_pa ? 'Ubah' : 'Assign';
                         var buttonKurClass = data.id_kurikulum ? 'secondary' : 'primary';
                         var buttonKurText = data.id_kurikulum ? 'Ubah' : 'Set';
+                        var urlUsept = "/prodi/data-master/mahasiswa/nilai-usept/" + data.id_registrasi_mahasiswa;
                         var jsonData = encodeURIComponent(JSON.stringify(data).replace(/'/g, '&#39;'));
                         return `
                         <div class="row justify-content-center px-2">
@@ -179,6 +180,9 @@ Mahasiswa Prodi
                                     onclick="setKurikulum(decodeURIComponent('${jsonData}'), ${data.id})">
                                 <i class="fa fa-plus"></i> ${buttonKurText} Kurikulum
                             </button>
+                            <a href="${urlUsept}" class="m-2 btn btn-sm btn-rounded btn-success text-nowrap">
+                                <i class="fa fa-list-ol"></i> Nilai Usept
+                            </a>
                         </div>
                         `;
                     },

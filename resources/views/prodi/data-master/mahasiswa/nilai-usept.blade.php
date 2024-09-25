@@ -1,8 +1,13 @@
-@extends('layouts.mahasiswa')
+@extends('layouts.prodi')
 @section('title')
 Nilai USEPT Mahasiswa
 @endsection
 @section('content')
+@push('header')
+<div class="mx-4">
+    <a href="{{route('prodi.data-master.mahasiswa')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+</div>
+@endpush
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-12">
@@ -12,7 +17,7 @@ Nilai USEPT Mahasiswa
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Histori Nilai USEPT Mahasiswa,  {{auth()->user()->name}}</h2>
+								<h2 class="mb-10">Histori Nilai USEPT Mahasiswa,  {{$mahasiswa->nama_mahasiswa}}</h2>
 								<p class="mb-0 text-fade fs-18">SIMAK Universitas Sriwijaya</p>
 							</div>
 						</div>
@@ -60,7 +65,7 @@ Nilai USEPT Mahasiswa
                                         <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
                                         <td>{{ date('d M Y', strtotime($d->tgl_test)) }}</td>
                                         <td>{{$d->score}}</td>
-                                        <td class="text-center align-middle"> 
+                                        <td class="text-center align-middle">
                                             @if (!$usept_prodi)
                                                 <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>  
                                             @elseif ($d->score < $usept_prodi->nilai_usept)
@@ -108,13 +113,13 @@ Nilai USEPT Mahasiswa
                                             <td>{{$c->grade}}</td>
                                             <td>{{$c->konversi}}</td>
                                             <td class="text-center align-middle"> 
-                                            @if (!$usept_prodi)
-                                                <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>  
-                                            @elseif ($c->konversi < $usept_prodi->nilai_usept)
-                                                <span class="badge bg-danger">Belum Lulus</span>
-                                            @elseif ($c->konversi >= $usept_prodi->nilai_usept)
-                                                <span class="badge bg-success">Lulus</span>
-                                            @endif
+                                                @if ($c->konversi < $usept_prodi->nilai_usept)
+                                                    <span class="badge bg-danger">Belum Lulus</span>
+                                                @elseif ($usept_prodi->nilai_usept == NULL)
+                                                    <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
+                                                @elseif ($c->konversi >= $usept_prodi->nilai_usept)
+                                                    <span class="badge bg-success">Lulus</span>
+                                                @endif
                                             </td>
                                         @endif
                                     </tr>

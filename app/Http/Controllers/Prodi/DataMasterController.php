@@ -10,6 +10,8 @@ use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Perkuliahan\PrasyaratMatkul;
 use App\Models\Perkuliahan\RencanaPembelajaran;
+use App\Models\Connection\Usept;
+use App\Models\Connection\CourseUsept;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
@@ -125,7 +127,7 @@ class DataMasterController extends Controller
         ]);
 
         return redirect()->back()->with('success', "Data Berhasil di tambahkan");
-    }
+    } 
 
     public function set_kurikulum(RiwayatPendidikan $mahasiswa, Request $request)
     {
@@ -379,5 +381,17 @@ class DataMasterController extends Controller
                     ->where('is_active', 1)->get();
 
         return view('prodi.data-master.kurikulum-angkatan.index',);
+    }
+
+    public function histori_nilai_usept($mahasiswa)
+    {
+        $data_mahasiswa = RiwayatPendidikan::with('biodata')->where('id_registrasi_mahasiswa', $mahasiswa)->first();
+        $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->id_kurikulum)->first();
+        $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->biodata->nik])->get();
+        $db_course_usept = new CourseUsept;
+        $nilai_course = $db_course_usept->whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->biodata->nik])->get();
+
+        // dd($nilai_hasil_course);
+        return view('prodi.data-master.mahasiswa.nilai-usept', ['data' => $nilai_usept_mhs, 'usept_prodi' => $nilai_usept_prodi, 'course_data' => $nilai_course, 'mahasiswa' => $data_mahasiswa]);
     }
 }
