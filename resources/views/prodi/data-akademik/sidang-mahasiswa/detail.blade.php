@@ -190,6 +190,7 @@ Dashboard
                                         <th>Pembimbing Ke -</th>
                                         <th>Nama Dosen</th>
                                         <th>Kategori Pembimbing</th>
+                                        <th>Nilai Proses Bimbingan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -198,6 +199,7 @@ Dashboard
                                             <td>{{$b->pembimbing_ke}}</td>
                                             <td>{{$b->nama_dosen}}<br>({{$b->nidn}})</td>
                                             <td>{{$b->nama_kategori_kegiatan}}</td>
+                                            <td>{{$b->nilai_proses_bimbingan == '' ? 0 : $b->nilai_proses_bimbingan}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

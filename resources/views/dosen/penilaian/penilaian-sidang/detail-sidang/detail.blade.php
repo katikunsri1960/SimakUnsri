@@ -61,6 +61,20 @@ Dashboard
                                 />
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="mb-4">
+                                <label for="link_repositroy" class="form-label">Link Repository</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="link_repositroy"
+                                    id="link_repositroy"
+                                    aria-describedby="helpId"
+                                    value="{{!$repository ? 'Belum Upload Repository' : $repository->link_repo}}"
+                                    disabled
+                                />
+                            </div>
+                        </div>
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
@@ -190,6 +204,7 @@ Dashboard
                                         <th>Pembimbing Ke -</th>
                                         <th>Nama Dosen</th>
                                         <th>Kategori Pembimbing</th>
+                                        <th>Nilai Proses Bimbingan</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -198,6 +213,7 @@ Dashboard
                                             <td>{{$b->pembimbing_ke}}</td>
                                             <td>{{$b->nama_dosen}}<br>({{$b->nidn}})</td>
                                             <td>{{$b->nama_kategori_kegiatan}}</td>
+                                            <td>{{$b->nilai_proses_bimbingan == '' ? 0 : $b->nilai_proses_bimbingan}}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>

@@ -5,17 +5,22 @@ namespace App\Http\Controllers\Dosen\Pembimbing;
 use App\Http\Controllers\Controller;
 use App\Models\AsistensiAkhir;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\NilaiSidangMahasiswa;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\Konversi;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\Perpus\BebasPustaka;
 use App\Models\Connection\Usept;
 use App\Models\Connection\CourseUsept;
 use App\Models\Semester;
@@ -63,7 +68,33 @@ class PembimbingMahasiswaController extends Controller
     public function bimbingan_akademik_detail(RiwayatPendidikan $riwayat)
     {
         $id = $riwayat->id_registrasi_mahasiswa;
+        $biodata = BiodataMahasiswa::where('id_mahasiswa', $riwayat->id_mahasiswa)->first();
+        $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
+        $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $biodata->nik])->max('score');
+        $db_course_usept = new CourseUsept;
+        $nilai_course = $db_course_usept->whereIn('nim', [$riwayat->nim, $biodata->nik])->get();
         $semester = SemesterAktif::first();
+
+        // dd($nilai_usept_mhs);
+
+        $nilai_usept_final = "Belum Ada Nilai";
+
+        if($nilai_usept_mhs !== null) {
+            $nilai_usept_final = $nilai_usept_mhs;
+
+            if($nilai_course){
+                foreach($nilai_course as $n){
+                    $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
+                    
+                    if($nilai_hasil_course > $nilai_usept_mhs){
+                        $nilai_usept_final = $nilai_hasil_course;
+                        // Hentikan loop karena syarat sudah terpenuhi
+                        break;
+                    }
+                }
+            }
+        }
+
         $data = PesertaKelasKuliah::with(['kelas_kuliah.matkul'])
                 ->whereHas('kelas_kuliah', function($query) use ($semester) {
                     $query->where('id_semester', $semester->id_semester);
@@ -92,6 +123,7 @@ class PembimbingMahasiswaController extends Controller
 
         return view('dosen.pembimbing.akademik.detail', [
             'riwayat' => $riwayat,
+            'nilai_usept' => $nilai_usept_final,
             'data' => $data,
             'aktivitas' => $aktivitas,
             'aktivitas_mbkm' => $aktivitas_mbkm,
@@ -177,6 +209,8 @@ class PembimbingMahasiswaController extends Controller
         $aktivitas = $aktivitas->load(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa', 'prodi', 'konversi', 'uji_mahasiswa']);
         $data_pelaksanaan_sidang = $aktivitas->load(['revisi_sidang', 'notulensi_sidang', 'penilaian_sidang', 'revisi_sidang.dosen', 'penilaian_sidang.dosen']);
 
+        $repository = BebasPustaka::where('id_registrasi_mahasiswa', $aktivitas->anggota_aktivitas_personal->id_registrasi_mahasiswa)->first();
+
         $penilaian_langsung = Konversi::where('id_kurikulum', $aktivitas->anggota_aktivitas_personal->mahasiswa->id_kurikulum)->where('id_matkul', $aktivitas->konversi->id_matkul)->first();
 
         $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
@@ -187,6 +221,7 @@ class PembimbingMahasiswaController extends Controller
             'data' => $data,
             'data_pelaksanaan' => $data_pelaksanaan_sidang,
             'aktivitas' => $aktivitas,
+            'repository' => $repository,
             'penilaian_langsung' => $penilaian_langsung,
             'pembimbing_ke' => $pembimbing_ke,
         ]);
@@ -661,5 +696,66 @@ class PembimbingMahasiswaController extends Controller
             DB::rollback();
             return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
         }
+    }
+
+    public function nilai_perkuliahan($id_reg_mhs)
+    {
+        $mahasiswa = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg_mhs)->first();
+        $aktivitas_kuliah=AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','desc')->get();
+        $nilai_transfer=NilaiTransferPendidikan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
+        $nilai_konversi=KonversiAktivitas::leftJoin('anggota_aktivitas_mahasiswas', 'anggota_aktivitas_mahasiswas.id_anggota', 'konversi_aktivitas.id_anggota')
+                        ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', 'konversi_aktivitas.id_matkul')
+                        ->where('id_registrasi_mahasiswa',$id_reg_mhs)
+                        ->orderBy('id_semester','asc')
+                        ->get();
+
+
+        $transkrip_mahasiswa=NilaiPerkuliahan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
+
+        $total_sks_transfer = $nilai_transfer->whereNotIn('nilai_angka_diakui', [0, NULL] )->sum('sks_mata_kuliah_diakui');
+        $total_sks_konversi = $nilai_konversi->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
+        $total_sks_transkrip = $transkrip_mahasiswa->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
+
+        $total_sks = $total_sks_transfer + $total_sks_konversi + $total_sks_transkrip ;
+        // dd($total_sks);
+
+
+        return view('dosen.pembimbing.akademik.khs', ['mahasiswa' => $mahasiswa,'data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks'=>$total_sks]);
+    }
+
+    public function lihat_khs($id_reg_mhs, $id_semester)
+    {
+        $mahasiswa = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg_mhs)->first();
+        $aktivitas_kuliah=AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->where('id_semester', $id_semester)->get();
+
+        $nilai_mahasiswa = NilaiPerkuliahan::with(['dosen_pengajar', 'kelas_kuliah' => function($query) use ($id_reg_mhs) {
+                                                $query->withCount(['kuisoner' => function($query) use ($id_reg_mhs) {
+                                                    $query->where('id_registrasi_mahasiswa', $id_reg_mhs);
+                                                }]);
+                                            }])
+                                            ->where('id_registrasi_mahasiswa', $id_reg_mhs)
+                                            ->where('id_semester', $id_semester)
+                                            ->orderBy('nama_mata_kuliah','asc')->get();
+
+        // dd($nilai_mahasiswa);
+        $transkrip_mahasiswa=NilaiPerkuliahan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
+        $nilai_transfer=NilaiTransferPendidikan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
+        $nilai_konversi=KonversiAktivitas::leftJoin('anggota_aktivitas_mahasiswas', 'anggota_aktivitas_mahasiswas.id_anggota', 'konversi_aktivitas.id_anggota')
+                        ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', 'konversi_aktivitas.id_matkul')
+                        ->where('id_registrasi_mahasiswa',$id_reg_mhs)
+                        ->orderBy('id_semester','asc')
+                        ->get();
+
+        $semester_aktif = SemesterAktif::first()->id_semester;
+        // dd($count_kuisoner);
+        return view('dosen.pembimbing.akademik.detail-khs', [
+            'mahasiswa' => $mahasiswa,
+            'data_nilai' => $nilai_mahasiswa,
+            'data_aktivitas' => $aktivitas_kuliah,
+            'transkrip' => $transkrip_mahasiswa,
+            'nilai_konversi' => $nilai_konversi,
+            'nilai_transfer' => $nilai_transfer,
+            'semester_aktif' => $semester_aktif,
+        ]);
     }
 }
