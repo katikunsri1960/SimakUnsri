@@ -32,8 +32,10 @@ Transkrip Nilai
                         <p class="mb-0">Data Transkrip sedang proses sinkronisasi. Harap menunggu terlebih dahulu!</p>
                         {{-- progress bar --}}
                         <div class="progress mt-3">
-                            <div id="sync-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
-                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                            <div id="sync-progress-bar"
+                                class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                style="width: 0%"></div>
                         </div>
                     </div>
                     @else
@@ -43,8 +45,10 @@ Transkrip Nilai
                             <label class="col-form-label col-md-2">NIM</label>
                             <div class="col-md-10">
                                 <div class="input-group">
-                                    <input type="text" class="form-control" id="nim" placeholder="Masukan NIM mahasiswa">
-                                    <button class="btn btn-primary" id="btnCari"><i class="fa fa-search"></i> Cari</button>
+                                    <input type="text" class="form-control" id="nim"
+                                        placeholder="Masukan NIM mahasiswa">
+                                    <button class="btn btn-primary" id="btnCari"><i class="fa fa-search"></i>
+                                        Cari</button>
                                 </div>
                             </div>
                         </div>
@@ -57,9 +61,11 @@ Transkrip Nilai
                             <div class="table-responsive">
                                 <div id="krsDiv" hidden>
                                     <div class="row mb-2">
-                                        <form action="{{route('bak.transkrip-nilai.download')}}" method="get" id="cetakForm" target="_blank">
+                                        <form action="{{route('fakultas.data-akademik.transkrip-nilai.download')}}" method="get"
+                                            id="cetakForm" target="_blank">
                                             <input type="hidden" name="nim" id="nimCetak">
-                                            <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
+                                            <button class="btn btn-success" type="submit"><i class="fa fa-print"></i>
+                                                Cetak</button>
                                         </form>
                                     </div>
                                     <h3 class="text-center">Transkrip Mahasiswa</h3>
@@ -72,7 +78,8 @@ Transkrip Nilai
                                                 <tr>
                                                     <td class="text-start align-middle" style="width: 12%">NIM</td>
                                                     <td>:</td>
-                                                    <td class="text-start" id="nimKrs" style="width: 45%; padding-left: 10px"></td>
+                                                    <td class="text-start" id="nimKrs"
+                                                        style="width: 45%; padding-left: 10px"></td>
                                                     <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
                                                     <td>:</td>
                                                     <td class="text-start align-middle" id="fakultasKrs"
@@ -81,7 +88,8 @@ Transkrip Nilai
                                                 <tr>
                                                     <td class="text-start align-middle" style="width: 12%">NAMA</td>
                                                     <td>:</td>
-                                                    <td class="text-start" id="namaKrs" style="width: 45%; padding-left: 10px"></td>
+                                                    <td class="text-start" id="namaKrs"
+                                                        style="width: 45%; padding-left: 10px"></td>
                                                     <td class="text-start align-middle" style="width: 18%">JURUSAN</td>
                                                     <td>:</td>
                                                     <td class="text-start align-middle" id="jurusanKrs"
@@ -90,8 +98,10 @@ Transkrip Nilai
                                                 <tr>
                                                     <td class="text-start align-middle" style="width: 12%">NIP PA</td>
                                                     <td>:</td>
-                                                    <td class="text-start" id="nippaKrs" style="width: 45%; padding-left: 10px"></td>
-                                                    <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI</td>
+                                                    <td class="text-start" id="nippaKrs"
+                                                        style="width: 45%; padding-left: 10px"></td>
+                                                    <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI
+                                                    </td>
                                                     <td>:</td>
                                                     <td class="text-start align-middle" id="prodiKrs"
                                                         style="width: 30%; padding-left: 10px"></td>
@@ -99,19 +109,55 @@ Transkrip Nilai
                                                 <tr>
                                                     <td class="text-start align-middle" style="width: 12%">DOSEN PA</td>
                                                     <td>:</td>
-                                                    <td class="text-start" id="dosenpaKrs" style="width: 45%; padding-left: 10px"></td>
-                                                    <td class="text-start align-middle" style="width: 18%">SEMESTER</td>
-                                                    <td>:</td>
+                                                    <td class="text-start" id="dosenpaKrs"
+                                                        style="width: 45%; padding-left: 10px"></td>
+                                                    <td class="text-start align-middle" style="width: 18%"></td>
+                                                    <td></td>
                                                     <td class="text-start align-middle" id="semesterKrs"
                                                         style="width: 30%; padding-left: 10px"></td>
                                                 </tr>
                                             </table>
                                         </div>
                                     </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-2 text-center">
+                                            <div class="bg-primary rounded p-2">
+                                                <i class="fa fa-qrcode" style="font-size: 45px"></i>
+                                            </div>
 
-                                    <div class="d-flex justify-content-end align-middle">
+                                        </div>
+                                        <div class="col-md-10">
+                                            <table style="width:100%; text-size: 15pt" class="mb-3">
+                                                <tr>
+                                                    <td class="text-start align-middle" style="width: 12%">Bebas Pustaka
+                                                    </td>
+                                                    <td>:</td>
+                                                    <td class="text-start"
+                                                        style="width: 45%; padding-left: 10px"> <div id="statusBebasPustaka"></div> </td>
+                                                    <td class="text-start align-middle" style="width: 18%">Upload Repository</td>
+                                                    <td>:</td>
+                                                    <td class="text-start align-middle"
+                                                        style="width: 30%; padding-left: 10px">
+                                                        <div id="uploadRepo"></div>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td class="text-center align-middle" style="width: 12%">Nilai USEPT</td>
+                                                    <td>:</td>
+                                                    <td class="text-start"
+                                                        style="width: 45%; padding-left: 10px"> <div id="nilaiUsept"></div> </td>
+                                                    <td class="text-start align-middle" style="width: 18%"></td>
+                                                    <td></td>
+                                                    <td class="text-start align-middle"
+                                                        style="width: 30%; padding-left: 10px">
 
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
                                     </div>
+
                                     <table class="table table-bordered mt-4" id="krs-regular">
                                         <thead>
                                             <tr>
@@ -132,16 +178,16 @@ Transkrip Nilai
                                             <tr>
                                                 <th colspan="3" class="text-center align-middle">Total SKS</th>
                                                 <th class="text-center align-middle" id="totalSks"></th>
-                                                <th ></th>
-                                                <th ></th>
-                                                <th ></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
                                             </tr>
                                             <tr>
                                                 <th colspan="3" class="text-center align-middle">IPK</th>
                                                 <th class="text-center align-middle" id="ipk"></th>
-                                                <th ></th>
-                                                <th ></th>
-                                                <th ></th>
+                                                <th></th>
+                                                <th></th>
+                                                <th></th>
                                             </tr>
                                         </tfoot>
                                     </table>
@@ -153,7 +199,7 @@ Transkrip Nilai
                                                 <tr>
                                                     <th class="text-center align-middle">No</th>
                                                     <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                    <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                    <th class="text-start align-middle">Nama Mata Kuliah</th>
                                                     <th class="text-center align-middle">Semester</th>
                                                     <th class="text-center align-middle">SKS Diakui</th>
                                                     <th class="text-center align-middle">Nilai Index Diakui</th>
@@ -186,8 +232,8 @@ Transkrip Nilai
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
             var statusSync = @json($statusSync);
             var idBatch = @json($id_batch); // Assuming you have $idBatch available in your Blade template
 
@@ -229,15 +275,17 @@ Transkrip Nilai
                 }
             });
         }
-
         $(document).ready(function () {
             $('#btnCari').click(function () {
                 var nim = $('#nim').val();
+                // fix error cannot reinitialize DataTable
+                $('#krs-regular').DataTable().clear().destroy();
+              
                 if (nim == '') {
                     swal('Peringatan', 'NIM tidak boleh kosong', 'warning');
                 } else {
                     $.ajax({
-                        url: '{{route('bak.transkrip-nilai.get')}}',
+                        url: '{{route('fakultas.data-akademik.transkrip-nilai.get')}}',
                         type: 'GET',
                         data: {
                             nim: nim
@@ -257,7 +305,7 @@ Transkrip Nilai
                                 });
                                 return false;
                             }
-                            $('#nimCetak').val(nim);
+                            $('#nimCetak').val(response.riwayat.nim);
                             $('#krsDiv').removeAttr('hidden');
                             // append response.krs to table of krs-regular
                             $('#nimKrs').text(response.riwayat.nim);
@@ -271,10 +319,24 @@ Transkrip Nilai
                             $('#nippaKrs').text(nip_pa);
                             var dosen_pa = response.riwayat.pembimbing_akademik ? response.riwayat.pembimbing_akademik.nama_dosen : '-';
                             $('#dosenpaKrs').text(dosen_pa);
-                            $('#prodiKrs').text(response.riwayat.prodi.nama_program_studi);
+                            var fullProdi = response.riwayat.prodi.nama_jenjang_pendidikan + ' ' + response.riwayat.prodi.nama_program_studi;
+                            $('#prodiKrs').text(fullProdi);
                             var semesterText =  $('#semester option:selected').text();
                             $('#semesterKrs').text(semesterText);
                             $('#krs-regular tbody').empty();
+
+                            if(response.bebas_pustaka == null){
+                                $('#statusBebasPustaka').html('<span class="badge bg-danger">Belum Bebas Pustaka</span>');
+                                $('#uploadRepo').html('<span class="badge bg-danger">Belum Upload Repository</span>');
+                            }else{
+                                $('#statusBebasPustaka').html('<a class="btn btn-success btn-sm" href="' + '{{ asset('storage') }}/' + response.bebas_pustaka.file_bebas_pustaka + '" target="_blank">Sudah Bebas Pustaka</a>');
+                                $('#uploadRepo').html('<a class="btn btn-success btn-sm" href="' + response.bebas_pustaka.link_repo + '" target="_blank">Sudah Upload Repository</a>');
+                            }
+
+                            $('#nilaiUsept').html(`
+                                <span class="badge bg-${response.usept.class}">${response.usept.score} (${response.usept.status})</span>
+                                `);
+
 
                             // append foto
                             var imagePath = '{{ asset('storage') }}' + '/' + response.riwayat.angkatan + '/' + response.riwayat.nim + '.jpg';
@@ -339,5 +401,5 @@ Transkrip Nilai
                 }
             });
         });
-    </script>
+</script>
 @endpush

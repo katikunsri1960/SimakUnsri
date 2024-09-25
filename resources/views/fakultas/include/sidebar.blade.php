@@ -88,8 +88,8 @@
                                     Yudisium Mahasiswa
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.transkrip-nilai') || request()->routeIs('fakultas.transkrip-nilai.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.transkrip-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                            <li class="{{request()->routeIs('fakultas.data-akademik.transkrip-nilai') || request()->routeIs('fakultas.data-akademik.transkrip-nilai.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-akademik.transkrip-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     Daftar Transkrip Nilai
                                 </a>
                             </li>

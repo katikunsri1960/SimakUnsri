@@ -5,8 +5,12 @@ namespace App\Http\Controllers\Fakultas\Akademik;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Connection\Usept;
 use Illuminate\Support\Facades\DB;
+use App\Models\Perpus\BebasPustaka;
 use App\Http\Controllers\Controller;
+use App\Models\Connection\CourseUsept;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
@@ -52,6 +56,20 @@ class TranskripController extends Controller
             ]);
         }
 
+        $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
+        $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
+        $nilai_course = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get()->pluck('konversi');
+
+        // Combine the scores and find the maximum
+        $all_scores = $nilai_usept_mhs->merge($nilai_course);
+        $usept = $all_scores->max();
+
+        $useptData = [
+            'score' => $usept,
+            'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
+            'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
+        ];
+
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
@@ -63,6 +81,8 @@ class TranskripController extends Controller
                 ->orderBy('id_semester', 'desc')
                 ->get();
 
+        $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
+
         $data = [
             'status' => 'success',
             'data' => $transkrip,
@@ -70,6 +90,8 @@ class TranskripController extends Controller
             'riwayat' => $riwayat,
             'total_sks' => $total_sks,
             'ipk' => $ipk,
+            'bebas_pustaka' => $bebas_pustaka,
+            'usept' => $useptData,
         ];
 
         return response()->json($data);
@@ -111,6 +133,7 @@ class TranskripController extends Controller
             'akm' => $akm,
             'total_sks' => $total_sks,
             'ipk' => $ipk,
+            'bebas_pustaka' => BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first(),
          ])
          ->setPaper('a4', 'portrait');
          

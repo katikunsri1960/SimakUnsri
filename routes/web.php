@@ -129,7 +129,7 @@ Route::group(['middleware' => ['auth']], function() {
                 });
 
                 Route::prefix('nilai-usept')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\NilaiUSEPTController::class, 'nilai_usept'])->name('fakultas.data-akademik.nilai-usept.devop');
+                    // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\NilaiUSEPTController::class, 'nilai_usept'])->name('fakultas.data-akademik.nilai-usept.devop');
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\NilaiUSEPTController::class, 'index'])->name('fakultas.data-akademik.nilai-usept');
                     // Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\NilaiUSEPTController::class, 'data'])->name('fakultas.data-akademik.nilai-usept.data');
                     Route::Get('/get-nilai-usept', [App\Http\Controllers\Fakultas\Akademik\NilaiUSEPTController::class, 'data'])->name('fakultas.data-akademik.nilai-usept.get');
@@ -170,9 +170,9 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('fakultas.data-akademik.yudisium-mahasiswa');
 
                 Route::prefix('transkrip-nilai')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'index'])->name('fakultas.transkrip-nilai');
-                    Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'data'])->name('fakultas.transkrip-nilai.get');
-                    Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'download'])->name('fakultas.transkrip-nilai.download');
+                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'index'])->name('fakultas.data-akademik.transkrip-nilai');
+                    Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'data'])->name('fakultas.data-akademik.transkrip-nilai.get');
+                    Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'download'])->name('fakultas.data-akademik.transkrip-nilai.download');
                 });
             });
 
