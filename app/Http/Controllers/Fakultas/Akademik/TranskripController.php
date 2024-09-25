@@ -12,8 +12,10 @@ use App\Http\Controllers\Controller;
 use App\Models\Connection\CourseUsept;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PejabatFakultas;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use Carbon\Carbon;
 
 class TranskripController extends Controller
 {
@@ -141,6 +143,8 @@ class TranskripController extends Controller
             'akm' => $akm,
             'total_sks' => $total_sks,
             'ipk' => $ipk,
+            'today'=> Carbon::now(),
+            'wd1' => PejabatFakultas::where('id_fakultas', $riwayat->prodi->fakultas_id)->where('id_jabatan', 1)->first(),
             'bebas_pustaka' => BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first(),
          ])
          ->setPaper('a4', 'portrait');

@@ -76,5 +76,44 @@
             </tfoot>
         </table>
     </div>
+    <table style="width: 100%">
+        <tbody>
+            <tr>
+                <td height="20"></td>
+            </tr>
+            <tr width="100%">
+                <td width="60%"></td>
+                <td width="50%" class="text-right text-10" >
+                        Inderalaya, {{ $today->locale('id')->translatedFormat('d F Y')}}
+                </td>
+            </tr>
+            <tr>
+                <td class="text-left text-10" width="60%">
+                    {{-- Catatan: --}}
+                </td>
+                <td width="50%" class="text-right text-10" >Wakil Dekan Bidang Akademik,</td>
+            </tr>
+            <tr>
+                <td class="text-left text-10" width="60%" style="vertical-align: text-top">
+                    {{-- KSM harus dibawa pada saat mengikuti ujian akhir semester --}}
+                </td>
+                <td height="60" width="50%" class="text-right text-10 mx-50"><strong>dto<strong></td>
+            </tr>
+            <tr>
+                <td width="50%"></td>
+                <td width="50%" class="text-right text-10" >
+                    {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->gelar_depan + $wd1->nama_dosen + $wd1->gelar_belakang}}
+                </td>
+            </tr>
+            <tr>
+                <td class="text-left text-10" width="60%" style="font-style: italic; ">
+                    {{-- Lembar untuk mahasiswa --}}
+                </td>
+                <td width="50%" class="text-right text-10" >
+                    NIP. {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->nidn}}
+                </td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 @endsection

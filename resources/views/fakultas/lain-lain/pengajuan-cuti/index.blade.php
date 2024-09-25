@@ -90,9 +90,9 @@ Pengajuan Cuti Fakultas
                                                 @if($d->approved < 3)
                                                     <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
                                                 @endif
-                                                <a href="{{ asset($d->file_pendukung) }}" target="_blank" class="btn btn-primary">
+                                                <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-primary">
                                                     <i class="fa fa-file-pdf-o"></i> File Pendukung
-                                                </a>                                                
+                                                </a>                                                                                            
                                             </div>
                                         </td>
                                     </tr>
