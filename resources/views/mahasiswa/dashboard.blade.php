@@ -23,27 +23,11 @@ Dashboard
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row mb-20">
         <div class="col-12">
             <div class="box no-shadow mb-0 bg-transparent">
                 <div class="box-header no-border px-0">
                     <h4 class="box-title">Dashboard</h4>
-                    {{-- <ul class="box-controls pull-right d-md-flex d-none">
-                        <li>
-                            <button class="btn btn-primary-light px-10">View All</button>
-                        </li>
-                        <li class="dropdown">
-                            <button class="dropdown-toggle btn btn-primary-light px-10" data-bs-toggle="dropdown"
-                                href="#" aria-expanded="false">Most
-                                Popular</button>
-                            <div class="dropdown-menu dropdown-menu-end" style="">
-                                <a class="dropdown-item active" href="#">Today</a>
-                                <a class="dropdown-item" href="#">Yesterday</a>
-                                <a class="dropdown-item" href="#">Last week</a>
-                                <a class="dropdown-item" href="#">Last month</a>
-                            </div>
-                        </li>
-                    </ul> --}}
                 </div>
             </div>
         </div>
@@ -67,29 +51,6 @@ Dashboard
                 </div>
             </div>
         </div>
-        {{-- <div class="col-xl-3 col-md-6 col-12">
-            <div class="box text-white bg-info pull-up">
-                <div class="box-header with-border">
-                    <div class="d-flex align-items-center">
-                        <span class="rounded bg-primary p-2"><i class="fa fa-money"></i></span>
-                        <h4 class="box-title text-white mx-10">UKT</h4>
-                    </div>
-                </div>
-                <div class="box-body">
-                    <div class="flex-grow-1">
-                        @if (!empty($tagihan->total_nilai_tagihan))
-                            <h2 class="mb-5">Rp  {{number_format($tagihan->total_nilai_tagihan, 0, ',', '.') }}</h2>
-                        @else
-                            <h2 class="mt-5 mb-0" style="color:#0052cc">Tidak Diisi</h2>
-                        @endif
-
-                        <p class="text-fade mb-0 fs-12 {{$tagihan->status_pembayaran === NULL ? 'text-danger' : 'text-white'}}">
-                            {{$tagihan->status_pembayaran===NULL ? 'Tagihan Belum Bayar' : 'Tagihan Belum Bayar'}}
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div> --}}
         <div class="col-xl-4 col-md-6 col-12">
             <div class="box text-white bg-danger pull-up">
                 <div class="box-header with-border">
@@ -123,6 +84,98 @@ Dashboard
                         @endif
                         
                         <p class="text-fade mb-0 fs-12 text-white">Total SKS yang telah ditempuh</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{-- <div class="box bg-transparent no-shadow mb-30">
+            
+    </div> --}}
+    <div class="row mb-20">
+        <div class="col-12-xl">
+            <div class="box no-shadow mb-0 bg-transparent pb-10">
+                <h4 class="box-title">Status Mahasiswa</h4>
+            </div>
+        </div>
+        <div class="col-xl-3">
+            <div class="box mb-15 pull-up">
+                <div class="box-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="mr-15 bg-primary-light h-50 w-50 l-h-60 rounded text-center">
+                                <i class="fa fa-graduation-cap"></i>
+                            </div>
+                            <div class="d-flex flex-column font-weight-500" style="margin-left: 20px">
+                                <a class="text-dark hover-primary mb-1 font-size-16"><strong>Status Aktif</strong></a>
+                                @if ($riwayat_pendidikan->keterangan_keluar == NULL)
+                                    <a class="badge bg-primary badge-lg">Aktif</a>
+                                @elseif($riwayat_pendidikan->id_jenis_keluar == 1)
+                                    <a class="badge bg-success badge-lg">Lulus</a>
+                                @else
+                                    <a class="badge bg-warning">{{$riwayat_pendidikan->keterangan_keluar}}</a>                               
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3">
+            <div class="box mb-15 pull-up">
+                <div class="box-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="mr-15 bg-primary-light h-50 w-50 l-h-60 rounded text-center">
+                                <i class="fa fa-pencil"></i>
+                            </div>
+                            <div class="d-flex flex-column font-weight-500" style="margin-left: 20px">
+                                <a class="text-dark hover-primary mb-1 font-size-16"><strong>Nilai USEPT</strong></a>
+                                <a class="badge bg-{{ $usept_data['class'] }} badge-lg">{{ $usept_data['score'] }} ({{ $usept_data['status'] }})</a>
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3">
+            <div class="box mb-15 pull-up">
+                <div class="box-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="mr-15 bg-primary-light h-50 w-50 l-h-60 rounded text-center">
+                                <i class="fa fa-book-open"></i>
+                            </div>
+                            <div class="d-flex flex-column font-weight-500" style="margin-left: 20px">
+                                <a class="text-dark hover-primary mb-1 font-size-16"><strong>Bebas Pustaka</strong></a>
+                                @if ($bebas_pustaka == NULL)
+                                    <a class="badge bg-danger badge-lg">Belum Bebas Pustaka</a>
+                                @else
+                                    <a class="btn btn-success btn-sm" href="asset('storage/{{$bebas_pustaka->file_bebas_pustaka}}'" title="Lihat Surat Bebas Pustaka" target="_blank">Sudah Bebas Pustaka</a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3">
+            <div class="box mb-15 pull-up">
+                <div class="box-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div class="d-flex align-items-center">
+                            <div class="mr-15 bg-primary-light h-50 w-50 l-h-60 rounded text-center">
+                                <i class="fa fa-bookmark"></i>
+                            </div>
+                            <div class="d-flex flex-column font-weight-500" style="margin-left: 20px">
+                                <a class="text-dark hover-primary mb-1 font-size-16"><strong>Upload Repository</strong></a>
+                                @if ($bebas_pustaka == NULL)
+                                    <a class="badge bg-danger badge-lg">Belum Upload Repository</a>
+                                @else
+                                    <a class="btn btn-success btn-sm" href="{{$bebas_pustaka->link_repo}}" title="Lihat Link Repository" target="_blank">{{$bebas_pustaka->link_repo}}</a>
+                                @endif
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
