@@ -120,7 +120,7 @@ Dashboard
                                             name="jenis_aktivitas"
                                             id="jenis_aktivitas"
                                             aria-describedby="helpId"
-                                            value="{{$data->nama_jenis_aktivitas}} ({{$data->konversi->kode_mata_kuliah}} - {{$data->konversi->nama_mata_kuliah}})"
+                                            value="{{$data->nama_jenis_aktivitas}} ({{!$data->konversi ? '' : $data->konversi->kode_mata_kuliah}} - {{!$data->konversi ? '' : $data->konversi->nama_mata_kuliah}})"
                                             disabled
                                         />
                                     </div>
