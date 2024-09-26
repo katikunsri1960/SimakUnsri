@@ -42,7 +42,12 @@ Bimbingan Tugas Akhir Dosen
                                 <tr>
                                     <td class="text-left">Judul</td>
                                     <td class="text-center">:</td>
-                                    <td class="text-left" style="text-align: justify">{{$aktivitas->judul}} ({{!$repository ? 'Belum Upload Repositroy' : $repository->link_repo}})</td>
+                                    <td class="text-left" style="text-align: justify">{{$aktivitas->judul}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Link Repository</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{!$repository ? 'Belum Upload Repositroy' : $repository->link_repo}}</td>
                                 </tr>
                                 <tr>
                                     <td class="text-left text-nowrap">No. SK</td>
