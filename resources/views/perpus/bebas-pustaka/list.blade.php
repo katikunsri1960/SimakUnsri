@@ -130,7 +130,7 @@ $(function () {
                         return '<a href="' + data + '" target="_blank" class="btn btn-primary btn-outline btn-sm"><i class="fa fa-link pe-1"></i> Link Repo </a>';
                     }
                 },
-                { data: 'nama_user', name: 'nama_user', class: 'text-center', searchable: true,  sortable: false,},
+                { data: 'verifikator', name: 'verifikator', class: 'text-center', searchable: true,  sortable: false,},
                 {
                     data: 'id',
                     name: 'id',

@@ -101,20 +101,36 @@ BEBAS PUSTAKA
                                         <div class="row">
                                             <input type="hidden" name="id_registrasi_mahasiswa"
                                                 id="id_registrasi_mahasiswa">
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="mb-3">
                                                     <label for="file_bebas_pustaka" class="form-label">File Bebas Pustaka <span class="text-danger">(PDF, Max 1 Mb!)</span></label>
                                                     <input type="file" class="form-control" name="file_bebas_pustaka" id="file_bebas_pustaka" placeholder="Max 1MB!" aria-describedby="fileHelpId" />
                                                     <div id="fileError" class="text-danger" style="display: none;">File size exceeds 1MB!</div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
+                                            <div class="col-md-4">
                                                 <div class="mb-3">
                                                     <label for="link_repo" class="form-label">Link Repo
                                                         TA/Skripsi/Thesis/Disertasi</label>
                                                     <input type="url" class="form-control" name="link_repo"
                                                         id="link_repo" aria-describedby="helpId" placeholder="" />
                                                 </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="mb-3">
+                                                    <label for="verifikator" class="form-label">Verifikator</label>
+                                                    <select
+                                                        class="form-select"
+                                                        name="verifikator"
+                                                        id="verifikator"
+                                                    >
+                                                       @foreach ($verifikator as $v => $verifikator)
+                                                            <option value="{{$verifikator}}">{{$verifikator}}</option>
+                                                        @endforeach
+
+                                                    </select>
+                                                </div>
+
                                             </div>
                                             <div class="col-md-12">
                                                 <div class="row p-4">

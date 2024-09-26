@@ -13,7 +13,14 @@ class BebasPustakaController extends Controller
 {
     public function index()
     {
-        return view('perpus.bebas-pustaka.index');
+        $verifikator = [
+            "RTS",
+            "NO",
+        ];
+        return view('perpus.bebas-pustaka.index',
+        [
+            'verifikator' => $verifikator,
+        ]);
     }
 
     public function getData(Request $request)
@@ -29,7 +36,7 @@ class BebasPustakaController extends Controller
                 'message' => 'Data Bebas Pustaka sudah ada!!',
             ]);
         }
-        
+
         if(!$riwayat) {
             return response()->json([
                 'status' => 'error',
@@ -51,6 +58,7 @@ class BebasPustakaController extends Controller
             'id_registrasi_mahasiswa' => 'required|unique:bebas_pustakas,id_registrasi_mahasiswa',
             'file_bebas_pustaka' => 'required|file|mimes:pdf|max:1024',
             'link_repo' => 'required|active_url',
+            "verifikator" => 'required',
         ]);
 
         $data['user_id'] = auth()->user()->id;
