@@ -9,18 +9,30 @@ use App\Models\Perkuliahan\NotulensiSidangMahasiswa;
 use App\Models\Perkuliahan\RevisiSidangMahasiswa;
 use App\Models\Perkuliahan\NilaiSidangMahasiswa;
 use App\Models\Perpus\BebasPustaka;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class PenilaianSidangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        if ($request->has('semester') && $request->semester != '') {
+            $id_semester = $request->semester;
+        } else {
+            $id_semester = SemesterAktif::first()->id_semester;
+        }
+
         $db = new AktivitasMahasiswa;
-        $data = $db->uji_dosen(auth()->user()->fk_id);
+        $data = $db->uji_dosen(auth()->user()->fk_id, $id_semester);
+
+        $semester = Semester::orderBy('id_semester', 'desc')->get();
         // dd($data);
         return view('dosen.penilaian.penilaian-sidang.index', [
-            'data' => $data
+            'data' => $data,
+            'semester' => $semester,
+            'id_semester' => $id_semester
         ]);
     }
 

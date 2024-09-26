@@ -30,6 +30,14 @@ Sidang Mahasiswa
                         <div class="d-flex justify-content-start">
                             <h4 class="fw-500 text-dark mt-0">Daftar Sidang Mahasiswa</h4>
                         </div>
+                        <div class="d-flex justify-content-end px-3">
+                            <select name="semester" id="semester_select" class="form-select">
+                                <option value="">-- Pilih Semester --</option>
+                                @foreach ($semester as $s)
+                                    <option value="{{$s->id_semester}}" @if ($s->id_semester == $id_semester) selected @endif>{{$s->nama_semester}}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-2">
@@ -51,7 +59,7 @@ Sidang Mahasiswa
                                 <tr>
                                     <td>{{$loop->iteration}}</td>
                                     <td>
-                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{!$d->konversi ? '' : $d->konversi->kode_mata_kuliah}} - {{!$d->konversi ? '' : $d->konversi->nama_mata_kuliah}})
                                     </td>
                                     <td class="text-start align-middle">
                                         <ul>
@@ -122,6 +130,8 @@ Sidang Mahasiswa
     <link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
 @endpush
 @push('js')
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
+<script>
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script>
 
@@ -134,6 +144,16 @@ Sidang Mahasiswa
             "info": true,
             "autoWidth": true,
             "responsive": true,
+        });
+
+        $('#semester_select').select2({
+            placeholder: '-- Pilih Semester --',
+            width: '100%',
+        });
+
+        $('#semester_select').on('change', function (e) {
+            var id = $(this).val();
+            window.location.href = "{{route('dosen.penilaian.sidang-mahasiswa')}}?semester=" + id;
         });
 
         $('.approve-class').on('submit', function(e) {
