@@ -22,9 +22,9 @@
                         <select name="id_jabatan" id="id_jabatan" required class="form-select">
                             <option value="" selected disabled>-- Pilih Jabatan --</option>
                             <option value="0">Dekan Fakultas</option>
-                            <option value="1">Wakil Dekan I Bidang Akademik</option>
-                            <option value="2">Wakil Dekan II Bidang Keuangan</option>
-                            <option value="3">Wakil Dekan III Bidang Kemahasiswaan</option>
+                            <option value="1">Wakil Dekan Bidang Akademik</option>
+                            <option value="2">Wakil Dekan Bidang Umum, Keuangan & Kepegawaian</option>
+                            <option value="3">Wakil Dekan Bidang Kemahasiswaan dan Alumni</option>
                         </select>
                     </div>
                     <div id="gelar-depan-fields">

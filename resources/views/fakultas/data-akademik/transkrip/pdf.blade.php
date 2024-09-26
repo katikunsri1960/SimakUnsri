@@ -91,6 +91,12 @@
                 <td class="text-left text-10" width="60%">
                     {{-- Catatan: --}}
                 </td>
+                <td width="50%" class="text-right text-10" >a.n Dekan</td>
+            </tr>
+            <tr>
+                <td class="text-left text-10" width="60%">
+                    {{-- Catatan: --}}
+                </td>
                 <td width="50%" class="text-right text-10" >Wakil Dekan Bidang Akademik,</td>
             </tr>
             <tr>
@@ -101,16 +107,16 @@
             </tr>
             <tr>
                 <td width="50%"></td>
-                <td width="50%" class="text-right text-10" >
-                    {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->gelar_depan + $wd1->nama_dosen + $wd1->gelar_belakang}}
-                </td>
+                <td width="60%" class="text-right text-10">
+                    {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->gelar_depan . ' ' . $wd1->nama_dosen . ', ' . $wd1->gelar_belakang }}
+                </td>                
             </tr>
             <tr>
                 <td class="text-left text-10" width="60%" style="font-style: italic; ">
                     {{-- Lembar untuk mahasiswa --}}
                 </td>
-                <td width="50%" class="text-right text-10" >
-                    NIP. {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->nidn}}
+                <td width="60%" class="text-right text-10" >
+                    NIP. {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->dosen->nip}}
                 </td>
             </tr>
         </tbody>

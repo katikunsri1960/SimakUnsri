@@ -10,6 +10,7 @@ use App\Models\Mahasiswa\LulusDo;
 use App\Models\Dosen\BiodataDosen;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\Fakultas;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 
 class PejabatFakultasController extends Controller
@@ -24,21 +25,26 @@ class PejabatFakultasController extends Controller
      */
     public function index(Request $request)
     {
-        $data = PejabatFakultas::with(['dosen', 'prodi'])->orderBy('id_jabatan', 'ASC')->get();
-        // $semester = Semester::orderBy('id_semester', 'desc')->get();
+        $fakultas_id = auth()->user()->fk_id;
+
+        $data = PejabatFakultas::with(['dosen', 'prodi'])->where('id_fakultas', $fakultas_id)->orderBy('id_jabatan', 'ASC')->get();
+        // dd($data);
 
         return view('fakultas.data-master.pejabat-fakultas.index', compact('data'));
     }
 
     public function store(Request $request)
     {
+        $fakultas_id = auth()->user()->fk_id;
         // dd($request->all());
 
         $data = $request->validate([
-            'id_dosen' => 'required',
+            'id_dosen' => 'required|string|max:255',
             'id_jabatan' => 'required|in:0,1,2,3',
             'tgl_mulai_jabatan' => 'required|date',
             'tgl_selesai_jabatan' => 'required|date',
+            'gelar_depan' => 'nullable|string',
+            'gelar_belakang' => 'nullable|string' ,
         ]);
 
         $semester_aktif = SemesterAktif::first();
@@ -50,15 +56,16 @@ class PejabatFakultasController extends Controller
                     ->where('id_dosen', $request->id_dosen)
                     ->firstOrFail();
 
+            $fakultas= Fakultas::where('id', $fakultas_id)->first();
             
             if ($request->id_jabatan == 0) {
                 $nama_jabatan = 'Dekan Fakultas';
             } elseif ($request->id_jabatan == 1) {
-                $nama_jabatan = 'Wakil Dekan I Bidang Akademik';
+                $nama_jabatan = 'Wakil Deka Bidang Akademik';
             } elseif ($request->id_jabatan == 2) {
-                $nama_jabatan = 'Wakil Dekan II Bidang Keuangan';
+                $nama_jabatan = 'Wakil Dekan Bidang Umum, Keuangan & Kepegawaian';
             } elseif ($request->id_jabatan == 3) {
-                $nama_jabatan = 'Wakil Dekan III Bidang Kemahasiswaan';
+                $nama_jabatan = 'Wakil Dekan Bidang Kemahasiswaan dan Alumni';
             } else{
                 $nama_jabatan = 'Tidak Diisi';
             }
@@ -74,9 +81,8 @@ class PejabatFakultasController extends Controller
             $data['nip'] = $dosen->biodata->nip;
             $data['gelar_depan'] = $request->gelar_depan;
             $data['gelar_belakang'] = $request->gelar_belakang;
-            $data['id_prodi'] = $dosen->id_prodi;
-            $data['id_fakultas'] = $dosen->prodi->fakultas->id;
-            $data['nama_fakultas'] = $dosen->prodi->fakultas->nama_fakultas;
+            $data['id_fakultas'] = $fakultas->id;
+            $data['nama_fakultas'] = $fakultas->nama_fakultas;
             $data['tgl_mulai_jabatan'] = $request->tgl_mulai_jabatan;
             $data['tgl_selesai_jabatan'] = $request->tgl_selesai_jabatan;
             
