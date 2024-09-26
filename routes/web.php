@@ -133,6 +133,7 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::prefix('khs')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs'])->name('fakultas.data-akademik.khs');
                     Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'data'])->name('fakultas.data-akademik.khs.data');
+                    Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'download'])->name('fakultas.data-akademik.khs.download');
                 });
 
                 Route::prefix('nilai-usept')->group(function(){
