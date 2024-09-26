@@ -144,6 +144,6 @@ class KHSController extends Controller
          ->setPaper('a4', 'portrait');
         //  dd($pdf);
 
-         return $pdf->stream('transkrip-'.$riwayat->nim.'.pdf');
+         return $pdf->stream('KHS-'.$riwayat->nim.'-'.$semester->nama_semester.'.pdf');
     }
 }
