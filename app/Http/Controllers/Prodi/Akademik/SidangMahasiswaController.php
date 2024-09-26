@@ -285,6 +285,11 @@ class SidangMahasiswaController extends Controller
         $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
         $nilai_akhir = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->where('nim', $data->anggota_aktivitas_personal->nim)->first();
 
+        // dd(count($pembimbing)+count($penguji));
+        if(count($data_nilai_sidang) != (count($pembimbing)+count($penguji))){
+            return redirect()->back()->with('error', 'Nilai Sidang Belum Lengkap.');
+        }
+
         //Generate nilai akhir sidang
         $bobot_penguji = round((60/count($penguji)),2);
         $bobot_pembimbing = round((30/count($pembimbing)),2);
@@ -293,11 +298,11 @@ class SidangMahasiswaController extends Controller
         $nilai_penguji = 0;
         $nilai_pembimbing = 0;
 
-        if($data->sk_tugas->is_null()){
+        if(is_null($data->sk_tugas)){
             return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
         }
 
-        if($data->jadwal_ujian->is_null()){
+        if(is_null($data->jadwal_ujian)){
             return redirect()->back()->with('error', 'Jadwal Ujian Tidak Boleh Kosong.');
         }else{
             foreach($data_nilai_sidang as $n){
@@ -314,7 +319,11 @@ class SidangMahasiswaController extends Controller
         $nilai_bimbingan = 0;
 
         foreach($pembimbing as $p){
-            $nilai_bimbingan = $nilai_bimbingan + (($bobot_proses_bimbingan/100)*$p->nilai_proses_bimbingan);
+            if(!$p->nilai_proses_bimbingan){
+                return redirect()->back()->with('error', 'Nilai Proses Bimbingan Belum Lengkap.');
+            }else{
+                $nilai_bimbingan = $nilai_bimbingan + (($bobot_proses_bimbingan/100)*$p->nilai_proses_bimbingan);
+            }
         }
 
         $nilai_akhir_sidang = $nilai_penguji + $nilai_pembimbing + $nilai_bimbingan;
