@@ -642,7 +642,7 @@ class PembimbingMahasiswaController extends Controller
         $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
 
-        if($data->sk_tugas->is_null()){
+        if(is_null($data->sk_tugas)){
             return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
         }
 
@@ -653,8 +653,16 @@ class PembimbingMahasiswaController extends Controller
         }
 
         $validate = $request->validate([
+            'judul' => 'required',
             'nilai_langsung' => 'required'
         ]);
+
+        $data->update(['judul' => $validate['judul']]);
+        $data->anggota_aktivitas_personal->update(['judul' => $validate['judul']]);
+    
+        foreach ($bimbingMahasiswa as $b) {
+            $b->update(['judul' => $validate['judul']]);
+        }
 
         $nilai_langsung = $request->nilai_langsung;
 
