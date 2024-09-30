@@ -3,16 +3,27 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
+use App\Models\AsistensiAkhir;
 use App\Models\KuisonerAnswer;
+use App\Models\Mahasiswa\AktivitasMagang;
+use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
+use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\NilaiSidangMahasiswa;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\NotulensiSidangMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\RencanaPembelajaran;
+use App\Models\Perkuliahan\RevisiSidangMahasiswa;
+use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
@@ -976,54 +987,61 @@ class FeederUploadController extends Controller
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
 
-        $act = 'InsertKelasKuliah';
-        $actGet = 'GetDetailKelasKuliah';
+        $act = 'InsertAktivitasMahasiswa';
+        $actGet = 'GetListAnggotaAktivitasMahasiswa';
         $dataGagal = 0;
         $dataBerhasil = 0;
 
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
-                $id_kelas_lama = $d->id_kelas_kuliah;
+                $id_aktivitas_lama = $d->id_aktivitas;
                 $record = [
+                    "program_mbkm" => $d->program_mbkm,
+                    "jenis_anggota" => $d->jenis_anggota,
+                    "id_jenis_aktivitas" => $d->id_jenis_aktivitas,
                     "id_prodi" => $d->id_prodi,
                     "id_semester" => $d->id_semester,
-                    "id_matkul" => $d->id_matkul,
-                    "nama_kelas_kuliah" => $d->nama_kelas_kuliah,
-                    "sks_mk" => $d->sks_mk,
-                    "sks_tm" => $d->sks_tm,
-                    "sks_prak" => $d->sks_prak,
-                    "sks_prak_lap" => $d->sks_prak_lap,
-                    "sks_sim" => $d->sks_sim,
-                    "bahasan" => $d->bahasan,
-                    // "a_selenggara_pditt" => '',
-                    "apa_untuk_pditt" => $d->apa_untuk_pditt,
-                    "kapasitas" => $d->kapasitas,
-                    "tanggal_mulai_efektif" => $d->tanggal_mulai_efektif,
-                    "tanggal_akhir_efektif" => $d->tanggal_akhir_efektif,
-                    // "id_mou" => '',
-                    "lingkup" => $d->lingkup,
-                    "mode" => $d->mode,
+                    "judul" => $d->judul,
+                    "keterangan" => $d->keterangan,
+                    "lokasi" => $d->lokasi,
+                    "sk_tugas" => $d->sk_tugas,
+                    "tanggal_sk_tugas" => $d->tanggal_sk_tugas,
+                    "tanggal_mulai" => $d->tanggal_mulai,
+                    "tanggal_selesai" => $d->tanggal_selesai,
                 ];
 
-                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+                $recordGet = "id_aktivitas = '".$d->id_aktivitas."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-                $result = $req->uploadKelas();
+                $result = $req->uploadAktivitas();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
                     DB::beginTransaction();
 
                     // KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    KuisonerAnswer::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    NilaiPerkuliahan::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    NilaiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    NotulensiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    RevisiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    AktivitasMagang::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    AsistensiAkhir::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    KonversiAktivitas::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    PrestasiMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    NilaiTransferPendidikan::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    UjiMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    BimbingMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
 
-                    NilaiKomponenEvaluasi::where('id_kelas', $id_kelas_lama)->update(['id_kelas' => $result['data']['id_kelas_kuliah']]);
+
+                    // KuisonerAnswer::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    // NilaiPerkuliahan::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    // DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    // PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+
+                    // NilaiKomponenEvaluasi::where('id_kelas', $id_kelas_lama)->update(['id_kelas' => $result['data']['id_kelas_kuliah']]);
 
                     $d->update([
-                        'id_kelas_kuliah' => $result['data']['id_kelas_kuliah'],
+                        'id_aktivitas' => $result['data']['id_aktivitas'],
                         'feeder' => 1
                     ]);
 
