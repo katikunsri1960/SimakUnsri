@@ -93,12 +93,10 @@ class AktivitasMahasiswa extends Model
         return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');
     }
 
-    public function uji_dosen($id_dosen)
+    public function uji_dosen($id_dosen, $semester)
     {
-        $id_semester = SemesterAktif::where('id',1)->pluck('id_semester')->first() ?? (date('m') >= 8 ? (date('Y').'1') : (date('Y')-1).'2');
-
         return $this->with(['uji_mahasiswa', 'uji_mahasiswa.dosen', 'prodi', 'semester', 'jenis_aktivitas_mahasiswa', 'anggota_aktivitas', 'anggota_aktivitas.mahasiswa', 'konversi'])
-                    ->where('id_semester', $id_semester)
+                    ->where('id_semester', $semester)
                     ->where('approve_sidang', 1)
                     ->whereIn('id_jenis_aktivitas', [1,2,3,4,22])
                     ->whereHas('uji_mahasiswa', function ($query) use ($id_dosen) {
@@ -277,11 +275,11 @@ class AktivitasMahasiswa extends Model
     {
         $data = $this->where('id_aktivitas', $id_aktivitas)->first();
 
-        if($data->sk_tugas->is_null()){
+        if(is_null($data->sk_tugas)){
             return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
         }
 
-        if($data->jadwal_ujian->is_null()){
+        if(is_null($data->jadwal_ujian)){
             return redirect()->back()->with('error', 'Jadwal Ujian Belum di Atur.');
         }else{
             $data->uji_mahasiswa()->where('status_uji_mahasiswa', '!=', '2')->update(['status_uji_mahasiswa' => 1]);

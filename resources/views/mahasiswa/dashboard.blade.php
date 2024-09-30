@@ -98,7 +98,7 @@ Dashboard
                 <h4 class="box-title">Status Mahasiswa</h4>
             </div>
         </div>
-        <div class="col-xl-3">
+        <div class="col-xl-6">
             <div class="box mb-15 pull-up">
                 <div class="box-body">
                     <div class="d-flex align-items-center justify-content-between">
@@ -121,7 +121,7 @@ Dashboard
                 </div>
             </div>
         </div>
-        <div class="col-xl-3">
+        <div class="col-xl-6">
             <div class="box mb-15 pull-up">
                 <div class="box-body">
                     <div class="d-flex align-items-center justify-content-between">
@@ -138,7 +138,7 @@ Dashboard
                 </div>
             </div>
         </div>
-        <div class="col-xl-3">
+        <div class="col-xl-6">
             <div class="box mb-15 pull-up">
                 <div class="box-body">
                     <div class="d-flex align-items-center justify-content-between">
@@ -151,7 +151,7 @@ Dashboard
                                 @if ($bebas_pustaka == NULL)
                                     <a class="badge bg-danger badge-lg">Belum Bebas Pustaka</a>
                                 @else
-                                    <a class="btn btn-success btn-sm" href="asset('storage/{{$bebas_pustaka->file_bebas_pustaka}}'" title="Lihat Surat Bebas Pustaka" target="_blank">Sudah Bebas Pustaka</a>
+                                    <a class="btn btn-success btn-sm" href="{{asset('storage/'. $bebas_pustaka->file_bebas_pustaka) }}" title="Lihat Surat Bebas Pustaka" target="_blank">Sudah Bebas Pustaka</a>
                                 @endif
                             </div>
                         </div>
@@ -159,7 +159,7 @@ Dashboard
                 </div>
             </div>
         </div>
-        <div class="col-xl-3">
+        <div class="col-xl-6">
             <div class="box mb-15 pull-up">
                 <div class="box-body">
                     <div class="d-flex align-items-center justify-content-between">

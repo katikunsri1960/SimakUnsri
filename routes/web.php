@@ -109,7 +109,14 @@ Route::group(['middleware' => ['auth']], function() {
                     Route::post('/set-kurikulum-angkatan', [App\Http\Controllers\Fakultas\DataMasterController::class, 'set_kurikulum_angkatan'])->name('fakultas.data-master.mahasiswa.set-kurikulum-angkatan');
                 });
 
-                Route::get('/pejabat-fakultas', [App\Http\Controllers\Fakultas\DataMasterController::class, 'pejabat_fakultas'])->name('fakultas.data-master.pejabat-fakultas.devop');
+                Route::prefix('pejabat-fakultas')->group(function(){
+                    Route::get('/pejabat-fakultas', [App\Http\Controllers\Fakultas\Master\PejabatFakultasController::class, 'pejabat_fakultas'])->name('fakultas.data-master.pejabat-fakultas.devop');
+                    Route::get('/', [App\Http\Controllers\Fakultas\Master\PejabatFakultasController::class, 'index'])->name('fakultas.data-master.pejabat-fakultas');
+                    Route::get('/get-nama-dosen', [App\Http\Controllers\Fakultas\Master\PejabatFakultasController::class, 'get_dosen'])->name('fakultas.data-master.pejabat-fakultas.get-dosen');
+                    Route::post('/store', [App\Http\Controllers\Fakultas\Master\PejabatFakultasController::class, 'store'])->name('fakultas.data-master.pejabat-fakultas.store');
+                    Route::patch('/update/{id_pejabat}', [App\Http\Controllers\Fakultas\Master\PejabatFakultasController::class, 'update'])->name('fakultas.data-master.pejabat-fakultas.update');
+                    Route::delete('/delete/{id_pejabat}', [App\Http\Controllers\Fakultas\Master\PejabatFakultasController::class, 'destroy'])->name('fakultas.data-master.pejabat-fakultas.delete');
+                });
                 Route::get('/biaya-kuliah', [App\Http\Controllers\Fakultas\DataMasterController::class, 'biaya_kuliah'])->name('fakultas.data-master.biaya-kuliah.devop');
 
                 Route::get('/', [App\Http\Controllers\Fakultas\UnderDevelopmentController::class, 'index'])->name('fakultas.under-development');

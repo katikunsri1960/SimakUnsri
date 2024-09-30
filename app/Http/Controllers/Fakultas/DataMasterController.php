@@ -191,11 +191,7 @@ class DataMasterController extends Controller
         return response()->json($response);
     }
 
-    //PEJABAT KULIAH
-    public function pejabat_fakultas(Request $request)
-    {
-        return view('fakultas.data-master.pejabat-fakultas.devop');
-    }
+    
 
     //BIAYA KULIAH
     public function biaya_kuliah(Request $request)

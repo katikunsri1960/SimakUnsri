@@ -211,7 +211,11 @@ class PembimbingMahasiswaController extends Controller
 
         $repository = BebasPustaka::where('id_registrasi_mahasiswa', $aktivitas->anggota_aktivitas_personal->id_registrasi_mahasiswa)->first();
 
-        $penilaian_langsung = Konversi::where('id_kurikulum', $aktivitas->anggota_aktivitas_personal->mahasiswa->id_kurikulum)->where('id_matkul', $aktivitas->konversi->id_matkul)->first();
+        if (!$aktivitas->konversi) {
+            $penilaian_langsung = ['penilaian_langsung' => 0];
+        }else{
+            $penilaian_langsung = Konversi::where('id_kurikulum', $aktivitas->anggota_aktivitas_personal->mahasiswa->id_kurikulum)->where('id_matkul', $aktivitas->konversi->id_matkul)->first();
+        }      
 
         $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
                             ->where('id_dosen', auth()->user()->fk_id)
@@ -516,8 +520,18 @@ class PembimbingMahasiswaController extends Controller
 
         $semester = Semester::orderBy('id_semester', 'desc')->get();
 
-        $penilaian_langsung = Konversi::where('id_kurikulum', $data[0]->anggota_aktivitas_personal->mahasiswa->id_kurikulum)->where('id_matkul', $data[0]->konversi->id_matkul)->first();
-
+        if (!$data || count($data) === 0) {
+            $penilaian_langsung = ['penilaian_langsung' => 0];
+        } else {
+            if (!isset($data[0]->konversi)) {
+                $penilaian_langsung = ['penilaian_langsung' => 0];
+            } else {
+                $penilaian_langsung = Konversi::where('id_kurikulum', $data[0]->anggota_aktivitas_personal->mahasiswa->id_kurikulum)
+                    ->where('id_matkul', $data[0]->konversi->id_matkul)
+                    ->first();
+            }
+        }
+        
         // dd($penilaian_langsung);
         return view('dosen.pembimbing.non-tugas-akhir.index', [
             'data' => $data,
