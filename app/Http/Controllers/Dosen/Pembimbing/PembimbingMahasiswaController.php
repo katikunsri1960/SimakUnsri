@@ -642,7 +642,7 @@ class PembimbingMahasiswaController extends Controller
         $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
 
-        if($data->sk_tugas->is_null()){
+        if(is_null($data->sk_tugas)){
             return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
         }
 
