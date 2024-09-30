@@ -653,8 +653,16 @@ class PembimbingMahasiswaController extends Controller
         }
 
         $validate = $request->validate([
+            'judul' => 'required',
             'nilai_langsung' => 'required'
         ]);
+
+        $data->update(['judul' => $validate['judul']]);
+        $data->anggota_aktivitas_personal->update(['judul' => $validate['judul']]);
+    
+        foreach ($bimbingMahasiswa as $b) {
+            $b->update(['judul' => $validate['judul']]);
+        }
 
         $nilai_langsung = $request->nilai_langsung;
 
