@@ -162,8 +162,8 @@ Mahasiswa Lulus DO
                 {data: 'nm_smt', name: 'nm_smt', class: "text-center align-middle", searchable: true, orderData: [6]},
                 {data: null, class: "text-center align-middle", searchable: true,   sortable: false,
                     render: function(data, type, row) {
-                        if (data.nomor_ijazah) {
-                            return data.nomor_ijazah;
+                        if (data.no_seri_ijazah) {
+                            return data.no_seri_ijazah;
                         }
                         else if (data.no_sertifikat_profesi)
                         {
