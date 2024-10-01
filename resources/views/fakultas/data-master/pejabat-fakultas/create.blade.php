@@ -31,13 +31,13 @@
                         <div class="gelar-depan-field row ">
                             {{-- <div class="mb-3"> --}}
                                 <div class="col-md-6 mb-20">
-                                    <label for="tgl_mulai_jabatan" class="form-label">Akhir Masa Jabatan </label>
+                                    <label for="tgl_mulai_jabatan" class="form-label">Tanggal Mulai Menjabat</label>
                                     <input class="form-control" type="date" name="tgl_mulai_jabatan"  id="tgl_mulai_jabatan" placeholder="-- Batas Isi KRS --">
                                 </div>
                             {{-- </div> --}}
                             {{-- <div class="mb-3"> --}}
                                 <div class="col-md-6 mb-20">
-                                    <label for="tgl_selesai_jabatan" class="form-label">Akhir Masa Jabatan </label>
+                                    <label for="tgl_selesai_jabatan" class="form-label">Tanggal Mulai Menjabat</label>
                                     <input class="form-control" type="date" name="tgl_selesai_jabatan"  id="tgl_selesai_jabatan" placeholder="-- Batas Isi KRS --">
                                 </div>
                             {{-- </div> --}}

@@ -42,7 +42,7 @@ Pejabat Fakultas
                                 <th class="text-center align-middle">NIDN</th>
                                 <th class="text-center align-middle">GELAR DEPAN</th>
                                 <th class="text-center align-middle">GELAR BELAKANG</th>
-                                <th class="text-center align-middle">PERIODE AKHIR MENJABAT</th>
+                                <th class="text-center align-middle">PERIODE MENJABAT</th>
                                 <th class="text-center align-middle">ACTION</th>
                              </tr>
                           </thead>

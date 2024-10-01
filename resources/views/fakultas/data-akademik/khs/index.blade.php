@@ -55,6 +55,13 @@ KHS Mahasiswa
                 <div class="box-body text-center">
                     <div class="table-responsive">
                         <div id="krsDiv" hidden>
+                            <div class="row mb-2">
+                                <form action="{{route('fakultas.data-akademik.khs.download')}}" method="get" id="cetakForm" target="_blank">
+                                    <input type="hidden" name="nim" id="nimCetak">
+                                    <input type="hidden" name="id_semester" id="idSemesterCetak">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
+                                </form>
+                            </div>
                             <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
                             <table style="width:100%" class="mb-3">
                                 <tr>
@@ -194,6 +201,8 @@ KHS Mahasiswa
                         return false;
                     }
 
+                    $('#nimCetak').val(response.riwayat.nim);
+                    $('#idSemesterCetak').val(semester);
                     $('#krsDiv').removeAttr('hidden');
                     // append response.krs to table of krs-regular
                     $('#nimKrs').text(response.riwayat.nim);
@@ -216,7 +225,6 @@ KHS Mahasiswa
                     var approved = 0;
                     var no = 1;
                     // var totalSks = 0;
-
 
                     console.log(response.konversi);
 
@@ -270,7 +278,6 @@ KHS Mahasiswa
                             `);
                             no++;
                         });
-
                     }
 
                     if(response.akm.length > 0)
@@ -309,7 +316,6 @@ KHS Mahasiswa
                                 </div>
                             `);
                         });
-
                     }
 
                     if (response.transfer.length > 0) {

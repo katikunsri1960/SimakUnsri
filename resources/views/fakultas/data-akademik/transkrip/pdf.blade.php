@@ -103,7 +103,7 @@
                 <td class="text-left text-10" width="60%" style="vertical-align: text-top">
                     {{-- KSM harus dibawa pada saat mengikuti ujian akhir semester --}}
                 </td>
-                <td height="60" width="50%" class="text-right text-10 mx-50"><strong>dto<strong></td>
+                <td height="60" width="50%" class="text-right text-10 mx-50"><strong><strong></td>
             </tr>
             <tr>
                 <td width="50%"></td>
