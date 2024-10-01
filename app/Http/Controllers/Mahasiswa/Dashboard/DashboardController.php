@@ -65,18 +65,28 @@ class DashboardController extends Controller
                 // dd($akm);
 
         $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
+
         $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->pluck('score');
         $nilai_course = CourseUsept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->get()->pluck('konversi');
-
+        // dd($nilai_usept_prodi);
         // Combine the scores and find the maximum
         $all_scores = $nilai_usept_mhs->merge($nilai_course);
         $usept = $all_scores->max();
 
-        $usept_data = [
-            'score' => $usept,
-            'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
-            'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
-        ];
+
+        if ($nilai_usept_prodi) {
+            $usept_data = [
+                'score' => $usept,
+                'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
+                'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
+            ];
+        }else{
+            $usept_data = [
+                'score' => '',
+                'class' => 'danger',
+                'status' => 'Kurikulum Belum diatur',
+            ];
+        }
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)->first();
         // dd($bebas_pustaka, $usept_data);
