@@ -25,6 +25,7 @@ class PenundaanBayarController extends Controller
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status' => 'required|in:0,2,3,4,5',
+            'keterangan' => 'nullable',
         ]);
 
         $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
@@ -44,6 +45,7 @@ class PenundaanBayarController extends Controller
     {
         $data = $request->validate([
             'status' => 'required|in:0,2,3,4,5',
+            'keterangan' => 'nullable',
         ]);
 
         $restrict = ['4', '5'];

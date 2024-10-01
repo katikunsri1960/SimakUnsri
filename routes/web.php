@@ -751,6 +751,12 @@ Route::group(['middleware' => ['auth']], function() {
                 Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'destroy'])->name('univ.batas-isi-krs-manual.delete');
             });
 
+            Route::prefix('pembatalan-krs')->group(function(){
+                Route::get('/', [App\Http\Controllers\Universitas\KRSManualController::class, 'pembatalan_krs'])->name('univ.pembatalan-krs');
+                Route::get('/data', [App\Http\Controllers\Universitas\KRSManualController::class, 'pembatalan_krs_data'])->name('univ.pembatalan-krs.data');
+                Route::get('/store', [App\Http\Controllers\Universitas\KRSManualController::class, 'pembatalan_krs_store'])->name('univ.pembatalan-krs.store');
+            });
+
             Route::prefix('kuisioner')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\KuisionerController::class, 'index'])->name('univ.kuisioner');
                 Route::post('/store', [App\Http\Controllers\Universitas\KuisionerController::class, 'store'])->name('univ.kuisioner.store');

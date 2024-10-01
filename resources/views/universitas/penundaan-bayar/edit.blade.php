@@ -12,16 +12,22 @@
                 @csrf
                 @method('patch')
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="status" class="form-label">Status</label>
-                        <select name="status" id="edit_status" required class="form-select">
-                            <option value="" selected disabled>-- Pilih Status --</option>
-                            <option value="0">Diajukan</option>
-                            <option value="2">Disetujui Prodi</option>
-                            <option value="3">Disetujui Fakultas</option>
-                            <option value="4">Disetujui BAK</option>
-                            <option value="5">Ditolak</option>
-                        </select>
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <select name="status" id="edit_status" required class="form-select">
+                                <option value="" selected disabled>-- Pilih Status --</option>
+                                <option value="0">Diajukan</option>
+                                <option value="2">Disetujui Prodi</option>
+                                <option value="3">Disetujui Fakultas</option>
+                                <option value="4">Disetujui BAK</option>
+                                <option value="5">Ditolak</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12 mb-3">
+                        <label for="keterangan" class="form-label">Keterangan</label>
+                        <textarea class="form-control" name="keterangan" id="edit_keterangan" rows="3"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
