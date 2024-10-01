@@ -140,7 +140,7 @@
                     </li>
                     <li class="treeview {{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*')
                                         | request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') | request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*')
-                                        | request()->routeIs('univ.beasiswa') ? 'active menu-open' : ''}}">
+                                        | request()->routeIs('univ.pembatalan-krs') | request()->routeIs('univ.pembatalan-krs.*') | request()->routeIs('univ.beasiswa') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-money"><span class="path1"></span><span class="path2"></span></i>
                             <span>Manual KRS</span>
@@ -149,6 +149,10 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('univ.pembatalan-krs') | request()->routeIs('univ.pembatalan-krs.*') ? 'active' : ''}}"><a
+                                href="{{route('univ.pembatalan-krs')}}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Pembatalan KRS</a>
+                            </li>
                             <li class="{{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*') ? 'active' : ''}}"><a
                                     href="{{route('univ.pembayaran-manual')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Pembayaran Manual</a>

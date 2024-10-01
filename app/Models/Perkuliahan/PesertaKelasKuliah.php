@@ -635,4 +635,129 @@ class PesertaKelasKuliah extends Model
         return $result;
 
     }
+
+    public function batal_all($id_reg)
+    {
+        $semester_aktif = SemesterAktif::first()
+        ;
+        $data = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
+                ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
+                    $query->where('id_semester', $semester_aktif->id_semester);
+                })
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->orderBy('kode_mata_kuliah')
+                ->get();
+
+        $db = new MataKuliah();
+        $db_akt = new AktivitasMahasiswa();
+
+        $akm_aktif= AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->first();
+                // dd($akm_aktif);
+
+        $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+                ->first();
+
+        $data_mbkm = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
+                    ->whereHas('kelas_kuliah', function($query) use ($semester_aktif,$riwayat_pendidikan) {
+                        $query->where('id_semester', $semester_aktif->id_semester)->whereNot('id_prodi', $riwayat_pendidikan->id_prodi);
+                    })
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->orderBy('kode_mata_kuliah')
+                    ->count();
+
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
+
+        $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
+
+        $tagihan = Tagihan::with('pembayaran')
+                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                    ->where('kode_periode', $semester_aktif->id_semester)
+                    ->first();
+
+        $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                    ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
+                            $query->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    // ->where('approve_krs', 1)
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
+                    ->get();
+
+        $data_mbkm_eksternal =  $krs_aktivitas_mbkm->count();
+
+
+        list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
+
+        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
+
+        $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
+
+        $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_prodi);
+
+        $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
+        $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
+        $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
+        $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
+
+        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
+
+        $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
+                    ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
+                        $query->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->get();
+
+
+        try {
+
+            DB::beginTransaction();
+
+            $akm_aktif->update([
+                'feeder' => 0
+            ]);
+
+            foreach ($aktivitas as $item) {
+                $item->update([
+                    'approve_krs' => '0',
+                    'approve_sidang' => '0',
+                    'feeder' => 0
+                ]);
+            }
+
+            foreach ($data as $item) {
+                $item->update([
+                    'approved' => '0',
+                    'feeder' => 0,
+                    'tanggal_approve' => date('Y-m-d')
+                ]);
+            }
+
+
+            DB::commit();
+
+            $result = [
+                'status' => 'success',
+                'message' => 'Semua data berhasil dibatalkan!',
+            ];
+
+        } catch (\Exception $e) {
+
+            DB::rollBack();
+
+            $result = [
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan!'. $e->getMessage(),
+            ];
+
+            return $result;
+
+        }
+
+        return $result;
+    }
 }
