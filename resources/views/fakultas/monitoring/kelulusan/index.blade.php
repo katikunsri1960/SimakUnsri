@@ -52,6 +52,7 @@ Mahasiswa Lulus DO
                                     <th class="text-center align-middle">Jenis Keluar</th>
                                     <th class="text-center align-middle">Tanggal Keluar</th>
                                     <th class="text-center align-middle">Periode Keluar</th>
+                                    <th class="text-center align-middle">PISN</th>
                                     <th class="text-center align-middle">Keterangan</th>
                                 </tr>
                             </thead>
@@ -159,9 +160,25 @@ Mahasiswa Lulus DO
                 {data: 'nama_jenis_keluar', name: 'nama_jenis_keluar', class: "text-center align-middle", searchable: true, orderData: [4]},
                 {data: 'tanggal_keluar', name: 'tanggal_keluar', class: "text-center align-middle", searchable: true, orderData: [5]},
                 {data: 'nm_smt', name: 'nm_smt', class: "text-center align-middle", searchable: true, orderData: [6]},
+                {data: null, class: "text-center align-middle", searchable: true,   sortable: false,
+                    render: function(data, type, row) {
+                        if (data.no_seri_ijazah) {
+                            return data.no_seri_ijazah;
+                        }
+                        else if (data.no_sertifikat_profesi)
+                        {
+                            return data.no_sertifikat_profesi;
+                        } else {
+                            return '';
+                        }
+                    }
+                },
                 {data: 'keterangan', name: 'keterangan', class: "text-start align-middle", searchable: true, orderData: [7]},
             ],
         });
+
+
+
     });
 </script>
 @endpush

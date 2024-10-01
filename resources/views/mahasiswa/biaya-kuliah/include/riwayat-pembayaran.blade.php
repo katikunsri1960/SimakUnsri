@@ -29,22 +29,34 @@
                                                         @foreach ($pembayaran as $p)
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:5%">{{ $loop->iteration }}</td>
+                                                                <td class="text-start align-middle">UKT {{ $p->formatted_kode_periode }}</td>
+                                                                <td class="text-center align-middle">{{ $p->pembayaran ?  $p->pembayaran->waktu_transaksi : '-'}}</td>
+                                                                <td class="text-center align-middle">
+                                                                    {{-- {{ $p->pembayaran ?  $p->pembayaran->waktu_transaksi : '-'}} --}}
+                                                                     {{ $p->pembayaran ? number_format($p->pembayaran->total_nilai_pembayaran, 2, ',', '.') : '-' }}</td>
                                                                 @if($p->pembayaran == null)
-                                                                    <td colspan="4" class="text-center align-middle" style="width:10%">
-                                                                        <div>
-                                                                            <span class="badge badge-xl badge-danger-light mb-5">
-                                                                                Belum Bayar
-                                                                            </span>
-                                                                        </div>
-                                                                    </td>
+                                                                    @if($beasiswa)
+                                                                        <td class="text-center align-middle" style="width:10%">
+                                                                            <div>
+                                                                                <span class="badge badge-xl badge-primary-light mb-5">
+                                                                                    Beasiswa
+                                                                                </span>
+                                                                            </div>
+                                                                        </td>
+                                                                    @else
+                                                                        <td class="text-center align-middle" style="width:10%">
+                                                                            <div>
+                                                                                <span class="badge badge-xl badge-danger-light mb-5">
+                                                                                    Belum Bayar
+                                                                                </span>
+                                                                            </div>
+                                                                        </td>
+                                                                    @endif
                                                                 @else
-                                                                    <td class="text-start align-middle">UKT {{ $p->formatted_kode_periode }}</td>
-                                                                    <td class="text-start align-middle">{{ $p->pembayaran->waktu_transaksi }}</td>
-                                                                    <td class="text-end align-middle">Rp. {{ number_format($p->pembayaran->total_nilai_pembayaran, 2, ',', '.') }}</td>
                                                                     <td class="text-center align-middle" style="width:10%">
                                                                         <div>
-                                                                            <span class="badge badge-xl {{ $p->pembayaran->status_pembayaran == 0 ? 'badge-danger-light' : 'badge-success-light' }} mb-5">
-                                                                                {{ $p->pembayaran->status_pembayaran == 0 ? 'Belum Bayar' : 'Lunas' }}
+                                                                            <span class="badge badge-xl  badge-success-light mb-5">
+                                                                                Lunas
                                                                             </span>
                                                                         </div>
                                                                     </td>

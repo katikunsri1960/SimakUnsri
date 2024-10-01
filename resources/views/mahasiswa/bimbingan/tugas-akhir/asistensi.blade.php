@@ -317,7 +317,7 @@ Bimbingan Tugas Akhir Mahasiswa
                             </table>
                         </div>
                     </div>
-                    <h4>Nilai Sidang Mahasiswa<h4>
+                    {{-- <h4>Nilai Sidang Mahasiswa<h4>
                     <div class="row mt-10">
                         <div class="table-responsive">
                             <table id="dt" class="table table-bordered table-striped text-center" style="font-size: 11px;">
@@ -357,7 +357,7 @@ Bimbingan Tugas Akhir Mahasiswa
                                 </tbody>
                             </table>
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
         </div>
