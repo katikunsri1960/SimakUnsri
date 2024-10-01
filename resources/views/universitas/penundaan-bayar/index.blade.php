@@ -40,6 +40,7 @@ Penundaan Bayar
                                 <th class="text-center align-middle">Semester</th>
                                 <th class="text-center align-middle">NIM</th>
                                 <th class="text-center align-middle">Nama Mahasiswa</th>
+                                <th class="text-center align-middle">Keterangan</th>
                                 <th class="text-center align-middle">Status</th>
                                 <th class="text-center align-middle">Terakhir Update</th>
                                 <th class="text-center align-middle">AKSI</th>
@@ -52,6 +53,7 @@ Penundaan Bayar
                                 <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
                                 <td class="text-center align-middle">{{$d->nim}}</td>
                                 <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
+                                <td class="text-start align-middle">{{$d->keterangan}}</td>
                                 <td class="text-center align-middle">
                                     @php
                                     switch ($d->status) {
@@ -145,6 +147,7 @@ Penundaan Bayar
 
     function editRuang(data, id) {
         document.getElementById('edit_status').value = data.status;
+        document.getElementById('edit_keterangan').value = data.keterangan;
         // Populate other fields...
         document.getElementById('editForm').action = '/universitas/p-bayar/update/' + id;
     }
