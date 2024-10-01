@@ -55,7 +55,7 @@ class BiayaKuliahController extends Controller
             }
         }
 
-        // dd($tagihan);
+        // dd($pembayaran);
         
         return view('mahasiswa.biaya-kuliah.index', ['tagihan' => $tagihan, 'pembayaran'=> $pembayaran, 'beasiswa'=> $beasiswa]);
     }
