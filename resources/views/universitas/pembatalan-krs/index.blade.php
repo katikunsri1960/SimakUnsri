@@ -12,8 +12,8 @@ Pembatalan KRS Mahasiswa
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i
                                     class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
-                        <li class="breadcrumb-item active" aria-current="page">Kartu Rencana Studi</li>
+                        <li class="breadcrumb-item" aria-current="page">Manual KRS</li>
+                        <li class="breadcrumb-item active" aria-current="page">Pembatalan KRS</li>
                     </ol>
                 </nav>
             </div>
@@ -92,7 +92,7 @@ Pembatalan KRS Mahasiswa
                             </table>
                             <div class="d-flex justify-content-end align-middle">
                                 <div class="">
-                                    <button class="btn btn-primary btn-rounded" type="button" id="btnApprove" disabled>Setujui Semua KRS</button>
+                                    <button class="btn btn-primary btn-rounded" type="button" id="btnApprove" disabled>Batalkan Semua KRS</button>
                                 </div>
                             </div>
                             <table class="table table-bordered mt-4" id="krs-regular">
@@ -145,11 +145,10 @@ Pembatalan KRS Mahasiswa
     function getKrs()
     {
         var nim = $('#nim').val();
-        var semester = $('#semester').val();
-        if(nim == '' || semester == ''){
+        if(nim == ''){
             swal({
                 title: "Peringatan!",
-                text: "Nomor Induk Mahasiswa dan Tahun Akademik harus diisi!",
+                text: "Nomor Induk Mahasiswa harus di isi!",
                 type: "warning",
                 buttons: {
                     confirm: {
@@ -163,7 +162,6 @@ Pembatalan KRS Mahasiswa
                 type: 'GET',
                 data: {
                     nim: nim,
-                    semester: semester
                 },
                 success: function(response){
                     if (response.status == 'error') {
@@ -272,7 +270,7 @@ Pembatalan KRS Mahasiswa
                         $('#btnApprove').removeAttr('disabled');
 
                     }else{
-                        $('#btnApprove').attr('disabled', true);
+                        $('#btnApprove').removeAttr('disabled');
                     }
                 }
             });
@@ -281,10 +279,9 @@ Pembatalan KRS Mahasiswa
 
     $('#btnApprove').click(function(){
         var nim = $('#nim').val();
-        var semester = $('#semester').val();
         swal({
             title: "Konfirmasi",
-            text: "Apakah Anda yakin akan menyetujui KRS mahasiswa ini? Pastikan sudah berkoordinasi dengan dosen PA terkait.",
+            text: "Apakah Anda yakin akan membatalkan KRS mahasiswa ini? Pastikan sudah berkoordinasi dengan dosen PA terkait. Harap Hapus data pada Neofeeder terlebih dahulu jika sudah ada.",
             type: "warning",
             showCancelButton: true,
             confirmButtonClass: "btn-danger",
@@ -293,11 +290,10 @@ Pembatalan KRS Mahasiswa
             closeOnConfirm: false
         }, function() {
             $.ajax({
-                url: '{{route('prodi.data-akademik.krs.approve')}}',
+                url: '{{route('univ.pembatalan-krs.store')}}',
                 type: 'get',
                 data: {
                     nim: nim,
-                    semester: semester
                 },
                 success: function(response){
                     if (response.status == 'error') {

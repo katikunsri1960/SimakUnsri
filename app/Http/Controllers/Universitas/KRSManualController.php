@@ -72,7 +72,7 @@ class KRSManualController extends Controller
 
     public function pembatalan_krs_data(Request $request)
     {
-        $semester = $request->semester;
+        $semester = SemesterAktif::first()->id_semester;
         $nim = $request->nim;
 
         $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')->where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
@@ -123,6 +123,26 @@ class KRSManualController extends Controller
             'riwayat' => $riwayat,
         ];
 
+
+        return response()->json($response);
+    }
+
+    public function pembatalan_krs_store(Request $request)
+    {
+        $nim = $request->nim;
+
+        $riwayat = RiwayatPendidikan::where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
+
+        if(!$riwayat) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data mahasiswa tidak ditemukan',
+            ]);
+        }
+
+        $db = new PesertaKelasKuliah();
+
+        $response = $db->batal_all($riwayat->id_registrasi_mahasiswa);
 
         return response()->json($response);
     }
