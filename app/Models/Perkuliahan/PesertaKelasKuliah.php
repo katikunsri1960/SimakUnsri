@@ -722,6 +722,15 @@ class PesertaKelasKuliah extends Model
             ]);
 
             foreach ($aktivitas as $item) {
+
+                BimbingMahasiswa::where('id_aktivitas', $item->id_aktivitas)
+                    ->update([
+                        'feeder' => 0,
+                        'approved' => 0,
+                        'approved_dosen' => 0,
+                    ]);
+
+
                 $item->update([
                     'approve_krs' => '0',
                     'approve_sidang' => '0',
