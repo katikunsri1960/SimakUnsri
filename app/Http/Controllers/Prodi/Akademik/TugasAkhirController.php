@@ -57,7 +57,7 @@ class TugasAkhirController extends Controller
         //Generate tanggal sk tugas
         $tanggal_sk_tugas = $request->tahun_sk."-".$request->bulan_sk."-".$request->tanggal_sk;
 
-        AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->update(['sk_tugas' => $request->sk_tugas, 'tanggal_sk_tugas' => $tanggal_sk_tugas]);
+        AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->update(['feeder' => 0,'sk_tugas' => $request->sk_tugas, 'tanggal_sk_tugas' => $tanggal_sk_tugas]);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }

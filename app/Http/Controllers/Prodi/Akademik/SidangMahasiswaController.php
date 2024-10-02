@@ -290,6 +290,16 @@ class SidangMahasiswaController extends Controller
             return redirect()->back()->with('error', 'Nilai Sidang Belum Lengkap.');
         }
 
+        $nilai_bimbingan = 0;
+
+        foreach($pembimbing as $p){
+            if(!$p->nilai_proses_bimbingan){
+                return redirect()->back()->with('error', 'Nilai Proses Bimbingan Belum Lengkap.');
+            }else{
+                $nilai_bimbingan = $nilai_bimbingan + (($bobot_proses_bimbingan/100)*$p->nilai_proses_bimbingan);
+            }
+        }
+
         //Generate nilai akhir sidang
         $bobot_penguji = round((60/count($penguji)),2);
         $bobot_pembimbing = round((30/count($pembimbing)),2);
@@ -313,16 +323,6 @@ class SidangMahasiswaController extends Controller
                 }else{
                     $nilai_pembimbing = $nilai_pembimbing + (($bobot_pembimbing/100)*$n->nilai_akhir_dosen);
                 }
-            }
-        }
-
-        $nilai_bimbingan = 0;
-
-        foreach($pembimbing as $p){
-            if(!$p->nilai_proses_bimbingan){
-                return redirect()->back()->with('error', 'Nilai Proses Bimbingan Belum Lengkap.');
-            }else{
-                $nilai_bimbingan = $nilai_bimbingan + (($bobot_proses_bimbingan/100)*$p->nilai_proses_bimbingan);
             }
         }
 

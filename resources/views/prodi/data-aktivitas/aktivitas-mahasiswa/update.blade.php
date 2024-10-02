@@ -71,7 +71,7 @@ Konversi Aktivitas
                                             <option value="" disabled selected>-- Pilih Mata kuliah --</option>
                                             <option value="{{ $mk_konversi->id_matkul }}" 
                                                 {{ $mk_konversi->id_matkul != '' ? 'selected' : '' }}>
-                                                {{ $mk_konversi->nama_mata_kuliah }}
+                                                {{ $mk_konversi->nama_mata_kuliah }} ({{$mk_konversi->kode_mata_kuliah}})
                                             </option>
                                         </select>
                                     </div>
