@@ -95,6 +95,27 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         $this->batas_max_E = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'E')
             ->first()->bobot_maksimum;
+
+        //Skala Nilai Statik
+        // $this->batas_min_A = 86.00;
+        
+        // $this->batas_max_A = 100.00;
+        
+        // $this->batas_min_B = 71.00;
+        
+        // $this->batas_max_B = 85.99;
+        
+        // $this->batas_min_C = 56.00;
+        
+        // $this->batas_max_C = 70.99;
+        
+        // $this->batas_min_D = 41.00;
+        
+        // $this->batas_max_D = 55.99;
+        
+        // $this->batas_min_E = 00.00;
+        
+        // $this->batas_max_E = 40.99;
     }  
 
     /**
