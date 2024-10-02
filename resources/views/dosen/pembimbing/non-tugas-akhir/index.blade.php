@@ -103,8 +103,10 @@ Pembimbingan Aktivitas Mahasiswa
                                             </form>
                                             @endif
                                             @foreach($penilaian_langsung as $p)
-                                                @if (($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6') && $p->penilaian_langsung == 1)
-                                                    <a class="btn btn-sm btn-warning my-2" href="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung', $d->id)}}"><i class="fa fa-list"></i> Penilaian Langsung</a>
+                                                @if($d->mk_konversi == $p->id_matkul)
+                                                    @if (($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6') && $p->penilaian_langsung == 1)
+                                                        <a class="btn btn-sm btn-warning my-2" href="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung', $d->id)}}"><i class="fa fa-list"></i> Penilaian Langsung</a>
+                                                    @endif
                                                 @endif
                                             @endforeach
                                             <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
