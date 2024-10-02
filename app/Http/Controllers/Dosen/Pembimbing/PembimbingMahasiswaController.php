@@ -526,9 +526,11 @@ class PembimbingMahasiswaController extends Controller
             if (!isset($data[0]->konversi)) {
                 $penilaian_langsung = (object)['penilaian_langsung' => 0];
             } else {
-                $penilaian_langsung = Konversi::where('id_kurikulum', $data[0]->anggota_aktivitas_personal->mahasiswa->id_kurikulum)
-                    ->where('id_matkul', $data[0]->konversi->id_matkul)
+                foreach($data as $d){
+                    $penilaian_langsung = Konversi::where('id_kurikulum', $d->anggota_aktivitas_personal->mahasiswa->id_kurikulum)
+                    ->where('id_matkul', $d->konversi->id_matkul)
                     ->first();
+                }
             }
         }
         
