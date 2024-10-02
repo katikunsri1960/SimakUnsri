@@ -163,13 +163,13 @@ class AktivitasMBKMController extends Controller
 
         // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
 
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1)
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran)
                                 ->orderby('nama_dosen', 'asc')->limit(10);
 
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
                   ->orWhere('nama_program_studi', 'like', "%{$search}%")
-                  ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1);
+                  ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran);
         }
 
         $data = $query->get();
@@ -328,7 +328,7 @@ class AktivitasMBKMController extends Controller
                 //Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
                 
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)
                                 ->where('id_registrasi_dosen', $request->dosen_bimbing_aktivitas)->first();
 
                 BimbingMahasiswa::create([
@@ -677,7 +677,7 @@ class AktivitasMBKMController extends Controller
                 //Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
                 
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)
                                 ->where('id_dosen', $riwayat_pendidikan->dosen_pa)
                                 ->first();
 

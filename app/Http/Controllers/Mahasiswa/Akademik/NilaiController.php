@@ -58,15 +58,16 @@ class NilaiController extends Controller
                                             ->where('id_semester', $id_semester)
                                             ->orderBy('nama_mata_kuliah','asc')->get();
 
-        // dd($nilai_mahasiswa);
+        
         $transkrip_mahasiswa=NilaiPerkuliahan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
         $nilai_transfer=NilaiTransferPendidikan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
-        $nilai_konversi=KonversiAktivitas::leftJoin('anggota_aktivitas_mahasiswas', 'anggota_aktivitas_mahasiswas.id_anggota', 'konversi_aktivitas.id_anggota')
+        $nilai_konversi=KonversiAktivitas::with('aktivitas_mahasiswa','aktivitas_mahasiswa.bimbing_mahasiswa')
+                        ->leftJoin('anggota_aktivitas_mahasiswas', 'anggota_aktivitas_mahasiswas.id_anggota', 'konversi_aktivitas.id_anggota')
                         ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', 'konversi_aktivitas.id_matkul')
                         ->where('id_registrasi_mahasiswa',$id_reg_mhs)
                         ->orderBy('id_semester','asc')
                         ->get();
-
+        // dd($nilai_transfer);
         $kuisoner = KuisonerQuestion::all();
         $count_kuisoner = $kuisoner->count();
         $semester_aktif = SemesterAktif::first()->id_semester;
