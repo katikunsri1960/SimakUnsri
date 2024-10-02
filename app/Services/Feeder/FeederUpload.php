@@ -233,11 +233,12 @@ class FeederUpload {
         $result = json_decode($response,true);
 
         if($result['error_code'] == 0) {
+            
             $token = $result['data']['token'];
-            $params = [
+            $paramsGet = [
                 "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record
+                "act"   => $this->actGet,
+                "filter" => $this->recordGet
             ];
 
             $req = $client->post( $this->url, [
@@ -245,48 +246,62 @@ class FeederUpload {
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($paramsGet)
             ]);
 
             $response = $req->getBody();
 
             $result = json_decode($response,true);
 
-            // if(isset($result['error_code']) && $result['error_code'] == 1260)
-            // {
-            //     $params = [
-            //         "token" => $token,
-            //         "act"   => 'UpdatePerkuliahanMahasiswa',
-            //         "key" => [
-            //             "id_registrasi_mahasiswa" => $this->record['id_registrasi_mahasiswa'],
-            //             "id_semester" => $this->record['id_semester']
-            //         ],
-            //         "record" => [
-            //             "id_status_mahasiswa" => $this->record['id_status_mahasiswa'],
-            //             "ips" => $this->record['ips'],
-            //             "ipk" => $this->record['ipk'],
-            //             "sks_semester" => $this->record['sks_semester'],
-            //             "total_sks" => $this->record['total_sks'],
-            //             "biaya_kuliah_smt" => $this->record['biaya_kuliah_smt'],
-            //             "id_pembiayaan" => $this->record['id_pembiayaan']
-            //         ]
-            //     ];
+            if ($result['error_code'] == 0 && count($result['data']) > 0) {
 
-            //     $req = $client->post( $this->url, [
-            //         'headers' => [
-            //             'Content-Type' => 'application/json',
-            //             'Accept' => 'application/json',
-            //         ],
-            //         'body' => json_encode($params)
-            //     ]);
+                $updateRecord = $this->record;
 
-            //     $response = $req->getBody();
+                unset($updateRecord['id_aktivitas']);
 
-            //     $result = json_decode($response,true);
+                $paramsUpdate = [
+                    "token" => $token,
+                    "act"   => "UpdateAktivitasMahasiswa",
+                    "key" => [
+                        "id_aktivitas" => $this->record['id_aktivitas']
+                    ],
+                    "record" => $updateRecord
+                ];
 
-            // }
+                $req = $client->post( $this->url, [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                            'Accept' => 'application/json',
+                        ],
+                        'body' => json_encode($paramsUpdate)
+                ]);
 
-            // error_codee 1260 = data sudah ada
+                $response = $req->getBody();
+
+                $result = json_decode($response,true);
+
+            } else {
+
+                    unset($this->record['id_aktivitas']);
+
+                    $params = [
+                        "token" => $token,
+                        "act"   => $this->act,
+                        "record" => $this->record
+                    ];
+
+                    $req = $client->post( $this->url, [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                            'Accept' => 'application/json',
+                        ],
+                        'body' => json_encode($params)
+                    ]);
+
+                    $response = $req->getBody();
+
+                    $result = json_decode($response,true);
+            }
 
             return $result;
         }

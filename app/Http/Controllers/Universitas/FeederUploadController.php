@@ -962,6 +962,7 @@ class FeederUploadController extends Controller
                 ->where('id_semester', $request->id_semester)
                 ->where('approve_krs', 1)
                 ->where('feeder', 0)
+                // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
                 ->get();
 
         return response()->json($data);
@@ -976,9 +977,10 @@ class FeederUploadController extends Controller
         // return response()->json(['message' => $semester.' - '.$prodi]);
 
         $data = AktivitasMahasiswa::where('id_prodi', $prodi)
-                ->where('id_semester', $request->id_semester)
+                ->where('id_semester', $semester)
                 ->where('approve_krs', 1)
                 ->where('feeder', 0)
+                // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
                 ->get();
 
         $totalData = $data->count();
@@ -988,7 +990,7 @@ class FeederUploadController extends Controller
         }
 
         $act = 'InsertAktivitasMahasiswa';
-        $actGet = 'GetListAnggotaAktivitasMahasiswa';
+        $actGet = 'GetListAktivitasMahasiswa';
         $dataGagal = 0;
         $dataBerhasil = 0;
 
@@ -996,19 +998,21 @@ class FeederUploadController extends Controller
             foreach ($data as $index => $d) {
                 $id_aktivitas_lama = $d->id_aktivitas;
                 $record = [
-                    "program_mbkm" => $d->program_mbkm,
-                    "jenis_anggota" => $d->jenis_anggota,
-                    "id_jenis_aktivitas" => $d->id_jenis_aktivitas,
-                    "id_prodi" => $d->id_prodi,
-                    "id_semester" => $d->id_semester,
+                    'id_aktivitas' => $d->id_aktivitas,
+                    // "program_mbkm" => $d->program_mbkm,
                     "judul" => $d->judul,
-                    "keterangan" => $d->keterangan,
+                    "id_semester" => $d->id_semester,
+                    "id_jenis_aktivitas" => $d->id_jenis_aktivitas,
                     "lokasi" => $d->lokasi,
                     "sk_tugas" => $d->sk_tugas,
                     "tanggal_sk_tugas" => $d->tanggal_sk_tugas,
+                    "jenis_anggota" => strval($d->jenis_anggota),
+                    "keterangan" => $d->keterangan,
+                    "id_prodi" => $d->id_prodi,
                     "tanggal_mulai" => $d->tanggal_mulai,
                     "tanggal_selesai" => $d->tanggal_selesai,
                 ];
+
 
                 $recordGet = "id_aktivitas = '".$d->id_aktivitas."'" ;
 
@@ -1020,31 +1024,23 @@ class FeederUploadController extends Controller
                     DB::beginTransaction();
 
                     // KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    NilaiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
-                    NotulensiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
-                    RevisiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    // NilaiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    // NotulensiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    // RevisiSidangMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
                     AktivitasMagang::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
-                    AsistensiAkhir::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
-                    KonversiAktivitas::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    // AsistensiAkhir::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    // KonversiAktivitas::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
                     PrestasiMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
-                    NilaiTransferPendidikan::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
-                    UjiMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    // NilaiTransferPendidikan::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    // UjiMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
                     BimbingMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
-                    AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
-
-
-                    // KuisonerAnswer::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    // NilaiPerkuliahan::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    // DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    // PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-
-                    // NilaiKomponenEvaluasi::where('id_kelas', $id_kelas_lama)->update(['id_kelas' => $result['data']['id_kelas_kuliah']]);
+                    // AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
 
                     $d->update([
                         'id_aktivitas' => $result['data']['id_aktivitas'],
+                        'status_sync' => 'sudah_sync',
                         'feeder' => 1
                     ]);
-
 
 
                     DB::commit();
