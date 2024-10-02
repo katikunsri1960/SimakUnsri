@@ -1,19 +1,19 @@
 @extends('layouts.fakultas')
 @section('title')
-List Mahasiswa Belum di Setujui
+List Mahasiswa Aktif > 7 Tahun
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">List Mahasiswa Belum Disetujui</h3>
+            <h3 class="page-title">List Mahasiswa Aktif > 7 Tahun</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('fakultas')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('fakultas.monitoring.pengisian-krs')}}">Pengisian KRS</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">List Mahasiswa Belum Disetujui KRS</li>
+                        <li class="breadcrumb-item active" aria-current="page">List Mahasiswa Aktif > 7 Tahun</li>
                     </ol>
                 </nav>
             </div>
@@ -43,14 +43,13 @@ List Mahasiswa Belum di Setujui
 
                     </div>
                     <div class="table-responsive">
-                        <table id="data" class="table table-hover table-bordered margin-top-10 w-p100" style="font-size: 10pt">
+                        <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
                           <thead>
                              <tr>
                                 <th class="text-center align-middle">No</th>
                                 <th class="text-center align-middle">Angkatan</th>
                                 <th class="text-center align-middle">NIM</th>
                                 <th class="text-center align-middle">Nama</th>
-                                <th class="text-center align-middle">Dosen PA</th>
                              </tr>
                           </thead>
                           <tbody>
@@ -60,7 +59,6 @@ List Mahasiswa Belum di Setujui
                                     <td class="text-center align-middle">{{$d->angkatan}}</td>
                                     <td class="text-center align-middle">{{$d->nim}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
-                                    <td class="text-start align-middle">{{$d->pembimbing_akademik ? $d->pembimbing_akademik->nama_dosen : '-'}}</td>
                                 </tr>
                             @endforeach
                           </tbody>
