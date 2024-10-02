@@ -69,14 +69,11 @@ class BiodataDosen extends Model
 
     public function data_dosen($id_dosen)
     {
-        $tahun_ajaran = SemesterAktif::join('semesters', 'semester_aktifs.id_semester', 'semesters.id_semester')->pluck('id_tahun_ajaran')->first() ??
-                        (date('m') >= 8 ? date('Y') : date('Y') - 1);
+        $tahun_ajaran = SemesterAktif::join('semesters', 'semester_aktifs.id_semester', 'semesters.id_semester')->pluck('id_tahun_ajaran')->first() ?? (date('m') >= 8 ? date('Y') : date('Y') - 1);
 
         return $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
                                 ->where('p.id_tahun_ajaran', $tahun_ajaran)
-                                ->where('biodata_dosens.id_dosen', $id_dosen)->first() ?? $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
-                                ->where('p.id_tahun_ajaran', $tahun_ajaran-1)
-                                ->where('biodata_dosens.id_dosen', $id_dosen)->first() ;
+                                ->where('biodata_dosens.id_dosen', $id_dosen)->first();
 
     }
 
