@@ -76,7 +76,7 @@ Dashboard
                             
                                                                             @endphp
 
-                                                                            @if(!empty($transkrip))
+                                                                            @if($transkrip->isNotEmpty())
                                                                             <tr>
                                                                                 <td class="text-center align-middle bg-dark" colspan="9">Nilai Perkuliahan</td>
                                                                             </tr>
@@ -84,7 +84,7 @@ Dashboard
                                                                                 <tr>
                                                                                     <td class="text-center align-middle">{{$no++}}</td>
                                                                                     <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
-                                                                                    <td>{{$d->nama_mata_kuliah}}</td>
+                                                                                    <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
                                                                                     <td class="text-center align-middle">{{$d->sks_mata_kuliah}}</td>
                                                                                     <td class="text-center align-middle">{{$d->nama_semester}}</td>
                                                                                     <td class="text-center align-middle">{{empty($d->nilai_angka) ? 'Nilai Belum Diisi' : $d->nilai_angka}}</td>
@@ -94,7 +94,7 @@ Dashboard
                                                                             @endforeach 
                                                                             @endif 
 
-                                                                            @if(!empty($nilai_konversi))
+                                                                            @if($nilai_konversi->isNotEmpty())
                                                                             <tr>
                                                                                 <td class="text-center align-middle bg-dark" colspan="9">Nilai Konversi Aktivitas</td>
                                                                             </tr>
@@ -102,7 +102,7 @@ Dashboard
                                                                                 <tr>
                                                                                     <td class="text-center align-middle">{{$no++}}</td>
                                                                                     <td class="text-center align-middle">{{$n->kode_mata_kuliah}}</td>
-                                                                                    <td>{{$n->nama_mata_kuliah}}</td>
+                                                                                    <td class="text-start align-middle">{{$n->nama_mata_kuliah}}</td>
                                                                                     <td class="text-center align-middle">{{$n->sks_mata_kuliah}}</td>
                                                                                     <td class="text-center align-middle">{{$n->nama_semester}}</td>
                                                                                     <td class="text-center align-middle">{{empty($n->nilai_angka) ? 'Nilai Belum Diisi' : $n->nilai_angka}}</td>
@@ -112,20 +112,20 @@ Dashboard
                                                                             @endforeach 
                                                                             @endif  
 
-                                                                            @if(!empty($nilai_transfer))
+                                                                            @if($nilai_transfer->isNotEmpty())
                                                                             <tr>
                                                                                 <td class="text-center align-middle bg-dark" colspan="9">Nilai Transfer Pendidikan</td>
                                                                             </tr>
                                                                             @foreach($nilai_transfer as $nt)
                                                                                 <tr>
                                                                                     <td class="text-center align-middle">{{$no++}}</td>
-                                                                                    <td class="text-center align-middle">{{$nt->kode_mata_kuliah}}</td>
-                                                                                    <td>{{$nt->nama_mata_kuliah}}</td>
-                                                                                    <td class="text-center align-middle">{{$nt->sks_mata_kuliah}}</td>
+                                                                                    <td class="text-center align-middle">{{$nt->kode_matkul_diakui}}</td>
+                                                                                    <td class="text-start align-middle">{{$nt->nama_mata_kuliah_diakui}}</td>
+                                                                                    <td class="text-center align-middle">{{$nt->sks_mata_kuliah_diakui}}</td>
                                                                                     <td class="text-center align-middle">{{$nt->nama_semester}}</td>
                                                                                     <td class="text-center align-middle">{{empty($nt->nilai_angka) ? 'Nilai Belum Diisi' : $nt->nilai_angka}}</td>
-                                                                                    <td class="text-center align-middle">{{empty($nt->nilai_huruf) ? 'Nilai Belum Diisi' : $nt->nilai_huruf}}</td>
-                                                                                    <td class="text-center align-middle">{{empty($nt->nilai_indeks) ? 'Nilai Belum Diisi' : $nt->nilai_indeks}}</td>
+                                                                                    <td class="text-center align-middle">{{empty($nt->nilai_huruf_diakui) ? 'Nilai Belum Diisi' : $nt->nilai_huruf_diakui}}</td>
+                                                                                    <td class="text-center align-middle">{{empty($nt->nilai_angka_diakui) ? 'Nilai Belum Diisi' : $nt->nilai_angka_diakui}}</td>
                                                                                 </tr>
                                                                             @endforeach 
                                                                             @endif      
