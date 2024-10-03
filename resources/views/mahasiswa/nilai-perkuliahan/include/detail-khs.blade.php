@@ -140,6 +140,59 @@ Dashboard
                                                         </td>
                                                     </tr>
                                                     @endforeach
+                                                    @if($nilai_konversi->isNotEmpty())
+                                                    <tr>
+                                                        <td class="text-center align-middle bg-dark" colspan="9">Nilai Konversi Aktivitas</td>
+                                                    </tr>
+                                                        @foreach($nilai_konversi as $n)
+                                                            <tr>
+                                                                {{-- <td class="text-center align-middle">{{$no++}}</td> --}}
+                                                                <td class="text-center align-middle">{{$n->kode_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$n->nama_mata_kuliah}}</td>
+                                                                <td class="text-center align-middle">{{empty($n->nilai_angka) ? 'Nilai Belum Diisi' : $n->nilai_angka}}</td>
+                                                                <td class="text-center align-middle">{{empty($n->nilai_indeks) ? 'Nilai Belum Diisi' : $n->nilai_indeks}}</td>
+                                                                <td class="text-center align-middle">{{empty($n->nilai_huruf) ? 'Nilai Belum Diisi' : $n->nilai_huruf}}</td>
+                                                                {{-- <td class="text-center align-middle">
+                                                                    {{ !empty($n->nilai_indeks) ? $n->sks_mata_kuliah * $d->nilai_indeks : 'Nilai Belum Diisi' }}
+                                                                </td> --}}
+                                                                <td class="text-start align-middle w-300">
+                                                                    <ul>
+                                                                        @foreach($n->aktivitas_mahasiswa->bimbing_mahasiswa as $dd)
+                                                                        <li>{{$dd->nama_dosen}}</li>
+                                                                        @endforeach
+                                                                    </ul>
+                                                                </td>
+                                                                {{-- <td class="text-center align-middle">
+                                                                    <a type="button" href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai', ['id_matkul' => $n->id_matkul])}}" class="btn btn-success waves-effect waves-light" title="Lihat Histori">
+                                                                    <i class="fa-solid fa-eye"></i>
+                                                                    </a>
+                                                                </td> --}}
+                                                            </tr>
+                                                        @endforeach 
+                                                    @endif  
+
+                                                    @if($nilai_transfer->isNotEmpty())
+                                                    <tr>
+                                                        <td class="text-center align-middle bg-dark" colspan="9">Nilai Transfer Pendidikan</td>
+                                                    </tr>
+                                                        @foreach($nilai_transfer as $nt)
+                                                            <tr>
+                                                                <td class="text-center align-middle">{{$nt->kode_matkul_diakui}}</td>
+                                                                <td>{{$nt->nama_mata_kuliah_diakui}}</td>
+                                                                <td class="text-center align-middle">{{empty($nt->nilai_angka) ? '-' : $nt->nilai_angka}}</td>
+                                                                <td class="text-center align-middle">{{empty($nt->nilai_huruf_diakui) ? 'Nilai Belum Diisi' : $nt->nilai_huruf_diakui}}</td>
+                                                                <td class="text-center align-middle">{{empty($nt->nilai_angka_diakui) ? 'Nilai Belum Diisi' : $nt->nilai_angka_diakui}}</td>
+                                                                {{-- <td class="text-center align-middle">
+                                                                    {{ !empty($nt->nilai_indeks) ? $nt->sks_mata_kuliah_diakui * $nt->nilai_indeks_diakui : 'Nilai Belum Diisi' }}
+                                                                </td> --}}
+                                                                {{-- <td class="text-center align-middle">
+                                                                    <a type="button" href="" class="btn btn-success waves-effect waves-light" title="Lihat Histori">
+                                                                    <i class="fa-solid fa-eye"></i>
+                                                                    </a>
+                                                                </td> --}}
+                                                            </tr>
+                                                        @endforeach 
+                                                    @endif      
                                                 </tbody>
                                             </table>
                                         </div>
