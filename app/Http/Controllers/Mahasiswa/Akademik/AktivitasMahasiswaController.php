@@ -181,7 +181,7 @@ class AktivitasMahasiswaController extends Controller
         $tahun_ajaran = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
         
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran-1)
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran)
                                 ->orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")

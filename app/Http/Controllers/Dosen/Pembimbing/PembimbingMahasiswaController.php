@@ -523,14 +523,20 @@ class PembimbingMahasiswaController extends Controller
         if (!$data || count($data) === 0) {
             $penilaian_langsung = (object)['penilaian_langsung' => 0];
         } else {
-            if (!isset($data[0]->konversi)) {
-                $penilaian_langsung = (object)['penilaian_langsung' => 0];
-            } else {
-                $penilaian_langsung = Konversi::where('id_kurikulum', $data[0]->anggota_aktivitas_personal->mahasiswa->id_kurikulum)
-                    ->where('id_matkul', $data[0]->konversi->id_matkul)
-                    ->first();
+            $penilaian_langsung = []; // Initialize an array to store multiple results if needed
+        
+            foreach ($data as $d) {
+                if (!isset($d->konversi)) {
+                    $penilaian_langsung[] = (object)['penilaian_langsung' => 0]; // Store 0 if konversi is not set
+                } else {
+                    $result = Konversi::where('id_kurikulum', $d->anggota_aktivitas_personal->mahasiswa->id_kurikulum)
+                        ->where('id_matkul', $d->konversi->id_matkul)
+                        ->first();
+        
+                    $penilaian_langsung[] = $result ? $result : (object)['penilaian_langsung' => 0]; // Handle null results
+                }
             }
-        }
+        }        
         
         // dd($penilaian_langsung);
         return view('dosen.pembimbing.non-tugas-akhir.index', [

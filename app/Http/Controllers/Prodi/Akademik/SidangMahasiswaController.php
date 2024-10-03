@@ -289,7 +289,14 @@ class SidangMahasiswaController extends Controller
         if(count($data_nilai_sidang) != (count($pembimbing)+count($penguji))){
             return redirect()->back()->with('error', 'Nilai Sidang Belum Lengkap.');
         }
+        
+        //Generate nilai akhir sidang
+        $bobot_penguji = round((60/count($penguji)),2);
+        $bobot_pembimbing = round((30/count($pembimbing)),2);
+        $bobot_proses_bimbingan = round((10/count($pembimbing)),2);
 
+        $nilai_penguji = 0;
+        $nilai_pembimbing = 0;
         $nilai_bimbingan = 0;
 
         foreach($pembimbing as $p){
@@ -299,14 +306,6 @@ class SidangMahasiswaController extends Controller
                 $nilai_bimbingan = $nilai_bimbingan + (($bobot_proses_bimbingan/100)*$p->nilai_proses_bimbingan);
             }
         }
-
-        //Generate nilai akhir sidang
-        $bobot_penguji = round((60/count($penguji)),2);
-        $bobot_pembimbing = round((30/count($pembimbing)),2);
-        $bobot_proses_bimbingan = round((10/count($pembimbing)),2);
-
-        $nilai_penguji = 0;
-        $nilai_pembimbing = 0;
 
         if(is_null($data->sk_tugas)){
             return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
