@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->enum('role', ['dosen', 'mahasiswa', 'prodi', 'fakultas', 'univ', 'admin', 'bak']);
+            $table->enum('role', ['dosen', 'mahasiswa', 'prodi', 'fakultas', 'univ', 'admin', 'bak', 'perpus']);
             $table->index('role');
             $table->string('fk_id')->nullable();
             $table->string('username')->unique();

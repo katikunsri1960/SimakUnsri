@@ -1003,14 +1003,14 @@ class FeederUploadController extends Controller
                     "judul" => $d->judul,
                     "id_semester" => $d->id_semester,
                     "id_jenis_aktivitas" => $d->id_jenis_aktivitas,
-                    "lokasi" => $d->lokasi,
-                    "sk_tugas" => $d->sk_tugas,
-                    "tanggal_sk_tugas" => $d->tanggal_sk_tugas,
+                    "lokasi" => $d->lokasi ?? "",
+                    "sk_tugas" => $d->sk_tugas ?? "",
+                    "tanggal_sk_tugas" => $d->tanggal_sk_tugas ?? "",
                     "jenis_anggota" => strval($d->jenis_anggota),
-                    "keterangan" => $d->keterangan,
+                    "keterangan" => $d->keterangan ?? "",
                     "id_prodi" => $d->id_prodi,
-                    "tanggal_mulai" => $d->tanggal_mulai,
-                    "tanggal_selesai" => $d->tanggal_selesai,
+                    "tanggal_mulai" => $d->tanggal_mulai ?? "",
+                    "tanggal_selesai" => $d->tanggal_selesai ?? "",
                 ];
 
 
@@ -1068,5 +1068,41 @@ class FeederUploadController extends Controller
         $response->headers->set('Connection', 'keep-alive');
 
         return $response;
+    }
+
+    public function anggota()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.aktivitas.anggota-aktivitas', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function anggota_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = AnggotaAktivitasMahasiswa::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'anggota_aktivitas_mahasiswas.id_aktivitas')
+                ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa')
+                ->join('program_studis as p', 'r.id_prodi', 'p.id_prodi')
+                ->where('a.id_prodi', $prodi)
+                ->where('a.id_semester', $request->id_semester)
+                ->where('a.approve_krs', 1)
+                ->where('a.feeder', 1)
+                ->where('anggota_aktivitas_mahasiswas.feeder', 0)
+                ->select('anggota_aktivitas_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi_mahasiswa'))
+                // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
+                ->get();
+
+        return response()->json($data);
+    }
+
+    public function anggota_upload(Request $request)
+    {
+
     }
 }
