@@ -716,10 +716,13 @@ class PesertaKelasKuliah extends Model
         try {
 
             DB::beginTransaction();
+            
+            if ($akm_aktif) {
+                $akm_aktif->update([
+                    'feeder' => 0
+                ]);
+            }
 
-            $akm_aktif->update([
-                'feeder' => 0
-            ]);
 
             foreach ($aktivitas as $item) {
 
