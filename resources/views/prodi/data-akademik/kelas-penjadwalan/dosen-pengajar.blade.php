@@ -199,7 +199,7 @@ Tambah Dosen Kelas Perkuliahan
                                 </div>
                             </div>
                             <p>*Notes Jumlah total dari seluruh rencana minggu pertemuan dosen harus sama dengan 16 pertemuan</p>
-                            <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
+                            <!-- <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button> -->
                         </div>
                     </div>
                     <div class="box-footer">

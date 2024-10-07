@@ -289,7 +289,7 @@ class SidangMahasiswaController extends Controller
         if(count($data_nilai_sidang) != (count($pembimbing)+count($penguji))){
             return redirect()->back()->with('error', 'Nilai Sidang Belum Lengkap.');
         }
-        
+
         //Generate nilai akhir sidang
         $bobot_penguji = round((60/count($penguji)),2);
         $bobot_pembimbing = round((30/count($pembimbing)),2);
@@ -366,7 +366,11 @@ class SidangMahasiswaController extends Controller
             if(!$nilai_akhir){
                 KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_akhir_sidang, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
             }else{
-                $nilai_akhir->update(['nilai_angka' => $nilai_akhir_sidang, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf]);
+                if($nilai_akhir->feeder == 0){
+                    $nilai_akhir->update(['nilai_angka' => $nilai_akhir_sidang, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf]);
+                }else{
+                    return redirect()->back()->with('error', 'Nilai Sudah di Sinkronisasi.');
+                }
             }
 
             DB::commit();

@@ -32,6 +32,9 @@ class CourseUsept extends Model
 
         $nilai_angka = $this->total_score;
         $nilai_huruf = $this->grade;
+
+        $nilai_angka = str_replace(",",".",$nilai_angka);
+        
         // dd($nilai_angka);
         if($nilai_huruf == 'A'){
             $nilai_hasil_course = ((677-525)/(100-86)) * ($nilai_angka - 86) + 525;
@@ -62,6 +65,9 @@ class CourseUsept extends Model
         // return round($nilai_hasil_course,0);
 
         // dd($nilai_angka);
+
+        $nilai_angka = str_replace(",",".",$nilai_angka);
+
         if($nilai_huruf == 'A'){
             $nilai_hasil_course = ((677-525)/(100-86)) * ($nilai_angka - 86) + 525;
         }
