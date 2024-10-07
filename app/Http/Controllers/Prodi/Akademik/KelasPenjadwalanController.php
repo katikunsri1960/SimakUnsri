@@ -517,7 +517,7 @@ class KelasPenjadwalanController extends Controller
         // dd($request->all());
         //Define variable
         $prodi_id = auth()->user()->fk_id;
-        $kelas = KelasKuliah::where('id_prodi',$prodi_id)->where('id_matkul',$id_matkul)->where('nama_kelas_kuliah',$nama_kelas_kuliah)->get();
+        $kelas = KelasKuliah::with('matkul')->where('id_prodi',$prodi_id)->where('id_matkul',$id_matkul)->where('nama_kelas_kuliah',$nama_kelas_kuliah)->first();
         $semester_aktif = SemesterAktif::first();
         $rencana_prodi = PeriodePerkuliahan::where('id_semester', $semester_aktif->id_semester)->where('id_prodi', $prodi_id)->first();
 
@@ -567,13 +567,13 @@ class KelasPenjadwalanController extends Controller
                     $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_kelas_kuliah[$i])->first();
                 }
 
-                $dosen_pengajar = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas[0]['id_kelas_kuliah'])->where('id_dosen','!=',$dosen->id_dosen)->get();
-                $count_dosen_pengajar = count($dosen_pengajar);
+                $dosen_kelas = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas->id_kelas_kuliah)->where('id_dosen','!=',$dosen->id_dosen)->get();
+                $count_dosen_pengajar = count($dosen_kelas);
                 $dosen_rencana_ajar = 0;
 
-                if($dosen_pengajar){
+                if($dosen_kelas){
                     for($k=0;$k<$count_dosen_pengajar;$k++){
-                        $dosen_rencana_ajar = $dosen_rencana_ajar + $dosen_pengajar[$k]['rencana_minggu_pertemuan'];
+                        $dosen_rencana_ajar = $dosen_rencana_ajar + $dosen_kelas[$k]['rencana_minggu_pertemuan'];
                     }
 
                     $total_rencana_pertemuan = $rencana_pertemuan + $dosen_rencana_ajar;
@@ -581,25 +581,79 @@ class KelasPenjadwalanController extends Controller
                     if ($total_rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
                         return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
                     }
-                }
 
-                if(is_null($request->substansi_kuliah)){
-                    //Store data to table tanpa substansi kuliah
-                    DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    for($d=0;$d<$count_dosen_pengajar;$d++){
+                        $update_sks_substansi = round(($dosen_kelas[$d]['rencana_minggu_pertemuan']/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
+
+                        DosenPengajarKelasKuliah::where('id_kelas_kuliah',
+                        $dosen_kelas[$d]['id_kelas_kuliah'])->where('id_dosen',
+                        $dosen_kelas[$d]['id_dosen'])->update(['feeder' => 0,'sks_substansi_total' => $update_sks_substansi]);
+
+                    }
+
+                    $sks_substansi = round(($rencana_pertemuan/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
+
+                    $sks_dosen_pengajar = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas->id_kelas_kuliah)->where('id_dosen','!=',$dosen->id_dosen)->sum('sks_substansi_total');
+
+                    $sks_substansi_total = $sks_substansi + $sks_dosen_pengajar;
+
+                    $remaining_sks = $kelas->matkul->sks_mata_kuliah - $sks_dosen_pengajar;
+
+                    $different_sks = $kelas->matkul->sks_mata_kuliah - $sks_substansi_total;
+
+                    // dd($remaining_sks);
+
+                    if($sks_substansi_total > $kelas->matkul->sks_mata_kuliah){
+                        $sks_substansi = $remaining_sks;
+                    }else if($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1){
+                        for($d=0;$d<$count_dosen_pengajar;$d++){
+                            $update_sks_substansi = round(($dosen_kelas[$d]['rencana_minggu_pertemuan']/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
+    
+                            if($dosen_kelas[$d]['urutan'] == 1 && ($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1)){
+    
+                                $update_sks_substansi = $update_sks_substansi + $different_sks;
+                                
+                                DosenPengajarKelasKuliah::where('id_kelas_kuliah', $dosen_kelas[$d]['id_kelas_kuliah'])
+                                                        ->where('id_dosen', $dosen_kelas[$d]['id_dosen'])
+                                                        ->update(['feeder' => 0, 'sks_substansi_total' => $update_sks_substansi]);
+
+                                break;
+                            }
+    
+                        }
+                    }
+
+                    if(is_null($request->substansi_kuliah)){
+                        //Store data to table tanpa substansi kuliah
+                        DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas->id_kelas_kuliah, 'sks_substansi_total' => $sks_substansi, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+    
+                    }else{
+                        //Get sks substansi total
+                        $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
+    
+                        //Store data to table dengan substansi kuliah
+                        DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas->id_kelas_kuliah, 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    }
 
                 }else{
-                    //Get sks substansi total
-                    $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
 
-                    //Store data to table dengan substansi kuliah
-                    DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas[0]['id_kelas_kuliah'], 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    if(is_null($request->substansi_kuliah)){
+                        //Store data to table tanpa substansi kuliah
+                        DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas->id_kelas_kuliah, 'sks_substansi_total' => $kelas->matkul->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+    
+                    }else{
+                        //Get sks substansi total
+                        $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
+    
+                        //Store data to table dengan substansi kuliah
+                        DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas->id_kelas_kuliah, 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
+                    } 
                 }
-
             }
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_matkul' => $id_matkul, 'id_kelas' => $kelas[0]['id_kelas_kuliah']])->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_matkul' => $id_matkul, 'id_kelas' => $kelas->id_kelas_kuliah])->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Throwable $th) {
             DB::rollback();
@@ -644,6 +698,7 @@ class KelasPenjadwalanController extends Controller
         // dd($id);
         $prodi_id = auth()->user()->fk_id;
         $data_dosen = DosenPengajarKelasKuliah::where('id',$id)->first();
+        $kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $data_dosen->id_kelas_kuliah)->first();
         $semester_aktif = SemesterAktif::first();
         $rencana_prodi = PeriodePerkuliahan::where('id_semester', $semester_aktif->id_semester)->where('id_prodi', $prodi_id)->first();
 
@@ -705,26 +760,83 @@ class KelasPenjadwalanController extends Controller
                 if ($total_realisasi_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan+1) {
                     return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
                 }
-            }
 
-            // Update the DosenPengajarKelasKuliah
-            if($data_dosen->feeder == 1){
-                DosenPengajarKelasKuliah::where('id', $id) // Ensure to specify which record to update
-                                    ->update([
-                                        'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
-                                        'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
-                                        'id_jenis_evaluasi' => $request->evaluasi[0]
-                                    ]);
+                for($d=0;$d<$count_dosen_pengajar;$d++){
+                    $update_sks_substansi = round(($dosen_pengajar[$d]['rencana_minggu_pertemuan']/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
+
+                    DosenPengajarKelasKuliah::where('id_kelas_kuliah',
+                    $dosen_pengajar[$d]['id_kelas_kuliah'])->where('id_dosen',
+                    $dosen_pengajar[$d]['id_dosen'])->update(['feeder' => 0,'sks_substansi_total' => $update_sks_substansi]);
+
+                }
+
+                $sks_substansi = round(($request->rencana_minggu_pertemuan[0]/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
+
+                $sks_dosen_pengajar = DosenPengajarKelasKuliah::where('dosen_pengajar_kelas_kuliahs.id_kelas_kuliah', $data_dosen->id_kelas_kuliah)->where('id', '!=', $id)->sum('sks_substansi_total');
+
+                $sks_substansi_total = $sks_substansi + $sks_dosen_pengajar;
+
+                $remaining_sks = $kelas->matkul->sks_mata_kuliah - $sks_dosen_pengajar;
+                $different_sks = $kelas->matkul->sks_mata_kuliah - $sks_substansi_total;
+
+                // dd($remaining_sks);
+
+                if($sks_substansi_total > $kelas->matkul->sks_mata_kuliah){
+                    $sks_substansi = $remaining_sks;
+                }else if($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1){
+                    for($d=0;$d<$count_dosen_pengajar;$d++){
+                        $update_sks_substansi = round(($dosen_pengajar[$d]['rencana_minggu_pertemuan']/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
+
+                        if($dosen_pengajar[$d]['urutan'] == 1 && ($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1)){
+
+                            $update_sks_substansi = $update_sks_substansi + $different_sks;
+                            
+                            DosenPengajarKelasKuliah::where('id_kelas_kuliah', $dosen_pengajar[$d]['id_kelas_kuliah'])
+                                                    ->where('id_dosen', $dosen_pengajar[$d]['id_dosen'])
+                                                    ->update(['feeder' => 0,'sks_substansi_total' => $update_sks_substansi]);
+
+                            break;
+                        }
+
+                    }
+                }
+                
+                // Update the DosenPengajarKelasKuliah
+                $updateFields = [
+                    'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
+                    'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
+                    'id_jenis_evaluasi' => $request->evaluasi[0],
+                    'sks_substansi_total' => $sks_substansi
+                ];
+                
+                if ($data_dosen->feeder == 1) {
+                    $updateFields['feeder'] = 0;
+                } else {
+                    $updateFields['id_registrasi_dosen'] = $dosen->id_registrasi_dosen;
+                    $updateFields['id_dosen'] = $dosen->id_dosen;
+                }
+                
+                DosenPengajarKelasKuliah::where('id', $id)->update($updateFields);
+
             }else{
-                DosenPengajarKelasKuliah::where('id', $id) // Ensure to specify which record to update
-                                    ->update([
-                                        'id_registrasi_dosen' => $dosen->id_registrasi_dosen,
-                                        'id_dosen' => $dosen->id_dosen,
-                                        'urutan' => $count_dosen_pengajar + 1,
-                                        'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
-                                        'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
-                                        'id_jenis_evaluasi' => $request->evaluasi[0]
-                                    ]);
+                
+                $sks_substansi = ($request->rencana_minggu_pertemuan[0]/$rencana_prodi->jumlah_minggu_pertemuan) * $kelas->matkul->sks_mata_kuliah;
+                // Update the DosenPengajarKelasKuliah
+                $updateFields = [
+                    'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
+                    'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
+                    'id_jenis_evaluasi' => $request->evaluasi[0],
+                    'sks_substansi_total' => $sks_substansi
+                ];
+                
+                if ($data_dosen->feeder == 1) {
+                    $updateFields['feeder'] = 0;
+                } else {
+                    $updateFields['id_registrasi_dosen'] = $dosen->id_registrasi_dosen;
+                    $updateFields['id_dosen'] = $dosen->id_dosen;
+                }
+                
+                DosenPengajarKelasKuliah::where('id', $id)->update($updateFields);
             }
 
             DB::commit();
@@ -739,14 +851,77 @@ class KelasPenjadwalanController extends Controller
 
     public function dosen_pengajar_destroy($id)
     {
+        $prodi_id = auth()->user()->fk_id;
         $dosen = DosenPengajarKelasKuliah::where('id', $id)->first();
+        $kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $dosen->id_kelas_kuliah)->first();
+        $semester_aktif = SemesterAktif::first();
+        $rencana_prodi = PeriodePerkuliahan::where('id_semester', $semester_aktif->id_semester)->where('id_prodi', $prodi_id)->first();
+
         if($dosen->feeder == 1){
             return redirect()->back()->with('error', 'Data Dosen Sudah di Sinkronisasi.');
         }
+
+        $dosen_pengajar = DosenPengajarKelasKuliah::with('kelas_kuliah')->where('dosen_pengajar_kelas_kuliahs.id', '!=', $id)
+                                                ->whereHas('kelas_kuliah', function ($query) use ($dosen) {
+                                                    $query->where('id_kelas_kuliah', $dosen->id_kelas_kuliah);
+                                                })
+                                                ->get();
+
+        $count_dosen_pengajar = count($dosen_pengajar);
+        $dosen_rencana_ajar = 0;
+
         try {
             DB::beginTransaction();
 
-            DosenPengajarKelasKuliah::where('id', $id)->where('feeder', 0)->delete();
+            if ($dosen_pengajar) {
+
+                foreach ($dosen_pengajar as $pengajar) {
+                    $dosen_rencana_ajar += $pengajar['rencana_minggu_pertemuan'];
+                }
+
+                $total_rencana_pertemuan = $dosen_rencana_ajar;
+
+                for($d=0;$d<$count_dosen_pengajar;$d++){
+                    $update_sks_substansi = round(($dosen_pengajar[$d]['rencana_minggu_pertemuan']/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
+
+                    DosenPengajarKelasKuliah::where('id_kelas_kuliah',
+                    $dosen_pengajar[$d]['id_kelas_kuliah'])->where('id_dosen',
+                    $dosen_pengajar[$d]['id_dosen'])->update(['feeder' => 0, 'sks_substansi_total' => $update_sks_substansi]);
+
+                }
+
+                $sks_dosen_pengajar = DosenPengajarKelasKuliah::where('dosen_pengajar_kelas_kuliahs.id_kelas_kuliah', $dosen->id_kelas_kuliah)->where('id', '!=', $id)->sum('sks_substansi_total');
+
+                $sks_substansi_total = $sks_dosen_pengajar;
+
+                $different_sks = $kelas->matkul->sks_mata_kuliah - $sks_substansi_total;
+
+                // dd($remaining_sks);
+
+               if($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1){
+                    for($d=0;$d<$count_dosen_pengajar;$d++){
+                        $update_sks_substansi = round(($dosen_pengajar[$d]['rencana_minggu_pertemuan']/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
+
+                        if($dosen_pengajar[$d]['urutan'] == 1 && ($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1)){
+
+                            $update_sks_substansi = $update_sks_substansi + $different_sks;
+                            
+                            DosenPengajarKelasKuliah::where('id_kelas_kuliah', $dosen_pengajar[$d]['id_kelas_kuliah'])
+                                                    ->where('id_dosen', $dosen_pengajar[$d]['id_dosen'])
+                                                    ->update(['feeder' => 0,'sks_substansi_total' => $update_sks_substansi]);
+
+                            break;
+                        }
+
+                    }
+                }
+
+                DosenPengajarKelasKuliah::where('id', $id)->where('feeder', 0)->delete();
+
+            }else{
+                
+                DosenPengajarKelasKuliah::where('id', $id)->where('feeder', 0)->delete();
+            }
 
             DB::commit();
 

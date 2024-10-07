@@ -119,6 +119,7 @@ Manajemen Dosen Kelas Perkuliahan
                                     <th class="text-center align-middle">NAMA PENGAJAR</th>
                                     <th class="text-center align-middle">RENCANA MINGGU PERTEMUAN</th>
                                     <th class="text-center align-middle">REALISASI MINGGU PERTEMUAN</th>
+                                    <th class="text-center align-middle">SKS SUBSTANSI</th>
                                     <th class="text-center align-middle">STATUS SYNC</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
@@ -137,6 +138,9 @@ Manajemen Dosen Kelas Perkuliahan
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->realisasi_minggu_pertemuan}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$d->sks_substansi_total}}
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->feeder > 0)
