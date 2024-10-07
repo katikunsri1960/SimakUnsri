@@ -104,12 +104,13 @@ FEEDER UPLOAD - DOSEN AJAR
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Status Sync</th>
                                     <th class="text-center align-middle">Semester</th>
-                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">NIDN</th>
                                     <th class="text-center align-middle">Nama</th>
                                     <th class="text-center align-middle">Kode MK</th>
-                                    <th class="text-center align-middle">Nama MK</th>
-                                    <th class="text-center align-middle">Nama Kelas</th>
-                                    <th class="text-center align-middle">Prodi Mhs</th>
+                                    <th class="text-center align-middle">Kelas</th>
+                                    <th class="text-center align-middle">sks</th>
+                                    <th class="text-center align-middle">Rencana</th>
+                                    <th class="text-center align-middle">Realisasi</th>
                                     <th class="text-center align-middle">Prodi Kelas</th>
                                 </tr>
                             </thead>
@@ -170,14 +171,15 @@ FEEDER UPLOAD - DOSEN AJAR
                     html += '<tr>';
                     html += '<td class="text-center">' + no + '</td>';
                     html += '<td>' + status + '</td>';
-                    html += '<td class="text-center">' + item.nama_semester + '</td>';
-                    html += '<td class="text-center">' + item.nim + '</td>';
-                    html += '<td class="text-start">' + item.nama_mahasiswa + '</td>';
-                    html += '<td class="text-center">' + item.kode_mata_kuliah + '</td>';
-                    html += '<td>' + item.nama_mata_kuliah + '</td>';
-                    html += '<td class="text-center">' + item.nama_kelas_kuliah + '</td>';
-                    html += '<td class="text-start">' + item.nama_program_studi_mhs + '</td>';
-                    html += '<td class="text-center">' + item.nama_program_studi + '</td>';
+                    html += '<td class="text-center">' + item.id_semester + '</td>';
+                    html += '<td class="text-center">' + item.nidn_dosen + '</td>';
+                    html += '<td class="text-start">' + item.nama + '</td>';
+                    html += '<td class="text-center">' + item.kode_mk + '</td>';
+                    html += '<td class="text-center">' + item.nama_kelas + '</td>';
+                    html += '<td>' + item.nama_mk + '</td>';
+                    html += '<td class="text-center">' + item.rencana_minggu_pertemuan + '</td>';
+                    html += '<td class="text-center">' + item.realisasi_minggu_pertemuan + '</td>';
+                    html += '<td class="text-center">' + item.prodi + '</td>';
                     html += '</tr>';
                     no++;
                 });

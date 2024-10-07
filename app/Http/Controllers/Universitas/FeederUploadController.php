@@ -492,12 +492,16 @@ class FeederUploadController extends Controller
     public function dosen_ajar_data(Request $request)
     {
         $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
-        $data = DosenPengajarKelasKuliah::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliah.id_kelas_kuliah')
-                ->where('k.id_semester', $request->id_semester)
-                ->where('k.id_prodi', $prodi)
-                ->where('dosen_pengajar_kelas_kuliah.feeder', 0)
-                ->select('dosen_pengajar_kelas_kuliah.*')
-                ->get();
+        $data = DosenPengajarKelasKuliah::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
+                    ->join('biodata_dosens as d', 'dosen_pengajar_kelas_kuliahs.id_dosen', 'd.id_dosen')
+                    ->join('mata_kuliahs as m', 'k.id_matkul', 'm.id_matkul')
+                    ->join('program_studis as p', 'k.id_prodi', 'p.id_prodi')
+                    ->where('k.id_semester', $request->id_semester)
+                    ->where('k.id_prodi', $prodi)
+                    ->where('dosen_pengajar_kelas_kuliahs.feeder', 0)
+                    ->select('dosen_pengajar_kelas_kuliahs.*', 'k.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas', 'd.nidn as nidn_dosen', 'd.nama_dosen as nama',
+                            'm.kode_mata_kuliah as kode_mk', 'm.nama_mata_kuliah as nama_mk', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
+                    ->get();
 
         return response()->json($data);
     }
@@ -510,11 +514,15 @@ class FeederUploadController extends Controller
 
         // return response()->json(['message' => $semester.' - '.$prodi]);
 
-        $data = DosenPengajarKelasKuliah::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliah.id_kelas_kuliah')
+        $data = DosenPengajarKelasKuliah::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
+                ->join('biodata_dosens as d', 'dosen_pengajar_kelas_kuliahs.id_dosen', 'd.id_dosen')
+                ->join('mata_kuliahs as m', 'k.id_matkul', 'm.id_matkul')
+                ->join('program_studis as p', 'k.id_prodi', 'p.id_prodi')
                 ->where('k.id_semester', $request->id_semester)
                 ->where('k.id_prodi', $prodi)
-                ->where('dosen_pengajar_kelas_kuliah.feeder', 0)
-                ->select('dosen_pengajar_kelas_kuliah.*')
+                ->where('dosen_pengajar_kelas_kuliahs.feeder', 0)
+                ->select('dosen_pengajar_kelas_kuliahs.*', 'k.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas', 'd.nidn as nidn_dosen', 'd.nama_dosen as nama',
+                        'm.kode_mata_kuliah as kode_mk', 'm.nama_mata_kuliah as nama_mk', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
                 ->get();
 
         $totalData = $data->count();
