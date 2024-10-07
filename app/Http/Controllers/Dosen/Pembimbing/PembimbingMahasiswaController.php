@@ -301,7 +301,7 @@ class PembimbingMahasiswaController extends Controller
         $tahun_ajaran = SemesterAktif::with('semester')->first();
 
         // Start building the query
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1)
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran)
                                 ->orderBy('nama_dosen', 'asc');
 
         // Add search conditions if search term is present
@@ -309,7 +309,7 @@ class PembimbingMahasiswaController extends Controller
             $query->where(function ($q) use ($search, $tahun_ajaran) {
                 $q->where('nama_dosen', 'like', "%{$search}%")
                 ->orWhere('nama_program_studi', 'like', "%{$search}%")
-                ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1);
+                ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran);
             });
         }
 
