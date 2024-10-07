@@ -523,8 +523,8 @@ class FeederUploadController extends Controller
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
 
-        $act = 'InsertPesertaKelasKuliah';
-        $actGet = 'GetPesertaKelasKuliah';
+        $act = 'InsertDosenPengajarKelasKuliah';
+        $actGet = 'GetDosenPengajarKelasKuliah';
         $dataGagal = 0;
         $dataBerhasil = 0;
 
