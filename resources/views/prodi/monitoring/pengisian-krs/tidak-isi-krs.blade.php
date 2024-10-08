@@ -45,6 +45,22 @@ List Mahasiswa Tidak KRS
                         </div>
 
                     </div>
+                    <div class="row justify-content-end">
+                        <div class="col-md-4">
+                            <label for="statusFilter">Filter by Status Pembayaran:</label>
+                            <select id="statusFilter" class="form-control">
+                                <option value="">All</option>
+                                <option value="Lunas">Lunas</option>
+                                <option value="Penundaan Bayar">Penundaan Bayar</option>
+                                <option value="Belum Bayar">Belum Bayar</option>
+                                <option value="KIP-K">KIP-K</option>
+                                <option value="BBP">BBP</option>
+                                <option value="Bantuan UKT Unsri">Bantuan UKT Unsri</option>
+                                <option value="Afirmasi Pendidikan Tinggi">Afirmasi Pendidikan Tinggi</option>
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="table-responsive">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
                             <thead>
@@ -108,9 +124,13 @@ List Mahasiswa Tidak KRS
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
     $(function() {
-        "use strict";
+        var table = $('#data').DataTable();
 
-        $('#data').DataTable();
+        // Custom filter for Status Pembayaran
+        $('#statusFilter').on('change', function() {
+            var filterValue = this.value;
+            table.column(5).search(filterValue).draw();
+        });
     });
 </script>
 @endpush
