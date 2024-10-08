@@ -69,12 +69,12 @@ class TugasAkhirController extends Controller
         $tahun_ajaran = SemesterAktif::with('semester')->first();
         // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
 
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1)
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran)
                                 ->orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
                   ->orWhere('nama_program_studi', 'like', "%{$search}%")
-                  ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran-1);
+                  ->where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran);
         }
 
         $data = $query->get();
