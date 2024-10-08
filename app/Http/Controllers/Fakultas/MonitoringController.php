@@ -16,14 +16,11 @@ class MonitoringController extends Controller
     public function pengisian_krs()
     {
         $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->where('status', 'A')
                     ->orderBy('id_jenjang_pendidikan')
                     ->orderBy('nama_program_studi')
-                    ->pluck('id_prodi', 'nama_program_studi');
-        
-
+                    ->pluck('id_prodi');
         // $id_prodi_fak=$prodi_fak->pluck('id_prodi');
-
-       
         
         $data = MonitoringIsiKrs::with(['prodi'])
                 ->join('program_studis', 'monitoring_isi_krs.id_prodi', 'program_studis.id_prodi')
