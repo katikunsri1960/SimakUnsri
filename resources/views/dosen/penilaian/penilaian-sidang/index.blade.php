@@ -144,6 +144,7 @@ Sidang Mahasiswa
             "info": true,
             "autoWidth": true,
             "responsive": true,
+            "stateSave": true
         });
 
         $('#semester_select').select2({

@@ -82,6 +82,7 @@ Pembimbingan Akademik Dosen
             "info": true,
             "autoWidth": true,
             "responsive": true,
+            "stateSave": true
         });
     });
 </script>
