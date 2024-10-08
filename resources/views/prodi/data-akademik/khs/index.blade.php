@@ -141,7 +141,7 @@ KHS Mahasiswa
                             </div>
 
                             <div class="row mt-5" id="totalDiv">
-                                
+
                             </div>
                         </div>
                     </div>
@@ -278,36 +278,76 @@ KHS Mahasiswa
                         $('#akmDiv').append(`
                             <hr>
                             <h2>Aktivitas Kuliah Mahasiswa (AKM)</h2>
+                            <div class="px-5">
+                                 <table class="table table-bordered ">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">Semester</th>
+                                        <th class="text-center align-middle">IPK</th>
+                                        <th class="text-center align-middle">IPS</th>
+                                        <th class="text-center align-middle">SKS Semester</th>
+                                        <th class="text-center align-middle">SKS Total</th>
+                                        <th class="text-center align-middle">Status Mahasiswa</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="akmTableBody">
+                                </tbody>
+                            </table>
+                        </div>
+
                         `);
+
                         response.akm.forEach(function(akm, index){
-                            $('#akmDiv').append(`
-                                <div class="col-md-4">
-                                    <table style="width:100%" class="table table-bordered">
-                                        <tr>
-                                            <td class="text-start align-middle" style="width: 50%">Semester</td>
-                                            <td>:</td>
-                                            <td class="text-start
-                                                align-middle">${akm.nama_semester}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-start align-middle" style="width: 50%">IPK</td>
-                                            <td>:</td>
-                                            <td class="text-start align-middle">${akm.ipk}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-start align-middle" style="width: 50%">IPS</td>
-                                            <td>:</td>
-                                            <td class="text-start align-middle">${akm.ips}</td>
-                                        </tr>
-                                        <tr>
-                                            <td class="text-start align-middle" style="width: 50%">Status Mahasiswa</td>
-                                            <td>:</td>
-                                            <td class="text-start align-middle">${akm.nama_status_mahasiswa}</td>
-                                        </tr>
-                                    </table>
-                                </div>
+                            $('#akmTableBody').append(`
+                                <tr>
+                                    <td class="text-center align-middle">${akm.nama_semester}</td>
+                                    <td class="text-center align-middle">${akm.ipk}</td>
+                                    <td class="text-center align-middle">${akm.ips}</td>
+                                    <td class="text-center align-middle">${akm.sks_semester}</td>
+                                    <td class="text-center align-middle">${akm.sks_total}</td>
+                                    <td class="text-center align-middle">${akm.nama_status_mahasiswa}</td>
+                                </tr>
                             `);
                         });
+                        // response.akm.forEach(function(akm, index){
+                        //     $('#akmDiv').append(`
+                        //         <div class="col-md-4">
+                        //             <table style="width:100%" class="table table-bordered">
+                        //                 <tr>
+                        //                     <td class="text-start align-middle" style="width: 50%">Semester</td>
+                        //                     <td>:</td>
+                        //                     <td class="text-start
+                        //                         align-middle">${akm.nama_semester}</td>
+                        //                 </tr>
+                        //                 <tr>
+                        //                     <td class="text-start align-middle" style="width: 50%">IPK</td>
+                        //                     <td>:</td>
+                        //                     <td class="text-start align-middle">${akm.ipk}</td>
+                        //                 </tr>
+                        //                 <tr>
+                        //                     <td class="text-start align-middle" style="width: 50%">IPS</td>
+                        //                     <td>:</td>
+                        //                     <td class="text-start align-middle">${akm.ips}</td>
+                        //                 </tr>
+                        //                  <tr>
+                        //                     <td class="text-start align-middle" style="width: 50%">SKS Semeseter</td>
+                        //                     <td>:</td>
+                        //                     <td class="text-start align-middle">${akm.sks_semester}</td>
+                        //                 </tr>
+                        //                  <tr>
+                        //                     <td class="text-start align-middle" style="width: 50%">SKS Total</td>
+                        //                     <td>:</td>
+                        //                     <td class="text-start align-middle">${akm.sks_total}</td>
+                        //                 </tr>
+                        //                 <tr>
+                        //                     <td class="text-start align-middle" style="width: 50%">Status Mahasiswa</td>
+                        //                     <td>:</td>
+                        //                     <td class="text-start align-middle">${akm.nama_status_mahasiswa}</td>
+                        //                 </tr>
+                        //             </table>
+                        //         </div>
+                        //     `);
+                        // });
 
                     }
 
