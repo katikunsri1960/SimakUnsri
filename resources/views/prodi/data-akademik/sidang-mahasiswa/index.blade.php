@@ -151,6 +151,7 @@ Tugas Akhir
 
         $('#data').DataTable({
             // default sort by column 6 desc
+            "stateSave": true,
             "order": [[ 5, "desc" ]],
             "columnDefs": [{
                 "targets": 0,

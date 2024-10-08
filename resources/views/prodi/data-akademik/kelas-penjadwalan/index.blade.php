@@ -96,6 +96,7 @@ Kelas Penjadwalan
             "searching": true,
             "scrollCollapse": true,
             "scrollY": "450px",
+            "stateSave": true,
             "order": [[ 4, "desc" ]]
         });
 

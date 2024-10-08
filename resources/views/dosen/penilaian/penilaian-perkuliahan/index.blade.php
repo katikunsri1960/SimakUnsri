@@ -135,6 +135,7 @@ Penilaian Perkuliahan Mahasiswa
             "searching": true,
             "scrollCollapse": true,
             "scrollY": "550px",
+            "stateSave": true
         });
 
     });
