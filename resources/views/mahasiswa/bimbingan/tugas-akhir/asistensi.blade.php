@@ -317,47 +317,6 @@ Bimbingan Tugas Akhir Mahasiswa
                             </table>
                         </div>
                     </div>
-                    {{-- <h4>Nilai Sidang Mahasiswa<h4>
-                    <div class="row mt-10">
-                        <div class="table-responsive">
-                            <table id="dt" class="table table-bordered table-striped text-center" style="font-size: 11px;">
-                                <thead>
-                                    <tr>
-                                        <th>No</th>
-                                        <th>Nama Dosen</th>
-                                        <th>Tanggal Penilaian</th>
-                                        <th>Nilai Kualitas Skripsi</th>
-                                        <th>Nilai Presentasi dan Diskusi</th>
-                                        <th>Nilai Performansi</th>
-                                        <th>Nilai Akhir Dosen (Jumlah dari BxN)</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($data_pelaksanaan->penilaian_sidang as $p)
-                                        <tr>
-                                            <td>{{$loop->iteration}}</td>
-                                            <td>{{$p->dosen->nama_dosen}}<br>({{$p->dosen->nidn}})</td>
-                                            <td>{{$p->tanggal_penilaian_sidang}}</td>
-                                            <td>{{$p->nilai_kualitas_skripsi}}</td>
-                                            <td>{{$p->nilai_presentasi_dan_diskusi}}</td>
-                                            <td>{{$p->nilai_performansi}}</td>
-                                            <td>{{$p->nilai_akhir_dosen}}</td>
-                                            <td>
-                                                @if ($p->approved_prodi == 0)
-                                                    <span class="badge bg-warning">Menunggu Persetujuan Prodi</span>
-                                                @elseif ($p->approved_prodi == 1)
-                                                    <span class="badge bg-success">Disetujui</span>
-                                                @else
-                                                    <span class="badge bg-danger">Dibatalkan</span>
-                                                @endif
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </div> --}}
                 </div>
             </div>
         </div>
