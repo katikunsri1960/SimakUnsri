@@ -527,13 +527,13 @@ class PembimbingMahasiswaController extends Controller
         
             foreach ($data as $d) {
                 if (!isset($d->konversi)) {
-                    $penilaian_langsung[] = (object)['penilaian_langsung' => 0]; // Store 0 if konversi is not set
+                    $penilaian_langsung[] = (object)['penilaian_langsung' => 0, 'id_matkul' => '']; // Store 0 if konversi is not set
                 } else {
                     $result = Konversi::where('id_kurikulum', $d->anggota_aktivitas_personal->mahasiswa->id_kurikulum)
                         ->where('id_matkul', $d->konversi->id_matkul)
                         ->first();
         
-                    $penilaian_langsung[] = $result ? $result : (object)['penilaian_langsung' => 0]; // Handle null results
+                    $penilaian_langsung[] = $result ? $result : (object)['penilaian_langsung' => 0, 'id_matkul' => '']; // Handle null results
                 }
             }
         }        
