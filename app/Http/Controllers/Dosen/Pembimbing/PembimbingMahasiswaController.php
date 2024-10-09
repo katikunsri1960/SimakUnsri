@@ -520,30 +520,24 @@ class PembimbingMahasiswaController extends Controller
 
         $semester = Semester::orderBy('id_semester', 'desc')->get();
 
-        if (!$data || count($data) === 0) {
-            $penilaian_langsung = (object)['penilaian_langsung' => 0];
-        } else {
-            $penilaian_langsung = []; // Initialize an array to store multiple results if needed
-        
-            foreach ($data as $d) {
-                if (!isset($d->konversi)) {
-                    $penilaian_langsung[] = (object)['penilaian_langsung' => 0, 'id_matkul' => '']; // Store 0 if konversi is not set
-                } else {
-                    $result = Konversi::where('id_kurikulum', $d->anggota_aktivitas_personal->mahasiswa->id_kurikulum)
-                        ->where('id_matkul', $d->konversi->id_matkul)
-                        ->first();
-        
-                    $penilaian_langsung[] = $result ? $result : (object)['penilaian_langsung' => 0, 'id_matkul' => '']; // Handle null results
+        foreach ($data as $d) {
+            $d->penilaian_langsung = 0;
+            if ($d->konversi) {
+                $result = Konversi::where('id_kurikulum', $d->anggota_aktivitas_personal->mahasiswa->id_kurikulum)
+                    ->where('id_matkul', $d->konversi->id_matkul)
+                    ->first();
+
+                if ($result) {
+                    $d->penilaian_langsung = $result->penilaian_langsung;
                 }
             }
-        }        
+        }      
         
         // dd($penilaian_langsung);
         return view('dosen.pembimbing.non-tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
-            'id_semester' => $id_semester,
-            'penilaian_langsung' => $penilaian_langsung
+            'id_semester' => $id_semester
         ]);
     } 
 
