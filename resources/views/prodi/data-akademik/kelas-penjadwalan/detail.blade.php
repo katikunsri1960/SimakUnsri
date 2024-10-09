@@ -102,22 +102,23 @@ Kelas Penjadwalan
                                         <td class="text-center align-middle">
 
                                             @if ($d->feeder == 0)
-                                            <div class="row my-3 px-3">
-                                                <a type="button" class="btn btn-sm btn-rounded btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', [ 'id_kelas'=> $d->id_kelas_kuliah])}}" title="Manajemen Dosen Kelas"><i class="fa fa-pencil-square-o"></i> Dosen Pengajar</a>
-                                            </div>
-                                            <div class="row my-3 px-3">
-                                                <a href="{{route('prodi.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Edit Kelas</a>
-                                            </div>
-
-                                            <form action="{{route('prodi.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
-                                                @csrf
-                                                @method('delete')
-                                                <div class="row">
-                                                <button type="submit" class="btn btn-sm btn-rounded btn-danger waves-effect waves-light"><i class="fa fa-trash"></i> Hapus Kelas</button>
+                                                <div class="row my-3 px-3">
+                                                    <a type="button" class="btn btn-sm btn-rounded btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', [ 'id_kelas'=> $d->id_kelas_kuliah])}}" title="Manajemen Dosen Kelas"><i class="fa fa-pencil-square-o"></i> Dosen Pengajar</a>
                                                 </div>
-                                            </form>
+                                                <div class="row my-3 px-3">
+                                                    <a href="{{route('prodi.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Edit Kelas</a>
+                                                </div>
+                                                <form action="{{route('prodi.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
+                                                    @csrf
+                                                    @method('delete')
+                                                    <div class="row">
+                                                    <button type="submit" class="btn btn-sm btn-rounded btn-danger waves-effect waves-light"><i class="fa fa-trash"></i> Hapus Kelas</button>
+                                                    </div>
+                                                </form>
                                             @else
-                                                <h4>Data Sudah di Sinkronisasi</h4>
+                                                <div class="row my-3 px-3">
+                                                    <a type="button" class="btn btn-sm btn-rounded btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', [ 'id_kelas'=> $d->id_kelas_kuliah])}}" title="Manajemen Dosen Kelas"><i class="fa fa-pencil-square-o"></i> Dosen Pengajar</a>
+                                                </div>
                                             @endif
 
                                         </td>
