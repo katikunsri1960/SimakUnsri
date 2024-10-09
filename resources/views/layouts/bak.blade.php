@@ -24,6 +24,15 @@
 
     {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
 
+    <style>
+        .centered {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+    </style>
+
 </head>
 
 <body class="hold-transition light-skin sidebar-mini theme-primary fixed">
@@ -65,7 +74,7 @@
     <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
     <script src="{{asset('assets/js/confirmSubmit.js')}}"></script>
     <script>
-        
+
     </script>
     @stack('js')
     <!-- EduAdmin App -->

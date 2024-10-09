@@ -143,7 +143,7 @@ Transkrip Nilai
                                                     </td>
                                                 </tr>
                                                 <tr>
-                                                    <td class="text-center align-middle" style="width: 12%">Nilai USEPT</td>
+                                                    <td class="text-start align-middle" style="width: 12%">Nilai USEPT</td>
                                                     <td>:</td>
                                                     <td class="text-start"
                                                         style="width: 45%; padding-left: 10px"> <div id="nilaiUsept"></div> </td>
@@ -277,11 +277,13 @@ Transkrip Nilai
         }
         $(document).ready(function () {
             $('#btnCari').click(function () {
+                $("#spinner").show();
                 var nim = $('#nim').val();
                 // fix error cannot reinitialize DataTable
                 $('#krs-regular').DataTable().clear().destroy();
 
                 if (nim == '') {
+                    $("#spinner").hide();
                     swal('Peringatan', 'NIM tidak boleh kosong', 'warning');
                 } else {
                     $.ajax({
@@ -291,7 +293,7 @@ Transkrip Nilai
                             nim: nim
                         },
                         success: function (response) {
-                            console.log(response);
+                            $("#spinner").hide();
                             if (response.status == 'error') {
                                 swal({
                                     title: "Peringatan!",
