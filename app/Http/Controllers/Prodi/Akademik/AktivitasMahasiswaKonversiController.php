@@ -202,7 +202,7 @@ class AktivitasMahasiswaKonversiController extends Controller
 
             $check_mk_konversi = AktivitasMahasiswa::where('id_prodi', $prodi_id)->where('id_semester', $semester->id_semester)->where('mk_konversi', $latest_mk_konversi->id_matkul)->count();
             // dd($check_mk_konversi);
-            if($check_mk_konversi > 0){
+            if($check_mk_konversi > 0 && ($mk_konversi->id_matkul != $latest_mk_konversi->id_matkul)){
                 return redirect()->route('prodi.data-aktivitas.aktivitas-mahasiswa.index')->with('error', 'Aktivitas MK Konversi Sudah di Ambil Mahasiswa.');
             }else{
                 // Simpan data ke tabel aktivitas_mahasiswas
