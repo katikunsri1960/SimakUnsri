@@ -37,7 +37,7 @@
                             {{-- </div> --}}
                             {{-- <div class="mb-3"> --}}
                                 <div class="col-md-6 mb-20">
-                                    <label for="tgl_selesai_jabatan" class="form-label">Tanggal Mulai Menjabat</label>
+                                    <label for="tgl_selesai_jabatan" class="form-label">Tanggal Selesai Menjabat</label>
                                     <input class="form-control" type="date" name="tgl_selesai_jabatan"  id="tgl_selesai_jabatan" placeholder="-- Batas Isi KRS --">
                                 </div>
                             {{-- </div> --}}
