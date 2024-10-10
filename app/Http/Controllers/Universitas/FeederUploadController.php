@@ -988,7 +988,7 @@ class FeederUploadController extends Controller
                 ->where('id_semester', $semester)
                 ->where('approve_krs', 1)
                 ->where('feeder', 0)
-                // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
+                ->where('id_aktivitas', '9dca5870-1647-46a1-8541-76e4739875cf')
                 ->get();
 
         $totalData = $data->count();
@@ -1111,6 +1111,79 @@ class FeederUploadController extends Controller
 
     public function anggota_upload(Request $request)
     {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
 
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = AktivitasMahasiswa::where('id_prodi', $prodi)
+                ->where('id_semester', $semester)
+                ->where('approve_krs', 1)
+                ->where('feeder', 0)
+                ->where('id_aktivitas', '9dca5870-1647-46a1-8541-76e4739875cf')
+                ->get();
+
+        $totalData = $data->count();
+        // dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertAnggotaAktivitasMahasiswa';
+        $actGet = 'GetListAktivitasMahasiswa';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+                $record = [
+                    'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
+                    'id_aktivitas' => $d->id_aktivitas,
+                    'jenis_peran' => $d->jenis_peran,
+                ];
+
+
+                $recordGet = "id_aktivitas = '".$d->id_aktivitas."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadAktivitas();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    DB::beginTransaction();
+
+                    $d->update([
+                        'id_anggota' => $result['data']['id_anggota'],
+                        'status_sync' => 'sudah_sync',
+                        'feeder' => 1
+                    ]);
+
+
+                    DB::commit();
+
+                    $dataBerhasil++;
+                } else {
+                    // DB::rollback();
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
     }
 }

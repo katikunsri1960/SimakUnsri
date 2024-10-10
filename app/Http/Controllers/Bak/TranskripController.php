@@ -74,10 +74,6 @@ class TranskripController extends Controller
             ];
         }
 
-
-        // Combine the scores and find the maximum
-
-
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
