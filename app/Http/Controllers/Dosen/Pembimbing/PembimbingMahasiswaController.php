@@ -75,7 +75,9 @@ class PembimbingMahasiswaController extends Controller
         // dd($nilai_usept_mhs);
 
         try {
-            //code...
+            // Set the time limit to 30 seconds (adjust as needed)
+            set_time_limit(30);
+
             $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $biodata->nik])->max('score');
             $db_course_usept = new CourseUsept;
             $nilai_course = $db_course_usept->whereIn('nim', [$riwayat->nim, $biodata->nik])->get();
@@ -99,6 +101,7 @@ class PembimbingMahasiswaController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             $nilai_usept_final = "Belum Ada Nilai";
+            \Log::error($th->getMessage());
         }
 
         $data = PesertaKelasKuliah::with(['kelas_kuliah.matkul'])
