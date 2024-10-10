@@ -58,31 +58,36 @@ Nilai USEPT Mahasiswa
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($data as $d)
+                                @if($data == 0)
                                     <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td class="text-center align-middle" style="white-space:nowrap;">{{$mahasiswa->nim}}</td>
-                                        <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
-                                        <td>{{ date('d M Y', strtotime($d->tgl_test)) }}</td>
-                                        <td>{{$d->score}}</td>
-                                        <td class="text-center align-middle">
-                                            @if (!$usept_prodi)
-                                                <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>  
-                                            @elseif ($d->score < $usept_prodi->nilai_usept)
-                                                <span class="badge bg-danger">Belum Lulus</span>
-                                            @elseif ($d->score >= $usept_prodi->nilai_usept)
-                                                <span class="badge bg-success">Lulus</span>
-                                            @endif
-                                        </td>
+                                        <td colspan="6">Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.</td>
                                     </tr>
-                                @endforeach
+                                @else
+                                    @foreach($data as $d)
+                                        <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td class="text-center align-middle" style="white-space:nowrap;">{{$mahasiswa->nim}}</td>
+                                            <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
+                                            <td>{{ date('d M Y', strtotime($d->tgl_test)) }}</td>
+                                            <td>{{$d->score}}</td>
+                                            <td class="text-center align-middle">
+                                                @if (!$usept_prodi)
+                                                    <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>  
+                                                @elseif ($d->score < $usept_prodi->nilai_usept)
+                                                    <span class="badge bg-danger">Belum Lulus</span>
+                                                @elseif ($d->score >= $usept_prodi->nilai_usept)
+                                                    <span class="badge bg-success">Lulus</span>
+                                                @endif
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
 					    </table>
                     </div>
                 </div>
                 <div class="box-footer">
                     <h3 class="text-info mb-25"><i class="fa fa-book"></i> Daftar Nilai Course USEPT</h3>
-                    {{-- <hr class="my-15"> --}}
                     <div class="table-responsive">
                         <table id="course" class="table table-bordered table-striped text-center">
                             <thead>
@@ -98,32 +103,38 @@ Nilai USEPT Mahasiswa
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($course_data as $c)
+                                @if($course_data == 0)
                                     <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td class="text-center align-middle" style="white-space:nowrap;">{{$mahasiswa->nim}}</td>
-                                        <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
-                                        <td>{{ date('d M Y', strtotime($c->tgl_upload)) }}</td>
-                                        @if($c->total_score < 71)
-                                            <td class="text-center align-middle" colspan="4"> 
-                                                <span class="badge bg-danger">Belum Lulus</span>
-                                            </td> 
-                                        @else
-                                            <td>{{$c->total_score}}</td>
-                                            <td>{{$c->grade}}</td>
-                                            <td>{{$c->konversi}}</td>
-                                            <td class="text-center align-middle"> 
-                                                @if ($c->konversi < $usept_prodi->nilai_usept)
-                                                    <span class="badge bg-danger">Belum Lulus</span>
-                                                @elseif ($usept_prodi->nilai_usept == NULL)
-                                                    <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
-                                                @elseif ($c->konversi >= $usept_prodi->nilai_usept)
-                                                    <span class="badge bg-success">Lulus</span>
-                                                @endif
-                                            </td>
-                                        @endif
+                                        <td colspan="8">Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.</td>
                                     </tr>
-                                @endforeach
+                                @else
+                                    @foreach($course_data as $c)
+                                        <tr>
+                                            <td>{{$loop->iteration}}</td>
+                                            <td class="text-center align-middle" style="white-space:nowrap;">{{$mahasiswa->nim}}</td>
+                                            <td class="text-start align-middle">{{$mahasiswa->nama_mahasiswa}}</td>
+                                            <td>{{ date('d M Y', strtotime($c->tgl_upload)) }}</td>
+                                            @if($c->total_score < 71)
+                                                <td class="text-center align-middle" colspan="4"> 
+                                                    <span class="badge bg-danger">Belum Lulus</span>
+                                                </td> 
+                                            @else
+                                                <td>{{$c->total_score}}</td>
+                                                <td>{{$c->grade}}</td>
+                                                <td>{{$c->konversi}}</td>
+                                                <td class="text-center align-middle"> 
+                                                    @if ($c->konversi < $usept_prodi->nilai_usept)
+                                                        <span class="badge bg-danger">Belum Lulus</span>
+                                                    @elseif ($usept_prodi->nilai_usept == NULL)
+                                                        <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
+                                                    @elseif ($c->konversi >= $usept_prodi->nilai_usept)
+                                                        <span class="badge bg-success">Lulus</span>
+                                                    @endif
+                                                </td>
+                                            @endif
+                                        </tr>
+                                    @endforeach
+                                @endif
                             </tbody>
 					    </table>
                     </div>
