@@ -76,7 +76,7 @@ class PembimbingMahasiswaController extends Controller
 
         try {
             // Set the time limit to 30 seconds (adjust as needed)
-            set_time_limit(30);
+            set_time_limit(10);
 
             $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $biodata->nik])->max('score');
             $db_course_usept = new CourseUsept;
