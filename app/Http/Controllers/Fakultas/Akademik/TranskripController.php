@@ -68,7 +68,8 @@ class TranskripController extends Controller
         }
 
         try {
-            //code...
+            set_time_limit(10);
+
             $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
             $nilai_course = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get()->pluck('konversi');
 
