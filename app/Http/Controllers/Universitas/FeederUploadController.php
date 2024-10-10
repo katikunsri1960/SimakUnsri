@@ -1113,25 +1113,30 @@ class FeederUploadController extends Controller
     {
         $prodi = ProgramStudi::find($request->prodi)->id_prodi;
 
-        $semester = $request->semester;
+        // $semester = $request->id_semester;
 
-        // return response()->json(['message' => $semester.' - '.$prodi]);
 
-        $data = AktivitasMahasiswa::where('id_prodi', $prodi)
-                ->where('id_semester', $semester)
-                ->where('approve_krs', 1)
-                ->where('feeder', 0)
-                ->where('id_aktivitas', '9dca5870-1647-46a1-8541-76e4739875cf')
-                ->get();
+
+        $data =  AnggotaAktivitasMahasiswa::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'anggota_aktivitas_mahasiswas.id_aktivitas')
+                                        ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa')
+                                        ->join('program_studis as p', 'r.id_prodi', 'p.id_prodi')
+                                        ->where('a.id_prodi', $prodi)
+                                        ->where('a.id_semester', $request->semester)
+                                        ->where('a.approve_krs', 1)
+                                        ->where('a.feeder', 1)
+                                        ->where('anggota_aktivitas_mahasiswas.feeder', 0)
+                                        ->select('anggota_aktivitas_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi_mahasiswa'))
+                                        // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
+                                        ->get();
 
         $totalData = $data->count();
-        // dd($data);
+        // dd($data, $totalData, $request->all());
         if ($totalData == 0) {
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
 
         $act = 'InsertAnggotaAktivitasMahasiswa';
-        $actGet = 'GetListAktivitasMahasiswa';
+        $actGet = 'GetListAnggotaAktivitasMahasiswa';
         $dataGagal = 0;
         $dataBerhasil = 0;
 
@@ -1147,7 +1152,7 @@ class FeederUploadController extends Controller
                 $recordGet = "id_aktivitas = '".$d->id_aktivitas."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-                $result = $req->uploadAktivitas();
+                $result = $req->uploadGeneral();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
