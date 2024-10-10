@@ -68,17 +68,30 @@ class TranskripController extends Controller
         }
 
         $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
-        $nilai_course = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get()->pluck('konversi');
+        
+        try {
+            //code...
+            $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
+            $nilai_course = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get()->pluck('konversi');
 
-        // Combine the scores and find the maximum
-        $all_scores = $nilai_usept_mhs->merge($nilai_course);
-        $usept = $all_scores->max();
+            $all_scores = $nilai_usept_mhs->merge($nilai_course);
+            $usept = $all_scores->max();
 
-        $useptData = [
-            'score' => $usept,
-            'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
-            'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
-        ];
+            $useptData = [
+                'score' => $usept,
+                'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
+                'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
+            ];
+
+        } catch (\Throwable $th) {
+            //throw $th;
+
+            $useptData = [
+                'score' => 0,
+                'class' => 'danger',
+                'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
+            ];
+        }
 
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
