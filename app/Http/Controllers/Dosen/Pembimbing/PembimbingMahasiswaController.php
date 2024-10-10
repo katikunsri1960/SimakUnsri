@@ -70,29 +70,38 @@ class PembimbingMahasiswaController extends Controller
         $id = $riwayat->id_registrasi_mahasiswa;
         $biodata = BiodataMahasiswa::where('id_mahasiswa', $riwayat->id_mahasiswa)->first();
         $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
-        $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $biodata->nik])->max('score');
-        $db_course_usept = new CourseUsept;
-        $nilai_course = $db_course_usept->whereIn('nim', [$riwayat->nim, $biodata->nik])->get();
         $semester = SemesterAktif::first();
 
         // dd($nilai_usept_mhs);
 
-        $nilai_usept_final = "Belum Ada Nilai";
+        try {
+            // Set the time limit to 30 seconds (adjust as needed)
+            set_time_limit(10);
 
-        if($nilai_usept_mhs !== null) {
-            $nilai_usept_final = $nilai_usept_mhs;
+            $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $biodata->nik])->max('score');
+            $db_course_usept = new CourseUsept;
+            $nilai_course = $db_course_usept->whereIn('nim', [$riwayat->nim, $biodata->nik])->get();
 
-            if($nilai_course){
-                foreach($nilai_course as $n){
-                    $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
-                    
-                    if($nilai_hasil_course > $nilai_usept_mhs){
-                        $nilai_usept_final = $nilai_hasil_course;
-                        // Hentikan loop karena syarat sudah terpenuhi
-                        break;
+            if($nilai_usept_mhs !== null) {
+                $nilai_usept_final = $nilai_usept_mhs;
+    
+                if($nilai_course){
+                    foreach($nilai_course as $n){
+                        $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
+                        
+                        if($nilai_hasil_course > $nilai_usept_mhs){
+                            $nilai_usept_final = $nilai_hasil_course;
+                            // Hentikan loop karena syarat sudah terpenuhi
+                            break;
+                        }
                     }
                 }
             }
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            $nilai_usept_final = "Belum Ada Nilai";
+            \Log::error($th->getMessage());
         }
 
         $data = PesertaKelasKuliah::with(['kelas_kuliah.matkul'])

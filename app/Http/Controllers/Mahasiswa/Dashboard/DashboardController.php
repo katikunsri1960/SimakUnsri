@@ -66,25 +66,34 @@ class DashboardController extends Controller
 
         $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
 
-        $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->pluck('score');
-        $nilai_course = CourseUsept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->get()->pluck('konversi');
-        // dd($nilai_usept_prodi);
-        // Combine the scores and find the maximum
-        $all_scores = $nilai_usept_mhs->merge($nilai_course);
-        $usept = $all_scores->max();
+        try {
+            //code...
+            $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->pluck('score');
+            $nilai_course = CourseUsept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->get()->pluck('konversi');
 
+            $all_scores = $nilai_usept_mhs->merge($nilai_course);
+            $usept = $all_scores->max();
 
-        if ($nilai_usept_prodi) {
+            if ($nilai_usept_prodi) {
+                $usept_data = [
+                    'score' => $usept,
+                    'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
+                    'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
+                ];
+            }else{
+                $usept_data = [
+                    'score' => '',
+                    'class' => 'danger',
+                    'status' => 'Kurikulum Belum diatur',
+                ];
+            }
+
+        } catch (\Throwable $th) {
+            //throw $th;
             $usept_data = [
-                'score' => $usept,
-                'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
-                'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
-            ];
-        }else{
-            $usept_data = [
-                'score' => '',
+                'score' => 0,
                 'class' => 'danger',
-                'status' => 'Kurikulum Belum diatur',
+                'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
             ];
         }
 
