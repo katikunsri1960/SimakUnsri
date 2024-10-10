@@ -67,8 +67,6 @@ class TranskripController extends Controller
             $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
         }
 
-        $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
-        
         try {
             //code...
             $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
@@ -85,7 +83,6 @@ class TranskripController extends Controller
 
         } catch (\Throwable $th) {
             //throw $th;
-
             $useptData = [
                 'score' => 0,
                 'class' => 'danger',

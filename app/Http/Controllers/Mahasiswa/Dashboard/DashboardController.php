@@ -90,7 +90,7 @@ class DashboardController extends Controller
 
         } catch (\Throwable $th) {
             //throw $th;
-            $useptData = [
+            $usept_data = [
                 'score' => 0,
                 'class' => 'danger',
                 'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
