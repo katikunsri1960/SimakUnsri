@@ -879,6 +879,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'anggota_data'])->name('univ.feeder-upload.aktivitas.anggota.data');
                         Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'anggota_upload'])->name('univ.feeder-upload.aktivitas.anggota.upload');
                     });
+
+                    Route::prefix('nilai-konversi')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_konversi'])->name('univ.feeder-upload.aktivitas.nilai-konversi');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_konversi_data'])->name('univ.feeder-upload.aktivitas.nilai-konversi.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_konversi_upload'])->name('univ.feeder-upload.aktivitas.nilai-konversi.upload');
+                    });
                 });
 
             });

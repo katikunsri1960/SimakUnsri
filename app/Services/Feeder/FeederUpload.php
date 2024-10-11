@@ -2,6 +2,8 @@
 
 namespace App\Services\Feeder;
 
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Semester;
 use GuzzleHttp\Client;
 
 class FeederUpload {
@@ -233,7 +235,7 @@ class FeederUpload {
         $result = json_decode($response,true);
 
         if($result['error_code'] == 0) {
-            
+
             $token = $result['data']['token'];
             $paramsGet = [
                 "token" => $token,
@@ -634,6 +636,151 @@ class FeederUpload {
 
             return $result;
         }
+    }
+
+    public function uploadNilaiKonversi()
+    {
+        $client = new Client();
+        $params = [
+            "act" => "GetToken",
+            "username" => $this->username,
+            "password" => $this->password,
+        ];
+
+        $req = $client->post( $this->url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode($params)
+        ]);
+
+        $response = $req->getBody();
+        $result = json_decode($response,true);
+
+        if($result['error_code'] == 0) {
+            $token = $result['data']['token'];
+            $id_reg = $this->record['id_registrasi_mahasiswa'];
+            $id_matkul = $this->record['id_matkul'];
+
+            unset($this->record['id_registrasi_mahasiswa']);
+
+            $params = [
+                "token" => $token,
+                "act"   => $this->act,
+                "record" => $this->record
+            ];
+
+            $req = $client->post( $this->url, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'body' => json_encode($params)
+            ]);
+
+            $response = $req->getBody();
+
+            $result = json_decode($response,true);
+
+            if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                $id_konversi_aktivitas = $result['data']['id_konversi_aktivitas'];
+                $smtDiambil = $this->smtDiambil($id_reg, $this->record['id_semester']);
+                $this->insertTranskrip($this->recordGet, $token, $id_reg, $id_matkul, $id_konversi_aktivitas, $smtDiambil);
+
+            }
+
+            return $result;
+        }
+    }
+
+    private function smtDiambil($id_reg, $id_semester)
+    {
+        $periode_masuk = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                                        ->select('id_periode_masuk')
+                                        ->first()->id_periode_masuk;
+
+        $semester_ke = Semester::orderBy('id_semester', 'ASC')
+                                        ->whereBetween('id_semester', [$periode_masuk, $id_semester])
+                                        ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                                        ->count();
+
+        return $semester_ke;
+
+
+    }
+
+    private function insertTranskrip($recordGet, $token, $id_reg, $id_matkul, $id_konversi_aktivitas, $smtDiambil)
+    {
+        $client = new Client();
+
+        $params = [
+            "token" => $token,
+            "act"   => "GetTranskripMahasiswa",
+            "filter" => $recordGet
+        ];
+
+        $req = $client->post( $this->url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode($params)
+        ]);
+
+        $response = $req->getBody();
+
+        $result = json_decode($response,true);
+
+        if (isset($result['error_code']) && $result['error_code'] == 0 && count($result['data']) > 0) {
+
+            $params = [
+                "token" => $token,
+                "act"   => "DeleteTranskripMahasiswa",
+                "key" => [
+                    "id_registrasi_mahasiswa" => $id_reg,
+                    "id_matkul" => $id_matkul
+                ]
+            ];
+
+            $req = $client->post( $this->url, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'body' => json_encode($params)
+            ]);
+
+            $response = $req->getBody();
+
+            $result = json_decode($response,true);
+        }
+
+        $params = [
+            'token' => $token,
+            'act' => 'InsertTranskripMahasiswa',
+            'record' => [
+                'id_registrasi_mahasiswa' => $id_reg,
+                'id_matkul' => $id_matkul,
+                'id_konversi_aktivitas' => $id_konversi_aktivitas,
+                'smt_diambil' => strval($smtDiambil),
+            ]
+        ];
+
+        $req = $client->post( $this->url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode($params)
+        ]);
+
+        $response = $req->getBody();
+
+        $result = json_decode($response,true);
+
+        return true;
     }
 
     public function uploadNilaiKelas()

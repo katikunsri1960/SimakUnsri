@@ -988,7 +988,7 @@ class FeederUploadController extends Controller
                 ->where('id_semester', $semester)
                 ->where('approve_krs', 1)
                 ->where('feeder', 0)
-                ->where('id_aktivitas', '8aba8319-5a47-4efb-ae85-dc2d3903349f')
+                // ->where('id_aktivitas', '8aba8319-5a47-4efb-ae85-dc2d3903349f')
                 ->get();
 
         $totalData = $data->count();
@@ -1142,6 +1142,7 @@ class FeederUploadController extends Controller
 
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
+                $id_anggota_lama = $d->id_anggota;
                 $record = [
                     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
                     'id_aktivitas' => $d->id_aktivitas,
@@ -1158,8 +1159,129 @@ class FeederUploadController extends Controller
 
                     DB::beginTransaction();
 
+                    KonversiAktivitas::where('id_anggota', $id_anggota_lama)->update(['id_anggota' => $result['data']['id_anggota']]);
+
                     $d->update([
                         'id_anggota' => $result['data']['id_anggota'],
+                        'status_sync' => 'sudah_sync',
+                        'feeder' => 1
+                    ]);
+
+
+                    DB::commit();
+
+                    $dataBerhasil++;
+                } else {
+                    // DB::rollback();
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+
+    public function nilai_konversi()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.aktivitas.nilai-konversi', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function nilai_konversi_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = KonversiAktivitas::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'konversi_aktivitas.id_aktivitas')
+                                ->join('anggota_aktivitas_mahasiswas as aa', 'aa.id_anggota', 'konversi_aktivitas.id_anggota')
+                                ->join('mata_kuliahs as m', 'konversi_aktivitas.id_matkul', 'm.id_matkul')
+                                ->join('program_studis as p', 'a.id_prodi', 'p.id_prodi')
+                                ->where('aa.feeder', 1)
+                                ->where('a.feeder', 1)
+                                ->where('a.id_prodi', $prodi)
+                                ->where('a.id_semester', $request->id_semester)
+                                ->where('konversi_aktivitas.feeder', 0)
+                                ->select('konversi_aktivitas.*', 'm.kode_mata_kuliah as kode_mata_kuliah', 'm.nama_mata_kuliah as nama_mata_kuliah', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
+                                ->get();
+
+
+        return response()->json($data);
+    }
+
+    public function nilai_konversi_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        // $semester = $request->id_semester;
+
+        $data =  KonversiAktivitas::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'konversi_aktivitas.id_aktivitas')
+                                ->join('anggota_aktivitas_mahasiswas as aa', 'aa.id_anggota', 'konversi_aktivitas.id_anggota')
+                                ->where('aa.feeder', 1)
+                                ->where('a.feeder', 1)
+                                ->where('a.id_prodi', $prodi)
+                                ->where('a.id_semester', $request->semester)
+                                ->where('konversi_aktivitas.feeder', 0)
+                                ->select('konversi_aktivitas.*', 'aa.id_registrasi_mahasiswa as id_registrasi_mahasiswa')
+                                ->get();
+
+        $totalData = $data->count();
+        // dd($data, $totalData, $request->all());
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertKonversiKampusMerdeka';
+        $actGet = 'GetListKonversiKampusMerdeka';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+
+                $record = [
+                    "id_semester" => $d->id_semester,
+                    "id_matkul" => $d->id_matkul,
+                    "id_anggota" => $d->id_anggota,
+                    "id_aktivitas" => $d->id_aktivitas,
+                    "sks_mata_kuliah" => $d->sks_mata_kuliah,
+                    "nilai_angka" => $d->nilai_angka,
+                    "nilai_indeks" => $d->nilai_indeks,
+                    "nilai_huruf" => $d->nilai_huruf,
+                    "id_registrasi_mahasiswa" => $d->id_registrasi_mahasiswa,
+                ];
+
+
+                $recordGet = "id_matkul = '".$d->id_matkul."' AND id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                
+                $result = $req->uploadNilaiKonversi();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    DB::beginTransaction();
+
+                    $d->update([
+                        'id_konversi_aktivitas' => $result['data']['id_konversi_aktivitas'],
                         'status_sync' => 'sudah_sync',
                         'feeder' => 1
                     ]);
