@@ -262,7 +262,7 @@ Kartu Rencana Studi
             // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
             $.ajax({
                 url: '{{ route("mahasiswa.krs.get_kelas_kuliah") }}',
-                type: 'GET',
+                type: 'POST',
                 data: {
                     id_matkul: idMatkul,
                     _token: csrfToken  // Sertakan CSRF token di sini
@@ -298,7 +298,7 @@ Kartu Rencana Studi
             // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
             $.ajax({
                 url: '{{ route("mahasiswa.krs.get_kelas_kuliah_merdeka") }}',
-                type: 'GET',
+                type: 'POST',
                 data: {
                     id_matkul: idMatkul,
                     _token: csrfToken  // Sertakan CSRF token di sini
@@ -432,7 +432,7 @@ Kartu Rencana Studi
         function cekPrasyarat(idMatkul, id_reg, csrfToken, callback) {
             $.ajax({
                 url: '{{ route("mahasiswa.krs.cek_prasyarat") }}',  // Pastikan rute ini sesuai dengan rute yang Anda gunakan
-                type: 'GET',
+                type: 'POST',
                 data: {
                     id_matkul: idMatkul,
                     id_reg: id_reg,
@@ -661,7 +661,7 @@ Kartu Rencana Studi
         // Lakukan AJAX request ke endpoint yang sesuai dengan menyertakan CSRF token
         $.ajax({
             url: '{{ route("mahasiswa.lihat-rps", ["id_matkul" => ":id_matkul"]) }}'.replace(':id_matkul', idMatkul),
-            type: 'GET',
+            type: 'POST',
             data: {
                 _token: csrfToken  // Sertakan CSRF token di sini
             },
