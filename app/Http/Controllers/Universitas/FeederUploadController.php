@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
-use App\Models\AsistensiAkhir;
 use App\Models\KuisonerAnswer;
 use App\Models\Mahasiswa\AktivitasMagang;
 use App\Models\Mahasiswa\PrestasiMahasiswa;
@@ -17,18 +16,12 @@ use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
-use App\Models\Perkuliahan\NilaiSidangMahasiswa;
-use App\Models\Perkuliahan\NilaiTransferPendidikan;
-use App\Models\Perkuliahan\NotulensiSidangMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\RencanaPembelajaran;
-use App\Models\Perkuliahan\RevisiSidangMahasiswa;
-use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use App\Services\Feeder\FeederUpload;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -1273,7 +1266,7 @@ class FeederUploadController extends Controller
                 $recordGet = "id_matkul = '".$d->id_matkul."' AND id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-                
+
                 $result = $req->uploadNilaiKonversi();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
