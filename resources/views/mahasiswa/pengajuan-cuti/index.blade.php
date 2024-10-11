@@ -21,7 +21,7 @@ Pengajuan Cuti Mahasiswa
 						</div>
 					<div>
 				</div>
-			</div>							
+			</div>
 		</div>
     </div>
     <div class="row">
@@ -30,14 +30,14 @@ Pengajuan Cuti Mahasiswa
                 <div class="row">
                     <div class="col-xl-6 col-lg-12">
                         <h3 class="fw-500 text-dark mt-0">Daftar Pengajuan Cuti Mahasiswa</h3>
-                    </div>                             
+                    </div>
                 </div>
                 <div class="row mb-5">
                     <div class="col-xl-12 col-lg-12 text-end">
                         <div class="btn-group">
                             <a class="btn btn-rounded bg-success-light " href="{{route('mahasiswa.pengajuan-cuti.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Pengajuan Cuti</a>
-                        </div>   
-                    </div>                           
+                        </div>
+                    </div>
                 </div><br>
                 <div class="row">
                     <div class="table-responsive">
@@ -93,7 +93,7 @@ Pengajuan Cuti Mahasiswa
                 </div>
             </div>
         </div>
-    </div>			
+    </div>
 </section>
 @endsection
 @push('js')
@@ -105,9 +105,9 @@ Pengajuan Cuti Mahasiswa
             "ordering": true,
             "searching": true,
         });
-        
+
         @if ($showAlert1)
-            console.log('masoook')
+         
             swal({
                 title: 'Pengajuan Cuti Tidak Diizinkan',
                 text: 'Anda tidak bisa mengajukan cuti, karena Anda Mahasiswa Program Pendidikan Profesi',

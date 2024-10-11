@@ -211,7 +211,7 @@ Mahasiswa Prodi
     function setKurikulum(data, id){
         data = data.replace(/&#39;/g, "'");
         parserData = JSON.parse(data);
-        console.log(parserData);
+
         // console.log('setKurikulum called with data:', data, 'and id:', id);
         $('#edit_set_id_kurikulum').val(parserData.id_kurikulum).trigger('change');
         $('#edit_nim').val(parserData.nim);
@@ -245,7 +245,7 @@ Mahasiswa Prodi
                     url: url,
                     data: formData,
                     success: function(response) {
-                        console.log(response); // Log the response for debugging
+                    
                         if (response.status === 'success') {
                             $('#data').DataTable().draw(false); // Redraw DataTable without resetting pagination
                             alert(response.message);

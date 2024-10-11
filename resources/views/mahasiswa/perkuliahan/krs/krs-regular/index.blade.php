@@ -74,12 +74,12 @@ Kartu Rencana Studi
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between">
                     <div class="d-flex justify-content-start">
-                        <h3 class="text-info mb-0"><i class="fa fa-newspaper-o"></i> Kartu Rencana Studi</h3> 
-                    </div>        
-                    <div class="d-flex justify-content-end mb-10">             
+                        <h3 class="text-info mb-0"><i class="fa fa-newspaper-o"></i> Kartu Rencana Studi</h3>
+                    </div>
+                    <div class="d-flex justify-content-end mb-10">
                         @if ($today<=$batas_isi_krs)
                             <span class="badge badge-warning-light">Periode pengisian KRS hingga tanggal <strong style="color: red">{{ date('d M Y', strtotime($batas_isi_krs)) }}</strong></span>
-                        @endif 
+                        @endif
                     </div>
                 </div>
                 <div class="box-header d-flex justify-content-between py-0 px-15 mt-10" style="border-bottom: 0px">
@@ -103,7 +103,7 @@ Kartu Rencana Studi
                             <td>
                                 <a href="#" id="print-krs-btn" class="waves-effect waves-light btn btn-sm btn-success float-end">
                                     <i class="fa fa-print"></i> Cetak
-                                </a> 
+                                </a>
                             </td>
                         </div>
                     </div>
@@ -150,13 +150,13 @@ Kartu Rencana Studi
                     type: 'GET',
                     success: function(response) {
                         if (response.error) {
-                            swal("Perhatian", 
-                                response.error, 
+                            swal("Perhatian",
+                                response.error,
                                 "warning"
                             ).then(() => {
                                 window.location.href = '{{ url()->previous() }}'; // Redirect ke halaman sebelumnya
                             });
-                        } 
+                        }
                         else {
                             window.open('{{ route("mahasiswa.krs.print", ["id_semester" => $semester_select]) }}', '_blank'); // Jika tidak ada error, buka halaman print di tab baru
                         }
@@ -212,14 +212,14 @@ Kartu Rencana Studi
                     var mhsProdi = response.prodi_mk;
                     var tbody = $('#mk-merdeka-tbody');
                     tbody.empty(); // Kosongkan tabel sebelum menambahkan data baru
-                    
+
                     if (mkMerdeka.length > 0) {
                         //console.log(response)
                         $.each(mkMerdeka, function(index, data) {
                             var isDisabledMerdeka = krsMerdeka.includes(data.id_matkul);
                             var isEmptyClass = data.jumlah_kelas == 0
                             var isEmptyRps = data.jumlah_rps == 0
-                            
+
                             var row = '<tr class="' + (isDisabledMerdeka ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
                                 '<td class="text-center align-middle" style="width: 5%;">' + (index + 1) +'. '+ '</td>' +
                                 '<td class="text-center align-middle" style="width: 10%;">' + data.kode_mata_kuliah + '</td>' +
@@ -393,7 +393,7 @@ Kartu Rencana Studi
                                 _token: csrfToken  // Sertakan CSRF token di sini
                             },
                             success: function(response) {
-                                console.log(response.message);
+                       
                                 swal({
                                     title: 'Berhasil!',
                                     text: response.message,
@@ -467,7 +467,7 @@ Kartu Rencana Studi
         }
     });
 
-    // TOMBOL 
+    // TOMBOL
     $('.delete-form').submit(function(e){
         e.preventDefault();
         var formId = $(this).data('id');
@@ -520,7 +520,7 @@ Kartu Rencana Studi
         $('.hapus-aktivitas').click(function() {
             var idAktivitas = $(this).data('id');
             // console.log(idAktivitas)
-            
+
             swal({
                 title: "Apakah Anda yakin?",
                 text: "Data yang dihapus tidak dapat dikembalikan!",
@@ -536,7 +536,7 @@ Kartu Rencana Studi
                         data: {
                             "_token": "{{ csrf_token() }}"
                         },
-                        
+
                     });
                     window.location.reload();
                 }
@@ -621,7 +621,7 @@ Kartu Rencana Studi
             ]
         });
     });
-    
+
     //  PENGECEKAN PERIODE KRS
     $(document).ready(function() {
         // Pengecekan tanggal
@@ -633,7 +633,7 @@ Kartu Rencana Studi
 
         // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
         if (!batasIsiKrs || today > batasIsiKrs || semesterAktif > semesterSelect) {
-            
+
             swal({
                 title: "Perhatian",
                 text: "Periode pengisian KRS pada Semester yang Anda pilih telah berakhir. Anda tidak Dapat Menghapus atau Menambahkan Mata Kuliah",
@@ -690,7 +690,7 @@ Kartu Rencana Studi
         });
     });
 
-    
+
 
     // MENAMPILKAN DATA RPS
     function displayData(data, resultContainerIdModal) {
@@ -704,8 +704,8 @@ Kartu Rencana Studi
             row += '</tr>';
             $(resultContainerIdModal).append(row);
         });
-    }      
-    
+    }
+
 
 </script>
 @endpush

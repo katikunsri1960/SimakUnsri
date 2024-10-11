@@ -94,7 +94,7 @@ BEASISWA
 
     function editRuang(data, id) {
         data = data.replace(/&#39;/g, "'");
-        console.log(data);
+
         document.getElementById('edit_mahasiswa').value = data.nim;
         // Populate other fields...
         document.getElementById('editForm').action = '/universitas/beasiswa/update/' + id;

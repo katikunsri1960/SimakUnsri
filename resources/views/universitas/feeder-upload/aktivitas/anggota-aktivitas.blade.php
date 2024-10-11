@@ -227,7 +227,7 @@ FEEDER UPLOAD - ANGGOTA AKTIVITAS MAHASISWA
 
                      // Serialize form data and log it to the console
                      var formData = form.serialize();
-                    console.log('Serialized form data:', formData);
+              
 
                     $.ajax({
                         url: "{{ route('univ.feeder-upload.ajax') }}",

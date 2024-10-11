@@ -216,7 +216,7 @@ KHS Mahasiswa
                     var approved = 0;
                     var no = 1;
 
-                    console.log(response.konversi);
+             
 
                     response.nilai.forEach(function(krs, index){
                         var trClass = '';

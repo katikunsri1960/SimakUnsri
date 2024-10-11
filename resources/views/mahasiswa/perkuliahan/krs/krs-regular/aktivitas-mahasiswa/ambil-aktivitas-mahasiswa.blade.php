@@ -91,7 +91,7 @@ Ambil Aktivitas Mahasiswa
                                 <div class="form-group mb-20">
                                     <div id="dosen-fields">
                                         <div class="dosen-field row">
-                                            
+
                                         </div>
                                     </div>
                                     <button id="add-dosen" type="button" class="btn btn-primary" title="Tambah Dosen"><i class="fa fa-plus" aria-hidden="true"></i> Tambah</button>
@@ -187,7 +187,7 @@ Ambil Aktivitas Mahasiswa
                                 '</div>' +
                             '</div>');
 
-            
+
 
                 // Append the new row
                 newRow.appendTo('#dosen-fields');
@@ -218,7 +218,7 @@ Ambil Aktivitas Mahasiswa
                 var selectedValue = $(this).val();
                 selectedValues.push(selectedValue);
             });
-            console.log(selectedValues);
+         
         }
     });
 

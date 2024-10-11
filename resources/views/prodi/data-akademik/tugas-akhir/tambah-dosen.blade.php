@@ -92,7 +92,7 @@ Dosen Pembimbing Mahasiswa
                         };
                     },
                     processResults: function (data) {
-                        console.log(data);
+
                         return {
                             results: $.map(data, function (item) {
                                 return {
@@ -160,7 +160,7 @@ Dosen Pembimbing Mahasiswa
                 var selectedValue = $(this).val();
                 selectedValues.push(selectedValue);
             });
-            console.log(selectedValues);
+       
         }
 
         $('#tambah-dosen-pembimbing').submit(function(e){

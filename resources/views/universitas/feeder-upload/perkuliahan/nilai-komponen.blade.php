@@ -152,7 +152,6 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                 id_semester: id_semester
             },
             success: function(response) {
-                console.log(response);
                 var data = response;
                 var html = '';
                 var no = 1;
@@ -238,7 +237,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
 
                      // Serialize form data and log it to the console
                      var formData = form.serialize();
-                    console.log('Serialized form data:', formData);
+                
 
                     $.ajax({
                         url: "{{ route('univ.feeder-upload.ajax') }}",

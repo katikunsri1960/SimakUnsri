@@ -35,7 +35,7 @@ Ubah Dosen Pengajar Mahasiswa
                                     <div class="col-md-3 mb-2">
                                         <label for="dosen_pengajar" class="form-label">Nama Dosen Pengajar</label>
                                         <select class="form-select" name="dosen_pengajar[]" id="dosen_pengajar" required>
-                                            <option value="{{ $data->id_registrasi_dosen }}" 
+                                            <option value="{{ $data->id_registrasi_dosen }}"
                                                 {{ $data->id_registrasi_dosen != '' ? 'selected' : '' }}>
                                                 ({{ $data->dosen->nidn }}) - {{ $data->dosen->nama_dosen }}
                                             </option>
@@ -115,7 +115,7 @@ Ubah Dosen Pengajar Mahasiswa
                         };
                     },
                     processResults: function (data) {
-                        console.log(data);
+
                         return {
                             results: $.map(data, function (item) {
                                 return {
@@ -139,7 +139,7 @@ Ubah Dosen Pengajar Mahasiswa
                 var selectedValue = $(this).val();
                 selectedValues.push(selectedValue);
             });
-            console.log(selectedValues);
+   
         }
 
         $('#ubah-dosen-pengajar').submit(function(e){

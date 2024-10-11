@@ -54,7 +54,7 @@ Dashboard
             method: 'GET',
             success: function(data) {
                 // Check if data is an array
-                console.log(data);
+
 
                 // Clear existing table rows
                 $('#mahasiswaTable tbody').empty();
@@ -69,7 +69,7 @@ Dashboard
 
             },
             error: function(error) {
-                console.log('Error:', error);
+         
             }
         });
     });

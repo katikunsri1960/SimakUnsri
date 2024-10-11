@@ -24,7 +24,7 @@ Dosen Penguji Mahasiswa
                                     <div class="col-md-5 mb-2">
                                         <label for="dosen_penguji" class="form-label">Nama Dosen Penguji</label>
                                         <select class="form-select" name="dosen_penguji[]" id="dosen_penguji" required>
-                                            <option value="{{ $data->id_dosen }}" 
+                                            <option value="{{ $data->id_dosen }}"
                                                 {{ $data->id_dosen != '' ? 'selected' : '' }}>
                                                 ({{ $data->nidn }}) - {{ $data->nama_dosen }}
                                             </option>
@@ -92,7 +92,7 @@ Dosen Penguji Mahasiswa
                         };
                     },
                     processResults: function (data) {
-                        console.log(data);
+
                         return {
                             results: $.map(data, function (item) {
                                 return {
@@ -116,7 +116,7 @@ Dosen Penguji Mahasiswa
                 var selectedValue = $(this).val();
                 selectedValues.push(selectedValue);
             });
-            console.log(selectedValues);
+           
         }
 
         $('#ubah-dosen-penguji').submit(function(e){
