@@ -120,12 +120,30 @@ List Mahasiswa Tidak KRS
     </div>
 </section>
 @endsection
+@push('css')
+<style>
+    .dt-center {
+        text-align: center;
+    }
+    </style>
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
    $(document).ready(function() {
-        var table = $('#data').DataTable();
+        var table = $('#data').DataTable({
+            dom: '<"top"lf<"dt-center"B>>rt<"bottom"ip><"clear">', // Place buttons (B) at the top center
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: 'Download Excel',
+                    className: 'btn btn-primary'
+                }
+            ],
+            lengthMenu: [10, 25, 50, 75, 100], // Include the length changing control
+            pageLength: 10 // Set the default number of rows to display
+        });
 
         // Custom filter for Status Pembayaran
         $('#statusFilter').on('change', function() {

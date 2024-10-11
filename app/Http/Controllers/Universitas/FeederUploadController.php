@@ -988,7 +988,7 @@ class FeederUploadController extends Controller
                 ->where('id_semester', $semester)
                 ->where('approve_krs', 1)
                 ->where('feeder', 0)
-                ->where('id_aktivitas', '9dca5870-1647-46a1-8541-76e4739875cf')
+                ->where('id_aktivitas', '8aba8319-5a47-4efb-ae85-dc2d3903349f')
                 ->get();
 
         $totalData = $data->count();
