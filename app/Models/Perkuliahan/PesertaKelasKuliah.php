@@ -671,12 +671,12 @@ class PesertaKelasKuliah extends Model
 
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
+        // $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
-        $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester)
-                    ->first();
+        // $tagihan = Tagihan::with('pembayaran')
+        //             ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+        //             ->where('kode_periode', $semester_aktif->id_semester)
+        //             ->first();
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                     ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
@@ -716,7 +716,7 @@ class PesertaKelasKuliah extends Model
         try {
 
             DB::beginTransaction();
-            
+
             if ($akm_aktif) {
                 $akm_aktif->update([
                     'feeder' => 0

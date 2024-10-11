@@ -137,7 +137,7 @@ Pengajuan Sidang Mahasiswa
                         };
                     },
                     processResults: function (data) {
-                        console.log('Received data:', data);
+                      
                         return {
                             results: $.map(data, function (item) {
                                 return {

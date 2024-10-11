@@ -239,7 +239,7 @@ Tambah Dosen Kelas Perkuliahan
                         };
                     },
                     processResults: function (data) {
-                        console.log(data);
+
                         return {
                             results: $.map(data, function (item) {
                                 return {
@@ -343,7 +343,7 @@ Tambah Dosen Kelas Perkuliahan
                 var selectedValue = $(this).val();
                 selectedValues.push(selectedValue);
             });
-            console.log(selectedValues);
+
         }
 
         $('#tambah-dosen-pengajar').submit(function(e){

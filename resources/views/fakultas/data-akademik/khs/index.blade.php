@@ -148,7 +148,7 @@ KHS Mahasiswa
                             </div>
 
                             <div class="row mt-5" id="totalDiv">
-                                
+
                             </div>
                         </div>
                     </div>
@@ -226,7 +226,7 @@ KHS Mahasiswa
                     var no = 1;
                     // var totalSks = 0;
 
-                    console.log(response.konversi);
+             
 
                     response.nilai.forEach(function(krs, index){
                         var trClass = '';

@@ -151,7 +151,7 @@ FEEDER UPLOAD - DOSEN AJAR
                 id_semester: id_semester
             },
             success: function(response) {
-                console.log(response);
+        
                 var data = response;
                 var html = '';
                 var no = 1;

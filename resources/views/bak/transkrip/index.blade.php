@@ -251,7 +251,7 @@ Transkrip Nilai
                 },
                 success: function(response) {
                     // Handle the response here
-                    console.log('Sync check response:', response);
+
 
                     // Update the progress bar
                     var progressBar = document.getElementById('sync-progress-bar');
@@ -265,7 +265,7 @@ Transkrip Nilai
                             checkSync(id_batch);
                         }, 3000); // Request every 2 seconds
                     } else {
-                        console.log('Sync completed');
+              
                         // reload page
                         location.reload();
                     }
