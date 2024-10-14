@@ -20,7 +20,7 @@ class TugasAkhirController extends Controller
         $semester = $semesterAktif->id_semester;
         $db = new AktivitasMahasiswa();
         $data = $db->ta(auth()->user()->fk_id, $semester );
-        // dd($data);
+        dd($data);
         return view('prodi.data-akademik.tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
