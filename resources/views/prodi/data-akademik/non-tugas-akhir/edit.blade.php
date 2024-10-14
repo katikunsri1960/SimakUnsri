@@ -72,7 +72,7 @@ Tugas Akhir
                                     name="nim"
                                     id="nim"
                                     aria-describedby="helpId"
-                                    value="{{$d->anggota_aktivitas_personal->nim}}"
+                                    value="{{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nim : '-'}}"
                                     disabled
                                 />
                             </div>
@@ -86,7 +86,7 @@ Tugas Akhir
                                     name="nama_mahasiswa"
                                     id="nama_mahasiswa"
                                     aria-describedby="helpId"
-                                    value="{{$d->anggota_aktivitas_personal->nama_mahasiswa}}"
+                                    value="{{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : '-'}}"
                                     disabled
                                 />
                             </div>
