@@ -165,6 +165,10 @@
                                 href="{{route('univ.p-bayar')}}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Penundaan Bayar</a>
                             </li>
+                            <li class="{{request()->routeIs('univ.cuti-manual') | request()->routeIs('univ.cuti-manual.*') ? 'active' : ''}}"><a
+                                href="{{route('univ.cuti-manual')}}"><i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>Pengajuan Cuti Manual</a>
+                            </li>
                             <li class="{{request()->routeIs('univ.beasiswa') ? 'active' : ''}}"><a
                                 href="{{route('univ.beasiswa')}}"><i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>Beasiswa</a>

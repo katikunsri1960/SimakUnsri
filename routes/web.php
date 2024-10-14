@@ -750,6 +750,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/store', [App\Http\Controllers\Universitas\KRSManualController::class, 'pembatalan_krs_store'])->name('univ.pembatalan-krs.store');
             });
 
+            Route::prefix('stop-out')->group(function(){
+                Route::get('/', [App\Http\Controllers\Universitas\CutiManualController::class, 'index'])->name('univ.cuti-manual');
+                Route::post('/store', [App\Http\Controllers\Universitas\CutiManualController::class, 'store'])->name('univ.cuti-manual.store');
+                Route::patch('/update/{idmanual}', [App\Http\Controllers\Universitas\CutiManualController::class, 'update'])->name('univ.cuti-manual.update');
+                Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\CutiManualController::class, 'destroy'])->name('univ.cuti-manual.delete');
+            });
+
             Route::prefix('kuisioner')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\KuisionerController::class, 'index'])->name('univ.kuisioner');
                 Route::post('/store', [App\Http\Controllers\Universitas\KuisionerController::class, 'store'])->name('univ.kuisioner.store');
