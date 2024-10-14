@@ -76,10 +76,10 @@ Tugas Akhir
                                 <tr>
                                     <td class="text-center align-middle"></td>
                                     <td class="text-center align-middle">
-                                        {{$d->anggota_aktivitas_personal->nim}}
+                                        {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nim : "-"}}
                                     </td>
                                     <td class="text-start align-middle" style="width: 15%">
-                                        {{$d->anggota_aktivitas_personal->nama_mahasiswa}}
+                                        {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : "-"}}
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6')
@@ -124,6 +124,11 @@ Tugas Akhir
                                                 </div>
                                             </form>
                                             @endif
+                                            {{--
+                                            @if($d->id_jenis_aktivitas != '5' || $d->id_jenis_aktivitas != '6')
+                                                <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-success btn-sm my-2" title="Edit"><i class="fa fa-pencil-square-o"></i> Nilai Konversi</a>
+                                            @endif
+                                            --}}
                                             <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
                                             <a href="#" class="btn btn-info btn-sm my-2" title="Detail"
                                                 data-bs-toggle="modal" data-bs-target="#detailModal"

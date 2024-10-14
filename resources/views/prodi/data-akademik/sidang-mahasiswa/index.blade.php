@@ -76,10 +76,10 @@ Tugas Akhir
                                 <tr>
                                     <td class="text-center align-middle"></td>
                                     <td class="text-center align-middle">
-                                        {{$d->anggota_aktivitas_personal->nim}}
+                                        {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nim : "-"}}
                                     </td>
                                     <td class="text-start align-middle" style="width: 15%">
-                                        {{$d->anggota_aktivitas_personal->nama_mahasiswa}}
+                                        {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : "-"}}
                                     </td>
                                     <td class="text-center align-middle">
                                         {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
