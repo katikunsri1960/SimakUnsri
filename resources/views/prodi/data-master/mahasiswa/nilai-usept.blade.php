@@ -58,7 +58,7 @@ Nilai USEPT Mahasiswa
                                 </tr>
                             </thead>
                             <tbody>
-                                @if($data == 0)
+                                @if(!$data)
                                     <tr>
                                         <td colspan="6">Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.</td>
                                     </tr>
@@ -103,7 +103,7 @@ Nilai USEPT Mahasiswa
                                 </tr>
                             </thead>
                             <tbody>
-                                @if($course_data == 0)
+                                @if(!$course_data)
                                     <tr>
                                         <td colspan="8">Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.</td>
                                     </tr>
