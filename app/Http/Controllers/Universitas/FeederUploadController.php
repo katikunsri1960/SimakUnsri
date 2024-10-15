@@ -1429,11 +1429,94 @@ class FeederUploadController extends Controller
                 ->where('a.id_semester', $request->id_semester)
                 ->where('a.approve_krs', 1)
                 ->where('a.feeder', 1)
+                ->where('uji_mahasiswas.status_uji_mahasiswa', 2)
                 ->where('uji_mahasiswas.feeder', 0)
                 ->select('uji_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi')
                 // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
                 ->get();
 
         return response()->json($data);
+    }
+
+    public function penguji_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $data =   UjiMahasiswa::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'uji_mahasiswas.id_aktivitas')
+                        ->join('biodata_dosens as bd', 'bd.id_dosen', 'uji_mahasiswas.id_dosen')
+                        ->where('a.id_prodi', $prodi)
+                        ->where('a.id_semester', $request->semester)
+                        ->where('a.approve_krs', 1)
+                        ->where('a.feeder', 1)
+                        ->where('uji_mahasiswas.status_uji_mahasiswa', 2)
+                        ->where('uji_mahasiswas.feeder', 0)
+                        ->select('uji_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi')
+                        // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
+                        ->get();
+
+        $totalData = $data->count();
+        // dd($data, $totalData, $request->all());
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertUjiMahasiswa';
+        $actGet = 'GetListUjiMahasiswa';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+                // $id_anggota_lama = $d->id_anggota;
+                $record = [
+                   "id_aktivitas" => $d->id_aktivitas,
+                    "id_kategori_kegiatan" => $d->id_kategori_kegiatan,
+                    "id_dosen" => $d->id_dosen,
+                    "penguji_ke"=> $d->penguji_ke,
+                ];
+
+                $recordGet = "id_uji = '".$d->id_uji."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadGeneral();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    DB::beginTransaction();
+
+                    // KonversiAktivitas::where('id_anggota', $id_anggota_lama)->update(['id_anggota' => $result['data']['id_anggota']]);
+
+                    $d->update([
+                        'id_uji' => $result['data']['id_uji'],
+                        'status_sync' => 'sudah_sync',
+                        'feeder' => 1
+                    ]);
+
+
+                    DB::commit();
+
+                    $dataBerhasil++;
+                } else {
+                    // DB::rollback();
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
     }
 }
