@@ -153,6 +153,16 @@ Tugas Akhir
             // default sort by column 6 desc
             "stateSave": true,
             "order": [[ 5, "desc" ]],
+            "dom": '<"top"lf<"dt-center"B>>rt<"bottom"ip><"clear">', // Place buttons (B) at the top center
+            "buttons": [
+                {
+                    "extend": 'excelHtml5',
+                    "text": 'Download Excel',
+                    "className": 'btn btn-primary mt-10'
+                }
+            ],
+            "lengthMenu": [10, 25, 50, 75, 100], // Include the length changing control
+            "pageLength": 10, // Set the default number of rows to display
             "columnDefs": [{
                 "targets": 0,
                 "searchable": false,
