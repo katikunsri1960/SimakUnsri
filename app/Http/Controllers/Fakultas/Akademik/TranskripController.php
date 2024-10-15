@@ -136,6 +136,7 @@ class TranskripController extends Controller
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
+        // $nilai_mutu = $transkrip->sum('sks_mata_kuliah')*$transkrip->sum('nilai_');
         $bobot = 0;
 
         foreach ($transkrip as $t) {
@@ -143,7 +144,7 @@ class TranskripController extends Controller
         }
 
         $ipk = number_format($bobot / $total_sks, 2);
-
+        // dd($ipk);
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester', 'desc')
                 ->get();
@@ -154,6 +155,7 @@ class TranskripController extends Controller
             'akm' => $akm,
             'total_sks' => $total_sks,
             'ipk' => $ipk,
+            'bobot'=> $bobot,
             'today'=> Carbon::now(),
             'wd1' => PejabatFakultas::where('id_fakultas', $riwayat->prodi->fakultas_id)->where('id_jabatan', 1)->first(),
             'bebas_pustaka' => BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first(),
