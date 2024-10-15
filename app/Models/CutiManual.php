@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class SOManual extends Model
+class CutiManual extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];

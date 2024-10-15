@@ -77,12 +77,18 @@ class BimbinganController extends Controller
 
         // Pengecekan apakah $data kosong atau tidak
         if ($data->isEmpty()) {
-            session()->flash('error', 'Data Aktivitas Mahasiswa tidak ditemukan.');
+            return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
         }
+        // if ($data->isEmpty()) {
+        //     session()->flash('error', 'Data Aktivitas Mahasiswa tidak ditemukan.');
+        // }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
+        // if ($pembayaran == NULL && $beasiswa == 0) {
+        //     session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
+        // }
         if ($pembayaran == NULL && $beasiswa == 0) {
-            session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
+            return redirect()->back()->withErrors('Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
 
         // dd($tagihan);

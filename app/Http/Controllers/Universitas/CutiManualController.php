@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Universitas;
 use Exception;
 use Ramsey\Uuid\Uuid;
 use App\Models\Semester;
-use App\Models\SOManual;
+use App\Models\CutiManual;
 use Illuminate\Http\Request;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
@@ -23,7 +23,7 @@ class CutiManualController extends Controller
 {
     public function index(Request $request)
     {
-        $data = SOManual::with('riwayat')->get();  // Optimasi query eager loading
+        $data = CutiManual::with('riwayat')->get();  // Optimasi query eager loading
         $semester = Semester::orderBy('id_semester', 'desc')->get();
 
         return view('universitas.cuti-manual.index', [
@@ -42,11 +42,14 @@ class CutiManualController extends Controller
             'no_sk' => 'nullable|string|max:50'
         ]);
 
-        DB::beginTransaction(); // Mulai transaction
+        
 
         try {
+
+            DB::beginTransaction(); // Mulai transaction
+
             // Cek apakah mahasiswa sudah mengajukan cuti di semester ini
-            $existingCuti = SOManual::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
+            $existingCuti = CutiManual::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
                 ->where('id_semester', $validatedData['id_semester'])
                 ->first();
 
@@ -72,57 +75,58 @@ class CutiManualController extends Controller
             ]);
 
             // Simpan data cuti
-            SOManual::create($data);
-
-            $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->count();
-
-            if ($beasiswa > 0) {
-                return redirect()->back()->withErrors('Mahasiswa adalah penerima Beasiswa, Tidak bisa mengajukan cuti untuk!');
-            }
-
-            $db = new MataKuliah();
-            $db_akt = new AktivitasMahasiswa();
-
-            $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
-                    ->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
-                    ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
-                    ->first();
-
-            $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-                        ->whereHas('anggota_aktivitas' , function($query) use ($validatedData) {
-                                $query->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa']);
-                        })
-                        // ->where('approve_krs', 1)
-                        ->where('id_semester', $semester->id_semester)
-                        ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
-                        ->get();
-
-            list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($validatedData['id_registrasi_mahasiswa'], $semester->id_semester);
-
-            $sks_max = $db->getSksMax($validatedData['id_registrasi_mahasiswa'], $semester->id_semester, $riwayat_pendidikan->id_periode_masuk);
-
-            $krs_regular = $db->getKrsRegular($validatedData['id_registrasi_mahasiswa'], $riwayat_pendidikan, $semester->id_semester, $data_akt_ids);
-
-            $krs_merdeka = $db->getKrsMerdeka($validatedData['id_registrasi_mahasiswa'], $semester->id_semester, $riwayat_pendidikan->id_prodi);
-
-            $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
-            $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
-            $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
-            $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
-
-            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
-
-            $transkrip = TranskripMahasiswa::select(
-                            DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
-                            DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
-                        )
-                        ->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
-                        ->whereNotIn('nilai_huruf', ['F', ''])
-                        ->groupBy('id_registrasi_mahasiswa')
-                        ->first();
+            CutiManual::create($data);
 
             // Jika approved == 3, buat data di tabel aktivitas_kuliah_mahasiswas
             if ($data['approved'] == 3) {
+
+                $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->count();
+
+                if ($beasiswa > 0) {
+                    return redirect()->back()->withErrors('Mahasiswa adalah penerima Beasiswa, Tidak bisa mengajukan cuti untuk!');
+                }
+
+                $db = new MataKuliah();
+                $db_akt = new AktivitasMahasiswa();
+
+                $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
+                        ->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
+                        ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+                        ->first();
+
+                $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                            ->whereHas('anggota_aktivitas' , function($query) use ($validatedData) {
+                                    $query->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa']);
+                            })
+                            // ->where('approve_krs', 1)
+                            ->where('id_semester', $semester->id_semester)
+                            ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
+                            ->get();
+
+                list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($validatedData['id_registrasi_mahasiswa'], $semester->id_semester);
+
+                $sks_max = $db->getSksMax($validatedData['id_registrasi_mahasiswa'], $semester->id_semester, $riwayat_pendidikan->id_periode_masuk);
+
+                $krs_regular = $db->getKrsRegular($validatedData['id_registrasi_mahasiswa'], $riwayat_pendidikan, $semester->id_semester, $data_akt_ids);
+
+                $krs_merdeka = $db->getKrsMerdeka($validatedData['id_registrasi_mahasiswa'], $semester->id_semester, $riwayat_pendidikan->id_prodi);
+
+                $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
+                $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
+                $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
+                $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
+
+                $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
+
+                $transkrip = TranskripMahasiswa::select(
+                                DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
+                                DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
+                            )
+                            ->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
+                            ->whereNotIn('nilai_huruf', ['F', ''])
+                            ->groupBy('id_registrasi_mahasiswa')
+                            ->first();
+                            
                 AktivitasKuliahMahasiswa::create([
                     'feeder' => 0,
                     'id_registrasi_mahasiswa' => $riwayat->id_registrasi_mahasiswa,
@@ -160,14 +164,20 @@ class CutiManualController extends Controller
 
 
 
-    public function update(SOManual $idmanual, Request $request)
+    public function update(CutiManual $idmanual, Request $request)
     {
         
     }
 
-    public function destroy(SOManual $idmanual)
+    public function destroy(CutiManual $idmanual)
     {
         try {
+            // Cek apakah approved = 3
+            if ($idmanual->approved == 3) {
+                return redirect()->back()->withErrors('Data tidak dapat dihapus karena sudah disetujui BAAK!');
+            }
+
+            // Lanjutkan proses penghapusan jika approved bukan 3
             $idmanual->delete();
 
             return redirect()->back()->with('success', 'Data berhasil dihapus.');
