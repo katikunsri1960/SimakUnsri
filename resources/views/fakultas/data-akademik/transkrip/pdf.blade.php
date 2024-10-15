@@ -33,7 +33,7 @@
                 <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI</td>
                 <td>:</td>
                 <td class="text-start align-middle" id="prodiKrs"
-                    style="width: 30%; padding-left: 10px">{{$riwayat->prodi->nama_program_studi}}</td>
+                    style="width: 30%; padding-left: 10px">{{$riwayat->prodi->nama_jenjang_pendidikan}} - {{$riwayat->prodi->nama_program_studi}}</td>
             </tr>
             <tr>
                 <td class="text-start align-middle" style="width: 12%">DOSEN PA</td>
@@ -49,9 +49,10 @@
                     <th class="text-center align-middle table-pdf text-pdf">No</th>
                     <th class="text-center align-middle table-pdf text-pdf">Kode Mata Kuliah</th>
                     <th class="text-center align-middle table-pdf text-pdf">Nama Mata Kuliah</th>
-                    <th class="text-center align-middle table-pdf text-pdf">SKS</th>
-                    <th class="text-center align-middle table-pdf text-pdf">Nilai Index</th>
+                    <th class="text-center align-middle table-pdf text-pdf">SKS (K)</th>
+                    <th class="text-center align-middle table-pdf text-pdf">Nilai Index (B)</th>
                     <th class="text-center align-middle table-pdf text-pdf">Nilai Huruf</th>
+                    <th class="text-center align-middle table-pdf text-pdf">K x B</th>
                 </tr>
             </thead>
             <tbody>
@@ -63,21 +64,45 @@
                     <td class="text-center align-middle table-pdf text-pdf">{{$d->sks_mata_kuliah}}</td>
                     <td class="text-center align-middle table-pdf text-pdf">{{$d->nilai_indeks}}</td>
                     <td class="text-center align-middle table-pdf text-pdf">{{$d->nilai_huruf}}</td>
+                    <td class="text-center align-middle table-pdf text-pdf">{{$d->sks_mata_kuliah*$d->nilai_indeks}}</td>
                 </tr>
                 @endforeach
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="3" class="text-center align-middle table-pdf text-pdf">Total SKS</th>
+                    <th colspan="3" class="text-center align-middle table-pdf text-pdf">Jumlah</th>
                     <th class="text-center align-middle table-pdf text-pdf" id="totalSks">{{$total_sks}}</th>
                     <th class="text-center align-middle table-pdf text-pdf"></th>
                     <th class="text-center align-middle table-pdf text-pdf"></th>
+                    <th class="text-center align-middle table-pdf text-pdf" id="bobot">{{$bobot}}</th>
+                </tr>
+                <tr>
+                    <th colspan="3" class="text-center align-middle table-pdf text-pdf">Total SKS</th>
+                    <th colspan="4" class="text-center align-middle table-pdf text-pdf">{{$total_sks}}</th>
+                </tr>
+                <tr>
+                    <th colspan="3" class="text-center align-middle table-pdf text-pdf">IPK</th>
+                    <th colspan="4" class="text-center align-middle table-pdf text-pdf">{{$ipk}}</th>
                 </tr>
             </tfoot>
         </table>
     </div>
     <table style="width: 100%">
         <tbody>
+            {{-- <tr>
+                <td height="20"></td>
+            </tr>
+            <tr width="100%">
+                <td width="60%" class="text-left text-10">Total SKS : <strong>{{$total_sks}}</strong>
+                </td>
+                <td width="50%" class="text-right text-10" ></td>
+            </tr>
+            <tr width="100%">
+                <td width="60%" class="text-left text-10">Indeks Prestasi Kumulatif : 
+                    {{$bobot}} / {{$total_sks}} = <strong>{{$ipk}}</strong>
+                </td>
+                <td width="50%" class="text-right text-10" ></td>
+            </tr> --}}
             <tr>
                 <td height="20"></td>
             </tr>
