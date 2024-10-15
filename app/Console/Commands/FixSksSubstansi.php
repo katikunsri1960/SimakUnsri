@@ -85,7 +85,10 @@ class FixSksSubstansi extends Command
             // Update the records in the database
             foreach ($data as $d) {
                 DosenPengajarKelasKuliah::where('id_aktivitas_mengajar', $d['id_aktivitas_mengajar'])
-                    ->update(['sks_substansi_total' => $d['sks_substansi_total']]);
+                    ->update([
+                        'feeder' => 0,
+                        'sks_substansi_total' => $d['sks_substansi_total']
+                    ]);
             }
 
             // Update progress bar
