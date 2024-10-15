@@ -236,7 +236,7 @@ class AktivitasNonTAController extends Controller
         }
     }
 
-    public function tambah_nilai_konversi($aktivitas)
+    public function nilai_konversi($aktivitas)
     {
         $semesterAktif = SemesterAktif::first();
         $kategori = KategoriKegiatan::where('id_kategori_kegiatan', '110300')->get();

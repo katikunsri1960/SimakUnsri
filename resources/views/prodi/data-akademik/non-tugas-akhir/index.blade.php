@@ -124,11 +124,9 @@ Tugas Akhir
                                                 </div>
                                             </form>
                                             @endif
-                                            {{--
-                                            @if($d->id_jenis_aktivitas != '5' || $d->id_jenis_aktivitas != '6')
+                                            {{--@if($d->id_jenis_aktivitas != '5' || $d->id_jenis_aktivitas != '6')
                                                 <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-success btn-sm my-2" title="Edit"><i class="fa fa-pencil-square-o"></i> Nilai Konversi</a>
-                                            @endif
-                                            --}}
+                                            @endif--}}
                                             <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
                                             <a href="#" class="btn btn-info btn-sm my-2" title="Detail"
                                                 data-bs-toggle="modal" data-bs-target="#detailModal"
@@ -167,6 +165,16 @@ Tugas Akhir
             // default sort by column 6 desc
             "stateSave": true,
             "order": [[ 5, "desc" ]],
+            "dom": '<"top"lf<"dt-center"B>>rt<"bottom"ip><"clear">', // Place buttons (B) at the top center
+            "buttons": [
+                {
+                    "extend": 'excelHtml5',
+                    "text": 'Download Excel',
+                    "className": 'btn btn-primary mt-10'
+                }
+            ],
+            "lengthMenu": [10, 25, 50, 75, 100], // Include the length changing control
+            "pageLength": 10, // Set the default number of rows to display
             "columnDefs": [{
                 "targets": 0,
                 "searchable": false,
