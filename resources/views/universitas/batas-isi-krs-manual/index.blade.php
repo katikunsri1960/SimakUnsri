@@ -130,7 +130,7 @@ Batas Isi KRS Manual
                     return {
                         results: $.map(data, function (item) {
                             return {
-                                text: "("+item.nim+") "+item.nama_mahasiswa,
+                                text: item.nama_mahasiswa + " ("+item.nim+" - "+item.nama_program_studi+")",
                                 id: item.id_registrasi_mahasiswa
                             }
                         })
