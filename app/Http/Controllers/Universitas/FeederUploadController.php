@@ -18,6 +18,7 @@ use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\RencanaPembelajaran;
+use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
@@ -963,7 +964,7 @@ class FeederUploadController extends Controller
                 ->where('id_semester', $request->id_semester)
                 ->where('approve_krs', 1)
                 ->where('feeder', 0)
-                // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
+                // ->where('id_aktivitas', 'f2420b62-3e0e-42c0-93c5-3ffb4585dfc1')
                 ->get();
 
         return response()->json($data);
@@ -981,7 +982,7 @@ class FeederUploadController extends Controller
                 ->where('id_semester', $semester)
                 ->where('approve_krs', 1)
                 ->where('feeder', 0)
-                // ->where('id_aktivitas', '8aba8319-5a47-4efb-ae85-dc2d3903349f')
+                // ->where('id_aktivitas', 'f2420b62-3e0e-42c0-93c5-3ffb4585dfc1')
                 ->get();
 
         $totalData = $data->count();
@@ -1097,10 +1098,6 @@ class FeederUploadController extends Controller
     public function anggota_upload(Request $request)
     {
         $prodi = ProgramStudi::find($request->prodi)->id_prodi;
-
-        // $semester = $request->id_semester;
-
-
 
         $data =  AnggotaAktivitasMahasiswa::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'anggota_aktivitas_mahasiswas.id_aktivitas')
                                         ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa')
@@ -1297,5 +1294,146 @@ class FeederUploadController extends Controller
         $response->headers->set('Connection', 'keep-alive');
 
         return $response;
+    }
+
+    public function pembimbing(Request $request)
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.aktivitas.pembimbing', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function pembimbing_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = BimbingMahasiswa::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'bimbing_mahasiswas.id_aktivitas')
+                ->join('biodata_dosens as bd', 'bd.id_dosen', 'bimbing_mahasiswas.id_dosen')
+                ->where('a.id_prodi', $prodi)
+                ->where('a.id_semester', $request->id_semester)
+                ->where('a.approve_krs', 1)
+                ->where('a.feeder', 1)
+                ->where('bimbing_mahasiswas.feeder', 0)
+                ->select('bimbing_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi')
+                // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
+                ->get();
+
+        return response()->json($data);
+    }
+
+    public function pembimbing_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $data =  BimbingMahasiswa::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'bimbing_mahasiswas.id_aktivitas')
+                                ->join('biodata_dosens as bd', 'bd.id_dosen', 'bimbing_mahasiswas.id_dosen')
+                                ->where('a.id_prodi', $prodi)
+                                ->where('a.id_semester', $request->semester)
+                                ->where('a.approve_krs', 1)
+                                ->where('a.feeder', 1)
+                                ->where('bimbing_mahasiswas.feeder', 0)
+                                ->select('bimbing_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi')
+                                // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
+                                ->get();
+
+        $totalData = $data->count();
+        // dd($data, $totalData, $request->all());
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertBimbingMahasiswa';
+        $actGet = 'GetListBimbingMahasiswa';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+                // $id_anggota_lama = $d->id_anggota;
+                $record = [
+                   "id_aktivitas" => $d->id_aktivitas,
+                    "id_kategori_kegiatan" => $d->id_kategori_kegiatan,
+                    "id_dosen" => $d->id_dosen,
+                    "pembimbing_ke"=> $d->pembimbing_ke,
+                ];
+
+                $recordGet = "id_aktivitas = '".$d->id_aktivitas."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadGeneral();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    DB::beginTransaction();
+
+                    // KonversiAktivitas::where('id_anggota', $id_anggota_lama)->update(['id_anggota' => $result['data']['id_anggota']]);
+
+                    $d->update([
+                        'id_bimbing_mahasiswa' => $result['data']['id_bimbing_mahasiswa'],
+                        'status_sync' => 'sudah_sync',
+                        'feeder' => 1
+                    ]);
+
+
+                    DB::commit();
+
+                    $dataBerhasil++;
+                } else {
+                    // DB::rollback();
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+
+    public function penguji()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.aktivitas.penguji', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function penguji_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = UjiMahasiswa::join('aktivitas_mahasiswas as a', 'a.id_aktivitas', 'uji_mahasiswas.id_aktivitas')
+                ->join('biodata_dosens as bd', 'bd.id_dosen', 'uji_mahasiswas.id_dosen')
+                ->where('a.id_prodi', $prodi)
+                ->where('a.id_semester', $request->id_semester)
+                ->where('a.approve_krs', 1)
+                ->where('a.feeder', 1)
+                ->where('uji_mahasiswas.feeder', 0)
+                ->select('uji_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi')
+                // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
+                ->get();
+
+        return response()->json($data);
     }
 }

@@ -887,6 +887,18 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'anggota_upload'])->name('univ.feeder-upload.aktivitas.anggota.upload');
                     });
 
+                    Route::prefix('pembimbing')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'pembimbing'])->name('univ.feeder-upload.aktivitas.pembimbing');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'pembimbing_data'])->name('univ.feeder-upload.aktivitas.pembimbing.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'pembimbing_upload'])->name('univ.feeder-upload.aktivitas.pembimbing.upload');
+                    });
+
+                    Route::prefix('penguji')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'penguji'])->name('univ.feeder-upload.aktivitas.penguji');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'penguji_data'])->name('univ.feeder-upload.aktivitas.penguji.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'penguji_upload'])->name('univ.feeder-upload.aktivitas.penguji.upload');
+                    });
+
                     Route::prefix('nilai-konversi')->group(function(){
                         Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_konversi'])->name('univ.feeder-upload.aktivitas.nilai-konversi');
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_konversi_data'])->name('univ.feeder-upload.aktivitas.nilai-konversi.data');

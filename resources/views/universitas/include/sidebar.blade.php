@@ -244,6 +244,12 @@
                                     <li class="{{request()->routeIs('univ.feeder-upload.aktivitas.anggota') ? 'active' : ''}}">
                                         <a href="{{route('univ.feeder-upload.aktivitas.anggota')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Anggota Aktivitas</a>
                                     </li>
+                                    <li class="{{request()->routeIs('univ.feeder-upload.aktivitas.pembimbing') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.aktivitas.pembimbing')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing Aktivitas</a>
+                                    </li>
+                                    <li class="{{request()->routeIs('univ.feeder-upload.aktivitas.penguji') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.aktivitas.penguji')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Penguji Aktivitas</a>
+                                    </li>
                                     <li class="{{request()->routeIs('univ.feeder-upload.aktivitas.nilai-konversi') ? 'active' : ''}}">
                                         <a href="{{route('univ.feeder-upload.aktivitas.nilai-konversi')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai Konversi</a>
                                     </li>
