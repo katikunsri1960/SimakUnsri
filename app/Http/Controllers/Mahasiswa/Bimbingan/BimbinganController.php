@@ -63,31 +63,31 @@ class BimbinganController extends Controller
         
             if($tagihan){
                 if($tagihan->pembayaran){
-                    $pembayaran = $tagihan->pembayaran->nomor_pembayaran;
+                    $pembayaran = $tagihan->pembayaran;
                 }
                 else{
-                    $pembayaran = NULL;
+                    $pembayaran = 0;
                 }
             }else{
-                $pembayaran = NULL;
+                $pembayaran = 0;
             }
-        // $pembayaran = NULL;
+        // $pembayaran = 0;
 
         // dd($pembayaran, $data, $beasiswa);
 
         // Pengecekan apakah $data kosong atau tidak
-        // if ($data->isEmpty()) {
-        //     return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
-        // }
         if ($data->isEmpty()) {
-            session()->flash('error', 'Data Aktivitas Mahasiswa tidak ditemukan.');
+            return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
         }
+        // if ($data->isEmpty()) {
+        //     session()->flash('error', 'Data Aktivitas Mahasiswa tidak ditemukan.');
+        // }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if ($pembayaran == NULL && $beasiswa == 0) {
+        if ($pembayaran == 0 && $beasiswa == 0) {
             session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
-        // if ($pembayaran == NULL && $beasiswa == 0) {
+        // if ($pembayaran == 0) {
         //     return redirect()->back()->withErrors('Anda belum menyelesaikan pembayaran untuk semester ini!');
         // }
 
@@ -100,8 +100,6 @@ class BimbinganController extends Controller
             'beasiswa'=>$beasiswa
         ]);
     }
-
-
     
     public function asistensi(AktivitasMahasiswa $aktivitas)
     {
