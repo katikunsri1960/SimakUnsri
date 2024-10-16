@@ -183,6 +183,8 @@ class PesertaKelasKuliah extends Model
 
             return $result;
         }
+
+        dd($tagihan);
         
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
