@@ -180,11 +180,12 @@ class PesertaKelasKuliah extends Model
                     ->first();
 
             // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
-            if (!$tagihan || $tagihan->total_nilai_tagihan == NULL) {
-                $total_nilai_tagihan = 0;
-            } else {
-                $total_nilai_tagihan = $tagihan->total_nilai_tagihan;
-            }
+            $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
+            // if (!$tagihan || $tagihan->total_nilai_tagihan == NULL) {
+            //     $total_nilai_tagihan = 0;
+            // } else {
+            //     $total_nilai_tagihan = $tagihan->total_nilai_tagihan;
+            // }
 
 
         }catch (\Exception $e) {
