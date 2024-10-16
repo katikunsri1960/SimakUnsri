@@ -82,6 +82,8 @@ class PembimbingMahasiswaController extends Controller
             $db_course_usept = new CourseUsept;
             $nilai_course = $db_course_usept->whereIn('nim', [$riwayat->nim, $biodata->nik])->get();
 
+            $nilai_usept_final = "Belum Ada Nilai";
+
             if($nilai_usept_mhs !== null) {
                 $nilai_usept_final = $nilai_usept_mhs;
     
