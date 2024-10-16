@@ -214,6 +214,101 @@ class FeederUpload {
 
     }
 
+    public function uploadDosenPengajar()
+    {
+        $client = new Client();
+        $params = [
+            "act" => "GetToken",
+            "username" => $this->username,
+            "password" => $this->password,
+        ];
+
+        $req = $client->post( $this->url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode($params)
+        ]);
+
+        $response = $req->getBody();
+        $result = json_decode($response,true);
+
+        if($result['error_code'] == 0) {
+
+            $token = $result['data']['token'];
+            $paramsGet = [
+                "token" => $token,
+                "act"   => $this->actGet,
+                "filter" => $this->recordGet
+            ];
+
+            $req = $client->post( $this->url, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'body' => json_encode($paramsGet)
+            ]);
+
+            $response = $req->getBody();
+
+            $result = json_decode($response,true);
+
+            if ($result['error_code'] == 0 && count($result['data']) > 0) {
+
+                $updateRecord = $this->record;
+
+                unset($updateRecord['id_aktivitas_mengajar']);
+
+                $paramsUpdate = [
+                    "token" => $token,
+                    "act"   => "UpdateDosenPengajarKelasKuliah",
+                    "key" => [
+                        "id_aktivitas_mengajar" => $this->record['id_aktivitas_mengajar']
+                    ],
+                    "record" => $updateRecord
+                ];
+
+                $req = $client->post( $this->url, [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                            'Accept' => 'application/json',
+                        ],
+                        'body' => json_encode($paramsUpdate)
+                    ]);
+
+                $response = $req->getBody();
+
+                $result = json_decode($response,true);
+            } else {
+
+                unset($this->record['id_aktivitas_mengajar']);
+
+                $params = [
+                    "token" => $token,
+                    "act"   => $this->act,
+                    "record" => $this->record
+                ];
+
+                $req = $client->post( $this->url, [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => json_encode($params)
+                ]);
+
+                $response = $req->getBody();
+
+                $result = json_decode($response,true);
+            }
+
+            return $result;
+
+        }
+    }
+
     public function uploadAktivitas()
     {
         $client = new Client();
@@ -305,7 +400,7 @@ class FeederUpload {
                     $result = json_decode($response,true);
             }
 
-            return $result;
+
         }
     }
 

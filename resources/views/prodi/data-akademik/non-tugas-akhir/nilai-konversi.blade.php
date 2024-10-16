@@ -4,28 +4,16 @@ Tambah Dosen Kelas Perkuliahan
 @endsection
 @section('content')
 @include('swal')
-@php
-    $id_matkul = $kelas[0]['id_matkul'];
-    $id_kelas = $kelas[0]['id_kelas_kuliah'];
-@endphp
+@push('header')
+<div class="mx-4">
+    <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', ['aktivitas' => $data->id_aktivitas])}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+</div>
+@endpush
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Tambah Dosen Kelas Perkuliahan</h3>
-            <div class="d-inline-block align-items-center">
-                <nav>
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul])}}">Detail Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_kelas' => $id_kelas])}}">Manajemen Dosen Pengajar Kelas</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Tambah Dosen Pengajar Kelas</li>
-                    </ol>
-                </nav>
-            </div>
+            <h3 class="page-title">Nilai Konversi Aktivitas Mahasiswa</h3>      
         </div>
-
     </div>
 </div>
 
@@ -36,16 +24,16 @@ Tambah Dosen Kelas Perkuliahan
                 <form class="form" action="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.store', ['id_matkul' => $id_matkul, 'nama_kelas_kuliah' => $kelas[0]['nama_kelas_kuliah']])}}" id="tambah-dosen-pengajar" method="POST">
                     @csrf
                     <div class="box-body">
-                        <h4 class="text-info mb-0"><i class="fa fa-university"></i> Detail Kelas Kuliah</h4>
+                        <h4 class="text-info mb-0"><i class="fa fa-university"></i> Detail Aktivitas Mahasiswa</h4>
                         <hr class="my-15">
                         <div class="form-group">
                             <div class=" col-lg-12 mb-3">
-                                <label for="nama_mata_kuliah" class="form-label">Nama Kelas Kuliah</label>
+                                <label for="nim" class="form-label">NIM</label>
                                 <input
                                     type="text"
                                     class="form-control"
-                                    name="nama_mata_kuliah"
-                                    id="nama_mata_kuliah"
+                                    name="nim"
+                                    id="nim"
                                     aria-describedby="helpId"
                                     value="{{$kelas[0]['nama_kelas_kuliah']}}"
                                     disabled
@@ -55,7 +43,7 @@ Tambah Dosen Kelas Perkuliahan
                         </div>
                         <div class="form-group">
                             <div class=" col-lg-12 mb-3">
-                                <label for="tgl_mulai" class="form-label">Tanggal Mulai Efektif Kelas Kuliah</label>
+                                <label for="tgl_mulai" class="form-label">Nama Mahasiswa</label>
                                 <input
                                     type="text"
                                     class="form-control"
@@ -70,7 +58,7 @@ Tambah Dosen Kelas Perkuliahan
                         </div>
                         <div class="form-group">
                             <div class=" col-lg-12 mb-3">
-                                <label for="tgl_akhir" class="form-label">Tanggal Akhir Efektif Kelas Kuliah</label>
+                                <label for="tgl_akhir" class="form-label">Jenis Aktivitas</label>
                                 <input
                                     type="text"
                                     class="form-control"
@@ -85,7 +73,7 @@ Tambah Dosen Kelas Perkuliahan
                         </div>
                         <div class="form-group">
                             <div class=" col-lg-12 mb-3">
-                                <label for="nama_mata_kuliah" class="form-label">Nama Mata Kuliah</label>
+                                <label for="nama_mata_kuliah" class="form-label">SK Aktivitas Mahasiswa</label>
                                 <input
                                     type="text"
                                     class="form-control"
@@ -98,67 +86,34 @@ Tambah Dosen Kelas Perkuliahan
                                 />
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="mb-3">
-                                <label for="nama_mata_kuliah" class="form-label">Nama Ruang Kelas Kuliah</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="nama_mata_kuliah"
-                                    id="nama_mata_kuliah"
-                                    aria-describedby="helpId"
-                                    value="{{$kelas[0]['nama_ruang'].' - '.$kelas[0]['lokasi']}}"
-                                    disabled
-                                    required
-                                />
-                            </div>
+                        <h4 class="text-info mb-0"><i class="fa fa-university"></i> Pembimbing Aktivitas Mahasiswa</h4>
+                        <hr class="my-15">
+                        <div class="table-responsive">
+                            <table id="data" class="table table-bordered table-hover margin-top-10 w-p100"
+                                style="font-size: 11px">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">No</th>
+                                        <th class="text-center align-middle">Nama Pembimbing</th>
+                                        <th class="text-center align-middle">Status Pembimbing</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($data as $d)
+                                    <tr>
+                                        <td class="text-center align-middle"></td>
+                                        <td class="text-center align-middle">
+                                            {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nim : "-"}}
+                                        </td>
+                                        <td class="text-start align-middle" style="width: 15%">
+                                            {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : "-"}}
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
                         </div>
-                        <div class="form-group">
-                            <div class="mb-3">
-                                <label for="mode_kelas" class="form-label">Mode Kelas Kuliah</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="mode_kelas"
-                                    id="mode_kelas"
-                                    aria-describedby="helpId"
-                                    value="@if($kelas[0]['mode'] == 'O'){{'Online'}}@elseif($kelas[0]['mode'] == 'F'){{'Offline'}}@elseif($kelas[0]['mode'] == 'M'){{'Campuran'}}@else{{'Mode Tidak Terdata'}}@endif"
-                                    disabled
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="mb-3">
-                                <label for="lingkup_kelas" class="form-label">Lingkup Kelas Kuliah</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="lingkup_kelas"
-                                    id="lingkup_kelas"
-                                    aria-describedby="helpId"
-                                    value="@if($kelas[0]['lingkup'] == '1'){{'Internal'}}@elseif($kelas[0]['mode'] == '2'){{'External'}}@elseif($kelas[0]['mode'] == '3'){{'Campuran'}}@else{{'Lingkup Tidak Terdata'}}@endif"
-                                    disabled
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="mb-3">
-                                <label for="jadwal_kelas" class="form-label">Jadwal Kelas Kuliah</label>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    name="jadwal_kelas"
-                                    id="jadwal_kelas"
-                                    aria-describedby="helpId"
-                                    value="{{$kelas[0]['jadwal_hari'].' ('.$kelas[0]['jadwal_jam_mulai'].' - '.$kelas[0]['jadwal_jam_selesai'].')'}}"
-                                    disabled
-                                    required
-                                />
-                            </div>
-                        </div>
-                        <h4 class="text-info mb-0"><i class="fa fa-user"></i> Nilai Konversi Mahasiswa</h4>
+                        <h4 class="text-info mb-0"><i class="fa fa-user"></i> Konversi Aktivitas Mahasiswa</h4>
                         <hr class="my-15">
                         <div class="form-group">
                             <div id="konversi-fields">

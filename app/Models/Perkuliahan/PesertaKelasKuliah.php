@@ -170,10 +170,28 @@ class PesertaKelasKuliah extends Model
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
-        $tagihan = Tagihan::with('pembayaran')
+        $total_nilai_tagihan = 0;
+        try{
+
+            $tagihan = Tagihan::with('pembayaran')
                     ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
                     ->where('kode_periode', $semester_aktif->id_semester)
                     ->first();
+
+            // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
+            $total_nilai_tagihan = $tagihan && $tagihan->total_nilai_tagihan != null 
+            ? $tagihan->total_nilai_tagihan 
+            : 0;
+
+        }catch (\Exception $e) {
+            $result = [
+                'status' => 'error',
+                'message' => 'Koneksi Database Keuangan Terputus!!'
+            ];
+
+            return $result;
+        }
+        
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                     ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
@@ -271,10 +289,10 @@ class PesertaKelasKuliah extends Model
                                 'id_status_mahasiswa' => 'M',
                                 'nama_status_mahasiswa' => 'Kampus Merdeka',
                                 'ips'=> '0.00',
-                                'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
-                                'sks_total'=> $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => 0,
+                                'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'biaya_kuliah_smt' => $total_nilai_tagihan,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -293,9 +311,9 @@ class PesertaKelasKuliah extends Model
                                 'id_status_mahasiswa' => 'M',
                                 'nama_status_mahasiswa' => 'Kampus Merdeka',
                                 'ips'=> '0.00',
-                                'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
-                                'sks_total'=> $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                                 'id_pembiayaan' => 2,
                                 'status_sync' => 'belum sync',
@@ -316,9 +334,9 @@ class PesertaKelasKuliah extends Model
                             'id_status_mahasiswa' => 'M',
                             'nama_status_mahasiswa' => 'Kampus Merdeka',
                             'ips'=> '0.00',
-                            'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                             'sks_semester'=> $total_sks,
-                            'sks_total'=> $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
@@ -351,7 +369,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => 0,
+                                'biaya_kuliah_smt' => $total_nilai_tagihan,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -444,7 +462,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => 0,
+                                'biaya_kuliah_smt' => $total_nilai_tagihan,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -494,27 +512,12 @@ class PesertaKelasKuliah extends Model
                             'status_sync' => 'belum sync',
                         ]);
                     }else{
-                        $peserta = AktivitasKuliahMahasiswa::create([
-                            'feeder' => 0,
-                            'id_registrasi_mahasiswa' => $id_reg,
-                            'nim' => $riwayat_pendidikan->nim,
-                            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                            'id_prodi' => $riwayat_pendidikan->id_prodi,
-                            'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                            'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
-                            'id_status_mahasiswa' => 'M',
-                            'nama_status_mahasiswa' => 'Kampus Merdeka',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                            'biaya_kuliah_smt' => 0,
-                            'id_pembiayaan' => NULL,
-                            'status_sync' => 'belum sync',
-                        ]);
+                        $result = [
+                            'status' => 'error',
+                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa!',
+                        ];
+
+                        return $result;
                     }
                 }else{
                     if($beasiswa){
@@ -536,7 +539,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => 0,
+                                'biaya_kuliah_smt' => $total_nilai_tagihan,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -586,27 +589,12 @@ class PesertaKelasKuliah extends Model
                             'status_sync' => 'belum sync',
                         ]);
                     }else{
-                        $peserta = AktivitasKuliahMahasiswa::create([
-                            'feeder' => 0,
-                            'id_registrasi_mahasiswa' => $id_reg,
-                            'nim' => $riwayat_pendidikan->nim,
-                            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                            'id_prodi' => $riwayat_pendidikan->id_prodi,
-                            'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
-                            'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
-                            'id_status_mahasiswa' => 'A',
-                            'nama_status_mahasiswa' => 'Aktif',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                            'biaya_kuliah_smt' => 0,
-                            'id_pembiayaan' => NULL,
-                            'status_sync' => 'belum sync',
-                        ]);
+                        $result = [
+                            'status' => 'error',
+                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa!',
+                        ];
+
+                        return $result;
                     }
                 }
             }
@@ -628,8 +616,6 @@ class PesertaKelasKuliah extends Model
             ];
 
             return $result;
-
-
         }
 
         return $result;

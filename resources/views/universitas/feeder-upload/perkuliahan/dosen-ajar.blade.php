@@ -151,7 +151,7 @@ FEEDER UPLOAD - DOSEN AJAR
                 id_semester: id_semester
             },
             success: function(response) {
-        
+
                 var data = response;
                 var html = '';
                 var no = 1;
@@ -176,7 +176,7 @@ FEEDER UPLOAD - DOSEN AJAR
                     html += '<td class="text-start">' + item.nama + '</td>';
                     html += '<td class="text-center">' + item.kode_mk + '</td>';
                     html += '<td class="text-center">' + item.nama_kelas + '</td>';
-                    html += '<td>' + item.nama_mk + '</td>';
+                    html += '<td class="text-center">' + item.sks_mk + '</td>';
                     html += '<td class="text-center">' + item.rencana_minggu_pertemuan + '</td>';
                     html += '<td class="text-center">' + item.realisasi_minggu_pertemuan + '</td>';
                     html += '<td class="text-center">' + item.prodi + '</td>';

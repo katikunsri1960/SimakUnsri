@@ -492,9 +492,10 @@ class FeederUploadController extends Controller
                     ->join('program_studis as p', 'k.id_prodi', 'p.id_prodi')
                     ->where('k.id_semester', $request->id_semester)
                     ->where('k.id_prodi', $prodi)
+                    ->where('k.feeder', 1)
                     ->where('dosen_pengajar_kelas_kuliahs.feeder', 0)
                     ->select('dosen_pengajar_kelas_kuliahs.*', 'k.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas', 'd.nidn as nidn_dosen', 'd.nama_dosen as nama',
-                            'm.kode_mata_kuliah as kode_mk', 'm.nama_mata_kuliah as nama_mk', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
+                            'm.kode_mata_kuliah as kode_mk', 'm.sks_mata_kuliah as sks_mk', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
                     ->get();
 
         return response()->json($data);
@@ -512,11 +513,12 @@ class FeederUploadController extends Controller
                 ->join('biodata_dosens as d', 'dosen_pengajar_kelas_kuliahs.id_dosen', 'd.id_dosen')
                 ->join('mata_kuliahs as m', 'k.id_matkul', 'm.id_matkul')
                 ->join('program_studis as p', 'k.id_prodi', 'p.id_prodi')
-                ->where('k.id_semester', $request->id_semester)
+                ->where('k.id_semester', $request->semester)
                 ->where('k.id_prodi', $prodi)
+                ->where('k.feeder', 1)
                 ->where('dosen_pengajar_kelas_kuliahs.feeder', 0)
                 ->select('dosen_pengajar_kelas_kuliahs.*', 'k.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas', 'd.nidn as nidn_dosen', 'd.nama_dosen as nama',
-                        'm.kode_mata_kuliah as kode_mk', 'm.nama_mata_kuliah as nama_mk', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
+                        'm.kode_mata_kuliah as kode_mk', 'm.sks_mata_kuliah as sks_mk', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
                 ->get();
 
         $totalData = $data->count();
@@ -534,6 +536,7 @@ class FeederUploadController extends Controller
             foreach ($data as $index => $d) {
 
                 $record = [
+                    'id_aktivitas_mengajar' => $d->id_aktivitas_mengajar,
                     'id_registrasi_dosen' => $d->id_registrasi_dosen,
                     'id_kelas_kuliah' => $d->id_kelas_kuliah,
                     'sks_substansi_total' => $d->sks_substansi_total,
@@ -542,14 +545,15 @@ class FeederUploadController extends Controller
                     'sks_prak_lap_subst' => 0,
                     'sks_sim_subst' => 0,*/
                     'rencana_minggu_pertemuan' => $d->rencana_minggu_pertemuan,
-                    'realisasi_minggu_pertemuan' => $d->tatap_muka_real,
+                    'realisasi_minggu_pertemuan' => $d->realisasi_minggu_pertemuan,
                     'id_jenis_evaluasi' => $d->id_jenis_evaluasi,
                 ];
 
-                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+                $recordGet = "id_aktivitas_mengajar = '".$d->id_aktivitas_mengajar."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-                $result = $req->uploadGeneral();
+                
+                $result = $req->uploadDosenPengajar();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
