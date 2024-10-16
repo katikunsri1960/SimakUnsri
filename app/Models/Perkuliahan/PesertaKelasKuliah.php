@@ -171,14 +171,14 @@ class PesertaKelasKuliah extends Model
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
         try{
-            
+
             $tagihan = Tagihan::with('pembayaran')
                     ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
                     ->where('kode_periode', $semester_aktif->id_semester)
                     ->first();
 
             // Check if tagihan is null or total_nilai_tagihan is null, and set to 0
-            $total_nilai_tagihan = $tagihan && $tagihan->total_nilai_tagihan !== null ? $tagihan->total_nilai_tagihan : 0;
+            $total_nilai_tagihan = $tagihan && $tagihan->total_nilai_tagihan != null ? $tagihan->total_nilai_tagihan : 0;
 
         }catch (\Exception $e) {
             $result = [
