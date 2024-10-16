@@ -171,6 +171,7 @@ class PesertaKelasKuliah extends Model
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
         $total_nilai_tagihan = 0;
+
         try{
 
             $tagihan = Tagihan::with('pembayaran')
@@ -179,9 +180,12 @@ class PesertaKelasKuliah extends Model
                     ->first();
 
             // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
-            $total_nilai_tagihan = $tagihan && $tagihan->total_nilai_tagihan != null 
-            ? $tagihan->total_nilai_tagihan 
-            : 0;
+            if (!$tagihan || $tagihan->total_nilai_tagihan == NULL) {
+                $total_nilai_tagihan = 0;
+            } else {
+                $total_nilai_tagihan = $tagihan->total_nilai_tagihan;
+            }
+
 
         }catch (\Exception $e) {
             $result = [
@@ -191,7 +195,7 @@ class PesertaKelasKuliah extends Model
 
             return $result;
         }
-        
+
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                     ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
