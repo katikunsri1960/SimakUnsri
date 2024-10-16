@@ -108,60 +108,6 @@ Tambah Dosen Kelas Perkuliahan
                                         <td class="text-start align-middle" style="width: 15%">
                                             {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : "-"}}
                                         </td>
-                                        <td class="text-center align-middle">
-                                            @if ($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6')
-                                                <span class="badge badge-lg badge-warning">Aktivitas Konversi</span>
-                                            @else
-                                                <span class="badge badge-lg badge-success">MBKM</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center align-middle">{{$d->nama_jenis_aktivitas}}</td>
-                                        <td class="text-center align-middle">
-                                            {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
-                                        </td>
-                                        <td class="text-start align-middle">
-                                            <ul>
-                                                @foreach ($d->bimbing_mahasiswa as $p)
-                                                <li>Pembimbing {{$p->pembimbing_ke}} :<br>{{$p->nama_dosen}}</li>
-                                                @endforeach
-                                            </ul>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            @if ($d->approved > 0)
-                                                <span class="badge badge-lg badge-danger">Belum Disetujui</span>
-                                            @elseif ($d->approved == 0 && $d->approved_dosen > 0)
-                                                <span class="badge badge-lg badge-warning">Menunggu konfirmasi dosen</span>
-                                            @elseif ($d->approved == 0 && $d->decline_dosen > 0)
-                                                <span class="badge badge-lg badge-danger">Bimbingan dibatalkan dosen</span>
-                                            @else
-                                                <span class="badge badge-lg badge-success">Approved</span>
-                                            @endif
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <div class="row d-flex justify-content-center">
-                                                @if ($d->approved > 0 || $d->decline_dosen > 0)
-                                                <form
-                                                    action="{{route('prodi.data-akademik.non-tugas-akhir.approve-pembimbing', $d)}}"
-                                                    method="post" id="approveForm{{$d->id}}" data-id="{{$d->id}}"
-                                                    class="approve-class">
-                                                    @csrf
-                                                    <div class="row">
-                                                        <button type="submit" class="btn btn-sm my-2 btn-success ">Approve
-                                                            pembimbing</button>
-                                                    </div>
-                                                </form>
-                                                @endif
-                                                @if($d->id_jenis_aktivitas != '5' || $d->id_jenis_aktivitas != '6')
-                                                    <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-success btn-sm my-2" title="Edit"><i class="fa fa-pencil-square-o"></i> Nilai Konversi</a>
-                                                @endif
-                                                <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
-                                                <a href="#" class="btn btn-info btn-sm my-2" title="Detail"
-                                                    data-bs-toggle="modal" data-bs-target="#detailModal"
-                                                    onclick="detailFunc({{$d}})">
-                                                    <i class="fa fa-eye"></i> Detail
-                                                </a>
-                                            </div>
-                                        </td>
                                     </tr>
                                     @endforeach
                                 </tbody>
