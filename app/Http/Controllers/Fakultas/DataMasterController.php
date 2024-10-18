@@ -103,8 +103,9 @@ class DataMasterController extends Controller
                     ->orderBy('nama_program_studi')
                     ->pluck('id_prodi');
 
-        $query = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik', 'beasiswa'])
+        $query = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik', 'beasiswa', 'beasiswa.jenis_beasiswa'])
                     ->whereIn('id_prodi',  $prodi)
+                    // ->where('nim', 'like', '%' . '07011182126001'. '%')
                     ->orderBy('nama_program_studi', 'ASC')
                     // ->orderBy('id_jenjang_pendidikan', 'ASC')
                     ->orderBy('id_periode_masuk', 'desc') // Pastikan orderBy di sini
@@ -133,7 +134,7 @@ class DataMasterController extends Controller
 
         $data=$query->get();
         
-    
+    //    dd($data);
 
         if ($request->has('order')) {
             $orderColumn = $request->input('order.0.column');
@@ -160,8 +161,7 @@ class DataMasterController extends Controller
             }
         }
 
-        // dd($data);
-
+        
         $recordsFiltered = $data->count();
 
         $data = $data->slice($offset, $limit)->values();
@@ -187,6 +187,8 @@ class DataMasterController extends Controller
             'recordsFiltered' => $recordsFiltered,
             'data' => $data,
         ];
+
+        // dd($data);
 
         return response()->json($response);
     }
