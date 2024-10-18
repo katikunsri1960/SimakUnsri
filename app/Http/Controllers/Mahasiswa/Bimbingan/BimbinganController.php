@@ -66,10 +66,10 @@ class BimbinganController extends Controller
                     $pembayaran = $tagihan->pembayaran;
                 }
                 else{
-                    $pembayaran = 0;
+                    $pembayaran = NULL;
                 }
             }else{
-                $pembayaran = 0;
+                $pembayaran = NULL;
             }
         // $pembayaran = 0;
 
@@ -84,7 +84,7 @@ class BimbinganController extends Controller
         // }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if ($pembayaran == 0 && $beasiswa == 0) {
+        if ($pembayaran == NULL && $beasiswa == 0) {
             session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
         // if ($pembayaran == 0) {
