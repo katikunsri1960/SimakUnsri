@@ -13,6 +13,25 @@
                             <div class="row mb-20">
                                 <div class="col-xl-12">
                                     <div class="box box-body mb-0 bg-white">
+                                        {{-- @if($krs_regular->isNotEmpty() || $krs_merdeka->isNotEmpty() || $krs_akt->isNotEmpty()) --}}
+                                        @if($total_krs_submitted > 0)
+                                        <div class="row mb-10">
+                                            <span class="text-danger text-center">*Silahkan klik tombol "Ajukan KRS" agar pengajuan KRS dapat disetujui Dosen PA!</span>
+                                        </div>
+                                        <div class="box-header d-flex justify-content-center py-0 px-15 mt-10" style="border-bottom: 0px">
+                                            <div class="row d-flex justify-content-end">
+                                                <h4 class="mb-5">
+                                                    <form action="{{ route('mahasiswa.krs.submit') }}" method="POST">
+                                                        @csrf
+                                                        <input type="hidden" name="id_reg" value="{{ $riwayat_pendidikan->id_registrasi_mahasiswa }}">
+                                                    
+                                                        <button type="submit" class="btn btn-success">Ajukan KRS</button>
+                                                    </form>
+                                                </h4>
+                                            </div>
+                                        </div>
+                                        <hr class="my-15">
+                                        @endif
                                         <div class="row">
                                             <div class="col-xl-12 col-lg-12">
                                                 <h3 class="fw-500 text-dark mb-20">Rencana Studi Reguler</h3>
@@ -47,8 +66,17 @@
                                                                 <td class="text-center align-middle" style="width:5%">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="white-space: nowrap; width:20%">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
                                                                 <td class="text-center align-middle" style="width:10%">
-                                                                    <div>
+                                                                    {{-- <div>
                                                                         {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
+                                                                    </div> --}}
+                                                                    <div>
+                                                                        @if ($data->approved == 0 && $data->submitted == 0)
+                                                                            <span class="badge badge-xl badge-danger-light">Belum Diajukan</span>
+                                                                        @elseif ($data->approved == 0 && $data->submitted == 1)
+                                                                            <span class="badge badge-xl badge-warning-light">Sudah Diajukan<br>(Menunggu Persetujuan Dosen PA)</span>
+                                                                        @else
+                                                                            <span class="badge badge-xl badge-success-light">Disetujui</span>
+                                                                        @endif
                                                                     </div>
                                                                 </td>
                                                                 <td class="text-center align-middle" style="width:3%">
@@ -114,8 +142,17 @@
                                                                 <td class="text-center align-middle" style="width:5%">{{$data->sks_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle" style="white-space: nowrap; width:20%">{{$data->jadwal_hari}}, {{$data->jadwal_jam_mulai}} - {{$data->jadwal_jam_selesai}}</td>
                                                                 <td class="text-center align-middle" style="width:10%">
-                                                                    <div>
+                                                                    {{-- <div>
                                                                         {!! $data->approved == 0 ? '<span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>' : '<span class="badge badge-xl badge-success-light mb-5">Disetujui</span>' !!}
+                                                                    </div> --}}
+                                                                    <div>
+                                                                        @if ($data->approved == 0 && $data->submitted == 0)
+                                                                            <span class="badge badge-xl badge-danger-light">Belum Diajukan</span>
+                                                                        @elseif ($data->approved == 0 && $data->submitted == 1)
+                                                                            <span class="badge badge-xl badge-warning-light">Sudah Diajukan<br>Menunggu Persetujuan Dosen PA</span>
+                                                                        @else
+                                                                            <span class="badge badge-xl badge-success-light">Disetujui</span>
+                                                                        @endif
                                                                     </div>
                                                                 </td>
                                                                 <td class="text-center align-middle" style="width:3%">
@@ -197,18 +234,20 @@
                                                                 <td class="text-center align-middle" style="width:10%">
                                                                     @foreach ($data->bimbing_mahasiswa as $dosen_bimbing)
                                                                         <div class="mb-20">
-                                                                            @if ($data->approve_krs == 0 && $dosen_bimbing->approved == 0)
-                                                                                <span class="badge badge-lg badge-danger-light">Belum Disetujui</span>
-                                                                            @elseif ($dosen_bimbing->approved == 0)
-                                                                                <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi Koprodi</span>
+                                                                            @if ($data->approve_krs == 0 && $dosen_bimbing->approved == 0 && $data->submitted == 0)
+                                                                                <span class="badge badge-xl badge-danger-light">Belum Diajukan</span>
+                                                                            @elseif ($data->submitted == 1 )
+                                                                                <span class="badge badge-xl badge-warning-light">Sudah Diajukan<br>Menunggu Persetujuan Dosen PA</span>
+                                                                            @elseif ($data->submitted == 1 && $dosen_bimbing->approved == 0)
+                                                                                <span class="badge badge-xl badge-warning-light">Menunggu konfirmasi Koprodi</span>
                                                                             @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 0)
-                                                                                <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
+                                                                                <span class="badge badge-xl badge-warning-light">Menunggu konfirmasi dosen</span>
                                                                             @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 2)
-                                                                                <span class="badge badge-lg badge-danger-light">Ditolak dosen pembimbing</span>
+                                                                                <span class="badge badge-xl badge-danger-light">Ditolak dosen pembimbing</span>
                                                                             @elseif ($data->approve_krs == 0 && $dosen_bimbing->approved == 1)
-                                                                                <span class="badge badge-lg badge-warning-light">Dibatalkan Dosen PA</span>
+                                                                                <span class="badge badge-xl badge-warning-light">Dibatalkan Dosen PA</span>
                                                                             @else
-                                                                                <span class="badge badge-lg badge-success-light">Disetujui</span>
+                                                                                <span class="badge badge-xl badge-success-light">Disetujui</span>
                                                                             @endif
                                                                         </div>
                                                                     @endforeach

@@ -42,6 +42,62 @@ class KrsController extends Controller
         return view('mahasiswa.perkuliahan.krs.index');
     }
 
+    public function submit(Request $request)
+    {
+        try {
+            // Ambil id_registrasi_mahasiswa dari request
+            $id_reg = $request->input('id_reg');
+            $semester_aktif = SemesterAktif::first()->id_semester;
+        
+            // Ambil 3 karakter paling kanan dari $semester_aktif
+            $kode_kelas_kuliah = substr($semester_aktif, -3);
+
+            // Ambil data riwayat pendidikan mahasiswa
+            $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
+        
+            // Ambil data peserta
+            $peserta = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                ->where('nama_kelas_kuliah', 'like', '%' . $kode_kelas_kuliah . '%') // menggunakan like dengan 3 karakter paling kanan
+                ->get();
+        
+            // Ambil aktivitas mahasiswa
+            $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa', 'konversi'])
+                ->whereHas('bimbing_mahasiswa', function ($query) {
+                    $query->whereNotNull('id_bimbing_mahasiswa');
+                })
+                ->whereHas('anggota_aktivitas', function ($query) use ($riwayat_pendidikan) {
+                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                        ->where('nim', $riwayat_pendidikan->nim);
+                })
+                ->where('id_semester', $semester_aktif)
+                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
+                ->get();
+        
+            // Validasi jika data peserta atau aktivitas tidak ditemukan
+            if ($peserta->isEmpty() || $aktivitas->isEmpty()) {
+                return redirect()->back()->withErrors('Data peserta atau aktivitas tidak ditemukan.');
+            }
+        
+            // Update 'submitted' untuk setiap peserta
+            foreach ($peserta as $item) {
+                $item->update(['submitted' => 1]);
+            }
+        
+            // Update 'submitted' untuk setiap aktivitas
+            foreach ($aktivitas as $item) {
+                $item->update(['submitted' => 1]);
+            }
+        
+            // Redirect dengan pesan sukses
+            return redirect()->back()->with('success', 'Data berhasil disubmit.');
+        } catch (\Exception $e) {
+            // Redirect dengan pesan error jika terjadi kesalahan
+            return redirect()->back()->withErrors('Gagal submit data: ' . $e->getMessage());
+        }
+        
+    }
+
     public function view(Request $request)
     {
         // DATA BAHAN
@@ -72,7 +128,7 @@ class KrsController extends Controller
 
         // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
-        list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
+        list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_select);
         
         $semester = Semester::orderBy('id_semester', 'DESC')
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
@@ -142,7 +198,7 @@ class KrsController extends Controller
                 ->whereNotIn('nilai_huruf', ['F', ''])
                 // ->groupBy('id_registrasi_mahasiswa')
                 ->first();
-                // dd($transkrip);
+                // dd($semester_select, $krs_regular);
 
 
             // $sks_mk = KelasKuliah::select('sks_mata_kuliah')
@@ -214,6 +270,13 @@ class KrsController extends Controller
         // dd($today);
         // dd($pembayaran_manual);
 
+        $regular_submitted= $krs_regular->where('submitted', 0)->count();
+        $merdeka_submitted= $krs_merdeka->where('submitted', 0)->count();
+        $aktivitas_submitted= $krs_akt->where('submitted', 0)->count();
+        $mbkm_submitted= $krs_aktivitas_mbkm->where('submitted', 0)->count();
+        $total_krs_submitted = $regular_submitted + $merdeka_submitted + $aktivitas_submitted+ $mbkm_submitted;
+        // dd($krs_submitted, );
+
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
                 return $this->formatDosenPengajar($dosenPengajar);
@@ -241,7 +304,7 @@ class KrsController extends Controller
             'cuti',
             'transkrip',
             'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran', 'non_gelar',
-            'pembayaran_manual'
+            'pembayaran_manual', 'total_krs_submitted'
         ));
     }
 
