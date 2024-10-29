@@ -732,7 +732,6 @@ class PesertaKelasKuliah extends Model
                         'feeder' => 0,
                         'approved' => 0,
                         'approved_dosen' => 0,
-                        'submitted' => 0
                     ]);
 
 
