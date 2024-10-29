@@ -640,6 +640,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/edit-dosen/{bimbing}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'edit_dosen_pembimbing'])->name('prodi.data-akademik.non-tugas-akhir.edit-dosen');
                     Route::post('/update-dosen/{bimbing}/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'update_dosen_pembimbing'])->name('prodi.data-akademik.non-tugas-akhir.update-dosen');
                     Route::delete('/delete-dosen/{bimbing}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'delete_dosen_pembimbing'])->name('prodi.data-akademik.non-tugas-akhir.delete-dosen');
+
+                    Route::prefix('nilai-konversi')->group(function(){
+                        Route::get('/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'nilai_konversi'])->name('prodi.data-akademik.non-tugas-akhir.nilai-konversi');
+                        Route::get('/store/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'data'])->name('prodi.data-akademik.non-tugas-akhir.nilai-konversi.store');
+                    });
+
+                    Route::get('/get-matkul', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'get_matkul'])->name('prodi.data-akademik.non-tugas-akhir.get-matkul');
                 });
             });
 

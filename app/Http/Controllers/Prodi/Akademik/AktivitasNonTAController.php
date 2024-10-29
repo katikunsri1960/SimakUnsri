@@ -85,11 +85,10 @@ class AktivitasNonTAController extends Controller
     public function get_matkul(Request $request)
     {
         $search = $request->get('q');
-        // $prodi_id = auth()->user()->fk_id;
-        $tahun_ajaran = SemesterAktif::with('semester')->first();
-        // $tahun_ajaran = Semester::where('id_semester','=','20231')->where('a_periode_aktif','=','1')->get();
 
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->semester->id_tahun_ajaran)
+        $data_kurikulum = RiwayatPendidikan::where('nim', $nim)->first();
+
+        $query = MataKuliah::where('id_kurikulum', $tahun_ajaran->semester->id_tahun_ajaran)
                                 ->orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")

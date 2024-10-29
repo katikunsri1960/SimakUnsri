@@ -364,15 +364,15 @@ class PembimbingMahasiswaController extends Controller
                                 ->first();
             
             $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
-            $data_mahasiswa->update(['judul' => $data['judul']]);
+            $data_mahasiswa->update(['feeder' => 0, 'judul' => $data['judul']]);
         
             foreach ($bimbingMahasiswa as $b) {
-                $b->update(['judul' => $data['judul']]);
+                $b->update(['feeder' => 0, 'judul' => $data['judul']]);
             }
         
             if ($ujiMahasiswa) {
                 foreach ($ujiMahasiswa as $u) {
-                    $u->update(['judul' => $data['judul']]);
+                    $u->update(['feeder' => 0, 'judul' => $data['judul']]);
                 }
             }
 
@@ -383,44 +383,44 @@ class PembimbingMahasiswaController extends Controller
 
             // if (in_array($aktivitasMahasiswa->prodi->id_jenjang_pendidikan, [31, 32, 37])) 
             // {
-            //     $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
-            //     $data_mahasiswa->update(['judul' => $data['judul']]);
+            //     $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+            //     $data_mahasiswa->update(['feeder' => 0, 'judul' => $data['judul']]);
             
             //     foreach ($bimbingMahasiswa as $b) {
-            //         $b->update(['judul' => $data['judul']]);
+            //         $b->update(['feeder' => 0, 'judul' => $data['judul']]);
             //     }
             
             //     if ($ujiMahasiswa) {
             //         foreach ($ujiMahasiswa as $u) {
-            //             $u->update(['judul' => $data['judul']]);
+            //             $u->update(['feeder' => 0, 'judul' => $data['judul']]);
             //         }
             //     }
             // } else {
             //     if($aktivitasMahasiswa->id_jenis_aktivitas == 2){
-            //         $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
-            //         $data_mahasiswa->update(['judul' => $data['judul']]);
+            //         $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+            //         $data_mahasiswa->update(['feeder' => 0, 'judul' => $data['judul']]);
                 
             //         foreach ($bimbingMahasiswa as $b) {
-            //             $b->update(['judul' => $data['judul']]);
+            //             $b->update(['feeder' => 0, 'judul' => $data['judul']]);
             //         }
                 
             //         if ($ujiMahasiswa) {
             //             foreach ($ujiMahasiswa as $u) {
-            //                 $u->update(['judul' => $data['judul']]);
+            //                 $u->update(['feeder' => 0, 'judul' => $data['judul']]);
             //             }
             //         }
             //     }else{
             //         if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
-            //             $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
-            //             $data_mahasiswa->update(['judul' => $data['judul']]);
+            //             $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+            //             $data_mahasiswa->update(['feeder' => 0, 'judul' => $data['judul']]);
                 
             //             foreach ($bimbingMahasiswa as $b) {
-            //                 $b->update(['judul' => $data['judul']]);
+            //                 $b->update(['feeder' => 0, 'judul' => $data['judul']]);
             //             }
                 
             //             if ($ujiMahasiswa) {
             //                 foreach ($ujiMahasiswa as $u) {
-            //                     $u->update(['judul' => $data['judul']]);
+            //                     $u->update(['feeder' => 0, 'judul' => $data['judul']]);
             //                 }
             //             }
             //         } else {
@@ -430,16 +430,16 @@ class PembimbingMahasiswaController extends Controller
                                 
             //                     // Jika nilai course sudah memenuhi syarat, lanjutkan
             //                     if($nilai_hasil_course >= $nilai_usept_prodi->nilai_usept){
-            //                         $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
-            //                         $data_mahasiswa->update(['judul' => $data['judul']]);
+            //                         $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+            //                         $data_mahasiswa->update(['feeder' => 0, 'judul' => $data['judul']]);
                         
             //                         foreach ($bimbingMahasiswa as $b) {
-            //                             $b->update(['judul' => $data['judul']]);
+            //                             $b->update(['feeder' => 0, 'judul' => $data['judul']]);
             //                         }
                         
             //                         if ($ujiMahasiswa) {
             //                             foreach ($ujiMahasiswa as $u) {
-            //                                 $u->update(['judul' => $data['judul']]);
+            //                                 $u->update(['feeder' => 0, 'judul' => $data['judul']]);
             //                             }
             //                         }
             //                         // Hentikan loop karena syarat sudah terpenuhi
