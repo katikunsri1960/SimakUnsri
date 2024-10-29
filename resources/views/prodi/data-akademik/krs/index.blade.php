@@ -271,12 +271,17 @@ KRS Mahasiswa
                     }
 
                     if(submitted > 0){
+                        // change text button to "KRS Belum di submit"
+                        $('#btnApprove').text('KRS Belum di submit!');
                         $('#btnApprove').attr('disabled', true);
+
                     }else{
                         if(approved > 0){
+                            $('#btnApprove').text('Setujui Semua KRS');
                             $('#btnApprove').removeAttr('disabled');
 
                         }else{
+                            $('#btnApprove').text('Semua KRS Sudah Disetujui');
                             $('#btnApprove').attr('disabled', true);
                         }
                     }
