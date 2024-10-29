@@ -142,6 +142,7 @@ class PesertaKelasKuliah extends Model
                     $query->where('id_semester', $semester_aktif->id_semester);
                 })
                 ->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('submitted', 1)
                 ->orderBy('kode_mata_kuliah')
                 ->get();
 
@@ -198,6 +199,7 @@ class PesertaKelasKuliah extends Model
                     })
                     // ->where('approve_krs', 1)
                     ->where('id_semester', $semester_aktif->id_semester)
+                    ->where('submitted', 1)
                     ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                     ->get();
 
@@ -240,6 +242,7 @@ class PesertaKelasKuliah extends Model
                         $query->where('id_registrasi_mahasiswa', $id_reg);
                     })
                     ->where('id_semester', $semester_aktif->id_semester)
+                    ->where('submitted', 1)
                     ->get();
 
 
@@ -258,9 +261,28 @@ class PesertaKelasKuliah extends Model
                     return $result;
                 }
 
+                if(count($aktivitas) == 0){
+                    $result = [
+                        'status' => 'error',
+                        'message' => 'Mahasiswa belum submit KRS final.',
+                    ];
+
+                    return $result;
+                }
+
+                if(count($data) == 0){
+                    $result = [
+                        'status' => 'error',
+                        'message' => 'Mahasiswa belum submit KRS final.',
+                    ];
+
+                    return $result;
+                }
+
                 foreach ($aktivitas as $item) {
                     $item->update([
-                        'approve_krs' => '1'
+                        'approve_krs' => '1',
+                        'tanggal_approve' => date('Y-m-d')
                     ]);
                 }
 
@@ -716,13 +738,16 @@ class PesertaKelasKuliah extends Model
                         'feeder' => 0,
                         'approved' => 0,
                         'approved_dosen' => 0,
+                        'submitted' => 0
                     ]);
 
 
                 $item->update([
                     'approve_krs' => '0',
                     'approve_sidang' => '0',
-                    'feeder' => 0
+                    'feeder' => 0,
+                    'tanggal_approve' => date('Y-m-d'),
+                    'submitted' => 0
                 ]);
             }
 
@@ -730,7 +755,8 @@ class PesertaKelasKuliah extends Model
                 $item->update([
                     'approved' => '0',
                     'feeder' => 0,
-                    'tanggal_approve' => date('Y-m-d')
+                    'tanggal_approve' => date('Y-m-d'),
+                    'submitted' => 0
                 ]);
             }
 
