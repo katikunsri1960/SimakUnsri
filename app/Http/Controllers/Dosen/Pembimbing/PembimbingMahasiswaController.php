@@ -363,7 +363,7 @@ class PembimbingMahasiswaController extends Controller
                                 ->where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)
                                 ->first();
             
-            $aktivitasMahasiswa->update(['judul' => $data['judul'], 'approve_sidang' => 1]);
+            $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
             $data_mahasiswa->update(['feeder' => 0, 'judul' => $data['judul']]);
         
             foreach ($bimbingMahasiswa as $b) {
