@@ -204,9 +204,11 @@ KRS Mahasiswa
 
                     // count response.krs.approved
                     var approved = 0;
+                    var submitted = 0;
                     var no = 1;
                     response.krs.forEach(function(krs, index){
                         approved += krs.approved == '1' ? 0 : 1;
+                        submitted += krs.submitted == '1' ? 0 : 1;
                         var status = krs.approved == '1' ? 'Disetujui' : 'Belum Disetujui';
 
                         $('#krs-regular tbody').append(`
@@ -227,6 +229,7 @@ KRS Mahasiswa
                     if (response.aktivitas.length > 0 ) {
                         response.aktivitas.forEach(function(aktivitas, index){
                             approved += aktivitas.approve_krs == '1' ? 0 : 1;
+                            submitted += aktivitas.submitted == '1' ? 0 : 1;
 
                             var status = aktivitas.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
                             $('#krs-regular tbody').append(`
@@ -249,7 +252,7 @@ KRS Mahasiswa
                     if (response.aktivitas_mbkm.length > 0) {
                         response.aktivitas_mbkm.forEach(function(aktivitas_mbkm, index){
                             approved += aktivitas_mbkm.approve_krs == '1' ? 0 : 1;
-
+                            submitted += aktivitas_mbkm.submitted == '1' ? 0 : 1;
                             var status = aktivitas_mbkm.approve_krs == '1' ? 'Disetujui' : 'Belum Disetujui';
                             $('#krs-mbkm tbody').append(`
                                 <tr>
@@ -267,12 +270,15 @@ KRS Mahasiswa
                         });
                     }
 
-
-                    if(approved > 0){
-                        $('#btnApprove').removeAttr('disabled');
-
-                    }else{
+                    if(submitted > 0){
                         $('#btnApprove').attr('disabled', true);
+                    }else{
+                        if(approved > 0){
+                            $('#btnApprove').removeAttr('disabled');
+
+                        }else{
+                            $('#btnApprove').attr('disabled', true);
+                        }
                     }
                 }
             });

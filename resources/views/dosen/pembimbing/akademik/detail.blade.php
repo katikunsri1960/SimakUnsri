@@ -57,15 +57,24 @@ Bimbingan Akademik Dosen
                         <div class="d-flex justify-content-end align-middle">
                             <div class="">
                                 @if ($data->where('approved', '0')->count() + $aktivitas->where('approve_krs', '0')->count() + $aktivitas_mbkm->where('approve_krs', '0')->count() > 0)
-                                    <form action="{{ route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat]) }}" method="post" class="d-inline" id="approveAll">
-                                        @csrf
-                                        <button class="btn btn-primary btn-rounded" type="submit" 
-                                            @if ($data->where('approved', '0')->count() + $aktivitas->where('approve_krs', '0')->count() + $aktivitas_mbkm->where('approve_krs', '0')->count() == 0)
-                                                disabled
-                                            @endif>
-                                            <i class="fa fa-check"></i> Setujui KRS
-                                        </button>
-                                    </form>
+                                    @if($data->where('submitted', '0')->count() + $aktivitas->where('submitted', '0')->count() + $aktivitas_mbkm->where('submitted', '0')->count() > 0)
+                                        <form action="{{ route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat]) }}" method="post" class="d-inline" id="approveAll">
+                                            @csrf
+                                            <button class="btn btn-warning btn-rounded" type="submit" disabled>
+                                                <i class="fa fa-warning"></i> Mahasiswa Belum Submit KRS
+                                            </button>
+                                        </form>
+                                    @else
+                                        <form action="{{ route('dosen.pembimbing.bimbingan-akademik.approve-all', ['riwayat' => $riwayat]) }}" method="post" class="d-inline" id="approveAll">
+                                            @csrf
+                                            <button class="btn btn-primary btn-rounded" type="submit" 
+                                                @if ($data->where('approved', '0')->count() + $aktivitas->where('approve_krs', '0')->count() + $aktivitas_mbkm->where('approve_krs', '0')->count() == 0)
+                                                    disabled
+                                                @endif>
+                                                <i class="fa fa-check"></i> Setujui KRS
+                                            </button>
+                                        </form>
+                                    @endif
                                 @endif
 
                                 @if ($data->where('approved', '1')->count() + $aktivitas->where('approve_krs', '1')->count() + $aktivitas_mbkm->where('approve_krs', '1')->count() > 0)
