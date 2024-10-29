@@ -45,16 +45,6 @@ class PesertaKelasKuliah extends Model
         $semester_aktif = SemesterAktif::first();
 
         $today = Carbon::now()->toDateString();
-        // // dd($total_sks);
-        // if($today >= $semester_aktif->krs_mulai && $today <= $semester_aktif->krs_selesai ){
-        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-        // }
-        // elseif(($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs )){
-        //     $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
-        // }else
-        // {
-        //     $batas_isi_krs =  NULL;
-        // }
 
         if ($today < $semester_aktif->krs_mulai) {
             return [
@@ -101,13 +91,17 @@ class PesertaKelasKuliah extends Model
 
             foreach ($aktivitas as $item) {
                 $item->update([
-                    'approve_krs' => '0',
+                    'approved' => '0',
+                    'feeder' => 0,
+                    'submitted' => 0
                 ]);
             }
 
             foreach ($data as $item) {
                 $item->update([
                     'approved' => '0',
+                    'feeder' => 0,
+                    'submitted' => 0
                 ]);
             }
 
