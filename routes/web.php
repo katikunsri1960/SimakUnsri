@@ -273,13 +273,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/pilih-prodi', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'pilih_prodi'])->name('mahasiswa.krs.pilih_prodi');
                 Route::get('/pilih-mk-merdeka', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'pilihMataKuliahMerdeka'])->name('mahasiswa.krs.pilih_mk_merdeka');
                 Route::post('/cek-prasyarat', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'cekPrasyarat'])->name('mahasiswa.krs.cek_prasyarat');
+                Route::post('/submit-krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'submit'])->name('mahasiswa.krs.submit');
 
                 Route::get('/get-aktivitas', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'getAktivitas'])->name('mahasiswa.krs.get-aktivitas');
                 Route::get('/ambil-aktivitas/{id_matkul}', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'ambilAktivitas'])->name('mahasiswa.krs.ambil-aktivitas');
                 Route::post('/simpan-aktivitas', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'simpanAktivitas'])->name('mahasiswa.krs.simpan-aktivitas');
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
                 Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
-
+                
                 //Route for Aktivitas Magang
                 Route::prefix('mbkm')->group(function () {
                     Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'view'])->name('mahasiswa.perkuliahan.mbkm.view');
