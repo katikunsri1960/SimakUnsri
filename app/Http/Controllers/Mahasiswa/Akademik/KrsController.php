@@ -75,7 +75,7 @@ class KrsController extends Controller
                 ->get();
         
             // Validasi jika data peserta atau aktivitas tidak ditemukan
-            if ($peserta->isEmpty() || $aktivitas->isEmpty()) {
+            if ($peserta->isEmpty() && $aktivitas->isEmpty()) {
                 return redirect()->back()->withErrors('Data peserta atau aktivitas tidak ditemukan.');
             }
         
@@ -542,6 +542,7 @@ class KrsController extends Controller
 
             $peserta = PesertaKelasKuliah::create([
                 'feeder' => 0,
+                'submitted' => 0,
                 'approved' => 0,
                 'id_kelas_kuliah' => $idKelasKuliah,
                 'id_registrasi_mahasiswa' => $id_reg,
