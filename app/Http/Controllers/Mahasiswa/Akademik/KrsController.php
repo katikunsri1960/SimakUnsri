@@ -542,6 +542,7 @@ class KrsController extends Controller
 
             $peserta = PesertaKelasKuliah::create([
                 'feeder' => 0,
+                'submitted' => 0,
                 'approved' => 0,
                 'id_kelas_kuliah' => $idKelasKuliah,
                 'id_registrasi_mahasiswa' => $id_reg,
