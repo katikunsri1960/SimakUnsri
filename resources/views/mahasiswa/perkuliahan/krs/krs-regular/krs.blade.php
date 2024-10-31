@@ -25,7 +25,9 @@
                                                         @csrf
                                                         <input type="hidden" name="id_reg" value="{{ $riwayat_pendidikan->id_registrasi_mahasiswa }}">
                                                     
-                                                        <button type="submit" class="btn btn-success">Ajukan KRS</button>
+                                                        <div class="row">
+                                                            <button type="submit" class="btn btn-success">Ajukan KRS</button>
+                                                        </div>
                                                     </form>
                                                 </h4>
                                             </div>
