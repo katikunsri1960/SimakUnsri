@@ -255,16 +255,7 @@ class PesertaKelasKuliah extends Model
                     return $result;
                 }
 
-                if(count($aktivitas) == 0){
-                    $result = [
-                        'status' => 'error',
-                        'message' => 'Mahasiswa belum submit KRS final.',
-                    ];
-
-                    return $result;
-                }
-
-                if(count($data) == 0){
+                if(count($data) == 0 && count($aktivitas) == 0){
                     $result = [
                         'status' => 'error',
                         'message' => 'Mahasiswa belum submit KRS final.',
