@@ -72,40 +72,40 @@ Kartu Rencana Studi
     <div class="row mt-20">
         <div class="col-lg-12 col-xl-12 mt-5">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border d-flex justify-content-between">
-                    <div class="d-flex justify-content-start">
+                <div class="row px-20">
+                    <div class="col-md-6 text-start mt-3">
                         <h3 class="text-info mb-0"><i class="fa fa-newspaper-o"></i> Kartu Rencana Studi</h3>
                     </div>
-                    <div class="d-flex justify-content-end mb-10">
+                    <div class="col-md-6 text-end mt-3">
                         @if ($today<=$batas_isi_krs)
-                            <span class="badge badge-warning-light">Periode pengisian KRS hingga tanggal <strong style="color: red">{{ date('d M Y', strtotime($batas_isi_krs)) }}</strong></span>
+                            <span class="badge badge-warning-light my-10">Periode pengisian KRS hingga tanggal <strong style="color: red">{{ date('d M Y', strtotime($batas_isi_krs)) }}</strong></span>
                         @endif
                     </div>
                 </div>
-                <div class="box-header d-flex justify-content-between py-0 px-15 mt-10" style="border-bottom: 0px">
-                    <div class="d-flex justify-content-start">
+                <div class="row px-20 justify-content-md-end mt-20" style="border-bottom: 0px">
+                    <div class="col-md-auto mb-10 px-5">
+                        <select name="semester" id="semester_select" class="form-select form-select-lg mb-10">
+                            <option value="">-- Pilih Semester --</option>
+                            @foreach ($semester as $s)
+                                <option value="{{$s->id_semester}}" @if ($s->id_semester == $semester_select) selected @endif>{{$s->nama_semester}}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="col-md-auto mb-10 justify-content-md-center">
+                        <td>
+                            <a href="#" id="print-krs-btn" class="waves-effect waves-light btn btn-sm btn-success float-end">
+                                <i class="fa fa-print"></i> Cetak KRS
+                            </a>
+                        </td>
+                    </div>
+                </div>
+                <div class="row px-20 mt-10" style="border-bottom: 0px">
+                    <div class="col-md-6 text-start pl-20">
                         <!-- Nav tabs -->
                         <ul class="nav nav-pills mt-10" role="tablist">
                             <li class="nav-item rounded10 mb-0 bg-secondary-light"> <a class="nav-link active" data-bs-toggle="tab" href="#krs" role="tab"><span><i class="fa-solid fa-file-invoice"></i></span> <span class="ms-15">KRS</span></a> </li>
                             <li class="nav-item rounded10 mb-0 bg-secondary-light"> <a class="nav-link " data-bs-toggle="tab" href="#data-kelas-kuliah" role="tab"><span><i class="fa-solid fa-graduation-cap"></i></span> <span class="ms-15">Data Kelas Kuliah</span></a> </li>
                         </ul>
-                    </div>
-                    <div class="d-flex justify-content-end">
-                        <div class="col-xl-12 mb-10 px-5">
-                            <select name="semester" id="semester_select" class="form-select form-select-lg mb-10">
-                                <option value="">-- Pilih Semester --</option>
-                                @foreach ($semester as $s)
-                                    <option value="{{$s->id_semester}}" @if ($s->id_semester == $semester_select) selected @endif>{{$s->nama_semester}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-xl-5 mb-10">
-                            <td>
-                                <a href="#" id="print-krs-btn" class="waves-effect waves-light btn btn-sm btn-success float-end">
-                                    <i class="fa fa-print"></i> Cetak
-                                </a>
-                            </td>
-                        </div>
                     </div>
                 </div>
                 <!-- Tab panes -->
