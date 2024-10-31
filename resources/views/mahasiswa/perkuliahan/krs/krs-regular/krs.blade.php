@@ -238,7 +238,7 @@
                                                                         <div class="mb-20">
                                                                             @if ($data->approve_krs == 0 && $dosen_bimbing->approved == 0 && $data->submitted == 0)
                                                                                 <span class="badge badge-xl badge-danger-light">Belum Diajukan</span>
-                                                                            @elseif ($data->submitted == 1 )
+                                                                            @elseif ($data->approve_krs == 0 && $data->submitted == 1 )
                                                                                 <span class="badge badge-xl badge-warning-light">Sudah Diajukan<br>Menunggu Persetujuan Dosen PA</span>
                                                                             @elseif ($data->submitted == 1 && $dosen_bimbing->approved == 0)
                                                                                 <span class="badge badge-xl badge-warning-light">Menunggu konfirmasi Koprodi</span>
