@@ -136,7 +136,6 @@ class PesertaKelasKuliah extends Model
                     $query->where('id_semester', $semester_aktif->id_semester);
                 })
                 ->where('id_registrasi_mahasiswa', $id_reg)
-                ->where('submitted', 1)
                 ->orderBy('kode_mata_kuliah')
                 ->get();
 
@@ -193,7 +192,6 @@ class PesertaKelasKuliah extends Model
                     })
                     // ->where('approve_krs', 1)
                     ->where('id_semester', $semester_aktif->id_semester)
-                    ->where('submitted', 1)
                     ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                     ->get();
 
@@ -236,7 +234,6 @@ class PesertaKelasKuliah extends Model
                         $query->where('id_registrasi_mahasiswa', $id_reg);
                     })
                     ->where('id_semester', $semester_aktif->id_semester)
-                    ->where('submitted', 1)
                     ->get();
 
 
@@ -255,7 +252,7 @@ class PesertaKelasKuliah extends Model
                     return $result;
                 }
 
-                if(count($aktivitas) == 0){
+                if($aktivitas->where('submitted', 1)->count() == 0){
                     $result = [
                         'status' => 'error',
                         'message' => 'Mahasiswa belum submit KRS final.',
@@ -264,7 +261,7 @@ class PesertaKelasKuliah extends Model
                     return $result;
                 }
 
-                if(count($data) == 0){
+                if($data->where('submitted', 1)->count() == 0){
                     $result = [
                         'status' => 'error',
                         'message' => 'Mahasiswa belum submit KRS final.',
