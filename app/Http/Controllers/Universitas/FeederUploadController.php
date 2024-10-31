@@ -552,7 +552,7 @@ class FeederUploadController extends Controller
                 $recordGet = "id_aktivitas_mengajar = '".$d->id_aktivitas_mengajar."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-                
+
                 $result = $req->uploadDosenPengajar();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
@@ -1003,17 +1003,22 @@ class FeederUploadController extends Controller
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
                 $id_aktivitas_lama = $d->id_aktivitas;
+                
+                $judul = preg_replace('/[^a-zA-Z0-9 ]/', '', $d->judul);
+                $lokasi =  preg_replace('/[^a-zA-Z0-9 ]/', '', $d->lokasi);
+                $keterangan = preg_replace('/[^a-zA-Z0-9 ]/', '', $d->keterangan);
+
                 $record = [
                     'id_aktivitas' => $d->id_aktivitas,
                     // "program_mbkm" => $d->program_mbkm,
-                    "judul" => $d->judul,
+                    "judul" => $judul,
                     "id_semester" => $d->id_semester,
                     "id_jenis_aktivitas" => $d->id_jenis_aktivitas,
-                    "lokasi" => $d->lokasi ?? "",
+                    "lokasi" => $lokasi,
                     "sk_tugas" => $d->sk_tugas ?? "",
                     "tanggal_sk_tugas" => $d->tanggal_sk_tugas ?? "",
                     "jenis_anggota" => strval($d->jenis_anggota),
-                    "keterangan" => $d->keterangan ?? "",
+                    "keterangan" => $keterangan,
                     "id_prodi" => $d->id_prodi,
                     "tanggal_mulai" => $d->tanggal_mulai ?? "",
                     "tanggal_selesai" => $d->tanggal_selesai ?? "",
@@ -1045,7 +1050,9 @@ class FeederUploadController extends Controller
 
                     $dataBerhasil++;
                 } else {
+
                     // DB::rollback();
+
                     $d->update(
                             [
                                 'status_sync' => $result['error_desc'],
