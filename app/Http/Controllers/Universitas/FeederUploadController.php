@@ -1003,10 +1003,11 @@ class FeederUploadController extends Controller
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
                 $id_aktivitas_lama = $d->id_aktivitas;
-                
-                $judul = preg_replace('/[^a-zA-Z0-9 ]/', '', $d->judul);
-                $lokasi =  preg_replace('/[^a-zA-Z0-9 ]/', '', $d->lokasi);
-                $keterangan = preg_replace('/[^a-zA-Z0-9 ]/', '', $d->keterangan);
+
+                $pattern = '/[^\x20-\x7E]|\'|"|\*|--+|\.{2,}/';
+                $judul = preg_replace($pattern, '', $d->judul);
+                $lokasi = preg_replace($pattern, '', $d->lokasi);
+                $keterangan = preg_replace($pattern, '', $d->keterangan);
 
                 $record = [
                     'id_aktivitas' => $d->id_aktivitas,
