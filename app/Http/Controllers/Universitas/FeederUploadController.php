@@ -1004,10 +1004,9 @@ class FeederUploadController extends Controller
             foreach ($data as $index => $d) {
                 $id_aktivitas_lama = $d->id_aktivitas;
 
-                $pattern = '/[^\x20-\x7E]|\'|"|\*|--+|\.{2,}/';
-                $judul = preg_replace($pattern, '', $d->judul);
-                $lokasi = preg_replace($pattern, '', $d->lokasi);
-                $keterangan = preg_replace($pattern, '', $d->keterangan);
+                $judul = $this->convert_ascii($d->judul);
+                $lokasi = $this->convert_ascii($d->lokasi);
+                $keterangan = $this->convert_ascii($d->keterangan);
 
                 $record = [
                     'id_aktivitas' => $d->id_aktivitas,
@@ -1530,5 +1529,46 @@ class FeederUploadController extends Controller
         $response->headers->set('Connection', 'keep-alive');
 
         return $response;
+    }
+
+    private function convert_ascii($string)
+    {
+      // Replace Single Curly Quotes
+      $search[]  = chr(226).chr(128).chr(152);
+      $replace[] = "'";
+      $search[]  = chr(226).chr(128).chr(153);
+      $replace[] = "'";
+      // Replace Smart Double Curly Quotes
+      $search[]  = chr(226).chr(128).chr(156);
+      $replace[] = '"';
+      $search[]  = chr(226).chr(128).chr(157);
+      $replace[] = '"';
+      // Replace En Dash
+      $search[]  = chr(226).chr(128).chr(147);
+      $replace[] = '--';
+      // Replace Em Dash
+      $search[]  = chr(226).chr(128).chr(148);
+      $replace[] = '---';
+      // Replace Bullet
+      $search[]  = chr(226).chr(128).chr(162);
+      $replace[] = '*';
+      // Replace Middle Dot
+      $search[]  = chr(194).chr(183);
+      $replace[] = '*';
+      // Replace Ellipsis with three consecutive dots
+      $search[]  = chr(226).chr(128).chr(166);
+      $replace[] = '...';
+      // Apply Replacements
+      $string = str_replace($search, $replace, $string);
+      // Remove any non-ASCII Characters
+      $string = preg_replace("/[^\x01-\x7F]/","", $string);
+
+      $string = preg_replace("/[().,-]/", " ", $string);
+
+      $string = preg_replace(array('/\s{2,}/', '/[\t\n]/'), ' ', $string);
+
+      $string = preg_replace( '/[^[:print:]]/', '',$string);
+      $string = trim($string);
+      return $string;
     }
 }

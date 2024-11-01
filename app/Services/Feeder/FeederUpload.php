@@ -311,44 +311,20 @@ class FeederUpload {
 
     public function uploadAktivitas()
     {
-        $client = new Client();
-        $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
-        ];
 
-        $req = $client->post( $this->url, [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-            'body' => json_encode($params)
-        ]);
 
-        $response = $req->getBody();
-        $result = json_decode($response,true);
-
-        if($result['error_code'] == 0) {
-
-            $token = $result['data']['token'];
+            $token = $this->get_token();
             $paramsGet = [
                 "token" => $token,
                 "act"   => $this->actGet,
                 "filter" => $this->recordGet
             ];
 
-            $req = $client->post( $this->url, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-                'body' => json_encode($paramsGet)
-            ]);
+            $response = $this->service_native($paramsGet, $this->url);
 
-            $response = $req->getBody();
+            // $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = $response;
 
             if ($result['error_code'] == 0 && count($result['data']) > 0) {
 
@@ -365,17 +341,11 @@ class FeederUpload {
                     "record" => $updateRecord
                 ];
 
-                $req = $client->post( $this->url, [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                        ],
-                        'body' => json_encode($paramsUpdate)
-                ]);
+                $response = $this->service_native($paramsUpdate, $this->url);
 
-                $response = $req->getBody();
+                // $response = $req->getBody();
 
-                $result = json_decode($response,true);
+                $result = $response;
 
             } else {
 
@@ -387,21 +357,13 @@ class FeederUpload {
                         "record" => $this->record
                     ];
 
-                    $req = $client->post( $this->url, [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                        ],
-                        'body' => json_encode($params)
-                    ]);
+                    $response = $this->service_native($params, $this->url);
 
-                    $response = $req->getBody();
-
-                    $result = json_decode($response,true);
+                    $result = $response;
             }
 
             return $result;
-        }
+
     }
 
     public function uploadKelas()
@@ -964,5 +926,60 @@ class FeederUpload {
 
             return $result;
         }
+    }
+
+    private function get_token()
+    {
+        $client = new Client();
+        $params = [
+            "act" => "GetToken",
+            "username" => $this->username,
+            "password" => $this->password,
+        ];
+
+        $req = $client->post( $this->url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode($params)
+        ]);
+
+        $response = $req->getBody();
+        $result = json_decode($response,true);
+
+        return $result['data']['token'];
+    }
+
+    private function service_native($data,$url,$type='POST') {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        $headers = array();
+        // $headers[] = 'Authorization: Bearer '.$this->get_token();
+        $headers[] = 'Content-Type: application/json';
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
+        $data = json_encode($data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        //curl_setopt($ch, CURLOPT_HEADER, 1);
+         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_ENCODING, '');
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($ch);
+
+        //print_r($data);
+        curl_close($ch);
+
+        return json_decode($result, true);
     }
 }
