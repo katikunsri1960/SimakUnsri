@@ -1566,7 +1566,7 @@ class FeederUploadController extends Controller
       // Remove any non-ASCII Characters
       $string = preg_replace("/[^\x01-\x7F]/","", $string);
 
-      $string = preg_replace("/[().,-]/", " ", $string);
+    //   $string = preg_replace("/[().,-]/", " ", $string);
 
       $string = preg_replace(array('/\s{2,}/', '/[\t\n]/'), ' ', $string);
 
