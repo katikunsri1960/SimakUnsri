@@ -1008,6 +1008,9 @@ class FeederUploadController extends Controller
                 $lokasi = $this->convert_ascii($d->lokasi);
                 $keterangan = $this->convert_ascii($d->keterangan);
 
+                // get 100 char only
+                $lokasi = substr($lokasi, 0, 80);
+
                 $record = [
                     'id_aktivitas' => $d->id_aktivitas,
                     // "program_mbkm" => $d->program_mbkm,
