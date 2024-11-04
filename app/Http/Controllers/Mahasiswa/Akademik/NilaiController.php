@@ -30,17 +30,28 @@ class NilaiController extends Controller
                         ->get();
 
 
-        $transkrip_mahasiswa=NilaiPerkuliahan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
+        $transkrip_mahasiswa=TranskripMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('nama_mata_kuliah','asc')->get();
 
         $total_sks_transfer = $nilai_transfer->whereNotIn('nilai_angka_diakui', [0, NULL] )->sum('sks_mata_kuliah_diakui');
         $total_sks_konversi = $nilai_konversi->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
         $total_sks_transkrip = $transkrip_mahasiswa->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
 
         $total_sks = $total_sks_transfer + $total_sks_konversi + $total_sks_transkrip ;
-        // dd($total_sks);
+
+        // $total_sks = $transkrip_mahasiswa->sum('sks_mata_kuliah');
+        // $nilai_mutu = $transkrip->sum('sks_mata_kuliah')*$transkrip->sum('nilai_');
+        $bobot = 0;
+
+        foreach ($transkrip_mahasiswa as $t) {
+            $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+        }
+
+        $ipk = number_format($bobot / $total_sks, 2);
+        // dd($ipk);
+        // dd($ipk);
 
 
-        return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks'=>$total_sks]);
+        return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks'=>$total_sks, 'bobot'=>$bobot,'ipk'=>$ipk]);
     }
 
     public function lihat_khs($id_semester)
@@ -59,7 +70,7 @@ class NilaiController extends Controller
                                             ->orderBy('nama_mata_kuliah','asc')->get();
 
         
-        $transkrip_mahasiswa=NilaiPerkuliahan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
+        $transkrip_mahasiswa=TranskripMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('nama_mata_kuliah','asc')->get();
         $nilai_transfer=NilaiTransferPendidikan::where('id_registrasi_mahasiswa',$id_reg_mhs)->where('id_semester', $id_semester)->orderBy('id_semester','asc')->get();
         $nilai_konversi=KonversiAktivitas::with('aktivitas_mahasiswa','aktivitas_mahasiswa.bimbing_mahasiswa')
                         ->leftJoin('anggota_aktivitas_mahasiswas', 'anggota_aktivitas_mahasiswas.id_anggota', 'konversi_aktivitas.id_anggota')
@@ -72,7 +83,7 @@ class NilaiController extends Controller
         $kuisoner = KuisonerQuestion::all();
         $count_kuisoner = $kuisoner->count();
         $semester_aktif = SemesterAktif::first()->id_semester;
-        // dd($count_kuisoner);
+        // dd($transkrip_mahasiswa);
         return view('mahasiswa.nilai-perkuliahan.include.detail-khs', [
             'data_nilai' => $nilai_mahasiswa,
             'data_aktivitas' => $aktivitas_kuliah,
@@ -88,7 +99,7 @@ class NilaiController extends Controller
     {
         $id_reg_mhs = auth()->user()->fk_id;
         $aktivitas_kuliah=AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','desc')->get();
-        $transkrip_mahasiswa=NilaiPerkuliahan::where('id_registrasi_mahasiswa',$id_reg_mhs)->where('id_matkul', $id_matkul)->orderBy('id_semester','asc')->get();
+        $transkrip_mahasiswa=TranskripMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->where('id_matkul', $id_matkul)->orderBy('nama_mata_kuliah','asc')->get();
         $nilai_transfer=NilaiTransferPendidikan::where('id_registrasi_mahasiswa',$id_reg_mhs)->where('id_matkul', $id_matkul)->orderBy('id_semester','asc')->get();
         $nilai_konversi=KonversiAktivitas::leftJoin('anggota_aktivitas_mahasiswas', 'anggota_aktivitas_mahasiswas.id_anggota', 'konversi_aktivitas.id_anggota')
                         ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', 'konversi_aktivitas.id_matkul')
