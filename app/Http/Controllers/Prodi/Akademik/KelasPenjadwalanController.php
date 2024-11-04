@@ -890,7 +890,7 @@ class KelasPenjadwalanController extends Controller
 
                     DosenPengajarKelasKuliah::where('id_kelas_kuliah',
                     $dosen_pengajar[$d]['id_kelas_kuliah'])->where('id_dosen',
-                    $dosen_pengajar[$d]['id_dosen'])->update(['feeder' => 0, 'sks_substansi_total' => $update_sks_substansi]);
+                    $dosen_pengajar[$d]['id_dosen'])->update(['feeder' => 0, 'urutan' => $d+1, 'sks_substansi_total' => $update_sks_substansi]);
 
                 }
 
