@@ -254,14 +254,15 @@ class MataKuliah extends Model
         $mk_merdeka = $this->with(['rencana_pembelajaran', 'matkul_merdeka','matkul_kurikulum',
                         'kelas_kuliah' => function($query) use ($semester_aktif, $id_prodi) {
                             $query->where('id_semester', $semester_aktif)
-                                    ->where('id_prodi', $id_prodi);
+                            ->where('id_prodi', $id_prodi)
+                                    ;
                         }])
                         ->whereHas('matkul_merdeka', function($query) use($id_prodi) {
                             $query->where('id_prodi', $id_prodi);
                         })
                         ->withCount(['kelas_kuliah as jumlah_kelas' => function ($q) use($semester_aktif, $id_prodi){
                             $q->where('id_semester', $semester_aktif)
-                            // ->where('id_prodi', $id_prodi);
+                            ->where('id_prodi', $id_prodi);
                             ;
                         },
                         'rencana_pembelajaran as jumlah_rps' => function ($q) {
@@ -271,6 +272,7 @@ class MataKuliah extends Model
                         // ->where('id_matkul', $id_matkul)
                         ->get();
 
+                        // dd($mk_merdeka);
         return $mk_merdeka;
     }
 

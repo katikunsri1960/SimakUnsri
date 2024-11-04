@@ -388,7 +388,7 @@ class KrsController extends Controller
 
         $id_reg = auth()->user()->fk_id;
 
-        $id_prodi = $request->input('id_prodi');
+        $idProdi = $request->get('id_prodi');
         // $prodi_id = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
         //             ->pluck('id_prodi');
 
@@ -401,11 +401,11 @@ class KrsController extends Controller
                     ->withCount('peserta_kelas')
                     ->where('id_matkul', $idMatkul)
                     ->where('id_semester',  $semester_aktif)
-                    // ->where('id_prodi', 'd8fc7d99-9d8a-4484-b946-3d1e7680314b')
+                    ->where('id_prodi', $idProdi)
                     ->orderBy('nama_kelas_kuliah')
                     ->get();
 
-                    
+        // dd($kelasKuliah);
         
         foreach ($kelasKuliah as $kelas) {
             $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->fk_id, $kelas->id_matkul);

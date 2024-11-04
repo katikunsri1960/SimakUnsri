@@ -206,37 +206,37 @@ Kartu Rencana Studi
                     id_prodi: selectedProdiId
                 },
                 success: function(response) {
-                    // console.log(id_prodi)
                     var mkMerdeka = response.mk_merdeka;
-                    var krsMerdeka = response.krs_merdeka.map(krs => krs.id_matkul); // Extract id_matkul from krs_merdeka
-                    var mhsProdi = response.prodi_mk;
+                    var krsMerdeka = response.krs_merdeka.map(krs => krs.id_matkul);
                     var tbody = $('#mk-merdeka-tbody');
-                    tbody.empty(); // Kosongkan tabel sebelum menambahkan data baru
+                    // console.log(mkMerdeka)
+                    tbody.empty();
 
                     if (mkMerdeka.length > 0) {
-                        //console.log(response)
-                        $.each(mkMerdeka, function(index, data) {
+                        mkMerdeka.forEach(function(data, index) {
                             var isDisabledMerdeka = krsMerdeka.includes(data.id_matkul);
-                            var isEmptyClass = data.jumlah_kelas == 0
-                            var isEmptyRps = data.jumlah_rps == 0
+                            var isEmptyClass = data.jumlah_kelas === 0;
+                            var isEmptyRps = data.jumlah_rps === 0;
 
-                            var row = '<tr class="' + (isDisabledMerdeka ? 'bg-success-light disabled-row' : 'disabled-row') + '">' +
-                                '<td class="text-center align-middle" style="width: 5%;">' + (index + 1) +'. '+ '</td>' +
-                                '<td class="text-center align-middle" style="width: 10%;">' + data.kode_mata_kuliah + '</td>' +
-                                '<td class="text-start align-middle" style="white-space: nowrap;">' + data.nama_mata_kuliah + '</td>' +
-                                '<td class="text-center align-middle" style="white-space: nowrap;">' +
-                                '<button type="button" class="btn btn-warning-light lihat-rps" data-bs-toggle="modal" data-id-matkul="'+ data.id_matkul +'">' +
-                                        '<i class="fa fa-newspaper-o"></i> Lihat RPS' +
-                                    '</button>' +
-                                '</td>' +
-                                '<td class="text-center align-middle">' + data.matkul_kurikulum.semester + '</td>' +
-                                '<td class="text-center align-middle">' + data.sks_mata_kuliah + '</td>' +
-                                '<td class="text-center align-middle">' + data.jumlah_kelas + '</td>' +
-                                '<td class="text-center align-middle">' +
-                                    '<button class="btn btn-success-light lihat-kelas-kuliah-merdeka" title="Lihat kelas kuliah" data-id-matkul="'+ data.id_matkul +'"' + (isEmptyClass || isEmptyRps || isDisabledMerdeka ? ' disabled' : '') + '><i class="fa fa-eye"></i> </button>' +
-                                    '<div class="result-container" id="result-container_m'+ data.id_matkul  +'" style="margin-top: 5px"></div>' +
-                                '</td>' +
-                                '</tr>';
+                            var row = `<tr class="${isDisabledMerdeka ? 'bg-success-light disabled-row' : 'disabled-row'}">
+                                <td class="text-center align-middle" style="width: 5%;">${index + 1}. </td>
+                                <td class="text-center align-middle" style="width: 10%;">${data.kode_mata_kuliah}</td>
+                                <td class="text-start align-middle" style="white-space: nowrap;">${data.nama_mata_kuliah}</td>
+                                <td class="text-center align-middle" style="white-space: nowrap;">
+                                    <button type="button" class="btn btn-warning-light lihat-rps" data-bs-toggle="modal" data-id-matkul="${data.id_matkul}">
+                                        <i class="fa fa-newspaper-o"></i> Lihat RPS
+                                    </button>
+                                </td>
+                                <td class="text-center align-middle">${data.matkul_kurikulum.semester}</td>
+                                <td class="text-center align-middle">${data.sks_mata_kuliah}</td>
+                                <td class="text-center align-middle">${data.jumlah_kelas}</td>
+                                <td class="text-center align-middle">
+                                    <button class="btn btn-success-light lihat-kelas-kuliah-merdeka" title="Lihat kelas kuliah" data-id-matkul="${data.id_matkul}" data-id-prodi="${selectedProdiId}" ${isEmptyClass || isEmptyRps || isDisabledMerdeka ? 'disabled' : ''}>
+                                        <i class="fa fa-eye"></i>
+                                    </button>
+                                    <div class="result-container" id="result-container_m${data.id_matkul}${selectedProdiId}" style="margin-top: 5px"></div>
+                                </td>
+                            </tr>`;
                             tbody.append(row);
                         });
                     } else {
@@ -249,6 +249,7 @@ Kartu Rencana Studi
                 }
             });
         });
+
 
 
         // Event listener untuk tombol "Lihat Kelas Kuliah"
@@ -293,6 +294,8 @@ Kartu Rencana Studi
             var idProdi = $(this).data('id-prodi');
             var resultContainerId = '#result-container_m' + idMatkul + idProdi;
 
+            // console.log(idMatkul);
+            // console.log(idProdi);
             // Dapatkan CSRF token dari meta tag
             var csrfToken = $('meta[name="csrf-token"]').attr('content');
 
@@ -307,7 +310,8 @@ Kartu Rencana Studi
                 },
                 success: function(data) {
                     // Cek apakah data kelas kuliah kosong
-                    console.log(data)
+                    // console.log(data.id_prodi)
+                    // console.log(data)
                     if (data.length === 0) {
                         // Jika kelas kuliah kosong, tampilkan pesan peringatan menggunakan SweetAlert
                         Swal.fire({
