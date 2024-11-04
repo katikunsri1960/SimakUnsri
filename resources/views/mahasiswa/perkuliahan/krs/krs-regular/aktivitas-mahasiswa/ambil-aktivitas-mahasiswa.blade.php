@@ -67,11 +67,11 @@ Ambil Aktivitas Mahasiswa
                                         <div class="lokasi-field row">
                                             <div class="col-md-8 mb-2">
                                                 <label for="lokasi" class="form-label">Lokasi</label>
-                                                <input type="text" id="lokasi" class="form-control" name="lokasi" placeholder="-- Masukkan Lokasi Aktivitas --" required>
+                                                <input type="text" id="lokasi" class="form-control" name="lokasi" placeholder="-- Masukkan Lokasi Aktivitas --" maxlength="80" required>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div>                                
                                 <div class="form-group mb-20">
                                     <div id="keterangan-fields">
                                         <div class="keterangan-field row">
