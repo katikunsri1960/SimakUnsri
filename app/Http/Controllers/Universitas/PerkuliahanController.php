@@ -452,7 +452,8 @@ class PerkuliahanController extends Controller
                 ];
 
             $prodi = ProgramStudi::pluck('id_prodi')->toArray();
-            $semester = Semester::pluck('id_semester')->toArray();
+            $semester_aktif = SemesterAktif::first()->id_semester;
+            $semester = Semester::whereNot('id_semester', $semester_aktif)->pluck('id_semester')->toArray();
             $semester = array_chunk($semester, 3);
             $semester = array_map(function ($value) {
                 return "id_semester IN ('" . implode("','", $value) . "')";
