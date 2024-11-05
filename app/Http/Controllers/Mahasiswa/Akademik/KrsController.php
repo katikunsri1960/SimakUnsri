@@ -74,6 +74,16 @@ class KrsController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
                 ->get();
         
+            $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
+                        $query->where('id_registrasi_mahasiswa', $id_reg);
+                })
+                // ->where('approve_krs', 1)
+                ->where('id_semester', $semester_aktif)
+                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
+                ->get();
+
             // Validasi jika data peserta atau aktivitas tidak ditemukan
             if ($peserta->isEmpty() && $aktivitas->isEmpty()) {
                 return redirect()->back()->withErrors('Data peserta atau aktivitas tidak ditemukan.');
@@ -86,6 +96,11 @@ class KrsController extends Controller
         
             // Update 'submitted' untuk setiap aktivitas
             foreach ($aktivitas as $item) {
+                $item->update(['submitted' => 1]);
+            }
+
+            // Update 'submitted' untuk setiap aktivitas mbkm
+            foreach ($krs_aktivitas_mbkm as $item) {
                 $item->update(['submitted' => 1]);
             }
         
