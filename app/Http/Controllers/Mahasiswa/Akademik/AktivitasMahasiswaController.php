@@ -361,40 +361,53 @@ class AktivitasMahasiswaController extends Controller
                 //Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
                 
-                // TAMBAHKAN TUGAS AKHIR D3
-                if($prodi->nama_jenjang_pendidikan == 'S1'){
-                    if($i==0){
-                        $id_kategori_kegiatan=110403;
-                        $nama_kategori_kegiatan='Skripsi (pembimbing utama)';
-                    }else{
-                        $id_kategori_kegiatan=110407;
-                        $nama_kategori_kegiatan='Skripsi (pembimbing pendamping)';
-                    }
-                }elseif($prodi->nama_jenjang_pendidikan == 'S2' || $prodi->nama_jenjang_pendidikan == 'Sp-1'||$prodi->nama_jenjang_pendidikan == 'Sp-2'){
-                    if($i==0){
-                        $id_kategori_kegiatan=110402;
-                        $nama_kategori_kegiatan='Tesis (pembimbing utama)';
-                    }else{
-                        $id_kategori_kegiatan=110406;
-                        $nama_kategori_kegiatan='Tesis (pembimbing pendamping)';
-                    }
-                }elseif($prodi->nama_jenjang_pendidikan == 'S3'){
-                    if($i==0){
-                        $id_kategori_kegiatan=110401;
-                        $nama_kategori_kegiatan='Disertasi (pembimbing utama)';
-                    }else{
-                        $id_kategori_kegiatan=110405;
-                        $nama_kategori_kegiatan='Disertasi (pembimbing pendamping)';
-                    }
-                }elseif($prodi->nama_jenjang_pendidikan == 'D3' || $prodi->nama_jenjang_pendidikan == 'Profesi'){
-                    if($i==0){
-                        $id_kategori_kegiatan=110404;
-                        $nama_kategori_kegiatan='Laporan/tugas akhir studi (pembimbing utama)';
-                    }else{
-                        $id_kategori_kegiatan=110408;
-                        $nama_kategori_kegiatan='Laporan akhir studi (pembimbing pendamping)';
+                //KONDISI JENIS AKTIVITAS KKN DAN KP
+                if($mk_konversi->id_jenis_aktivitas ==5 || $mk_konversi->id_jenis_aktivitas == 6)
+                {
+                    $id_kategori_kegiatan=110300;
+                    $nama_kategori_kegiatan='Membimbing Kuliah Kerja Nyata, Praktek Kerja Nyata, Praktek Kerja Lapangan, termasuk membimbing pelatihan militer mahasiswa, pertukaran mahasiswa,  Magang, kuliah berbasis penelitian, wirausaha, dan bentuk lain pengabdian kepada masyarakat, dan sejenisnya';
+                }
+                elseif($mk_konversi->id_jenis_aktivitas == 1 || $mk_konversi->id_jenis_aktivitas == 2 ||
+                $mk_konversi->id_jenis_aktivitas == 3 || $mk_konversi->id_jenis_aktivitas == 4 ||
+                $mk_konversi->id_jenis_aktivitas == 7)
+                {
+                    //KONDISI JENJANG PENDIDIKAN KKN DAN KP
+                    if($prodi->nama_jenjang_pendidikan == 'S1'){
+                        if($i==0){
+                            $id_kategori_kegiatan=110403;
+                            $nama_kategori_kegiatan='Skripsi (pembimbing utama)';
+                        }else{
+                            $id_kategori_kegiatan=110407;
+                            $nama_kategori_kegiatan='Skripsi (pembimbing pendamping)';
+                        }
+                    }elseif($prodi->nama_jenjang_pendidikan == 'S2' || $prodi->nama_jenjang_pendidikan == 'Sp-1'||$prodi->nama_jenjang_pendidikan == 'Sp-2'){
+                        if($i==0){
+                            $id_kategori_kegiatan=110402;
+                            $nama_kategori_kegiatan='Tesis (pembimbing utama)';
+                        }else{
+                            $id_kategori_kegiatan=110406;
+                            $nama_kategori_kegiatan='Tesis (pembimbing pendamping)';
+                        }
+                    }elseif($prodi->nama_jenjang_pendidikan == 'S3'){
+                        if($i==0){
+                            $id_kategori_kegiatan=110401;
+                            $nama_kategori_kegiatan='Disertasi (pembimbing utama)';
+                        }else{
+                            $id_kategori_kegiatan=110405;
+                            $nama_kategori_kegiatan='Disertasi (pembimbing pendamping)';
+                        }
+                    }elseif($prodi->nama_jenjang_pendidikan == 'D3' || $prodi->nama_jenjang_pendidikan == 'Profesi'){
+                        if($i==0){
+                            $id_kategori_kegiatan=110404;
+                            $nama_kategori_kegiatan='Laporan/tugas akhir studi (pembimbing utama)';
+                        }else{
+                            $id_kategori_kegiatan=110408;
+                            $nama_kategori_kegiatan='Laporan akhir studi (pembimbing pendamping)';
+                        }
                     }
                 }
+
+                
                 $dosen_pembimbing=BiodataDosen::where('id_dosen', $request->dosen_bimbing_aktivitas[$i])->first();
                 // dd($dosen_pembimbing);
 
