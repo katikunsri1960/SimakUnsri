@@ -369,7 +369,9 @@ class AktivitasMahasiswaController extends Controller
                 }
                 elseif($mk_konversi->id_jenis_aktivitas == 1 || $mk_konversi->id_jenis_aktivitas == 2 ||
                 $mk_konversi->id_jenis_aktivitas == 3 || $mk_konversi->id_jenis_aktivitas == 4 ||
-                $mk_konversi->id_jenis_aktivitas == 7)
+                $mk_konversi->id_jenis_aktivitas == 7 
+                || $mk_konversi->id_jenis_aktivitas == 22
+                )
                 {
                     //KONDISI JENJANG PENDIDIKAN KKN DAN KP
                     if($prodi->nama_jenjang_pendidikan == 'S1'){
