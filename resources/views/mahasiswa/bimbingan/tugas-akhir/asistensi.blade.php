@@ -124,7 +124,7 @@ Bimbingan Tugas Akhir Mahasiswa
                                     <th class="text-center align-middle">Uraian Asistensi</th>
                                     <th class="text-center align-middle">Pembimbing</th>
                                     <th class="text-center align-middle">Status</th>
-                                    {{-- <th class="text-center align-middle">Aksi</th> --}}
+                                    <th class="text-center align-middle">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -139,6 +139,17 @@ Bimbingan Tugas Akhir Mahasiswa
                                         <span class="badge bg-warning">Menunggu Persetujuan</span>
                                         @elseif ($d->approved == 1)
                                         <span class="badge bg-success">Disetujui</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->approved != 1)
+                                            <form action="{{ route('mahasiswa.bimbingan.bimbingan-tugas-akhir.destroy', $d->id) }}" method="post" class="delete-form" id="deleteForm{{$d->id}}">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-danger" title="Hapus Data">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
                                         @endif
                                     </td>
                                 </tr>
@@ -342,6 +353,7 @@ Bimbingan Tugas Akhir Mahasiswa
             "autoWidth": true,
         });
     });
+</script>
 
 </script>
 @endpush

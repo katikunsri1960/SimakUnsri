@@ -141,4 +141,25 @@ class BimbinganController extends Controller
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
+
+    public function asistensi_destroy($id_asistensi)
+    {
+        try {
+            // Cari data asistensi berdasarkan id_asistensi
+            $asistensi = AsistensiAkhir::findOrFail($id_asistensi);
+
+            if ($asistensi->approved==1) {
+                return redirect()->back()->with('error', 'Asistensi tidak dapat dihapus karena telah diapprove!');
+            }
+
+            // Hapus data asistensi
+            $asistensi->delete();
+
+            // Redirect kembali dengan pesan sukses
+            return redirect()->back()->with('success', 'Data berhasil dihapus');
+        } catch (\Exception $e) {
+            // Redirect kembali dengan pesan error jika terjadi kesalahan
+            return redirect()->back()->withErrors('Gagal menghapus data: ' . $e->getMessage());
+        }
+    }
 }
