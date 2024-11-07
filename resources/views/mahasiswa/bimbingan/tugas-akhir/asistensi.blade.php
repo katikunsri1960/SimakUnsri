@@ -141,12 +141,8 @@ Bimbingan Tugas Akhir Mahasiswa
                                         <span class="badge bg-success">Disetujui</span>
                                         @endif
                                     </td>
-                                    <td>
-                                        @if($d->approved == 1)
-                                            <button type="button" class="btn btn-danger" onclick="showError()" title="Hapus Data">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        @else
+                                    <td class="text-center align-middle">
+                                        @if ($d->approved != 1)
                                             <form action="{{ route('mahasiswa.bimbingan.bimbingan-tugas-akhir.destroy', $d->id) }}" method="post" class="delete-form" id="deleteForm{{$d->id}}">
                                                 @csrf
                                                 @method('DELETE')
@@ -357,15 +353,6 @@ Bimbingan Tugas Akhir Mahasiswa
             "autoWidth": true,
         });
     });
-
-    function showError() {
-        swal({
-            title: "Gagal Menghapus",
-            text: "Asistensi tidak bisa dihapus karena sudah diapprove!",
-            type: "error",
-            button: "OK"
-        });
-    }
 </script>
 
 </script>

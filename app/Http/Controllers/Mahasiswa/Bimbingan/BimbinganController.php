@@ -148,10 +148,8 @@ class BimbinganController extends Controller
             // Cari data asistensi berdasarkan id_asistensi
             $asistensi = AsistensiAkhir::findOrFail($id_asistensi);
 
-            $asistensi_approved = $asistensi->where('approved', '1')->get();
-
-            if (!$asistensi_approved) {
-                return redirect()->route('mahasiswa.bimbingan.bimbingan-tugas-akhir.index')->with('error', 'Asistensi tidak ditemukan.');
+            if ($asistensi->approved==1) {
+                return redirect()->back()->with('error', 'Asistensi tidak dapat dihapus karena telah diapprove!');
             }
 
             // Hapus data asistensi
