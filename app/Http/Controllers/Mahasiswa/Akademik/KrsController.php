@@ -39,7 +39,14 @@ class KrsController extends Controller
 {
     public function index(Request $request)
     {
-        return view('mahasiswa.perkuliahan.krs.index');
+        // Ambil id_registrasi_mahasiswa dari request
+        $id_reg = auth()->user()->fk_id;
+        
+        // Ambil data riwayat pendidikan mahasiswa
+        $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
+    // dd($riwayat_pendidikan);
+
+        return view('mahasiswa.perkuliahan.krs.index', ['riwayat_pendidikan' => $riwayat_pendidikan]);
     }
 
     public function submit(Request $request)

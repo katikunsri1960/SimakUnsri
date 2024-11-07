@@ -5,7 +5,7 @@ Kartu Rencana Studi
 @section('content')
 @push('header')
 <div class="mx-4">
-    <a href="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir')}}"
+    <a href="{{route('mahasiswa.krs')}}"
         class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush

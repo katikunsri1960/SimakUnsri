@@ -41,14 +41,19 @@ class NilaiController extends Controller
         // $total_sks = $transkrip_mahasiswa->sum('sks_mata_kuliah');
         // $nilai_mutu = $transkrip->sum('sks_mata_kuliah')*$transkrip->sum('nilai_');
         $bobot = 0;
-
+        
         foreach ($transkrip_mahasiswa as $t) {
             $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
         }
 
-        $ipk = number_format($bobot / $total_sks, 2);
-        // dd($ipk);
-        // dd($ipk);
+        
+        if($total_sks != 0){
+            $ipk = number_format($bobot / $total_sks, 2);
+        }else{
+            $ipk=0;
+        }
+        // dd($total_sks, $ipk, $bobot);
+        // dd($aktivitas_kuliah);
 
 
         return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks'=>$total_sks, 'bobot'=>$bobot,'ipk'=>$ipk]);
