@@ -332,6 +332,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('asistensi')->group(function(){
                     Route::get('/{aktivitas}', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi');
                     Route::post('/{aktivitas}/store', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi_store'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi.store');
+                    Route::delete('/{aktivitas}', [App\Http\Controllers\Mahasiswa\Bimbingan\BimbinganController::class, 'asistensi_destroy'])->name('mahasiswa.bimbingan.bimbingan-tugas-akhir.destroy');
                 });
             });
 
