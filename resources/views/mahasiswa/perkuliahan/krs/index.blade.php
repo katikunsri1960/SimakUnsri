@@ -48,27 +48,29 @@ Kartu Rencana Studi
             </div>
           </div>
         </div>
-        <div class="col-12 col-lg-6 px-50">
-          <div class="box ribbon-box">
-            <div class="ribbon-two ribbon-two-danger"><span>MBKM</span></div>
-            <div class="box-header no-border p-0">				
-              <a href="{{route('mahasiswa.perkuliahan.mbkm.view')}}">
-                <img class="img-fluid" src="{{asset('images/images/avatar/icon_kampus_merdeka.png')}}" alt="">
-              </a>
-            </div>
-            <div class="box-body">
-                <div class="text-center">
-                  <h3 class="my-10"><a href="{{route('mahasiswa.perkuliahan.mbkm.view')}}">Aktivitas MBKM</a></h3>
-                  {{-- <h6 class="user-info mt-0 mb-10 text-fade">Full Stack Developer</h6> --}}
-                  <p class="text-fade w-p85 mx-auto">
-                  <div class="text-fade w-p85 mx-auto my-15">
-                    <li>Pertukaran Pelajar</li>
-                    <li>Non Pertukaran Pelajar</li>
+        @if($riwayat_pendidikan->id_jenis_daftar != 14)
+          <div class="col-12 col-lg-6 px-50">
+            <div class="box ribbon-box">
+              <div class="ribbon-two ribbon-two-danger"><span>MBKM</span></div>
+              <div class="box-header no-border p-0">				
+                <a href="{{route('mahasiswa.perkuliahan.mbkm.view')}}">
+                  <img class="img-fluid" src="{{asset('images/images/avatar/icon_kampus_merdeka.png')}}" alt="">
+                </a>
+              </div>
+              <div class="box-body">
+                  <div class="text-center">
+                    <h3 class="my-10"><a href="{{route('mahasiswa.perkuliahan.mbkm.view')}}">Aktivitas MBKM</a></h3>
+                    {{-- <h6 class="user-info mt-0 mb-10 text-fade">Full Stack Developer</h6> --}}
+                    <p class="text-fade w-p85 mx-auto">
+                    <div class="text-fade w-p85 mx-auto my-15">
+                      <li>Pertukaran Pelajar</li>
+                      <li>Non Pertukaran Pelajar</li>
+                    </div>
                   </div>
-                </div>
+              </div>
             </div>
           </div>
-        </div>
+        @endif
       </div>
     </div>
 </section>
