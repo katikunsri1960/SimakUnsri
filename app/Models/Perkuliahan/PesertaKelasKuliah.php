@@ -153,6 +153,11 @@ class PesertaKelasKuliah extends Model
                 ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                 ->first();
 
+        $status_akm = [
+            'id_status_mahasiswa' => $riwayat_pendidikan->id_jenis_daftar == '14' ? 'M' : 'A',
+            'nama_status_mahasiswa' => $riwayat_pendidikan->id_jenis_daftar == '14' ? 'Kampus Merdeka' : 'Aktif',
+        ];
+
         $data_mbkm = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
                     ->whereHas('kelas_kuliah', function($query) use ($semester_aktif,$riwayat_pendidikan) {
                         $query->where('id_semester', $semester_aktif->id_semester)->whereNot('id_prodi', $riwayat_pendidikan->id_prodi);
@@ -369,8 +374,8 @@ class PesertaKelasKuliah extends Model
                                 'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
                                 'id_semester'=> $semester_aktif->id_semester,
                                 'nama_semester'=> $semester_aktif->semester->nama_semester,
-                                'id_status_mahasiswa' => 'A',
-                                'nama_status_mahasiswa' => 'Aktif',
+                                'id_status_mahasiswa' => $status_akm['id_status_mahasiswa'],
+                                'nama_status_mahasiswa' => $status_akm['nama_status_mahasiswa'],
                                 'ips'=> '0.00',
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
@@ -391,8 +396,8 @@ class PesertaKelasKuliah extends Model
                                 'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
                                 'id_semester'=> $semester_aktif->id_semester,
                                 'nama_semester'=> $semester_aktif->semester->nama_semester,
-                                'id_status_mahasiswa' => 'A',
-                                'nama_status_mahasiswa' => 'Aktif',
+                                'id_status_mahasiswa' => $status_akm['id_status_mahasiswa'],
+                                'nama_status_mahasiswa' => $status_akm['nama_status_mahasiswa'],
                                 'ips'=> '0.00',
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
@@ -414,8 +419,8 @@ class PesertaKelasKuliah extends Model
                             'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
                             'id_semester'=> $semester_aktif->id_semester,
                             'nama_semester'=> $semester_aktif->semester->nama_semester,
-                            'id_status_mahasiswa' => 'A',
-                            'nama_status_mahasiswa' => 'Aktif',
+                            'id_status_mahasiswa' => $status_akm['id_status_mahasiswa'],
+                            'nama_status_mahasiswa' => $status_akm['nama_status_mahasiswa'],
                             'ips'=> '0.00',
                             'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                             'sks_semester'=> $total_sks,
@@ -539,8 +544,8 @@ class PesertaKelasKuliah extends Model
                                 'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
                                 'id_semester'=> $semester_aktif->id_semester,
                                 'nama_semester'=> $semester_aktif->semester->nama_semester,
-                                'id_status_mahasiswa' => 'A',
-                                'nama_status_mahasiswa' => 'Aktif',
+                                'id_status_mahasiswa' => $status_akm['id_status_mahasiswa'],
+                                'nama_status_mahasiswa' => $status_akm['nama_status_mahasiswa'],
                                 'ips'=> '0.00',
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
@@ -584,8 +589,8 @@ class PesertaKelasKuliah extends Model
                             'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
                             'id_semester'=> $semester_aktif->id_semester,
                             'nama_semester'=> $semester_aktif->semester->nama_semester,
-                            'id_status_mahasiswa' => 'A',
-                            'nama_status_mahasiswa' => 'Aktif',
+                            'id_status_mahasiswa' => $status_akm['id_status_mahasiswa'],
+                            'nama_status_mahasiswa' => $status_akm['nama_status_mahasiswa'],
                             'ips'=> '0.00',
                             'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                             'sks_semester'=> $total_sks,
