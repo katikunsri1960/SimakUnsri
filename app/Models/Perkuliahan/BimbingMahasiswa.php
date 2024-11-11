@@ -7,6 +7,7 @@ use App\Models\Referensi\KategoriKegiatan;
 use App\Models\SemesterAktif;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class BimbingMahasiswa extends Model
 {
@@ -36,6 +37,25 @@ class BimbingMahasiswa extends Model
     public function dosen()
     {
         return $this->belongsTo(BiodataDosen::class, 'id_dosen', 'id_dosen');
+    }
+
+    public function aktivitas_pa_prodi($prodi, $semester)
+    {
+        $data = $this->join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'bimbing_mahasiswas.id_aktivitas')
+                    ->where('am.id_prodi', $prodi)
+                    ->where('am.id_semester', $semester)
+                    ->where('am.id_jenis_aktivitas', 7)
+                    ->select(
+                        'am.*',
+                        'bimbing_mahasiswas.nidn',
+                        'bimbing_mahasiswas.nama_dosen',
+                        'bimbing_mahasiswas.id_dosen',
+                        'bimbing_mahasiswas.id_kategori_kegiatan',
+                        DB::raw('(SELECT COUNT(*) FROM anggota_aktivitas_mahasiswas WHERE id_aktivitas = am.id_aktivitas) as jumlah_anggota')
+                    )
+                    ->get();
+
+        return $data;
     }
 
     public function bimbing_ta($id_dosen, $semester)

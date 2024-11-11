@@ -36,6 +36,7 @@
     <div class="wrapper">
 
         <div id="loader"></div>
+        @include('swal')
 
         @include('prodi.include.header')
 

@@ -93,6 +93,16 @@ class AktivitasMahasiswa extends Model
         return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');
     }
 
+    public function aktivitas_pa_prodi($prodi, $semester)
+    {
+        $data = $this->where('id_prodi', $prodi)
+                    ->where('id_semester', $semester)
+                    ->where('id_jenis_aktivitas', 7)
+                    ->get();
+
+        return $data;
+    }
+
     public function uji_dosen($id_dosen, $semester)
     {
         return $this->with(['uji_mahasiswa', 'uji_mahasiswa.dosen', 'prodi', 'semester', 'jenis_aktivitas_mahasiswa', 'anggota_aktivitas', 'anggota_aktivitas.mahasiswa', 'konversi'])
@@ -162,7 +172,7 @@ class AktivitasMahasiswa extends Model
     public function getKrsAkt($id_reg, $id_semester)
     {
         //DATA AKTIVITAS
-        
+
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
@@ -174,7 +184,7 @@ class AktivitasMahasiswa extends Model
                     ->where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
                     ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','5','6', '22'])
                     ->get();
-                    
+
         if($data_akt == NULL)
         {
             $mk_akt=NULL;
@@ -199,7 +209,7 @@ class AktivitasMahasiswa extends Model
                             ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                             ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','5','6', '22'])
                             ->get();
-                            
+
         // $matkul_konversi = $krs_akt->aktivitas_mahasiswa->konversi;
                         // dd($krs_akt);
 

@@ -115,6 +115,9 @@
                             <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-penelitian') || request()->routeIs('prodi.data-aktivitas.aktivitas-penelitian.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-aktivitas.aktivitas-penelitian')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Penelitian</a>
                             </li>
+                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-pa') || request()->routeIs('prodi.data-aktivitas.aktivitas-pa.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-aktivitas.aktivitas-pa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas PA</a>
+                            </li>
                             <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-lomba') || request()->routeIs('prodi.data-aktivitas.aktivitas-lomba.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-aktivitas.aktivitas-lomba')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Lomba</a>
                             </li>
