@@ -280,7 +280,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::post('/simpan-aktivitas', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'simpanAktivitas'])->name('mahasiswa.krs.simpan-aktivitas');
                 Route::get('/get-nama-dosen', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'get_dosen'])->name('mahasiswa.krs.dosen-pembimbing.get-dosen');
                 Route::delete('/hapus-aktivitas/{id}', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMahasiswaController::class, 'hapusAktivitas'])->name('mahasiswa.krs.hapus-aktivitas');
-                
+
                 //Route for Aktivitas Magang
                 Route::prefix('mbkm')->group(function () {
                     Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\AktivitasMBKMController::class, 'view'])->name('mahasiswa.perkuliahan.mbkm.view');
@@ -667,6 +667,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::delete('/delete/{id}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'delete'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.delete');
                 });
                 Route::get('/aktivitas-penelitian', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_penelitian'])->name('prodi.data-aktivitas.aktivitas-penelitian');
+
+                Route::prefix('aktivitas-pa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_pa'])->name('prodi.data-aktivitas.aktivitas-pa');
+                    Route::post('/update/{id}', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_pa_update'])->name('prodi.data-aktivitas.aktivitas-pa.update');
+                    Route::get('/anggota/{id}', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'anggota_pa'])->name('prodi.data-aktivitas.aktivitas-pa.anggota');
+                });
                 Route::get('/aktivitias-lomba', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_lomba'])->name('prodi.data-aktivitas.aktivitas-lomba');
                 Route::get('/aktivitas-organisasi', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_organisasi'])->name('prodi.data-aktivitas.aktivitas-organisasi');
             });
