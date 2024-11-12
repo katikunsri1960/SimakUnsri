@@ -124,9 +124,9 @@ Tugas Akhir
                                                 </div>
                                             </form>
                                             @endif
-                                            {{--@if($d->id_jenis_aktivitas != '5' || $d->id_jenis_aktivitas != '6')
-                                                <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-success btn-sm my-2" title="Edit"><i class="fa fa-pencil-square-o"></i> Nilai Konversi</a>
-                                            @endif--}}
+                                            @if($d->id_jenis_aktivitas != '5' || $d->id_jenis_aktivitas != '6')
+                                                <a href="{{route('prodi.data-akademik.non-tugas-akhir.nilai-konversi', $d->id_aktivitas)}}" class="btn btn-success btn-sm my-2" title="Nilai Konversi"><i class="fa fa-pencil-square-o"></i> Nilai Konversi</a>
+                                            @endif
                                             <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
                                             <a href="#" class="btn btn-info btn-sm my-2" title="Detail"
                                                 data-bs-toggle="modal" data-bs-target="#detailModal"
