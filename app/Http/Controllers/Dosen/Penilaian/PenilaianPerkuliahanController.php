@@ -66,7 +66,6 @@ class PenilaianPerkuliahanController extends Controller
 
         //Check batas pengisian nilai
         $hari_proses = date('Y-m-d');
-        $hari_proses = '2024-12-1';
         $mulai_nilai = $semester_aktif->mulai_isi_nilai;
         $batas_nilai = $semester_aktif->batas_isi_nilai;
 
