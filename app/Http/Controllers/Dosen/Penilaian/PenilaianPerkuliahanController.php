@@ -64,13 +64,22 @@ class PenilaianPerkuliahanController extends Controller
         $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->get();
 
-         //Check batas pengisian nilai
-         $batas_nilai = $semester_aktif->batas_isi_nilai;
+        //Check batas pengisian nilai
+        $hari_proses = date('Y-m-d');
+        $mulai_nilai = $semester_aktif->mulai_isi_nilai;
+        $batas_nilai = $semester_aktif->batas_isi_nilai;
 
-        // dd($interval);
+         
+        if ($hari_proses < $mulai_nilai) {
+            return redirect()->back()->with('error', "Jadwal Pengisian Nilai Belum Dimulai !");
+        } elseif ($hari_proses > $batas_nilai) {
+            return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Telah Berakhir !');
+        }
+        
         return view('dosen.penilaian.penilaian-perkuliahan.upload-dpna', [
             'data' => $nilai_komponen,
             'kelas' => $data_kelas,
+            'mulai_pengisian' => $mulai_nilai,
             'batas_pengisian' => $batas_nilai
         ]);
     }

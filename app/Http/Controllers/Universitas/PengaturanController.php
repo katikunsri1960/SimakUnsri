@@ -87,6 +87,7 @@ class PengaturanController extends Controller
             'id_semester' => 'required|exists:semesters,id_semester',
             'krs_mulai' => 'required',
             'krs_selesai' => 'required',
+            'mulai_isi_nilai' => 'required',
             'batas_isi_nilai' => 'required',
             'tanggal_mulai_kprs' => 'required',
             'tanggal_akhir_kprs' => 'required',
@@ -95,8 +96,10 @@ class PengaturanController extends Controller
 
         $data['id'] = 1;
 
-        SemesterAktif::updateOrCreate(['id' => 1], $data);
+        
 
+        SemesterAktif::updateOrCreate(['id' => 1], $data);
+        // dd($data);
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 

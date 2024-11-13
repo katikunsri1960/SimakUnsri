@@ -28,8 +28,10 @@ Semester Aktif
                 <div class="box-body">
                     <form action="{{route('univ.pengaturan.semester-aktif.store')}}" method="post" id="form-store">
                         @csrf
+                        <h4 class="text-info mt-20"><i class="fa fa-calendar-o"></i> Semester</h4>
+                        <hr class="my-10">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="col-lg-6 col-md-6 mb-3">
                                 <label for="id_semester" class="form-label">Semester</label>
                                 <select class="form-select" name="id_semester" id="id_semester" required>
                                     <option value="">-- Pilih Semester --</option>
@@ -38,42 +40,43 @@ Semester Aktif
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <label for="krs_mulai" class="form-label">Tanggal Mulai KRS</label>
-                                <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="krs_mulai" id="krs_mulai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_krs_mulai : '' }}"/>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <label for="krs_selesai" class="form-label">Tanggal Akhir KRS</label>
-                                <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="krs_selesai" id="krs_selesai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_krs_selesai : '' }}"/>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
-                                <label for="batas_isi_nilai" class="form-label">Batas Pengisian Nilai</label>
-                                <div class="input-group">
-                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
-                                    <input type="text" class="form-control" name="batas_isi_nilai" id="batas_isi_nilai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_batas_isi_nilai : '' }}"/>
-                                </div>
-                            </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="col-lg-6 col-md-6 mb-3">
                                 <label for="batas_bayar_ukt" class="form-label">Batas Bayar UKT</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                     <input type="text" class="form-control" name="batas_bayar_ukt" id="batas_bayar_ukt" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_batas_bayar_ukt : '' }}"/>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
+                        </div>
+                        <h4 class="text-info mt-20"><i class="fa fa-calendar-o"></i> Jadwal KRS</h4>
+                        <hr class="my-10">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="krs_mulai" class="form-label">Tanggal Mulai KRS</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="krs_mulai" id="krs_mulai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_krs_mulai : '' }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="krs_selesai" class="form-label">Tanggal Akhir KRS</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="krs_selesai" id="krs_selesai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_krs_selesai : '' }}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <h4 class="text-info mt-20"><i class="fa fa-calendar-o"></i> Jadwal KPRS </h4>
+                        <hr class="my-10">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 mb-3">
                                 <label for="tanggal_mulai_kprs" class="form-label">Tanggal Mulai KPRS</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                     <input type="text" class="form-control" name="tanggal_mulai_kprs" id="tanggal_mulai_kprs" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_tanggal_mulai_kprs : '' }}"/>
                                 </div>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
+                            <div class="col-lg-6 col-md-6 mb-3">
                                 <label for="tanggal_akhir_kprs" class="form-label">Tanggal Akhir KPRS</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
@@ -81,9 +84,28 @@ Semester Aktif
                                 </div>
                             </div>
                         </div>
-                            <div class="col-lg-3 col-md-6 mb-3">
+                        <h4 class="text-info mt-20"><i class="fa fa-calendar-o"></i> Jadwal Pengisian Nilai </h4>
+                        <hr class="my-10">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="mulai_isi_nilai" class="form-label">Mulai Pengisian Nilai</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="mulai_isi_nilai" id="mulai_isi_nilai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_mulai_isi_nilai : '' }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="batas_isi_nilai" class="form-label">Batas Pengisian Nilai</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="batas_isi_nilai" id="batas_isi_nilai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_batas_isi_nilai : '' }}"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="box-footer p-0 mt-20">
+                            <div class="col-lg-3 col-md-3 mb-3">
                                 <label class="form-label" style="opacity: 0;">Submit</label> <!-- Invisible label for alignment -->
-                                <button type="submit" class="form-control btn btn-sm btn-primary waves-effect waves-light">Simpan</button>
+                                <button type="submit" class="form-control btn btn-primary waves-effect waves-light">Simpan</button>
                             </div>
                         </div>
                     </form>
@@ -117,6 +139,10 @@ Semester Aktif
         });
 
         flatpickr("#krs_mulai", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#mulai_isi_nilai", {
             dateFormat: "d-m-Y",
         });
 

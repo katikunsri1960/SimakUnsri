@@ -10,7 +10,7 @@ class SemesterAktif extends Model
 {
     use HasFactory;
     protected $guarded = [];
-    protected $appends = ['id_batas_isi_nilai', 'id_tanggal_mulai_kprs', 'id_tanggal_akhir_kprs', 'id_krs_mulai', 'id_krs_selesai', 'id_batas_bayar_ukt'];
+    protected $appends = ['id_mulai_isi_nilai', 'id_batas_isi_nilai', 'id_tanggal_mulai_kprs', 'id_tanggal_akhir_kprs', 'id_krs_mulai', 'id_krs_selesai', 'id_batas_bayar_ukt'];
 
     public function getIdKrsMulaiAttribute()
     {
@@ -70,6 +70,16 @@ class SemesterAktif extends Model
     public function setBatasIsiNilaiAttribute($value)
     {
         $this->attributes['batas_isi_nilai'] = date('Y-m-d', strtotime($value));
+    }
+
+    public function getIdMulaiIsiNilaiAttribute()
+    {
+        return date('d-m-Y', strtotime($this->mulai_isi_nilai)) ?? '';
+    }
+
+    public function setMulaiIsiNilaiAttribute($value)
+    {
+        $this->attributes['mulai_isi_nilai'] = date('Y-m-d', strtotime($value));
     }
 
     public function semester()

@@ -41,7 +41,10 @@ Penilaian Perkuliahan Mahasiswa
                         <div class="row">
                             <div class="col-xl-4 col-lg-12">
                                 {{-- <h3 class="fw-500 text-dark mt-0">{{$data[0]->kelas_kuliah->nama_semester}}</h3> --}}
-                                <p class="mb-0 text-fade fs-18">Batas Pengisian Nilai, {{$semester_aktif ? $semester_aktif['batas_isi_nilai'] : 'Data Belum Terisi'}}</p>
+                                <p class="mb-0 text-fade fs-18">
+                                    Periode Pengisian Nilai, 
+                                    {{ $semester_aktif ? \Carbon\Carbon::parse($semester_aktif['mulai_isi_nilai'])->locale('id')->translatedFormat('d M Y') . ' - ' . \Carbon\Carbon::parse($semester_aktif['batas_isi_nilai'])->locale('id')->translatedFormat('d M Y') : 'Data Belum Terisi' }}
+                                </p>                                
                             </div>
                         </div><hr>
                         <div class="row">
