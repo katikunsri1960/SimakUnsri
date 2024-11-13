@@ -108,7 +108,7 @@ Penilaian Sidang Mahasiswa
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <input name="kualitas_skripsi" type="number" class="form-control" value="0">
+                                    <input name="kualitas_skripsi" type="number" class="form-control" value="0" step="0.01" max="100">
                                 </div>
                             </div>
                         </div>
@@ -130,7 +130,7 @@ Penilaian Sidang Mahasiswa
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <input name="presentasi" type="number" class="form-control" value="0">
+                                    <input name="presentasi" type="number" class="form-control" value="0" step="0.01" max="100">
                                 </div>
                             </div>
                         </div>
@@ -152,7 +152,7 @@ Penilaian Sidang Mahasiswa
                             </div>
                             <div class="col-md-3">
                                 <div class="form-group">
-                                    <input name="performansi" type="number" class="form-control" value="0">
+                                    <input name="performansi" type="number" class="form-control" value="0" step="0.01" max="100">
                                 </div>
                             </div>
                         </div>

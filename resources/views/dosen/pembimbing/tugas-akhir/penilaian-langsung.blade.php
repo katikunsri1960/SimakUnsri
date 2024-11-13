@@ -108,7 +108,7 @@ Penilaian Langsung Mahasiswa
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <input name="nilai_langsung" type="number" class="form-control" value="{{$data_nilai->nilai_angka ?? 0}}">
+                                    <input name="nilai_langsung" type="number" class="form-control" value="{{$data_nilai->nilai_angka ?? 0}}" step="0.01" max="100">
                                 </div>
                             </div>
                         </div>

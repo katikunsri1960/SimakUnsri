@@ -334,8 +334,8 @@ class AktivitasNonTAController extends Controller
                     $nilai_huruf = 'D';
                 }
                 else if($request->nilai_angka[$i] >= 0 && $request->nilai_angka[$i] < 41){
-                    $nilai_indeks = '1.00';
-                    $nilai_huruf = 'D';
+                    $nilai_indeks = '0.00';
+                    $nilai_huruf = 'E';
                 }else{
                     return redirect()->back()->with('error', 'Nilai di luar range skala nilai.');
                 }
