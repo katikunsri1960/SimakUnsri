@@ -414,6 +414,7 @@ Bimbingan Tugas Akhir Dosen
     }
 
     $('#dt').DataTable({
+        "stateSave": true,
         "paging": true,
         "lengthChange": true,
         "searching": true,
