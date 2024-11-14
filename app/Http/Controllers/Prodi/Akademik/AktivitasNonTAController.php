@@ -249,6 +249,7 @@ class AktivitasNonTAController extends Controller
 
         return view('prodi.data-akademik.non-tugas-akhir.nilai-konversi', [
             'd' => $data,
+            'semester' => $semesterAktif,
             'kategori' => $kategori,
             'konversi' => $nilai_konversi
         ]);
