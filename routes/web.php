@@ -362,6 +362,15 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
         Route::get('/dosen', [App\Http\Controllers\Dosen\DashboardController::class, 'index'])->name('dosen');
         Route::prefix('dosen')->group(function () {
 
+            Route::prefix('monev')->group(function(){
+                Route::prefix('pa-prodi')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Dosen\MonevController::class, 'pa_prodi'])->name('dosen.monev.pa-prodi');
+                    Route::get('/get-monev', [App\Http\Controllers\Dosen\MonevController::class, 'pa_prodi_get_monev'])->name('dosen.monev.pa-prodi.get-monev');
+                    Route::get('/get-anggota-monev', [App\Http\Controllers\Dosen\MonevController::class, 'pa_prodi_get_anggota_monev'])->name('dosen.monev.pa-prodi.get-anggota-monev');
+                });
+
+            });
+
             //Route Menu Utama
             Route::prefix('profile-dosen')->group(function () {
                 Route::get('/biodata-dosen', [App\Http\Controllers\Dosen\BiodataDosenController::class, 'biodata_dosen'])->name('dosen.profile.biodata');
