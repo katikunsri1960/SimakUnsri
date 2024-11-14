@@ -65,10 +65,10 @@ Aktivitas Pembimbingan Akademik
 
                                 <td class="text-center align-middle">
                                     <button class="btn btn-warning btn-sm" title="Edit"
-                                        onclick="edit({{$d->id}}, '{{$d->nidn}}', '{{$d->nama_dosen}}', '{{$d->sk_tugas}}', '{{$d->tanggal_sk_tugas}}')"
-                                        data-bs-toggle="modal" data-bs-target="#modalEdit">
-                                    <i class="fa fa-pencil"></i>
-                                </button>
+                                            onclick="edit({{$d->id}}, '{{$d->nidn}}', '{{$d->nama_dosen}}', '{{$d->sk_tugas}}', '{{$d->tanggal_sk_tugas}}')"
+                                            data-bs-toggle="modal" data-bs-target="#modalEdit">
+                                        <i class="fa fa-pencil"></i>
+                                    </button>
                                 </td>
                             @endforeach
                           </tbody>

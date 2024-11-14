@@ -52,6 +52,28 @@
                             </li> --}}
                         </ul>
                     </li>
+                    <li class="treeview {{request()->routeIs('dosen.monev.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i class="fa fa-chart-pie"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Monev</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            {{-- <li class="{{request()->routeIs('dosen.monev.pa-prodi') || request()->routeIs('dosen.monev.pa-prodi.*') ? 'active' : ''}}"> --}}
+                            <li>
+                                <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing K. Ilmiah</a>
+                            </li>
+                            {{-- <li class="{{request()->routeIs('dosen.monev.pa-prodi') || request()->routeIs('dosen.monev.pa-prodi.*') ? 'active' : ''}}"> --}}
+                            <li>
+                                <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Penguji Sidang</a>
+                            </li>
+                            <li class="{{request()->routeIs('dosen.monev.pa-prodi') || request()->routeIs('dosen.monev.pa-prodi.*') ? 'active' : ''}}">
+                                <a href="{{route('dosen.monev.pa-prodi')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing Akademik</a>
+                            </li>
+                        </ul>
+                    </li>
                     <!-- <li class="{{request()->routeIs('dosen.kalender_akademik') ? 'active' : ''}}">
                         <a href="{{route('dosen.kalender_akademik')}}">
                             <i class="fa fa-calendar-o"><span class="path1"></span><span

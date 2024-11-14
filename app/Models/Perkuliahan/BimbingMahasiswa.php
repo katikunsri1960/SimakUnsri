@@ -46,7 +46,9 @@ class BimbingMahasiswa extends Model
                     ->where('am.id_semester', $semester)
                     ->where('am.id_jenis_aktivitas', 7)
                     ->select(
-                        'am.*',
+                        'am.id as id',
+                        'am.sk_tugas as sk_tugas',
+                        'am.tanggal_sk_tugas',
                         'bimbing_mahasiswas.nidn',
                         'bimbing_mahasiswas.nama_dosen',
                         'bimbing_mahasiswas.id_dosen',
