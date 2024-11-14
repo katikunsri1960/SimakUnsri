@@ -61,9 +61,8 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            {{-- <li class="{{request()->routeIs('dosen.monev.pa-prodi') || request()->routeIs('dosen.monev.pa-prodi.*') ? 'active' : ''}}"> --}}
-                            <li>
-                                <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing K. Ilmiah</a>
+                            <li class="{{request()->routeIs('dosen.monev.karya-ilmiah') || request()->routeIs('dosen.monev.karya-ilmiahi.*') ? 'active' : ''}}">
+                                <a href="{{route('dosen.monev.karya-ilmiah')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing K. Ilmiah</a>
                             </li>
                             {{-- <li class="{{request()->routeIs('dosen.monev.pa-prodi') || request()->routeIs('dosen.monev.pa-prodi.*') ? 'active' : ''}}"> --}}
                             <li>
@@ -71,6 +70,12 @@
                             </li>
                             <li class="{{request()->routeIs('dosen.monev.pa-prodi') || request()->routeIs('dosen.monev.pa-prodi.*') ? 'active' : ''}}">
                                 <a href="{{route('dosen.monev.pa-prodi')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing Akademik</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Profil Lulusan</a>
+                            </li>
+                            <li>
+                                <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Presensi Dosen</a>
                             </li>
                         </ul>
                     </li>

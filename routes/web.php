@@ -369,6 +369,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/get-anggota-monev', [App\Http\Controllers\Dosen\MonevController::class, 'pa_prodi_get_anggota_monev'])->name('dosen.monev.pa-prodi.get-anggota-monev');
                 });
 
+                Route::prefix('karya-ilmiah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Dosen\MonevController::class, 'karya_ilmiah'])->name('dosen.monev.karya-ilmiah');
+                    Route::get('/get-data', [App\Http\Controllers\Dosen\MonevController::class, 'karya_ilmiah_get_data'])->name('dosen.monev.karya-ilmiah.get-data');
+                });
+
             });
 
             //Route Menu Utama
