@@ -95,34 +95,71 @@ Daftar Pengajuan Cuti
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
 $(document).ready(function() {
-        $("#id_registrasi_mahasiswa").select2({
-            placeholder : '-- Masukan NIM / Nama Mahasiswa --',
-            dropdownParent: $('#createModal'),
-            width: '100%',
-            minimumInputLength: 3,
-            ajax: {
-                url: "{{route('univ.pengaturan.akun.get-mahasiswa')}}",
-                type: "GET",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term // search term
-                    };
-                },
-                processResults: function (data) {
-                    // console.log(data);
-                    return {
-                        results: $.map(data, function (item) {
-                            return {
-                                text: "("+item.nim+") "+item.nama_mahasiswa,
-                                id: item.id_registrasi_mahasiswa
-                            }
-                        })
-                    };
-                },
+    $("#id_registrasi_mahasiswa").select2({
+        placeholder : '-- Masukan NIM / Nama Mahasiswa --',
+        dropdownParent: $('#createModal'),
+        width: '100%',
+        minimumInputLength: 3,
+        ajax: {
+            url: "{{route('univ.pengaturan.akun.get-mahasiswa')}}",
+            type: "GET",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term
+                };
+            },
+            processResults: function (data) {
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: "("+item.nim+") "+item.nama_mahasiswa,
+                            id: item.id_registrasi_mahasiswa
+                        }
+                    })
+                };
+            }
+        }
+    });
+
+    // Fetch mahasiswa data on selection
+    $('#id_registrasi_mahasiswa').on('change', function() {
+        var id_registrasi_mahasiswa = $(this).val();
+        
+        $.ajax({
+            url: "{{ url('/universitas/cuti-kuliah/get-data-mahasiswa') }}/" + id_registrasi_mahasiswa,
+            type: "GET",
+            dataType: "json",
+            success: function(response) {
+                var data = response.data;
+                var semester_aktif = response.semester_aktif;
+                
+                if (data) {
+                    // Mengisi data mahasiswa pada input form
+                    $('#fakultas_mahasiswa').val(data.prodi.fakultas.nama_fakultas);
+                    $('#jurusan_mahasiswa').val(data.prodi.jurusan.nama_jurusan_id);
+                    $('#jenjang_mahasiswa').val(data.prodi.nama_jenjang_pendidikan);
+                    $('#prodi_mahasiswa').val(data.prodi.nama_program_studi);
+                    
+                    $('#jalan').val(data.biodata.jalan);
+                    $('#dusun').val(data.biodata.dusun);
+                    $('#rt').val(data.biodata.rt);
+                    $('#rw').val(data.biodata.rw);
+                    $('#kelurahan').val(data.biodata.kelurahan);
+                    $('#kode_pos').val(data.biodata.kode_pos);
+                    $('#nama_wilayah').val(data.biodata.nama_wilayah);
+                    $('#handphone').val(data.biodata.handphone);
+
+                    // Mengisi data semester aktif
+                    if (semester_aktif) {
+                        $('#id_semester').val(semester_aktif.semester.nama_semester);
+                    }
+                }
             }
         });
     });
+});
+
 </script>
 @endpush

@@ -729,6 +729,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('cuti-kuliah')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\CutiController::class, 'index'])->name('univ.cuti-kuliah');
                 Route::post('/store', [App\Http\Controllers\Universitas\CutiController::class, 'store'])->name('univ.cuti-kuliah.store');
+                Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\CutiController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
+                Route::get('/get-data-mahasiswa/{id_registrasi_mahasiswa}', [App\Http\Controllers\Universitas\CutiController::class, 'getMahasiswaData'])->name('univ.cuti-kuliah.get-data');
+
+
             });
 
             Route::prefix('beasiswa')->group(function() {

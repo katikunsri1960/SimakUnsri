@@ -241,6 +241,7 @@ class CutiController extends Controller
             'id_cuti' => $id_cuti,
             'id_registrasi_mahasiswa' => $id_reg,
             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+            'nim'=>$riwayat_pendidikan->nim,
             'id_semester' => $semester_aktif->id_semester,
             'nama_semester'=> $semester_aktif->semester->nama_semester,
             'id_prodi'=>$riwayat_pendidikan->id_prodi,
