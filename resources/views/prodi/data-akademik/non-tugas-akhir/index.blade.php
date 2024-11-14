@@ -83,9 +83,23 @@ Tugas Akhir
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6')
-                                            <span class="badge badge-lg badge-warning">Aktivitas Konversi</span>
+                                            <div class="row my-10">
+                                                <span class="badge badge-lg badge-warning">Aktivitas Konversi</span>
+                                            </div>
+                                            @if($d->count_nilai > 0)
+                                                <div class="row">
+                                                    <span class="badge badge-lg badge-success">Sudah di Nilai</span>
+                                                </div>
+                                            @endif
                                         @else
-                                            <span class="badge badge-lg badge-success">MBKM</span>
+                                            <div class="row my-10">
+                                                <span class="badge badge-lg badge-success me-10">MBKM ({{$d->sks_aktivitas}} SKS)</span>
+                                            </div>
+                                            @if($d->count_nilai > 0)
+                                                <div class="row">
+                                                    <span class="badge badge-lg badge-success">Sudah di Nilai</span>
+                                                </div>
+                                            @endif
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">{{$d->nama_jenis_aktivitas}}</td>
