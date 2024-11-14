@@ -92,7 +92,7 @@
                         <div class="chat-msg user">
                             <div class="cm-msg-text">
                                 job batch name :
-                                 
+
                             </div>
 
                         </div>
@@ -114,6 +114,7 @@
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/js/pages/chat-popup.js')}}"></script>
     @stack('js')
+    @include('swal')
     {{-- <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script> --}}
 
 
