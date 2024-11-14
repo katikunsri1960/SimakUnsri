@@ -61,7 +61,7 @@ Pembimbingan Karya Ilmiah Mahasiswa
                                 <tr>
 
                                     <td class="text-center align-middle" style="width: 10%">{{$d->nama_prodi}}</td>
-                                    <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal->nim}}<br>{{$d->anggota_aktivitas_personal->nama_mahasiswa}}</td>
+                                    <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nim : '-'}}<br>{{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : '-'}}</td>
                                     <td class="text-center align-middle">
                                         {{ strtoupper($d->nama_jenis_aktivitas)}}<br>
                                         @if ($d->konversi)

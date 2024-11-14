@@ -348,8 +348,8 @@ class SidangMahasiswaController extends Controller
             $nilai_huruf = 'D';
         }
         else if($nilai_akhir_sidang >= 0 && $nilai_akhir_sidang < 41){
-            $nilai_indeks = '1.00';
-            $nilai_huruf = 'D';
+            $nilai_indeks = '0.00';
+            $nilai_huruf = 'E';
         }else{
             return redirect()->back()->with('error', 'Nilai di luar range skala nilai.');
         }

@@ -19,7 +19,7 @@ class CreateAccountController extends Controller
     public function checkNim(string $nim)
     {
         $user = RiwayatPendidikan::select('nama_mahasiswa')->where('nim', $nim)->orderBy('id_jenis_daftar', 'desc')->first();
-        
+
         if ($user) {
             return response()->json([
                 'status' => 'success',
@@ -32,22 +32,6 @@ class CreateAccountController extends Controller
             ]);
         }
 
-    }
-
-    public function testNusoap(string $nim, string $tak_pembayaran)
-    {
-        $url = "http://103.241.4.52/services/host2host.php";
-        $tak_pembayaran = "20241";
-        require_once app_path('Libraries/nusoap.php');
-        $client = new \nusoap_client($url, true);
-        $param = array(
-            'nim'			=>	$nim,
-            'kode'			=>	$tak_pembayaran
-         );
-        $client->soap_defencoding = 'UTF-8';
-        $response = $client->call('CheckPembayaran', $param);
-        dd($response);
-        return response()->json($response);
     }
 
     public function storeAkun(Request $request)

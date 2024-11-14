@@ -176,6 +176,8 @@ Nilai Konversi Aktivitas
                                             id="nilai_angka"
                                             aria-describedby="helpId"
                                             value="0"
+                                            step="0.01"
+                                            max="100"
                                             required
                                         />
                                     </div>
