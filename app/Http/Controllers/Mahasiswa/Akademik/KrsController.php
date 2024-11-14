@@ -479,6 +479,7 @@ class KrsController extends Controller
                         })
                         ->where('id_semester', $semester_aktif->id_semester )
                         ->where('approve_krs', 1)
+                        ->whereNotIn('id_jenis_aktivitas', ['7'])
                         ->count();
                         // dd($approved);
                        
