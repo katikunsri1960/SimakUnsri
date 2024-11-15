@@ -40,7 +40,8 @@ Monev Pembimbing Karya Ilmiah Pembimbing Utama
                                         <th class="text-center align-middle">Angkatan</th>
                                         <th class="text-center align-middle">NIM</th>
                                         <th class="text-center align-middle">Nama Mahasiswa</th>
-                                        <th class="text-center align-middle">Judul Aktivitas</th>
+                                        <th class="text-center align-middle">MK</th>
+                                        <th class="text-center align-middle">Jenis Aktivitas</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -51,7 +52,8 @@ Monev Pembimbing Karya Ilmiah Pembimbing Utama
                                         <td class="text-center align-middle">{{$d->angkatan}}</td>
                                         <td class="text-center align-middle">{{$d->nim}}</td>
                                         <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
-                                        <td class="text-start align-middle">{{$d->judul}}</td>
+                                        <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
+                                        <td class="text-center align-middle">{{$d->nama_jenis_aktivitas}}</td>
                                     </tr>
                                     @endforeach
                                 </tbody>
