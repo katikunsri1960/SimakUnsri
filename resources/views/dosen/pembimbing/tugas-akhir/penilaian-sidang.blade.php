@@ -68,7 +68,6 @@ Penilaian Sidang Mahasiswa
                                     id="judul"
                                     aria-describedby="helpId"
                                     value="{{$data->judul}}"
-                                    disabled
                                     required
                                 />
                             </div>
