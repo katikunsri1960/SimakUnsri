@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="createModalLabel">
-                    Tambah Data
+                    Tambah Pengajuan Cuti
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
@@ -24,24 +24,24 @@
                 <hr class="my-15">
                 <div class="row form-group">
                     <div class="col-lg-6 mb-3">
-                        <label for="fakultas_mahasiswa" class="form-label">Program Studi</label>
+                        <label for="fakultas_mahasiswa" class="form-label">Fakultas</label>
                         <input type="text" id="fakultas_mahasiswa" name="fakultas_mahasiswa" class="form-control" disabled />
                     </div>
                     <div class="col-lg-6 mb-3">
-                        <label for="jurusan_mahasiswa" class="form-label">Jenjang Pendidikan</label>
+                        <label for="jurusan_mahasiswa" class="form-label">Jurusan</label>
                         <input type="text" id="jurusan_mahasiswa" name="jurusan_mahasiswa" class="form-control" disabled />
                     </div>
                 </div>
                 <div class="row form-group">
-                    <div class="col-lg-4 mb-3">
+                    {{-- <div class="col-lg-4 mb-3">
                         <label for="jenjang_mahasiswa" class="form-label">Jenjang Pendidikan</label>
                         <input type="text" id="jenjang_mahasiswa" name="jenjang_mahasiswa" class="form-control" disabled />
-                    </div>
-                    <div class="col-lg-4 mb-3">
+                    </div> --}}
+                    <div class="col-lg-6 mb-3">
                         <label for="prodi_mahasiswa" class="form-label">Program Studi</label>
                         <input type="text" id="prodi_mahasiswa" name="prodi_mahasiswa" class="form-control" disabled />
                     </div>
-                    <div class="col-lg-4 mb-3">
+                    <div class="col-lg-6 mb-3">
                         <label for="id_semester" class="form-label">Semester</label>
                         <input type="text" id="id_semester" name="id_semester" class="form-control" disabled />
                     </div>

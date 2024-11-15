@@ -82,7 +82,7 @@ class CutiController extends Controller
             'jenjang_pendidikan' => $jenjang_pendidikan,
             'beasiswa' => $beasiswa,
             'tagihan' => $tagihan,
-            // 'statusPembayaran' => $statusPembayaran,
+            'statusPembayaran' => $statusPembayaran,
             'max_cuti' => $pengecekan['max_cuti'],
             'showAlert1' => $pengecekan['showAlert1'],
             'showAlert2' => $pengecekan['showAlert2'],
