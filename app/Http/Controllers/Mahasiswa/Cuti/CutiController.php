@@ -82,7 +82,7 @@ class CutiController extends Controller
             'jenjang_pendidikan' => $jenjang_pendidikan,
             'beasiswa' => $beasiswa,
             'tagihan' => $tagihan,
-            'statusPembayaran' => $statusPembayaran,
+            // 'statusPembayaran' => $statusPembayaran,
             'max_cuti' => $pengecekan['max_cuti'],
             'showAlert1' => $pengecekan['showAlert1'],
             'showAlert2' => $pengecekan['showAlert2'],
@@ -267,6 +267,10 @@ class CutiController extends Controller
             // Jika pengajuan cuti tidak ditemukan, lemparkan pesan error
             if (!$cuti) {
                 return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak ditemukan.');
+            }
+
+            if ($cuti->approved != 0) {
+                return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak dapat dihapus! Pengajuan Cuti sudah disetujui!');
             }
 
             // Hapus file pendukung dari storage jika ada

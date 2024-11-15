@@ -16,7 +16,7 @@
                 <div class="row form-group">
                     <div class="col-lg-6 mb-3">
                         <label for="id_registrasi_mahasiswa" class="form-label">Mahasiswa</label>
-                        <select id="id_registrasi_mahasiswa" ></select>
+                        <select id="id_registrasi_mahasiswa"  name="id_registrasi_mahasiswa"></select>
                     </div>
                 </div>
                 {{-- <div class="box-body"> --}}
@@ -25,28 +25,28 @@
                 <div class="row form-group">
                     <div class="col-lg-6 mb-3">
                         <label for="fakultas_mahasiswa" class="form-label">Program Studi</label>
-                        <input type="text" id="fakultas_mahasiswa" class="form-control" disabled />
+                        <input type="text" id="fakultas_mahasiswa" name="fakultas_mahasiswa" class="form-control" disabled />
                     </div>
                     <div class="col-lg-6 mb-3">
                         <label for="jurusan_mahasiswa" class="form-label">Jenjang Pendidikan</label>
-                        <input type="text" id="jurusan_mahasiswa" class="form-control" disabled />
+                        <input type="text" id="jurusan_mahasiswa" name="jurusan_mahasiswa" class="form-control" disabled />
                     </div>
                 </div>
                 <div class="row form-group">
                     <div class="col-lg-4 mb-3">
                         <label for="jenjang_mahasiswa" class="form-label">Jenjang Pendidikan</label>
-                        <input type="text" id="jenjang_mahasiswa" class="form-control" disabled />
+                        <input type="text" id="jenjang_mahasiswa" name="jenjang_mahasiswa" class="form-control" disabled />
                     </div>
                     <div class="col-lg-4 mb-3">
                         <label for="prodi_mahasiswa" class="form-label">Program Studi</label>
-                        <input type="text" id="prodi_mahasiswa" class="form-control" disabled />
+                        <input type="text" id="prodi_mahasiswa" name="prodi_mahasiswa" class="form-control" disabled />
                     </div>
                     <div class="col-lg-4 mb-3">
                         <label for="id_semester" class="form-label">Semester</label>
-                        <input type="text" id="id_semester" class="form-control" disabled />
+                        <input type="text" id="id_semester" name="id_semester" class="form-control" disabled />
                     </div>
                 </div>
-                <h4 class="text-info mb-0 mt-20"><i class="fa fa-home"></i> Alamat</h4>
+                {{-- <h4 class="text-info mb-0 mt-20"><i class="fa fa-home"></i> Alamat</h4>
                 <hr class="my-15">
                 <div class="row form-group">
                     <div class=" col-lg-12 mb-3">
@@ -77,11 +77,11 @@
                         <label for="nama_wilayah" class="form-label">Kecamatan / Kabupaten / Provinsi</label>
                         <input type="text"class="form-control"id="nama_wilayah" required/>
                     </div>
-                </div>
+                </div> --}}
                 <div class="row form-group">
                     <div class="col-lg-6 mb-3">
                         <label for="handphone" class="form-label">Handphone</label>
-                        <input type="text" id="handphone" class="form-control"  />
+                        <input type="text" id="handphone" name="handphone" class="form-control" disabled />
                     </div>
                 </div>
                 <h4 class="text-info mb-0 mt-20"><i class="fa fa-user"></i> Pengajuan Cuti Mahasiswa</h4>
@@ -92,13 +92,13 @@
                         <div class="cuti-field row">
                             <div class="col-lg-12 mb-2">
                                 <label for="alasan_cuti" class="form-label">Alasan Pengajuan Cuti</label>
-                                <input type="text" class="form-control" id="alasan_cuti" aria-describedby="helpId" placeholder="Masukkan Alasan Pengajuan Cuti" required />
+                                <input type="text" class="form-control" id="alasan_cuti" name="alasan_cuti" aria-describedby="helpId" placeholder="Masukkan Alasan Pengajuan Cuti"/>
                             </div>
                         </div>
                         <div class="cuti-field row">
                             <div class="col-md-12 mb-2">
                                 <label for="file_pendukung" class="form-label">File Pendukung (.pdf)</label>
-                                <input type="file" class="form-control" id="file_pendukung" aria-describedby="fileHelpId" accept=".pdf" required />
+                                <input type="file" class="form-control" id="file_pendukung" name="file_pendukung" aria-describedby="fileHelpId" accept=".pdf"/>
                             </div>
                         </div>
                     </div>

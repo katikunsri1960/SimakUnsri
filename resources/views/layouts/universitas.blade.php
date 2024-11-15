@@ -45,6 +45,8 @@
     <div class="wrapper">
         <div id="loader"></div>
 
+        @include('swal')
+        
         @include('universitas.include.header')
 
         @include('universitas.include.sidebar')
