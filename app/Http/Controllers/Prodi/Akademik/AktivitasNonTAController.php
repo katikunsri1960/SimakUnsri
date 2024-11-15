@@ -28,6 +28,7 @@ class AktivitasNonTAController extends Controller
         return view('prodi.data-akademik.non-tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
+            'pengisian_nilai' => $semesterAktif
         ]);
     } 
 
@@ -249,6 +250,7 @@ class AktivitasNonTAController extends Controller
 
         return view('prodi.data-akademik.non-tugas-akhir.nilai-konversi', [
             'd' => $data,
+            'pengisian_nilai' => $semesterAktif,
             'kategori' => $kategori,
             'konversi' => $nilai_konversi
         ]);
@@ -261,6 +263,14 @@ class AktivitasNonTAController extends Controller
         $aktivitas_mahasiswa = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semester->id_semester)->first();
 
         $nilai_konversi = KonversiAktivitas::with(['matkul'])->where('id_aktivitas', $aktivitas)->get();
+
+        if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
+            return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
+        }
+
+        if(strtotime(date('Y-m-d')) > strtotime($semester->batas_isi_nilai)){
+            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        }
 
         // dd($nilai_konversi);
 

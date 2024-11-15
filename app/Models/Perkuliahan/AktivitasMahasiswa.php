@@ -28,6 +28,11 @@ class AktivitasMahasiswa extends Model
         return $this->belongsTo(MataKuliah::class, 'mk_konversi', 'id_matkul');
     }
 
+    public function nilai_konversi()
+    {
+        return $this->hasMany(KonversiAktivitas::class, 'id_aktivitas', 'id_aktivitas');
+    }
+
     public function notulensi_sidang()
     {
         return $this->hasMany(NotulensiSidangMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
@@ -218,7 +223,7 @@ class AktivitasMahasiswa extends Model
 
     public function aktivitas_non_ta($id_prodi, $semester)
     {
-        $data = $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi'])
+        $data = $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi', 'nilai_konversi'])
                     ->withCount([
                         'bimbing_mahasiswa as approved' => function($query) {
                             $query->where('approved', 0);
@@ -228,6 +233,10 @@ class AktivitasMahasiswa extends Model
                         },
                         'bimbing_mahasiswa as decline_dosen' => function($query) {
                             $query->where('approved_dosen', 2);
+                        },
+                        // Add count for 'nilai_konversi'
+                        'nilai_konversi as count_nilai' => function ($query) {
+                            $query->select(\DB::raw('count(*)')); // This will count all 'nilai_konversi' entries
                         },
                     ])
                     ->where('id_prodi', $id_prodi)

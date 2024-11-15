@@ -83,9 +83,23 @@ Tugas Akhir
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6')
-                                            <span class="badge badge-lg badge-warning">Aktivitas Konversi</span>
+                                            <div class="row my-10">
+                                                <span class="badge badge-lg badge-warning">Aktivitas Konversi</span>
+                                            </div>
+                                            @if($d->count_nilai > 0)
+                                                <div class="row">
+                                                    <span class="badge badge-lg badge-success">Sudah di Nilai</span>
+                                                </div>
+                                            @endif
                                         @else
-                                            <span class="badge badge-lg badge-success">MBKM</span>
+                                            <div class="row my-10">
+                                                <span class="badge badge-lg badge-success me-10">MBKM ({{$d->sks_aktivitas}} SKS)</span>
+                                            </div>
+                                            @if($d->count_nilai > 0)
+                                                <div class="row">
+                                                    <span class="badge badge-lg badge-success">Sudah di Nilai</span>
+                                                </div>
+                                            @endif
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">{{$d->nama_jenis_aktivitas}}</td>
@@ -124,8 +138,16 @@ Tugas Akhir
                                                 </div>
                                             </form>
                                             @endif
-                                            @if($d->id_jenis_aktivitas != '5' && $d->id_jenis_aktivitas != '6')
-                                                <a href="{{route('prodi.data-akademik.non-tugas-akhir.nilai-konversi', $d->id_aktivitas)}}" class="btn btn-success btn-sm my-2" title="Nilai Konversi"><i class="fa fa-pencil-square-o"></i> Nilai Konversi</a>
+                                            @if(($d->approved == 0 && $d->approved_dosen == 0) && ($d->id_jenis_aktivitas != '5' && $d->id_jenis_aktivitas != '6'))
+                                                @if((strtotime(date('Y-m-d')) < strtotime($pengisian_nilai->mulai_isi_nilai)) || (strtotime(date('Y-m-d')) > strtotime($pengisian_nilai->batas_isi_nilai)))
+                                                    <button type="submit" class="btn btn-primary btn-sm my-2" title="Nilai Konversi" disabled>
+                                                        <i class="fa fa-pencil-square-o"></i> Nilai Konversi
+                                                    </button>
+                                                @else
+                                                    <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-konversi', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Konversi">
+                                                        <i class="fa fa-pencil-square-o"></i> Nilai Konversi
+                                                    </a>
+                                                @endif
                                             @endif
                                             <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
                                             <a href="#" class="btn btn-info btn-sm my-2" title="Detail"

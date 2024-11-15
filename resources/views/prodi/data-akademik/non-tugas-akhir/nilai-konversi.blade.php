@@ -195,7 +195,11 @@ Nilai Konversi Aktivitas
                         <a type="button" href="{{route('prodi.data-akademik.non-tugas-akhir')}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
-                        <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                        @if((strtotime(date('Y-m-d')) < strtotime($pengisian_nilai->mulai_isi_nilai)) || (strtotime(date('Y-m-d')) > strtotime($pengisian_nilai->batas_isi_nilai)))
+                            <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light" disabled>Simpan</button>
+                        @else
+                            <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                        @endif
                     </div>
                 </form>
                 <!-- Delete Form (Hidden) -->
