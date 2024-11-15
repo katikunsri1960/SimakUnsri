@@ -22,8 +22,6 @@ Monev Pembimbing Karya Ilmiah
                     </div>
                 </div>
             </div>
-
-            @include('dosen.monev.pa-prodi-anggota')
             <div class="row">
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
@@ -61,13 +59,14 @@ Monev Pembimbing Karya Ilmiah
     function getMonev() {
         var id_prodi = $('#id_prodi').val();
         $.ajax({
-            url: "{{route('dosen.monev.pa-prodi.get-monev')}}",
+            url: "{{route('dosen.monev.karya-ilmiah.get-data')}}",
             type: "GET",
             data: {
                 id_prodi: id_prodi
             },
             success: function (data) {
             //    empty data-div
+
                 $('#data-div').empty();
 
                 if(data.status == 0)
@@ -89,30 +88,34 @@ Monev Pembimbing Karya Ilmiah
                                         <th class="text-center align-middle">No</th>
                                         <th class="text-center align-middle">NIDN</th>
                                         <th class="text-center align-middle">Dosen</th>
-                                        <th class="text-center align-middle">Jumlah<br>Bimbingan</th>
-                                        <th class="text-center align-middle">No SK</th>
-                                        <th class="text-center align-middle">Tgl Sk Tugas</th>
-
+                                        <th class="text-center align-middle">Jumlah<br>Pembimbing Utama</th>
+                                        <th class="text-center align-middle">Jumlah<br>Pembimbing Pendamping</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                     `;
+                    var baseUrl = "{{ route('dosen.monev.karya-ilmiah.pembimbing-utama', ':id_dosen') }}";
+                    baseUrl = baseUrl.replace(':id_dosen', '');
+
+                    var baseUrlPendamping = " {{ route('dosen.monev.karya-ilmiah.pembimbing-pendamping', ':id_dosen') }}";
+                    baseUrlPendamping = baseUrlPendamping.replace(':id_dosen', '');
+
                     data.data.forEach((d, i) => {
-                        var sk_tugas = d.sk_tugas == null ? 'Belum diisi' : d.sk_tugas;
-                        var tanggal_sk_tugas = d.tanggal_sk_tugas == null ? 'Belum diisi' : d.tanggal_sk_tugas;
+
                         table += `
                                 <tr>
                                     <td class="text-center align-middle">${i + 1}</td>
                                     <td class="text-center align-middle">${d.nidn}</td>
                                     <td class="text-start align-middle">${d.nama_dosen}</td>
                                     <td class="text-center align-middle">
-                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalAnggota" onclick="getAnggota(${d.id})">
-                                            ${d.jumlah_anggota}
+                                       <a href="${baseUrl}${d.id_dosen}">
+                                            ${d.pembimbing_utama}
                                         </a>
                                     </td>
-                                    <td class="text-center align-middle">${sk_tugas}</td>
-                                    <td class="text-center align-middle">${tanggal_sk_tugas}</td>
-
+                                    <td class="text-center align-middle">
+                                         <a href="${baseUrlPendamping}${d.id_dosen}">
+                                        ${d.pembimbing_pendamping}
+                                    </td>
                                 </tr>
                             `;
                         });
@@ -130,69 +133,6 @@ Monev Pembimbing Karya Ilmiah
             }
         });
     }
-
-    function getAnggota(id) {
-        $.ajax({
-            url: "{{route('dosen.monev.pa-prodi.get-anggota-monev')}}",
-            type: "GET",
-            data: {
-                id: id
-            },
-            success: function (data) {
-                // empty anggota-div
-                if ($.fn.DataTable.isDataTable('#data-anggota')) {
-                    $('#data-anggota').DataTable().clear().destroy();
-                }
-                $('#anggota-div').empty();
-
-                if (data.status == 0) {
-                    $('#anggota-div').html(`
-                        <div class="alert alert-danger" role="alert">
-                            <h4>${data.message}</h4>
-                        </div>
-                    `);
-                } else {
-                    // make table from data and append to anggota-div
-                    var table = `
-                        <div class="table-responsive">
-                            <table id="data-anggota" class="table table-hover table-bordered margin-top-10 w-p100" style="width: 100%;">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center align-middle">No</th>
-                                        <th class="text-center align-middle">NIM</th>
-                                        <th class="text-center align-middle">Mahasiswa</th>
-                                        <th class="text-center align-middle">Angkatan</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-                    data.data.forEach((d, i) => {
-                        table += `
-                                <tr>
-                                    <td class="text-center align-middle">${i + 1}</td>
-                                    <td class="text-center align-middle">${d.nim}</td>
-                                    <td class="text-start align-middle">${d.nama_mahasiswa}</td>
-                                    <td class="text-center align-middle">${d.angkatan}</td>
-                                </tr>
-                            `;
-                    });
-                    table += `
-                                </tbody>
-                            </table>
-                        </div>
-                    `;
-                    $('#anggota-div').html(table);
-
-                    $('#data-anggota').DataTable({
-                        "paging": false,
-
-                    });
-
-                }
-            }
-        });
-    }
-
 
 </script>
 @endpush
