@@ -14,7 +14,7 @@ Daftar Pengajuan Cuti
                                 src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Daftar Pengajuan Cuti Mahasiswa</h2>
+                            <h2>Halaman Pengajuan Cuti Mahasiswa</h2>
 
                         </div>
                     </div>
@@ -26,63 +26,76 @@ Daftar Pengajuan Cuti
         <div class="col-12">
             <div class="box">
                 <div class="box-header with-border">
+                    <div class="d-flex justify-content-start">
+                        <div class="row">
+                            <div class="col-xl-12 col-lg-12">
+                                <h3 class="fw-500 text-dark mt-0">Daftar Pengajuan Cuti Mahasiswa</h3>
+                            </div>
+                        </div>
+                    </div>
                     <div class="d-flex justify-content-end">
-                        <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
-                        data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
+                        <button class="btn btn-rounded bg-success-light" data-bs-toggle="modal"
+                        data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Pengajuan Cuti</button>
                         <span class="divider-line mx-1"></span>
-                        {{-- <form action="{{route('univ.mahasiswa.sync-prestasi')}}" method="get" id="sync-form-2">
-                            <button class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Prestasi</button>
-                        </form> --}}
                     </div>
                 </div>
-                <div class="box-body py-10">
-
-                        {{-- <div class="form-group row">
-                            <label class="col-form-label col-md-2">NIM</label>
-                            <div class="col-md-10">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="nim" placeholder="Masukan NIM mahasiswa">
-                                    <button class="btn btn-primary" id="btnCari"><i class="fa fa-search"></i> Cari</button>
-                                </div>
-                            </div>
-                        </div> --}}
-                    </div>
-                    <div class="table-responsive mt-5">
-                        <table id="data" class="table table-bordered table-striped text-center">
-                            <thead>
+                
+                <div class="table-responsive mt-5">
+                    <table id="data" class="table table-bordered table-striped text-center">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Semester</th>
+                                <th>Prodi</th>
+                                <th>NIM</th>
+                                <th>Nama Mahasiswa</th>
+                                <th>Alasan Pengajuan Cuti</th>
+                                <th>Status</th>
+                                <th>File Pendukung</th>
+                                <th>Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($data as $d)
                                 <tr>
-                                    <th>No</th>
-                                    <th>Semester</th>
-                                    <th>Prodi</th>
-                                    <th>NIM</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Alasan Pengajuan Cuti</th>
-                                    <th>Status</th>
+                                    <td>{{$loop->iteration}}</td>
+                                    <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>
+                                    <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} {{$d->prodi->nama_program_studi}}</td>
+                                    <td class="text-start align-middle">{{$d->riwayat->nim}}</td>
+                                    <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
+                                    <td class="text-start align-middle">{{$d->alasan_cuti}}</td>
+                                    <td class="text-center align-middle" style="width:10%">
+                                        @if($d->approved == 0)
+                                            <span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>
+                                        @elseif($d->approved == 1)
+                                            <span class="badge badge-xl badge-warning-light mb-5">Disetujui Fakultas</span>
+                                        @elseif($d->approved == 2)
+                                            <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle" style="width:10%">
+                                        @if($d->file_pendukung)
+                                            <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-primary" title="Lihat File">
+                                                <i class="fa fa-eye"></i>
+                                            </a>
+                                        @else
+                                            <span class="text-muted">Tidak ada file</span>
+                                        @endif
+                                    </td>
+                                    
+                                    <td class="text-center align-middle" style="width:3%">
+                                        <form action="{{route('univ.cuti-kuliah.delete',$d->id_cuti)}}" method="post" class="delete-form" data-id="{{$d->id_cuti}}" id="deleteForm{{$d->id_cuti}}">
+                                            @csrf
+                                            @method('delete')
+                                            <button type="submit" class="btn btn-danger" data-id="{{ $d->id_cuti }}" title="Hapus Data">
+                                                <i class="fa fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
                                 </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($data as $d)
-                                    <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>
-                                        <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} {{$d->prodi->nama_program_studi}}</td>
-                                        <td class="text-start align-middle">{{$d->riwayat->nim}}</td>
-                                        <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
-                                        <td class="text-start align-middle">{{$d->alasan_cuti}}</td>
-                                        <td class="text-center align-middle" style="width:10%">
-                                            @if($d->approved == 0)
-                                                <span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>
-                                            @elseif($d->approved == 1)
-                                                <span class="badge badge-xl badge-warning-light mb-5">Disetujui Fakultas</span>
-                                            @elseif($d->approved == 2)
-                                                <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
-                                            @endif
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-					  </table>
-                    </div>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -94,6 +107,7 @@ Daftar Pengajuan Cuti
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
+
 $(document).ready(function() {
     $("#id_registrasi_mahasiswa").select2({
         placeholder : '-- Masukan NIM / Nama Mahasiswa --',
@@ -123,6 +137,12 @@ $(document).ready(function() {
         }
     });
 
+    $('#data').DataTable({
+        "paging": true,      // Menampilkan pagination
+        "ordering": true,    // Mengizinkan pengurutan kolom
+        "searching": true    // Menambahkan kotak pencarian
+    });
+
     // Fetch mahasiswa data on selection
     $('#id_registrasi_mahasiswa').on('change', function() {
         var id_registrasi_mahasiswa = $(this).val();
@@ -139,8 +159,8 @@ $(document).ready(function() {
                     // Mengisi data mahasiswa pada input form
                     $('#fakultas_mahasiswa').val(data.prodi.fakultas.nama_fakultas);
                     $('#jurusan_mahasiswa').val(data.prodi.jurusan.nama_jurusan_id);
-                    $('#jenjang_mahasiswa').val(data.prodi.nama_jenjang_pendidikan);
-                    $('#prodi_mahasiswa').val(data.prodi.nama_program_studi);
+                    // $('#jenjang_mahasiswa').;
+                    $('#prodi_mahasiswa').val(data.prodi.nama_jenjang_pendidikan + " - " + data.prodi.nama_program_studi);
                     
                     $('#jalan').val(data.biodata.jalan);
                     $('#dusun').val(data.biodata.dusun);

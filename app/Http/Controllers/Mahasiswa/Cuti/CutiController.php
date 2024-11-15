@@ -269,6 +269,10 @@ class CutiController extends Controller
                 return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak ditemukan.');
             }
 
+            if ($cuti->approved != 0) {
+                return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak dapat dihapus! Pengajuan Cuti sudah disetujui!');
+            }
+
             // Hapus file pendukung dari storage jika ada
             // if ($cuti->file_pendukung) {
             //     \Storage::disk('public')->delete($cuti->file_pendukung);

@@ -71,20 +71,13 @@ class CutiController extends Controller
             // Validate request data
             $request->validate([
                 'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
-                'id_semester' => 'required|exists:semesters,id_semester',
-                'jalan' => 'required',
-                'kelurahan' => 'required',
-                'nama_wilayah' => 'required',
-                'handphone' => 'required',
-                'alasan_cuti' => 'required',
-                'file_pendukung' => 'required|file|mimes:pdf|max:2048',
             ]);
             
             // Define variable
-            $id_reg = $request->input('id_registrasi_mahasiswa');
+            $id_reg = $request->id_registrasi_mahasiswa;
             $semester_aktif=SemesterAktif::with('semester')->first();
             
-            $riwayat_pendidikan = RiwayatPendidikan::select('*')
+            $riwayat_pendidikan = RiwayatPendidikan::with('biodata')
                         ->where('id_registrasi_mahasiswa', $id_reg)
                         ->first();
             // dd($id_reg);
@@ -104,16 +97,30 @@ class CutiController extends Controller
 
             $id_cuti = Uuid::uuid4()->toString();
 
-            $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
-            . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
+            $alamat = $riwayat_pendidikan->biodata->jalan . ', ' . $riwayat_pendidikan->biodata->dusun . ', RT-' . $riwayat_pendidikan->biodata->rt . '/RW-' . $riwayat_pendidikan->biodata->rw
+            . ', ' . $riwayat_pendidikan->biodata->kelurahan . ', ' . $riwayat_pendidikan->biodata->nama_wilayah;
 
             $alamat = str_replace(', ,', ',', $alamat);
 
-            // Generate file name
-            $fileName = 'file_pendukung_' . str_replace(' ', '_', $riwayat_pendidikan->nama_mahasiswa) . '_' . time() . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
+            // dd($alamat);
+            $alasan= $request->alasan_cuti;
 
-            // Simpan file ke folder public/pdf dengan nama kustom
-            $filePath = $request->file('file_pendukung')->storeAs('pdf', $fileName, 'public');
+            if (!$alasan) {
+                $alasan = 'Alasan tidak diisi';
+            }
+
+            // dd($alasan);
+
+            // Cek apakah ada file yang diunggah
+            if ($request->hasFile('file_pendukung')) {
+                // Generate file name
+                $fileName = 'file_pendukung_' . str_replace(' ', '_', $riwayat_pendidikan->nama_mahasiswa) . '_' . time() . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
+                // Simpan file ke folder public/pdf dengan nama kustom
+                $filePath = $request->file('file_pendukung')->storeAs('pdf', $fileName, 'public');
+            } else {
+                // Jika file tidak diunggah, gunakan nama default
+                $filePath = 'pdf/tidak_ada_file.pdf';
+            }
 
             // Cek apakah file berhasil diupload
             if (!$filePath) {
@@ -130,19 +137,46 @@ class CutiController extends Controller
                 'id_prodi'=>$riwayat_pendidikan->id_prodi,
                 'alamat'=> $alamat,
                 'handphone' => $request->handphone,
-                'alasan_cuti' => $request->alasan_cuti,
+                'alasan_cuti' => $alasan,
                 'file_pendukung' => $filePath,
-                'approved' => 0,
+                'approved' => 2,
                 'status_sync' => 'belum sync',
             ]);
 
             
             // Redirect kembali ke halaman index dengan pesan sukses
-            return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('univ.cuti-kuliah')->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Exception $e) {
             // Tampilkan pesan error jika ada masalah
             return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
+    public function delete($id_cuti)
+    {
+        try {
+            // Temukan pengajuan cuti berdasarkan ID
+            $cuti = PengajuanCuti::where('id_cuti', $id_cuti)->first();
+
+            // Jika pengajuan cuti tidak ditemukan, lemparkan pesan error
+            if (!$cuti) {
+                return redirect()->route('univ.cuti-kuliah')->with('error', 'Pengajuan cuti tidak ditemukan.');
+            }
+
+            // Hapus file pendukung dari storage jika ada
+            // if ($cuti->file_pendukung) {
+            //     \Storage::disk('public')->delete($cuti->file_pendukung);
+            // }
+
+            // Hapus data pengajuan cuti dari database
+            $cuti->delete();
+
+            // Redirect kembali ke halaman index dengan pesan sukses
+            return redirect()->route('univ.cuti-kuliah')->with('success', 'Pengajuan cuti berhasil dihapus.');
+        } catch (\Exception $e) {
+            // Tangani error dan tampilkan pesan error
+            return redirect()->route('univ.cuti-kuliah')->with('error', 'Terjadi kesalahan saat menghapus pengajuan cuti.');
         }
     }
 

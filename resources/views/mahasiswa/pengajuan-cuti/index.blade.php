@@ -68,10 +68,11 @@ Pengajuan Cuti Mahasiswa
                                         </td>
                                         {{-- <td>{{$d->file_pendukung}}</td> --}}
                                         <td class="text-center align-middle" style="width:3%">
-                                            <form action="{{route('mahasiswa.pengajuan-cuti.delete',$d->id_cuti)}}" method="post" class="delete-form" data-id="{{$d->id_cuti}}" id="deleteForm{{$d->id_cuti}}">
+                                            <form action="{{ route('mahasiswa.pengajuan-cuti.delete', $d->id_cuti) }}" method="post" class="delete-form" data-id="{{ $d->id_cuti }}" id="deleteForm{{ $d->id_cuti }}">
                                                 @csrf
                                                 @method('delete')
-                                                <button type="submit" class="btn btn-danger" data-id="{{ $d->id_cuti }}" title="Hapus Data">
+                                                <button type="submit" class="btn btn-danger" data-id="{{ $d->id_cuti }}" title="Hapus Data" 
+                                                    {{ $d->approved != 0 ? 'disabled' : '' }}>
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>
