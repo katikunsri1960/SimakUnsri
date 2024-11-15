@@ -330,6 +330,10 @@ class SidangMahasiswaController extends Controller
 
         $nilai_akhir_sidang = round($nilai_akhir_sidang,2);
 
+        if($nilai_akhir_sidang < 0.0 || $nilai_akhir_sidang > 100.0){
+            return redirect()->back()->with('error', 'Nilai di luar skala yang ditentukan.'); 
+        }
+
         $skala = $this->skala_nilai($nilai_akhir_sidang);
         $nilai_indeks = $skala['nilai_indeks'];
         $nilai_huruf = $skala['nilai_huruf'];
@@ -360,12 +364,7 @@ class SidangMahasiswaController extends Controller
         }
     }
 
-    private function skala_nilai($nilai){
-
-        if($nilai > 100){
-            $nilai = 100;
-        }
-        
+    private function skala_nilai($nilai){  
         switch (true) {
             case ($nilai >= 86.0 && $nilai <= 100.0):
 
