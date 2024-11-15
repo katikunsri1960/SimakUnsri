@@ -325,36 +325,14 @@ class SidangMahasiswaController extends Controller
             }
         }
 
+        // dd($nilai_penguji, $nilai_pembimbing, $nilai_bimbingan);
         $nilai_akhir_sidang = $nilai_penguji + $nilai_pembimbing + $nilai_bimbingan;
 
-        if($nilai_akhir_sidang > 100){
-            $nilai_akhir_sidang = 100;
-        }
+        $nilai_akhir_sidang = round($nilai_akhir_sidang,2);
 
-        if($nilai_akhir_sidang >= 86 && $nilai_akhir_sidang <=100){
-            $nilai_indeks = '4.00';
-            $nilai_huruf = 'A';
-        }
-        else if($nilai_akhir_sidang >= 71 && $nilai_akhir_sidang < 86){
-            $nilai_indeks = '3.00';
-            $nilai_huruf = 'B';
-        }
-        else if($nilai_akhir_sidang >= 56 && $nilai_akhir_sidang < 71){
-            $nilai_indeks = '2.00';
-            $nilai_huruf = 'C';
-        }
-        else if($nilai_akhir_sidang >= 41 && $nilai_akhir_sidang < 56){
-            $nilai_indeks = '1.00';
-            $nilai_huruf = 'D';
-        }
-        else if($nilai_akhir_sidang >= 0 && $nilai_akhir_sidang < 41){
-            $nilai_indeks = '0.00';
-            $nilai_huruf = 'E';
-        }else{
-            return redirect()->back()->with('error', 'Nilai di luar range skala nilai.');
-        }
-
-        // dd($nilai_indeks);
+        $skala = $this->skala_nilai($nilai_akhir_sidang);
+        $nilai_indeks = $skala['nilai_indeks'];
+        $nilai_huruf = $skala['nilai_huruf'];
 
         try {
             DB::beginTransaction();
@@ -379,6 +357,69 @@ class SidangMahasiswaController extends Controller
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+        }
+    }
+
+    private function skala_nilai($nilai){
+
+        if($nilai > 100){
+            $nilai = 100;
+        }
+        
+        switch (true) {
+            case ($nilai >= 86.0 && $nilai <= 100.0):
+
+                $nilai_indeks = '4.00';
+                $nilai_huruf = 'A';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 71.0 && $nilai < 86.0):
+
+                $nilai_indeks = '3.00';
+                $nilai_huruf = 'B';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 56.0 && $nilai < 71.0):
+
+                $nilai_indeks = '2.00';
+                $nilai_huruf = 'C';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 41.0 && $nilai < 56.0):
+
+                $nilai_indeks = '1.00';
+                $nilai_huruf = 'D';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            default:
+                $nilai_indeks = '0.00';
+                $nilai_huruf = 'E';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
         }
     }
 }
