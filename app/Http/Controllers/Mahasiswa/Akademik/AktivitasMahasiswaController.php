@@ -265,11 +265,16 @@ class AktivitasMahasiswaController extends Controller
                             $query ->where('id_registrasi_mahasiswa', $id_reg);
                         })
                         ->where('id_semester', $semester_aktif->id_semester )
+                        ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
                         ->where('approve_krs', 1)
                         ->count();
                         // dd($approved);
-                       
-            if ( $approved_krs > 0 || $approved_akt > 0) {
+                
+            $approved_mbkm=$krs_aktivitas_mbkm->where('approve_krs', 1)
+                            ->count();
+
+            // dd($approved_mbkm);
+            if ( $approved_krs > 0 || $approved_akt > 0 || $approved_mbkm > 0) {
                 // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
                 return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
             }
