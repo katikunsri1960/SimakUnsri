@@ -371,6 +371,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::prefix('karya-ilmiah')->group(function(){
                     Route::get('/', [App\Http\Controllers\Dosen\MonevController::class, 'karya_ilmiah'])->name('dosen.monev.karya-ilmiah');
+                    Route::get('/pembimbing-utama/{dosen}', [App\Http\Controllers\Dosen\MonevController::class, 'karya_ilmiah_pembimbing_utama'])->name('dosen.monev.karya-ilmiah.pembimbing-utama');
+                    Route::get('/pembimbing-pendamping/{dosen}', [App\Http\Controllers\Dosen\MonevController::class, 'karya_ilmiah_pembimbing_pendamping'])->name('dosen.monev.karya-ilmiah.pembimbing-pendamping');
                     Route::get('/get-data', [App\Http\Controllers\Dosen\MonevController::class, 'karya_ilmiah_get_data'])->name('dosen.monev.karya-ilmiah.get-data');
                 });
 

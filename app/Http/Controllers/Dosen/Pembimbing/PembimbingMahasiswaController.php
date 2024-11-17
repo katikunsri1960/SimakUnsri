@@ -578,11 +578,43 @@ class PembimbingMahasiswaController extends Controller
         $nilai_sidang = NilaiSidangMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen',$id_dosen)->first();
 
         $validate = $request->validate([
+            'judul' => 'required',
             'proses_bimbingan' => 'required',
             'kualitas_skripsi' => 'required',
             'presentasi' => 'required',
             'performansi' => 'required'
         ]);
+
+        $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+        $ujiMahasiswa = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+        // dd($aktivitas, $aktivitasMahasiswa);
+
+        if (!$data) {
+            return redirect()->back()->with('error', 'Aktivitas Mahasiswa tidak ditemukan.');
+        }
+
+        $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])
+                            ->where('id_aktivitas', $data->id_aktivitas)
+                            ->first();
+        
+        if($data->judul != $validate['judul']){
+            if($pembimbing->pembimbing_ke != 1){
+                return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat merubah judul.');
+            }else{
+                $data->update(['feeder' => 0, 'judul' => $validate['judul']]);
+                $data_mahasiswa->update(['judul' => $validate['judul']]);
+
+                foreach ($bimbingMahasiswa as $b) {
+                    $b->update(['judul' => $validate['judul']]);
+                }
+
+                if ($ujiMahasiswa) {
+                    foreach ($ujiMahasiswa as $u) {
+                        $u->update(['judul' => $validate['judul']]);
+                    }
+                }
+            }
+        }
 
         //Generate tanggal penilaian
         $tanggal_penilaian = $data->jadwal_ujian;
