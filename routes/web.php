@@ -376,6 +376,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/get-data', [App\Http\Controllers\Dosen\MonevController::class, 'karya_ilmiah_get_data'])->name('dosen.monev.karya-ilmiah.get-data');
                 });
 
+                Route::prefix('penguji-sidang')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Dosen\MonevController::class, 'penguji_sidang'])->name('dosen.monev.penguji-sidang');
+                });
+
             });
 
             //Route Menu Utama
@@ -603,7 +607,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/data', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'data'])->name('prodi.data-akademik.khs.data');
                 });
 
-                Route::get('', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'krs'])->name('prodi.data-akademik.krs');
                 Route::get('/sidang-mahasiswa', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'sidang_mahasiswa'])->name('prodi.data-akademik.sidang-mahasiswa');
                 Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('prodi.data-akademik.transkrip-mahasiswa');
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
