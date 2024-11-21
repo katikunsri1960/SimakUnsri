@@ -77,10 +77,6 @@ class MonevController extends Controller
         $semester = SemesterAktif::join('semesters', 'semester_aktifs.id_semester', 'semesters.id_semester')
                                 ->select('semesters.id_tahun_ajaran as id_tahun_ajaran', 'semester_aktifs.id_semester as id_semester')->first();
 
-        $id_registrasi_dosen = PenugasanDosen::where('id_dosen', $id_dosen)
-                                ->where('id_tahun_ajaran', $semester->id_tahun_ajaran)
-                                ->first()->id_registrasi_dosen;
-
         $id_jenis_aktivitas = [3,4,22];
 
         $id_prodi_penugasan = BimbingMahasiswa::join('aktivitas_mahasiswas as am', 'bimbing_mahasiswas.id_aktivitas', 'am.id_aktivitas')
@@ -209,5 +205,10 @@ class MonevController extends Controller
             'data' => $data,
             'dosen' => $data_dosen
         ]);
+    }
+
+    public function penguji_sidang()
+    {
+
     }
 }
