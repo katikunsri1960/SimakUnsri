@@ -104,7 +104,7 @@ Kelas Penjadwalan
                                         </td>
                                         <td class="text-center align-middle">
                                             {{ $d->jadwal_mulai_ujian 
-                                                ? \Carbon\Carbon::parse($d->jadwal_mulai_ujian)->locale('id')->translatedFormat('l, d F Y H:i') 
+                                                ? \Carbon\Carbon::parse($d->jadwal_mulai_ujian)->locale('id')->translatedFormat('l, d F Y') 
                                                 : 'Belum Diisi' }}
                                         </td>
                                         <td class="text-center align-middle">
@@ -118,13 +118,9 @@ Kelas Penjadwalan
                                             <div class="row my-3 px-3">
                                                 <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm rounded20 btn-primary waves-effect waves-light" title="Atur Jadwal Ujian"><i class="fa fa-calendar"></i> Jadwal Ujian</a>
                                             </div>
-                                            {{-- <form action="{{route('fakultas.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
-                                                @csrf
-                                                @method('delete')
-                                                <div class="row">
-                                                <button type="submit" class="btn btn-sm btn-rounded btn-danger waves-effect waves-light"><i class="fa fa-trash"></i> Hapus Jadwal Ujian</button>
-                                                </div>
-                                            </form> --}}
+                                            <div class="row my-3 px-3">
+                                                <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.absensi', ['id_kelas' => $d->id_kelas_kuliah])}}" class="btn btn-sm rounded20 bg-success" target="_blank" title="Download Absensi Ujian"><i class="fa fa-file-lines"></i> Absensi</a>
+                                            </div>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -144,7 +140,16 @@ Kelas Penjadwalan
     $(function() {
         "use strict";
 
-        $('#data').DataTable();
+        $(document).ready(function () {
+            $('#data').DataTable({
+                stateSave: true, // Mengaktifkan state saving
+                // stateDuration: -1, // Simpan state selamanya (default: 2 jam, dalam detik)
+                // language: {
+                //     url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/id.json" // Contoh untuk bahasa Indonesia
+                // }
+            });
+        });
+
 
         $('.delete-form').submit(function(e){
             e.preventDefault();
