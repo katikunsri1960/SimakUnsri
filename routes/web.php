@@ -621,6 +621,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/data', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'data'])->name('prodi.data-akademik.khs.data');
                 });
 
+                Route::get('', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'krs'])->name('prodi.data-akademik.krs');
                 Route::get('/sidang-mahasiswa', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'sidang_mahasiswa'])->name('prodi.data-akademik.sidang-mahasiswa');
                 Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('prodi.data-akademik.transkrip-mahasiswa');
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
@@ -632,9 +633,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/data', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'data'])->name('prodi.data-akademik.krs.data');
                     Route::get('/approve', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'approve'])->name('prodi.data-akademik.krs.approve');
                 });
-
-                Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('prodi.data-akademik.transkrip-mahasiswa');
-                Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
 
                 Route::prefix('sidang-mahasiswa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'index'])->name('prodi.data-akademik.sidang-mahasiswa');
@@ -682,7 +680,22 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::delete('/delete/{konversi}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'delete_nilai_konversi'])->name('prodi.data-akademik.non-tugas-akhir.nilai-konversi.delete');
                     });
 
+                    Route::prefix('nilai-transfer')->group(function(){
+                        Route::get('/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'nilai_transfer'])->name('prodi.data-akademik.non-tugas-akhir.nilai-transfer');
+                        Route::post('/store/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'store_nilai_transfer'])->name('prodi.data-akademik.non-tugas-akhir.nilai-transfer.store');
+                        Route::delete('/delete/{transfer}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'delete_nilai_transfer'])->name('prodi.data-akademik.non-tugas-akhir.nilai-transfer.delete');
+                    });
+
                     Route::get('/get-matkul/{nim}', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'get_matkul'])->name('prodi.data-akademik.non-tugas-akhir.get-matkul');
+                    Route::get('/get-all-pt', [App\Http\Controllers\Prodi\Akademik\AktivitasNonTAController::class, 'get_all_pt'])->name('prodi.data-akademik.non-tugas-akhir.get-all-pt');
+                });
+
+                //Nilai Transfer Pendidikan
+                Route::prefix('nilai-transfer-rpl')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'index'])->name('prodi.data-akademik.nilai-transfer-rpl');
+                        Route::get('/input/{id_reg}', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'nilai_transfer'])->name('prodi.data-akademik.nilai-transfer-rpl.input');
+                        Route::post('/store/{id_reg}', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'store_nilai_transfer'])->name('prodi.data-akademik.nilai-transfer-rpl.store');
+                        Route::delete('/delete/{transfer}', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'delete_nilai_transfer'])->name('prodi.data-akademik.nilai-transfer-rpl.delete');
                 });
             });
 
