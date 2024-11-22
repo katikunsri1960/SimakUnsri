@@ -230,7 +230,6 @@ Nilai Transfer Pendidikan
                                             id="nilai_huruf_asal"
                                             aria-describedby="helpId"
                                             onkeydown="upperCaseF(this)"
-                                            pattern="[A-Za-z]+"
                                             required
                                         />
                                     </div>
