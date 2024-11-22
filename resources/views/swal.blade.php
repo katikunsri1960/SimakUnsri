@@ -1,6 +1,6 @@
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 @if (session('success'))
-<script>   
+<script>
     swal({
         type: 'success',
         title: 'Berhasil !!',
