@@ -83,12 +83,12 @@ Edit Kelas Perkuliahan
                                 <div class="col-md-6">
                                     <label for="jadwal_mulai_ujian" class="form-label">Jadwal Mulai Ujian</label>
                                     <input class="form-control" type="datetime-local" name="jadwal_mulai_ujian" 
-                                           value="{{ isset($kelas->jadwal_mulai_ujian) ? $kelas->jadwal_mulai_ujian : '' }}">
+                                           value="{{ isset($kelas->jadwal_mulai_ujian) ? $kelas->jadwal_mulai_ujian : '' }}" required>
                                 </div>
                                 <div class="col-md-6">
                                     <label for="jadwal_selesai_ujian" class="form-label">Jadwal Selesai Ujian</label>
                                     <input class="form-control" type="datetime-local" name="jadwal_selesai_ujian" 
-                                           value="{{ isset($kelas->jadwal_selesai_ujian) ? $kelas->jadwal_selesai_ujian : '' }}">
+                                           value="{{ isset($kelas->jadwal_selesai_ujian) ? $kelas->jadwal_selesai_ujian : '' }}" required>
                                 </div>
                             </div>
                         </div>                        

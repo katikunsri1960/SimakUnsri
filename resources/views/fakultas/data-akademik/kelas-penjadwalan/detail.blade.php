@@ -102,20 +102,29 @@ Kelas Penjadwalan
                                                 echo count($d->peserta_kelas);
                                             @endphp
                                         </td>
-                                        <td class="text-center align-middle">{{$hari_ujian[$index]}}, {{$tgl_ujian[$index]}}</td>
-                                        <td class="text-center align-middle">{{$jam_mulai_ujian[$index]}} - {{$jam_selesai_ujian[$index]}} WIB</td>
-                                        <td class="text-center align-middle">{{$d->ruang_ujian->nama_ruang}} ({{$d->ruang_ujian->lokasi}})</td>
+                                        <td class="text-center align-middle">
+                                            {{ $d->jadwal_mulai_ujian 
+                                                ? \Carbon\Carbon::parse($d->jadwal_mulai_ujian)->locale('id')->translatedFormat('l, d F Y H:i') 
+                                                : 'Belum Diisi' }}
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            {{ $d->jadwal_mulai_ujian && $d->jadwal_selesai_ujian 
+                                                ? \Carbon\Carbon::parse($d->jadwal_mulai_ujian)->locale('id')->translatedFormat('H:i') . ' - ' . \Carbon\Carbon::parse($d->jadwal_selesai_ujian)->locale('id')->translatedFormat('H:i') 
+                                                : 'Belum Diisi' }}
+                                        </td>
+                                        <td class="text-center align-middle">{{ $d->ruang_ujian  ?  $d->ruang_ujian->nama_ruang.' ('.$d->ruang_ujian->lokasi.')' : 'Belum Diisi' }}</td>
+                                        
                                         <td class="text-center align-middle">
                                             <div class="row my-3 px-3">
-                                                <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Atur Jadwal Ujian</a>
+                                                <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm rounded20 btn-primary waves-effect waves-light" title="Atur Jadwal Ujian"><i class="fa fa-calendar"></i> Jadwal Ujian</a>
                                             </div>
-                                            <form action="{{route('fakultas.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
+                                            {{-- <form action="{{route('fakultas.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
                                                 @csrf
                                                 @method('delete')
                                                 <div class="row">
                                                 <button type="submit" class="btn btn-sm btn-rounded btn-danger waves-effect waves-light"><i class="fa fa-trash"></i> Hapus Jadwal Ujian</button>
                                                 </div>
-                                            </form>
+                                            </form> --}}
                                         </td>
                                     </tr>
                                 @endforeach

@@ -88,6 +88,8 @@ class KelasPenjadwalanController extends Controller
             $jam_selesai_ujian[] = Carbon::parse($d->jadwal_selesai_ujian)->format('H:i');
         }
 
+        
+
 
                     
         // dd($tgl_ujian, $hari_ujian, $jam_mulai_ujian, $jam_selesai_ujian);
@@ -102,10 +104,18 @@ class KelasPenjadwalanController extends Controller
             $q->orderBy('urutan');
         }, 'dosen_pengajar.dosen', 'ruang_perkuliahan','ruang_ujian', 'semester', 'matkul', 'prodi'])->where('id', $id_kelas)->first();
 
+        // dd($data);
+
+        // dd($data->lokasi_ujian_id , $data->jadwal_mulai_ujian ,$data->jadwal_selesai_ujian );
+        if(!$data->ruang_ujian){
+            return redirect()->back()->with('error', 'Tidak dapat Download Absensi, Silahkan atur Lokasi dan Jadwal Ujian!');
+        }
+
         $tgl_ujian= Carbon::parse($data->jadwal_mulai_ujian)->locale('id')->translatedFormat('d F Y');;
         $hari_ujian = Carbon::parse($data->jadwal_mulai_ujian)->locale('id')->translatedFormat('l');
         $mulai_ujian = Carbon::parse($data->jadwal_mulai_ujian)->format('H:i');
         $selesai_ujian = Carbon::parse($data->jadwal_selesai_ujian)->format('H:i');
+
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
         $sectionStyle = array(
@@ -148,7 +158,7 @@ class KelasPenjadwalanController extends Controller
         $table->addRow();
         $table->addCell(2000)->addText('Ruang', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->ruang_ujian->nama_ruang." (".$data->ruang_ujian->lokasi.")", array('name' => 'Arial', 'size' => 10));
+        $table->addCell(5000)->addText($data->ruang_ujian->nama_ruang." (".strtoupper($data->ruang_ujian->lokasi).")", array('name' => 'Arial', 'size' => 10));
 
         $table->addRow();
         $table->addCell(2000)->addText('Dosen', array('name' => 'Arial', 'size' => 10, 'bold' => true));
@@ -212,14 +222,16 @@ class KelasPenjadwalanController extends Controller
         $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'continue']);
 
 
-        $no = 1;
-        foreach ($data->peserta_kelas as $peserta) {
-            $table->addRow();
-            $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($no++, array('name' => 'Arial', 'size' => 9), ['align' => 'center', 'valign' => 'center']);
-            $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nim, array('name' => 'Arial', 'size' => 9),['align' => 'center']);
-            $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nama_mahasiswa, array('name' => 'Arial', 'size' => 9),['valign' => 'center']);
-            $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
-            $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+        if ($data->peserta_kelas || $data->peserta_kelas->isEmpty()) {
+            $no = 1;
+            foreach ($data->peserta_kelas as $peserta) {
+                $table->addRow();
+                $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($no++, array('name' => 'Arial', 'size' => 9), ['align' => 'center', 'valign' => 'center']);
+                $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nim, array('name' => 'Arial', 'size' => 9),['align' => 'center']);
+                $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nama_mahasiswa, array('name' => 'Arial', 'size' => 9),['valign' => 'center']);
+                $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+                $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+            }
         }
 
         $section->addTextBreak(1);
@@ -243,7 +255,12 @@ class KelasPenjadwalanController extends Controller
         // Keterangan// 
 
         
-        $filename = 'Daftar Hadir '.$data->matkul->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.'.docx';
+        if(!$data->matkul){
+            $filename = 'Daftar Hadir '.$data->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.' '.$data->nama_semester.'.docx';
+        }else{
+            $filename = 'Daftar Hadir '.$data->matkul->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.' '.$data->nama_semester.'.docx';
+        }
+
         $folderPath = storage_path('app/public/absensi_ujian/');
         $path = $folderPath . $filename;
 
@@ -258,40 +275,6 @@ class KelasPenjadwalanController extends Controller
 
         return response()->download($path);
 
-    }
-
-    public function kelas_penjadwalan_destroy($id_matkul, $id_kelas)
-    {
-        // dd($id_matkul);
-        $peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->first();
-
-        $dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->count();
-
-        // dd($dosen);
-
-        if($peserta){
-            return redirect()->back()->with('error', 'Data Kelas tidak bisa dihapus karena sudah ada peserta');
-        }
-
-        try {
-            DB::beginTransaction();
-
-            if($dosen){
-                DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
-                KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas)->delete();
-                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
-            }else{
-                KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas)->delete();
-                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
-            }
-
-            DB::commit();
-
-            return redirect()->route('fakultas.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Kelas Berhasil di Hapus!!');
-        } catch (\Throwable $th) {
-            DB::rollback();
-            return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. '. $th->getMessage());
-        }
     }
 
     public function edit_kelas_penjadwalan($id_matkul, $id_kelas)
@@ -354,6 +337,39 @@ class KelasPenjadwalanController extends Controller
         }
     }
 
+    public function kelas_penjadwalan_destroy($id_matkul, $id_kelas)
+    {
+        // dd($id_matkul);
+        $peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->first();
+
+        $dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->count();
+
+        // dd($dosen);
+
+        if($peserta){
+            return redirect()->back()->with('error', 'Data Kelas tidak bisa dihapus karena sudah ada peserta');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            if($dosen){
+                DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+                KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas)->delete();
+                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+            }else{
+                KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas)->delete();
+                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->delete();
+            }
+
+            DB::commit();
+
+            return redirect()->route('fakultas.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Kelas Berhasil di Hapus!!');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. '. $th->getMessage());
+        }
+    }
 
     public function peserta_kelas($id_matkul, $id_kelas)
     {

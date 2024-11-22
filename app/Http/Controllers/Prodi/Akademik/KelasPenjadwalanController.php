@@ -131,7 +131,7 @@ class KelasPenjadwalanController extends Controller
         // }
 
         $italicStyle = ['name' => 'Arial', 'size' => 10, 'italic' => true];
-        
+
         if (!$data->dosen_pengajar || $data->dosen_pengajar->isEmpty()) {
             $cell->addText('Dosen Pengajar Belum Diisi', $italicStyle);
         } else {
@@ -182,18 +182,25 @@ class KelasPenjadwalanController extends Controller
         }
 
 
-        $no = 1;
-        foreach ($data->peserta_kelas as $peserta) {
-            $table->addRow();
-            $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($no++, array('name' => 'Arial', 'size' => 9), ['align' => 'center', 'valign' => 'center']);
-            $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nim, array('name' => 'Arial', 'size' => 9),['align' => 'center']);
-            $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nama_mahasiswa, array('name' => 'Arial', 'size' => 9),['valign' => 'center']);
-            for ($i=1; $i <= $pertemuan; $i++) {
-                $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+        if ($data->peserta_kelas || $data->peserta_kelas->isEmpty()) {
+            $no = 1;
+            foreach ($data->peserta_kelas as $peserta) {
+                $table->addRow();
+                $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($no++, array('name' => 'Arial', 'size' => 9), ['align' => 'center', 'valign' => 'center']);
+                $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nim, array('name' => 'Arial', 'size' => 9),['align' => 'center']);
+                $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nama_mahasiswa, array('name' => 'Arial', 'size' => 9),['valign' => 'center']);
+                for ($i=1; $i <= $pertemuan; $i++) {
+                    $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
+                }
             }
         }
 
-        $filename = 'Daftar Hadir '.$data->matkul->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.'.docx';
+        if(!$data->matkul){
+            $filename = 'Daftar Hadir '.$data->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.' '.$data->nama_semester.'.docx';
+        }else{
+            $filename = 'Daftar Hadir '.$data->matkul->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.' '.$data->nama_semester.'.docx';
+        }
+
         $folderPath = storage_path('app/public/absensi/');
         $path = $folderPath . $filename;
 
