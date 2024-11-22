@@ -71,12 +71,16 @@ Edit Kelas Perkuliahan
                                 <label for="lokasi_ujian_id" class="form-label">Ruang Kelas Ujian</label>
                                 <select class="form-select" name="lokasi_ujian_id" id="lokasi_ujian_id" required>
                                     <option value="">-- Pilih Ruang Kelas --</option>
-                                    @foreach($ruang as $r)                                    
-                                        <option value="{{$r->id}}" {{ $kelas->lokasi_ujian_id == $r->id ? 'selected' : '' }}>{{$r->nama_ruang}} ( {{strtoupper($r->lokasi)}} )</option>
+                                    @foreach($ruang as $r)
+                                        <option value="{{$r->id}}" {{ $kelas->lokasi_ujian_id == $r->id ? 'selected' : '' }}>
+                                            {{$r->nama_ruang}} ( {{strtoupper($r->lokasi)}} )
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                         </div>
+                        
+                        
                         <!-- Input untuk Tanggal dan Waktu -->
                         <div class="form-group">
                             <div class="row mb-4">
@@ -108,9 +112,18 @@ Edit Kelas Perkuliahan
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script src="{{asset('assets/js/flatpickr/flatpickr.js')}}"></script>
 
 <script>
+    $(document).ready(function () {
+        $('#lokasi_ujian_id').select2({
+            placeholder: "-- Pilih Ruang Kelas --", // Placeholder saat tidak ada yang dipilih
+            allowClear: true, // Menambahkan tombol hapus
+            width: '100%', // Mengatur lebar agar menyesuaikan
+        });
+    });
+
 
     $('#edit-kelas').submit(function(e){
         e.preventDefault();
@@ -135,12 +148,16 @@ Edit Kelas Perkuliahan
         // Tambahkan Datepicker
         $('#datetimepicker').datetimepicker({
             dateFormat: 'DD, dd MM yy', // Format: Hari, Tanggal Bulan Tahun
-            timeFormat: 'HH:mm', // Format: Jam:Menit (24 Jam)
-            showSecond: false, // Tidak tampil detik
-            controlType: 'select', // Gunakan dropdown untuk jam dan menit
-            stepMinute: 1, // Interval menit
+            timeFormat: 'HH:mm',       // Format: Jam:Menit (24 Jam)
+            showSecond: false,         // Tidak tampil detik
+            controlType: 'select',     // Gunakan dropdown untuk jam dan menit
+            stepMinute: 1,             // Interval menit
+            hourGrid: 4,               // Grid pada selector jam (opsional)
+            minuteGrid: 10,            // Grid pada selector menit (opsional)
+            showButtonPanel: true,     // Menampilkan panel navigasi untuk mempermudah
         });
     });
+
 
 </script>
 @endpush

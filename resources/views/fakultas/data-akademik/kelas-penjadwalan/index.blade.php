@@ -32,6 +32,20 @@ Kelas Penjadwalan
                     <div class="pull-right">
                         <p class="mb-0 text-fade fs-18">Semester - {{$semester_aktif->semester->nama_semester}}</p>
                     </div>
+                    <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-start">
+                            <!-- Modal trigger button -->
+                            <button type="button" class="btn btn-primary waves-effect waves" data-bs-toggle="modal"
+                                data-bs-target="#filter-button">
+                                <i class="fa fa-filter"></i> Filter
+                            </button>
+                            <span class="divider-line mx-1"></span>
+                            <a href="{{route('fakultas.data-akademik.kelas-penjadwalan')}}" class="btn btn-warning waves-effect waves" >
+                                <i class="fa fa-rotate"></i> Reset Filter
+                            </a>
+                            @include('fakultas.data-akademik.kelas-penjadwalan.filter')
+                        </div>
+                    </div>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -86,6 +100,8 @@ Kelas Penjadwalan
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(function() {
         "use strict";
