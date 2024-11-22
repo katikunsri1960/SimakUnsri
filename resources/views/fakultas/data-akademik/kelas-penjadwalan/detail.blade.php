@@ -118,9 +118,16 @@ Kelas Penjadwalan
                                             <div class="row my-3 px-3">
                                                 <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm rounded20 btn-primary waves-effect waves-light" title="Atur Jadwal Ujian"><i class="fa fa-calendar"></i> Jadwal Ujian</a>
                                             </div>
-                                            <div class="row my-3 px-3">
-                                                <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.absensi', ['id_kelas' => $d->id_kelas_kuliah])}}" class="btn btn-sm rounded20 bg-success" target="_blank" title="Download Absensi Ujian"><i class="fa fa-file-lines"></i> Absensi</a>
-                                            </div>
+                                            @if(!empty($d->lokasi_ujian_id))
+                                                <div class="row my-3 px-3">
+                                                    <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.absensi', ['id_kelas' => $d->id_kelas_kuliah])}}" 
+                                                    class="btn btn-sm rounded20 bg-success" 
+                                                    target="_blank" 
+                                                    title="Download Absensi Ujian">
+                                                        <i class="fa fa-file-lines"></i> Absensi
+                                                    </a>
+                                                </div>
+                                            @endif                                            
                                         </td>
                                     </tr>
                                 @endforeach
