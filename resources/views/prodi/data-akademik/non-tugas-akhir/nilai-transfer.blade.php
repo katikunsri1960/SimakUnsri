@@ -322,7 +322,7 @@ Nilai Transfer Pendidikan
             });
         }
 
-        function initializeSelect2Substansi(selectElement) {
+        function initializeSelect2allPt(selectElement) {
             return selectElement.select2({
                 placeholder : '-- Pilih Asal PT --',
                 minimumInputLength: 3,
@@ -352,7 +352,7 @@ Nilai Transfer Pendidikan
 
         // Initialize Select2 for the first select element
         var initialSelect = initializeSelect2($('#mata_kuliah_transfer'));
-        var initialSelect = initializeSelect2Substansi($('#all_pt'));
+        var initialSelect = initializeSelect2allPt($('#all_pt'));
 
         // Event listener for adding a new row
         $('#add-transfer').click(function() {
@@ -383,7 +383,7 @@ Nilai Transfer Pendidikan
                                 '<hr class="my-10">' +
                                 '<div class="col-md-10 mb-2">' +
                                     '<label for="mata_kuliah_transfer" class="form-label">Nama Mata Kuliah Transfer</label>' +
-                                    '<select class="form-select" name="mata_kuliah_transfer[]" id="mata_kuliah_transfer" required></select>' +
+                                    '<select class="form-select select2" name="mata_kuliah_transfer[]" id="mata_kuliah_transfer" required></select>' +
                                 '</div>' +
                                 '<div class="col-md-2 mb-2">' +
                                     '<label for="nilai_huruf_transfer" class="form-label">Nilai Huruf Transfer</label>' +
@@ -406,7 +406,7 @@ Nilai Transfer Pendidikan
 
             // Initialize Select2 for the new select element
             var newSelect = newRow.find('.select2-pt');
-            initializeSelect2(newSelect);
+            initializeSelect2allPt(newSelect);
             newSelect.val(null).trigger('change');
 
             // Show the remove button
