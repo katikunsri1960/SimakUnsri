@@ -101,7 +101,7 @@ class TugasAkhirController extends Controller
         $data = $request->validate([
                     'dosen_pembimbing.*' => 'required',
                     'kategori.*' => 'required',
-                    'pembimbing_ke.*' => 'required',
+                    'pembimbing_ke.*' => 'required|numeric|min:1',
                 ]);
         try {
             DB::beginTransaction();
@@ -163,7 +163,7 @@ class TugasAkhirController extends Controller
         $data = $request->validate([
                     'dosen_pembimbing' => 'required',
                     'kategori.*' => 'required',
-                    'pembimbing_ke.*' => 'required',
+                    'pembimbing_ke.*' => 'required|numeric|min:1',
                 ]);
         try {
             DB::beginTransaction();

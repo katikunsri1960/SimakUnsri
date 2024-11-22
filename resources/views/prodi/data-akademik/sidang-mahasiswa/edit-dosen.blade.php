@@ -47,6 +47,7 @@ Dosen Penguji Mahasiswa
                                             name="penguji_ke[]"
                                             id="penguji_ke"
                                             aria-describedby="helpId"
+                                            min="1"
                                             value="{{$data->penguji_ke}}"
                                             required
                                         />

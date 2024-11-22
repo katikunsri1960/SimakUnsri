@@ -6,6 +6,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
+use App\Models\Referensi\AllPt;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -27,6 +28,11 @@ class NilaiTransferPendidikan extends Model
     public function semester()
     {
         return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');
+    }
+
+    public function all_pt()
+    {
+        return $this->belongsTo(AllPt::class, 'id_perguruan_tinggi', 'id_perguruan_tinggi');
     }
 
     public function matkul()

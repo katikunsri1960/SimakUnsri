@@ -116,7 +116,7 @@ class SidangMahasiswaController extends Controller
         $data = $request->validate([
                     'dosen_penguji.*' => 'required',
                     'kategori.*' => 'required',
-                    'penguji_ke.*' => 'required',
+                    'penguji_ke.*' => 'required|numeric|min:1',
                 ]);
         try {
             DB::beginTransaction();
@@ -203,7 +203,7 @@ class SidangMahasiswaController extends Controller
         $data = $request->validate([
                     'dosen_penguji' => 'required',
                     'kategori.*' => 'required',
-                    'penguji_ke.*' => 'required',
+                    'penguji_ke.*' => 'required|numeric|min:1',
                 ]);
         try {
             DB::beginTransaction();
