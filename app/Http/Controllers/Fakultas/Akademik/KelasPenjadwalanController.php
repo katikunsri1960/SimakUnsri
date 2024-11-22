@@ -70,13 +70,28 @@ class KelasPenjadwalanController extends Controller
         $semester_aktif = SemesterAktif::first();
         // $prodi_id = auth()->user()->fk_id;
         $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
-        $data = KelasKuliah::with(['peserta_kelas','dosen_pengajar', 'dosen_pengajar.dosen', 'ruang_perkuliahan', 'semester'])
+        $data = KelasKuliah::with(['peserta_kelas','dosen_pengajar', 'dosen_pengajar.dosen', 'ruang_perkuliahan', 'ruang_ujian', 'semester'])
                             ->where('id_matkul', $id_matkul)
                             ->whereIn('id_prodi', $id_prodi_fak)
                             ->where('id_semester', $semester_aktif->id_semester)
                             ->get();
         // dd($data);
-        return view('fakultas.data-akademik.kelas-penjadwalan.detail', ['data' => $data, 'id_matkul' => $id_matkul, 'matkul' => $mata_kuliah]);
+        $tgl_ujian = [];
+        $hari_ujian = [];
+        $jam_mulai_ujian = [];
+        $jam_selesai_ujian = [];
+
+        foreach ($data as $d) {
+            $tgl_ujian[] = Carbon::parse($d->jadwal_mulai_ujian)->locale('id')->translatedFormat('d F Y');
+            $hari_ujian[] = Carbon::parse($d->jadwal_mulai_ujian)->locale('id')->translatedFormat('l');
+            $jam_mulai_ujian[] = Carbon::parse($d->jadwal_mulai_ujian)->format('H:i');
+            $jam_selesai_ujian[] = Carbon::parse($d->jadwal_selesai_ujian)->format('H:i');
+        }
+
+
+                    
+        // dd($tgl_ujian, $hari_ujian, $jam_mulai_ujian, $jam_selesai_ujian);
+        return view('fakultas.data-akademik.kelas-penjadwalan.detail', ['data' => $data, 'id_matkul' => $id_matkul, 'matkul' => $mata_kuliah, 'tgl_ujian'=>$tgl_ujian, 'hari_ujian'=>$hari_ujian, 'jam_mulai_ujian'=>$jam_mulai_ujian, 'jam_selesai_ujian'=>$jam_selesai_ujian]);
     }
 
     public function download_absensi($id_kelas)
@@ -113,31 +128,32 @@ class KelasPenjadwalanController extends Controller
         $table->addRow();
         $table->addCell(2000)->addText('Program Studi', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText(strtoupper($data->prodi->nama_jenjang_pendidikan). " ".strtoupper($data->prodi->nama_program_studi)." (".strtoupper($data->prodi->kode_program_studi).")", array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText(strtoupper($data->prodi->nama_jenjang_pendidikan). " ".strtoupper($data->prodi->nama_program_studi)." (".strtoupper($data->prodi->kode_program_studi).")", array('name' => 'Arial', 'size' => 10));
 
         $table->addRow();
         $table->addCell(2000)->addText('Tahun Akademik', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->semester->nama_semester, array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->semester->nama_semester, array('name' => 'Arial', 'size' => 10));
 
         $table->addRow();
         $table->addCell(2000)->addText('Mata Kuliah', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->matkul->kode_mata_kuliah.' - '.$data->matkul->nama_mata_kuliah, array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->matkul->kode_mata_kuliah.' - '.$data->matkul->nama_mata_kuliah, array('name' => 'Arial', 'size' => 10));
 
         $table->addRow();
         $table->addCell(2000)->addText('Kelas', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->nama_kelas_kuliah, array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->nama_kelas_kuliah, array('name' => 'Arial', 'size' => 10));
 
         $table->addRow();
         $table->addCell(2000)->addText('Ruang', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->ruang_ujian->nama_ruang." (".$data->ruang_ujian->lokasi.")", array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($data->ruang_ujian->nama_ruang." (".$data->ruang_ujian->lokasi.")", array('name' => 'Arial', 'size' => 10));
 
         $table->addRow();
         $table->addCell(2000)->addText('Dosen', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        
         $cell = $table->addCell(5000);
 
         $listStyle = array(
@@ -145,20 +161,28 @@ class KelasPenjadwalanController extends Controller
             'inde' => array('left' => 0, 'hanging' => 0) // Adjust the negative value as needed
         );
 
+        $italicStyle = ['name' => 'Arial', 'size' => 10, 'italic' => true];
+
         // Iterate over the dosen_pengajar array and add each dosen name as a bullet point with the custom list style
-        foreach ($data->dosen_pengajar as $dosenPengajar) {
-            $cell->addListItem($dosenPengajar->dosen->nama_dosen, 0, array('name' => 'Arial', 'size' => 10, 'bold' => true), $listStyle);
+        if (!$data->dosen_pengajar || $data->dosen_pengajar->isEmpty()) {
+            $cell->addText('Dosen Pengajar Belum Diisi', $italicStyle);
+        } else {
+            foreach ($data->dosen_pengajar as $dosenPengajar) {
+                $cell->addListItem($dosenPengajar->dosen->nama_dosen, 0, ['name' => 'Arial', 'size' => 10, 'bold' => true], $listStyle);
+            }
         }
+
+        // dd($dosen);
 
         $table->addRow();
         $table->addCell(2000)->addText('Jadwal Hari', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText(strtoupper($hari_ujian), array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText(strtoupper($hari_ujian), array('name' => 'Arial', 'size' => 10));
 
         $table->addRow();
         $table->addCell(2000)->addText('Jadwal Jam', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($mulai_ujian.' - '.$selesai_ujian. " WIB", array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(5000)->addText($mulai_ujian.' - '.$selesai_ujian. " WIB", array('name' => 'Arial', 'size' => 10));
 
         $section->addTextBreak(1);
 
@@ -220,7 +244,7 @@ class KelasPenjadwalanController extends Controller
 
         
         $filename = 'Daftar Hadir '.$data->matkul->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.'.docx';
-        $folderPath = storage_path('app/public/absensi/');
+        $folderPath = storage_path('app/public/absensi_ujian/');
         $path = $folderPath . $filename;
 
         // Check if the folder exists
@@ -320,7 +344,7 @@ class KelasPenjadwalanController extends Controller
             DB::commit();
 
             // Redirect ke halaman index dengan pesan sukses
-            return redirect()->route('fakultas.data-akademik.kelas-penjadwalan')
+            return redirect()->route('fakultas.data-akademik.kelas-penjadwalan.detail', $id_matkul)
                             ->with('success', 'Data Kelas Berhasil diubah!');
         } catch (\Throwable $th) {
             DB::rollback();

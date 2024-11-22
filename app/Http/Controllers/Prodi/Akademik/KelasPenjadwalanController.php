@@ -126,8 +126,18 @@ class KelasPenjadwalanController extends Controller
         );
 
         // Iterate over the dosen_pengajar array and add each dosen name as a bullet point with the custom list style
-        foreach ($data->dosen_pengajar as $dosenPengajar) {
-            $cell->addListItem($dosenPengajar->dosen->nama_dosen, 0, array('name' => 'Arial', 'size' => 10), $listStyle);
+        // foreach ($data->dosen_pengajar as $dosenPengajar) {
+        //     $cell->addListItem($dosenPengajar->dosen->nama_dosen, 0, array('name' => 'Arial', 'size' => 10), $listStyle);
+        // }
+
+        $italicStyle = ['name' => 'Arial', 'size' => 10, 'italic' => true];
+        
+        if (!$data->dosen_pengajar || $data->dosen_pengajar->isEmpty()) {
+            $cell->addText('Dosen Pengajar Belum Diisi', $italicStyle);
+        } else {
+            foreach ($data->dosen_pengajar as $dosenPengajar) {
+                $cell->addListItem($dosenPengajar->dosen->nama_dosen, 0, ['name' => 'Arial', 'size' => 10, 'bold' => true], $listStyle);
+            }
         }
 
         $table->addRow();

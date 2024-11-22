@@ -61,6 +61,9 @@ Kelas Penjadwalan
                                     <th class="text-center align-middle">DOSEN</th>
                                     <th class="text-center align-middle">KAPASITAS</th>
                                     <th class="text-center align-middle">JUMLAH PESERTA</th>
+                                    <th class="text-center align-middle">TANGGAL UJIAN</th>
+                                    <th class="text-center align-middle">WAKTU UJIAN</th>
+                                    <th class="text-center align-middle">LOKASI UJIAN</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -68,7 +71,7 @@ Kelas Penjadwalan
                                 @php
                                     $row=0;
                                 @endphp
-                                @foreach($data as $d)
+                                @foreach($data as $index => $d)
                                     <tr>
                                         <td class="text-center align-middle">{{$row = $row + 1}}</td>
                                         <td class="text-center align-middle">
@@ -99,25 +102,20 @@ Kelas Penjadwalan
                                                 echo count($d->peserta_kelas);
                                             @endphp
                                         </td>
+                                        <td class="text-center align-middle">{{$hari_ujian[$index]}}, {{$tgl_ujian[$index]}}</td>
+                                        <td class="text-center align-middle">{{$jam_mulai_ujian[$index]}} - {{$jam_selesai_ujian[$index]}} WIB</td>
+                                        <td class="text-center align-middle">{{$d->ruang_ujian->nama_ruang}} ({{$d->ruang_ujian->lokasi}})</td>
                                         <td class="text-center align-middle">
-
-                                            {{-- @if ($d->feeder == 0) --}}
-                                                <div class="row my-3 px-3">
-                                                    <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Atur Jadwal Ujian</a>
+                                            <div class="row my-3 px-3">
+                                                <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.edit',['id_matkul' => $d->id_matkul, 'id_kelas' => $d->id_kelas_kuliah])}}" type="button" class="btn btn-sm btn-rounded btn-primary waves-effect waves-light"><i class="fa fa-pencil"></i> Atur Jadwal Ujian</a>
+                                            </div>
+                                            <form action="{{route('fakultas.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
+                                                @csrf
+                                                @method('delete')
+                                                <div class="row">
+                                                <button type="submit" class="btn btn-sm btn-rounded btn-danger waves-effect waves-light"><i class="fa fa-trash"></i> Hapus Jadwal Ujian</button>
                                                 </div>
-                                                <form action="{{route('fakultas.data-akademik.kelas-penjadwalan.delete', ['id_matkul' => $d->id_matkul, 'id_kelas'=> $d->id_kelas_kuliah])}}" method="post" class="delete-form my-3 px-3" data-id="{{$d->id_kelas_kuliah}}" id="deleteForm{{$d->id_kelas_kuliah}}">
-                                                    @csrf
-                                                    @method('delete')
-                                                    <div class="row">
-                                                    <button type="submit" class="btn btn-sm btn-rounded btn-danger waves-effect waves-light"><i class="fa fa-trash"></i> Hapus Jadwal Ujian</button>
-                                                    </div>
-                                                </form>
-                                            {{-- @else
-                                                <div class="row my-3 px-3">
-                                                    <span class="badge badge-xl badge-success-light badge-rounded">Sudah Disync</span>
-                                                </div>
-                                            @endif --}}
-
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
