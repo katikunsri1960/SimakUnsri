@@ -261,7 +261,7 @@ class AktivitasNonTAController extends Controller
     {
         $semesterAktif = SemesterAktif::first();
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
-        $nilai_konversi = NilaiTransferPendidikan::where('id_aktivitas', $aktivitas)->get();
+        $nilai_konversi = KonversiAktivitas::where('id_aktivitas', $aktivitas)->get();
         // dd($nilai_konversi);
 
         return view('prodi.data-akademik.non-tugas-akhir.nilai-konversi', [
