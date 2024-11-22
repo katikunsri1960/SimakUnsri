@@ -125,6 +125,20 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             //ROUTE AKADEMIK
             Route::prefix('data-akademik')->group(function(){
+                Route::prefix('kelas-penjadwalan')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan'])->name('fakultas.data-akademik.kelas-penjadwalan');
+                    Route::get('/{id_matkul}/detail', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'detail_kelas_penjadwalan'])->name('fakultas.data-akademik.kelas-penjadwalan.detail');
+                    Route::get('/{id_maktul}/{id_kelas}/peserta', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'peserta_kelas'])->name('fakultas.data-akademik.kelas-penjadwalan.peserta');
+
+                    Route::get('/{id_kelas}/absensi', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'download_absensi'])->name('fakultas.data-akademik.kelas-penjadwalan.absensi');
+                    
+                    Route::delete('/{id_matkul}/{id_kelas}/delete', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_destroy'])->name('fakultas.data-akademik.kelas-penjadwalan.delete');
+
+                    Route::get('/{id_matkul}/{id_kelas}/edit-kelas', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'edit_kelas_penjadwalan'])->name('fakultas.data-akademik.kelas-penjadwalan.edit');
+                    Route::post('/{id_matkul}/{id_kelas}/update', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_update'])->name('fakultas.data-akademik.kelas-penjadwalan.update');
+
+                });
+
                 Route::prefix('krs')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\KRSController::class, 'krs'])->name('fakultas.data-akademik.krs');
                     Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\KRSController::class, 'data'])->name('fakultas.data-akademik.krs.data');

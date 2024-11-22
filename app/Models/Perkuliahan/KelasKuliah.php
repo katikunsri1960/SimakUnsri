@@ -68,6 +68,11 @@ class KelasKuliah extends Model
         return $this->belongsTo(RuangPerkuliahan::class, 'ruang_perkuliahan_id', 'id');
     }
 
+    public function ruang_ujian()
+    {
+        return $this->belongsTo(RuangPerkuliahan::class, 'lokasi_ujian_id', 'id');
+    }
+
     public function detail_penilaian_perkuliahan(string $kelas)
     {
         $data = $this->with([

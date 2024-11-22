@@ -53,6 +53,11 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('fakultas.data-akademik.kelas-penjadwalan') | request()->routeIs('fakultas.data-akademik.kelas-penjadwalan.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-akademik.kelas-penjadwalan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Kelas dan Penjadwalan
+                                </a>
+                            </li>
                             <li class="{{request()->routeIs('fakultas.data-akademik.krs') || request()->routeIs('fakultas.data-akademik.krs.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-akademik.krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     Kartu Rencana Studi
