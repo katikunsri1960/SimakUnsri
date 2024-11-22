@@ -123,8 +123,8 @@ Kelas Penjadwalan
                                                     <a href="{{route('fakultas.data-akademik.kelas-penjadwalan.absensi', ['id_kelas' => $d->id_kelas_kuliah])}}" 
                                                     class="btn btn-sm rounded20 bg-success" 
                                                     target="_blank" 
-                                                    title="Download Absensi Ujian">
-                                                        <i class="fa fa-file-lines"></i> Absensi
+                                                    title="Download Presensi Ujian">
+                                                        <i class="fa fa-file-lines"></i> Presensi
                                                     </a>
                                                 </div>
                                             @endif                                            
