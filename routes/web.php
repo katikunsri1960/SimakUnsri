@@ -696,6 +696,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::get('/input/{id_reg}', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'nilai_transfer'])->name('prodi.data-akademik.nilai-transfer-rpl.input');
                         Route::post('/store/{id_reg}', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'store_nilai_transfer'])->name('prodi.data-akademik.nilai-transfer-rpl.store');
                         Route::delete('/delete/{transfer}', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'delete_nilai_transfer'])->name('prodi.data-akademik.nilai-transfer-rpl.delete');
+                        Route::get('/get-matkul/{nim}', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'get_matkul'])->name('prodi.data-akademik.nilai-transfer-rpl.get-matkul');
+                    Route::get('/get-all-pt', [App\Http\Controllers\Prodi\Akademik\NilaiTransferController::class, 'get_all_pt'])->name('prodi.data-akademik.nilai-transfer-rpl.get-all-pt');
                 });
             });
 

@@ -93,9 +93,9 @@
                             <li class="{{request()->routeIs('prodi.data-akademik.yudisium-mahasiswa') || request()->routeIs('prodi.data-akademik.yudisium-mahasiswa.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.yudisium-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Yudisium Mahasiswa</a>
                             </li>
-                            <!-- <li class="{{request()->routeIs('prodi.data-akademik.nilai-transfer-rpl') || request()->routeIs('prodi.data-akademik.nilai-transfer-rpl.*') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('prodi.data-akademik.nilai-transfer-rpl') || request()->routeIs('prodi.data-akademik.nilai-transfer-rpl.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.nilai-transfer-rpl')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai Transfer Pendidikan</a>
-                            </li> -->
+                            </li>
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('prodi.data-aktivitas.*') ? 'active menu-open' : ''}}">
