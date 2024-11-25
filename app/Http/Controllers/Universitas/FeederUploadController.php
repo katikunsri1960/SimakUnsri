@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Http\Controllers\Controller;
+use App\Models\Semester;
+use App\Models\ProgramStudi;
+use Illuminate\Http\Request;
+use App\Models\SemesterAktif;
 use App\Models\KuisonerAnswer;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
+use App\Services\Feeder\FeederUpload;
+use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Mahasiswa\AktivitasMagang;
 use App\Models\Mahasiswa\PrestasiMahasiswa;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
-use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
-use App\Models\Perkuliahan\KelasKuliah;
-use App\Models\Perkuliahan\KomponenEvaluasiKelas;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\RencanaPembelajaran;
-use App\Models\Perkuliahan\UjiMahasiswa;
-use App\Models\ProgramStudi;
-use App\Models\Semester;
-use App\Models\SemesterAktif;
-use App\Services\Feeder\FeederUpload;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class FeederUploadController extends Controller
@@ -947,6 +948,132 @@ class FeederUploadController extends Controller
 
         return $response;
     }
+
+    // NILAI TRANSFER START
+    public function nilai_transfer()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.perkuliahan.nilai-transfer', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function nilai_transfer_data(Request $request)
+    {
+        // dd($request->id_prodi);
+        $prodi = ProgramStudi::where('id',$request->id_prodi)->first();
+        $data = NilaiTransferPendidikan::join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
+                ->join('program_studis as p', 'am.id_prodi', 'p.id_prodi')
+                ->join('semesters as s', 'am.id_semester', 's.id_semester')
+                // ->join('mata_kuliahs as m', 'am.id_matkul', 'm.id_matkul')
+                ->where('am.id_semester', $request->id_semester)
+                ->where('am.id_prodi', $prodi->id_prodi)
+                ->where('am.feeder', 1)
+                ->where('nilai_transfer_pendidikans.feeder', 0)
+                ->select('nilai_transfer_pendidikans.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester')
+                // ->orderBy('am.id_kelas_kuliah')
+                // ->whepsire('nilai_transfer_pendidikans.nim', '06091182126010')
+                ->get();
+
+        // return response()->json($data);
+
+        return response()->json(
+            // [
+            // 'data' => 
+            $data,
+            // 'prodi' => $prodi,
+        // ]
+        );
+    }
+
+    public function nilai_transfer_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = NilaiPerkuliahan::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'nilai_perkuliahans.id_kelas_kuliah')
+                ->where('k.id_semester', $semester)
+                ->where('k.id_prodi', $prodi)
+                ->where('nilai_perkuliahans.feeder', 0)
+                ->select('nilai_perkuliahans.*')
+                ->orderBy('k.id_kelas_kuliah')
+                ->get();
+
+        $totalData = $data->count();
+        // dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'UpdateNilaiPerkuliahanKelas';
+        $actGet = 'GetListKomponenEvaluasiKelas';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+
+                $record = [
+                    'id_kelas_kuliah' => $d->id_kelas_kuliah,
+                    'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
+                    'nilai_angka' => $d->nilai_angka,
+                    'nilai_huruf' => $d->nilai_huruf,
+                    'nilai_indeks' => $d->nilai_indeks,
+                ];
+
+                $recordGet = "id_kelas = '".$d->id_kelas."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+
+                $result = $req->uploadNilaiKelas();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    DB::beginTransaction();
+
+                    $d->update([
+                        // 'id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi'],
+                        'feeder' => 1
+                    ]);
+
+                    DB::commit();
+
+                    $dataBerhasil++;
+
+
+                } else {
+
+
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+    // NILAI TRANSFER END
 
     public function aktivitas()
     {
