@@ -27,7 +27,7 @@ use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 
 class KelasPenjadwalanController extends Controller
 {
-    public function kelas_penjadwalan()
+    public function kelas_penjadwalan(Request $request)
     {
         $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
         ->orderBy('id_jenjang_pendidikan')
@@ -53,9 +53,19 @@ class KelasPenjadwalanController extends Controller
         }])
         ->whereIn('id_prodi', $id_prodi_fak)
         ->where('is_active', 1)
-        ->get();
+        // ->get()
+        ;
+
+        if ($request->has('prodi') && !empty($request->prodi)) {
+            $filter = $request->prodi;
+            $data->whereIn('id_prodi', $filter);
+        }else{
+            $data = $data->whereIn('id_prodi', $id_prodi_fak);
+        }
+
+        $data=$data->get();
         // dd($data);
-        return view('fakultas.data-akademik.kelas-penjadwalan.index', ['data' => $data, 'semester_aktif' => $semester_aktif]);
+        return view('fakultas.data-akademik.kelas-penjadwalan.index', ['data' => $data, 'semester_aktif' => $semester_aktif, 'prodi' => $prodi_fak,]);
     }
 
     public function detail_kelas_penjadwalan($id_matkul)
@@ -88,7 +98,7 @@ class KelasPenjadwalanController extends Controller
             $jam_selesai_ujian[] = Carbon::parse($d->jadwal_selesai_ujian)->format('H:i');
         }
 
-        
+        // $kelas = KelasKuliah::where('id', $id_kelas)->first();
 
 
                     
@@ -102,7 +112,7 @@ class KelasPenjadwalanController extends Controller
             $q->orderBy('nim');
         }, 'dosen_pengajar' => function($q) {
             $q->orderBy('urutan');
-        }, 'dosen_pengajar.dosen', 'ruang_perkuliahan','ruang_ujian', 'semester', 'matkul', 'prodi'])->where('id', $id_kelas)->first();
+        }, 'dosen_pengajar.dosen', 'ruang_perkuliahan','ruang_ujian', 'semester', 'matkul', 'prodi'])->where('id_kelas_kuliah', $id_kelas)->first();
 
         // dd($data);
 
@@ -256,9 +266,9 @@ class KelasPenjadwalanController extends Controller
 
         
         if(!$data->matkul){
-            $filename = 'Daftar Hadir '.$data->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.' '.$data->nama_semester.'.docx';
+            $filename = 'Daftar_Hadir-'.$data->kode_mata_kuliah.'-'.$data->nama_kelas_kuliah.'-'.$data->id_semester.'.docx';
         }else{
-            $filename = 'Daftar Hadir '.$data->matkul->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.' '.$data->nama_semester.'.docx';
+            $filename = 'Daftar_Hadir-'.$data->matkul->kode_mata_kuliah.'-'.$data->nama_kelas_kuliah.'-'.$data->id_semester.'.docx';
         }
 
         $folderPath = storage_path('app/public/absensi_ujian/');

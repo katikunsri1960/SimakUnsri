@@ -148,10 +148,19 @@ class MonitoringController extends Controller
 
     public function lulus_do(Request $request)
     {
+        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->where('status', 'A')
+                    ->orderBy('id_jenjang_pendidikan')
+                    ->orderBy('nama_program_studi')
+                    ->pluck('id_prodi');
+        // $id_prodi_fak=$prodi_fak->pluck('id_prodi');
+        
+        
         $db = new LulusDo();
         $jenis_keluar = $db->select('id_jenis_keluar', 'nama_jenis_keluar')->distinct()->get();
 
         $jenis_keluar_counts = $db->select('id_jenis_keluar','nama_jenis_keluar', DB::raw('count(*) as total'))
+        ->whereIn('id_prodi', $id_prodi_fak)
         ->groupBy('id_jenis_keluar','nama_jenis_keluar');
 
         if ($request->has('id_prodi') && !empty($request->id_prodi)) {
@@ -171,7 +180,7 @@ class MonitoringController extends Controller
 
         $jenis_keluar_counts = $jenis_keluar_counts->get();
 
-        $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
+        $prodi = ProgramStudi::whereIn('id_prodi', $id_prodi_fak)->orderBy('nama_jenjang_pendidikan')->orderBy('nama_program_studi')->get();
         $angkatan = $db->select('angkatan')->distinct()->orderBy('angkatan', 'desc')->get();
 
         return view('fakultas.monitoring.kelulusan.index', [
@@ -184,9 +193,16 @@ class MonitoringController extends Controller
 
     public function lulus_do_data(Request $request)
     {
+        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->where('status', 'A')
+                    ->orderBy('id_jenjang_pendidikan')
+                    ->orderBy('nama_program_studi')
+                    ->pluck('id_prodi');
+
         $searchValue = $request->input('search.value');
 
-        $query = LulusDo::with('prodi', 'biodata');
+        $query = LulusDo::with('prodi', 'biodata')
+                ->whereIn('id_prodi', $id_prodi_fak);
 
         if ($searchValue) {
             $query = $query->where('nim', 'like', '%' . $searchValue . '%')
@@ -234,7 +250,7 @@ class MonitoringController extends Controller
 
         $data = $query->skip($offset)->take($limit)->get();
 
-        $recordsTotal = LulusDo::count();
+        $recordsTotal = LulusDo::whereIn('id_prodi', $id_prodi_fak)->count();
 
         $response = [
             'draw' => $request->input('draw'),

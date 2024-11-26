@@ -32,6 +32,20 @@ Kelas Penjadwalan
                     <div class="pull-right">
                         <p class="mb-0 text-fade fs-18">Semester - {{$semester_aktif->semester->nama_semester}}</p>
                     </div>
+                    <div class="d-flex justify-content-end">
+                        <div class="d-flex justify-content-start">
+                            <!-- Modal trigger button -->
+                            <button type="button" class="btn btn-primary waves-effect waves" data-bs-toggle="modal"
+                                data-bs-target="#filter-button">
+                                <i class="fa fa-filter"></i> Filter
+                            </button>
+                            <span class="divider-line mx-1"></span>
+                            <a href="{{route('fakultas.data-akademik.kelas-penjadwalan')}}" class="btn btn-warning waves-effect waves" >
+                                <i class="fa fa-rotate"></i> Reset Filter
+                            </a>
+                            @include('fakultas.data-akademik.kelas-penjadwalan.filter')
+                        </div>
+                    </div>
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
@@ -43,7 +57,7 @@ Kelas Penjadwalan
                                     <th class="text-center align-middle">KODE MATA KULIAH</th>
                                     <th class="text-center align-middle">NAMA MATA KULIAH</th>
                                     <th class="text-center align-middle">JUMLAH KELAS</th>
-                                    <th class="text-center align-middle">SEMESTER MATA KULIAH</th>
+                                    {{-- <th class="text-center align-middle">SEMESTER MATA KULIAH</th> --}}
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -65,7 +79,7 @@ Kelas Penjadwalan
                                                         echo count($d->kelas_kuliah);
                                                     @endphp
                                                 </td>
-                                                <td class="text-center align-middle">{{$k->semester_mulai_berlaku}}</td>
+                                                {{-- <td class="text-center align-middle">{{$k->semester_mulai_berlaku}}</td> --}}
                                                 <td class="text-center align-middle">
                                                     <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('fakultas.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
                                                 </td>
@@ -86,6 +100,8 @@ Kelas Penjadwalan
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(function() {
         "use strict";

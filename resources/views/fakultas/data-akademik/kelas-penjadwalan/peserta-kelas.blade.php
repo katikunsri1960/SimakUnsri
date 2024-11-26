@@ -53,9 +53,9 @@ Peserta Kelas Kuliah
                                     {{-- <button class="btn btn-rounded bg-success-light" disabled>
                                         <i class="fa fa-plus"></i> Tambah RPS
                                     </button> --}}
-                                    <a class="btn btn-rounded bg-primary-light" href="{{route('fakultas.data-akademik.kelas-penjadwalan.absensi', ['id_kelas' => $kelas->id])}}" target="_blank">
+                                    {{-- <a class="btn btn-rounded bg-primary-light" href="{{route('fakultas.data-akademik.kelas-penjadwalan.absensi', ['id_kelas' => $kelas->id])}}" target="_blank">
                                         <i class="fa fa-file-lines"></i> Download Absensi
-                                    </a>
+                                    </a> --}}
                                 </div>
                             </div>
                         </div><br>

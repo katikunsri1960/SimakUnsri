@@ -42,6 +42,7 @@ Dosen Pembimbing Mahasiswa
                                             name="pembimbing_ke[]"
                                             id="pembimbing_ke"
                                             aria-describedby="helpId"
+                                            min="1"
                                             value="1"
                                             required
                                         />

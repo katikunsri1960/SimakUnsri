@@ -8,9 +8,11 @@ use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\MatkulKurikulum;
 use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Referensi\KategoriKegiatan;
+use App\Models\Referensi\AllPt;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -106,6 +108,21 @@ class AktivitasNonTAController extends Controller
         return response()->json($data);
     }
 
+    public function get_all_pt(Request $request)
+    {
+        $search = $request->get('q');
+        $query = AllPt::orderby('nama_perguruan_tinggi', 'asc');
+
+        if ($search) {
+            $query->where('kode_perguruan_tinggi', 'like', "%{$search}%")
+                  ->orWhere('nama_perguruan_tinggi', 'like', "%{$search}%");
+        }
+
+        $data = $query->get();
+
+        return response()->json($data);
+    }
+
     public function tambah_dosen_pembimbing($aktivitas)
     {
         $semesterAktif = SemesterAktif::first();
@@ -125,7 +142,7 @@ class AktivitasNonTAController extends Controller
         $data = $request->validate([
                     'dosen_pembimbing.*' => 'required',
                     'kategori.*' => 'required',
-                    'pembimbing_ke.*' => 'required',
+                    'pembimbing_ke.*' => 'required|numeric|min:1',
                 ]);
         try {
             DB::beginTransaction();
@@ -187,7 +204,7 @@ class AktivitasNonTAController extends Controller
         $data = $request->validate([
                     'dosen_pembimbing' => 'required',
                     'kategori.*' => 'required',
-                    'pembimbing_ke.*' => 'required',
+                    'pembimbing_ke.*' => 'required|numeric|min:1',
                 ]);
         try {
             DB::beginTransaction();
@@ -243,7 +260,6 @@ class AktivitasNonTAController extends Controller
     public function nilai_konversi($aktivitas)
     {
         $semesterAktif = SemesterAktif::first();
-        $kategori = KategoriKegiatan::where('id_kategori_kegiatan', '110300')->get();
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
         $nilai_konversi = KonversiAktivitas::where('id_aktivitas', $aktivitas)->get();
         // dd($nilai_konversi);
@@ -251,7 +267,6 @@ class AktivitasNonTAController extends Controller
         return view('prodi.data-akademik.non-tugas-akhir.nilai-konversi', [
             'd' => $data,
             'pengisian_nilai' => $semesterAktif,
-            'kategori' => $kategori,
             'konversi' => $nilai_konversi
         ]);
     } 
@@ -381,10 +396,144 @@ class AktivitasNonTAController extends Controller
 
             DB::commit();
 
-            return redirect()->back()->with('success', 'Data Kelas Berhasil di Hapus!!');
+            return redirect()->back()->with('success', 'Data Nilai Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Nilai Gagal di Hapus. '. $th->getMessage());
+        }
+    }
+
+    public function nilai_transfer($aktivitas)
+    {
+        $semesterAktif = SemesterAktif::first();
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
+        $nilai_transfer = NilaiTransferPendidikan::with(['all_pt'])->where('id_aktivitas', $aktivitas)->get();
+        // dd($nilai_konversi);
+
+        return view('prodi.data-akademik.non-tugas-akhir.nilai-transfer', [
+            'd' => $data,
+            'pengisian_nilai' => $semesterAktif,
+            'transfer' => $nilai_transfer
+        ]);
+    } 
+
+    public function store_nilai_transfer($aktivitas, Request $request)
+    {
+        $semester = SemesterAktif::with('semester')->first();
+
+        $aktivitas_mahasiswa = AktivitasMahasiswa::with(['anggota_aktivitas_personal','anggota_aktivitas_personal.mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semester->id_semester)->first();
+
+        $nilai_transfer = NilaiTransferPendidikan::with(['matkul'])->where('id_aktivitas', $aktivitas)->get();
+
+        if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
+            return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
+        }
+
+        if(strtotime(date('Y-m-d')) > strtotime($semester->batas_isi_nilai)){
+            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        }
+
+        // dd($aktivitas_mahasiswa->anggota_aktivitas_personal);
+
+        $data = $request->validate([
+                'asal_pt.*' => 'required',
+                'kode_mata_kuliah_asal.*' => 'required',
+                'nama_mata_kuliah_asal.*' => 'required',
+                'sks_matkul_asal.*' => 'required',
+                'nilai_huruf_asal.*' => 'required',
+                'mata_kuliah_transfer.*' => 'required',
+                'nilai_huruf_transfer.*' => 'required'
+
+        ]);
+
+        //Count jumlah dosen pengajar kelas kuliah
+        $jumlah_matkul=count($request->mata_kuliah_transfer);
+
+        $jumlah_sks_matkul = 0;
+
+        for($j=0;$j<$jumlah_matkul;$j++){
+
+            $matkul = MataKuliah::where('id_matkul', $request->mata_kuliah_transfer[$j])->first();
+            // dd($matkul);
+
+            $jumlah_sks_matkul = $jumlah_sks_matkul + $matkul->sks_mata_kuliah;
+        }
+
+        if ($jumlah_sks_matkul == 0) {
+            return redirect()->back()->with('error', 'SKS Mata Kuliah tidak boleh 0.');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            for($i=0;$i<$jumlah_matkul;$i++){
+                //Generate id aktivitas mengajar
+                $id_transfer = Uuid::uuid4()->toString();
+
+                $matkul = MataKuliah::where('id_matkul', $request->mata_kuliah_transfer[$i])->first();
+
+                $jumlah_sks = $matkul->sks_mata_kuliah;
+        
+                if($request->nilai_huruf_transfer[$i] == 'A'){
+                    $nilai_indeks = '4.00';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'B'){
+                    $nilai_indeks = '3.00';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'C'){
+                    $nilai_indeks = '2.00';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'D'){
+                    $nilai_indeks = '1.00';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'E'){
+                    $nilai_indeks = '0.00';
+                }else{
+                    return redirect()->back()->with('error', 'Nilai di luar range skala nilai.');
+                }
+
+                //Store data
+                NilaiTransferPendidikan::create([
+                    'feeder'=> 0, 
+                    'id_transfer'=> $id_transfer, 
+                    'id_registrasi_mahasiswa'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->id_registrasi_mahasiswa, 
+                    'nim'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->nim, 
+                    'nama_mahasiswa' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->nama_mahasiswa, 
+                    'id_prodi' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->id_prodi, 
+                    'nama_program_studi' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->nama_program_studi, 'id_periode_masuk' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->id_periode_masuk, 'kode_mata_kuliah_asal' => $request->kode_mata_kuliah_asal[$i], 'nama_mata_kuliah_asal' => $request->nama_mata_kuliah_asal[$i], 'sks_mata_kuliah_asal' => $request->sks_matkul_asal[$i], 'nilai_huruf_asal' => $request->nilai_huruf_asal[$i], 'id_matkul' => $matkul->id_matkul, 'kode_matkul_diakui' => $matkul->kode_mata_kuliah, 'nama_mata_kuliah_diakui' => $matkul->nama_mata_kuliah, 'sks_mata_kuliah_diakui' => $matkul->sks_mata_kuliah, 'nilai_huruf_diakui' => $request->nilai_huruf_transfer[$i], 'nilai_angka_diakui' => $nilai_indeks, 'id_perguruan_tinggi' => $request->asal_pt[$i], 'id_aktivitas' => $aktivitas_mahasiswa->id_aktivitas, 'judul' => $aktivitas_mahasiswa->judul, 'id_jenis_aktivitas' => $aktivitas_mahasiswa->id_jenis_aktivitas, 'nama_jenis_aktivitas' => $aktivitas_mahasiswa->nama_jenis_aktivitas, 'id_semester' => $aktivitas_mahasiswa->id_semester, 'nama_semester' => $aktivitas_mahasiswa->nama_semester, 'status_sync' => 'belum sync']);
+
+            }
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+        }
+    }
+
+    public function delete_nilai_transfer($transfer)
+    {
+        // dd($id_matkul);
+        $nilai_transfer = NilaiTransferPendidikan::where('id_transfer', $transfer)->first();
+
+        if($nilai_transfer->feeder == 1){
+            return redirect()->back()->with('error', 'Data Nilai tidak bisa dihapus karena sudah di sinkronisasi');
+        }
+
+        try {
+            DB::beginTransaction();
+
+            NilaiTransferPendidikan::where('id_transfer', $transfer)->delete();
+
+            DB::commit();
+
+            return redirect()->back()->with('success', 'Data Nilai Berhasil di Hapus!!');
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Nilai Gagal di Hapus. '. $th->getMessage());
         }
     }
 }
