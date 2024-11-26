@@ -64,16 +64,25 @@ class PenilaianPerkuliahanController extends Controller
         $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->get();
 
-        //Check batas pengisian nilai
+        // List of program codes not requiring scheduling checks
+        $prodi_not_scheduled = ['11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
+
+        // Fetch data for the specific class and its associated program
+        $data_prodi = KelasKuliah::with('prodi')->where('id_kelas_kuliah', $kelas)->first();
+
+        // Check the schedule for inputting grades
         $hari_proses = date('Y-m-d');
         $mulai_nilai = $semester_aktif->mulai_isi_nilai;
         $batas_nilai = $semester_aktif->batas_isi_nilai;
 
-         
-        if ($hari_proses < $mulai_nilai) {
-            return redirect()->back()->with('error', "Jadwal Pengisian Nilai Belum Dimulai !");
-        } elseif ($hari_proses > $batas_nilai) {
-            return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Telah Berakhir !');
+        // Check if the program is not in the excluded list
+        if (!in_array($data_prodi->prodi->kode_program_studi, $prodi_not_scheduled)) {
+
+            if ($hari_proses < $mulai_nilai) {
+                return redirect()->back()->with('error', "Jadwal Pengisian Nilai Belum Dimulai!");
+            } elseif ($hari_proses > $batas_nilai) {
+                return redirect()->back()->with('error', "Jadwal Pengisian Nilai Telah Berakhir!");
+            }
         }
         
         return view('dosen.penilaian.penilaian-perkuliahan.upload-dpna', [
@@ -86,14 +95,37 @@ class PenilaianPerkuliahanController extends Controller
 
     public function upload_dpna_store(Request $request, string $kelas, string $matkul)
     {
-        // dd($request->all());
+        $semester_aktif = SemesterAktif::first();
+
+        // Validate the uploaded file
         $data = $request->validate([
-            'file' => 'required|mimes:xlsx,xls|max:2048', // Validate the file type and size
+            'file' => 'required|mimes:xlsx,xls|max:2048', // Validate file type and size
         ]);
 
+        // List of program codes not requiring scheduling checks
+        $prodi_not_scheduled = ['11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
+
+        // Fetch data for the specific class and its associated program
+        $data_prodi = KelasKuliah::with('prodi')->where('id_kelas_kuliah', $kelas)->first();
+
+        // Check if the program is not in the excluded list
+        if (!in_array($data_prodi->prodi->kode_program_studi, $prodi_not_scheduled)) {
+            // Check the schedule for inputting grades
+            $hari_proses = date('Y-m-d');
+            $mulai_nilai = $semester_aktif->mulai_isi_nilai;
+            $batas_nilai = $semester_aktif->batas_isi_nilai;
+
+            if ($hari_proses < $mulai_nilai) {
+                return redirect()->back()->with('error', "Jadwal Pengisian Nilai Belum Dimulai!");
+            } elseif ($hari_proses > $batas_nilai) {
+                return redirect()->back()->with('error', "Jadwal Pengisian Nilai Telah Berakhir!");
+            }
+        }
+
+        // If everything is valid, process the file import
         $file = $request->file('file');
         Excel::import(new ImportDPNA($kelas, $matkul), $file);
 
-        return back()->with('success', 'Data nilai perkuliahan berhasil ditambahkan');
+        return redirect()->back()->with('success', "Data successfully imported!");
     }
 }
