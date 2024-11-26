@@ -965,22 +965,16 @@ class FeederUploadController extends Controller
 
     public function nilai_transfer_data(Request $request)
     {
-        // dd($request->id_prodi);
         $prodi = ProgramStudi::where('id',$request->id_prodi)->first();
         $data = NilaiTransferPendidikan::join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
                 ->join('program_studis as p', 'am.id_prodi', 'p.id_prodi')
                 ->join('semesters as s', 'am.id_semester', 's.id_semester')
-                // ->join('mata_kuliahs as m', 'am.id_matkul', 'm.id_matkul')
-                ->where('am.id_semester', $request->id_semester)
-                ->where('am.id_prodi', $prodi->id_prodi)
+                ->where('nilai_transfer_pendidikans.id_semester', $request->id_semester)
+                ->where('nilai_transfer_pendidikans.id_prodi', $prodi->id_prodi)
                 ->where('am.feeder', 1)
                 ->where('nilai_transfer_pendidikans.feeder', 0)
                 ->select('nilai_transfer_pendidikans.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester')
-                // ->orderBy('am.id_kelas_kuliah')
-                // ->whepsire('nilai_transfer_pendidikans.nim', '06091182126010')
                 ->get();
-
-        // return response()->json($data);
 
         return response()->json(
             // [
@@ -994,17 +988,18 @@ class FeederUploadController extends Controller
     public function nilai_transfer_upload(Request $request)
     {
         $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+        // $prodi = ProgramStudi::where('id',$request->id_prodi)->first();
 
         $semester = $request->semester;
 
         // return response()->json(['message' => $semester.' - '.$prodi]);
 
-        $data = NilaiPerkuliahan::join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'nilai_perkuliahans.id_kelas_kuliah')
-                ->where('k.id_semester', $semester)
-                ->where('k.id_prodi', $prodi)
-                ->where('nilai_perkuliahans.feeder', 0)
-                ->select('nilai_perkuliahans.*')
-                ->orderBy('k.id_kelas_kuliah')
+        $data = NilaiTransferPendidikan::join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
+                ->where('am.feeder', 1)
+                ->where('nilai_transfer_pendidikans.feeder', 0)
+                ->where('nilai_transfer_pendidikans.id_prodi', $prodi)
+                ->where('nilai_transfer_pendidikans.id_semester', $semester)
+                // ->where('id_aktivitas', 'f2420b62-3e0e-42c0-93c5-3ffb4585dfc1')
                 ->get();
 
         $totalData = $data->count();
@@ -1013,44 +1008,66 @@ class FeederUploadController extends Controller
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
 
-        $act = 'UpdateNilaiPerkuliahanKelas';
-        $actGet = 'GetListKomponenEvaluasiKelas';
+        $act = 'InsertNilaiTransferPendidikanMahasiswa';
+        $actGet = 'GetNilaiTransferPendidikanMahasiswa';
         $dataGagal = 0;
         $dataBerhasil = 0;
 
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
+                $id_transfer_lama = $d->id_transfer;
+
+                // $judul = $this->convert_ascii($d->judul);
+                // $lokasi = $this->convert_ascii($d->lokasi);
+                // $keterangan = $this->convert_ascii($d->keterangan);
+
+                // get 100 char only
+                // $lokasi = substr($lokasi, 0, 80);
 
                 $record = [
-                    'id_kelas_kuliah' => $d->id_kelas_kuliah,
-                    'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                    'nilai_angka' => $d->nilai_angka,
-                    'nilai_huruf' => $d->nilai_huruf,
-                    'nilai_indeks' => $d->nilai_indeks,
+                    'id_transfer' => $d->id_transfer,
+                    "id_registrasi_mahasiswa" =>  $d->id_registrasi_mahasiswa,
+                    "kode_mata_kuliah_asal" => $d->kode_mata_kuliah_asal,
+                    "nama_mata_kuliah_asal" => $d->nama_mata_kuliah_asal,
+                    "sks_mata_kuliah_asal" =>  $d->sks_mata_kuliah_asal,
+                    "nilai_huruf_asal" => $d->nilai_huruf_asal,
+                    "id_matkul" => $d->id_matkul,
+                    "sks_mata_kuliah_diakui" => $d->sks_mata_kuliah_diakui,
+                    "nilai_huruf_diakui" => $d->nilai_huruf_diakui,
+                    "nilai_angka_diakui" => $d->nilai_angka_diakui,
+                    "id_perguruan_tinggi" => $d->id_perguruan_tinggi,
+                    "id_semester" => $d->id_semester,
+                    "id_aktivitas" => $d->id_aktivitas ?? "",
                 ];
 
-                $recordGet = "id_kelas = '".$d->id_kelas."'" ;
+
+                $recordGet = "id_transfer = '".$d->id_transfer."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-
-                $result = $req->uploadNilaiKelas();
+                $result = $req->uploadNilaiTransfer();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
                     DB::beginTransaction();
 
+
+                    NilaiTransferPendidikan::where('id_transfer', $id_transfer_lama)->update(['id_transfer' => $result['data']['id_transfer']]);
+                    // PrestasiMahasiswa::where('id_aktivitas', $id_transfer_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+                    // BimbingMahasiswa::where('id_aktivitas', $id_transfer_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
+
                     $d->update([
-                        // 'id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi'],
+                        'id_transfer' => $result['data']['id_transfer'],
+                        'status_sync' => 'sudah_sync',
                         'feeder' => 1
                     ]);
+
 
                     DB::commit();
 
                     $dataBerhasil++;
-
-
                 } else {
 
+                    // DB::rollback();
 
                     $d->update(
                             [

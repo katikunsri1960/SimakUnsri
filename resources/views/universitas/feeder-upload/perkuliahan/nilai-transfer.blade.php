@@ -122,12 +122,8 @@ FEEDER UPLOAD - NILAI TRANSFER
                                     <th class="text-center">Nilai Huruf</th>
                                     <th class="text-center">Nilai Indeks</th>
                                 </tr>
-                                {{-- <tr>
-                                    
-                                </tr> --}}
                             </thead>
                             <tbody>
-
                             </tbody>
                         </table>
                     </div>
@@ -191,15 +187,15 @@ FEEDER UPLOAD - NILAI TRANSFER
                     html += '<td class="text-center">' + item.nim + '</td>';
                     html += '<td class="text-star">' + item.nama_mahasiswa + '</td>';
                     html += '<td class="text-center">' + item.nama_semester + '</td>';
-                    html += '<td class="text-center">' + item.nama_jenis_aktivitas + '</td>';
+                    html += '<td class="text-center">' + (item.nama_jenis_aktivitas ? item.nama_jenis_aktivitas : '')  + '</td>';
                     html += '<td class="text-center">' + item.kode_mata_kuliah_asal + '</td>';
                     html += '<td class="text-center">' + item.nama_mata_kuliah_asal + '</td>';
                     html += '<td class="text-center">' + item.sks_mata_kuliah_asal + '</td>';
                     html += '<td class="text-center">' + item.nilai_huruf_asal + '</td>';
                     
                     html += '<td class="text-center">' + item.kode_matkul_diakui + '</td>';
-                    html += '<td class="text-center">' + item.nama_mata_kuliah_asal + '</td>';
-                    html += '<td class="text-center">' + item.sks_mata_kuliah_asal + '</td>';
+                    html += '<td class="text-center">' + item.nama_mata_kuliah_diakui + '</td>';
+                    html += '<td class="text-center">' + item.sks_mata_kuliah_diakui + '</td>';
                     html += '<td class="text-center">' + item.nilai_huruf_diakui + '</td>';
                     html += '<td class="text-center">' + item.nilai_angka_diakui + '</td>';
                     
@@ -266,7 +262,7 @@ FEEDER UPLOAD - NILAI TRANSFER
                             var id_prodi = $('#id_prodi').val();
                             var id_semester = $('#id_semester').val();
 
-                            var eventSourceUrl = "{{ route('univ.feeder-upload.perkuliahan.nilai-kelas.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
+                            var eventSourceUrl = "{{ route('univ.feeder-upload.perkuliahan.nilai-transfer.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
                             // console.log('EventSource URL:', eventSourceUrl);
 
                             // Initialize the EventSource with the constructed URL

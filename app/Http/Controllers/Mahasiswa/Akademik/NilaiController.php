@@ -32,11 +32,11 @@ class NilaiController extends Controller
 
         $transkrip_mahasiswa=TranskripMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('nama_mata_kuliah','asc')->get();
 
-        $total_sks_transfer = $nilai_transfer->whereNotIn('nilai_angka_diakui', [0, NULL] )->sum('sks_mata_kuliah_diakui');
-        $total_sks_konversi = $nilai_konversi->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
+        // $total_sks_transfer = $nilai_transfer->whereNotIn('nilai_angka_diakui', [0, NULL] )->sum('sks_mata_kuliah_diakui');
+        // $total_sks_konversi = $nilai_konversi->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
         $total_sks_transkrip = $transkrip_mahasiswa->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
 
-        $total_sks = $total_sks_transfer + $total_sks_konversi + $total_sks_transkrip ;
+        $total_sks = $total_sks_transkrip ;
 
         // $total_sks = $transkrip_mahasiswa->sum('sks_mata_kuliah');
         // $nilai_mutu = $transkrip->sum('sks_mata_kuliah')*$transkrip->sum('nilai_');
