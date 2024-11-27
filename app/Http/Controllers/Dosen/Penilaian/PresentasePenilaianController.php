@@ -18,11 +18,6 @@ class PresentasePenilaianController extends Controller
         $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
 
-         //Check batas pengisian nilai
-         $hari_proses = Carbon::now();
-         $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
-         $interval = $hari_proses->diffInDays($batas_nilai);
-
         if(!$data_komponen->isEmpty()){
             foreach($data_komponen as $d){
                 if($d->id_jenis_evaluasi == '2'){

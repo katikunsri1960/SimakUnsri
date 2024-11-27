@@ -61,7 +61,7 @@ Nilai Transfer Pendidikan
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center">
-                                            <a href="{{ route('prodi.data-akademik.nilai-transfer-rpl.input', $d->id_registrasi_mahasiswa) }}" class="btn btn-success btn-sm my-2" title="Nilai Konversi">
+                                            <a href="{{ route('prodi.data-akademik.nilai-transfer-rpl.input', ['id_reg' => $d->id_registrasi_mahasiswa]) }}" class="btn btn-success btn-sm my-2" title="Nilai Konversi">
                                                 <i class="fa fa-pencil-square-o"></i> Nilai Transfer
                                             </a>
                                         </div>

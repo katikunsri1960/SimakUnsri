@@ -39,7 +39,7 @@ Penilaian Perkuliahan Mahasiswa
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
                         <div class="row">
-                            <div class="col-xl-4 col-lg-12">
+                            <div class="col-xl-12 col-lg-12">
                                 {{-- <h3 class="fw-500 text-dark mt-0">{{$data[0]->kelas_kuliah->nama_semester}}</h3> --}}
                                 <p class="mb-0 text-fade fs-18">
                                     Periode Pengisian Nilai, 
@@ -93,27 +93,15 @@ Penilaian Perkuliahan Mahasiswa
                                             <td class="text-center align-middle">
                                                 <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-12 mb-2">
-                                                        @if(date('Y-m-d') <= $semester_aktif->batas_isi_nilai)
-                                                            <a class="btn btn-sm btn-rounded bg-warning-light " href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Komponen Evaluasi"><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</a>
-                                                        @else
-                                                            <button class="btn btn-sm btn-rounded bg-warning-light" disabled><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</button>
-                                                        @endif
+                                                        <a class="btn btn-sm btn-rounded bg-warning-light " href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Komponen Evaluasi"><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</a>
                                                     </div>
                                                 </div>
                                                 <div class="row" style="white-space:nowrap;">
                                                     <div class="col-md-6 mb-2">
-                                                        @if(date('Y-m-d') <= $semester_aktif->batas_isi_nilai)
-                                                            <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi])}}" title="Download DPNA"><i class="fa fa-download"></i> Download</a>
-                                                        @else
-                                                            <button class="btn btn-sm btn-rounded bg-success-light" disabled><i class="fa fa-download"></i> Download</button>
-                                                        @endif
+                                                        <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi])}}" title="Download DPNA"><i class="fa fa-download"></i> Download</a>
                                                     </div>
                                                     <div class="col-md-6 mb-2">
-                                                        @if(date('Y-m-d') <= $semester_aktif->batas_isi_nilai)
-                                                            <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Upload DPNA"><i class="fa fa-upload"></i> Upload</a>
-                                                        @else
-                                                            <button class="btn btn-sm btn-rounded bg-primary-light" disabled><i class="fa fa-upload"></i> Upload</button>
-                                                        @endif
+                                                        <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Upload DPNA"><i class="fa fa-upload"></i> Upload</a>
                                                     </div>
                                                 </div>
                                             </td>
