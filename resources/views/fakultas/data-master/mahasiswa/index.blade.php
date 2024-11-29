@@ -98,6 +98,7 @@ Mahasiswa Prodi
                 data: function (d) {
                     d.prodi = $('#prodi').val();
                     d.angkatan = $('#angkatan').val();
+                    d.status_keluar = $('#status_keluar').val();
                 },
                 // success: function(response) {
                 //     console.log(response); // Menampilkan respon data di console
