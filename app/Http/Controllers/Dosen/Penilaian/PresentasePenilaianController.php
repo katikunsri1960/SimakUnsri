@@ -90,7 +90,7 @@ class PresentasePenilaianController extends Controller
 
         // dd($interval);
 
-        if($komponen_kelas->isEmpty() && (date('Y-m-d') > $semester_aktif->batas_isi_nilai)){
+        if($komponen_kelas->isEmpty() && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai)){
             //Check jumlah bobot komponen evaluasi
             $total_bobot_input = $request->participatory + $request->project_outcomes + $request->assignment + $request->quiz + $request->midterm_exam + $request->finalterm_exam;
 
@@ -155,7 +155,7 @@ class PresentasePenilaianController extends Controller
             'finalterm_exam' => 'required'
         ]);
         
-        if(($komponen_kelas[0]->feeder == '0' || $komponen_kelas[1]->feeder == '0' || $komponen_kelas[2]->feeder == '0' || $komponen_kelas[3]->feeder == '0' || $komponen_kelas[4]->feeder == '0' || $komponen_kelas[5]->feeder == '0') && (date('Y-m-d') > $semester_aktif->batas_isi_nilai)){
+        if(($komponen_kelas[0]->feeder == '0' || $komponen_kelas[1]->feeder == '0' || $komponen_kelas[2]->feeder == '0' || $komponen_kelas[3]->feeder == '0' || $komponen_kelas[4]->feeder == '0' || $komponen_kelas[5]->feeder == '0') && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai)){
             //Check jumlah bobot komponen evaluasi
             $total_bobot_input = $request->participatory + $request->project_outcomes + $request->assignment + $request->quiz + $request->midterm_exam + $request->finalterm_exam;
 
