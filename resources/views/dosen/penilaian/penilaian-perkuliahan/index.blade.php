@@ -92,17 +92,34 @@ Penilaian Perkuliahan Mahasiswa
                                             </td>
                                             <td class="text-center align-middle">
                                                 <div class="row" style="white-space:nowrap;">
-                                                    <div class="col-md-12 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-warning-light " href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Komponen Evaluasi"><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</a>
-                                                    </div>
+                                                    @if(date("Y-m-d") > $semester_aktif->batas_isi_nilai)
+                                                        <div class="col-md-12 mb-2">
+                                                            <button type="submit" class="btn btn-sm btn-rounded bg-warning-light " disabled>
+                                                                <i class="fa fa-clipboard-list"></i> Rencana Evaluasi</a>
+                                                            </button>
+                                                        </div>
+                                                    @else
+                                                        <div class="col-md-12 mb-2">
+                                                            <a class="btn btn-sm btn-rounded bg-warning-light " href="{{route('dosen.penilaian.komponen-evaluasi', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Komponen Evaluasi"><i class="fa fa-clipboard-list"></i> Rencana Evaluasi</a>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                                 <div class="row" style="white-space:nowrap;">
-                                                    <div class="col-md-6 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi])}}" title="Download DPNA"><i class="fa fa-download"></i> Download</a>
-                                                    </div>
-                                                    <div class="col-md-6 mb-2">
-                                                        <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Upload DPNA"><i class="fa fa-upload"></i> Upload</a>
-                                                    </div>
+                                                    @if(date("Y-m-d") > $semester_aktif->batas_isi_nilai)
+                                                        <div class="col-md-6 mb-2">
+                                                            <button class="btn btn-sm btn-rounded bg-success-light" title="Download DPNA"><i class="fa fa-download" disabled></i> Download</button>
+                                                        </div>
+                                                        <div class="col-md-6 mb-2">
+                                                            <button class="btn btn-sm btn-rounded bg-primary-light" title="Upload DPNA" disabled><i class="fa fa-upload"></i> Upload</button>
+                                                        </div>
+                                                    @else
+                                                        <div class="col-md-6 mb-2">
+                                                            <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi])}}" title="Download DPNA"><i class="fa fa-download"></i> Download</a>
+                                                        </div>
+                                                        <div class="col-md-6 mb-2">
+                                                            <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Upload DPNA"><i class="fa fa-upload"></i> Upload</a>
+                                                        </div>
+                                                    @endif
                                                 </div>
                                             </td>
                                         </tr>
