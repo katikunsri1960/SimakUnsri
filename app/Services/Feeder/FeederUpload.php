@@ -366,6 +366,63 @@ class FeederUpload {
 
     }
 
+    public function uploadNilaiTransfer()
+    {
+
+
+            $token = $this->get_token();
+            $paramsGet = [
+                "token" => $token,
+                "act"   => $this->actGet,
+                "filter" => $this->recordGet
+            ];
+
+            $response = $this->service_native($paramsGet, $this->url);
+
+            // $response = $req->getBody();
+
+            $result = $response;
+
+            if ($result['error_code'] == 0 && count($result['data']) > 0) {
+
+                $updateRecord = $this->record;
+
+                unset($updateRecord['id_transfer']);
+
+                $paramsUpdate = [
+                    "token" => $token,
+                    "act"   => "UpdateNilaiTransferPendidikanMahasiswa",
+                    "key" => [
+                        "id_transfer" => $this->record['id_transfer']
+                    ],
+                    "record" => $updateRecord
+                ];
+
+                $response = $this->service_native($paramsUpdate, $this->url);
+
+                // $response = $req->getBody();
+
+                $result = $response;
+
+            } else {
+
+                    unset($this->record['id_transfer']);
+
+                    $params = [
+                        "token" => $token,
+                        "act"   => $this->act,
+                        "record" => $this->record
+                    ];
+
+                    $response = $this->service_native($params, $this->url);
+
+                    $result = $response;
+            }
+
+            return $result;
+
+    }
+
     public function uploadKelas()
     {
         $client = new Client();

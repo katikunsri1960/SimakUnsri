@@ -290,7 +290,7 @@ class RiwayatPendidikan extends Model
     public function nilai_transfer_pendidikan($id_prodi, $semester)
     {
         $data = $this->where('id_prodi', $id_prodi)
-                    // ->where('id_periode_masuk', $semester)
+                    ->where('id_periode_masuk', $semester)
                     ->whereNull('id_jenis_keluar')
                     ->whereIn('id_jenis_daftar', [2,16])
                     ->get();

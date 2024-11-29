@@ -153,6 +153,9 @@ class PesertaKelasKuliah extends Model
                 ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                 ->first();
 
+        $jalur_pendaftaran = $riwayat_pendidikan->id_jenis_daftar;
+        // dd($jalur_pendaftaran);
+
         $status_akm = [
             'id_status_mahasiswa' => $riwayat_pendidikan->id_jenis_daftar == '14' ? 'M' : 'A',
             'nama_status_mahasiswa' => $riwayat_pendidikan->id_jenis_daftar == '14' ? 'Kampus Merdeka' : 'Aktif',
@@ -352,16 +355,38 @@ class PesertaKelasKuliah extends Model
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
                         ]);
+                    }else if($jalur_pendaftaran=='14'){
+                        $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                            'feeder' => 0,
+                            'id_registrasi_mahasiswa' => $id_reg,
+                            'nim' => $riwayat_pendidikan->nim,
+                            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                            'id_prodi' => $riwayat_pendidikan->id_prodi,
+                            'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+                            'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester'=> $semester_aktif->id_semester,
+                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_status_mahasiswa' => 'M',
+                            'nama_status_mahasiswa' => 'Kampus Merdeka',
+                            'ips'=> '0.00',
+                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester'=> $total_sks,
+                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'biaya_kuliah_smt' => '0',
+                            'id_pembiayaan' => 3,
+                            'status_sync' => 'belum sync',
+                        ]);
                     }else{
                         $result = [
                             'status' => 'error',
-                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa!',
+                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa 1!',
                         ];
 
                         return $result;
                     }
                 }else{
-                    if($beasiswa){
+                    if($beasiswa ){
                         if($beasiswa->id_pembiayaan == '3'){
                             $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
                                 'feeder' => 0,
@@ -429,10 +454,32 @@ class PesertaKelasKuliah extends Model
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
                         ]);
+                    }else if($jalur_pendaftaran=='14'){
+                        $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                            'feeder' => 0,
+                            'id_registrasi_mahasiswa' => $id_reg,
+                            'nim' => $riwayat_pendidikan->nim,
+                            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                            'id_prodi' => $riwayat_pendidikan->id_prodi,
+                            'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+                            'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester'=> $semester_aktif->id_semester,
+                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_status_mahasiswa' => $status_akm['id_status_mahasiswa'],
+                            'nama_status_mahasiswa' => $status_akm['nama_status_mahasiswa'],
+                            'ips'=> '0.00',
+                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester'=> $total_sks,
+                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'biaya_kuliah_smt' => '0',
+                            'id_pembiayaan' => 3,
+                            'status_sync' => 'belum sync',
+                        ]);
                     }else{
                         $result = [
                             'status' => 'error',
-                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa!',
+                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa 2!',
                         ];
 
                         return $result;
@@ -455,7 +502,7 @@ class PesertaKelasKuliah extends Model
                 }
                 if($data_mbkm > 0){
                     if($beasiswa){
-                        if($beasiswa->id_pembiayaan == '3'){
+                        if($beasiswa->id_pembiayaan == '3' ){
                             $peserta = AktivitasKuliahMahasiswa::create([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
@@ -522,10 +569,32 @@ class PesertaKelasKuliah extends Model
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
                         ]);
+                    }else if($jalur_pendaftaran=='14'){
+                        $peserta = AktivitasKuliahMahasiswa::create([
+                            'feeder' => 0,
+                            'id_registrasi_mahasiswa' => $id_reg,
+                            'nim' => $riwayat_pendidikan->nim,
+                            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                            'id_prodi' => $riwayat_pendidikan->id_prodi,
+                            'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+                            'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester'=> $semester_aktif->id_semester,
+                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_status_mahasiswa' => 'M',
+                            'nama_status_mahasiswa' => 'Kampus Merdeka',
+                            'ips'=> '0.00',
+                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester'=> $total_sks,
+                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'biaya_kuliah_smt' => '0',
+                            'id_pembiayaan' => 3,
+                            'status_sync' => 'belum sync',
+                        ]);
                     }else{
                         $result = [
                             'status' => 'error',
-                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa!',
+                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa 3!',
                         ];
 
                         return $result;
@@ -599,10 +668,32 @@ class PesertaKelasKuliah extends Model
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
                         ]);
+                    }else if($jalur_pendaftaran=='14'){
+                        $peserta = AktivitasKuliahMahasiswa::create([
+                            'feeder' => 0,
+                            'id_registrasi_mahasiswa' => $id_reg,
+                            'nim' => $riwayat_pendidikan->nim,
+                            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                            'id_prodi' => $riwayat_pendidikan->id_prodi,
+                            'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
+                            'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
+                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester'=> $semester_aktif->id_semester,
+                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_status_mahasiswa' => $status_akm['id_status_mahasiswa'],
+                            'nama_status_mahasiswa' => $status_akm['nama_status_mahasiswa'],
+                            'ips'=> '0.00',
+                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester'=> $total_sks,
+                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'biaya_kuliah_smt' => '0',
+                            'id_pembiayaan' => 3,
+                            'status_sync' => 'belum sync',
+                        ]);
                     }else{
                         $result = [
                             'status' => 'error',
-                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa!',
+                            'message' => 'Data tidak terdata didalam tagihan ataupun beasiswa 4!',
                         ];
 
                         return $result;
