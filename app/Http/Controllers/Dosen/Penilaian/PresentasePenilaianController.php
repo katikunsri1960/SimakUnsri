@@ -18,6 +18,9 @@ class PresentasePenilaianController extends Controller
         $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
 
+        //Check batas pengisian nilai
+        $interval = $semester_aktif->batas_isi_nilai;
+
         if(!$data_komponen->isEmpty()){
             foreach($data_komponen as $d){
                 if($d->id_jenis_evaluasi == '2'){
@@ -85,14 +88,9 @@ class PresentasePenilaianController extends Controller
         //Check komponen kelas kuliah masih kosong
         $komponen_kelas = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
 
-        //Check batas pengisian nilai
-        $hari_proses = Carbon::now();
-        $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
-        $interval = $hari_proses->diffInDays($batas_nilai);
-
         // dd($interval);
 
-        if($komponen_kelas->isEmpty() && $interval >= 0){
+        if($komponen_kelas->isEmpty() && (date('Y-m-d') > $semester_aktif->batas_isi_nilai)){
             //Check jumlah bobot komponen evaluasi
             $total_bobot_input = $request->participatory + $request->project_outcomes + $request->assignment + $request->quiz + $request->midterm_exam + $request->finalterm_exam;
 
@@ -156,13 +154,8 @@ class PresentasePenilaianController extends Controller
             'midterm_exam' => 'required',
             'finalterm_exam' => 'required'
         ]);
-
-        //Check batas pengisian nilai
-        $hari_proses = Carbon::now();
-        $batas_nilai = Carbon::createFromFormat('Y-m-d', $semester_aktif->batas_isi_nilai);
-        $interval = $hari_proses->diffInDays($batas_nilai);
-
-        if(($komponen_kelas[0]->feeder == '0' || $komponen_kelas[1]->feeder == '0' || $komponen_kelas[2]->feeder == '0' || $komponen_kelas[3]->feeder == '0' || $komponen_kelas[4]->feeder == '0' || $komponen_kelas[5]->feeder == '0') && $interval >= 0){
+        
+        if(($komponen_kelas[0]->feeder == '0' || $komponen_kelas[1]->feeder == '0' || $komponen_kelas[2]->feeder == '0' || $komponen_kelas[3]->feeder == '0' || $komponen_kelas[4]->feeder == '0' || $komponen_kelas[5]->feeder == '0') && (date('Y-m-d') > $semester_aktif->batas_isi_nilai)){
             //Check jumlah bobot komponen evaluasi
             $total_bobot_input = $request->participatory + $request->project_outcomes + $request->assignment + $request->quiz + $request->midterm_exam + $request->finalterm_exam;
 
