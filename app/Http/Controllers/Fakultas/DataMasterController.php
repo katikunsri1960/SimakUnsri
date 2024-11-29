@@ -76,7 +76,28 @@ class DataMasterController extends Controller
                     ->distinct()
                     ->orderBy('angkatan_raw', 'desc')
                     ->get();
-        // dd($request->prodi);
+
+        $status_keluar = RiwayatPendidikan::select('id_jenis_keluar', 'keterangan_keluar')
+            ->where(function ($query) {
+                $query->whereNotIn('id_jenis_keluar', ['C']) // Mengecualikan nilai 'C'
+                    ->orWhereNull('id_jenis_keluar')
+                    ; // Menambahkan kondisi untuk menangani NULL
+            })
+            ->groupBy('id_jenis_keluar', 'keterangan_keluar')
+            ->get();
+        
+        // Iterasi setiap item untuk memeriksa kondisi null
+        $status_keluar = $status_keluar->map(function ($item) {
+            if (is_null($item->keterangan_keluar)) { // Periksa apakah null
+                // $item->id_jenis_keluar = '*';
+                $item->keterangan_keluar = 'Aktif';
+            }
+            return $item;
+        });
+                
+                
+            
+        // dd($request->prodi, $request->angkatan, $request->status_keluar);
 
         $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
 
@@ -88,6 +109,7 @@ class DataMasterController extends Controller
             'prodi' => $prodi_fak,
             'kurikulum' => $kurikulum,
             'dosen' => $dosen,
+            'status_keluar' => $status_keluar,
             // 'mahasiswa'=>$data
         ]);
     }
@@ -111,7 +133,7 @@ class DataMasterController extends Controller
                     ->orderBy('id_periode_masuk', 'desc') // Pastikan orderBy di sini
                     // ->limit(10)
                     ;
-                
+
         if ($searchValue) {
             $query = $query->where(function($q) use ($searchValue) {
                 $q->where('nim', 'like', '%' . $searchValue . '%')
@@ -129,12 +151,34 @@ class DataMasterController extends Controller
             $query->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $filter);
         }
 
+        $data=$query->get();
+        
+        // Gunakan map untuk memodifikasi hasil setelah data diambil
+        $data = $data->map(function ($item) {
+            if (is_null($item->keterangan_keluar)) { // Periksa apakah null
+                // Tetapkan nilai default
+                $item->keterangan_keluar = 'Aktif';
+            }
+            return $item;
+        });
+        
+        
         $limit = $request->input('length');
         $offset = $request->input('start');
 
-        $data=$query->get();
         
-    //    dd($data);
+        //    dd($data);
+
+        if ($request->has('status_keluar') && !empty($request->status_keluar)) {
+            $filter = $request->status_keluar;
+        
+            $query->whereIn('keterangan_keluar', $filter);
+            // $query->where(function ($q) use ($filter) {
+            //     $q->whereIn('id_jenis_keluar', $filter)
+            //     //   ->orWhereNull('keterangan_keluar')
+            //     ; // Tambahkan kondisi untuk nilai NULL
+            // });
+        }
 
         if ($request->has('order')) {
             $orderColumn = $request->input('order.0.column');

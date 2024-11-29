@@ -37,6 +37,18 @@
                                 @endforeach
                             </select>
                         </div>
+                        {{-- <div class="col-md-12 mb-3">
+                            <label for="status_keluar" class="form-label">Status Keluar</label>
+                            <select multiple class="form-select" name="status_keluar[]" id="status_keluar">
+                                <option value="">-- Pilih Status Keluar --</option>
+                                @foreach ($status_keluar as $p)
+                                    <option value="{{$p->keterangan_keluar}}" {{ in_array($p->keterangan_keluar, old('status_keluar',
+                                        request()->get('status_keluar', []))) ? 'selected' : '' }}>
+                                        {{$p->keterangan_keluar}}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -62,6 +74,13 @@
 
         $('#angkatan').select2({
             placeholder: '-- Pilih Angkatan -- ',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#filter-button')
+        });
+
+        $('#status_keluar').select2({
+            placeholder: '-- Pilih Status Keluar -- ',
             allowClear: true,
             width: '100%',
             dropdownParent: $('#filter-button')

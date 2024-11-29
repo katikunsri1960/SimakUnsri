@@ -81,6 +81,7 @@ class KelasPenjadwalanController extends Controller
             'marginBottom' => 600
         );
 
+        // dd($data);
         // Add section with the defined properties
         $section = $phpWord->addSection($sectionStyle);
 
@@ -196,9 +197,9 @@ class KelasPenjadwalanController extends Controller
         }
 
         if(!$data->matkul){
-            $filename = 'Daftar Hadir '.$data->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.' '.$data->nama_semester.'.docx';
+            $filename = 'Daftar Hadir-'.$data->kode_mata_kuliah.'-'.$data->nama_kelas_kuliah.'-'.$data->id_semester.'.docx';
         }else{
-            $filename = 'Daftar Hadir '.$data->matkul->kode_mata_kuliah.' '.$data->nama_kelas_kuliah.' '.$data->nama_semester.'.docx';
+            $filename = 'Daftar Hadir-'.$data->matkul->kode_mata_kuliah.'-'.$data->nama_kelas_kuliah.'-'.$data->id_semester.'.docx';
         }
 
         $folderPath = storage_path('app/public/absensi/');
