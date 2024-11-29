@@ -17,3 +17,7 @@
 ## Update 
 - Jalankan perintah 'composer install' pada terminal saat terdapat perubahan pada file composer.json
 - Lalu jalankan pernitah 'npm install && npm run dev' kembali pada terminal
+
+## Yang harus dilakukan
+- Membuat fitur untuk recalculasi akm dengan menghitung sks yang diambil mahasiswa dan sks-sks yang ada di transkrip dengan melakukan pengecekan matakuliah
+

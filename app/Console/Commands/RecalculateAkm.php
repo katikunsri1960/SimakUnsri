@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\SemesterAktif;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
@@ -31,7 +32,7 @@ class RecalculateAkm extends Command
 
         ini_set('memory_limit', '2048M');
 
-        $semester = '20241';
+        $semester = SemesterAktif::first()->id_semester;
 
         $data = AktivitasKuliahMahasiswa::where('id_semester', $semester)->get();
 
@@ -43,13 +44,16 @@ class RecalculateAkm extends Command
         foreach ($data as $d)
         {
             $transkrip = TranskripMahasiswa::select(
-                DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
-                DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
+                'id_matkul', 'kode_mata_kuliah', 'nama_mata_kuliah','sks_mata_kuliah', 'nilai_angka', 'nilai_huruf','nilai_indeks'
             )
             ->where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
             ->whereNotIn('nilai_huruf', ['F', ''])
-            ->groupBy('id_registrasi_mahasiswa')
-            ->first();
+            ->get();
+
+            $totalSksTranskrip = $transkrip->sum('sks_mata_kuliah');
+            $this->info($totalSksTranskrip);
+
+            return;
 
             $ipk = 0;
             $total_sks = 0;

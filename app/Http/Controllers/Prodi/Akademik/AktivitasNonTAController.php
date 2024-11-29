@@ -287,6 +287,10 @@ class AktivitasNonTAController extends Controller
             return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
         }
 
+        if(!$aktivitas_mahasiswa || !$aktivitas_mahasiswa->sk_tugas){
+            return redirect()->back()->with('error', 'SK Aktivitas Belum di Isi.');
+        }
+
         // dd($nilai_konversi);
 
         $data = $request->validate([
@@ -431,6 +435,10 @@ class AktivitasNonTAController extends Controller
 
         if(strtotime(date('Y-m-d')) > strtotime($semester->batas_isi_nilai)){
             return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        }
+
+        if(!$aktivitas_mahasiswa || !$aktivitas_mahasiswa->sk_tugas){
+            return redirect()->back()->with('error', 'SK Aktivitas Belum di Isi.');
         }
 
         // dd($aktivitas_mahasiswa->anggota_aktivitas_personal);

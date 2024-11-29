@@ -11,6 +11,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Support\Facades\DB;
 
 class AktivitasMahasiswa extends Model
 {
@@ -236,7 +237,7 @@ class AktivitasMahasiswa extends Model
                         },
                         // Add count for 'nilai_konversi'
                         'nilai_konversi as count_nilai' => function ($query) {
-                            $query->select(\DB::raw('count(*)')); // This will count all 'nilai_konversi' entries
+                            $query->select(DB::raw('count(*)')); // This will count all 'nilai_konversi' entries
                         },
                     ])
                     ->where('id_prodi', $id_prodi)
