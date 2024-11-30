@@ -7,6 +7,7 @@ use App\Models\Semester;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\ProgramStudi;
 use App\Models\RuangPerkuliahan;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -16,7 +17,17 @@ class KelasKuliah extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['kuisoner_count'];
+    protected $appends = ['kuisoner_count', 'id_tanggal_mulai_efektif', 'id_tanggal_akhir_efektif'];
+
+    public function getIdTanggalMulaiEfektifAttribute()
+    {
+        return Carbon::parse($this->tanggal_mulai_efektif)->format('d-m-Y');
+    }
+
+    public function getIdTanggalAkhirEfektifAttribute()
+    {
+        return Carbon::parse($this->tanggal_akhir_efektif)->format('d-m-Y');
+    }
 
     public function semester()
     {

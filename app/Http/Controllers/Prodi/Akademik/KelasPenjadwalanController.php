@@ -19,6 +19,7 @@ use App\Models\JenisEvaluasi;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\SemesterAktif;
+use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 
 
@@ -30,8 +31,8 @@ class KelasPenjadwalanController extends Controller
 
         $semester_aktif = SemesterAktif::first();
         // dd($semester_aktif);
-        $prodi_id = auth()->user()->fk_id;        
-        
+        $prodi_id = auth()->user()->fk_id;
+
         $data = ListKurikulum::with(['mata_kuliah' => function ($query) use ($prodi_id, $semester_aktif) {
             $query->with(['matkul_konversi' => function ($query) use ($prodi_id) {
                 $query->where('id_prodi', $prodi_id);
@@ -237,15 +238,12 @@ class KelasPenjadwalanController extends Controller
         $semester_aktif = SemesterAktif::first();
         $id_kelas = Uuid::uuid4()->toString();
         $kode_tahun = substr($semester_aktif->id_semester,-3);
-        $tahun_aktif = date('Y');
         $detik = "00";
 
         //Validate request data
         $data = $request->validate([
             'tanggal_mulai' => 'required',
             'tanggal_akhir' => 'required',
-            'bulan_mulai' => 'required',
-            'bulan_akhir' => 'required',
             'kapasitas_kelas' => 'required',
             'ruang_kelas' => 'required',
             'mode_kelas' => [
@@ -263,9 +261,12 @@ class KelasPenjadwalanController extends Controller
             'menit_selesai' => 'required'
         ]);
 
+        // change tanggal mulai and tanggal akhir from d-m-Y to Y-m-d using Carbon
+        $tanggal_mulai_kelas = Carbon::createFromFormat('d-m-Y', $request->tanggal_mulai)->format('Y-m-d');
+        $tanggal_akhir_kelas = Carbon::createFromFormat('d-m-Y', $request->tanggal_akhir)->format('Y-m-d');
         //Generate tanggal pelaksanaan
-        $tanggal_mulai_kelas = $tahun_aktif."-".$request->bulan_mulai."-".$request->tanggal_mulai;
-        $tanggal_akhir_kelas = $tahun_aktif."-".$request->bulan_akhir."-".$request->tanggal_akhir;
+        // $tanggal_mulai_kelas = $tahun_aktif."-".$request->bulan_mulai."-".$request->tanggal_mulai;
+        // $tanggal_akhir_kelas = $tahun_aktif."-".$request->bulan_akhir."-".$request->tanggal_akhir;
 
         //Generate jam pelaksanaan
         $jam_mulai_kelas = $request->jam_mulai.":".$request->menit_mulai.":".$detik;
@@ -626,29 +627,29 @@ class KelasPenjadwalanController extends Controller
                     }else if($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1){
                         for($d=0;$d<$count_dosen_pengajar;$d++){
                             $update_sks_substansi = round(($dosen_kelas[$d]['rencana_minggu_pertemuan']/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
-    
+
                             if($dosen_kelas[$d]['urutan'] == 1 && ($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1)){
-    
+
                                 $update_sks_substansi = $update_sks_substansi + $different_sks;
-                                
+
                                 DosenPengajarKelasKuliah::where('id_kelas_kuliah', $dosen_kelas[$d]['id_kelas_kuliah'])
                                                         ->where('id_dosen', $dosen_kelas[$d]['id_dosen'])
                                                         ->update(['feeder' => 0, 'sks_substansi_total' => $update_sks_substansi]);
 
                                 break;
                             }
-    
+
                         }
                     }
 
                     if(is_null($request->substansi_kuliah)){
                         //Store data to table tanpa substansi kuliah
                         DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas->id_kelas_kuliah, 'sks_substansi_total' => $sks_substansi, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
-    
+
                     }else{
                         //Get sks substansi total
                         $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
-    
+
                         //Store data to table dengan substansi kuliah
                         DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas->id_kelas_kuliah, 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
                     }
@@ -658,14 +659,14 @@ class KelasPenjadwalanController extends Controller
                     if(is_null($request->substansi_kuliah)){
                         //Store data to table tanpa substansi kuliah
                         DosenPengajarKelasKuliah::create(['feeder'=> 0,'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas->id_kelas_kuliah, 'sks_substansi_total' => $kelas->matkul->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
-    
+
                     }else{
                         //Get sks substansi total
                         $substansi_kuliah = SubstansiKuliah::where('id_substansi',$request->substansi_kuliah[$i])->get();
-    
+
                         //Store data to table dengan substansi kuliah
                         DosenPengajarKelasKuliah::create(['feeder'=> 0, 'id_aktivitas_mengajar'=> $id_aktivitas_mengajar, 'id_registrasi_dosen'=> $dosen->id_registrasi_dosen, 'id_dosen'=> $dosen->id_dosen, 'urutan' => $count_dosen_pengajar+1, 'id_kelas_kuliah'=> $kelas->id_kelas_kuliah, 'id_substansi' => $substansi_kuliah->first()->id_substansi, 'sks_substansi_total' => $substansi_kuliah->first()->sks_mata_kuliah, 'rencana_minggu_pertemuan'=> $request->rencana_minggu_pertemuan[$i], 'realisasi_minggu_pertemuan'=> 0, 'id_jenis_evaluasi'=> $request->evaluasi[$i], 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester]);
-                    } 
+                    }
                 }
             }
 
@@ -702,7 +703,7 @@ class KelasPenjadwalanController extends Controller
         $data = DosenPengajarKelasKuliah::with(['dosen','kelas_kuliah','kelas_kuliah.matkul'])
                                         ->where('dosen_pengajar_kelas_kuliahs.id', $id)
                                         ->first();
-        
+
         // dd($data);
 
         return view('prodi.data-akademik.kelas-penjadwalan.edit-dosen-pengajar', [
@@ -746,9 +747,9 @@ class KelasPenjadwalanController extends Controller
         // dd($rencana_pertemuan);
         try {
             DB::beginTransaction();
-            
+
             $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_pengajar)->first();
-            
+
             if(!$dosen)
             {
                 $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_pengajar)->first();
@@ -767,10 +768,10 @@ class KelasPenjadwalanController extends Controller
                     $dosen_rencana_ajar += $pengajar['rencana_minggu_pertemuan'];
                     $dosen_realisasi_ajar += $pengajar['realisasi_minggu_pertemuan'];
                 }
-        
+
                 $total_rencana_pertemuan = (int) $request->rencana_minggu_pertemuan[0] + $dosen_rencana_ajar;
                 $total_realisasi_pertemuan = (int) $request->realisasi_minggu_pertemuan[0] + $dosen_realisasi_ajar;
-        
+
                 if ($total_rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan+1) {
                     return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
                 }
@@ -808,7 +809,7 @@ class KelasPenjadwalanController extends Controller
                         if($dosen_pengajar[$d]['urutan'] == 1 && ($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1)){
 
                             $update_sks_substansi = $update_sks_substansi + $different_sks;
-                            
+
                             DosenPengajarKelasKuliah::where('id_kelas_kuliah', $dosen_pengajar[$d]['id_kelas_kuliah'])
                                                     ->where('id_dosen', $dosen_pengajar[$d]['id_dosen'])
                                                     ->update(['feeder' => 0,'sks_substansi_total' => $update_sks_substansi]);
@@ -818,7 +819,7 @@ class KelasPenjadwalanController extends Controller
 
                     }
                 }
-                
+
                 // Update the DosenPengajarKelasKuliah
                 $updateFields = [
                     'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
@@ -826,18 +827,18 @@ class KelasPenjadwalanController extends Controller
                     'id_jenis_evaluasi' => $request->evaluasi[0],
                     'sks_substansi_total' => $sks_substansi
                 ];
-                
+
                 if ($data_dosen->feeder == 1) {
                     $updateFields['feeder'] = 0;
                 } else {
                     $updateFields['id_registrasi_dosen'] = $dosen->id_registrasi_dosen;
                     $updateFields['id_dosen'] = $dosen->id_dosen;
                 }
-                
+
                 DosenPengajarKelasKuliah::where('id', $id)->update($updateFields);
 
             }else{
-                
+
                 $sks_substansi = ($request->rencana_minggu_pertemuan[0]/$rencana_prodi->jumlah_minggu_pertemuan) * $kelas->matkul->sks_mata_kuliah;
                 // Update the DosenPengajarKelasKuliah
                 $updateFields = [
@@ -846,14 +847,14 @@ class KelasPenjadwalanController extends Controller
                     'id_jenis_evaluasi' => $request->evaluasi[0],
                     'sks_substansi_total' => $sks_substansi
                 ];
-                
+
                 if ($data_dosen->feeder == 1) {
                     $updateFields['feeder'] = 0;
                 } else {
                     $updateFields['id_registrasi_dosen'] = $dosen->id_registrasi_dosen;
                     $updateFields['id_dosen'] = $dosen->id_dosen;
                 }
-                
+
                 DosenPengajarKelasKuliah::where('id', $id)->update($updateFields);
             }
 
@@ -927,7 +928,7 @@ class KelasPenjadwalanController extends Controller
                         if($dosen_pengajar[$d]['urutan'] == 1 && ($sks_substansi_total < $kelas->matkul->sks_mata_kuliah+1)){
 
                             $update_sks_substansi = $update_sks_substansi + $different_sks;
-                            
+
                             DosenPengajarKelasKuliah::where('id_kelas_kuliah', $dosen_pengajar[$d]['id_kelas_kuliah'])
                                                     ->where('id_dosen', $dosen_pengajar[$d]['id_dosen'])
                                                     ->update(['feeder' => 0,'sks_substansi_total' => $update_sks_substansi]);
@@ -941,7 +942,7 @@ class KelasPenjadwalanController extends Controller
                 DosenPengajarKelasKuliah::where('id', $id)->where('feeder', 0)->delete();
 
             }else{
-                
+
                 DosenPengajarKelasKuliah::where('id', $id)->where('feeder', 0)->delete();
             }
 
@@ -1021,8 +1022,6 @@ class KelasPenjadwalanController extends Controller
             $data = $request->validate([
                 'tanggal_mulai' => 'required',
                 'tanggal_akhir' => 'required',
-                'bulan_mulai' => 'required',
-                'bulan_akhir' => 'required',
                 'kapasitas_kelas' => 'required',
                 'ruang_kelas' => 'required',
                 'mode_kelas' => [
@@ -1041,8 +1040,8 @@ class KelasPenjadwalanController extends Controller
             ]);
 
             //Generate tanggal pelaksanaan
-            $tanggal_mulai_kelas = $tahun_aktif."-".$request->bulan_mulai."-".$request->tanggal_mulai;
-            $tanggal_akhir_kelas = $tahun_aktif."-".$request->bulan_akhir."-".$request->tanggal_akhir;
+            $tanggal_mulai_kelas = Carbon::createFromFormat('d-m-Y', $request->tanggal_mulai)->format('Y-m-d');
+            $tanggal_akhir_kelas = Carbon::createFromFormat('d-m-Y', $request->tanggal_akhir)->format('Y-m-d');
 
             //Generate jam pelaksanaan
             $jam_mulai_kelas = $request->jam_mulai.":".$request->menit_mulai.":".$detik;

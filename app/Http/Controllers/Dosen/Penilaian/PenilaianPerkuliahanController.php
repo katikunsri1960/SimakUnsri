@@ -10,6 +10,7 @@ use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\SemesterAktif;
 use App\Exports\ExportDPNA;
 use App\Imports\ImportDPNA;
+use App\Models\SkalaNilai;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -46,6 +47,12 @@ class PenilaianPerkuliahanController extends Controller
         //Check batas pengisian nilai
         $hari_proses = date('Y-m-d');
         $batas_nilai = $semester_aktif->batas_isi_nilai;
+
+        $checkSkala = $this->checkSkalaNilai($data_kelas->id_prodi);
+
+        if(!$checkSkala){
+            return redirect()->back()->with('error', 'Sekala nilai prodi pada feeder belum diatur! Silahkan hubungi Admin Universitas untuk mengatur skala nilai feeder');
+        }
 
         if(!$data_komponen->isEmpty()){
             if($hari_proses <= $batas_nilai){
@@ -84,7 +91,7 @@ class PenilaianPerkuliahanController extends Controller
                 return redirect()->back()->with('error', "Jadwal Pengisian Nilai Telah Berakhir!");
             }
         }
-        
+
         return view('dosen.penilaian.penilaian-perkuliahan.upload-dpna', [
             'data' => $nilai_komponen,
             'kelas' => $data_kelas,
@@ -127,5 +134,17 @@ class PenilaianPerkuliahanController extends Controller
         Excel::import(new ImportDPNA($kelas, $matkul), $file);
 
         return redirect()->back()->with('success', "Data successfully imported!");
+    }
+
+    private function checkSkalaNilai($id_prodi)
+    {
+        $data = SkalaNilai::where('id_prodi', $id_prodi)->get();
+
+        // check if the data is empty or there the count data is less than 5
+        if ($data->isEmpty() || $data->count() < 5) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

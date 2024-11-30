@@ -79,107 +79,29 @@ Edit Kelas Perkuliahan
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-sm-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Tanggal Mulai Efektif</label>
-                                    <div class="row">
-                                        <div class="col-sm-4 mb-2">
-                                            <select class="form-select" name="tanggal_mulai" id="tanggal_mulai" required>
-                                                <option value="">Tanggal</option>
-                                                @for($i=1;$i <= 31;$i++)
-                                                    @php
-                                                        $based_num = 0;
-                                                        $num = $based_num.$i;
-                                                    @endphp
-                                                    <option value="{{$i < 10 ? $num : $i}}" {{ substr($kelas->tanggal_mulai_efektif, 8, 2) == $i ? 'selected' : '' }}>{{$i < 10 ? $num : $i}}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-4 mb-2">
-                                            <select class="form-select" name="bulan_mulai" id="bulan_mulai" required>
-                                                <option value="">Bulan</option>
-                                                @for($i=1;$i <= 12;$i++)
-                                                    @php
-                                                        $based_num = 0;
-                                                        $num = $based_num.$i;
-                                                    @endphp
-                                                    <option value="{{$i < 10 ? $num : $i}}" {{ substr($kelas->tanggal_mulai_efektif, 5, 2) == $i ? 'selected' : '' }}>{{$i < 10 ? $num : $i}}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-4 mb-2">
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                name="tahun_mulai"
-                                                id="tahun_mulai"
-                                                aria-describedby="helpId"
-                                                placeholder="Tahun"
-                                                value="{{date('Y')}}"
-                                                disabled
-                                                required
-                                            />
-                                        </div>
-                                    </div>
+                                    <input type="text" class="form-control" name="tanggal_mulai" id="tanggal_mulai"
+                                        aria-describedby="helpId" placeholder="" required
+                                        value="{{$kelas->id_tanggal_mulai_efektif}}" />
                                 </div>
                             </div>
-                            <div class="col-sm-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label class="form-label">Tanggal Akhir Efektif</label>
-                                    <div class="row">
-                                        <div class="col-sm-4 mb-2">
-                                            <select class="form-select" name="tanggal_akhir" id="tanggal_akhir" required>
-                                                <option value="">Tanggal</option>
-                                                @for($i=1;$i <= 31;$i++)
-                                                    @php
-                                                        $based_num = 0;
-                                                        $num = $based_num.$i;
-                                                    @endphp
-                                                    <option value="{{$i < 10 ? $num : $i}}" {{ substr($kelas->tanggal_akhir_efektif, 8, 2) == $i ? 'selected' : '' }}>{{$i < 10 ? $num : $i}}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-4 mb-2">
-                                            <select class="form-select" name="bulan_akhir" id="bulan_akhir" required>
-                                                <option value="">Bulan</option>
-                                                @for($i=1;$i <= 12;$i++)
-                                                    @php
-                                                        $based_num = 0;
-                                                        $num = $based_num.$i;
-                                                    @endphp
-                                                    <option value="{{$i < 10 ? $num : $i}}" {{ substr($kelas->tanggal_akhir_efektif, 5, 2) == $i ? 'selected' : '' }}>{{$i < 10 ? $num : $i}}</option>
-                                                @endfor
-                                            </select>
-                                        </div>
-                                        <div class="col-sm-4 mb-2">
-                                            <input
-                                                type="text"
-                                                class="form-control"
-                                                name="tahun_akhir"
-                                                id="tahun_akhir"
-                                                aria-describedby="helpId"
-                                                placeholder="Tahun"
-                                                value="{{date('Y')}}"
-                                                disabled
-                                            />
-                                        </div>
-                                    </div>
+                                    <input type="text" class="form-control" name="tanggal_akhir" id="tanggal_akhir"
+                                        aria-describedby="helpId" placeholder="" required
+                                        value="{{$kelas->id_tanggal_akhir_efektif}}" />
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="mb-4">
-                                <label for="kapasitas_kelas" class="form-label">Kapasitas Kelas Kuliah</label>
-                                <input
-                                    type="number"
-                                    class="form-control"
-                                    name="kapasitas_kelas"
-                                    id="kapasitas_kelas"
-                                    aria-describedby="helpId"
-                                    placeholder="Masukkan Kapasitas Kelas Kuliah"
-                                    value="{{$kelas->kapasitas}}"
-                                    required
-                                />
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label for="kapasitas_kelas" class="form-label">Kapasitas Kelas Kuliah</label>
+                                    <input type="number" class="form-control" name="kapasitas_kelas"
+                                        id="kapasitas_kelas" aria-describedby="helpId"
+                                        placeholder="Kapasitas Kelas" required value="{{$kelas->kapasitas}}"/>
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -187,7 +109,7 @@ Edit Kelas Perkuliahan
                                 <label for="ruang_kelas" class="form-label">Ruang Kelas Kuliah</label>
                                 <select class="form-select" name="ruang_kelas" id="ruang_kelas" required>
                                     <option value="">-- Pilih Ruang Kelas --</option>
-                                    @foreach($ruang as $r)                                    
+                                    @foreach($ruang as $r)
                                         <option value="{{$r->id}}" {{ $kelas->ruang_perkuliahan_id == $r->id ? 'selected' : '' }}>{{$r->nama_ruang}} - {{$r->lokasi}}</option>
                                     @endforeach
                                 </select>
@@ -335,11 +257,26 @@ Edit Kelas Perkuliahan
     </div>
 </section>
 @endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('assets/js/flatpickr/flatpickr.min.css')}}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/js/flatpickr/flatpickr.js')}}"></script>
 <script>
+    $(function(){
+        'use strict';
+
+        flatpickr("#tanggal_mulai", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#tanggal_akhir", {
+            dateFormat: "d-m-Y",
+        });
+    });
+
 
     $('#edit-kelas').submit(function(e){
         e.preventDefault();
