@@ -189,6 +189,7 @@ class KHSController extends Controller
         }
 
         $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])
+                    ->select('id_registrasi_mahasiswa', 'nim', 'id_prodi', 'id_periode_masuk', 'dosen_pa', 'nama_mahasiswa')
                     ->where('id_prodi', $request->prodi)
                     ->where(DB::raw('LEFT(id_periode_masuk, 4)'), $request->angkatan)
                     ->get();
@@ -207,22 +208,27 @@ class KHSController extends Controller
                     ->where('id_semester', $request->semester)
                     ->first();
 
-            $nilai = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+            $nilai = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
                     ->where('id_semester', $request->semester)
                     ->orderBy('id_semester')
                     ->get();
 
             $konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
                         ->where('id_semester', $request->semester)
-                        ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                        ->where('ang.id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
                         ->get();
 
-            $transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+            $transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
                         ->where('id_semester', $request->semester)
                         ->get();
 
+            $nama_pa = $d->pembimbing_akademik ? $d->pembimbing_akademik->nama_dosen : '-';
+            $nip_pa = $d->pembimbing_akademik ? $d->pembimbing_akademik->nip : '-';
+
             $data[] = [
                 'riwayat' => $d,
+                'nama_pa' => $nama_pa,
+                'nip_pa' => $nip_pa,
                 'akm' => $akm,
                 'nilai' => $nilai,
                 'konversi' => $konversi,
