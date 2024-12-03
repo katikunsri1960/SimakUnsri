@@ -400,7 +400,7 @@ class PembimbingMahasiswaController extends Controller
                         $u->update(['judul' => $data['judul']]);
                     }
                 }
-            } else {
+            }else {
                 if($aktivitasMahasiswa->id_jenis_aktivitas == 2){
                     $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
                     $data_mahasiswa->update(['judul' => $data['judul']]);
@@ -430,6 +430,7 @@ class PembimbingMahasiswaController extends Controller
                         }
                     } else {
                         if($nilai_course){
+                            $nilai_hasil_course = null;
                             foreach($nilai_course as $n){
                                 $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
 
@@ -453,7 +454,7 @@ class PembimbingMahasiswaController extends Controller
                             }
 
                             // Cek setelah loop jika tidak ada nilai yang memenuhi syarat
-                            if ($nilai_hasil_course < $nilai_usept_prodi->nilai_usept) {
+                            if (!$nilai_hasil_course || $nilai_hasil_course < $nilai_usept_prodi->nilai_usept) {
                                 return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
                             }
 
