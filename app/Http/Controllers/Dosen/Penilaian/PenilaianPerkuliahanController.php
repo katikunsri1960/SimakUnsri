@@ -7,6 +7,7 @@ use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
+use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\SemesterAktif;
 use App\Exports\ExportDPNA;
 use App\Imports\ImportDPNA;
@@ -43,6 +44,12 @@ class PenilaianPerkuliahanController extends Controller
         $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
         $semester_aktif = SemesterAktif::first();
+        $id_dosen = auth()->user()->fk_id;
+        $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
+
+        if($data_dosen->urutan != 1){
+            return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
+        }
 
         //Check batas pengisian nilai
         $hari_proses = date('Y-m-d');
@@ -70,6 +77,12 @@ class PenilaianPerkuliahanController extends Controller
         $semester_aktif = SemesterAktif::first();
         $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->get();
+        $id_dosen = auth()->user()->fk_id;
+        $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
+
+        if($data_dosen->urutan != 1){
+            return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
+        }
 
         // List of program codes not requiring scheduling checks
         $prodi_not_scheduled = ['11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
@@ -103,6 +116,12 @@ class PenilaianPerkuliahanController extends Controller
     public function upload_dpna_store(Request $request, string $kelas, string $matkul)
     {
         $semester_aktif = SemesterAktif::first();
+        $id_dosen = auth()->user()->fk_id;
+        $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
+
+        if($data_dosen->urutan != 1){
+            return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
+        }
 
         // Validate the uploaded file
         $data = $request->validate([
