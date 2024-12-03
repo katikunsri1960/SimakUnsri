@@ -127,8 +127,8 @@ class KHSController extends Controller
         $ipk = number_format($bobot / $total_sks, 2);
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                ->orderBy('id_semester', 'desc')
-                ->get();
+                ->where('id_semester', $request->id_semester)
+                ->first();
 
         $pdf = PDF::loadview('fakultas.data-akademik.khs.pdf', [
             'khs' => $khs,

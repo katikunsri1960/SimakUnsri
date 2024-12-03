@@ -6,16 +6,16 @@ Kartu Hasil Studi
 @include('swal')
 <div style="text-transform: uppercase; font-family: Arial, Helvetica, sans-serif" style="margin-left: 2%">
     <div class="container-fluid" >
-        <table style="width: 70%" class="table-pdf">
+        <table style="width: 100%" class="table-pdf">
             <tr>
-                <td class="text-judul3">KEMENTERIAN PENDIDIKAN, KEBUDAYAAN, RISET DAN TEKNOLOGI</td>
+                <td class="text-judul3 text-center">KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</td>
             </tr>
             <tr>
-                <td class="text-judul3"><strong>UNIVERSITAS SRIWIJAYA</strong></td>
+                <td class="text-judul3 text-center"><strong>UNIVERSITAS SRIWIJAYA</strong></td>
             </tr>
         </table>
     </div>
-    <table class="text-10" 
+    <table class="text-10"
         style="width: 100%">
         <tr>
             <td height="20"></td>
@@ -75,7 +75,7 @@ Kartu Hasil Studi
     <div class="table-responsive">
         <table id="krs-regular" class="text-10" border="1" rules="all" style="width: 100%">
             <thead>
-                
+
                 <tr>
                     <th width="30" class="text-thead">NO.</th>
                     <th width="80" class="text-thead">KODE MK</th>
@@ -99,10 +99,21 @@ Kartu Hasil Studi
             </tbody>
             <tfoot>
                 <tr>
-                    <td class="text-thead" colspan="3"><strong>TOTAL SKS</strong></td>
-                    <td class="text-thead"><strong>{{$total_sks}}</strong></td>
-                    <td class="text-thead" colspan="2"><strong></strong></td>
-                </tr> 
+                    <td class="text-start" colspan="3" style="padding: 0.2rem 0.3rem 0.3rem 0.3rem; font-size:8pt"><strong>SKS Yang Ditempuh</strong></td>
+                    <td class="text-thead" colspan="3"><strong>{{$total_sks}}</strong></td>
+                </tr>
+                <tr>
+                    <td class="text-start" colspan="3" style="padding: 0.2rem 0.3rem 0.3rem 0.3rem; font-size:8pt"><strong>Total Kredit Yang Telah Ditempuh</strong></td>
+                    <td class="text-thead" colspan="3"><strong>{{$akm->sks_total}}</strong></td>
+                </tr>
+                <tr>
+                    <td class="text-start" colspan="3" style="padding: 0.2rem 0.3rem 0.3rem 0.3rem; font-size:8pt"><strong>Indeks Prestasi Semester</strong></td>
+                    <td class="text-thead" colspan="3"><strong>{{$akm->ips}}</strong></td>
+                </tr>
+                <tr>
+                    <td class="text-start" colspan="3" style="padding: 0.2rem 0.3rem 0.3rem 0.3rem; font-size:8pt"><strong>Indeks Prestasi Kumulatif</strong></td>
+                    <td class="text-thead" colspan="3"><strong>{{$akm->ipk}}</strong></td>
+                </tr>
             </tfoot>
         </table>
     </div>
@@ -115,7 +126,7 @@ Kartu Hasil Studi
         </tr>
         <tr width="100%">
             <td width="60%"></td>
-            <td width="50%" class="text-right text-10" >
+            <td width="40%" class="text-start text-10" >
                     Inderalaya, {{ $today->locale('id')->translatedFormat('d F Y')}}
             </td>
         </tr>
@@ -123,31 +134,31 @@ Kartu Hasil Studi
             <td class="text-left text-10" width="60%">
                 {{-- Catatan: --}}
             </td>
-            <td width="50%" class="text-right text-10" >a.n Dekan</td>
+            <td width="40%" class="text-start text-10" >a.n Dekan</td>
         </tr>
         <tr>
             <td class="text-left text-10" width="60%">
                 {{-- Catatan: --}}
             </td>
-            <td width="50%" class="text-right text-10" >Wakil Dekan Bidang Akademik,</td>
+            <td width="40%" class="text-start text-10" >Wakil Dekan Bidang Akademik,</td>
         </tr>
         <tr>
             <td class="text-left text-10" width="60%" style="vertical-align: text-top">
                 {{-- KSM harus dibawa pada saat mengikuti ujian akhir semester --}}
             </td>
-            <td height="60" width="50%" class="text-right text-10 mx-50"><strong><strong></td>
+            <td height="60" width="40%" class="text-right text-10 mx-50"><strong><strong></td>
         </tr>
         <tr>
-            <td width="50%"></td>
-            <td width="60%" class="text-right text-10">
+            <td width="60%"></td>
+            <td width="40%" class="text-start text-10">
                 {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->gelar_depan . ' ' . ucwords(strtolower($wd1->nama_dosen)) . ', ' . $wd1->gelar_belakang }}
-            </td>                
+            </td>
         </tr>
         <tr>
             <td class="text-left text-10" width="60%" style="font-style: italic; ">
                 {{-- Lembar untuk mahasiswa --}}
             </td>
-            <td width="60%" class="text-right text-10" >
+            <td width="40%" class="text-start text-10" >
                 NIP. {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->dosen->nip}}
             </td>
         </tr>
