@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Dosen\Penilaian;
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
@@ -74,6 +75,12 @@ class PresentasePenilaianController extends Controller
         // dd($request->all());
         //Define variable;
         $semester_aktif = SemesterAktif::first();
+        $id_dosen = auth()->user()->fk_id;
+        $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
+
+        if($data_dosen->urutan != 1){
+            return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
+        }
 
         //Validate request data
         $data = $request->validate([
@@ -144,6 +151,12 @@ class PresentasePenilaianController extends Controller
         //Define variable;
         $semester_aktif = SemesterAktif::first();
         $komponen_kelas = KomponenEvaluasiKelas :: where('id_kelas_kuliah', $kelas)->get();
+        $id_dosen = auth()->user()->fk_id;
+        $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
+
+        if($data_dosen->urutan != 1){
+            return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
+        }
 
         //Validate request data
         $data = $request->validate([
