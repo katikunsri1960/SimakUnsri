@@ -284,6 +284,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             // Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'generateAKM'])->name('mahasiswa.krs');
             Route::prefix('perkuliahan')->group(function () {
                 Route::get('/krs', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'view'])->name('mahasiswa.krs.index');
+                Route::get('/krs/{id}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'show'])->name('mahasiswa.krs.show');
+                Route::post('/krs/{id}/update', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'updateSksMaksPmm'])->name('mahasiswa.krs.update');
+
+
+                Route::post('/update-sks-maks-pmm/{id}', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'updateSksMaksPmm'])->name('mahasiswa.krs.sks_maks_pmm.update');
+
                 Route::post('/get-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'get_kelas_kuliah'])->name('mahasiswa.krs.get_kelas_kuliah');
                 Route::post('/get-kelas-kuliah-merdeka', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'get_kelas_kuliah_merdeka'])->name('mahasiswa.krs.get_kelas_kuliah_merdeka');
                 Route::post('/store-kelas-kuliah', [App\Http\Controllers\Mahasiswa\Akademik\KrsController::class, 'ambilKelasKuliah'])->name('mahasiswa.krs.store_kelas_kuliah');

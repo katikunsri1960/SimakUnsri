@@ -80,23 +80,23 @@ class DataMasterController extends Controller
         $status_keluar = RiwayatPendidikan::select('id_jenis_keluar', 'keterangan_keluar')
             ->where(function ($query) {
                 $query->whereNotIn('id_jenis_keluar', ['C']) // Mengecualikan nilai 'C'
-                    ->orWhereNull('id_jenis_keluar')
+                    // ->orWhereNull('id_jenis_keluar')
                     ; // Menambahkan kondisi untuk menangani NULL
             })
             ->groupBy('id_jenis_keluar', 'keterangan_keluar')
             ->get();
         
         // Iterasi setiap item untuk memeriksa kondisi null
-        $status_keluar = $status_keluar->map(function ($item) {
-            if (is_null($item->keterangan_keluar)) { // Periksa apakah null
-                // $item->id_jenis_keluar = '*';
-                $item->keterangan_keluar = 'Aktif';
-            }
-            return $item;
-        });
+        // $status_keluar = $status_keluar->map(function ($item) {
+        //     if (is_null($item->keterangan_keluar)) { // Periksa apakah null
+        //         $item->id_jenis_keluar = '9';
+        //         $item->keterangan_keluar = 'Aktif';
+        //     }
+        //     return $item;
+        // });
                 
                 
-            
+        // dd($status_keluar);
         // dd($request->prodi, $request->angkatan, $request->status_keluar);
 
         $kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
@@ -117,68 +117,92 @@ class DataMasterController extends Controller
     public function mahasiswa_data(Request $request)
     {
         $searchValue = $request->input('search.value');
-
         $semesterAktif = SemesterAktif::first()->id_semester;
-        
+
         $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                    ->orderBy('id_jenjang_pendidikan')
-                    ->orderBy('nama_program_studi')
-                    ->pluck('id_prodi');
+            ->orderBy('id_jenjang_pendidikan')
+            ->orderBy('nama_program_studi')
+            ->pluck('id_prodi');
 
+        // Membangun query awal
         $query = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik', 'beasiswa', 'beasiswa.jenis_beasiswa'])
-                    ->whereIn('id_prodi',  $prodi)
-                    // ->where('nim', 'like', '%' . '07011182126001'. '%')
-                    ->orderBy('nama_program_studi', 'ASC')
-                    // ->orderBy('id_jenjang_pendidikan', 'ASC')
-                    ->orderBy('id_periode_masuk', 'desc') // Pastikan orderBy di sini
-                    // ->limit(10)
-                    ;
+            ->whereIn('id_prodi', $prodi)
+            ->orderBy('nama_program_studi', 'ASC')
+            ->orderBy('id_periode_masuk', 'desc');
 
+            // Modifikasi hasil data setelah diambil
+        
+        // if ($request->has('status_keluar') && !empty($request->status_keluar)) {
+        //     if(in_array('*', $request->status_keluar)){
+        //         // hapus bintang dari aary status keluar,
+        //         if(count($request->status_keluar) > 0){
+        //             $query  ->whereNull('id_jenis_keluar')
+        //                     ->whereIn('id_jenis_keluar', $request->status_keluar);
+        //         }else{
+        //             $query->whereNull('id_jenis_keluar');
+        //         }
+        //     }
+        //     $query->whereIn('id_jenis_keluar', $request->status_keluar);
+        // }
+
+        if ($request->has('status_keluar') && !empty($request->status_keluar)) {
+            $status_keluar = array_filter($request->status_keluar, function ($value) {
+                return $value !== '*';
+            });
+        
+            if (in_array('*', $request->status_keluar)) {
+                if (count($status_keluar) > 0) {
+                    $query->where(function ($q) use ($status_keluar) {
+                        $q->whereNull('id_jenis_keluar')
+                          ->orWhereIn('id_jenis_keluar', $status_keluar);
+                    });
+                } else {
+                    $query->whereNull('id_jenis_keluar');
+                }
+            } else {
+                $query->whereIn('id_jenis_keluar', $status_keluar);
+            }
+        }
+        
+
+        // Filter berdasarkan `searchValue` jika ada
         if ($searchValue) {
-            $query = $query->where(function($q) use ($searchValue) {
+            $query->where(function ($q) use ($searchValue) {
                 $q->where('nim', 'like', '%' . $searchValue . '%')
                 ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
             });
         }
+        
 
+        // Filter berdasarkan program studi
         if ($request->has('prodi') && !empty($request->prodi)) {
-            $filter = $request->prodi;
-            $query->whereIn('id_prodi', $filter);
+            $query->whereIn('id_prodi', $request->prodi);
         }
 
+        // Filter berdasarkan angkatan
         if ($request->has('angkatan') && !empty($request->angkatan)) {
-            $filter = $request->angkatan;
-            $query->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $filter);
+            $query->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $request->angkatan);
         }
 
-        $data=$query->get();
-        
-        // Gunakan map untuk memodifikasi hasil setelah data diambil
-        $data = $data->map(function ($item) {
-            if (is_null($item->keterangan_keluar)) { // Periksa apakah null
-                // Tetapkan nilai default
-                $item->keterangan_keluar = 'Aktif';
-            }
-            return $item;
-        });
-        
+        // Filter berdasarkan status keluar
+        if ($request->has('status_keluar') && !empty($request->status_keluar)) {
+            $filter = $request->status_keluar;
+            $query->where(function ($q) use ($filter) {
+                $q->whereIn('id_jenis_keluar', $filter)
+                ->orWhere(function ($subQuery) {
+                    $subQuery->whereNull('id_jenis_keluar')
+                            ->whereNull('keterangan_keluar');
+                });
+            });
+        }
+
+        // Eksekusi query untuk mendapatkan data
+        $data = $query->get();
+
+        // dd($data);
         
         $limit = $request->input('length');
         $offset = $request->input('start');
-
-        
-        //    dd($data);
-
-        if ($request->has('status_keluar') && !empty($request->status_keluar)) {
-            $filter = $request->status_keluar;
-        
-            $query->whereIn('keterangan_keluar', $filter);
-            // $query->where(function ($q) use ($filter) {
-            //     $q->whereIn('id_jenis_keluar', $filter)
-            //     //   ->orWhereNull('keterangan_keluar')
-            //     ; // Tambahkan kondisi untuk nilai NULL
-            // });
-        }
 
         if ($request->has('order')) {
             $orderColumn = $request->input('order.0.column');

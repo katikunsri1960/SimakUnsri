@@ -308,7 +308,9 @@ class KelasPenjadwalanController extends Controller
 
         // dd($kelas);
 
-        $ruang = RuangPerkuliahan::whereIn('id_prodi', $id_prodi_fak)->where('lokasi', $kelas->lokasi)->get();
+        $ruang = RuangPerkuliahan::whereIn('id_prodi', $id_prodi_fak)
+                                    // ->where('lokasi', $kelas->lokasi)
+                                    ->get();
 
         return view('fakultas.data-akademik.kelas-penjadwalan.edit', ['kelas' => $kelas, 'matkul' => $mata_kuliah, 
         'ruang' => $ruang

@@ -111,11 +111,14 @@ class MataKuliah extends Model
                     '40693f4c-5177-4bd3-b3df-7321320583a6',
         ];
 
+        $prodi_profesi=ProgramStudi::where('id_jenjang_pendidikan', '31')->where('status', 'A')->get()->pluck('id_prodi');
+
+        $prodi_profesi = $prodi_profesi->toArray();
         // $mhs_fk= RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
         //             ->whereIn('id_prodi', $prodi_fk)
         //             ->first();
 
-        // dd($mhs_fk);
+        // dd($prodi_profesi);
 
         $akm = Semester::orderBy('id_semester', 'ASC')
                     ->whereBetween('id_semester', [$id_periode_masuk, $id_semester])
@@ -179,9 +182,11 @@ class MataKuliah extends Model
     //  dd($non_gelar);
 
 
-    if ( in_array($riwayat_pendidikan->id_prodi, $prodi_fk) ) {
+    if (isset($riwayat_pendidikan->id_prodi) && 
+        (in_array($riwayat_pendidikan->id_prodi, $prodi_fk, true) || 
+        in_array($riwayat_pendidikan->id_prodi, $prodi_profesi, true))) {
         $sks_max = 24;
-    }else
+    } else
     if ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' || 
         $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3' 
     ) {
