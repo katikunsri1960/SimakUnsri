@@ -63,7 +63,9 @@ class PenilaianPerkuliahanController extends Controller
 
         if(!$data_komponen->isEmpty()){
             if($hari_proses <= $batas_nilai){
-                return Excel::download(new ExportDPNA($kelas, $prodi), 'DPNA_'.$data_kelas->nama_program_studi.'_'.$data_kelas->matkul->kode_mata_kuliah.'_'.$data_kelas->matkul->nama_mata_kuliah.'_'.$data_kelas->nama_kelas_kuliah.'.xlsx');
+                // remove regex from $data_kelas->matkul->nama_mata_kuliah
+                $nm_matkul = preg_replace('/[^A-Za-z0-9\-]/', '_', $data_kelas->matkul->nama_mata_kuliah);
+                return Excel::download(new ExportDPNA($kelas, $prodi), 'DPNA_'.$data_kelas->nama_program_studi.'_'.$data_kelas->matkul->kode_mata_kuliah.'_'.$nm_matkul.'_'.$data_kelas->nama_kelas_kuliah.'.xlsx');
             }else{
                 return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Telah Berakhir');
             }
