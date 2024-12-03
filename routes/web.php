@@ -131,7 +131,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/{id_maktul}/{id_kelas}/peserta', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'peserta_kelas'])->name('fakultas.data-akademik.kelas-penjadwalan.peserta');
 
                     Route::get('/{id_kelas}/absensi', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'download_absensi'])->name('fakultas.data-akademik.kelas-penjadwalan.absensi');
-                    
+
                     Route::delete('/{id_matkul}/{id_kelas}/delete', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan_destroy'])->name('fakultas.data-akademik.kelas-penjadwalan.delete');
 
                     Route::get('/{id_matkul}/{id_kelas}/edit-kelas', [App\Http\Controllers\Fakultas\Akademik\KelasPenjadwalanController::class, 'edit_kelas_penjadwalan'])->name('fakultas.data-akademik.kelas-penjadwalan.edit');
@@ -149,6 +149,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs'])->name('fakultas.data-akademik.khs');
                     Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'data'])->name('fakultas.data-akademik.khs.data');
                     Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'download'])->name('fakultas.data-akademik.khs.download');
+
+                    Route::prefix('angkatan')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs_angkatan'])->name('fakultas.data-akademik.khs.angkatan');
+                        Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs_angkatan_data'])->name('fakultas.data-akademik.khs.angkatan.data');
+                        Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs_angkatan_download'])->name('fakultas.data-akademik.khs.angkatan.download');
+                    });
                 });
 
                 Route::prefix('nilai-usept')->group(function(){

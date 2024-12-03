@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class DataMasterController extends Controller
 {
@@ -413,7 +414,7 @@ class DataMasterController extends Controller
     {
         $data_mahasiswa = RiwayatPendidikan::with('biodata')->where('id_registrasi_mahasiswa', $mahasiswa)->first();
         $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->id_kurikulum)->first();
-        
+
 
         try {
             // Set the time limit to 30 seconds (adjust as needed)
@@ -427,7 +428,7 @@ class DataMasterController extends Controller
             //throw $th;
             $nilai_usept_mhs = 0;
             $nilai_course = 0;
-            \Log::error($th->getMessage());
+            Log::error($th->getMessage());
 
         }
 

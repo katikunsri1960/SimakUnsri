@@ -63,11 +63,27 @@
                                     Kartu Rencana Studi
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.data-akademik.khs') || request()->routeIs('fakultas.data-akademik.khs.*') ? 'active' : ''}}">
+                            <li class="treeview {{request()->routeIs('fakultas.data-akademik.khs.*') || request()->routeIs('fakultas.data-akademik.khs') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('fakultas.data-akademik.khs') ? 'active' : ''}}">
+                                        <a href="{{route('fakultas.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mahasiswa</a>
+                                    </li>
+                                    <li class="{{request()->routeIs('fakultas.data-akademik.khs.angkatan') ? 'active' : ''}}">
+                                        <a href="{{route('fakultas.data-akademik.khs.angkatan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Angkatan</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {{-- <li class="{{request()->routeIs('fakultas.data-akademik.khs') || request()->routeIs('fakultas.data-akademik.khs.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     Kartu Hasil Studi
                                 </a>
-                            </li>
+                            </li> --}}
                             <li class="{{request()->routeIs('fakultas.data-akademik.nilai-usept') || request()->routeIs('fakultas.data-akademik.nilai-usept.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-akademik.nilai-usept')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     Nilai USEPT
@@ -120,11 +136,11 @@
                             <li class="{{request()->routeIs('fakultas.monitoring.pengajaran-dosen') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.monitoring.pengajaran-dosen')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengajaran Dosen</a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.monitoring.pengisian-krs') || 
+                            <li class="{{request()->routeIs('fakultas.monitoring.pengisian-krs') ||
                                         request()->routeIs('fakultas.monitoring.pengisian-krs.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.monitoring.lulus-do')|| 
+                            <li class="{{request()->routeIs('fakultas.monitoring.lulus-do')||
                                         request()->routeIs('fakultas.monitoring.lulus-do.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.monitoring.lulus-do')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus DO</a>
                             </li>

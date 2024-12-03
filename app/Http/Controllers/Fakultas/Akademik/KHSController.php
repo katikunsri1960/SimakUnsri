@@ -19,6 +19,7 @@ use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use Illuminate\Support\Facades\DB;
 
 class KHSController extends Controller
 {
@@ -145,5 +146,94 @@ class KHSController extends Controller
         //  dd($pdf);
 
          return $pdf->stream('KHS-'.$riwayat->nim.'-'.$semester->nama_semester.'.pdf');
+    }
+
+    public function khs_angkatan()
+    {
+        $semesters = Semester::orderBy('id_semester', 'desc')->get();
+        $semesterAktif = SemesterAktif::with('semester')->first();
+        $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)->orderBy('kode_program_studi')->get();
+
+        $arrayProdi = $prodi->pluck('id_prodi');
+
+        $angkatan = RiwayatPendidikan::whereIn('id_prodi', $arrayProdi)
+                    ->select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
+                    ->distinct()
+                    ->orderBy('angkatan_raw', 'desc')
+                    ->get();
+
+        return view('fakultas.data-akademik.khs.angkatan.index',[
+            'semesters' => $semesters,
+            'semesterAktif' => $semesterAktif,
+            'angkatan' => $angkatan,
+            'prodi' => $prodi,
+        ]);
+    }
+
+    public function khs_angkatan_data(Request $request)
+    {
+        if($request->semester=='' || $request->angkatan=='' || $request->prodi=='') {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Semester dan Angkatan harus diisi!',
+            ]);
+        }
+
+        $checkProdi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)->where('id_prodi', $request->prodi)->first();
+
+        if(!$checkProdi) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Prodi tidak ditemukan!',
+            ]);
+        }
+
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])
+                    ->where('id_prodi', $request->prodi)
+                    ->where(DB::raw('LEFT(id_periode_masuk, 4)'), $request->angkatan)
+                    ->get();
+
+        if ($riwayat->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Mahasiswa Prodi dan angkatan ini tidak ditemukan!',
+            ]);
+        }
+
+        $data = [];
+
+        foreach($riwayat as $d){
+            $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+                    ->where('id_semester', $request->semester)
+                    ->first();
+
+            $nilai = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                    ->where('id_semester', $request->semester)
+                    ->orderBy('id_semester')
+                    ->get();
+
+            $konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+                        ->where('id_semester', $request->semester)
+                        ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                        ->get();
+
+            $transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                        ->where('id_semester', $request->semester)
+                        ->get();
+
+            $data[] = [
+                'riwayat' => $d,
+                'akm' => $akm,
+                'nilai' => $nilai,
+                'konversi' => $konversi,
+                'transfer' => $transfer,
+            ];
+        }
+
+        return response()->json([
+            'status' => 'success',
+            'message' => 'Data KHS berhasil diambil',
+            'data' => $data,
+        ]);
     }
 }
