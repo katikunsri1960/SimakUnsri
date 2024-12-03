@@ -49,6 +49,57 @@ class KrsController extends Controller
         return view('mahasiswa.perkuliahan.krs.index', ['riwayat_pendidikan' => $riwayat_pendidikan]);
     }
 
+    public function show($id)
+    {
+        try {
+            // Cari data riwayat pendidikan berdasarkan ID
+            $riwayat_pendidikan = RiwayatPendidikan::findOrFail($id);
+
+            // Periksa apakah sks_maks_pmm kosong
+            if (!$riwayat_pendidikan->sks_maks_pmm) {
+                // Tampilkan halaman untuk update sks_maks_pmm
+                return view('mahasiswa.perkuliahan.krs.krs-regular.sks_maks_pmm', compact('riwayat_pendidikan'));
+            } else {
+                // Tampilkan halaman lain
+                return view('mahasiswa.perkuliahan.krs.krs-regular.index', compact('riwayat_pendidikan'));
+            }
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
+    }
+
+    public function updateSksMaksPmm(Request $request, $id)
+    {
+        try {
+            // Validasi input
+            $validated = $request->validate([
+                'sks_maks_pmm' => 'required|numeric|min:1',
+            ]);
+
+            // Cari data berdasarkan ID
+            $riwayat = RiwayatPendidikan::findOrFail($id);
+
+            // Update nilai sks_maks_pmm
+            $riwayat->sks_maks_pmm = $validated['sks_maks_pmm'];
+            $riwayat->save();
+
+            // Redirect dengan pesan sukses
+            return redirect()->route('riwayat.edit', $id)->with('success', 'SKS Maksimal PMM berhasil diperbarui.');
+
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            // Jika data tidak ditemukan
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Jika validasi gagal
+            return redirect()->back()->withErrors($e->validator)->withInput();
+
+        } catch (\Exception $e) {
+            // Error umum lainnya
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
+    }
+
     public function submit(Request $request)
     {
         try {
@@ -136,6 +187,12 @@ class KrsController extends Controller
                     ->select('riwayat_pendidikans.*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
+
+        // dd($riwayat_pendidikan->sks_maks_pmm);
+        // if ( !$riwayat_pendidikan -> sks_maks_pmm) {
+        //     // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
+        //     return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
+        // }
 
         $semester_aktif = SemesterAktif::first();
 
@@ -299,6 +356,44 @@ class KrsController extends Controller
         $total_krs_submitted = $regular_submitted + $merdeka_submitted + $aktivitas_submitted+ $mbkm_submitted;
         // dd($krs_submitted, );
 
+        $sks_aktivitas_mbkm = [
+            "10", 
+            "20"
+        ];
+        // Periksa apakah sks_maks_pmm kosong
+        if (!$riwayat_pendidikan->sks_maks_pmm) {
+            // Tampilkan halaman untuk update sks_maks_pmm
+            return view('mahasiswa.perkuliahan.krs.krs-regular.sks_maks_pmm', compact(
+                'sks_aktivitas_mbkm',
+                'mk_regular', 'semester_select',
+                'riwayat_pendidikan',
+                'semester_aktif',
+                'krs_regular',
+                'krs_merdeka',
+                'total_sks_merdeka',
+                'total_sks_regular',
+                // 'akm', 
+                'sks_max', 
+                'semester',
+                'total_sks',
+                'status_mahasiswa',
+                'data_status_mahasiswa',
+                'semester_ke',
+                'fakultas',
+                'krs_akt',
+                'mk_akt',
+                'total_sks_akt',
+                'beasiswa',
+                'tagihan', 
+                'cuti',
+                'transkrip',
+                'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran', 'non_gelar',
+                'pembayaran_manual', 'total_krs_submitted'
+            ));
+        } else {
+            // Tampilkan halaman lain
+            // return view('mahasiswa.perkuliahan.krs.krs-regular.index', compact('riwayat_pendidikan'));
+        
         return view('mahasiswa.perkuliahan.krs.krs-regular.index',[
             'formatDosenPengajar' => function($dosenPengajar) {
                 return $this->formatDosenPengajar($dosenPengajar);
@@ -328,6 +423,7 @@ class KrsController extends Controller
             'batas_pembayaran', 'batas_isi_krs', 'today', 'masa_tenggang', 'penundaan_pembayaran', 'non_gelar',
             'pembayaran_manual', 'total_krs_submitted'
         ));
+        }
     }
 
     public function pilih_prodi(Request $request)
