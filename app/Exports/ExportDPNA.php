@@ -337,8 +337,9 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
               ->setLocked(Protection::PROTECTION_UNPROTECTED);
 
         // Enable sheet protection but allow other cells to be editable
+        $pwd = bin2hex(openssl_random_pseudo_bytes(4));
         $sheet->getProtection()->setSheet(true);
-        $sheet->getProtection()->setPassword('password'); // Optional: Set a password for sheet protection
+        $sheet->getProtection()->setPassword($pwd); // Optional: Set a password for sheet protection
 
         // Set column widths
         $sheet->getColumnDimension('A')->setWidth(15);
