@@ -41,6 +41,7 @@ Jadwal Kuliah Dosen
                                     <th>Ruang Perkuliahan</th>
                                     <th>Semester</th>
                                     <th>Jadwal Kuliah</th>
+                                    <th>Jadwal Ujian</th>
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -48,12 +49,13 @@ Jadwal Kuliah Dosen
                                 @foreach($data as $d)
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
-                                        <td>{{$d->kode_mata_kuliah}}</td>
-                                        <td class="text-start align-left" style="white-space:nowrap;">{{$d->nama_mata_kuliah}}</td>
-                                        <td>{{$d->nama_kelas_kuliah}}</td>
-                                        <td>{{$d->nama_ruang}}</td>
-                                        <td style="white-space:nowrap;">{{$d->nama_semester}}</td>
-                                        <td>{{$d->jadwal_hari}}, {{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}</td>
+                                        <td>{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
+                                        <td class="text-start align-left" style="white-space:nowrap;">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
+                                        <td>{{$d->kelas_kuliah->nama_kelas_kuliah}}</td>
+                                        <td>{{$d->kelas_kuliah->ruang_perkuliahan->nama_ruang}}</td>
+                                        <td style="white-space:nowrap;">{{$d->kelas_kuliah->semester->nama_semester}}</td>
+                                        <td>{{$d->kelas_kuliah->jadwal_hari}}, {{$d->kelas_kuliah->jadwal_jam_mulai}} - {{$d->kelas_kuliah->jadwal_jam_selesai}}</td>
+                                        <td>{{$d->kelas_kuliah->ruang_ujian ? $d->kelas_kuliah->ruang_ujian->nama_ruang : 'Jadwal Ujian Belum di Setting'}}, {{$d->kelas_kuliah->jadwal_mulai_ujian}} - {{$d->kelas_kuliah->jadwal_selesai_ujian}}</td>
                                         <td>
                                             <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.jadwal-kuliah.detail', ['kelas' => $d->id_kelas_kuliah])}}"><i class="fa fa-search"></i> Detail Kelas</a>
                                         </td>
