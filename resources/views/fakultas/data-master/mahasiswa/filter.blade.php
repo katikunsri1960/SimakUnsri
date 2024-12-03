@@ -37,18 +37,21 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- <div class="col-md-12 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label for="status_keluar" class="form-label">Status Keluar</label>
                             <select multiple class="form-select" name="status_keluar[]" id="status_keluar">
-                                <option value="">-- Pilih Status Keluar --</option>
+                                <option value="" disabled>-- Pilih Status Keluar --</option>
+                                <!-- Option manual -->
+                                <option value="*" {{ in_array('*', old('status_keluar', request()->get('status_keluar', []))) ? 'selected' : '' }}>Aktif</option>
+                                <!-- Options dari database -->
                                 @foreach ($status_keluar as $p)
-                                    <option value="{{$p->keterangan_keluar}}" {{ in_array($p->keterangan_keluar, old('status_keluar',
-                                        request()->get('status_keluar', []))) ? 'selected' : '' }}>
+                                    <option value="{{$p->id_jenis_keluar}}" 
+                                        {{ in_array($p->id_jenis_keluar, old('status_keluar', request()->get('status_keluar', []))) ? 'selected' : '' }}>
                                         {{$p->keterangan_keluar}}
                                     </option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>                        
                     </div>
                 </div>
                 <div class="modal-footer">
