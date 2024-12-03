@@ -57,9 +57,17 @@ KHS Mahasiswa
                             </div>
                         </div>
                         <div class="col-md-4">
-                            <label for="nim" class="form-label">Nomor Induk Mahasiswa</label>
+                            <label for="nim" class="form-label">Angkatan</label>
                             <div class="input-group mb-3">
-                                <input type="text" class="form-control" name="nim" id="nim" required />
+                                <select class="form-select" name="angkatan" id="angkatan">
+                                    <option value="" disabled selected>-- Pilih Angkatan --</option>
+                                    @foreach ($angkatan as $a)
+                                    <option value="{{$a->angkatan_raw}}" {{request()->angkatan != '' &&
+                                        $a->angkatan_raw ==
+                                        request()->angkatan ? 'selected' : ''}}>{{$a->angkatan_raw}}
+                                    </option>
+                                    @endforeach
+                                </select>
                                 <button class="input-group-button btn btn-primary btn-sm" id="basic-addon1"
                                     onclick="getKrs()"><i class="fa fa-search"></i> Proses</button>
                             </div>
@@ -70,13 +78,14 @@ KHS Mahasiswa
                     <div class="table-responsive">
                         <div id="krsDiv" hidden>
                             <div class="row mb-2">
-                                <form action="{{route('fakultas.data-akademik.khs.download')}}" method="get" id="cetakForm" target="_blank">
+                                {{-- <form action="{{route('fakultas.data-akademik.khs.angkatan.download')}}" method="get" id="cetakForm" target="_blank">
                                     <input type="hidden" name="nim" id="nimCetak">
                                     <input type="hidden" name="id_semester" id="idSemesterCetak">
                                     <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
-                                </form>
+                                </form> --}}
                             </div>
-                            <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
+                            <div id="dataKrsDiv"></div>
+                            {{-- <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
                             <table style="width:100%" class="mb-3">
                                 <tr>
                                     <td class="text-start align-middle" style="width: 12%">NIM</td>
@@ -164,7 +173,7 @@ KHS Mahasiswa
                             <div class="row mt-5" id="totalDiv">
 
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
 
@@ -174,14 +183,18 @@ KHS Mahasiswa
 </section>
 @endsection
 @push('js')
-<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+{{-- <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script> --}}
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
  function getKrs()
     {
-        var nim = $('#nim').val();
+        // console.log('getKrs');
+        // return;
+        var angkatan = $('#angkatan').val();
+        var prodi = $('#prodi').val();
         var semester = $('#semester').val();
-        if(nim == '' || semester == ''){
+
+        if(angkatan == '' || semester == '' || prodi == ''){
             swal({
                 title: "Peringatan!",
                 text: "Nomor Induk Mahasiswa dan Tahun Akademik harus diisi!",
@@ -197,7 +210,8 @@ KHS Mahasiswa
                 url: '{{route('fakultas.data-akademik.khs.angkatan.data')}}',
                 type: 'GET',
                 data: {
-                    nim: nim,
+                    angkatan: angkatan,
+                    prodi: prodi,
                     semester: semester
                 },
                 success: function(response){
@@ -214,6 +228,214 @@ KHS Mahasiswa
                         });
                         return false;
                     }
+
+                    $('#dataKrsDiv').empty();
+                    $('#krsDiv').removeAttr('hidden');
+
+                    // looping response.data
+                    response.data.forEach(function(data, index){
+                        var fakultas = data.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '');
+                        var jurusan = data.riwayat.prodi.jurusan.nama_jurusan_id ?? '-';
+                        var nip_pa = data.riwayat.dosen_pa ? data.riwayat.dosen_pa.nip : '-';
+                        var dosen_pa = data.riwayat.dosen_pa ? data.riwayat.dosen_pa.nama_dosen : '-';
+                        var semesterText =  $('#semester option:selected').text().toUpperCase();
+
+                        $('#dataKrsDiv').append(`
+                            <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
+                            <table style="width:100%" class="mb-3">
+                                <tr>
+                                    <td class="text-start align-middle" style="width: 12%">NIM</td>
+                                    <td>:</td>
+                                    <td class="text-start align-middle" id="nimKrs" style="width: 45%; padding-left: 10px">${data.riwayat.nim}</td>
+                                    <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
+                                    <td>:</td>
+                                    <td class="text-start align-middle" id="fakultasKrs" style="width: 30%; padding-left: 10px">${fakultas}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start align-middle" style="width: 12%">NAMA</td>
+                                    <td>:</td>
+                                    <td class="text-start align-middle" id="namaKrs" style="width: 45%; padding-left: 10px">${data.riwayat.nama_mahasiswa}</td>
+                                    <td class="text-start align-middle" style="width: 18%">JURUSAN</td>
+                                    <td>:</td>
+                                    <td class="text-start align-middle" id="jurusanKrs" style="width: 30%; padding-left: 10px">${jurusan}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start align-middle" style="width: 10%">NIP PA</td>
+                                    <td>:</td>
+                                    <td class="text-start align-middle" id="nippaKrs" style="width: 45%; padding-left: 10px">${nip_pa}</td>
+                                    <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI</td>
+                                    <td>:</td>
+                                    <td class="text-start align-middle" id="prodiKrs" style="width: 30%; padding-left: 10px">${data.riwayat.prodi.nama_program_studi.toUpperCase()}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-start align-middle" style="width: 10%">DOSEN PA</td>
+                                    <td>:</td>
+                                    <td class="text-start align-middle" id="dosenpaKrs" style="width: 45%; padding-left: 10px">${dosen_pa}</td>
+                                    <td class="text-start align-middle" style="width: 18%">SEMESTER</td>
+                                    <td>:</td>
+                                    <td class="text-start align-middle" id="semesterKrs" style="width: 30%; padding-left: 10px">${semesterText}</td>
+                                </tr>
+                            </table>
+                            <div class="d-flex justify-content-end align-middle"></div>
+                            <table class="table table-bordered mt-4" id="krs-regular-${index}">
+                                <thead>
+                                    <tr>
+                                        <th class="text-center align-middle">No</th>
+                                        <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                        <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                        <th class="text-center align-middle">Nama Kelas</th>
+                                        <th class="text-center align-middle">Semester</th>
+                                        <th class="text-center align-middle">SKS</th>
+                                        <th class="text-center align-middle">Nilai Angka</th>
+                                        <th class="text-center align-middle">Nilai Index</th>
+                                        <th class="text-center align-middle">Nilai Huruf</th>
+                                    </tr>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                            <hr>
+                            <div class="row mt-5" id="transferDiv-${index}" hidden>
+                                <h3>Nilai Transfer</h3>
+                                <table class="table table-bordered table-hover mt-2" id="transferTable-${index}">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center align-middle">No</th>
+                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                            <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                            <th class="text-center align-middle">Semester</th>
+                                            <th class="text-center align-middle">SKS Diakui</th>
+                                            <th class="text-center align-middle">Nilai Index Diakui</th>
+                                            <th class="text-center align-middle">Nilai Huruf Diakui</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                            <div class="row mt-5" id="akmDiv-${index}"></div>
+                            <div class="row mt-5" id="totalDiv-${index}"></div>
+                        `);
+
+                        var no = 1;
+                        var indexTable = index;
+
+                        data.nilai.forEach(function(krs, index){
+                            var trClass = '';
+                            if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null) {
+                                trClass = 'bg-danger';
+                            }
+                            $(`#krs-regular-${indexTable} tbody`).append(`
+                                <tr class="${trClass}">
+                                    <td class="text-center align-middle">${no}</td>
+                                    <td class="text-center align-middle">${krs.kode_mata_kuliah}</td>
+                                    <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
+                                    <td class="text-center align-middle">${krs.nama_kelas_kuliah}</td>
+                                    <td class="text-center align-middle">${krs.nama_semester}</td>
+                                    <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
+                                    <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
+                                    <td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>
+                                    <td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>
+                                </tr>
+                            `);
+                            no++;
+                        });
+
+                        if (data.konversi.length > 0) {
+                            $(`#krs-regular-${indexTable} tbody`).append(`
+                                <tr>
+                                    <th class="text-center align-middle" colspan="8">Konversi Aktivitas</th>
+                                </tr>
+                            `);
+
+                            data.konversi.forEach(function(krs, index){
+                                var trClass = '';
+                                if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
+                                {
+                                    trClass = 'bg-danger';
+                                }
+                                $(`#krs-regular-${indexTable} tbody`).append(`
+                                    <tr class="${trClass}">
+                                        <td class="text-center align-middle">${no}</td>
+                                        <td class="text-center align-middle">${krs.matkul.kode_mata_kuliah}</td>
+                                        <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
+                                        <td class="text-center align-middle"> - </td>
+                                        <td class="text-center align-middle">${krs.nama_semester}</td>
+                                        <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
+                                        <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
+                                        <td class="text-center align-middle">${krs.nilai_indeks}</td>
+                                        <td class="text-center align-middle">${krs.nilai_huruf}</td>
+                                    </tr>
+                                `);
+                                no++;
+                            });
+                        }
+
+                        if(data.akm != null)
+                        {
+                            // console.log(data.akm.id);
+
+                            $(`#akmDiv-${indexTable}`).empty();
+                            $(`#akmDiv-${indexTable}`).append(`
+                                <hr>
+                                <h2>Aktivitas Kuliah Mahasiswa (AKM)</h2>
+                            `);
+
+                            $(`#akmDiv-${indexTable}`).append(`
+                                <div class="col-md-4">
+                                    <table style="width:100%" class="table table-bordered">
+                                        <tr>
+                                            <td class="text-start align-middle" style="width: 50%">Semester</td>
+                                            <td>:</td>
+                                            <td class="text-start
+                                                align-middle">${data.akm.nama_semester}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start align-middle" style="width: 50%">IPK</td>
+                                            <td>:</td>
+                                            <td class="text-start align-middle">${data.akm.ipk}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start align-middle" style="width: 50%">IPS</td>
+                                            <td>:</td>
+                                            <td class="text-start align-middle">${data.akm.ips}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="text-start align-middle" style="width: 50%">Status Mahasiswa</td>
+                                            <td>:</td>
+                                            <td class="text-start align-middle">${data.akm.nama_status_mahasiswa}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            `);
+                        }
+
+                        if (data.transfer.length > 0) {
+                            $(`#transferDiv-${indexTable}`).removeAttr('hidden');
+
+                            data.transfer.forEach(function(transfer, index){
+                                $(`#transferTable-${indexTable} tbody`).append(`
+                                    <tr>
+                                        <td class="text-center align-middle">${index + 1}</td>
+                                        <td class="text-center align-middle">${transfer.kode_matkul_diakui}</td>
+                                        <td class="text-start align-middle">${transfer.nama_mata_kuliah_diakui}</td>
+                                        <td class="text-center align-middle">${transfer.nama_semester}</td>
+                                        <td class="text-center align-middle">${transfer.sks_mata_kuliah_diakui}</td>
+                                        <td class="text-center align-middle">${transfer.nilai_angka_diakui}</td>
+                                        <td class="text-center align-middle">${transfer.nilai_huruf_diakui}</td>
+                                    </tr>
+                                `);
+                            });
+
+                        }
+
+                        $('#dataKrsDiv').append(`
+                            <hr>
+                            <br>
+                            <hr>
+                        `);
+                    });
+
+                    return true;
+
 
                     $('#nimCetak').val(response.riwayat.nim);
                     $('#idSemesterCetak').val(semester);

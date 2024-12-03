@@ -889,7 +889,7 @@ class KelasPenjadwalanController extends Controller
         $count_dosen_pengajar = count($dosen_pengajar);
         $dosen_rencana_ajar = 0;
 
-        if($count_dosen_pengajar == 1){
+        if($count_dosen_pengajar < 1){
             return redirect()->back()->with('error', 'Data Dosen Tidak Boleh Kosong.');
         }
 
