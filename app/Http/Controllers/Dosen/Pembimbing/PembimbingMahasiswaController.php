@@ -364,101 +364,105 @@ class PembimbingMahasiswaController extends Controller
                                 ->where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)
                                 ->first();
 
-            $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
-            $data_mahasiswa->update(['judul' => $data['judul']]);
+            // coding apabila ajuan sidang tanpa pengecheckan USEPT
 
-            foreach ($bimbingMahasiswa as $b) {
-                $b->update(['judul' => $data['judul']]);
-            }
+            // $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+            // $data_mahasiswa->update(['judul' => $data['judul']]);
 
-            if ($ujiMahasiswa) {
-                foreach ($ujiMahasiswa as $u) {
-                    $u->update(['judul' => $data['judul']]);
-                }
-            }
+            // foreach ($bimbingMahasiswa as $b) {
+            //     $b->update(['judul' => $data['judul']]);
+            // }
 
-            // $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->mahasiswa->id_kurikulum)->first();
-            // $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->max('score');
-            // $db_course_usept = new CourseUsept;
-            // $nilai_course = $db_course_usept->whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->get();
-
-            // if (in_array($aktivitasMahasiswa->prodi->id_jenjang_pendidikan, [31, 32, 37]))
-            // {
-            //     $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
-            //     $data_mahasiswa->update(['judul' => $data['judul']]);
-
-            //     foreach ($bimbingMahasiswa as $b) {
-            //         $b->update(['judul' => $data['judul']]);
-            //     }
-
-            //     if ($ujiMahasiswa) {
-            //         foreach ($ujiMahasiswa as $u) {
-            //             $u->update(['judul' => $data['judul']]);
-            //         }
-            //     }
-            // } else {
-            //     if($aktivitasMahasiswa->id_jenis_aktivitas == 2){
-            //         $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
-            //         $data_mahasiswa->update(['judul' => $data['judul']]);
-
-            //         foreach ($bimbingMahasiswa as $b) {
-            //             $b->update(['judul' => $data['judul']]);
-            //         }
-
-            //         if ($ujiMahasiswa) {
-            //             foreach ($ujiMahasiswa as $u) {
-            //                 $u->update(['judul' => $data['judul']]);
-            //             }
-            //         }
-            //     }else{
-            //         if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
-            //             $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
-            //             $data_mahasiswa->update(['judul' => $data['judul']]);
-
-            //             foreach ($bimbingMahasiswa as $b) {
-            //                 $b->update(['judul' => $data['judul']]);
-            //             }
-
-            //             if ($ujiMahasiswa) {
-            //                 foreach ($ujiMahasiswa as $u) {
-            //                     $u->update(['judul' => $data['judul']]);
-            //                 }
-            //             }
-            //         } else {
-            //             if($nilai_course){
-            //                 foreach($nilai_course as $n){
-            //                     $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
-
-            //                     // Jika nilai course sudah memenuhi syarat, lanjutkan
-            //                     if($nilai_hasil_course >= $nilai_usept_prodi->nilai_usept){
-            //                         $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
-            //                         $data_mahasiswa->update(['feeder' => 0, 'judul' => $data['judul']]);
-
-            //                         foreach ($bimbingMahasiswa as $b) {
-            //                             $b->update(['feeder' => 0, 'judul' => $data['judul']]);
-            //                         }
-
-            //                         if ($ujiMahasiswa) {
-            //                             foreach ($ujiMahasiswa as $u) {
-            //                                 $u->update(['feeder' => 0, 'judul' => $data['judul']]);
-            //                             }
-            //                         }
-            //                         // Hentikan loop karena syarat sudah terpenuhi
-            //                         break;
-            //                     }
-            //                 }
-
-            //                 // Cek setelah loop jika tidak ada nilai yang memenuhi syarat
-            //                 if ($nilai_hasil_course < $nilai_usept_prodi->nilai_usept) {
-            //                     return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
-            //                 }
-
-            //             } else {
-            //                 return redirect()->back()->with('error', 'Mahasiswa belum memiliki data course untuk nilai USEPT.');
-            //             }
-            //         }
+            // if ($ujiMahasiswa) {
+            //     foreach ($ujiMahasiswa as $u) {
+            //         $u->update(['judul' => $data['judul']]);
             //     }
             // }
+
+            // coding apabila ajuan sidang dengan pengecheckan USEPT
+
+            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->mahasiswa->id_kurikulum)->first();
+            $nilai_usept_mhs = Usept::whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->max('score');
+            $db_course_usept = new CourseUsept;
+            $nilai_course = $db_course_usept->whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->mahasiswa->biodata->nik])->get();
+
+            if (in_array($aktivitasMahasiswa->prodi->id_jenjang_pendidikan, [31, 32, 37]))
+            {
+                $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+                $data_mahasiswa->update(['judul' => $data['judul']]);
+
+                foreach ($bimbingMahasiswa as $b) {
+                    $b->update(['judul' => $data['judul']]);
+                }
+
+                if ($ujiMahasiswa) {
+                    foreach ($ujiMahasiswa as $u) {
+                        $u->update(['judul' => $data['judul']]);
+                    }
+                }
+            } else {
+                if($aktivitasMahasiswa->id_jenis_aktivitas == 2){
+                    $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+                    $data_mahasiswa->update(['judul' => $data['judul']]);
+
+                    foreach ($bimbingMahasiswa as $b) {
+                        $b->update(['judul' => $data['judul']]);
+                    }
+
+                    if ($ujiMahasiswa) {
+                        foreach ($ujiMahasiswa as $u) {
+                            $u->update(['judul' => $data['judul']]);
+                        }
+                    }
+                }else{
+                    if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
+                        $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+                        $data_mahasiswa->update(['judul' => $data['judul']]);
+
+                        foreach ($bimbingMahasiswa as $b) {
+                            $b->update(['judul' => $data['judul']]);
+                        }
+
+                        if ($ujiMahasiswa) {
+                            foreach ($ujiMahasiswa as $u) {
+                                $u->update(['judul' => $data['judul']]);
+                            }
+                        }
+                    } else {
+                        if($nilai_course){
+                            foreach($nilai_course as $n){
+                                $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
+
+                                // Jika nilai course sudah memenuhi syarat, lanjutkan
+                                if($nilai_hasil_course >= $nilai_usept_prodi->nilai_usept){
+                                    $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);
+                                    $data_mahasiswa->update(['feeder' => 0, 'judul' => $data['judul']]);
+
+                                    foreach ($bimbingMahasiswa as $b) {
+                                        $b->update(['feeder' => 0, 'judul' => $data['judul']]);
+                                    }
+
+                                    if ($ujiMahasiswa) {
+                                        foreach ($ujiMahasiswa as $u) {
+                                            $u->update(['feeder' => 0, 'judul' => $data['judul']]);
+                                        }
+                                    }
+                                    // Hentikan loop karena syarat sudah terpenuhi
+                                    break;
+                                }
+                            }
+
+                            // Cek setelah loop jika tidak ada nilai yang memenuhi syarat
+                            if ($nilai_hasil_course < $nilai_usept_prodi->nilai_usept) {
+                                return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan syarat kelulusan nilai USEPT.');
+                            }
+
+                        } else {
+                            return redirect()->back()->with('error', 'Mahasiswa belum memiliki data course untuk nilai USEPT.');
+                        }
+                    }
+                }
+            }
 
 
             if (!empty($data['dosen_penguji']) && !empty($request->penguji_ke)) {
