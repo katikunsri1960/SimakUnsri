@@ -44,12 +44,6 @@ class PenilaianPerkuliahanController extends Controller
         $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
         $semester_aktif = SemesterAktif::first();
-        $id_dosen = auth()->user()->fk_id;
-        $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
-
-        if($data_dosen->urutan != 1){
-            return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
-        }
 
         //Check batas pengisian nilai
         $hari_proses = date('Y-m-d');
