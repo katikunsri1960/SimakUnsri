@@ -113,31 +113,60 @@ class KHSController extends Controller
 
         $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                     ->where('id_semester', $request->id_semester)
+                    ->whereNotNull('nilai_indeks')
+                    ->orderBy('kode_mata_kuliah')
                     ->get();
 
-        $total_sks = $khs->sum('sks_mata_kuliah');
-        $bobot = 0;
+        $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                    ->where('id_semester', $request->id_semester)
+                    ->whereNotNull('nilai_angka_diakui')
+                    ->orderBy('kode_matkul_diakui')
+                    ->get();
 
+        $khs_konversi = KonversiAktivitas::with('matkul')
+                    ->where('nim', $riwayat->nim)
+                    ->where('id_semester', $request->id_semester)
+                    ->whereNotNull('nilai_indeks')
+                    // ->orderBy('kode_mata_kuliah')
+                    ->get();
+
+        // dd($khs, $khs_transfer, $khs_konversi);
+
+        $total_sks = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
+        $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
+
+        //  dd($total_sks);
         $semester = Semester::where('id_semester', $request->id_semester)->first();
 
         foreach ($khs as $t) {
             $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
         }
 
-        //  dd($semester);
-        $ipk = number_format($bobot / $total_sks, 2);
+        foreach ($khs_transfer as $t) {
+            $bobot_transfer += $t->nilai_angka_diakui * $t->sks_mata_kuliah_diakui;
+        }
+
+        foreach ($khs_konversi as $t) {
+            $bobot_konversi += $t->nilai_indeks * $t->sks_mata_kuliah;
+        }
+
+        $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
+        //  dd($total_bobot);
+        $ips = number_format($total_bobot / $total_sks, 2);
+
+        $ipk = number_format($total_bobot / $total_sks, 2);
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->where('id_semester', $request->id_semester)
                 ->first();
 
         $pdf = PDF::loadview('fakultas.data-akademik.khs.pdf', [
-            'khs' => $khs,
+            'khs' => $khs,'khs_transfer' => $khs_transfer,'khs_konversi' => $khs_konversi,
             'riwayat' => $riwayat,
             'semester' => $semester,
             'akm' => $akm,
             'total_sks' => $total_sks,
-            'ipk' => $ipk,
+            'ipk' => $ipk,'ips' => $ips,
             'today'=> Carbon::now(),
             'wd1' => PejabatFakultas::where('id_fakultas', $riwayat->prodi->fakultas_id)->where('id_jabatan', 1)->first(),
             'bebas_pustaka' => BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first(),
