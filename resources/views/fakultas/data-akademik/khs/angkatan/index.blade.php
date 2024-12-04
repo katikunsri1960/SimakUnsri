@@ -76,7 +76,7 @@ KHS Mahasiswa
                 </div>
                 <div class="box-body text-center">
                     <div class="table-responsive">
-                        <div id="krsDiv" hidden>
+                        <div id="khsDiv" hidden>
                             <div class="row mb-2">
                                 {{-- <form action="{{route('fakultas.data-akademik.khs.angkatan.download')}}" method="get" id="cetakForm" target="_blank">
                                     <input type="hidden" name="nim" id="nimCetak">
@@ -84,7 +84,7 @@ KHS Mahasiswa
                                     <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
                                 </form> --}}
                             </div>
-                            <div id="dataKrsDiv"></div>
+                            <div id="dataKhsDiv"></div>
                             {{-- <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
                             <table style="width:100%" class="mb-3">
                                 <tr>
@@ -229,8 +229,8 @@ KHS Mahasiswa
                         return false;
                     }
 
-                    $('#dataKrsDiv').empty();
-                    $('#krsDiv').removeAttr('hidden');
+                    $('#dataKhsDiv').empty();
+                    $('#khsDiv').removeAttr('hidden');
 
                     // looping response.data
                     response.data.forEach(function(data, index){
@@ -240,7 +240,7 @@ KHS Mahasiswa
                         var dosen_pa = data.riwayat.dosen_pa ? data.riwayat.dosen_pa.nama_dosen : '-';
                         var semesterText =  $('#semester option:selected').text().toUpperCase();
 
-                        $('#dataKrsDiv').append(`
+                        $('#dataKhsDiv').append(`
                             <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
                             <table style="width:100%" class="mb-3">
                                 <tr>
@@ -427,7 +427,7 @@ KHS Mahasiswa
 
                         }
 
-                        $('#dataKrsDiv').append(`
+                        $('#dataKhsDiv').append(`
                             <hr>
                             <br>
                             <hr>
@@ -439,7 +439,7 @@ KHS Mahasiswa
 
                     $('#nimCetak').val(response.riwayat.nim);
                     $('#idSemesterCetak').val(semester);
-                    $('#krsDiv').removeAttr('hidden');
+                    $('#khsDiv').removeAttr('hidden');
                     // append response.krs to table of krs-regular
                     $('#nimKrs').text(response.riwayat.nim);
                     // remove "Fakultas " from nama_fakultas
