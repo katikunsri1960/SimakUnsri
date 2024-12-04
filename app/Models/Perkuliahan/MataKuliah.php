@@ -186,8 +186,9 @@ class MataKuliah extends Model
         (in_array($riwayat_pendidikan->id_prodi, $prodi_fk, true) || 
         in_array($riwayat_pendidikan->id_prodi, $prodi_profesi, true))) {
         $sks_max = 24;
-    } else
-    if ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' || 
+    } elseif ($riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14'){
+        $sks_max = $riwayat_pendidikan->sks_maks_pmm;
+    } elseif ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' || 
         $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3' 
     ) {
         $sks_max = 15;

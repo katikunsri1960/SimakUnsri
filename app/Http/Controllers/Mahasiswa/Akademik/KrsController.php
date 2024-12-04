@@ -361,7 +361,7 @@ class KrsController extends Controller
             "20"
         ];
         // Periksa apakah sks_maks_pmm kosong
-        if (!$riwayat_pendidikan->sks_maks_pmm) {
+        if (!$riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14') {
             // Tampilkan halaman untuk update sks_maks_pmm
             return view('mahasiswa.perkuliahan.krs.krs-regular.sks_maks_pmm', compact(
                 'sks_aktivitas_mbkm',
