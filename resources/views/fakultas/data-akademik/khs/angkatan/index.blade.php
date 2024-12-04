@@ -262,7 +262,7 @@ KHS Mahasiswa
                                 <tr>
                                     <td class="text-start align-middle" style="width: 10%">NIP PA</td>
                                     <td>:</td>
-                                    <td class="text-start align-middle" id="nippaKrs" style="width: 45%; padding-left: 10px">${nip_pa}</td>
+                                    <td class="text-start align-middle" id="nippaKrs" style="width: 45%; padding-left: 10px">${data.nip_pa}</td>
                                     <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI</td>
                                     <td>:</td>
                                     <td class="text-start align-middle" id="prodiKrs" style="width: 30%; padding-left: 10px">${data.riwayat.prodi.nama_program_studi.toUpperCase()}</td>
@@ -270,7 +270,7 @@ KHS Mahasiswa
                                 <tr>
                                     <td class="text-start align-middle" style="width: 10%">DOSEN PA</td>
                                     <td>:</td>
-                                    <td class="text-start align-middle" id="dosenpaKrs" style="width: 45%; padding-left: 10px">${dosen_pa}</td>
+                                    <td class="text-start align-middle" id="dosenpaKrs" style="width: 45%; padding-left: 10px">${data.nama_pa}</td>
                                     <td class="text-start align-middle" style="width: 18%">SEMESTER</td>
                                     <td>:</td>
                                     <td class="text-start align-middle" id="semesterKrs" style="width: 30%; padding-left: 10px">${semesterText}</td>
