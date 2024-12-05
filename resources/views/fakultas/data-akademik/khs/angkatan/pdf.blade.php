@@ -3,7 +3,6 @@
 Kartu Hasil Studi
 @endsection
 @section('content')
-@include('swal')
 <div style="text-transform: uppercase; font-family: Arial, Helvetica, sans-serif" style="margin-left: 2%">
     <div class="container-fluid" >
         <table style="width: 100%" class="table-pdf">
@@ -164,5 +163,5 @@ Kartu Hasil Studi
         </tr>
     </tbody>
 </table>
-{{-- </div> --}}
+
 @endsection
