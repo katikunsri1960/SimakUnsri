@@ -25,6 +25,8 @@ class PenilaianPerkuliahanController extends Controller
         $semester_aktif = SemesterAktif::first();
         $data = $db->dosen_pengajar_kelas(auth()->user()->fk_id);
 
+        // dd($data);
+
         return view('dosen.penilaian.penilaian-perkuliahan.index', [
             'data' => $data, 'semester_aktif' => $semester_aktif]);
     }

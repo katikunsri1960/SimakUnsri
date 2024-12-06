@@ -64,7 +64,7 @@ Penilaian Perkuliahan Mahasiswa
                                     </thead>
                                     <tbody>
                                         @foreach ($data as $d)
-                                        <tr>
+                                        <tr class="{{ $d->kelas_kuliah && $d->kelas_kuliah->nilai_perkuliahan->count() > 0 ? 'table-success' : '' }}">
                                             <td class="text-center align-middle">{{$loop->iteration}}</td>
                                             <td class="text-start align-middle">
                                                 {{$d->kelas_kuliah->prodi->nama_jenjang_pendidikan}} - {{$d->kelas_kuliah->prodi->nama_program_studi}}

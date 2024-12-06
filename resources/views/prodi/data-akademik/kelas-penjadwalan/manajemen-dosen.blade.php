@@ -67,7 +67,7 @@ Manajemen Dosen Kelas Perkuliahan
                                     name="ruang_kelas"
                                     id="ruang_kelas"
                                     aria-describedby="helpId"
-                                    value="{{$kelas->ruang_perkuliahan->nama_ruang}} ( {{$kelas->ruang_perkuliahan->lokasi}} )"
+                                    value="{{!$kelas->ruang_perkuliahan ? '' : $kelas->ruang_perkuliahan->nama_ruang}} ( {{!$kelas->ruang_perkuliahan ? '' : $kelas->ruang_perkuliahan->lokasi}} )"
                                     disabled
                                 />
                             </div>
