@@ -160,6 +160,7 @@ KHS Mahasiswa
                         $('#dataKhsDiv').append(`
                             <div class="box box-outline-success bs-3 border-success p-20">
                                 <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
+                                if()
                                 <table style="width:100%" class="mb-3">
                                     <tr>
                                         <td class="text-start align-middle" style="width: 12%">NIM</td>

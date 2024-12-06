@@ -522,6 +522,6 @@ class KHSController extends Controller
          ->setPaper('a4', 'portrait');
         //  dd($pdf);
 
-         return $pdf->stream('KHS-'.$tahun_ajaran->id_tahun_ajaran.'-'.$semester->nama_semester.'.pdf');
+         return $pdf->stream('KHS-'.$prodi->kode_program_studi.'-'.$tahun_ajaran->id_tahun_ajaran.'-'.$semester->nama_semester.'.pdf');
     }
 }

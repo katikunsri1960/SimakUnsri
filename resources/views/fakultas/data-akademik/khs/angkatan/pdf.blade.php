@@ -100,11 +100,11 @@ Kartu Hasil Studi
                             @foreach ($item['khs'] as $d)
                                 <tr>
                                     <td width="30" class="text-td text-center">{{ $loop->iteration }}</td>
-                                    <td width="80" class="text-td text-center">{{ $d['kode_matkul'] }}</td>
+                                    <td width="80" class="text-td text-center">{{ $d['kode_mata_kuliah'] }}</td>
                                     <td width="230" class="text-td text-left">{{ $d['nama_mata_kuliah'] }}</td>
-                                    <td width="40" class="text-td text-center">{{ $d['sks_mata_kuliah'] }}</td>
-                                    <td width="40" class="text-td text-center">{{ $d['nilai_indeks'] }}</td>
-                                    <td width="40" class="text-td text-center">{{ $d['nilai_huruf'] }}</td>
+                                    <td width="40" class="text-td text-center">{{ $d['sks_mata_kuliah'] ?? '-'}}</td>
+                                    <td width="40" class="text-td text-center">{{ $d['nilai_indeks'] ?? '-'}}</td>
+                                    <td width="40" class="text-td text-center">{{ $d['nilai_huruf'] ?? '-'}}</td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -132,13 +132,13 @@ Kartu Hasil Studi
                                         {{ $d->nama_mata_kuliah_diakui}}
                                     </td>
                                     <td width="40" class="text-td text-center">
-                                        {{$d->sks_mata_kuliah_diakui}}
+                                        {{$d->sks_mata_kuliah_diakui ?? '-'}}
                                     </td>
                                     <td width="40" class="text-td text-center">
-                                        {{ $d->nilai_angka_diakui}}
+                                        {{ $d->nilai_angka_diakui ?? '-'}}
                                     </td>
                                     <td width="40" class="text-td text-center">
-                                        {{$d->nilai_huruf_diakui}}
+                                        {{$d->nilai_huruf_diakui ?? '-'}}
                                     </td>
                                 </tr>
                             @endforeach
@@ -165,13 +165,13 @@ Kartu Hasil Studi
                                         {{ $d->nama_mata_kuliah}}
                                     </td>
                                     <td width="40" class="text-td text-center">
-                                        {{$d->sks_mata_kuliah}}
+                                        {{$d->sks_mata_kuliah ?? '-'}}
                                     </td>
                                     <td width="40" class="text-td text-center">
-                                        {{ $d->nilai_indeks}}
+                                        {{ $d->nilai_indeks ?? '-'}}
                                     </td>
                                     <td width="40" class="text-td text-center">
-                                        {{$d->nilai_huruf}}
+                                        {{$d->nilai_huruf ?? '-'}}
                                     </td>
                                 </tr>
                                 @endforeach
