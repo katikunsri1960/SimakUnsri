@@ -80,8 +80,11 @@ class BiodataDosen extends Model
     public function dosen_pengajar_kelas($id_dosen)
     {
         $id_semester = SemesterAktif::where('id',1)->pluck('id_semester')->first() ?? (date('m') >= 8 ? (date('Y').'1') : (date('Y')-1).'2');
+        $tahun_ajaran = SemesterAktif::join('semesters', 'semester_aktifs.id_semester', 'semesters.id_semester')->pluck('id_tahun_ajaran')->first() ?? (date('m') >= 8 ? date('Y') : date('Y') - 1);
 
-        $id_registrasi_dosen = $this->data_dosen($id_dosen)->id_registrasi_dosen;
+        $id_registrasi_dosen = $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
+                                        ->where('p.id_tahun_ajaran', $tahun_ajaran)
+                                        ->where('biodata_dosens.id_dosen', $id_dosen)->get()->pluck('id_registrasi_dosen');
 
         $data = DosenPengajarKelasKuliah::with([
             'kelas_kuliah',
@@ -89,9 +92,10 @@ class BiodataDosen extends Model
             'kelas_kuliah.prodi',
             'kelas_kuliah.dosen_pengajar',
             'kelas_kuliah.peserta_kelas_approved',
+            'kelas_kuliah.nilai_perkuliahan',
             'kelas_kuliah.dosen_pengajar.dosen'
         ])
-        ->where('id_registrasi_dosen', $id_registrasi_dosen)
+        ->whereIn('id_registrasi_dosen', $id_registrasi_dosen)
         ->where('id_semester', $id_semester)
         ->get();
 
