@@ -1,6 +1,6 @@
 @extends('layouts.doc-nologo')
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid mt-10">
     <center>
         <h2>TRANSKRIP MAHASISWA</h2>
     </center>
