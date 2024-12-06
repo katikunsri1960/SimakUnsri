@@ -1,6 +1,6 @@
 @extends('layouts.doc-nologo')
 @section('content')
-<div class="container-fluid mt-10">
+<div class="container-fluid">
     <center>
         <h2>TRANSKRIP MAHASISWA</h2>
     </center>
@@ -43,7 +43,7 @@
         </table>
     </div>
     <div class="row" style="margin-top: 15px">
-        <table class="table-pdf text-pdf" id="krs-regular">
+        <table class="table-pdf text-pdf" id="krs-regular" border="1" rules="all" style="width: 100%">
             <thead>
                 <tr>
                     <th class="text-center align-middle table-pdf text-pdf">No</th>
@@ -70,24 +70,24 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="3" class="text-center align-middle table-pdf text-pdf">Jumlah</th>
+                    <th colspan="3" class="text-start align-middle table-pdf text-pdf">Jumlah</th>
                     <th class="text-center align-middle table-pdf text-pdf" id="totalSks">{{$total_sks}}</th>
                     <th class="text-center align-middle table-pdf text-pdf"></th>
                     <th class="text-center align-middle table-pdf text-pdf"></th>
                     <th class="text-center align-middle table-pdf text-pdf" id="bobot">{{$bobot}}</th>
                 </tr>
                 <tr>
-                    <th colspan="3" class="text-center align-middle table-pdf text-pdf">Total SKS</th>
+                    <th colspan="3" class="text-start align-middle table-pdf text-pdf">Total SKS</th>
                     <th colspan="4" class="text-center align-middle table-pdf text-pdf">{{$total_sks}}</th>
                 </tr>
                 <tr>
-                    <th colspan="3" class="text-center align-middle table-pdf text-pdf">IPK</th>
+                    <th colspan="3" class="text-start align-middle table-pdf text-pdf">IPK</th>
                     <th colspan="4" class="text-center align-middle table-pdf text-pdf">{{$ipk}}</th>
                 </tr>
             </tfoot>
         </table>
     </div>
-    <table style="width: 100%">
+    <table style="width: 100%" class="no-break">
         <tbody>
             <tr>
                 <td height="20"></td>
@@ -95,20 +95,20 @@
             <tr width="100%">
                 <td width="60%"></td>
                 <td width="40%" class="text-start text-10" >
-                        Inderalaya, {{ $today->locale('id')->translatedFormat('d F Y')}}
+                    Inderalaya, {{ $today->locale('id')->translatedFormat('d F Y')}}
                 </td>
             </tr>
             <tr>
                 <td class="text-left text-10" width="60%">
                     {{-- Catatan: --}}
                 </td>
-                <td width="40%" class="text-start text-10" >a.n Dekan</td>
+                <td width="40%" class="text-start text-10">a.n Dekan</td>
             </tr>
             <tr>
                 <td class="text-left text-10" width="60%">
                     {{-- Catatan: --}}
                 </td>
-                <td width="40%" class="text-start text-10" >Wakil Dekan Bidang Akademik,</td>
+                <td width="40%" class="text-start text-10">Wakil Dekan Bidang Akademik,</td>
             </tr>
             <tr>
                 <td class="text-left text-10" width="60%" style="vertical-align: text-top">
@@ -123,14 +123,14 @@
                 </td>
             </tr>
             <tr>
-                <td class="text-left text-10" width="60%" style="font-style: italic; ">
+                <td class="text-left text-10" width="60%" style="font-style: italic;">
                     {{-- Lembar untuk mahasiswa --}}
                 </td>
-                <td width="40%" class="text-start text-10" >
+                <td width="40%" class="text-start text-10">
                     NIP. {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->dosen->nip}}
                 </td>
             </tr>
         </tbody>
-    </table>
+    </table>    
 </div>
 @endsection

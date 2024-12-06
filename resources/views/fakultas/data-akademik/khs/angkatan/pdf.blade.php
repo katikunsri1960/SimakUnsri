@@ -62,7 +62,7 @@ Kartu Hasil Studi
                 <td width="15"></td>
                 <td class="text-pdf text-8 text-upper" style="width: 18%">PROGRAM STUDI</td>
                 <td width="3"> : </td>
-                <td class="text-pdf text-8 text-upper" style="width: 30%">{{$prodi->nama_program_studi}}</td>
+                <td class="text-pdf text-8 text-upper" style="width: 30%">{{$prodi->nama_jenjang_pendidikan}} - {{$prodi->nama_program_studi}}</td>
             </tr>
             <tr>
                 <td class="text-pdf text-8 text-upper" style="width: 10%">DOSEN PA</td>

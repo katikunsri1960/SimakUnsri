@@ -227,28 +227,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do_data'])->name('fakultas.monitoring.lulus-do.data');
                 });
             });
-            // Route::prefix('monitoring')->group(function(){
-            //     Route::get('/entry-nilai', [App\Http\Controllers\Fakultas\MonitoringController::class, 'monitoring_nilai'])->name('fakultas.monitoring.entry-nilai');
-            //     Route::get('/pengajaran-dosen', [App\Http\Controllers\Fakultas\MonitoringController::class, 'monitoring_pengajaran'])->name('fakultas.monitoring.pengajaran-dosen');
-
-            //     Route::prefix('pengisian-krs')->group(function () {
-            //         Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_krs'])->name('fakultas.monitoring.pengisian-krs');
-            //         Route::get('/data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_krs_data'])->name('fakultas.monitoring.pengisian-krs.data');
-            //         Route::get('/detail-mahasiswa-aktif/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_mahasiswa_aktif'])->name('fakultas.monitoring.pengisian-krs.detail-mahasiswa-aktif');
-            //         Route::get('/detail-aktif-min-tujuh/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_aktif_min_tujuh'])->name('fakultas.monitoring.pengisian-krs.detail-aktif-min-tujuh');
-            //         Route::get('/detail-isi-krs/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_isi_krs'])->name('fakultas.monitoring.pengisian-krs.detail-isi-krs');
-            //         Route::get('/detail-approved-krs/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_approved_krs'])->name('fakultas.monitoring.pengisian-krs.detail-approved-krs');
-            //         Route::get('/detail-not-approved-krs/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_not_approved_krs'])->name('fakultas.monitoring.pengisian-krs.detail-not-approved-krs');
-
-            //         Route::post('/generate-data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'generateDataIsiKrs'])->name('fakultas.monitoring.pengisian-krs.generate-data');
-            //         Route::get('/check-progress', [App\Http\Controllers\Fakultas\MonitoringController::class, 'checkProgress'])->name('fakultas.monitoring.pengisian-krs.check-progress');
-            //     });
-
-            //     Route::prefix('lulus-do')->group(function(){
-            //         Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do'])->name('fakultas.monitoring.lulus-do');
-            //         Route::get('/data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do_data'])->name('fakultas.monitoring.lulus-do.data');
-            //     });
-            // });
 
             //ROUTE LAIN-LAIN
             Route::prefix('beasiswa')->group(function(){
