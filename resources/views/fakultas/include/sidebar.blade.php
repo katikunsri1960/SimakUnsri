@@ -65,7 +65,7 @@
                             </li>
                             <li class="treeview {{request()->routeIs('fakultas.data-akademik.khs.*') || request()->routeIs('fakultas.data-akademik.khs') ? 'active menu-open' : ''}}">
                                 <a href="#">
-                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i> Kartu Hasil Studi
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>
