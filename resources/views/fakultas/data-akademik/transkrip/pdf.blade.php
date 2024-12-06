@@ -71,18 +71,18 @@
             <tfoot>
                 <tr>
                     <th colspan="3" class="text-start align-middle table-pdf text-pdf">Jumlah</th>
-                    <th class="text-center align-middle table-pdf text-pdf" id="totalSks">{{$total_sks}}</th>
-                    <th class="text-center align-middle table-pdf text-pdf"></th>
-                    <th class="text-center align-middle table-pdf text-pdf"></th>
-                    <th class="text-center align-middle table-pdf text-pdf" id="bobot">{{$bobot}}</th>
+                    <th class="text-start align-middle table-pdf text-pdf" id="totalSks">{{$total_sks}}</th>
+                    <th class="text-start align-middle table-pdf text-pdf"></th>
+                    <th class="text-start align-middle table-pdf text-pdf"></th>
+                    <th class="text-start align-middle table-pdf text-pdf" id="bobot">{{$bobot}}</th>
                 </tr>
                 <tr>
                     <th colspan="3" class="text-start align-middle table-pdf text-pdf">Total SKS</th>
-                    <th colspan="4" class="text-center align-middle table-pdf text-pdf">{{$total_sks}}</th>
+                    <th colspan="4" class="text-start align-middle table-pdf text-pdf">{{$total_sks}}</th>
                 </tr>
                 <tr>
                     <th colspan="3" class="text-start align-middle table-pdf text-pdf">IPK</th>
-                    <th colspan="4" class="text-center align-middle table-pdf text-pdf">{{$ipk}}</th>
+                    <th colspan="4" class="text-start align-middle table-pdf text-pdf">{{$ipk}}</th>
                 </tr>
             </tfoot>
         </table>
