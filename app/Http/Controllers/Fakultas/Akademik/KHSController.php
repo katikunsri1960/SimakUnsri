@@ -174,7 +174,7 @@ class KHSController extends Controller
          ->setPaper('a4', 'portrait');
         //  dd($pdf);
 
-         return $pdf->stream('KHS-'.$riwayat->nim.'-'.$semester->nama_semester.'.pdf');
+         return $pdf->stream('KHS-'.$riwayat->nim.'-'.str_replace('/', '_', $semester->nama_semester) . '.pdf');
     }
 
     public function khs_angkatan()
