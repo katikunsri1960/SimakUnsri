@@ -500,7 +500,7 @@ class KelasPenjadwalanController extends Controller
         $tahun_ajaran = SemesterAktif::with('semester')->first();
         $tahun_berjalan = $tahun_ajaran->semester->id_tahun_ajaran;
 
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_berjalan)
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_berjalan)->whereNull('id_jns_keluar')
                                 ->orderBy('nama_dosen', 'asc');
 
         if ($search) {
