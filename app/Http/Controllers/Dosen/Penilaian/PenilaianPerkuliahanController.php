@@ -25,7 +25,15 @@ class PenilaianPerkuliahanController extends Controller
         $semester_aktif = SemesterAktif::first();
         $data = $db->dosen_pengajar_kelas(auth()->user()->fk_id);
 
-        // dd($data);
+
+
+        // if($data[0]->kelas_kuliah->nilai_perkuliahan->isEmpty()){
+        //     return response()->json([
+        //         'status' => 'error',
+        //         'message' => 'Data Berisi',
+        //     ]);
+        // }
+        // dd($data, $data[1]->kelas_kuliah->nilai_perkuliahan->count() > 0);
 
         return view('dosen.penilaian.penilaian-perkuliahan.index', [
             'data' => $data, 'semester_aktif' => $semester_aktif]);

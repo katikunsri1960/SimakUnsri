@@ -64,7 +64,12 @@ Penilaian Perkuliahan Mahasiswa
                                     </thead>
                                     <tbody>
                                         @foreach ($data as $d)
-                                        <tr class="{{ $d->kelas_kuliah && $d->kelas_kuliah->nilai_perkuliahan->count() > 0 ? 'table-success' : '' }}">
+                                        <tr class="{{ $d->kelas_kuliah && $d->kelas_kuliah->nilai_perkuliahan && 
+                                                        $d->kelas_kuliah->nilai_perkuliahan->filter(function($item) {
+                                                            return isset($item->nilai_huruf) && !empty($item->nilai_huruf);
+                                                        })->isNotEmpty() ? 'table-success' : '' 
+                                                    }}">
+                                                    
                                             <td class="text-center align-middle">{{$loop->iteration}}</td>
                                             <td class="text-start align-middle">
                                                 {{$d->kelas_kuliah->prodi->nama_jenjang_pendidikan}} - {{$d->kelas_kuliah->prodi->nama_program_studi}}
