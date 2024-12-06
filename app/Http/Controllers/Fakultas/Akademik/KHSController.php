@@ -221,6 +221,8 @@ class KHSController extends Controller
                     ->select('id_registrasi_mahasiswa', 'nim', 'id_prodi', 'id_periode_masuk', 'dosen_pa', 'nama_mahasiswa')
                     ->where('id_prodi', $request->prodi)
                     ->where(DB::raw('LEFT(id_periode_masuk, 4)'), $request->angkatan)
+                    ->orderBy('nim', 'ASC')
+                    ->orderBy('id_periode_masuk', 'desc')
                     ->get();
 
         if ($riwayat->isEmpty()) {
@@ -270,5 +272,256 @@ class KHSController extends Controller
             'message' => 'Data KHS berhasil diambil',
             'data' => $data,
         ]);
+    }
+
+//     public function khs_angkatan_download(Request $request)
+//     {
+//         // Validasi input
+//         $request->validate([
+//             'angkatan' => 'required',
+//             'prodi' => 'required',
+//             'semester' => 'required',
+//         ]);
+
+//         // Ambil data riwayat pendidikan berdasarkan prodi dan angkatan
+//         $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])
+//                     ->select('id_registrasi_mahasiswa', 'nim', 'id_prodi', 'id_periode_masuk', 'dosen_pa', 'nama_mahasiswa')
+//                     ->where('id_prodi', $request->prodi)
+//                     ->where(DB::raw('LEFT(id_periode_masuk, 4)'), $request->angkatan)
+//                     ->orderBy('nim', 'ASC')
+//                     ->orderBy('id_periode_masuk', 'desc')
+//                     ->get();
+
+//         // Cek apakah data riwayat ditemukan
+//         if ($riwayat->isEmpty()) {
+//             return response()->json([
+//                 'status' => 'error',
+//                 'message' => 'Data Mahasiswa Prodi dan angkatan ini tidak ditemukan!',
+//             ]);
+//         }
+
+//         // Ambil data semester, tahun ajaran, dan program studi
+//         $semester = Semester::where('id_semester', $request->semester)->first();
+//         $tahun_ajaran = Semester::where('id_tahun_ajaran', $request->angkatan)->first();
+//         $prodi = ProgramStudi::with('fakultas')->where('id_prodi', $request->prodi)->first();
+
+//         // Array untuk menyimpan data akhir
+//         $data = [];
+
+//         // Loop pertama: Mengambil data riwayat mahasiswa dan AKM
+//         foreach ($riwayat as $d) {
+//             // Ambil data AKM
+//             $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+//                     ->where('id_semester', $request->semester)
+//                     ->first();
+
+//             // Menyimpan informasi pembimbing akademik
+//             $nama_pa = $d->pembimbing_akademik ? $d->pembimbing_akademik->nama_dosen : '-';
+//             $nip_pa = $d->pembimbing_akademik ? $d->pembimbing_akademik->nip : '-';
+
+//             // Menyimpan data awal ke array
+//             $data[] = [
+//                 'riwayat' => $d,
+//                 'akm' => $akm,
+//                 'nama_pa' => $nama_pa,
+//                 'nip_pa' => $nip_pa,
+//             ];
+//         }
+
+//         // Loop kedua: Menambahkan data KHS, KHS Konversi, dan KHS Transfer
+//         foreach ($data as &$item) { // Gunakan reference (&) untuk memodifikasi data di $data
+//             $riwayat = $item['riwayat'];
+
+//             // Ambil data KHS
+//             $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+//                     ->where('id_semester', $request->semester)
+//                     ->orderBy('id_semester')
+//                     ->get();
+
+//             // Ambil data KHS Konversi
+//             $khs_konversi = KonversiAktivitas::with(['matkul'])
+//                     ->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', '=', 'ang.id_anggota')
+//                     ->where('id_semester', $request->semester)
+//                     ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+//                     ->get();
+
+//             // Ambil data KHS Transfer
+//             $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+//                     ->where('id_semester', $request->semester)
+//                     ->get();
+
+//             // Tambahkan data ke array
+//             $item['khs'] = $khs;
+//             $item['khs_konversi'] = $khs_konversi;
+//             $item['khs_transfer'] = $khs_transfer;
+//         }
+
+//         // Debug hasil akhir
+//         // dd($item['khs'], $item['khs_konversi'],$item['khs_transfer']);
+
+//         // Menghitung total SKS dan bobot untuk setiap mahasiswa
+//         $total_sks_semester = 0;
+//         $total_bobot = 0;
+//         $bobot_transfer = 0;
+//         $bobot_konversi = 0;
+
+//         foreach ($data as $mahasiswa) {
+//             // Total SKS
+//             $total_sks_semester += $mahasiswa['khs']->sum('sks_mata_kuliah') + $mahasiswa['khs_transfer']->sum('sks_mata_kuliah_diakui') + $mahasiswa['khs_konversi']->sum('sks_mata_kuliah');
+
+//             // Bobot
+//             foreach ($mahasiswa['khs'] as $khs) {
+//                 $total_bobot += $khs->nilai_indeks * $khs->sks_mata_kuliah;
+//             }
+
+//             foreach ($mahasiswa['khs_transfer'] as $transfer) {
+//                 $bobot_transfer += $transfer->nilai_angka_diakui * $transfer->sks_mata_kuliah_diakui;
+//             }
+
+//             foreach ($mahasiswa['khs_konversi'] as $konversi) {
+//                 $bobot_konversi += $konversi->nilai_indeks * $konversi->sks_mata_kuliah;
+//             }
+//         }
+
+//         // Menghitung IPS dan IPK
+//         $ips = number_format($total_bobot / $total_sks_semester, 2);
+//         $ipk = $ips; // Karena perhitungan IPK sama dengan IPS
+
+//         // Mengambil data pejabat fakultas
+//         $wd1 = PejabatFakultas::where('id_fakultas', $prodi->fakultas_id)->where('id_jabatan', 1)->first();
+// // dd($data);
+//         // Menghasilkan PDF
+//         $pdf = PDF::loadview('fakultas.data-akademik.khs.angkatan.pdf', [
+//             'khs' => $khs,
+//             'khs_transfer' => $khs_transfer,
+//             'khs_konversi' => $khs_konversi,
+//             'data' => $data,
+//             'angkatan' => $tahun_ajaran,
+//             'prodi' => $prodi,
+//             'semester' => $semester,
+//             'akm' => $akm,
+//             'total_sks_semester' => $total_sks_semester,
+//             'ipk' => $ipk,
+//             'ips' => $ips,
+//             'today' => Carbon::now(),
+//             'wd1' => $wd1,
+//         ])
+//         ->setPaper('a4', 'portrait');
+
+//         // dd($riwayat);
+//         // Mengunduh file PDF
+//         return $pdf->stream('KHS-' . $tahun_ajaran->id_tahun_ajaran . '-' . $semester->nama_semester . '.pdf');
+//     }
+
+    public function khs_angkatan_download (Request $request)
+    {
+        // dd($request->id_semester);
+
+
+        $request->validate([
+            'angkatan' => 'required',
+            'prodi' => 'required',
+            'semester' => 'required',
+        ]);
+
+        ini_set('max_execution_time', 300);
+        // ini_set('memory_limit', '512M');
+
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])
+                    ->select('id_registrasi_mahasiswa', 'nim', 'id_prodi', 'id_periode_masuk', 'dosen_pa', 'nama_mahasiswa')
+                    ->where('id_prodi', $request->prodi)
+                    ->where(DB::raw('LEFT(id_periode_masuk, 4)'), $request->angkatan)
+                    ->orderBy('nim', 'ASC')
+                    ->orderBy('id_periode_masuk', 'desc')
+                    ->get();
+
+        if ($riwayat->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Mahasiswa Prodi dan angkatan ini tidak ditemukan!',
+            ]);
+        }
+
+        $data = [];
+
+        foreach($riwayat as $d){
+            $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+                    ->where('id_semester', $request->semester)
+                    ->first();
+
+            $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+                    ->where('id_semester', $request->semester)
+                    ->orderBy('id_semester')
+                    ->get();
+
+            $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+                        ->where('id_semester', $request->semester)
+                        ->where('ang.id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+                        ->get();
+
+            $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+                        ->where('id_semester', $request->semester)
+                        ->get();
+
+            $nama_pa = $d->pembimbing_akademik ? $d->pembimbing_akademik->nama_dosen : '-';
+            $nip_pa = $d->pembimbing_akademik ? $d->pembimbing_akademik->nip : '-';
+
+            $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
+            $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
+
+            
+            // dd($semester, $tahun_ajaran, $prodi);
+            foreach ($khs as $t) {
+                $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+            }
+
+            foreach ($khs_transfer as $tf) {
+                $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
+            }
+
+            foreach ($khs_konversi as $kv) {
+                $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
+            }
+
+            $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
+            // dd($total_sks_semester, $total_bobot);
+            //  dd($total_bobot);
+            $ips = 0;
+            if($total_sks_semester){
+                $ips = $total_bobot / $total_sks_semester;
+            }
+            
+            $data[] = [
+                'riwayat' => $d,
+                'nama_pa' => $nama_pa,
+                'nip_pa' => $nip_pa,
+                'akm' => $akm,
+                'khs' => $khs,
+                'khs_konversi' => $khs_konversi,
+                'khs_transfer' => $khs_transfer,
+                'ips'=> $ips
+            ];            
+        }
+        // dd($data);
+       
+        $semester = Semester::where('id_semester', $request->semester)->first();
+
+        $tahun_ajaran = Semester::where('id_tahun_ajaran', $request->angkatan)->first();
+
+        $prodi = ProgramStudi::where('id_prodi', $request->prodi)->first();
+
+        $pdf = PDF::loadview('fakultas.data-akademik.khs.angkatan.pdf', [
+            'data' => $data,
+            'angkatan' => $tahun_ajaran,
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'today'=> Carbon::now(),
+            'wd1' => PejabatFakultas::where('id_fakultas', $prodi->fakultas_id)->where('id_jabatan', 1)->first(),
+            // 'bebas_pustaka' => BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first(),
+         ])
+         ->setPaper('a4', 'portrait');
+        //  dd($pdf);
+
+         return $pdf->stream('KHS-'.$tahun_ajaran->id_tahun_ajaran.'-'.$semester->nama_semester.'.pdf');
     }
 }

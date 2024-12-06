@@ -78,105 +78,19 @@ KHS Mahasiswa
                     <div class="table-responsive">
                         <div id="khsDiv" hidden>
                             <div class="row mb-2">
-                                {{-- <form action="{{route('fakultas.data-akademik.khs.angkatan.download')}}" method="get" id="cetakForm" target="_blank">
-                                    <input type="hidden" name="nim" id="nimCetak">
-                                    <input type="hidden" name="id_semester" id="idSemesterCetak">
-                                    <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
-                                </form> --}}
+                                <form action="{{route('fakultas.data-akademik.khs.angkatan.download')}}" method="get" id="cetakForm" target="_blank">
+                                    <input type="hidden" name="prodi" id="prodiCetak">
+                                    <input type="hidden" name="angkatan" id="angkatanCetak">
+                                    <input type="hidden" name="semester" id="semesterCetak">
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-print mb-20"></i> Cetak KHS</button>
+                                </form>
                             </div>
-                            <div id="dataKhsDiv"></div>
-                            {{-- <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
-                            <table style="width:100%" class="mb-3">
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">NIM</td>
-                                    <td>:</td>
-                                    <td class="text-start" id="nimKrs" style="width: 45%; padding-left: 10px"></td>
-                                    <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="fakultasKrs"
-                                        style="width: 30%; padding-left: 10px"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">NAMA</td>
-                                    <td>:</td>
-                                    <td class="text-start" id="namaKrs" style="width: 45%; padding-left: 10px"></td>
-                                    <td class="text-start align-middle" style="width: 18%">JURUSAN</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="jurusanKrs"
-                                        style="width: 30%; padding-left: 10px"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">NIP PA</td>
-                                    <td>:</td>
-                                    <td class="text-start" id="nippaKrs" style="width: 45%; padding-left: 10px"></td>
-                                    <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="prodiKrs"
-                                        style="width: 30%; padding-left: 10px"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">DOSEN PA</td>
-                                    <td>:</td>
-                                    <td class="text-start" id="dosenpaKrs" style="width: 45%; padding-left: 10px"></td>
-                                    <td class="text-start align-middle" style="width: 18%">SEMESTER</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="semesterKrs"
-                                        style="width: 30%; padding-left: 10px"></td>
-                                </tr>
-                            </table>
-                            <div class="d-flex justify-content-end align-middle">
+                            <div id="dataKhsDiv">
 
                             </div>
-                            <table class="table table-bordered mt-4" id="krs-regular">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center align-middle">No</th>
-                                        <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                        <th class="text-center align-middle">Nama Mata Kuliah</th>
-                                        <th class="text-center align-middle">Nama Kelas</th>
-                                        <th class="text-center align-middle">Semester</th>
-                                        <th class="text-center align-middle">SKS</th>
-                                        <th class="text-center align-middle">Nilai Angka</th>
-                                        <th class="text-center align-middle">Nilai Index</th>
-                                        <th class="text-center align-middle">Nilai Huruf</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                            <hr>
-                            <div class="row mt-5" id="transferDiv" hidden>
-                                <h3>Nilai Transfer</h3>
-                                <table class="table table-bordered table-hover mt-2" id="transferTable">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center align-middle">No</th>
-                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                            <th class="text-center align-middle">Nama Mata Kuliah</th>
-                                            <th class="text-center align-middle">Semester</th>
-                                            <th class="text-center align-middle">SKS Diakui</th>
-                                            <th class="text-center align-middle">Nilai Index Diakui</th>
-                                            <th class="text-center align-middle">Nilai Huruf Diakui</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
-                            </div>
-
-                            <div class="row mt-5" id="akmDiv">
-
-                            </div>
-
-                            <div class="row mt-5" id="totalDiv">
-
-                            </div>
-                        </div> --}}
+                        </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>
@@ -215,6 +129,9 @@ KHS Mahasiswa
                     semester: semester
                 },
                 success: function(response){
+                    // console.log(angkatan)
+                    // console.log(prodi)
+                    // console.log(semester)
                     if (response.status == 'error') {
                         swal({
                             title: "Peringatan!",
@@ -241,78 +158,80 @@ KHS Mahasiswa
                         var semesterText =  $('#semester option:selected').text().toUpperCase();
 
                         $('#dataKhsDiv').append(`
-                            <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
-                            <table style="width:100%" class="mb-3">
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">NIM</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="nimKrs" style="width: 45%; padding-left: 10px">${data.riwayat.nim}</td>
-                                    <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="fakultasKrs" style="width: 30%; padding-left: 10px">${fakultas}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">NAMA</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="namaKrs" style="width: 45%; padding-left: 10px">${data.riwayat.nama_mahasiswa}</td>
-                                    <td class="text-start align-middle" style="width: 18%">JURUSAN</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="jurusanKrs" style="width: 30%; padding-left: 10px">${jurusan}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 10%">NIP PA</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="nippaKrs" style="width: 45%; padding-left: 10px">${data.nip_pa}</td>
-                                    <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="prodiKrs" style="width: 30%; padding-left: 10px">${data.riwayat.prodi.nama_program_studi.toUpperCase()}</td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 10%">DOSEN PA</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="dosenpaKrs" style="width: 45%; padding-left: 10px">${data.nama_pa}</td>
-                                    <td class="text-start align-middle" style="width: 18%">SEMESTER</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="semesterKrs" style="width: 30%; padding-left: 10px">${semesterText}</td>
-                                </tr>
-                            </table>
-                            <div class="d-flex justify-content-end align-middle"></div>
-                            <table class="table table-bordered mt-4" id="krs-regular-${index}">
-                                <thead>
+                            <div class="box box-outline-success bs-3 border-success p-20">
+                                <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
+                                <table style="width:100%" class="mb-3">
                                     <tr>
-                                        <th class="text-center align-middle">No</th>
-                                        <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                        <th class="text-center align-middle">Nama Mata Kuliah</th>
-                                        <th class="text-center align-middle">Nama Kelas</th>
-                                        <th class="text-center align-middle">Semester</th>
-                                        <th class="text-center align-middle">SKS</th>
-                                        <th class="text-center align-middle">Nilai Angka</th>
-                                        <th class="text-center align-middle">Nilai Index</th>
-                                        <th class="text-center align-middle">Nilai Huruf</th>
+                                        <td class="text-start align-middle" style="width: 12%">NIM</td>
+                                        <td>:</td>
+                                        <td class="text-start align-middle" id="nimKrs" style="width: 45%; padding-left: 10px">${data.riwayat.nim}</td>
+                                        <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
+                                        <td>:</td>
+                                        <td class="text-start align-middle" id="fakultasKrs" style="width: 30%; padding-left: 10px">${fakultas}</td>
                                     </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <hr>
-                            <div class="row mt-5" id="transferDiv-${index}" hidden>
-                                <h3>Nilai Transfer</h3>
-                                <table class="table table-bordered table-hover mt-2" id="transferTable-${index}">
+                                    <tr>
+                                        <td class="text-start align-middle" style="width: 12%">NAMA</td>
+                                        <td>:</td>
+                                        <td class="text-start align-middle" id="namaKrs" style="width: 45%; padding-left: 10px">${data.riwayat.nama_mahasiswa}</td>
+                                        <td class="text-start align-middle" style="width: 18%">JURUSAN</td>
+                                        <td>:</td>
+                                        <td class="text-start align-middle" id="jurusanKrs" style="width: 30%; padding-left: 10px">${jurusan}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start align-middle" style="width: 10%">NIP PA</td>
+                                        <td>:</td>
+                                        <td class="text-start align-middle" id="nippaKrs" style="width: 45%; padding-left: 10px">${data.nip_pa}</td>
+                                        <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI</td>
+                                        <td>:</td>
+                                        <td class="text-start align-middle" id="prodiKrs" style="width: 30%; padding-left: 10px">${data.riwayat.prodi.nama_program_studi.toUpperCase()}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-start align-middle" style="width: 10%">DOSEN PA</td>
+                                        <td>:</td>
+                                        <td class="text-start align-middle" id="dosenpaKrs" style="width: 45%; padding-left: 10px">${data.nama_pa}</td>
+                                        <td class="text-start align-middle" style="width: 18%">SEMESTER</td>
+                                        <td>:</td>
+                                        <td class="text-start align-middle" id="semesterKrs" style="width: 30%; padding-left: 10px">${semesterText}</td>
+                                    </tr>
+                                </table>
+                                <div class="d-flex justify-content-end align-middle"></div>
+                                <table class="table table-bordered mt-4" id="krs-regular-${index}">
                                     <thead>
                                         <tr>
                                             <th class="text-center align-middle">No</th>
                                             <th class="text-center align-middle">Kode Mata Kuliah</th>
                                             <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                            <th class="text-center align-middle">Nama Kelas</th>
                                             <th class="text-center align-middle">Semester</th>
-                                            <th class="text-center align-middle">SKS Diakui</th>
-                                            <th class="text-center align-middle">Nilai Index Diakui</th>
-                                            <th class="text-center align-middle">Nilai Huruf Diakui</th>
+                                            <th class="text-center align-middle">SKS</th>
+                                            <th class="text-center align-middle">Nilai Angka</th>
+                                            <th class="text-center align-middle">Nilai Index</th>
+                                            <th class="text-center align-middle">Nilai Huruf</th>
                                         </tr>
                                     </thead>
                                     <tbody></tbody>
                                 </table>
+                                <hr>
+                                <div class="row mt-5" id="transferDiv-${index}" hidden>
+                                    <h3>Nilai Transfer</h3>
+                                    <table class="table table-bordered table-hover mt-2" id="transferTable-${index}">
+                                        <thead>
+                                            <tr>
+                                                <th class="text-center align-middle">No</th>
+                                                <th class="text-center align-middle">Kode Mata Kuliah</th>
+                                                <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                <th class="text-center align-middle">Semester</th>
+                                                <th class="text-center align-middle">SKS Diakui</th>
+                                                <th class="text-center align-middle">Nilai Index Diakui</th>
+                                                <th class="text-center align-middle">Nilai Huruf Diakui</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="row mt-5" id="akmDiv-${index}"></div>
+                                <div class="row mt-5" id="totalDiv-${index}"></div>
                             </div>
-                            <div class="row mt-5" id="akmDiv-${index}"></div>
-                            <div class="row mt-5" id="totalDiv-${index}"></div>
                         `);
 
                         var no = 1;
@@ -434,11 +353,14 @@ KHS Mahasiswa
                         `);
                     });
 
+                    $('#angkatanCetak').val(angkatan);
+                    $('#prodiCetak').val(prodi);
+                    $('#semesterCetak').val(semester);
+
                     return true;
 
-
-                    $('#nimCetak').val(response.riwayat.nim);
-                    $('#idSemesterCetak').val(semester);
+                    
+                    
                     $('#khsDiv').removeAttr('hidden');
                     // append response.krs to table of krs-regular
                     $('#nimKrs').text(response.riwayat.nim);
