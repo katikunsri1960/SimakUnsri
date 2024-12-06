@@ -55,11 +55,11 @@ KHS Mahasiswa
                 <div class="box-body text-center">
                     <div class="table-responsive">
                         <div id="khsDiv" hidden>
-                            <div class="row mb-2">
+                            <div class="row mb-20">
                                 <form action="{{route('fakultas.data-akademik.khs.download')}}" method="get" id="cetakForm" target="_blank">
                                     <input type="hidden" name="nim" id="nimCetak">
                                     <input type="hidden" name="id_semester" id="idSemesterCetak">
-                                    <button class="btn btn-success" type="submit"><i class="fa fa-print mb-20"></i> Cetak KHS</button>
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak KHS</button>
                                 </form>
                             </div>
                             <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
