@@ -13,6 +13,16 @@ use Illuminate\Support\Facades\DB;
 
 class MonitoringController extends Controller
 {
+    public function monitoring_nilai()
+    {
+        return view('fakultas.monitoring.entry-nilai.index');
+    }
+
+    public function monitoring_pengajaran()
+    {
+        return view('fakultas.monitoring.pengajaran-dosen.index');
+    }
+
     public function pengisian_krs()
     {
         $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
