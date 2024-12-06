@@ -54,12 +54,12 @@ KHS Mahasiswa
                 </div>
                 <div class="box-body text-center">
                     <div class="table-responsive">
-                        <div id="krsDiv" hidden>
-                            <div class="row mb-2">
+                        <div id="khsDiv" hidden>
+                            <div class="row mb-20">
                                 <form action="{{route('fakultas.data-akademik.khs.download')}}" method="get" id="cetakForm" target="_blank">
                                     <input type="hidden" name="nim" id="nimCetak">
                                     <input type="hidden" name="id_semester" id="idSemesterCetak">
-                                    <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak</button>
+                                    <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak KHS</button>
                                 </form>
                             </div>
                             <h3 class="text-center">Kartu Hasil Studi (KHS)</h3>
@@ -203,7 +203,7 @@ KHS Mahasiswa
 
                     $('#nimCetak').val(response.riwayat.nim);
                     $('#idSemesterCetak').val(semester);
-                    $('#krsDiv').removeAttr('hidden');
+                    $('#khsDiv').removeAttr('hidden');
                     // append response.krs to table of krs-regular
                     $('#nimKrs').text(response.riwayat.nim);
                     // remove "Fakultas " from nama_fakultas

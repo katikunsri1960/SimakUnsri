@@ -313,7 +313,7 @@ Transkrip Nilai
                             var fakultas = response.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '');
                             $('#fakultasKrs').text(fakultas);
                             $('#namaKrs').text(response.riwayat.nama_mahasiswa);
-                            var jurusan = response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-';
+                            var jurusan = (response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-').toUpperCase();
                             $('#jurusanKrs').text(jurusan);
                             var nip_pa = response.riwayat.pembimbing_akademik ? response.riwayat.pembimbing_akademik.nip : '-';
                             $('#nippaKrs').text(nip_pa);
