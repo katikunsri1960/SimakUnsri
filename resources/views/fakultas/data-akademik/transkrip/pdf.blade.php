@@ -43,7 +43,7 @@
         </table>
     </div>
     <div class="row" style="margin-top: 15px">
-        <table class="table-pdf text-pdf" id="krs-regular">
+        <table class="table-pdf text-pdf" id="krs-regular" border="1" rules="all" style="width: 100%">
             <thead>
                 <tr>
                     <th class="text-center align-middle table-pdf text-pdf">No</th>
