@@ -82,6 +82,27 @@ class SemesterAktif extends Model
         $this->attributes['mulai_isi_nilai'] = date('Y-m-d', strtotime($value));
     }
 
+    // PERIODE SO
+    public function getIdTglMulaiPengajuanCutiAttribute()
+    {
+        return date('d-m-Y', strtotime($this->tgl_mulai_pengajuan_cuti)) ?? '';
+    }
+
+    public function setTglMulaiPengajuanCutiAttribute($value)
+    {
+        $this->attributes['tgl_mulai_pengajuan_cuti'] = date('Y-m-d', strtotime($value));
+    }
+
+    public function getIdTglSelesaiPengajuanCutiAttribute()
+    {
+        return date('d-m-Y', strtotime($this->tgl_selesai_pengajuan_cuti)) ?? '';
+    }
+
+    public function setTglSelesaiPengajuanCutiAttribute($value)
+    {
+        $this->attributes['tgl_selesai_pengajuan_cuti'] = date('Y-m-d', strtotime($value));
+    }
+
     public function semester()
     {
         return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');

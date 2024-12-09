@@ -92,6 +92,8 @@ class PengaturanController extends Controller
             'tanggal_mulai_kprs' => 'required',
             'tanggal_akhir_kprs' => 'required',
             'batas_bayar_ukt' => 'required',
+            'tgl_mulai_pengajuan_cuti' => 'required',
+            'tgl_selesai_pengajuan_cuti' => 'required'
         ]);
 
         $data['id'] = 1;
