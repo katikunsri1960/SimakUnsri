@@ -143,7 +143,7 @@ class KrsController extends Controller
                 ->get();
 
             // Validasi jika data peserta atau aktivitas tidak ditemukan
-            if ($peserta->isEmpty() && $aktivitas->isEmpty()) {
+            if ($peserta->isEmpty() && $aktivitas->isEmpty() && $krs_aktivitas_mbkm->isEmpty()) {
                 return redirect()->back()->withErrors('Data peserta atau aktivitas tidak ditemukan.');
             }
         
@@ -354,7 +354,7 @@ class KrsController extends Controller
         $aktivitas_submitted= $krs_akt->where('submitted', 0)->count();
         $mbkm_submitted= $krs_aktivitas_mbkm->where('submitted', 0)->count();
         $total_krs_submitted = $regular_submitted + $merdeka_submitted + $aktivitas_submitted+ $mbkm_submitted;
-        // dd($krs_submitted, );
+        // dd($total_krs_submitted, $mbkm_submitted);
 
         $sks_aktivitas_mbkm = [
             "10", 
