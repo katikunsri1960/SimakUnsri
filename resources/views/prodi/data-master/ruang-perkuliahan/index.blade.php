@@ -39,8 +39,9 @@ Ruang Perkuliahan
                           <thead>
                              <tr>
                                 <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">NAMA RUANGAN</th>
-                                <th class="text-center align-middle">LOKASI</th>
+                                <th class="text-center align-middle">LOKASI RUANG</th>
+                                <th class="text-center align-middle">NAMA RUANG</th>
+                                <!-- <th class="text-center align-middle">KAPASITAS RUANG</th> -->
                                 <th class="text-center align-middle">AKSI</th>
                              </tr>
                           </thead>
@@ -51,8 +52,9 @@ Ruang Perkuliahan
                             @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$row = $row + 1}}</td>
-                                    <td class="text-center align-middle">{{$d->nama_ruang}}</td>
                                     <td class="text-center align-middle">{{$d->lokasi}}</td>
+                                    <td class="text-center align-middle">{{$d->nama_ruang}}</td>
+                                    <!-- <td class="text-center align-middle">{{$d->kapasistas_ruang}}</td> -->
                                     <td class="text-center align-middle">
                                         <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editRuangKuliah" onclick="editRuang({{$d}}, {{$d->id}})">
                                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
