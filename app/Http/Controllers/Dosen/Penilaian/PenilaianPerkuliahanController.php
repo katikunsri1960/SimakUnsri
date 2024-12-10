@@ -88,7 +88,7 @@ class PenilaianPerkuliahanController extends Controller
             $join->on('peserta_kelas_kuliahs.id_registrasi_mahasiswa', '=', 'n.id_registrasi_mahasiswa')
             ->where('n.id_kelas_kuliah', $kelas);
         })->where('peserta_kelas_kuliahs.id_kelas_kuliah', $kelas)
-        ->select('n.id_registrasi_mahasiswa', 'n.nim', 'n.nama_mahasiswa', 'nilai_angka', 'nilai_huruf')->orderBy('n.nim')->get();
+        ->select('peserta_kelas_kuliahs.id_registrasi_mahasiswa', 'peserta_kelas_kuliahs.nim', 'peserta_kelas_kuliahs.nama_mahasiswa', 'nilai_angka', 'nilai_huruf')->orderBy('n.nim')->get();
         // pluck('id_registrasi_mahasiswa')->toArray();
         $reg = $peserta->pluck('id_registrasi_mahasiswa')->toArray();
         $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->whereIn('id_registrasi_mahasiswa', $reg)->orderBy('urutan')->get();
