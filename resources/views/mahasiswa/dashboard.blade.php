@@ -3,7 +3,7 @@
 Dashboard
 @endsection
 @section('content')
-
+@include('swal')
 <section class="content">
     <div class="row align-items-end">
         <div class="col-xl-12 col-12">

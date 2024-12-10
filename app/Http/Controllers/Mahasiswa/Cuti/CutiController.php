@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Mahasiswa\Cuti;
 
+use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 use App\Models\Semester;
 use Illuminate\Http\Request;
@@ -32,6 +33,17 @@ class CutiController extends Controller
         // - beasiswa penuh lainnya, dan Mahasiswa Program Pendidikan Profesi.
         // - mahasiswa telah menempuh minimal 4 semester untuk program sarjana, 
         // - atau telah menempuh minimal 50% dari total sks yang wajib ditempuh pada program studinya.
+        
+        $semester_aktif = SemesterAktif::first();
+
+        $today = Carbon::now()->toDateString();
+
+        if($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti ){
+            return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+        }
+
+        // dd($semester_aktif->tgl_mulai_pengajuan_cuti, $today);
+        
         
         $user = auth()->user();
         $nim = $user->username;
@@ -154,10 +166,13 @@ class CutiController extends Controller
 
         $jumlah_sks_diambil = intval(
                         AktivitasKuliahMahasiswa::where('id_semester', $akm_sebelum)
+                        ->where('id_registrasi_mahasiswa', $fk_id)
                         ->pluck('sks_total')
                         ->first()
                     );
 
+                    // dd($jumlah_sks_lulus,
+                    // $jumlah_sks_diambil, $akm_sebelum);
         $showAlert4 = false;
         
         if ($jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
@@ -179,6 +194,12 @@ class CutiController extends Controller
         $id_reg = auth()->user()->fk_id;
         $data = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan')->where('id_registrasi_mahasiswa', $id_reg)->first();
         $semester_aktif=SemesterAktif::with('semester')->first();
+        $today = Carbon::now()->toDateString();
+
+        if($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti ){
+            // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+        }
         // dd($data);
 
         return view('mahasiswa.pengajuan-cuti.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);

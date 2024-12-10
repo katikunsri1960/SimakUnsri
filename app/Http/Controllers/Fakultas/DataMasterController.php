@@ -234,6 +234,7 @@ class DataMasterController extends Controller
 
         $data = $data->slice($offset, $limit)->values();
 
+        //BISA DIOPTIMALISASI DENGAN GUNAKAN WHEREIN DARI DATA(NIM) UNTUK PEMBAYARAN DAN REGISTRASI
         foreach($data as $key => $value) {
             $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
 
