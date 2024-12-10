@@ -254,14 +254,14 @@ class PesertaKelasKuliah extends Model
 
             if($akm_aktif){
 
-                if($akm_aktif->feeder == '1'){
-                    $result = [
-                        'status' => 'error',
-                        'message' => 'Data sudah di sinkronisasi ke feeder!',
-                    ];
+                // if($akm_aktif->feeder == '1'){
+                //     $result = [
+                //         'status' => 'error',
+                //         'message' => 'Data sudah di sinkronisasi ke feeder!',
+                //     ];
 
-                    return $result;
-                }
+                //     return $result;
+                // }
 
                 if(count($data) == 0 && count($aktivitas) == 0){
                     $result = [
