@@ -259,10 +259,13 @@ class KrsController extends Controller
             // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
             // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
             ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-            // ->where('tagihan.nomor_pembayaran', '08051282328058')
-            ->where('kode_periode', $semester_aktif->id_semester)
+            // ->whereNotIn('nomor_pembayaran', '08051182126003')
+            ->where('kode_periode', $semester_aktif->id_semester
+            // -1
+            )
             ->first();
             
+        // dd($beasiswa, $tagihan);
 
 
         $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();

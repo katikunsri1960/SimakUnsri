@@ -84,18 +84,36 @@ Semester Aktif
                                 </div>
                             </div>
                         </div>
+                        <h4 class="text-info mt-20"><i class="fa fa-calendar-o"></i> Jadwal Pengajuan Stop Out / Cuti </h4>
+                        <hr class="my-10">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="tgl_mulai_pengajuan_cuti" class="form-label">Tanggal Mulai Pengajuan Stop Out / Cuti</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="tgl_mulai_pengajuan_cuti" id="tgl_mulai_pengajuan_cuti" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_tgl_mulai_pengajuan_cuti : '' }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="tgl_selesai_pengajuan_cuti" class="form-label">Tanggal Selesai Pengajuan Stop Out / Cuti</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="tgl_selesai_pengajuan_cuti" id="tgl_selesai_pengajuan_cuti" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_tgl_selesai_pengajuan_cuti : '' }}"/>
+                                </div>
+                            </div>
+                        </div>
                         <h4 class="text-info mt-20"><i class="fa fa-calendar-o"></i> Jadwal Pengisian Nilai </h4>
                         <hr class="my-10">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 mb-3">
-                                <label for="mulai_isi_nilai" class="form-label">Mulai Pengisian Nilai</label>
+                                <label for="mulai_isi_nilai" class="form-label">Tanggal Mulai Pengisian Nilai</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                     <input type="text" class="form-control" name="mulai_isi_nilai" id="mulai_isi_nilai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_mulai_isi_nilai : '' }}"/>
                                 </div>
                             </div>
                             <div class="col-lg-6 col-md-6 mb-3">
-                                <label for="batas_isi_nilai" class="form-label">Batas Pengisian Nilai</label>
+                                <label for="batas_isi_nilai" class="form-label">Tanggal Selesai Pengisian Nilai</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
                                     <input type="text" class="form-control" name="batas_isi_nilai" id="batas_isi_nilai" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_batas_isi_nilai : '' }}"/>
@@ -155,6 +173,14 @@ Semester Aktif
         });
 
         flatpickr("#tanggal_akhir_kprs", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#tgl_mulai_pengajuan_cuti", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#tgl_selesai_pengajuan_cuti", {
             dateFormat: "d-m-Y",
         });
 
