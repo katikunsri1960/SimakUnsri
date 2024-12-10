@@ -38,8 +38,11 @@ class CutiController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        if($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti ){
-            return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+        if($semester_aktif->tgl_mulai_pengajuan_cuti && $semester_aktif->tgl_selesai_pengajuan_cuti){
+            if($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti ){
+            // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+            }
         }
 
         // dd($semester_aktif->tgl_mulai_pengajuan_cuti, $today);
@@ -196,9 +199,11 @@ class CutiController extends Controller
         $semester_aktif=SemesterAktif::with('semester')->first();
         $today = Carbon::now()->toDateString();
 
-        if($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti ){
+        if($semester_aktif->tgl_mulai_pengajuan_cuti && $semester_aktif->tgl_selesai_pengajuan_cuti){
+            if($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti ){
             // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+            }
         }
         // dd($data);
 
