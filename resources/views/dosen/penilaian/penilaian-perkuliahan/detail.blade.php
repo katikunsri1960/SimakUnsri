@@ -39,10 +39,16 @@ Detail Penilaian Perkuliahan Mahasiswa
                 <div class="col-xxl-12">
                     <div class="box box-body mb-0 ">
                         <div class="row mb-5">
-                            <div class="col-xl-4 col-lg-12">
+                            <div class="col-xl-6 col-lg-6 mb-4">
                                 <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}"><i class="fa fa-chevron-left"><span class="path1"></span><span class="path2"></span></i> Kembali</a>
                             </div>
-                        </div><br>
+                            <div class="col-xl-6 col-lg-6 mb-4">
+                                <form action="{{route('dosen.penilaian.penilaian-perkuliahan.pdf-dpna', ['kelas' => $data->id_kelas_kuliah])}}" method="get" target="_blank">
+                                    <button type="submit" class="btn btn-rounded bg-primary-light float-end"><i class="fa fa-file-pdf"><span class="path1"></span><span class="path2"></span></i> Download / Cetak DPNA</button>
+                                </form>
+                            </div>
+                        </div>
+                        <hr>
                         <div class="row">
                             <div class="table-responsive">
                                 <table id="data" class="table table-bordered table-striped text-center" style="font-size: 12px">
