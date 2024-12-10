@@ -134,7 +134,7 @@ Dashboard
                                                         <td class="text-start align-middle w-300">
                                                             <ul>
                                                                 @foreach($d->dosen_pengajar as $dd)
-                                                                <li>{{$dd->nama_dosen}}</li>
+                                                                <li>{{$dd->dosen->nama_dosen}}</li>
                                                                 @endforeach
                                                             </ul>
                                                         </td>

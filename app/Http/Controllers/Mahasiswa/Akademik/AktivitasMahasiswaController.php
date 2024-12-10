@@ -127,12 +127,25 @@ class AktivitasMahasiswaController extends Controller
                 // ->pluck('ips')
                 ->first();
 
+        // dd($mk_konversi->id_matkul);
 
+        $riwayat_aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa', 'konversi'])
+                    ->whereHas('bimbing_mahasiswa', function ($query) {
+                        $query->whereNotNull('id_bimbing_mahasiswa');
+                    })
+                    ->whereHas('anggota_aktivitas', function ($query) use ($riwayat_pendidikan) {
+                        $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                            ->where('nim', $riwayat_pendidikan->nim);
+                    })
+                    ->where('mk_konversi', $mk_konversi->id_matkul)
+                    ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                    ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
+                    ->get();
 
         // Pastikan untuk mengambil nilai ips
         $ips = $ips ?  $ips->ips : null;
 
-        // dd($ips);
+        // dd($riwayat_aktivitas);
 
         if ($semester_ke == 1 || $semester_ke == 2) {
             $sks_max = 20;
@@ -155,6 +168,8 @@ class AktivitasMahasiswaController extends Controller
                 $sks_max = 0;
             }
         }
+
+        // dd($ips, $semester_ke, $sks_max);
 
         $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
                 // ->leftJoin()
