@@ -69,7 +69,7 @@ Tugas Akhir
                                         {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : '-'}}
                                     </td>
                                     <td class="text-center align-middle">
-                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi ? $d->konversi->kode_mata_kuliah - $d->konversi->nama_mata_kuliah : '-'}})
+                                        {{ Str::upper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi ? $d->konversi->kode_mata_kuliah - $d->konversi->nama_mata_kuliah : '-'}})
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
