@@ -285,6 +285,10 @@ class SidangMahasiswaController extends Controller
         $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
         $nilai_akhir = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->where('nim', $data->anggota_aktivitas_personal->nim)->first();
 
+        if(count($penguji) == 0){
+            return redirect()->back()->with('error', 'Dosen Penguji Belum di Setting.');
+        }
+
         // dd(count($pembimbing)+count($penguji));
         if(count($data_nilai_sidang) != (count($pembimbing)+count($penguji))){
             return redirect()->back()->with('error', 'Nilai Sidang Belum Lengkap.');
