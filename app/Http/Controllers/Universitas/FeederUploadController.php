@@ -966,14 +966,19 @@ class FeederUploadController extends Controller
     public function nilai_transfer_data(Request $request)
     {
         $prodi = ProgramStudi::where('id',$request->id_prodi)->first();
-        $data = NilaiTransferPendidikan::join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
-                ->join('program_studis as p', 'am.id_prodi', 'p.id_prodi')
-                ->join('semesters as s', 'am.id_semester', 's.id_semester')
+        $data = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
+                // ->whereHas('aktivitas_mahasiswa' , function($query) {
+                //     $query->where('feeder', 1);
+                // })
+        //         ->
+                // leftjoin('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
+                // ->join('program_studis as p', 'am.id_prodi', 'p.id_prodi')
+                // ->join('semesters as s', 'am.id_semester', 's.id_semester')
                 ->where('nilai_transfer_pendidikans.id_semester', $request->id_semester)
                 ->where('nilai_transfer_pendidikans.id_prodi', $prodi->id_prodi)
-                ->where('am.feeder', 1)
+                // ->where('feeder', 1)
                 ->where('nilai_transfer_pendidikans.feeder', 0)
-                ->select('nilai_transfer_pendidikans.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester')
+                // ->select('nilai_transfer_pendidikans.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester')
                 ->get();
 
         return response()->json(
@@ -994,8 +999,12 @@ class FeederUploadController extends Controller
 
         // return response()->json(['message' => $semester.' - '.$prodi]);
 
-        $data = NilaiTransferPendidikan::join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
-                ->where('am.feeder', 1)
+        $data = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
+                // join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
+                // ->whereHas('aktivitas_mahasiswa' , function($query) {
+                //     $query->where('feeder', 1);
+                // })
+                // ->where('am.feeder', 1)
                 ->where('nilai_transfer_pendidikans.feeder', 0)
                 ->where('nilai_transfer_pendidikans.id_prodi', $prodi)
                 ->where('nilai_transfer_pendidikans.id_semester', $semester)

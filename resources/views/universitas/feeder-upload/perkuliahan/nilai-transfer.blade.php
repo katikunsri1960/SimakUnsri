@@ -166,7 +166,7 @@ FEEDER UPLOAD - NILAI TRANSFER
                 var data = response;
                 var html = '';
                 var no = 1;
-                console.log(data);
+                // console.log(data);
                 // console.log(prodi.id_prodi);
                 if (response.length > 0) {
                     $('#buttonSubmitForm').prop('disabled', false);
