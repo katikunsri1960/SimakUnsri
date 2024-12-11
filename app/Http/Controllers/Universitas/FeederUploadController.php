@@ -1025,7 +1025,7 @@ class FeederUploadController extends Controller
                 // $lokasi = substr($lokasi, 0, 80);
 
                 $record = [
-                    'id_transfer' => $d->id_transfer,
+                    "id_transfer" => $d->id_transfer,
                     "id_registrasi_mahasiswa" =>  $d->id_registrasi_mahasiswa,
                     "kode_mata_kuliah_asal" => $d->kode_mata_kuliah_asal,
                     "nama_mata_kuliah_asal" => $d->nama_mata_kuliah_asal,
@@ -1041,7 +1041,7 @@ class FeederUploadController extends Controller
                 ];
 
 
-                $recordGet = "id_transfer = '".$d->id_transfer."'" ;
+                $recordGet = "id_transfer = '".$d->id_transfer."' AND id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
                 $result = $req->uploadNilaiTransfer();
@@ -1050,17 +1050,15 @@ class FeederUploadController extends Controller
 
                     DB::beginTransaction();
 
-
-                    NilaiTransferPendidikan::where('id_transfer', $id_transfer_lama)->update(['id_transfer' => $result['data']['id_transfer']]);
+                    // NilaiTransferPendidikan::where('id_transfer', $id_transfer_lama)->update(['id_transfer' => $result['data']['id_transfer']]);
                     // PrestasiMahasiswa::where('id_aktivitas', $id_transfer_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
                     // BimbingMahasiswa::where('id_aktivitas', $id_transfer_lama)->update(['id_aktivitas' => $result['data']['id_aktivitas']]);
 
-                    $d->update([
+                    $d->where('id_transfer', $d->id_transfer)->update([
                         'id_transfer' => $result['data']['id_transfer'],
                         'status_sync' => 'sudah_sync',
                         'feeder' => 1
                     ]);
-
 
                     DB::commit();
 

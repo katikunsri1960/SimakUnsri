@@ -11,6 +11,7 @@ use App\Models\SemesterAktif;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\AsistensiAkhir;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Perkuliahan\Konversi;
 use App\Models\Perkuliahan\MataKuliah;
@@ -140,7 +141,7 @@ class AktivitasMahasiswaController extends Controller
                     ->where('mk_konversi', $mk_konversi->id_matkul)
                     ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                     ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
-                    ->get();
+                    ->first();
 
         // Pastikan untuk mengambil nilai ips
         $ips = $ips ?  $ips->ips : null;
@@ -184,7 +185,8 @@ class AktivitasMahasiswaController extends Controller
             'akm'=>$akm_sebelum, 
             'sks_max'=>$sks_max,
             'mk_konversi'=>$mk_konversi,
-            'dosen_bimbing_aktivitas'=>$dosen_pembimbing
+            'dosen_bimbing_aktivitas'=>$dosen_pembimbing,
+            'riwayat_aktivitas' => $riwayat_aktivitas
         ]);
     }
 
@@ -213,14 +215,28 @@ class AktivitasMahasiswaController extends Controller
 
     public function simpanAktivitas(Request $request)
     {
+        // dd($request->id_aktivitas, $request->judul, $request->input('lokasi'), $request->input('keterangan'), $request->dosen_bimbing_aktivitas);
+    
+        // dd($riwayat_asistensi);
+        // dd($request->judul, $request->input('lokasi'), $request->input('keterangan'), $request->dosen_bimbing_aktivitas);
+
         // Validasi data
-        $validated = $request->validate([
-            'judul' => 'required|string|max:255',
-            'keterangan' => 'nullable|max:100', // tambahkan validasi untuk Keterangan
-            'lokasi' => 'required|string|max:80',
-            'dosen_bimbing_aktivitas.*' => 'required',
-            'id_matkul_konversi' => 'required',
-        ]);
+        if(!$request->id_aktivitas){
+            $validated = $request->validate([
+                // 'id_aktivitas'=>'required',
+                'judul' => 'required|string|max:255',
+                'keterangan' => 'nullable|max:100', // tambahkan validasi untuk Keterangan
+                'lokasi' => 'required|string|max:80',
+                'dosen_bimbing_aktivitas.*' => 'required',
+                'id_matkul_konversi' => 'required',
+            ]);
+        }else{
+            $validated = $request->validate([
+                'id_aktivitas'=>'required',
+            ]);
+        }
+        
+        // dd($request->id_aktivitas, $request->judul, $request->input('lokasi'), $request->input('keterangan'), $request->dosen_bimbing_aktivitas);
         
         try {
             // Gunakan transaksi untuk memastikan semua operasi database berhasil
@@ -262,7 +278,6 @@ class AktivitasMahasiswaController extends Controller
             $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
             $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm ;
-
 
             // Pengecekan apakah KRS sudah diApprove 
             $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
@@ -311,15 +326,26 @@ class AktivitasMahasiswaController extends Controller
                 // return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS', 'sks_max' => $sks_max], 400);
             }
             
-
             $id_aktivitas = Uuid::uuid4()->toString();
-
-            
 
             // Periksa jumlah dosen pembimbing yang dipilih
             // if (count((array)$request->dosen_bimbing_aktivitas) == 0) {
             //     return redirect()->back()->with('error', 'Harap pilih minimal satu dosen pembimbing.');
             // }
+
+            $riwayat_aktivitas = AktivitasMahasiswa::where('id_aktivitas', $request->id_aktivitas)->first();
+
+            if($riwayat_aktivitas){
+                $judul = $riwayat_aktivitas->judul;
+                $keterangan = $riwayat_aktivitas->keterangan;
+                $lokasi = $riwayat_aktivitas->lokasi;
+                $tanggal_mulai = $riwayat_aktivitas->tanggal_mulai;
+            }else{
+                $judul = $request->judul;
+                $keterangan = $request->keterangan;
+                $lokasi = $request->lokasi;
+                $tanggal_mulai = $now;
+            }
             
             // Simpan data ke tabel aktivitas_mahasiswas
             $aktivitas=AktivitasMahasiswa::create([
@@ -339,13 +365,14 @@ class AktivitasMahasiswaController extends Controller
                 'nama_prodi'=>$riwayat_pendidikan->nama_program_studi,
                 'id_semester' => $semester_aktif->id_semester,
                 'nama_semester'=>$semester_aktif->semester->nama_semester,
-                'judul' => $request->judul,
-                'keterangan'=>$request->keterangan,
-                'lokasi'=>$request->lokasi,
+                'judul' => $judul,
+                'keterangan'=>$keterangan,
+                'lokasi'=>$lokasi,
                 'sk_tugas'=>Null,
                 'sumber_data'=>1,
                 'tanggal_sk_tugas'=>Null,
-                'tanggal_mulai'=>$now,//tambahkan kondisi jika aktivitas melanjutkan semester
+                'tanggal_mulai'=>$tanggal_mulai,
+                //tambahkan kondisi jika aktivitas melanjutkan semester
                 'tanggal_selesai'=>Null,
                 'untuk_kampus_merdeka'=>1,
                 'asal_data'=>9,
@@ -433,10 +460,25 @@ class AktivitasMahasiswaController extends Controller
                 $dosen_pembimbing=BiodataDosen::where('id_dosen', $request->dosen_bimbing_aktivitas[$i])->first();
                 // dd($dosen_pembimbing);
 
+                $approved_dosen_aktivitas = BimbingMahasiswa::where('id_aktivitas', $request->id_aktivitas)->where('id_dosen', $dosen_pembimbing->id_dosen)->get();
+                // dd($approved_dosen_aktivitas);
+                if($approved_dosen_aktivitas->isEmpty()){
+                    $approved = 0;
+                    $approved_dosen = 0;
+                }else{
+                    foreach ($approved_dosen_aktivitas as $app) {
+                        $approved = $app->approved;
+                        $approved_dosen = $app->approved_dosen;
+                    }
+                }
+                // dd($approved, $approved_dosen);
+
+                // dd($dosen_pembimbing);
+
                 $bimbing=BimbingMahasiswa::create([
                     'feeder'=>0,
-                    'approved'=>0,
-                    'approved_dosen'=>0,
+                    'approved'=>$approved,
+                    'approved_dosen'=>$approved_dosen,
                     'id_bimbing_mahasiswa'=> $id_bimbing_mahasiswa,
                     'id_aktivitas'=>$aktivitas->id_aktivitas,
                     'judul'=>$aktivitas->judul,
@@ -448,11 +490,28 @@ class AktivitasMahasiswaController extends Controller
                     'pembimbing_ke'=>$i+1,
                     'status_sync'=>'belum sync',
                 ]);
-                
+                //QUERY AMBIL DATA LAMA               
             }
             // $bimbing_urut=$bimbing->orderBy('pembimbing_ke', 'ASC')->get();
             // dd($bimbing);
                 
+            if($request->id_aktivitas){
+                $riwayat_asistensi= AsistensiAkhir::where('id_aktivitas', $request->id_aktivitas)->orderBy('id', 'ASC')->get();
+                // dd($riwayat_asistensi);
+                foreach ($riwayat_asistensi as $asistensi) {
+                    // Menambahkan data ke tabel asistensi_akhirs
+                    AsistensiAkhir::create([
+                        'id_aktivitas' => $id_aktivitas, 
+                        'id_dosen' => $asistensi->id_dosen, 
+                        'approved' => $asistensi->approved, 
+                        'tanggal' => $asistensi->tanggal, 
+                        'uraian' => $asistensi->uraian, 
+                        'created_at' => $asistensi->created_at, 
+                        'updated_at' => $asistensi->updated_at,
+                        // Kolom lainnya sesuai dengan tabel `asistensi_akhirs`
+                    ]);
+                }
+            }
         });
 
         // Jika berhasil, kembalikan respons sukses
@@ -492,6 +551,12 @@ class AktivitasMahasiswaController extends Controller
             $anggota = AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas);
             if ($anggota) {
                 $anggota->delete();
+            }
+
+            // Menghapus anggota aktivitas mahasiswa
+            $asistensi = AsistensiAkhir::where('id_aktivitas', $id_aktivitas);
+            if ($asistensi) {
+                $asistensi->delete();
             }
             
             // Menghapus aktivitas mahasiswa

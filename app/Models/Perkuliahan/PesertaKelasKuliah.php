@@ -179,7 +179,9 @@ class PesertaKelasKuliah extends Model
 
             $tagihan = Tagihan::with('pembayaran')
                     ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester)
+                    ->where('kode_periode', $semester_aktif->id_semester
+                    // -1
+                    )
                     ->first();
 
             // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
