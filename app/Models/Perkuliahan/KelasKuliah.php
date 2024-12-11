@@ -94,6 +94,10 @@ class KelasKuliah extends Model
             'nilai_komponen' => function($query) {
                 $query->orderBy('urutan');
             },
+            'matkul',
+            'ruang_perkuliahan',
+            'prodi',
+            'semester'
         ])
         ->where('id_kelas_kuliah', $kelas)
         ->first();

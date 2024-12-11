@@ -11,9 +11,11 @@ use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\SemesterAktif;
 use App\Exports\ExportDPNA;
 use App\Imports\ImportDPNA;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\SkalaNilai;
 use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
 
 class PenilaianPerkuliahanController extends Controller
@@ -76,6 +78,40 @@ class PenilaianPerkuliahanController extends Controller
         }else{
             return redirect()->back()->with('error', 'Silahkan Melakukan Pengaturan Bobot Komponen Evaluasi');
         }
+    }
+
+    public function pdf_dpna(string $kelas)
+    {
+        $db = new KelasKuliah;
+        $data = $db->detail_penilaian_perkuliahan($kelas);
+        $peserta = PesertaKelasKuliah::leftJoin('nilai_perkuliahans as n', function($join) use ($kelas){
+            $join->on('peserta_kelas_kuliahs.id_registrasi_mahasiswa', '=', 'n.id_registrasi_mahasiswa')
+            ->where('n.id_kelas_kuliah', $kelas);
+        })->where('peserta_kelas_kuliahs.id_kelas_kuliah', $kelas)
+        ->select('peserta_kelas_kuliahs.id_registrasi_mahasiswa', 'peserta_kelas_kuliahs.nim', 'peserta_kelas_kuliahs.nama_mahasiswa', 'nilai_angka', 'nilai_huruf')->orderBy('n.nim')->get();
+        // pluck('id_registrasi_mahasiswa')->toArray();
+        $reg = $peserta->pluck('id_registrasi_mahasiswa')->toArray();
+        $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->whereIn('id_registrasi_mahasiswa', $reg)->orderBy('urutan')->get();
+        $dosen = DosenPengajarKelasKuliah::with(['dosen'])->where('id_kelas_kuliah', $kelas)->orderBy(
+            'urutan'
+        )->get();
+
+        $kode_matkul = $data->matkul ? $data->matkul->kode_mata_kuliah : '';
+        $today = Carbon::now()->locale('id')->translatedFormat('d F Y');
+        // dd($today);
+
+        $pdf = PDF::loadview('dosen.penilaian.penilaian-perkuliahan.pdf-dpna', [
+            'data' => $data,
+            'dosen' => $dosen,
+            'kode_matkul' => $kode_matkul,
+            'nilai_komponen' => $nilai_komponen,
+            'peserta' => $peserta,
+            'today' => $today
+         ])
+         ->setPaper('a4', 'landscape');
+        //  dd($pdf);
+
+         return $pdf->stream('DPNA-'.$kode_matkul.'_'.$data->nama_kelas. '.pdf');
     }
 
     public function upload_dpna(string $kelas)

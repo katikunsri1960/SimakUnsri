@@ -63,13 +63,13 @@ Tugas Akhir
                                 <tr>
                                     <td class="text-center align-middle"></td>
                                     <td class="text-center align-middle">
-                                        {{$d->anggota_aktivitas_personal->nim}}
+                                        {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nim : '-'}}
                                     </td>
                                     <td class="text-start align-middle" style="width: 15%">
-                                        {{$d->anggota_aktivitas_personal->nama_mahasiswa}}
+                                        {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : '-'}}
                                     </td>
                                     <td class="text-center align-middle">
-                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                        {{ Str::upper($d->nama_jenis_aktivitas) }}<br>({{$d->konversi ? $d->konversi->kode_mata_kuliah."-".$d->konversi->nama_mata_kuliah : '-'}})
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$d->sk_tugas}}<br>({{$d->id_tanggal_sk_tugas}})
@@ -79,27 +79,32 @@ Tugas Akhir
                                     </td>
                                     <td class="text-start align-middle">
                                         <ul>
-                                            @foreach ($d->bimbing_mahasiswa as $p)
-                                            <li>Pembimbing {{$p->pembimbing_ke}} :<br>{{$p->nama_dosen}}</li>
-                                            @endforeach
+                                            @if($d->bimbing_mahasiswa)
+                                                @foreach ($d->bimbing_mahasiswa as $p)
+                                                <li>Pembimbing {{$p->pembimbing_ke}} :<br>{{$p->nama_dosen}}</li>
+                                                @endforeach
+                                            @endif
+
                                         </ul>
                                     </td>
                                     <td class="text-center align-middle" >
-                                        @foreach ($d->bimbing_mahasiswa as $p)
-                                            @if ($d->approve_krs == 0 && $p->approved == 0) 
-                                                <span class="badge badge-lg badge-danger mb-10">Belum Disetujui</span><br>
-                                            @elseif ($p->approved == 0) 
-                                                <span class="badge badge-lg badge-warning mb-10">Menunggu konfirmasi Koprodi</span><br>
-                                            @elseif ($d->approve_krs == 1 && $p->approved_dosen == 0)
-                                                <span class="badge badge-lg badge-warning mb-10">Menunggu konfirmasi dosen</span><br>
-                                            @elseif ($d->approve_krs == 1 && $p->approved_dosen == 2)
-                                                <span class="badge badge-lg badge-danger mb-10">Ditolak dosen pembimbing</span><br>
-                                            @elseif ($d->approve_krs == 0 && $p->approved == 1)
-                                                <span class="badge badge-lg badge-warning mb-10">Dibatalkan Dosen PA</span><br>
-                                            @else
-                                                <span class="badge badge-lg badge-success mb-10">Disetujui</span><br>
-                                            @endif
-                                        @endforeach
+                                        @if($d->bimbing_mahasiswa)
+                                            @foreach ($d->bimbing_mahasiswa as $p)
+                                                @if ($d->approve_krs == 0 && $p->approved == 0)
+                                                    <span class="badge badge-lg badge-danger mb-10">Belum Disetujui</span><br>
+                                                @elseif ($p->approved == 0)
+                                                    <span class="badge badge-lg badge-warning mb-10">Menunggu konfirmasi Koprodi</span><br>
+                                                @elseif ($d->approve_krs == 1 && $p->approved_dosen == 0)
+                                                    <span class="badge badge-lg badge-warning mb-10">Menunggu konfirmasi dosen</span><br>
+                                                @elseif ($d->approve_krs == 1 && $p->approved_dosen == 2)
+                                                    <span class="badge badge-lg badge-danger mb-10">Ditolak dosen pembimbing</span><br>
+                                                @elseif ($d->approve_krs == 0 && $p->approved == 1)
+                                                    <span class="badge badge-lg badge-warning mb-10">Dibatalkan Dosen PA</span><br>
+                                                @else
+                                                    <span class="badge badge-lg badge-success mb-10">Disetujui</span><br>
+                                                @endif
+                                            @endforeach
+                                        @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center">

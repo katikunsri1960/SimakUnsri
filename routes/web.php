@@ -437,7 +437,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 //Penilaian Perkuliahan Mahasiswa
                 Route::get('/penilaian-perkuliahan', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'penilaian_perkuliahan'])->name('dosen.penilaian.penilaian-perkuliahan');
                 Route::get('/penilaian-perkuliahan/detail/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'detail_penilaian_perkuliahan'])->name('dosen.penilaian.penilaian-perkuliahan.detail');
-
+                Route::get('/penilaian-perkuliahan/pdf-dpna/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'pdf_dpna'])->name('dosen.penilaian.penilaian-perkuliahan.pdf-dpna');
                 //Detail Fitur
                 //Komponen Evaluasi
                 Route::get('/komponen-evaluasi/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'komponen_evaluasi'])->name('dosen.penilaian.komponen-evaluasi');
