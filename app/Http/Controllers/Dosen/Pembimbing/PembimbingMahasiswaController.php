@@ -592,6 +592,10 @@ class PembimbingMahasiswaController extends Controller
 
         $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $ujiMahasiswa = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
+
+        if(count($ujiMahasiswa) == 0){
+            return redirect()->back()->with('error', 'Dosen Penguji Belum di Setting.');
+        }
         // dd($aktivitas, $aktivitasMahasiswa);
 
         if (!$data) {

@@ -91,8 +91,10 @@ class PesertaKelasKuliah extends Model
 
             foreach ($aktivitas as $item) {
                 $item->update([
-                    'approved' => '0',
+                    'approve_krs' => '0',
+                    'approve_sidang' => '0',
                     'feeder' => 0,
+                    'tanggal_approve' => date('Y-m-d'),
                     'submitted' => 0
                 ]);
             }
@@ -101,6 +103,7 @@ class PesertaKelasKuliah extends Model
                 $item->update([
                     'approved' => '0',
                     'feeder' => 0,
+                    'tanggal_approve' => date('Y-m-d'),
                     'submitted' => 0
                 ]);
             }
