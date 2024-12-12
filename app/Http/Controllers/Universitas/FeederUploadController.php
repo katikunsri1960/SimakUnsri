@@ -28,6 +28,8 @@ use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
+use function PHPUnit\Framework\isNull;
+
 class FeederUploadController extends Controller
 {
 
@@ -965,21 +967,33 @@ class FeederUploadController extends Controller
 
     public function nilai_transfer_data(Request $request)
     {
+        
         $prodi = ProgramStudi::where('id',$request->id_prodi)->first();
-        $data = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
-                // ->whereHas('aktivitas_mahasiswa' , function($query) {
-                //     $query->where('feeder', 1);
-                // })
-        //         ->
-                // leftjoin('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
-                // ->join('program_studis as p', 'am.id_prodi', 'p.id_prodi')
-                // ->join('semesters as s', 'am.id_semester', 's.id_semester')
-                ->where('nilai_transfer_pendidikans.id_semester', $request->id_semester)
-                ->where('nilai_transfer_pendidikans.id_prodi', $prodi->id_prodi)
-                // ->where('feeder', 1)
-                ->where('nilai_transfer_pendidikans.feeder', 0)
-                // ->select('nilai_transfer_pendidikans.*', 'p.nama_jenjang_pendidikan', 'p.nama_program_studi', 's.nama_semester as nama_semester')
-                ->get();
+        // dd($prodi->id_prodi, $request->id_semester);
+        // $data = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
+        //         ->where('nilai_transfer_pendidikans.id_semester', $request->id_semester)
+        //         ->where('nilai_transfer_pendidikans.id_prodi', $prodi->id_prodi)
+        //         ->where('nilai_transfer_pendidikans.feeder', 0)
+        //         ->get();
+
+        $query = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
+            ->where('nilai_transfer_pendidikans.feeder', 0)
+            ->where('nilai_transfer_pendidikans.id_semester', $request->id_semester)
+            ->where('nilai_transfer_pendidikans.id_prodi', $prodi->id_prodi);
+
+        // if (isNull(NilaiTransferPendidikan::has('aktivitas_mahasiswa'))) {
+        //     $query->doesntHave('aktivitas_mahasiswa');            
+        //     return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        // } else {
+        //     $query->whereHas('aktivitas_mahasiswa', function ($subquery) {
+        //         $subquery->where('feeder', 1);
+        //     });
+        //     return response()->json(['error' => 'Data ditemukan'], 404);
+        // }
+
+
+        $data = $query->get();
+        // dd($data);
 
         return response()->json(
             // [
@@ -999,17 +1013,26 @@ class FeederUploadController extends Controller
 
         // return response()->json(['message' => $semester.' - '.$prodi]);
 
-        $data = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
-                // join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'nilai_transfer_pendidikans.id_aktivitas')
-                // ->whereHas('aktivitas_mahasiswa' , function($query) {
-                //     $query->where('feeder', 1);
-                // })
-                // ->where('am.feeder', 1)
-                ->where('nilai_transfer_pendidikans.feeder', 0)
-                ->where('nilai_transfer_pendidikans.id_prodi', $prodi)
-                ->where('nilai_transfer_pendidikans.id_semester', $semester)
-                // ->where('id_aktivitas', 'f2420b62-3e0e-42c0-93c5-3ffb4585dfc1')
-                ->get();
+        // $data = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
+        //         // ->where('am.feeder', 1)
+        //         ->where('nilai_transfer_pendidikans.feeder', 0)
+        //         ->where('nilai_transfer_pendidikans.id_prodi', $prodi)
+        //         ->where('nilai_transfer_pendidikans.id_semester', $semester)
+        //         ->get();
+
+        $query = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
+            ->where('nilai_transfer_pendidikans.feeder', 0)
+            ->where('nilai_transfer_pendidikans.id_prodi', $prodi)
+            ->where('nilai_transfer_pendidikans.id_semester', $semester);
+
+        // if (NilaiTransferPendidikan::has('aktivitas_mahasiswa')->count() > 0) {
+        //     $query->whereHas('aktivitas_mahasiswa', function ($subQuery) {
+        //         $subQuery->where('feeder', 1);
+        //     });
+        // }
+
+        $data = $query->get();
+
 
         $totalData = $data->count();
         // dd($data);
@@ -1050,7 +1073,7 @@ class FeederUploadController extends Controller
                 ];
 
 
-                $recordGet = "id_transfer = '".$d->id_transfer."' AND id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
+                $recordGet = "id_transfer = '".$d->id_transfer."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
                 $result = $req->uploadNilaiTransfer();
