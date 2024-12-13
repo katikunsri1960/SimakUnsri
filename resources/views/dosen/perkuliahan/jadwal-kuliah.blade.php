@@ -18,7 +18,7 @@ Jadwal Kuliah Dosen
 						</div>
 					<div>
 				</div>
-			</div>							
+			</div>
 		</div>
     </div>
     <div class="row">
@@ -27,7 +27,7 @@ Jadwal Kuliah Dosen
                 <div class="row">
                     <div class="col-xl-6 col-lg-12">
                         <h3 class="fw-500 text-dark mt-0">Daftar Jadwal Mengajar Dosen</h3>
-                    </div>                             
+                    </div>
                 </div>
                 <div class="row">
                     <div class="table-responsive">
@@ -36,7 +36,7 @@ Jadwal Kuliah Dosen
                                 <tr>
                                     <th>No</th>
                                     <th>Kode Mata Kuliah</th>
-                                    <th>Nama Mata Kuliah</th>                                    
+                                    <th>Nama Mata Kuliah</th>
                                     <th>Nama Kelas</th>
                                     <th>Ruang Perkuliahan</th>
                                     <th>Semester</th>
@@ -48,18 +48,18 @@ Jadwal Kuliah Dosen
                             <tbody>
                                 @foreach($data as $d)
                                     <tr>
-                                        <td>{{$loop->iteration}}</td>
-                                        <td>{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
-                                        <td class="text-start align-left" style="white-space:nowrap;">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
-                                        <td>{{$d->kelas_kuliah->nama_kelas_kuliah}}</td>
-                                        <td>{{$d->kelas_kuliah->ruang_perkuliahan->nama_ruang}}</td>
-                                        <td style="white-space:nowrap;">{{$d->kelas_kuliah->semester->nama_semester}}</td>
-                                        <td>{{$d->kelas_kuliah->jadwal_hari}}, {{$d->kelas_kuliah->jadwal_jam_mulai}} - {{$d->kelas_kuliah->jadwal_jam_selesai}}</td>
-                                        <td>{{$d->kelas_kuliah->ruang_ujian ? $d->kelas_kuliah->ruang_ujian->nama_ruang : 'Jadwal Ujian Belum di Setting'}}, {{$d->kelas_kuliah->jadwal_mulai_ujian}} - {{$d->kelas_kuliah->jadwal_selesai_ujian}}</td>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ optional($d->kelas_kuliah->matkul)->kode_mata_kuliah ?? '-' }}</td>
+                                        <td class="text-start align-left" style="white-space:nowrap;">{{ optional($d->kelas_kuliah->matkul)->nama_mata_kuliah ?? '-' }}</td>
+                                        <td>{{ $d->kelas_kuliah->nama_kelas_kuliah ?? '-' }}</td>
+                                        <td>{{ optional($d->kelas_kuliah->ruang_perkuliahan)->nama_ruang ?? '-' }}</td>
+                                        <td style="white-space:nowrap;">{{ optional($d->kelas_kuliah->semester)->nama_semester ?? '-' }}</td>
+                                        <td>{{ $d->kelas_kuliah->jadwal_hari ?? '-' }}, {{ $d->kelas_kuliah->jadwal_jam_mulai ?? '-' }} - {{ $d->kelas_kuliah->jadwal_jam_selesai ?? '-' }}</td>
+                                        <td>{{ optional($d->kelas_kuliah->ruang_ujian)->nama_ruang ?? 'Jadwal Ujian Belum di Setting' }}, {{ $d->kelas_kuliah->jadwal_mulai_ujian ?? '-' }} - {{ $d->kelas_kuliah->jadwal_selesai_ujian ?? '-' }}</td>
                                         <td>
-                                            <a class="btn btn-sm btn-rounded bg-warning" href="{{route('dosen.perkuliahan.jadwal-kuliah.detail', ['kelas' => $d->id_kelas_kuliah])}}"><i class="fa fa-search"></i> Detail Kelas</a>
+                                            <a class="btn btn-sm btn-rounded bg-warning" href="{{ route('dosen.perkuliahan.jadwal-kuliah.detail', ['kelas' => $d->id_kelas_kuliah]) }}"><i class="fa fa-search"></i> Detail Kelas</a>
                                         </td>
-                                    </tr> 
+                                    </tr>
                                 @endforeach
                             </tbody>
 					  </table>
@@ -67,7 +67,7 @@ Jadwal Kuliah Dosen
                 </div>
             </div>
         </div>
-    </div>			
+    </div>
 </section>
 @endsection
 @push('js')
