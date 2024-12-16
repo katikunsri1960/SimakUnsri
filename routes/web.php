@@ -764,15 +764,15 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::get('/data-krs', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ.data-krs');
 
-            Route::prefix('cuti-kuliah')->group(function(){
-                Route::get('/', [App\Http\Controllers\Universitas\CutiController::class, 'index'])->name('univ.cuti-kuliah');
-                Route::post('/store', [App\Http\Controllers\Universitas\CutiController::class, 'store'])->name('univ.cuti-kuliah.store');
-                Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\CutiController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
-                Route::get('/get-data-mahasiswa/{id_registrasi_mahasiswa}', [App\Http\Controllers\Universitas\CutiController::class, 'getMahasiswaData'])->name('univ.cuti-kuliah.get-data');
-                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Universitas\CutiController::class, 'delete'])->name('univ.cuti-kuliah.delete');
+            // Route::prefix('cuti-kuliah')->group(function(){
+            //     Route::get('/', [App\Http\Controllers\Universitas\CutiController::class, 'index'])->name('univ.cuti-kuliah');
+            //     Route::post('/store', [App\Http\Controllers\Universitas\CutiController::class, 'store'])->name('univ.cuti-kuliah.store');
+            //     Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\CutiController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
+            //     Route::get('/get-data-mahasiswa/{id_registrasi_mahasiswa}', [App\Http\Controllers\Universitas\CutiController::class, 'getMahasiswaData'])->name('univ.cuti-kuliah.get-data');
+            //     Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Universitas\CutiController::class, 'delete'])->name('univ.cuti-kuliah.delete');
 
 
-            });
+            // });
 
             Route::prefix('beasiswa')->group(function() {
                 Route::get('/', [App\Http\Controllers\Universitas\BeasiswaController::class, 'index'])->name('univ.beasiswa');
@@ -812,8 +812,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('stop-out')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\CutiManualController::class, 'index'])->name('univ.cuti-manual');
                 Route::post('/store', [App\Http\Controllers\Universitas\CutiManualController::class, 'store'])->name('univ.cuti-manual.store');
-                Route::patch('/update/{idmanual}', [App\Http\Controllers\Universitas\CutiManualController::class, 'update'])->name('univ.cuti-manual.update');
-                Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\CutiManualController::class, 'destroy'])->name('univ.cuti-manual.delete');
+                Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\CutiManualController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
+                Route::get('/get-data-mahasiswa/{id_registrasi_mahasiswa}', [App\Http\Controllers\Universitas\CutiManualController::class, 'getMahasiswaData'])->name('univ.cuti-manual.get-data');
+                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Universitas\CutiManualController::class, 'delete'])->name('univ.cuti-manual.delete');
             });
 
             Route::prefix('kuisioner')->group(function(){

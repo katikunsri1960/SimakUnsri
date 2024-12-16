@@ -1,13 +1,9 @@
 <div class="tab-pane active" id="krs" role="tabpanel">
     <div class="col-xl-12 col-lg-12 col-12">
-        <div class="bg-primary-light rounded20 big-side-section">
+        <div class="bg-primary-light rounded20 big-side-section mb-20 shadow-lg">
             <div class="row">
                 <div class="row">
-                    @php
-                        // $today = \Carbon\Carbon::now();
-                        // $batas_isi_krs = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
-                        // $batas_pembayaran = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
-                    @endphp
+                    
                     <div class="col-xxl-12 py-10 mx-10 rounded20">
                         @if(!empty($beasiswa) ||$pembayaran_manual > 0|| $non_gelar > 0|| $penundaan_pembayaran > 0 || !empty($tagihan->pembayaran->status_pembayaran) || $semester_select != $semester_aktif->id_semester)
                             <div class="row mb-20">
@@ -302,7 +298,11 @@
                                                             <label>
                                                                 Anda tidak dapat melakukan pengisian KRS!
                                                             </label><br>
-                                                            @if($beasiswa==NULL || $tagihan->status_pembayaran==NULL && $today<=$batas_pembayaran && $cuti==NULL)
+                                                            @if($cuti!=NULL)
+                                                                <label>
+                                                                    Anda dalam Masa <strong>Cuti Kuliah</strong> / <strong>STOP OUT</strong>
+                                                                </label>
+                                                            @elseif($beasiswa==NULL || $tagihan->status_pembayaran==NULL && $today<=$batas_pembayaran && $cuti==NULL)
                                                                 <label>
                                                                     Segera Lakukan Pembayaran UKT Sebelum Periode Pembayaran Berakhir!
                                                                 </label>
