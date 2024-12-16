@@ -129,7 +129,7 @@
                             </span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('univ.cuti-kuliah') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('univ.cuti-kuliah') ? 'active' : ''}}">
                         <a href="{{route('univ.cuti-kuliah')}}">
                             <i span class="fa fa-sign-out-alt"><span class="path1"></span><span class="path2"></span></i>
                             <span>List Cuti Kuliah</span>
@@ -137,7 +137,7 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="treeview {{request()->routeIs('univ.pembayaran-manual') | request()->routeIs('univ.pembayaran-manual.*')
                                         | request()->routeIs('univ.krs-manual') | request()->routeIs('univ.krs-manual.*') | request()->routeIs('univ.p-bayar') | request()->routeIs('univ.p-bayar.*')
                                         | request()->routeIs('univ.pembatalan-krs') | request()->routeIs('univ.pembatalan-krs.*') | request()->routeIs('univ.beasiswa') ? 'active menu-open' : ''}}">
