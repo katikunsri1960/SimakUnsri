@@ -279,13 +279,13 @@ class AktivitasNonTAController extends Controller
 
         $nilai_konversi = KonversiAktivitas::with(['matkul'])->where('id_aktivitas', $aktivitas)->get();
 
-        if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
-            return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
-        }
+        // if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
+        //     return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
+        // }
 
-        if(strtotime(date('Y-m-d')) > strtotime($semester->batas_isi_nilai)){
-            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
-        }
+        // if(strtotime(date('Y-m-d')) > strtotime($semester->batas_isi_nilai)){
+        //     return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        // }
 
         if(!$aktivitas_mahasiswa || !$aktivitas_mahasiswa->sk_tugas){
             return redirect()->back()->with('error', 'SK Aktivitas Belum di Isi.');
@@ -429,13 +429,13 @@ class AktivitasNonTAController extends Controller
 
         $nilai_transfer = NilaiTransferPendidikan::with(['matkul'])->where('id_aktivitas', $aktivitas)->get();
 
-        if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
-            return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
-        }
+        // if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
+        //     return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
+        // }
 
-        if(strtotime(date('Y-m-d')) > strtotime($semester->batas_isi_nilai)){
-            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
-        }
+        // if(strtotime(date('Y-m-d')) > strtotime($semester->batas_isi_nilai)){
+        //     return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        // }
 
         if(!$aktivitas_mahasiswa || !$aktivitas_mahasiswa->sk_tugas){
             return redirect()->back()->with('error', 'SK Aktivitas Belum di Isi.');
