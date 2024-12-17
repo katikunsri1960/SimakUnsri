@@ -66,7 +66,7 @@ class NilaiController extends Controller
         $aktivitas_kuliah=AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->where('id_semester', $id_semester)->get();
 
         $nilai_mahasiswa = NilaiPerkuliahan::with(['dosen_pengajar', 'dosen_pengajar.dosen', 'kelas_kuliah' => function($query) use ($id_reg_mhs) {
-                                                $query->withCount(['kuisoner' => function($query) use ($id_reg_mhs) {
+                                                $query->withCount(['kuisoner as q_count_c' => function($query) use ($id_reg_mhs) {
                                                     $query->where('id_registrasi_mahasiswa', $id_reg_mhs);
                                                 }]);
                                             }])

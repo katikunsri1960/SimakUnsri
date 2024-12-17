@@ -256,7 +256,7 @@
                                     </div>
                                 </div>
                             @else
-                                <div class="row mb-20">
+                                <div class="row mb-5">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">
                                             <div class="row">
@@ -275,7 +275,11 @@
                                                                 <label>
                                                                     Anda tidak dapat memilih Mata Kuliah!
                                                                 </label><br>
-                                                                @if($beasiswa==NULL || $tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti==NULL)
+                                                                @if($cuti!=NULL)
+                                                                    <label>
+                                                                        Anda dalam Masa <strong>Cuti Kuliah</strong> / <strong>STOP OUT</strong>
+                                                                    </label>
+                                                                @elseif($beasiswa==NULL || $tagihan->status_pembayaran==NULL && $today<=$deadline && $cuti==NULL)
                                                                     <label>
                                                                         Segera Lakukan Pembayaran UKT Sebelum Periode Pembayaran Berakhir!
                                                                     </label>
