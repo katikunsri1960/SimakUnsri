@@ -21,11 +21,12 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
 
     public function __construct(string $kelas, string $matkul)
     {
+        $dbKelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->first();
         $this->kelas = $kelas;
         $this->matkul = $matkul;
         $this->sks_matkul = MataKuliah::where('id_matkul', $matkul)->first()->sks_mata_kuliah;
-        $this->semester_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->first()->id_semester;
-        $this->nama_semester_kelas = KelasKuliah::where('id_kelas_kuliah', $kelas)->first()->nama_semester;
+        $this->semester_kelas = $dbKelas->id_semester;
+        $this->nama_semester_kelas = $dbKelas->nama_semester;
     }
 
     public function collection(Collection $rows)
@@ -90,12 +91,29 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
 
                         $nilai_field = $this->getNilaiField($komponen['nomor_urut']);
 
-                        NilaiKomponenEvaluasi::where('id_komponen_evaluasi', $komponen['id_komponen_evaluasi'])
-                                ->where('id_kelas', $this->kelas)
-                                ->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)
-                                ->update([
-                                    'nilai_komp_eval' => $row[$nilai_field] ?? 0,
-                                ]);
+                        NilaiKomponenEvaluasi::updateOrCreate(
+                            ['id_komponen_evaluasi' => $komponen['id_komponen_evaluasi'], 'id_kelas' => $this->kelas, 'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa, 'urutan' => $komponen['nomor_urut']],
+                            [
+                                'feeder' => 0,
+                                'id_prodi' => $mahasiswa_kelas->id_prodi,
+                                'nama_program_studi' => $mahasiswa_kelas->nama_program_studi,
+                                'id_periode' => $this->semester_kelas,
+                                'id_matkul' => $this->matkul,
+                                'nama_mata_kuliah' => $mahasiswa_kelas->nama_mata_kuliah,
+                                'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
+                                'sks_mata_kuliah' => $this->sks_matkul,
+                                'nama_mahasiswa' => $row['nama_mahasiswa'],
+                                'nim' => $row['nim'],
+                                'nama_mahasiswa' => $row['nama_mahasiswa'],
+                                'id_jns_eval' => $komponen['id_jenis_evaluasi'],
+                                'nama' => $komponen['nama'],
+                                'nama_inggris' => $komponen['nama_inggris'],
+                                'bobot' => $komponen['bobot_evaluasi'],
+                                'angkatan' => $mahasiswa_kelas->angkatan,
+                                'status_sync' => 'belum sync',
+                                'nilai_komp_eval' => $row[$nilai_field] ?? 0,
+                            ]
+                        );
 
                     }
                 }
