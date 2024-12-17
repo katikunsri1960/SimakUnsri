@@ -115,13 +115,6 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             ]
                         );
 
-                        // NilaiKomponenEvaluasi::where('id_komponen_evaluasi', $komponen['id_komponen_evaluasi'])
-                        //         ->where('id_kelas', $this->kelas)
-                        //         ->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)
-                        //         ->update([
-                        //             'nilai_komp_eval' => $row[$nilai_field] ?? 0,
-                        //         ]);
-
                     }
                 }
 
