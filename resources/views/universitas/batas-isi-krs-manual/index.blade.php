@@ -77,9 +77,9 @@ Batas Isi KRS Manual
                                 </td>
                                 <td class="text-center align-middle">{{$d->terakhir_update}}</td>
                                 <td class="text-center align-middle">
-                                    {{-- <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editBatas({{$d}}, {{$d->id}})">
+                                    <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editBatas({{$d}}, {{$d->id}})">
                                         <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                                    </button> --}}
+                                    </button>
                                     <form action="{{route('univ.batas-isi-krs-manual.delete', $d->id)}}" method="POST" id="delete-form-{{$d->id}}">
                                         @csrf
                                         @method('delete')
@@ -141,9 +141,22 @@ Batas Isi KRS Manual
     });
 
     function editBatas(data, id) {
-        document.getElementById('edit_status').value = data.status;
+        console.log(data.nim, id);
+        document.getElementById('edit_status').value = data.status_bayar;
+        document.getElementById('edit_batas_isi_krs').value = data.batas_isi_krs;
+        document.getElementById('edit_keterangan').value = data.keterangan;
         // Populate other fields...
-        document.getElementById('editForm').action = '/universitas/krs-manual/update/' + id;
+        // document.getElementById('editForm').action = '/universitas/krs-manual/update/' + id;
+
+        let mahasiswaSelect = document.getElementById('edit_id_registrasi_mahasiswa');
+        mahasiswaSelect.onchange = () => {
+            getNamaMahasiswaEdit();
+            setTimeout(() => {
+                document.getElementById('edit_id_registrasi_mahasiswa').value = data.nim;
+            }, 500);
+        };
+
+        document.getElementById('editForm').action = `{{route('univ.batas-isi-krs-manual.update', ':id')}}`.replace(':id', data.id);
     }
 
     function deleteKRSManual(id) {
