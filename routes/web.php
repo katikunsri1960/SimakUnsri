@@ -80,6 +80,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/mahasiswa-up-tujuh/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'mahasiswa_up_tujuh'])->name('bak.monitoring.pengisian-krs.mahasiswa-up-tujuh');
                 });
 
+                Route::prefix('pengisian-nilai')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'pengisian_nilai'])->name('bak.monitoring.pengisian-nilai');
+                    Route::get('/detail/{mode}/{dosen}/{prodi}', [App\Http\Controllers\Bak\MonitoringController::class, 'pengisian_nilai_detail'])->name('bak.monitoring.pengisian-nilai.detail');
+                    Route::get('/get-data', [App\Http\Controllers\Bak\MonitoringController::class, 'pengisian_nilai_data'])->name('bak.monitoring.pengisian-nilai.data');
+                });
+
                 Route::prefix('lulus-do')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'lulus_do'])->name('bak.monitoring.lulus-do');
                     Route::get('/data', [App\Http\Controllers\Bak\MonitoringController::class, 'lulus_do_data'])->name('bak.monitoring.lulus-do.data');

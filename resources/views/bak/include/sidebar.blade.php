@@ -68,6 +68,9 @@
                             <li class="{{request()->routeIs('bak.monitoring.lulus-do') || request()->routeIs('bak.monitoring.lulus-do.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.monitoring.lulus-do')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus Do</a>
                             </li>
+                            <li class="{{request()->routeIs('bak.monitoring.pengisian-nilai') || request()->routeIs('bak.monitoring.pengisian-nilai.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.monitoring.pengisian-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian Nilai</a>
+                            </li>
                         </ul>
                     </li>
                     {{-- <li class="treeview {{request()->routeIs('dosen.profile.*') ? 'active menu-open' : ''}}">
