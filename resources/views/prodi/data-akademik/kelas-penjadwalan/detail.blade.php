@@ -78,7 +78,7 @@ Kelas Penjadwalan
                                         </td>
                                         <td class="text-center align-middle">
                                             @if ($d->ruang_perkuliahan)
-                                            {{!$d->ruang_perkuliahan ? '' : $d->ruang_perkuliahan->nama_ruang}}<br>({{$d->ruang_perkuliahan ? '' : $d->ruang_perkuliahan->lokasi}})
+                                            {{!$d->ruang_perkuliahan ? '' : $d->ruang_perkuliahan->nama_ruang}}<br>({{!$d->ruang_perkuliahan ? '' : $d->ruang_perkuliahan->lokasi}})
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>

@@ -15,6 +15,7 @@ use App\Models\Connection\CourseUsept;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
+use App\Models\ProgramStudi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -285,7 +286,10 @@ class DataMasterController extends Controller
     public function ruang_perkuliahan()
     {
         $prodi_id = auth()->user()->fk_id;
-        $data = RuangPerkuliahan::where('id_prodi',$prodi_id)->get();
+        $data_prodi = ProgramStudi::where('id_prodi', $prodi_id)->first();
+        $data = RuangPerkuliahan::where('fakultas_id',$data_prodi->fakultas_id)->get();
+
+        // dd($data_prodi);
 
         return view('prodi.data-master.ruang-perkuliahan.index', [
             'data' => $data
