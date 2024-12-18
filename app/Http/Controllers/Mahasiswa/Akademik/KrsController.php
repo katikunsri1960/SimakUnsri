@@ -316,7 +316,7 @@ class KrsController extends Controller
         //     '03041381823070'//Mahasiswa Perpanjangan Studi
         // ];
 
-        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->first();
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
         // dd($batas_isi_krs_manual);
 
         if($batas_isi_krs_manual != NULL){
