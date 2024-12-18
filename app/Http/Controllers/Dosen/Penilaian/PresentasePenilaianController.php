@@ -16,8 +16,11 @@ class PresentasePenilaianController extends Controller
     public function komponen_evaluasi(string $kelas)
     {
         $semester_aktif = SemesterAktif::first();
-        $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
+        $data_kelas = KelasKuliah::with(['matkul', 'prodi'])->where('id_kelas_kuliah', $kelas)->first();
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
+
+         // List of program codes not requiring scheduling checks
+         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
 
         //Check batas pengisian nilai
         $interval = $semester_aktif->batas_isi_nilai;
@@ -55,7 +58,6 @@ class PresentasePenilaianController extends Controller
             $bobot_finalterm = 0;
         }
         
-        
         // dd($data_komponen);
         return view('dosen.penilaian.presentase.komponen-evaluasi', [
             'data' => $data_komponen,
@@ -66,7 +68,8 @@ class PresentasePenilaianController extends Controller
             'quiz' => $bobot_quiz,
             'midterm_exam' => $bobot_midterm,
             'finalterm_exam' => $bobot_finalterm,
-            'batas_pengisian' => $interval
+            'batas_pengisian' => $interval,
+            'prodi_bebas_jadwal' => $prodi_not_scheduled
         ]);
     }
 
@@ -97,7 +100,7 @@ class PresentasePenilaianController extends Controller
 
         // dd($interval);
 
-        if($komponen_kelas->isEmpty() && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai)){
+        if($komponen_kelas->isEmpty() && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai && !in_array($kelas->prodi->kode_program_studi, $prodi_bebas_jadwal))){
             //Check jumlah bobot komponen evaluasi
             $total_bobot_input = $request->participatory + $request->project_outcomes + $request->assignment + $request->quiz + $request->midterm_exam + $request->finalterm_exam;
 
@@ -151,6 +154,7 @@ class PresentasePenilaianController extends Controller
         //Define variable;
         $semester_aktif = SemesterAktif::first();
         $komponen_kelas = KomponenEvaluasiKelas :: where('id_kelas_kuliah', $kelas)->get();
+        $data_kelas = KelasKuliah::with(['matkul', 'prodi'])->where('id_kelas_kuliah', $kelas)->first();
         $id_dosen = auth()->user()->fk_id;
         $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
 
@@ -167,8 +171,10 @@ class PresentasePenilaianController extends Controller
             'midterm_exam' => 'required',
             'finalterm_exam' => 'required'
         ]);
+
+        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
         
-        if(($komponen_kelas[0]->feeder == '0' || $komponen_kelas[1]->feeder == '0' || $komponen_kelas[2]->feeder == '0' || $komponen_kelas[3]->feeder == '0' || $komponen_kelas[4]->feeder == '0' || $komponen_kelas[5]->feeder == '0') && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai)){
+        if(collect($komponen_kelas)->pluck('feeder')->contains('0') && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai || in_array($data_kelas->prodi->kode_program_studi, $prodi_not_scheduled))){
             //Check jumlah bobot komponen evaluasi
             $total_bobot_input = $request->participatory + $request->project_outcomes + $request->assignment + $request->quiz + $request->midterm_exam + $request->finalterm_exam;
 

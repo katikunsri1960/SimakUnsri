@@ -254,7 +254,7 @@ Komponen Evaluasi Kelas Perkuliahan
                             <a class="btn btn-warning me-1" href="{{route('dosen.penilaian.penilaian-perkuliahan')}}">
                                 <i class="ti-trash"></i> Cancel
                             </a>
-                            <button type="submit" class="btn btn-primary" @if(date("Y-m-d") > $batas_pengisian) disabled @endif>
+                            <button type="submit" class="btn btn-primary" @if(date("Y-m-d") > $batas_pengisian && !in_array($kelas->prodi->kode_program_studi, $prodi_bebas_jadwal)) disabled @endif>
                                 <i class="ti-save-alt"></i> Save
                             </button>
                         </div>

@@ -23,22 +23,16 @@ class PenilaianPerkuliahanController extends Controller
     public function penilaian_perkuliahan()
     {
         $db = new BiodataDosen;
-
         $semester_aktif = SemesterAktif::first();
         $data = $db->dosen_pengajar_kelas(auth()->user()->fk_id);
 
-
-
-        // if($data[0]->kelas_kuliah->nilai_perkuliahan->isEmpty()){
-        //     return response()->json([
-        //         'status' => 'error',
-        //         'message' => 'Data Berisi',
-        //     ]);
-        // }
+        // List of program codes not requiring scheduling checks
+        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
+       
         // dd($data);
 
         return view('dosen.penilaian.penilaian-perkuliahan.index', [
-            'data' => $data, 'semester_aktif' => $semester_aktif]);
+            'data' => $data, 'semester_aktif' => $semester_aktif, 'prodi_bebas_jadwal' => $prodi_not_scheduled]);
     }
 
     public function detail_penilaian_perkuliahan(string $kelas)
@@ -53,13 +47,16 @@ class PenilaianPerkuliahanController extends Controller
 
     public function download_dpna(string $kelas, string $prodi)
     {
-        $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
+        $data_kelas = KelasKuliah::with(['matkul', 'prodi'])->where('id_kelas_kuliah', $kelas)->first();
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
         $semester_aktif = SemesterAktif::first();
 
-        //Check batas pengisian nilai
-        $hari_proses = date('Y-m-d');
-        $batas_nilai = $semester_aktif->batas_isi_nilai;
+         // List of program codes not requiring scheduling checks
+         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
+
+         // Check the schedule for inputting grades
+         $hari_proses = date('Y-m-d');
+         $batas_nilai = $semester_aktif->batas_isi_nilai;
 
         $checkSkala = $this->checkSkalaNilai($data_kelas->id_prodi);
 
@@ -68,7 +65,7 @@ class PenilaianPerkuliahanController extends Controller
         }
 
         if(!$data_komponen->isEmpty()){
-            if($hari_proses <= $batas_nilai){
+            if($hari_proses <= $batas_nilai || in_array($data_kelas->prodi->kode_program_studi, $prodi_not_scheduled)){
                 // remove regex from $data_kelas->matkul->nama_mata_kuliah
                 $nm_matkul = preg_replace('/[^A-Za-z0-9\-]/', '_', $data_kelas->matkul->nama_mata_kuliah);
                 return Excel::download(new ExportDPNA($kelas, $prodi), 'DPNA_'.$data_kelas->nama_program_studi.'_'.$data_kelas->matkul->kode_mata_kuliah.'_'.$nm_matkul.'_'.$data_kelas->nama_kelas_kuliah.'.xlsx');
@@ -117,7 +114,7 @@ class PenilaianPerkuliahanController extends Controller
     public function upload_dpna(string $kelas)
     {
         $semester_aktif = SemesterAktif::first();
-        $data_kelas = KelasKuliah::with('matkul')->where('id_kelas_kuliah', $kelas)->first();
+        $data_kelas = KelasKuliah::with(['matkul', 'prodi'])->where('id_kelas_kuliah', $kelas)->first();
         $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->get();
         $id_dosen = auth()->user()->fk_id;
         $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
@@ -125,12 +122,8 @@ class PenilaianPerkuliahanController extends Controller
         if($data_dosen->urutan != 1){
             return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
         }
-
         // List of program codes not requiring scheduling checks
         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
-
-        // Fetch data for the specific class and its associated program
-        $data_prodi = KelasKuliah::with('prodi')->where('id_kelas_kuliah', $kelas)->first();
 
         // Check the schedule for inputting grades
         $hari_proses = date('Y-m-d');
@@ -138,7 +131,7 @@ class PenilaianPerkuliahanController extends Controller
         $batas_nilai = $semester_aktif->batas_isi_nilai;
 
         // Check if the program is not in the excluded list
-        if (!in_array($data_prodi->prodi->kode_program_studi, $prodi_not_scheduled)) {
+        if (!in_array($data_kelas->prodi->kode_program_studi, $prodi_not_scheduled)) {
 
             if ($hari_proses < $mulai_nilai) {
                 return redirect()->back()->with('error', "Jadwal Pengisian Nilai Belum Dimulai!");
@@ -151,7 +144,8 @@ class PenilaianPerkuliahanController extends Controller
             'data' => $nilai_komponen,
             'kelas' => $data_kelas,
             'mulai_pengisian' => $mulai_nilai,
-            'batas_pengisian' => $batas_nilai
+            'batas_pengisian' => $batas_nilai,
+            'prodi_bebas_jadwal' => $prodi_not_scheduled
         ]);
     }
 
