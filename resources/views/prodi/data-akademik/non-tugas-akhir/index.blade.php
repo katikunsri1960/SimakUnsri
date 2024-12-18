@@ -139,14 +139,18 @@ Tugas Akhir
                                             </form>
                                             @endif
                                             @if(($d->approved == 0 && $d->approved_dosen == 0) && ($d->id_jenis_aktivitas != '5' && $d->id_jenis_aktivitas != '6' && $d->id_jenis_aktivitas != '21'))
-                                                <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-konversi', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Konversi">
-                                                    <i class="fa fa-pencil-square-o"></i> Nilai Konversi
-                                                </a>
+                                                @if($semester == $d->id_semester)
+                                                    <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-konversi', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Konversi">
+                                                        <i class="fa fa-pencil-square-o"></i> Nilai Konversi
+                                                    </a>
+                                                @endif
                                             @endif
                                             @if(($d->approved == 0 && $d->approved_dosen == 0) && $d->id_jenis_aktivitas == '21')
-                                                <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-transfer', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Transfer">
-                                                    <i class="fa fa-pencil-square-o"></i> Nilai Transfer
-                                                </a>
+                                                @if($semester == $d->id_semester)
+                                                    <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-transfer', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Transfer">
+                                                        <i class="fa fa-pencil-square-o"></i> Nilai Transfer
+                                                    </a>
+                                                @endif
                                             @endif
                                             <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
                                             <a href="#" class="btn btn-info btn-sm my-2" title="Detail"

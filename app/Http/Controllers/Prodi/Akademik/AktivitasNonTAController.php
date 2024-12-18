@@ -279,6 +279,10 @@ class AktivitasNonTAController extends Controller
 
         $nilai_konversi = KonversiAktivitas::with(['matkul'])->where('id_aktivitas', $aktivitas)->get();
 
+        if($semester->id_semester != $aktivitas_mahasiswa->id_semester){
+            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        }
+
         // if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
         //     return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
         // }
@@ -428,6 +432,10 @@ class AktivitasNonTAController extends Controller
         $aktivitas_mahasiswa = AktivitasMahasiswa::with(['anggota_aktivitas_personal','anggota_aktivitas_personal.mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semester->id_semester)->first();
 
         $nilai_transfer = NilaiTransferPendidikan::with(['matkul'])->where('id_aktivitas', $aktivitas)->get();
+
+        if($semester->id_semester != $aktivitas_mahasiswa->id_semester){
+            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        }
 
         // if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
         //     return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
