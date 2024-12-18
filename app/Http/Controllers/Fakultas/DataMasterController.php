@@ -269,4 +269,68 @@ class DataMasterController extends Controller
     {
         return view('fakultas.data-master.biaya-kuliah.devop');
     }
+
+    public function ruang_perkuliahan()
+    {
+        $fakultas_id = auth()->user()->fk_id;
+        $data = RuangPerkuliahan::where('fakultas_id',$fakultas_id)->get();
+
+        // dd($data);
+
+        return view('fakultas.data-master.ruang-perkuliahan.index', [
+            'data' => $data
+        ]);
+    }
+
+    public function ruang_perkuliahan_store(Request $request)
+    {
+        $fakultas_id = auth()->user()->fk_id;
+        $data = $request->validate([
+            'nama_ruang' => 'required',
+            'kapasitas_ruang' => 'required',
+            'lokasi' => [
+                'required',
+                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$fakultas_id) {
+                    return $query->where('nama_ruang', $request->nama_ruang)
+                    ->where('lokasi', $request->lokasi)
+                    ->where('fakultas_id', $fakultas_id);
+                }),
+            ],
+        ]);
+
+        // dd($request->kapasitas_ruang);
+
+        RuangPerkuliahan::create(['nama_ruang'=> $request->nama_ruang, 'lokasi'=> $request->lokasi, 'fakultas_id'=> $fakultas_id, 'kapasitas_ruang' => $request->kapasitas_ruang]);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+    public function ruang_perkuliahan_update(Request $request, RuangPerkuliahan $ruang_perkuliahan)
+    {
+        $fakultas_id = auth()->user()->fk_id;
+        $data = $request->validate([
+            'nama_ruang' => 'required',
+            'kapasitas_ruang' => 'required',
+            'lokasi' => [
+                'required',
+                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$fakultas_id,$ruang_perkuliahan) {
+                    return $query->where('nama_ruang', $request->nama_ruang)
+                    ->where('lokasi', $request->lokasi)
+                    ->where('fakultas_id', $fakultas_id)
+                    ->whereNotIn('id', [$ruang_perkuliahan->id]);
+                }),
+            ],
+        ]);
+
+        $ruang_perkuliahan->update($data);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Rubah');
+    }
+
+    public function ruang_perkuliahan_destroy(RuangPerkuliahan $ruang_perkuliahan)
+    {
+        $ruang_perkuliahan->delete();
+
+        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+    }
 }
