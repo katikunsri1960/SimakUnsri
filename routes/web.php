@@ -611,7 +611,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/data', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'data'])->name('prodi.data-akademik.khs.data');
                 });
 
-                Route::get('', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'krs'])->name('prodi.data-akademik.krs');
+                // Route::get('', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'krs'])->name('prodi.data-akademik.krs');
                 Route::get('/sidang-mahasiswa', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'sidang_mahasiswa'])->name('prodi.data-akademik.sidang-mahasiswa');
                 Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('prodi.data-akademik.transkrip-mahasiswa');
                 Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
@@ -799,7 +799,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('krs-manual')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\KRSManualController::class, 'index'])->name('univ.krs-manual');
                 Route::post('/store', [App\Http\Controllers\Universitas\KRSManualController::class, 'store'])->name('univ.batas-isi-krs-manual.store');
-                Route::patch('/update/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'update'])->name('univ.batas-isi-krs-manual.update');
+                Route::patch('/update/{id}', [App\Http\Controllers\Universitas\KRSManualController::class, 'update'])->name('univ.batas-isi-krs-manual.update');
+                // Route::get('edit/{id}', [App\Http\Controllers\Universitas\KRSManualController::class, 'getDataById'])->name('univ.batas-isi-krs-manual.edit');
+                // Route::put('/{id}', [App\Http\Controllers\Universitas\KRSManualController::class, 'update'])->name('univ.batas-isi-krs-manual.update');
+                // // Route untuk mengambil data berdasarkan ID
+                Route::get('/get-batas-isi-krs/{id}', [App\Http\Controllers\Universitas\KRSManualController::class, 'getDataById']);
+
+
                 Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\KRSManualController::class, 'destroy'])->name('univ.batas-isi-krs-manual.delete');
             });
 
@@ -1042,7 +1048,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/get-fakultas', [App\Http\Controllers\Universitas\PengaturanController::class, 'get_fakultas'])->name('univ.pengaturan.akun.get-fakultas');
                     Route::post('/fakultas-store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_fakultas_create'])->name('univ.pengaturan.akun.fakultas-store');
 
-                    Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\PengaturanController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
+                    // Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\PengaturanController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
                     Route::post('/mahasiswa-store', [App\Http\Controllers\Universitas\PengaturanController::class, 'akun_mahasiswa_create'])->name('univ.pengaturan.akun.mahasiswa-store');
                 });
             });
