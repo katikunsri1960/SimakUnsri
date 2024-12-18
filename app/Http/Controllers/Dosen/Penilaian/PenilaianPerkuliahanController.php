@@ -35,7 +35,7 @@ class PenilaianPerkuliahanController extends Controller
         //         'message' => 'Data Berisi',
         //     ]);
         // }
-        // dd($data, $data[1]->kelas_kuliah->nilai_perkuliahan->count() > 0);
+        // dd($data);
 
         return view('dosen.penilaian.penilaian-perkuliahan.index', [
             'data' => $data, 'semester_aktif' => $semester_aktif]);

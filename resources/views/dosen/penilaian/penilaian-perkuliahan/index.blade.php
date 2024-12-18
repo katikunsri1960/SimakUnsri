@@ -109,21 +109,23 @@ Penilaian Perkuliahan Mahasiswa
                                                         </div>
                                                     @endif
                                                 </div>
-                                                <div class="row" style="white-space:nowrap;">
-                                                    @if(date("Y-m-d") > $semester_aktif->batas_isi_nilai)
-                                                        <div class="col-md-6 mb-2">
-                                                            <button class="btn btn-sm btn-rounded bg-success-light" title="Download DPNA"><i class="fa fa-download" disabled></i> Download</button>
-                                                        </div>
-                                                        <div class="col-md-6 mb-2">
-                                                            <button class="btn btn-sm btn-rounded bg-primary-light" title="Upload DPNA" disabled><i class="fa fa-upload"></i> Upload</button>
-                                                        </div>
-                                                    @else
-                                                        <div class="col-md-6 mb-2">
-                                                            <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi])}}" title="Download DPNA"><i class="fa fa-download"></i> Download</a>
-                                                        </div>
-                                                        <div class="col-md-6 mb-2">
-                                                            <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Upload DPNA"><i class="fa fa-upload"></i> Upload</a>
-                                                        </div>
+                                                <div class="row" style="white-space:nowrap;"> 
+                                                    @if($d->urutan == 1)
+                                                        @if(date("Y-m-d") > $semester_aktif->batas_isi_nilai)
+                                                            <div class="col-md-6 mb-2">
+                                                                <button class="btn btn-sm btn-rounded bg-success-light" title="Download DPNA"><i class="fa fa-download" disabled></i> Download</button>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <button class="btn btn-sm btn-rounded bg-primary-light" title="Upload DPNA" disabled><i class="fa fa-upload"></i> Upload</button>
+                                                            </div>
+                                                        @else
+                                                            <div class="col-md-6 mb-2">
+                                                                <a class="btn btn-sm btn-rounded bg-success-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi])}}" title="Download DPNA"><i class="fa fa-download"></i> Download</a>
+                                                            </div>
+                                                            <div class="col-md-6 mb-2">
+                                                                <a class="btn btn-sm btn-rounded bg-primary-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Upload DPNA"><i class="fa fa-upload"></i> Upload</a>
+                                                            </div>
+                                                        @endif
                                                     @endif
                                                 </div>
                                             </td>
