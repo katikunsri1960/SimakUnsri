@@ -139,22 +139,14 @@ Tugas Akhir
                                             </form>
                                             @endif
                                             @if(($d->approved == 0 && $d->approved_dosen == 0) && ($d->id_jenis_aktivitas != '5' && $d->id_jenis_aktivitas != '6' && $d->id_jenis_aktivitas != '21'))
-                                                @if((strtotime(date('Y-m-d')) < strtotime($pengisian_nilai->mulai_isi_nilai)) || (strtotime(date('Y-m-d')) > strtotime($pengisian_nilai->batas_isi_nilai)))
-                                                    <button type="submit" class="btn btn-primary btn-sm my-2" title="Nilai Konversi" disabled>
-                                                        <i class="fa fa-pencil-square-o"></i> Nilai Konversi
-                                                    </button>
-                                                @else
+                                                @if($semester == $d->id_semester)
                                                     <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-konversi', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Konversi">
                                                         <i class="fa fa-pencil-square-o"></i> Nilai Konversi
                                                     </a>
                                                 @endif
                                             @endif
                                             @if(($d->approved == 0 && $d->approved_dosen == 0) && $d->id_jenis_aktivitas == '21')
-                                                @if((strtotime(date('Y-m-d')) < strtotime($pengisian_nilai->mulai_isi_nilai)) || (strtotime(date('Y-m-d')) > strtotime($pengisian_nilai->batas_isi_nilai)))
-                                                    <button type="submit" class="btn btn-primary btn-sm my-2" title="Nilai Konversi" disabled>
-                                                        <i class="fa fa-pencil-square-o"></i> Nilai Transfer
-                                                    </button>
-                                                @else
+                                                @if($semester == $d->id_semester)
                                                     <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-transfer', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Transfer">
                                                         <i class="fa fa-pencil-square-o"></i> Nilai Transfer
                                                     </a>
