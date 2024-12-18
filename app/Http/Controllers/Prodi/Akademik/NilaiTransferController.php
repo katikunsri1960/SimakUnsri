@@ -82,6 +82,10 @@ class NilaiTransferController extends Controller
 
         $nilai_transfer = NilaiTransferPendidikan::with(['all_pt'])->where('id_registrasi_mahasiswa',$id_reg)->whereNull('id_aktivitas')->get();
 
+        if($semester->id_semester != $mahasiswa->id_semester){
+            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        }
+
         $data = $request->validate([
                 'asal_pt.*' => 'required',
                 'kode_mata_kuliah_asal.*' => 'required',
