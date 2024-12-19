@@ -22,9 +22,9 @@ Monitoring Pengisian Nilai
 <section class="content">
     <div class="row">
         <div class="col-12">
-            <div class="box box-outline-success bs-3 border-success">
+            <div class="box box-outline-success bs-3 border-success p-10">
                 <div class="box-body">
-                    <div class="table-responsive mt-5">
+                    <div class="table-responsive mt-5 p-10">
                         <div class="col-md-11 mt-5">
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">Fakultas</label>
@@ -51,6 +51,7 @@ Monitoring Pengisian Nilai
                                 <button type="button" class="btn btn-primary" onclick="getData()">Proses <i class="fa fa-magnifying-glass ms-1"></i></button>
                             </div>
                         </div>
+                        <hr>
                         <div class="mt-3" id="divData" hidden>
                             <table class="table table-bordered table-hover" id="data-monitoring">
                                 <thead>
@@ -172,10 +173,15 @@ Monitoring Pengisian Nilai
                                 }
                             }
                         ],
-                        order: [[1, 'asc']], // Mengatur urutan default berdasarkan kolom kedua (nidn)
+                        order: [[5, 'asc']], // Mengatur urutan default berdasarkan kolom kedua (nidn)
                         rowCallback: function(row, data, index){
                             // Menambahkan nomor urut yang tetap
                             $('td:eq(0)', row).html(index + 1);
+
+                            // Kondisi jika total_kelas_belum_dinilai > 0
+                            if (data.total_kelas_belum_dinilai > 0) {
+                                $(row).css('background-color', '#ffdddd'); // Warna merah muda
+                            }
                         }
                     });
                 }
