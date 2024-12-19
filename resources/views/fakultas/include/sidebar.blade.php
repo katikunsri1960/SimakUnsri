@@ -130,12 +130,9 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('fakultas.monitoring.entry-nilai') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.monitoring.entry-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Entry Nilai Dosen</a>
-                            </li>
-                            <li class="{{request()->routeIs('fakultas.monitoring.pengajaran-dosen') ? 'active' : ''}}">
+                            {{-- <li class="{{request()->routeIs('fakultas.monitoring.pengajaran-dosen') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.monitoring.pengajaran-dosen')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengajaran Dosen</a>
-                            </li>
+                            </li> --}}
                             <li class="{{request()->routeIs('fakultas.monitoring.pengisian-krs') ||
                                         request()->routeIs('fakultas.monitoring.pengisian-krs.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>
@@ -143,6 +140,9 @@
                             <li class="{{request()->routeIs('fakultas.monitoring.lulus-do')||
                                         request()->routeIs('fakultas.monitoring.lulus-do.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.monitoring.lulus-do')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus DO</a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.monitoring.pengisian-nilai') || request()->routeIs('fakultas.monitoring.pengisian-nilai.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.monitoring.pengisian-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian Nilai</a>
                             </li>
                         </ul>
                     </li>
