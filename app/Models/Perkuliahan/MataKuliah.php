@@ -85,7 +85,7 @@ class MataKuliah extends Model
 
     public function getSksMax($id_reg, $id_semester, $id_periode_masuk)
     {
-        $riwayat_pendidikan = RiwayatPendidikan::with('prodi')            
+        $riwayat_pendidikan = RiwayatPendidikan::with('prodi')
                             ->where('id_registrasi_mahasiswa', $id_reg)
                             ->first();
 
@@ -124,7 +124,7 @@ class MataKuliah extends Model
                     ->whereBetween('id_semester', [$id_periode_masuk, $id_semester])
                     ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                     ->pluck('id_semester');
-    
+
         // Dapatkan indeks dari semester terakhir dalam koleksi
         $index_semester_terakhir = $akm->search($akm->last());
 
@@ -144,13 +144,13 @@ class MataKuliah extends Model
                     ->orderBy('id_semester', 'DESC')
                     // ->pluck('ips')
                     ->count();
-                
+
 
         if($akm_cuti > 0){
             $akm_sebelum = $akm[$index_semester_terakhir - 2];
         }
 
-        
+
         $jenjang_pendidikan = $riwayat_pendidikan->prodi;
 
         // dd($riwayat_pendidikan);
@@ -163,7 +163,7 @@ class MataKuliah extends Model
                     ->first();
 
                 // dd($ips);
-                    
+
         // $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->whereRaw("RIGHT(id_semester, 1) != 3")->count();
         $semester_ke = Semester::orderBy('id_semester', 'ASC')
                 ->whereBetween('id_semester', [$id_periode_masuk, $id_semester])
@@ -172,53 +172,53 @@ class MataKuliah extends Model
 
         // $semester_ke==3;
 
-    // Pastikan untuk mengambil nilai ips
-    $ips_value = $ips ? $ips->ips : null;
+        // Pastikan untuk mengambil nilai ips
+        $ips_value = $ips ? $ips->ips : null;
 
-    $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->where('id_jenis_daftar', '14')
-                    ->count();
+        $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                        ->where('id_jenis_daftar', '14')
+                        ->count();
 
-    //  dd($non_gelar);
+        //  dd($non_gelar);
 
 
-    if (isset($riwayat_pendidikan->id_prodi) && 
-        (in_array($riwayat_pendidikan->id_prodi, $prodi_fk, true) || 
-        in_array($riwayat_pendidikan->id_prodi, $prodi_profesi, true))) {
-        $sks_max = 24;
-    } elseif ($riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14'){
-        $sks_max = $riwayat_pendidikan->sks_maks_pmm;
-    } elseif ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' || 
-        $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3' 
-    ) {
-        $sks_max = 15;
-    }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
-        $sks_max = 20;
-    } else {
-        if ($ips_value !== null) {
-            if ($ips_value >= 3.00) {
-                $sks_max = 24;
-            } elseif ($ips_value >= 2.50 && $ips_value <= 2.99) {
-                $sks_max = 21;
-            } elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
-                $sks_max = 18;
-            } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
-                $sks_max = 15;
-            } elseif ($ips_value < 1.50 ) {
-                $sks_max = 12;
+        if (isset($riwayat_pendidikan->id_prodi) &&
+            (in_array($riwayat_pendidikan->id_prodi, $prodi_fk, true) ||
+            in_array($riwayat_pendidikan->id_prodi, $prodi_profesi, true))) {
+            $sks_max = 24;
+        } elseif ($riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14'){
+            $sks_max = $riwayat_pendidikan->sks_maks_pmm;
+        } elseif ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' ||
+            $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3'
+        ) {
+            $sks_max = 15;
+        }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
+            $sks_max = 20;
+        } else {
+            if ($ips_value !== null) {
+                if ($ips_value >= 3.00) {
+                    $sks_max = 24;
+                } elseif ($ips_value >= 2.50 && $ips_value <= 2.99) {
+                    $sks_max = 21;
+                } elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
+                    $sks_max = 18;
+                } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
+                    $sks_max = 15;
+                } elseif ($ips_value < 1.50 ) {
+                    $sks_max = 12;
+                } else {
+                    $sks_max = 0;
+                }
             } else {
                 $sks_max = 0;
             }
-        } else {
-            $sks_max = 0;
         }
-    }
     // dd($sks_max);
         return $sks_max;
-         
+
     }
 
-     
+
 
     public function getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids)
     {
@@ -294,7 +294,7 @@ class MataKuliah extends Model
                     ->where('id_kurikulum', $kurikulum)
                     ->get();
                     // dd($data_akt);
-                    
+
         if($data_akt == NULL)
         {
             $mk_akt=NULL;
@@ -307,7 +307,7 @@ class MataKuliah extends Model
             $data_akt_ids = $mk_akt->pluck('id_matkul');
         }
 
-        $matakuliah = $this->with(['kurikulum','matkul_kurikulum', 
+        $matakuliah = $this->with(['kurikulum','matkul_kurikulum',
                         'kelas_kuliah' => function($query) use ($id_semester, $prodi) {
                             $query->where('id_semester', $id_semester->id_semester)
                                     ->where('id_prodi', $prodi);
@@ -419,7 +419,7 @@ class MataKuliah extends Model
                 "id_prodi"=> "c9091879-6fd9-4691-bea8-283186c27ad1",
                 "data"=>
                 [
-                    [   
+                    [
                         "id_kurikulum"=>"6cc57ff6-9b9e-4bed-b9f9-e51999efb99d",
                         "data"=>
                             [
@@ -457,7 +457,7 @@ class MataKuliah extends Model
                 "id_prodi"=> "5c1370e1-dfd1-4137-af50-a24025696602",
                 "data"=>
                 [
-                    [   
+                    [
                         "id_kurikulum"=>"f577582a-9ef0-4a04-aed8-a84a0dd8714b",
                         "data"=>
                             [
@@ -495,14 +495,14 @@ class MataKuliah extends Model
         $dataAkt = [];
         // dd($id_prodi);
         foreach ($data as $d) {
-            
+
             if ($d['id_prodi'] === $id_prodi) {
                 foreach ($d['data'] as $kurikulumKey => $kurikulumValue) {
-                    
+
                     if (is_array($kurikulumValue) && array_key_exists('id_kurikulum', $kurikulumValue) && $kurikulumValue['id_kurikulum'] === $id_kurikulum) {
                         // dd($kurikulumValue['data']);
                         return $kurikulumValue['data'];
-                       
+
                     }
                 }
             }
