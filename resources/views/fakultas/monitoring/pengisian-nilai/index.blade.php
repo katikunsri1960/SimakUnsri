@@ -20,11 +20,11 @@ Monitoring Pengisian Nilai
     </div>
 </div>
 <section class="content">
-    <div class="row">
+    <div class="row ">
         <div class="col-12">
-            <div class="box box-outline-success bs-3 border-success">
+            <div class="box box-outline-success bs-3 border-success p-10">
                 <div class="box-body">
-                    <div class="table-responsive mt-5">
+                    <div class="table-responsive mt-5 p-10">
                         <div class="col-md-11 mt-5">
                             <div class="form-group row">
                                 <label class="col-form-label col-md-3">Program Studi</label>
