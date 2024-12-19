@@ -310,12 +310,12 @@ class MonitoringController extends Controller
             ->where('dosen_pengajar_kelas_kuliahs.urutan', 1)
             ->where('k.id_prodi', $id_prodi)
             ->where('d.id_dosen', $dosen)
-            ->whereRaw('EXISTS (SELECT * FROM peserta_kelas_kuliahs WHERE peserta_kelas_kuliahs.id_kelas_kuliah = k.id_kelas_kuliah)');
+            ->whereRaw('EXISTS (SELECT * FROM peserta_kelas_kuliahs WHERE peserta_kelas_kuliahs.id_kelas_kuliah = k.id_kelas_kuliah AND peserta_kelas_kuliahs.approved = 1)');
 
         if ($mode == 2) {
-            $query->whereRaw('EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah)');
+            $query->whereRaw('EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah AND nilai_perkuliahans.nilai_huruf IS NOT NULL)');
         } elseif ($mode == 3) {
-            $query->whereRaw('NOT EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah)');
+            $query->whereRaw('NOT EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah AND nilai_perkuliahans.nilai_huruf IS NOT NULL)');
         }
 
         $id_kelas = $query->select('k.id_kelas_kuliah')
@@ -350,13 +350,13 @@ class MonitoringController extends Controller
             ->where('k.id_semester', $semester)
             ->where('dosen_pengajar_kelas_kuliahs.urutan', 1)
             ->where('k.id_prodi', $id_prodi)
-            ->whereRaw('EXISTS (SELECT * FROM peserta_kelas_kuliahs WHERE peserta_kelas_kuliahs.id_kelas_kuliah = k.id_kelas_kuliah)')
+            ->whereRaw('EXISTS (SELECT * FROM peserta_kelas_kuliahs WHERE peserta_kelas_kuliahs.id_kelas_kuliah = k.id_kelas_kuliah AND peserta_kelas_kuliahs.approved = 1)')
             ->select(
                 'dosen_pengajar_kelas_kuliahs.id_dosen',
                 'd.nidn',
                 'd.nama_dosen',
                 DB::raw('COUNT(k.id_kelas_kuliah) as total_kelas'),
-                DB::raw('SUM(CASE WHEN EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah) THEN 1 ELSE 0 END) as total_kelas_dinilai')
+                DB::raw('SUM(CASE WHEN EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah AND nilai_perkuliahans.nilai_huruf IS NOT NULL) THEN 1 ELSE 0 END) as total_kelas_dinilai')
             )
             ->groupBy('dosen_pengajar_kelas_kuliahs.id_dosen', 'd.nidn', 'd.nama_dosen')
             ->get();
