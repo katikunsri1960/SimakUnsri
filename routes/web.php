@@ -127,6 +127,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/biaya-kuliah', [App\Http\Controllers\Fakultas\DataMasterController::class, 'biaya_kuliah'])->name('fakultas.data-master.biaya-kuliah.devop');
 
                 Route::get('/', [App\Http\Controllers\Fakultas\UnderDevelopmentController::class, 'index'])->name('fakultas.under-development');
+
+                //Ruang Perkuliahan
+                Route::prefix('ruang-perkuliahan')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan'])->name('fakultas.data-master.ruang-perkuliahan');
+                    Route::post('/store', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_store'])->name('fakultas.data-master.ruang-perkuliahan.store');
+                    Route::patch('/{ruang_perkuliahan}/update', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_update'])->name('fakultas.data-master.ruang-perkuliahan.update');
+                    Route::delete('/{ruang_perkuliahan}/delete', [App\Http\Controllers\Fakultas\DataMasterController::class, 'ruang_perkuliahan_destroy'])->name('fakultas.data-master.ruang-perkuliahan.delete');
+                });
             });
 
             //ROUTE AKADEMIK
@@ -576,7 +584,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 //Ruang Perkuliahan
                 Route::prefix('ruang-perkuliahan')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'ruang_perkuliahan'])->name('prodi.data-master.ruang-perkuliahan');
-                    Route::post('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'ruang_perkuliahan_store'])->name('prodi.data-master.ruang-perkuliahan.store');
+                    Route::post('/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'ruang_perkuliahan_store'])->name('prodi.data-master.ruang-perkuliahan.store');
                     Route::patch('/{ruang_perkuliahan}/update', [App\Http\Controllers\Prodi\DataMasterController::class, 'ruang_perkuliahan_update'])->name('prodi.data-master.ruang-perkuliahan.update');
                     Route::delete('/{ruang_perkuliahan}/delete', [App\Http\Controllers\Prodi\DataMasterController::class, 'ruang_perkuliahan_destroy'])->name('prodi.data-master.ruang-perkuliahan.delete');
                 });

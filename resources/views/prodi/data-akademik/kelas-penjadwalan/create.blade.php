@@ -52,7 +52,7 @@ $id_matkul = $mata_kuliah[0]['id_matkul'];
                             </div>
                         </div>
                         <div class="row mb-3">
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Tanggal Mulai Efektif</label>
                                     <input type="text" class="form-control" name="tanggal_mulai" id="tanggal_mulai"
@@ -60,7 +60,7 @@ $id_matkul = $mata_kuliah[0]['id_matkul'];
                                         value="{{old('tanggal_mulai')}}" />
                                 </div>
                             </div>
-                            <div class="col-md-4">
+                            <div class="col-md-6">
                                 <div class="form-group">
                                     <label class="form-label">Tanggal Akhir Efektif</label>
                                     <input type="text" class="form-control" name="tanggal_akhir" id="tanggal_akhir"
@@ -68,23 +68,15 @@ $id_matkul = $mata_kuliah[0]['id_matkul'];
                                         value="{{old('tanggal_akhir')}}" />
                                 </div>
                             </div>
-                            <div class="col-md-4">
-                                <div class="form-group">
-                                    <label for="kapasitas_kelas" class="form-label">Kapasitas Kelas Kuliah</label>
-                                    <input type="number" class="form-control" name="kapasitas_kelas"
-                                        id="kapasitas_kelas" aria-describedby="helpId"
-                                        placeholder="Kapasitas Kelas" required value="{{old('kapasitas_kelas')}}"/>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="form-group">
                             <div class="mb-3">
-                                <label for="ruang_kelas" class="form-label">Ruang Kelas Kuliah</label>
+                                <label for="ruang_kelas" class="form-label">Ruang Kelas Kuliah (Kapasitas Ruang)</label>
                                 <select class="form-select" name="ruang_kelas" id="ruang_kelas" required>
                                     <option value="">-- Pilih Ruang Kelas --</option>
                                     @foreach($ruang as $r)
-                                    <option value="{{$r->id}}" @if (old('ruang_kelas') == $r->id) selected @endif>{{$r->nama_ruang}} - {{$r->lokasi}}</option>
+                                    <option value="{{$r->id}}" @if (old('ruang_kelas') == $r->id) selected @endif>{{$r->nama_ruang}} - {{$r->lokasi}} ({{$r->kapasitas_ruang}})</option>
                                     @endforeach
                                 </select>
                             </div>

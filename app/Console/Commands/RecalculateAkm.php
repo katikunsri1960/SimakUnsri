@@ -51,6 +51,10 @@ class RecalculateAkm extends Command
             ->get();
 
             $totalSksTranskrip = $transkrip->sum('sks_mata_kuliah');
+
+            $krs = 
+
+
             $this->info($totalSksTranskrip);
 
             return;

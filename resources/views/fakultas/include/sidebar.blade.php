@@ -36,6 +36,10 @@
                                 <a href="{{route('fakultas.data-master.pejabat-fakultas')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Pejabat Fakultas</a>
                             </li>
+                            <li class="{{request()->routeIs('fakultas.data-master.ruang-perkuliahan') || request()->routeIs('fakultas.data-master.ruang-perkuliahan.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-master.ruang-perkuliahan')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Ruang Perkuliahan</a>
+                            </li>
                             {{-- <li class="{{request()->routeIs('fakultas.data-master.biaya-kuliah.devop')
                                 ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-master.biaya-kuliah.devop') }}"><i class="icon-Commit"><span

@@ -11,7 +11,8 @@ class RuangPerkuliahan extends Model
 
     protected $fillable = [
         'nama_ruang',
+        'kapasitas_ruang',
         'lokasi',
-        'id_prodi',
+        'fakultas_id',
     ];
 }
