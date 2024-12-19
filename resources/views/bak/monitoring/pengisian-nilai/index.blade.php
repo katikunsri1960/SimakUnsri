@@ -173,7 +173,7 @@ Monitoring Pengisian Nilai
                                 }
                             }
                         ],
-                        order: [[5, 'asc']], // Mengatur urutan default berdasarkan kolom kedua (nidn)
+                        order: [[5, 'desc']], // Mengatur urutan default berdasarkan kolom kedua (nidn)
                         rowCallback: function(row, data, index){
                             // Menambahkan nomor urut yang tetap
                             $('td:eq(0)', row).html(index + 1);
