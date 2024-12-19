@@ -173,10 +173,15 @@ Monitoring Pengisian Nilai
                                 }
                             }
                         ],
-                        order: [[1, 'asc']], // Mengatur urutan default berdasarkan kolom kedua (nidn)
+                        order: [[5, 'asc']], // Mengatur urutan default berdasarkan kolom kedua (nidn)
                         rowCallback: function(row, data, index){
                             // Menambahkan nomor urut yang tetap
                             $('td:eq(0)', row).html(index + 1);
+
+                            // Kondisi jika total_kelas_belum_dinilai > 0
+                            if (data.total_kelas_belum_dinilai > 0) {
+                                $(row).css('background-color', '#ffdddd'); // Warna merah muda
+                            }
                         }
                     });
                 }
