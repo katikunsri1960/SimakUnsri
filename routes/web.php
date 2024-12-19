@@ -240,6 +240,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do'])->name('fakultas.monitoring.lulus-do');
                     Route::get('/data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'lulus_do_data'])->name('fakultas.monitoring.lulus-do.data');
                 });
+
+                Route::prefix('pengisian-nilai')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_nilai'])->name('fakultas.monitoring.pengisian-nilai');
+                    Route::get('/detail/{mode}/{dosen}/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_nilai_detail'])->name('fakultas.monitoring.pengisian-nilai.detail');
+                    Route::get('/get-data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_nilai_data'])->name('fakultas.monitoring.pengisian-nilai.data');
+                });
             });
 
             //ROUTE LAIN-LAIN

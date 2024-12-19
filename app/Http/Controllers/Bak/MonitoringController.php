@@ -245,7 +245,11 @@ class MonitoringController extends Controller
     public function pengisian_nilai()
     {
         $fakultas = Fakultas::select('id', 'nama_fakultas')->get();
-        $prodi = ProgramStudi::where('status', 'A')->select('id_prodi', 'nama_program_studi', 'nama_jenjang_pendidikan', 'fakultas_id', 'id')->get();
+        $prodi = ProgramStudi::where('status', 'A')
+                        ->select('id_prodi', 'nama_program_studi','kode_program_studi', 'nama_jenjang_pendidikan', 'fakultas_id', 'id')
+                        ->orderBy('id_jenjang_pendidikan', 'ASC')
+                        ->orderBy('nama_program_studi')
+                        ->get();
 
         $semesterAktif = SemesterAktif::first()->id_semester;
         $semester = Semester::where('id_semester', '<=', $semesterAktif)->orderBy('id_semester', 'desc')->get();
