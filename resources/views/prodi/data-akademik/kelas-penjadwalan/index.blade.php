@@ -43,7 +43,6 @@ Kelas Penjadwalan
                                     <th class="text-center align-middle">KODE MATA KULIAH</th>
                                     <th class="text-center align-middle">NAMA MATA KULIAH</th>
                                     <th class="text-center align-middle">JUMLAH KELAS</th>
-                                    <th class="text-center align-middle">SEMESTER MATA KULIAH</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -65,7 +64,6 @@ Kelas Penjadwalan
                                                         echo count($d->kelas_kuliah);
                                                     @endphp
                                                 </td>
-                                                <td class="text-center align-middle">{{$k->semester_mulai_berlaku}}</td>
                                                 <td class="text-center align-middle">
                                                     <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
                                                 </td>

@@ -25,14 +25,6 @@ Ruang Perkuliahan
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
-                    <div class="d-flex justify-content-end">
-                        <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
-                        data-bs-target="#tambahRuangKuliah"><i class="fa fa-plus"></i> Tambah Ruang Kuliah</button>
-                    </div>
-                </div>
-                @include('prodi.data-master.ruang-perkuliahan.create')
-                @include('prodi.data-master.ruang-perkuliahan.update')
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover margin-top-10 w-p100">
@@ -41,8 +33,7 @@ Ruang Perkuliahan
                                 <th class="text-center align-middle">No</th>
                                 <th class="text-center align-middle">LOKASI RUANG</th>
                                 <th class="text-center align-middle">NAMA RUANG</th>
-                                <!-- <th class="text-center align-middle">KAPASITAS RUANG</th> -->
-                                <th class="text-center align-middle">AKSI</th>
+                                <th class="text-center align-middle">KAPASITAS RUANG</th>
                              </tr>
                           </thead>
                           <tbody>
@@ -54,22 +45,7 @@ Ruang Perkuliahan
                                     <td class="text-center align-middle">{{$row = $row + 1}}</td>
                                     <td class="text-center align-middle">{{$d->lokasi}}</td>
                                     <td class="text-center align-middle">{{$d->nama_ruang}}</td>
-                                    <!-- <td class="text-center align-middle">{{$d->kapasistas_ruang}}</td> -->
-                                    <td class="text-center align-middle">
-                                        <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editRuangKuliah" onclick="editRuang({{$d}}, {{$d->id}})">
-                                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                                        </button>
-                                        <button type="button" class="btn btn-rounded bg-danger" title="Delete Data" onclick="deleteRuang({{$d->id}})">
-                                            <i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i>
-                                        </button>
-                                        <form action="{{route('prodi.data-master.ruang-perkuliahan.delete', $d->id)}}" method="POST" id="delete-form-{{$d->id}}">
-                                            @csrf
-                                            @method('delete')
-                                            {{-- <button type="submit" class="btn btn-rounded bg-danger" title="Delete Data">
-                                                <i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i>
-                                            </button> --}}
-                                        </form>
-                                    </td>
+                                    <td class="text-center align-middle">{{$d->kapasitas_ruang}}</td>
                                 </tr>
                             @endforeach
                           </tbody>
@@ -84,77 +60,11 @@ Ruang Perkuliahan
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
-<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
      $(function() {
         "use strict";
 
         $('#data').DataTable();
     });
-
-    function editRuang(data, id) {
-        document.getElementById('edit_nama_ruang').value = data.nama_ruang;
-        document.getElementById('edit_lokasi').value = data.lokasi;
-        // Populate other fields...
-        document.getElementById('edit-ruang').action = '/prodi/data-master/ruang-perkuliahan/' + id + '/update';
-    }
-
-    function deleteRuang(id) {
-        swal({
-            title: 'Delete Data Ruang Kuliah',
-            text: "Apakah anda yakin ingin menghapus ruang?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                document.getElementById('delete-form-' + id).submit();
-                $('#spinner').show();
-            }
-        });
-    }
-
-    $('#tambah-ruang').submit(function(e){
-        e.preventDefault();
-        swal({
-            title: 'Pembuatan Ruang Kuliah',
-            text: "Apakah anda yakin ingin menambahkan ruang?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#tambah-ruang').unbind('submit').submit();
-                $('#spinner').show();
-            }
-        });
-    });
-
-    $('#edit-ruang').submit(function(e){
-        e.preventDefault();
-        swal({
-            title: 'Edit Data Ruang Kuliah',
-            text: "Apakah anda yakin ingin merubah ruang?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#edit-ruang').unbind('submit').submit();
-                $('#spinner').show();
-            }
-        });
-    });
-
-
 </script>
 @endpush

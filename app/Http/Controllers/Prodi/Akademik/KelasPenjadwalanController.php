@@ -19,6 +19,7 @@ use App\Models\JenisEvaluasi;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\SemesterAktif;
+use App\Models\ProgramStudi;
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
 
@@ -223,7 +224,8 @@ class KelasPenjadwalanController extends Controller
     {
         // dd($id_matkul);
         $prodi_id = auth()->user()->fk_id;
-        $ruang = RuangPerkuliahan::where('id_prodi', $prodi_id)->get();
+        $data_prodi = ProgramStudi::where('id_prodi', $prodi_id)->first();
+        $ruang = RuangPerkuliahan::where('fakultas_id',$data_prodi->fakultas_id)->get();
         $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->get();
         // dd($mata_kuliah);
         return view('prodi.data-akademik.kelas-penjadwalan.create', ['ruang' => $ruang, 'mata_kuliah' => $mata_kuliah]);
@@ -244,7 +246,6 @@ class KelasPenjadwalanController extends Controller
         $data = $request->validate([
             'tanggal_mulai' => 'required',
             'tanggal_akhir' => 'required',
-            'kapasitas_kelas' => 'required',
             'ruang_kelas' => 'required',
             'mode_kelas' => [
                 'required',
@@ -273,10 +274,10 @@ class KelasPenjadwalanController extends Controller
         $jam_selesai_kelas = $request->jam_selesai.":".$request->menit_selesai.":".$detik;
 
         //Generate nama kelas
-        $check_lokasi_ruang = RuangPerkuliahan::where('id', $request->ruang_kelas)->get();
+        $check_lokasi_ruang = RuangPerkuliahan::where('id', $request->ruang_kelas)->first();
         $check_kelas = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->get();
         // dd(count($check_kelas));
-        if(strval($check_lokasi_ruang[0]['lokasi']) == "Indralaya"){
+        if(strval($check_lokasi_ruang->lokasi) == "Indralaya"){
             if(count($check_kelas) <= 70){
                 $kode_nama_L = $kode_tahun."L";
                 $check_kelas_L = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_L}%")->get();
@@ -370,7 +371,7 @@ class KelasPenjadwalanController extends Controller
             }else{
                 return redirect()->back()->with('error', 'Jumlah kelas sudah melebihi batas');
             }
-        }else if(strval($check_lokasi_ruang[0]['lokasi']) == "Palembang"){
+        }else if(strval($check_lokasi_ruang->lokasi) == "Palembang"){
             if(count($check_kelas) <= 70){
                 $kode_nama_P = $kode_tahun."P";
                 $check_kelas_P = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->where('nama_kelas_kuliah','LIKE', "{$kode_nama_P}%")->get();
@@ -470,7 +471,7 @@ class KelasPenjadwalanController extends Controller
         // dd($nama_kelas_kuliah);
 
         //Store data to table
-        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester, 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif->id_semester, 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $check_lokasi_ruang->kapasitas_ruang, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
 
         return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Berhasil di Tambahkan');
     }
@@ -1001,9 +1002,9 @@ class KelasPenjadwalanController extends Controller
         ->where('kelas_kuliahs.id_semester', $semester_aktif->id_semester)
         ->first();
 
-        // dd($kelas);
-
-        $ruang = RuangPerkuliahan::where('id_prodi', $prodi_id)->where('lokasi', $kelas->lokasi)->get();
+        // dd($kelas->lokasi);
+        $data_prodi = ProgramStudi::where('id_prodi', $prodi_id)->first();
+        $ruang = RuangPerkuliahan::where('fakultas_id',$data_prodi->fakultas_id)->where('lokasi', $kelas->lokasi)->get();
 
         return view('prodi.data-akademik.kelas-penjadwalan.edit', ['kelas' => $kelas, 'matkul' => $mata_kuliah, 'ruang' => $ruang]);
     }
@@ -1022,7 +1023,6 @@ class KelasPenjadwalanController extends Controller
             $data = $request->validate([
                 'tanggal_mulai' => 'required',
                 'tanggal_akhir' => 'required',
-                'kapasitas_kelas' => 'required',
                 'ruang_kelas' => 'required',
                 'mode_kelas' => [
                     'required',
@@ -1048,11 +1048,12 @@ class KelasPenjadwalanController extends Controller
             $jam_selesai_kelas = $request->jam_selesai.":".$request->menit_selesai.":".$detik;
 
             $data_kelas = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->count();
+            $ruang = RuangPerkuliahan::where('id', $request->ruang_kelas)->first();
 
             // dd((int) $request->kapasitas_kelas >= $data_kelas);
 
             if((int) $request->kapasitas_kelas >= $data_kelas){
-                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->where('feeder', 0)->update(['ruang_perkuliahan_id' => $request->ruang_kelas,'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $request->kapasitas_kelas, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+                KelasKuliah::where('id_kelas_kuliah', $id_kelas)->where('feeder', 0)->update(['ruang_perkuliahan_id' => $request->ruang_kelas,'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $ruang->kapasitas_ruang, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
             }else{
                 return redirect()->back()->with('error', 'Ubah kapasitas tidak boleh lebih kecil dari jumlah peserta kelas kuliah!!');
             }
