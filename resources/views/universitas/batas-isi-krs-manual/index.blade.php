@@ -141,20 +141,22 @@ Batas Isi KRS Manual
     });
 
     function editBatas(data, id) {
-        console.log(data.nim, id);
+        // console.log(data.nama_mahasiswa, id);
+        document.getElementById('edit_nama_mahasiswa').value = data.nama_mahasiswa;
+        document.getElementById('edit_id_registrasi_mahasiswa').value = data.id_registrasi_mahasiswa;
         document.getElementById('edit_status').value = data.status_bayar;
         document.getElementById('edit_batas_isi_krs').value = data.batas_isi_krs;
         document.getElementById('edit_keterangan').value = data.keterangan;
         // Populate other fields...
         // document.getElementById('editForm').action = '/universitas/krs-manual/update/' + id;
 
-        let mahasiswaSelect = document.getElementById('edit_id_registrasi_mahasiswa');
-        mahasiswaSelect.onchange = () => {
-            getNamaMahasiswaEdit();
-            setTimeout(() => {
-                document.getElementById('edit_id_registrasi_mahasiswa').value = data.nim;
-            }, 500);
-        };
+        // let mahasiswaSelect = document.getElementById('edit_id_registrasi_mahasiswa');
+        // mahasiswaSelect.onchange = () => {
+        //     getNamaMahasiswaEdit();
+        //     setTimeout(() => {
+        //         document.getElementById('edit_id_registrasi_mahasiswa').value = data.nim;
+        //     }, 500);
+        // };
 
         document.getElementById('editForm').action = `{{route('univ.batas-isi-krs-manual.update', ':id')}}`.replace(':id', data.id);
     }

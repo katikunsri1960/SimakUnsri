@@ -14,12 +14,8 @@
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="id_registrasi_mahasiswa" class="form-label">Mahasiswa</label>
-                        <select class="form-select" name="id_registrasi_mahasiswa" id="edit_id_registrasi_mahasiswa" required onchange="getNamaMahasiswaEdit()">
-                            <option value="" disabled>-- NIM / Nama Mahasiswa --</option>
-                                {{-- @foreach ($data as $d) --}}
-                                <option value="{{$data[0]->id_registrasi_mahasiswa}}">({{$data[0]->nim}}) {{$data[0]->nama_mahasiswa}}</option>
-                                {{-- @endforeach --}}
-                        </select>                        
+                        <input class="form-control" type="text" name="edit_nama_mahasiswa"  id="edit_nama_mahasiswa" disabled>                      
+                        <input type="hidden" name="id_registrasi_mahasiswa" id="edit_id_registrasi_mahasiswa" required>
                     </div>
                     <div class="mb-3">
                         <label for="status_bayar" class="form-label">Status</label>
@@ -35,6 +31,7 @@
                         <label for="batas_isi_krs" class="form-label">Batas Isi KRS </label>
                         <div class="col-sm-10">
                           <input class="form-control" type="date" name="batas_isi_krs"  id="edit_batas_isi_krs" placeholder="-- Batas Isi KRS --">
+
                         </div>
                     </div>
                     <div class="mb-3">
