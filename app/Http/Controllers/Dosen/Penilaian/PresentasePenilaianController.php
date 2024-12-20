@@ -101,7 +101,7 @@ class PresentasePenilaianController extends Controller
 
         // dd($interval);
 
-        if($komponen_kelas->isEmpty() && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai && !in_array($data_kelas->prodi->kode_program_studi, $prodi_bebas_jadwal))){
+        if($komponen_kelas->isEmpty() && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai || !in_array($data_kelas->prodi->kode_program_studi, $prodi_bebas_jadwal))){
             //Check jumlah bobot komponen evaluasi
             $total_bobot_input = $request->participatory + $request->project_outcomes + $request->assignment + $request->quiz + $request->midterm_exam + $request->finalterm_exam;
 
