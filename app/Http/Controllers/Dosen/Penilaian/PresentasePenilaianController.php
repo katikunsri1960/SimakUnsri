@@ -100,8 +100,11 @@ class PresentasePenilaianController extends Controller
         $prodi_bebas_jadwal = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
 
         // dd($interval);
+        if (date('Y-m-d') > $semester_aktif->batas_isi_nilai && !in_array($data_kelas->prodi->kode_program_studi, $prodi_bebas_jadwal)) {
+            return redirect()->back()->with('error', 'Komponen Evaluasi Telah di Buat / Cek Batas Pengisian Nilai');
+        }
 
-        if($komponen_kelas->isEmpty() && (date('Y-m-d') <= $semester_aktif->batas_isi_nilai || !in_array($data_kelas->prodi->kode_program_studi, $prodi_bebas_jadwal))){
+        if($komponen_kelas->count() == 0){
             //Check jumlah bobot komponen evaluasi
             $total_bobot_input = $request->participatory + $request->project_outcomes + $request->assignment + $request->quiz + $request->midterm_exam + $request->finalterm_exam;
 
