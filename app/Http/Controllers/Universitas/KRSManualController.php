@@ -36,17 +36,16 @@ class KRSManualController extends Controller
 
     public function edit($id)
     {
+        // dd($id);
         $batasIsiKrs = BatasIsiKrsManual::findOrFail($id);  // Ambil data berdasarkan ID
         $mahasiswaList = BatasIsiKrsManual::all();  // Ambil semua data mahasiswa (atau bisa menggunakan query khusus)
         
         return view('univ.batas_isi_krs_manual.edit', compact('batasIsiKrs', 'mahasiswaList'));
     }
 
-    
-
-
     public function store(Request $request)
     {
+        // dd($request->id);
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status_bayar' => 'required | in:0,1,2,3',
@@ -76,20 +75,9 @@ class KRSManualController extends Controller
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
-    // public function edit($id)
-    // {
-    //     $batasIsiKRSManual = BatasIsiKRSManual::findOrFail($id);
-
-    //     // Debugging untuk memastikan data ada
-    //     dd($batasIsiKRSManual);  // Cek apakah data sudah diambil dengan benar
-
-    //     return view('universitas.batas-isi-krs-manual.edit', compact('batasIsiKRSManual'));
-    // }
-
-
-
     public function update(Request $request, $id)
     {
+        // dd($request->all());
         // Validasi data yang dikirim dari form
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
@@ -103,16 +91,6 @@ class KRSManualController extends Controller
 
         // Ambil data berdasarkan ID
         $batasIsiKRSManual = BatasIsiKRSManual::findOrFail($id);
-
-        // Cek jika data sudah ada untuk mahasiswa di semester aktif
-        // $cekDuplikat = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])
-        //     ->where('id_semester', $semester_aktif->id_semester)
-        //     ->where('id', '!=', $id) // Pastikan ID tidak sama dengan data yang sedang diupdate
-        //     ->first();
-
-        // if ($cekDuplikat) {
-        //     return redirect()->back()->with('error', 'Mahasiswa sudah ada pada Batas Isi KRS Manual!');
-        // }
 
         // Ambil data riwayat pendidikan
         $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
