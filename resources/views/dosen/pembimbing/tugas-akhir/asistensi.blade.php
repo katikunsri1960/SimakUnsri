@@ -77,9 +77,11 @@ Bimbingan Tugas Akhir Dosen
                                     <td class="text-center align-middle">:</td>
                                     <td class="text-left align-middle">
                                         <ul style="padding: 0; padding-left:0.8rem">
+                                            @if ($aktivitas->bimbing_mahasiswa)
                                             @foreach ($aktivitas->bimbing_mahasiswa as $p)
                                             <li>Pembimbing {{$p->pembimbing_ke}} : {{$p->nama_dosen}}</li>
                                             @endforeach
+                                            @endif
                                         </ul>
                                     </td>
                                 </tr>
@@ -94,6 +96,8 @@ Bimbingan Tugas Akhir Dosen
                                 <a class="btn btn-rounded bg-success-light" href="#" data-bs-toggle="modal" data-bs-target="#tambahAsistensiModal"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Asistensi</a>
                                 @if($aktivitas->id_jenis_aktivitas == 2 && $penilaian_langsung->penilaian_langsung == 1)
                                     <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung', $aktivitas->id)}}"><i class="fa fa-list"></i> Penilaian Langsung</a>
+                                @elseif($aktivitas->id_jenis_aktivitas == 2 && $penilaian_langsung->penilaian_langsung == 2)
+                                    <a class="btn btn-rounded bg-warning-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.penilaian-langsung-tim', $aktivitas->id)}}"><i class="fa fa-list"></i> Penilaian Langsung Tim</a>
                                 @else
                                     <a class="btn btn-rounded bg-primary-light" href="{{route('dosen.pembimbing.bimbingan-tugas-akhir.ajuan-sidang', ['aktivitas' => $aktivitas])}}"><i class="fa fa-check-circle-o"></i> Ajukan Sidang</a>
                                 @endif
@@ -226,6 +230,7 @@ Bimbingan Tugas Akhir Dosen
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if ($aktivitas->bimbing_mahasiswa)
                                         @foreach ($aktivitas->bimbing_mahasiswa as $b)
                                             <tr>
                                                 <td>{{$b->pembimbing_ke}}</td>
@@ -234,6 +239,8 @@ Bimbingan Tugas Akhir Dosen
                                                 <td>{{$b->nilai_proses_bimbingan == '' ? 0 : $b->nilai_proses_bimbingan}}</td>
                                             </tr>
                                         @endforeach
+                                        @endif
+
                                     </tbody>
                                 </table>
                             </div>
@@ -250,6 +257,7 @@ Bimbingan Tugas Akhir Dosen
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if ($aktivitas->uji_mahasiswa)
                                         @foreach ($aktivitas->uji_mahasiswa as $u)
                                             <tr>
                                                 <td>{{$u->penguji_ke}}</td>
@@ -257,6 +265,8 @@ Bimbingan Tugas Akhir Dosen
                                                 <td>{{$u->nama_kategori_kegiatan}}</td>
                                             </tr>
                                         @endforeach
+                                        @endif
+
                                     </tbody>
                                 </table>
                             </div>
@@ -278,6 +288,7 @@ Bimbingan Tugas Akhir Dosen
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if ($data_pelaksanaan->notulensi_sidang)
                                         @foreach ($data_pelaksanaan->notulensi_sidang as $ns)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
@@ -293,6 +304,8 @@ Bimbingan Tugas Akhir Dosen
                                                 <td colspan="6">{{$ns->uraian}}</td>
                                             </tr>
                                         @endforeach
+                                        @endif
+
                                     </tbody>
                                 </table>
                             </div>
@@ -310,6 +323,7 @@ Bimbingan Tugas Akhir Dosen
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if ($data_pelaksanaan->revisi_sidang)
                                         @foreach ($data_pelaksanaan->revisi_sidang as $r)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
@@ -318,6 +332,8 @@ Bimbingan Tugas Akhir Dosen
                                                 <td>{{$r->tanggal_batas_revisi}}</td>
                                             </tr>
                                         @endforeach
+                                        @endif
+
                                     </tbody>
                                 </table>
                             </div>
@@ -339,6 +355,7 @@ Bimbingan Tugas Akhir Dosen
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if ($data_pelaksanaan->penilaian_sidang)
                                         @foreach ($data_pelaksanaan->penilaian_sidang as $p)
                                             <tr>
                                                 <td>{{$loop->iteration}}</td>
@@ -359,6 +376,8 @@ Bimbingan Tugas Akhir Dosen
                                                 </td>
                                             </tr>
                                         @endforeach
+                                        @endif
+
                                     </tbody>
                                 </table>
                             </div>
