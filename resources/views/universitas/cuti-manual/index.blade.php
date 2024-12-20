@@ -130,7 +130,7 @@ $(document).ready(function() {
         width: '100%',
         minimumInputLength: 3,
         ajax: {
-            url: "{{route('univ.pengaturan.akun.get-mahasiswa')}}",
+            url: "{{route('univ.cuti-manual.get-mahasiswa')}}",
             type: "GET",
             dataType: 'json',
             delay: 250,
