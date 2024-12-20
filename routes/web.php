@@ -838,7 +838,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('stop-out')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\CutiManualController::class, 'index'])->name('univ.cuti-manual');
                 Route::post('/store', [App\Http\Controllers\Universitas\CutiManualController::class, 'store'])->name('univ.cuti-manual.store');
-                Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\CutiManualController::class, 'get_mahasiswa'])->name('univ.cuti-manual.get-mahasiswa');
+                Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\CutiManualController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
                 Route::get('/get-data-mahasiswa/{id_registrasi_mahasiswa}', [App\Http\Controllers\Universitas\CutiManualController::class, 'getMahasiswaData'])->name('univ.cuti-manual.get-data');
                 Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Universitas\CutiManualController::class, 'delete'])->name('univ.cuti-manual.delete');
             });
