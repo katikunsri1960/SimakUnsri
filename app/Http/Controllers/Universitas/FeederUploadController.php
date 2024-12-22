@@ -332,7 +332,7 @@ class FeederUploadController extends Controller
                     DB::beginTransaction();
 
                     // KomponenEvaluasiKelas::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
-                    KuisonerAnswer::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
+                    // KuisonerAnswer::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     NilaiPerkuliahan::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
                     PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas_lama)->update(['id_kelas_kuliah' => $result['data']['id_kelas_kuliah']]);
@@ -967,7 +967,7 @@ class FeederUploadController extends Controller
 
     public function nilai_transfer_data(Request $request)
     {
-        
+
         $prodi = ProgramStudi::where('id',$request->id_prodi)->first();
         // dd($prodi->id_prodi, $request->id_semester);
         // $data = NilaiTransferPendidikan::with('prodi', 'semester', 'aktivitas_mahasiswa')
@@ -982,7 +982,7 @@ class FeederUploadController extends Controller
             ->where('nilai_transfer_pendidikans.id_prodi', $prodi->id_prodi);
 
         // if (isNull(NilaiTransferPendidikan::has('aktivitas_mahasiswa'))) {
-        //     $query->doesntHave('aktivitas_mahasiswa');            
+        //     $query->doesntHave('aktivitas_mahasiswa');
         //     return response()->json(['error' => 'Data tidak ditemukan'], 404);
         // } else {
         //     $query->whereHas('aktivitas_mahasiswa', function ($subquery) {
@@ -997,7 +997,7 @@ class FeederUploadController extends Controller
 
         return response()->json(
             // [
-            // 'data' => 
+            // 'data' =>
             $data,
             // 'prodi' => $prodi,
         // ]
