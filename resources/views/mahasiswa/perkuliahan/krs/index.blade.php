@@ -48,7 +48,7 @@ Kartu Rencana Studi
             </div>
           </div>
         </div>
-        @if($riwayat_pendidikan->id_jenis_daftar != 14)
+        @if($riwayat_pendidikan->id_jenis_daftar != 14 && ($riwayat_pendidikan->prodi->id_jenjang_pendidikan == 30 || $riwayat_pendidikan->prodi->id_jenjang_pendidikan == 22 ))
           <div class="col-12 col-lg-6 px-50">
             <div class="box ribbon-box">
               <div class="ribbon-two ribbon-two-danger"><span>MBKM</span></div>
