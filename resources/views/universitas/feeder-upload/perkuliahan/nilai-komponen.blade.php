@@ -140,6 +140,8 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
         var id_prodi = $('#id_prodi').val();
         var id_semester = $('#id_semester').val();
 
+        //spinner show
+        $('#spinner').show();
         // remove existing rows
         $('#dataAkm tbody').html('');
         $('#dataAkm').DataTable().destroy();
@@ -152,6 +154,9 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
                 id_semester: id_semester
             },
             success: function(response) {
+
+                // hide spinner
+                $('#spinner').hide();
                 var data = response;
                 var html = '';
                 var no = 1;
@@ -237,7 +242,7 @@ FEEDER UPLOAD - NILAI KOMPONEN EVALUASI KELAS
 
                      // Serialize form data and log it to the console
                      var formData = form.serialize();
-                
+
 
                     $.ajax({
                         url: "{{ route('univ.feeder-upload.ajax') }}",
