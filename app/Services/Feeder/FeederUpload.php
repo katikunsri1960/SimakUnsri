@@ -689,15 +689,15 @@ class FeederUpload {
         if($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
-                "token" => $token,
                 "act"   => $this->act,
+                "token" => $token,
+                "record" => [
+                    "nilai_komponen_evaluasi" => $this->record['nilai_komponen_evaluasi']
+                ],
                 "key" => [
                     "id_komponen_evaluasi" => $this->record['id_komponen_evaluasi'],
-                    "id_registrasi_mahasiswa" => $this->record['id_registrasi_mahasiswa'],
-                ],
-                "record" => [
-                    "nilai_komponen_evaluasi" => $this->record['nilai_komponen_evaluasi'],
-                ],
+                    "id_registrasi_mahasiswa" => $this->record['id_registrasi_mahasiswa']
+                ]
             ];
 
             $req = $client->post( $this->url, [
