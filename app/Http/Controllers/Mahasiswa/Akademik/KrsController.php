@@ -43,7 +43,7 @@ class KrsController extends Controller
         $id_reg = auth()->user()->fk_id;
         
         // Ambil data riwayat pendidikan mahasiswa
-        $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
+        $riwayat_pendidikan = RiwayatPendidikan::with('prodi')->where('id_registrasi_mahasiswa', $id_reg)->first();
     // dd($riwayat_pendidikan);
 
         return view('mahasiswa.perkuliahan.krs.index', ['riwayat_pendidikan' => $riwayat_pendidikan]);
