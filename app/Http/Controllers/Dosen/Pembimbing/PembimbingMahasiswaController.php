@@ -674,6 +674,20 @@ class PembimbingMahasiswaController extends Controller
         ]);
     }
 
+    public function penilaian_langsung_tim($aktivitas)
+    {
+        $id_dosen = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa'])
+                                    ->where('id', $aktivitas)->first();
+
+        $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
+        // dd($penguji);
+        return view('dosen.pembimbing.tugas-akhir.penilaian-langsung-tim', [
+            'data' => $data,
+            'data_nilai' => $data_nilai
+        ]);
+    }
+
     public function penilaian_langsung_aktivitas($aktivitas)
     {
         $id_dosen = auth()->user()->fk_id;

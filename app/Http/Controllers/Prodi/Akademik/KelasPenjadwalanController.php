@@ -276,6 +276,10 @@ class KelasPenjadwalanController extends Controller
         //Generate nama kelas
         $check_lokasi_ruang = RuangPerkuliahan::where('id', $request->ruang_kelas)->first();
         $check_kelas = KelasKuliah::where('id_prodi', $prodi_id)->where('id_matkul', $id_matkul)->where('id_semester', $semester_aktif->id_semester)->get();
+
+        if($check_lokasi_ruang->kapasitas_ruang < 1){
+            return redirect()->back()->with('error', 'Kapasitas Ruang Belum di Setting Admin Fakultas.');
+        }
         // dd(count($check_kelas));
         if(strval($check_lokasi_ruang->lokasi) == "Indralaya"){
             if(count($check_kelas) <= 70){
@@ -1049,6 +1053,10 @@ class KelasPenjadwalanController extends Controller
 
             $data_kelas = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->count();
             $ruang = RuangPerkuliahan::where('id', $request->ruang_kelas)->first();
+
+            if($ruang->kapasitas_ruang < 1){
+                return redirect()->back()->with('error', 'Kapasitas Ruang Belum di Setting Admin Fakultas.');
+            }
 
             // dd((int) $request->kapasitas_kelas >= $data_kelas);
 

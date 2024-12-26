@@ -17,7 +17,7 @@ class KelasKuliah extends Model
 
     protected $guarded = [];
 
-    protected $appends = ['kuisoner_count', 'id_tanggal_mulai_efektif', 'id_tanggal_akhir_efektif'];
+    protected $appends = [ 'id_tanggal_mulai_efektif', 'id_tanggal_akhir_efektif'];
 
     public function getIdTanggalMulaiEfektifAttribute()
     {
