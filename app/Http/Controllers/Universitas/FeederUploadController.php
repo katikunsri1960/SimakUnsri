@@ -902,9 +902,9 @@ class FeederUploadController extends Controller
                 $record = [
                     'id_kelas_kuliah' => $d->id_kelas_kuliah,
                     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                    'nilai_angka' => $d->nilai_angka,
-                    'nilai_huruf' => $d->nilai_huruf,
-                    'nilai_indeks' => $d->nilai_indeks,
+                    'nilai_angka' => strval($d->nilai_angka),
+                    'nilai_huruf' => strval($d->nilai_huruf),
+                    'nilai_indeks' => strval($d->nilai_indeks),
                 ];
 
                 $recordGet = "id_kelas = '".$d->id_kelas."'" ;
