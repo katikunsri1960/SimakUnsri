@@ -765,6 +765,7 @@ class FeederUploadController extends Controller
                 ->where('kk.id_semester', $semester)
                 ->where('kk.id_prodi', $prodi)
                 ->where('nilai_komponen_evaluasis.feeder', 0)
+                ->where('kk.feeder', 1)
                 ->select('nilai_komponen_evaluasis.*')
                 ->orderBy('nilai_komponen_evaluasis.id_kelas')
                 ->get();
