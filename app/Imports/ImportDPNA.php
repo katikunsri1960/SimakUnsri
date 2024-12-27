@@ -155,6 +155,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                     NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)
                         ->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)
                         ->update([
+                            'feeder' => 0,
                             'nilai_angka' => number_format($row['nilai_angka'], 2),
                             'nilai_indeks' => number_format($row['nilai_indeks'], 2),
                             'nilai_huruf' => $row['nilai_huruf'],
