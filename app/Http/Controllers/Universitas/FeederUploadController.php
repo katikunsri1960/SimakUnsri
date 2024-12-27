@@ -784,10 +784,12 @@ class FeederUploadController extends Controller
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
 
+                $nilai = $d->nilai_komp_eval != null ? $d->nilai_komp_eval : 0;
+
                 $record = [
                     'id_komponen_evaluasi' => $d->id_komponen_evaluasi,
                     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                    'nilai_komponen_evaluasi' => $d->nilai_komp_eval != null ? $d->nilai_komp_eval : 0,
+                    'nilai_komponen_evaluasi' => $nilai,
                     'id_kelas' => $d->id_kelas,
                 ];
 
