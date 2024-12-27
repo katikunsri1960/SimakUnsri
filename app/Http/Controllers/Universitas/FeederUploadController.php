@@ -656,7 +656,7 @@ class FeederUploadController extends Controller
                     'nama' => $d->nama,
                     'nama_inggris' => $d->nama_inggris,
                     'nomor_urut' => $d->nomor_urut,
-                    'bobot_evaluasi' => $d->bobot_evaluasi * 100,
+                    'bobot_evaluasi' => intval($d->bobot_evaluasi * 100),
                 ];
 
                 $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
