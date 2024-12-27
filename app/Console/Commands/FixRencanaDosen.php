@@ -72,7 +72,7 @@ class FixRencanaDosen extends Command
                 } elseif ($rencana_minggu_pertemuan < 16) {
                     // Increase the sks_substansi_total of the item with the lowest urutan
                     $minUrutanKey = collect($data)->sortBy('urutan')->keys()->first();
-                    $data[$minUrutanKey]['sks_substansi_total'] += round($rencana_minggu_pertemuan - 16, 0);
+                    $data[$minUrutanKey]['rencana_minggu_pertemuan'] += round($rencana_minggu_pertemuan - 16, 0);
                 }
 
                 foreach ($data as $d) {
