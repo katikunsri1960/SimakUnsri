@@ -520,8 +520,7 @@ class FeederUploadController extends Controller
                 ->where('k.id_prodi', $prodi)
                 ->where('k.feeder', 1)
                 ->where('dosen_pengajar_kelas_kuliahs.feeder', 0)
-                ->select('dosen_pengajar_kelas_kuliahs.*', 'k.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas', 'd.nidn as nidn_dosen', 'd.nama_dosen as nama',
-                        'm.kode_mata_kuliah as kode_mk', 'm.sks_mata_kuliah as sks_mk', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
+                ->select('dosen_pengajar_kelas_kuliahs.*')
                 ->get();
 
         $totalData = $data->count();
