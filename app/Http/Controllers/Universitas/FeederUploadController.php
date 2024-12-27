@@ -918,8 +918,8 @@ class FeederUploadController extends Controller
                     DB::beginTransaction();
 
                     $d->update([
-                        // 'id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi'],
-                        'feeder' => 1
+                        'feeder' => 1,
+                        'status_sync' => 'sudah sync'
                     ]);
 
                     DB::commit();
