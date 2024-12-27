@@ -47,7 +47,7 @@ class FixRencanaDosen extends Command
             $jumlahPertemuan = $group->sum('rencana_minggu_pertemuan');
             $count = $group->count();
 
-            if ($jumlahPertemuan > 16 && $count > 2) {
+            if ($jumlahPertemuan > 16 && $count > 1) {
                 $jumlahKelas++;
 
                 $this->info("ID Kelas: {$id_kelas_kuliah}");
