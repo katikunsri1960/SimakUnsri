@@ -49,38 +49,38 @@ class FixRencanaDosen extends Command
             if ($jumlahPertemuan > 16) {
                 $jumlahKelas++;
 
+                $this->info("ID Kelas: {$id_kelas_kuliah}");
+                // foreach ($group as $g) {
+                //     $sks_mk = $g->total_sks;
+                //     $substansi = $g->sks_substansi_total;
+                //     $rencana = $g->rencana_minggu_pertemuan;
+                //     $pertemuanCheck = 16;
+                //     $pertemuanFix = round(($substansi * $pertemuanCheck) / $sks_mk, 0);
+                //     $data[] = [
+                //         'id_aktivitas_mengajar' => $g->id_aktivitas_mengajar,
+                //         'urutan' => $g->urutan,
+                //         'rencana_minggu_pertemuan' => $pertemuanFix,
+                //     ];
+                // }
 
-                foreach ($group as $g) {
-                    $sks_mk = $g->total_sks;
-                    $substansi = $g->sks_substansi_total;
-                    $rencana = $g->rencana_minggu_pertemuan;
-                    $pertemuanCheck = 16;
-                    $pertemuanFix = round(($substansi * $pertemuanCheck) / $sks_mk, 0);
-                    $data[] = [
-                        'id_aktivitas_mengajar' => $g->id_aktivitas_mengajar,
-                        'urutan' => $g->urutan,
-                        'rencana_minggu_pertemuan' => $pertemuanFix,
-                    ];
-                }
+                // $rencana_minggu_pertemuan = collect($data)->sum('rencana_minggu_pertemuan');
 
-                $rencana_minggu_pertemuan = collect($data)->sum('rencana_minggu_pertemuan');
+                // if ($rencana_minggu_pertemuan > 16) {
+                //     $maxUrutanKey = collect($data)->sortByDesc('urutan')->keys()->first();
+                //     $data[$maxUrutanKey]['rencana_minggu_pertemuan'] -= round($rencana_minggu_pertemuan - 16, 0);
+                // } elseif ($rencana_minggu_pertemuan < 16) {
+                //     // Increase the sks_substansi_total of the item with the lowest urutan
+                //     $minUrutanKey = collect($data)->sortBy('urutan')->keys()->first();
+                //     $data[$minUrutanKey]['sks_substansi_total'] += round($rencana_minggu_pertemuan - 16, 0);
+                // }
 
-                if ($rencana_minggu_pertemuan > 16) {
-                    $maxUrutanKey = collect($data)->sortByDesc('urutan')->keys()->first();
-                    $data[$maxUrutanKey]['rencana_minggu_pertemuan'] -= round($rencana_minggu_pertemuan - 16, 0);
-                } elseif ($rencana_minggu_pertemuan < 16) {
-                    // Increase the sks_substansi_total of the item with the lowest urutan
-                    $minUrutanKey = collect($data)->sortBy('urutan')->keys()->first();
-                    $data[$minUrutanKey]['sks_substansi_total'] += round($rencana_minggu_pertemuan - 16, 0);
-                }
-
-                foreach ($data as $d) {
-                    DosenPengajarKelasKuliah::where('id_aktivitas_mengajar', $d['id_aktivitas_mengajar'])
-                        ->update([
-                            'feeder' => 0,
-                            'rencana_minggu_pertemuan' => $d['rencana_minggu_pertemuan']
-                        ]);
-                }
+                // foreach ($data as $d) {
+                //     DosenPengajarKelasKuliah::where('id_aktivitas_mengajar', $d['id_aktivitas_mengajar'])
+                //         ->update([
+                //             'feeder' => 0,
+                //             'rencana_minggu_pertemuan' => $d['rencana_minggu_pertemuan']
+                //         ]);
+                // }
             }
 
             $progressBar->advance();
