@@ -562,10 +562,10 @@ class FeederUploadController extends Controller
 
                     $dataBerhasil++;
                 } else {
-                    // $d->update(
-                    //         [
-                    //             'status_sync' => $result['error_desc'],
-                    //         ]);
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
                     $dataGagal++;
                 }
 
