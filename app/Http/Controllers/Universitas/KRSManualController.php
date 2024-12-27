@@ -17,7 +17,7 @@ class KRSManualController extends Controller
     public function index(Request $request)
     {
         $data = BatasIsiKRSManual::with(['riwayat'])->get();
-        
+
         // $semester = Semester::orderBy('id_semester', 'desc')->get();
 
         return view('universitas.batas-isi-krs-manual.index', compact('data'));
@@ -30,7 +30,7 @@ class KRSManualController extends Controller
         if (!$data) {
             return response()->json(['error' => 'Data not found'], 404);
         }
-    
+
         return response()->json($data);
     }
 
@@ -39,7 +39,7 @@ class KRSManualController extends Controller
         // dd($id);
         $batasIsiKrs = BatasIsiKrsManual::findOrFail($id);  // Ambil data berdasarkan ID
         $mahasiswaList = BatasIsiKrsManual::all();  // Ambil semua data mahasiswa (atau bisa menggunakan query khusus)
-        
+
         return view('univ.batas_isi_krs_manual.edit', compact('batasIsiKrs', 'mahasiswaList'));
     }
 
@@ -68,7 +68,7 @@ class KRSManualController extends Controller
         $data['nama_mahasiswa'] = $riwayat_pendidikan->nama_mahasiswa;
         $data['id_semester'] = $semester_aktif->id_semester;
         $data['keterangan'] = $request->keterangan;
-        
+
 
         BatasIsiKRSManual::create($data);
 
@@ -197,6 +197,26 @@ class KRSManualController extends Controller
         $db = new PesertaKelasKuliah();
 
         $response = $db->batal_all($riwayat->id_registrasi_mahasiswa);
+
+        return response()->json($response);
+    }
+
+    public function pembatalan_krs_approve(Request $request)
+    {
+        $nim = $request->nim;
+
+        $riwayat = RiwayatPendidikan::where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
+
+        if(!$riwayat) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data mahasiswa tidak ditemukan',
+            ]);
+        }
+
+        $db = new PesertaKelasKuliah();
+
+        $response = $db->approve_all_univ($riwayat->id_registrasi_mahasiswa);
 
         return response()->json($response);
     }

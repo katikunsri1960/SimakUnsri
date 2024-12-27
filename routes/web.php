@@ -836,6 +836,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/', [App\Http\Controllers\Universitas\KRSManualController::class, 'pembatalan_krs'])->name('univ.pembatalan-krs');
                 Route::get('/data', [App\Http\Controllers\Universitas\KRSManualController::class, 'pembatalan_krs_data'])->name('univ.pembatalan-krs.data');
                 Route::get('/store', [App\Http\Controllers\Universitas\KRSManualController::class, 'pembatalan_krs_store'])->name('univ.pembatalan-krs.store');
+                Route::get('/approve', [App\Http\Controllers\Universitas\KRSManualController::class, 'pembatalan_krs_approve'])->name('univ.pembatalan-krs.approve');
             });
 
             Route::prefix('stop-out')->group(function(){
