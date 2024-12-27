@@ -542,10 +542,6 @@ class FeederUploadController extends Controller
                     'id_registrasi_dosen' => $d->id_registrasi_dosen,
                     'id_kelas_kuliah' => $d->id_kelas_kuliah,
                     'sks_substansi_total' => strval($d->sks_substansi_total),
-                    /*'sks_tm_subst' => 0,
-                    'sks_prak_subst' => 0,
-                    'sks_prak_lap_subst' => 0,
-                    'sks_sim_subst' => 0,*/
                     'rencana_minggu_pertemuan' => strval($d->rencana_minggu_pertemuan),
                     'realisasi_minggu_pertemuan' => strval($d->realisasi_minggu_pertemuan),
                     'id_jenis_evaluasi' => $d->id_jenis_evaluasi,
