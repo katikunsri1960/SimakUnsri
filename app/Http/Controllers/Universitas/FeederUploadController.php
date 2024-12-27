@@ -647,8 +647,8 @@ class FeederUploadController extends Controller
 
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
-                
-                $bobot = round($d->bobot_evaluasi * 100, 2);
+
+                $bobot = $d->bobot_evaluasi * 100;
 
                 $record = [
                     'id_komponen_evaluasi' => $d->id_komponen_evaluasi,
@@ -657,7 +657,7 @@ class FeederUploadController extends Controller
                     'nama' => $d->nama,
                     'nama_inggris' => $d->nama_inggris,
                     'nomor_urut' => $d->nomor_urut,
-                    'bobot_evaluasi' => $bobot,
+                    'bobot_evaluasi' => intval($bobot),
                 ];
 
                 $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
