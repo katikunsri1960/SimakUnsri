@@ -40,10 +40,10 @@ class DataMasterController extends Controller
                     ->orderBy('id_jenjang_pendidikan')
                     ->orderBy('nama_program_studi')
                     ->get();
-        
+
 
         $id_prodi_fak=$prodi_fak->pluck('id_prodi');
-        
+
         // $query = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik', 'beasiswa'])
         //     ->whereIn('id_prodi',  $id_prodi_fak)
         //     ->orderBy('nama_program_studi', 'ASC')
@@ -51,9 +51,9 @@ class DataMasterController extends Controller
         //     ->orderBy('id_periode_masuk', 'desc') // Pastikan orderBy di sini
         //     ->limit(10)
         //     ;
-        
+
         // $data=$query->get();
-        
+
 
         // foreach($data as $key => $value) {
         //     $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
@@ -85,7 +85,7 @@ class DataMasterController extends Controller
             })
             ->groupBy('id_jenis_keluar', 'keterangan_keluar')
             ->get();
-        
+
         // Iterasi setiap item untuk memeriksa kondisi null
         // $status_keluar = $status_keluar->map(function ($item) {
         //     if (is_null($item->keterangan_keluar)) { // Periksa apakah null
@@ -94,8 +94,8 @@ class DataMasterController extends Controller
         //     }
         //     return $item;
         // });
-                
-                
+
+
         // dd($status_keluar);
         // dd($request->prodi, $request->angkatan, $request->status_keluar);
 
@@ -131,7 +131,7 @@ class DataMasterController extends Controller
             ->orderBy('id_periode_masuk', 'desc');
 
             // Modifikasi hasil data setelah diambil
-        
+
         // if ($request->has('status_keluar') && !empty($request->status_keluar)) {
         //     if(in_array('*', $request->status_keluar)){
         //         // hapus bintang dari aary status keluar,
@@ -149,7 +149,7 @@ class DataMasterController extends Controller
             $status_keluar = array_filter($request->status_keluar, function ($value) {
                 return $value !== '*';
             });
-        
+
             if (in_array('*', $request->status_keluar)) {
                 if (count($status_keluar) > 0) {
                     $query->where(function ($q) use ($status_keluar) {
@@ -163,7 +163,7 @@ class DataMasterController extends Controller
                 $query->whereIn('id_jenis_keluar', $status_keluar);
             }
         }
-        
+
 
         // Filter berdasarkan `searchValue` jika ada
         if ($searchValue) {
@@ -172,7 +172,7 @@ class DataMasterController extends Controller
                 ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
             });
         }
-        
+
 
         // Filter berdasarkan program studi
         if ($request->has('prodi') && !empty($request->prodi)) {
@@ -200,7 +200,7 @@ class DataMasterController extends Controller
         $data = $query->get();
 
         // dd($data);
-        
+
         $limit = $request->input('length');
         $offset = $request->input('start');
 
@@ -229,7 +229,7 @@ class DataMasterController extends Controller
             }
         }
 
-        
+
         $recordsFiltered = $data->count();
 
         $data = $data->slice($offset, $limit)->values();
@@ -262,7 +262,7 @@ class DataMasterController extends Controller
         return response()->json($response);
     }
 
-    
+
 
     //BIAYA KULIAH
     public function biaya_kuliah(Request $request)
@@ -290,12 +290,14 @@ class DataMasterController extends Controller
             'kapasitas_ruang' => 'required',
             'lokasi' => [
                 'required',
-                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$fakultas_id) {
+                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request, $fakultas_id) {
                     return $query->where('nama_ruang', $request->nama_ruang)
-                    ->where('lokasi', $request->lokasi)
-                    ->where('fakultas_id', $fakultas_id);
+                        ->where('lokasi', $request->lokasi)
+                        ->where('fakultas_id', $fakultas_id);
                 }),
             ],
+        ], [
+            'lokasi.unique' => 'Ruang dengan nama dan lokasi ini sudah ada di fakultas Anda. Silahkan melakukan lakukan pengecekan kembali.',
         ]);
 
         // dd($request->kapasitas_ruang);
