@@ -30,7 +30,7 @@ Kelas Penjadwalan
                     <div class="row mb-5">
                         <div class="col-lg-6 mb-10">
                             <div class="d-flex">
-                                <a type="button" class="btn btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"><i class="fa fa-arrow-left"></i> Kembali</a>
+                                <a type="button" class="btn btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan', ['semester_view' => $semester])}}"><i class="fa fa-arrow-left"></i> Kembali</a>
                             </div>
                         </div>
                         <div class="col-lg-6 mb-10">
