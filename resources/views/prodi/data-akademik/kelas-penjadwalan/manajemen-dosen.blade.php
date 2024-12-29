@@ -14,7 +14,7 @@ Manajemen Dosen Kelas Perkuliahan
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page"><a href="#">Data Akademik</a></li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail',['id_matkul' => $kelas->id_matkul])}}">Detail Kelas dan Penjadwalan</a></li>
+                        <li class="breadcrumb-item" aria-current="page">Detail Kelas dan Penjadwalan</li>
                         <li class="breadcrumb-item active" aria-current="page">Manajemen Dosen Kelas Perkuliahan</li>
                     </ol>
                 </nav>
@@ -159,7 +159,7 @@ Manajemen Dosen Kelas Perkuliahan
                                                     <button type="submit" class="btn btn-danger btn-sm my-2 delete-button">
                                                         <i class="fa fa-trash"></i> Delete
                                                     </button>
-                                                </div> 
+                                                </div>
                                             </form>
                                         </div>
                                     </td>
@@ -182,7 +182,7 @@ Manajemen Dosen Kelas Perkuliahan
     $(document).ready(function(){
 
         $('#data').DataTable();
-        
+
         $('.delete-button').click(function(e){
             e.preventDefault();
             var form = $(this).closest('form');

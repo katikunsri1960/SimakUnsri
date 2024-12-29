@@ -14,13 +14,12 @@ Edit Kelas Perkuliahan
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $kelas->id_matkul])}}">Detail Kelas dan Penjadwalan</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $kelas->id_matkul, 'semester'=>$kelas->id_semester])}}">Detail Kelas dan Penjadwalan</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Edit Kelas Perkuliahan</li>
                     </ol>
                 </nav>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -238,7 +237,7 @@ Edit Kelas Perkuliahan
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $kelas->id_matkul])}}" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $kelas->id_matkul, 'semester' => $kelas->id_semester])}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>

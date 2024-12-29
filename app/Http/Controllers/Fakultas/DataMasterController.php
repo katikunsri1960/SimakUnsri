@@ -322,6 +322,9 @@ class DataMasterController extends Controller
                     ->whereNotIn('id', [$ruang_perkuliahan->id]);
                 }),
             ],
+        ],
+        [
+            'lokasi.unique' => 'Ruang dengan nama dan lokasi ini sudah ada di fakultas Anda. Silahkan melakukan lakukan pengecekan kembali.',
         ]);
 
         $ruang_perkuliahan->update($data);

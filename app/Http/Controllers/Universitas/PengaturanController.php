@@ -85,6 +85,7 @@ class PengaturanController extends Controller
     {
         $data = $request->validate([
             'id_semester' => 'required|exists:semesters,id_semester',
+            'semester_allow' => 'required',
             'krs_mulai' => 'required',
             'krs_selesai' => 'required',
             'mulai_isi_nilai' => 'required',
@@ -95,10 +96,10 @@ class PengaturanController extends Controller
             'tgl_mulai_pengajuan_cuti' => 'required',
             'tgl_selesai_pengajuan_cuti' => 'required'
         ]);
-
+        // dd($data);
         $data['id'] = 1;
 
-        
+
 
         SemesterAktif::updateOrCreate(['id' => 1], $data);
         // dd($data);
