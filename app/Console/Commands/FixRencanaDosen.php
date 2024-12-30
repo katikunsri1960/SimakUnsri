@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Perkuliahan\KelasKuliah;
 use Illuminate\Console\Command;
 
 class FixRencanaDosen extends Command
@@ -32,13 +33,17 @@ class FixRencanaDosen extends Command
         $data = DosenPengajarKelasKuliah::leftJoin('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
                 ->join('mata_kuliahs as m', 'm.id_matkul', 'k.id_matkul')
                 ->where('dosen_pengajar_kelas_kuliahs.id_semester', $semester)
-                ->select('dosen_pengajar_kelas_kuliahs.*', 'm.sks_mata_kuliah as total_sks')
+                ->select('dosen_pengajar_kelas_kuliahs.*', 'm.sks_mata_kuliah as total_sks', 'm.kode_mata_kuliah as kode_mk')
                 ->get();
 
         $groupedData = $data->groupBy('id_kelas_kuliah');
         $this->info($groupedData->count());
         $progressBar = $this->output->createProgressBar($groupedData->count());
         $jumlahKelas = 0;
+        $file = fopen(public_path('rencana_dosen.csv'), 'a');
+        if (ftell($file) == 0) {
+            fputcsv($file, ['KodeMk', 'Nama Kelas']);
+        }
 
         foreach ($groupedData as $id_kelas_kuliah => $group) {
             $data = [];
@@ -49,8 +54,13 @@ class FixRencanaDosen extends Command
 
             if ($jumlahPertemuan > 16 && $count > 1) {
                 $jumlahKelas++;
+                $dbKelas = KelasKuliah::where('id_kelas_kuliah', $id_kelas_kuliah)->select('nama_kelas_kuliah')->first();
+                // tulis data ke dalam file txt di folder public
 
-                // $this->info("ID Kelas: {$id_kelas_kuliah}");
+                fputcsv($file, [$group->first()->kode_mk, $dbKelas->nama_kelas_kuliah]);
+
+
+                $this->info("ID Kelas: {$id_kelas_kuliah}");
                 foreach ($group as $g) {
                     $sks_mk = $g->total_sks;
                     $substansi = $g->sks_substansi_total;
@@ -86,6 +96,7 @@ class FixRencanaDosen extends Command
 
             $progressBar->advance();
         }
+        fclose($file);
 
         $this->info("Jumlah kelas: {$jumlahKelas}");
     }
