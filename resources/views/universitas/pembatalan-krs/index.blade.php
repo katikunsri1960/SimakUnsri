@@ -94,6 +94,9 @@ Pembatalan KRS Mahasiswa
                                 <div class="">
                                     <button class="btn btn-primary btn-rounded" type="button" id="btnApprove" disabled>Batalkan Semua KRS</button>
                                 </div>
+                                <div class="">
+                                    <button class="btn btn-success btn-rounded" type="button" id="btnApproveKRS" disabled>Approve Semua KRS</button>
+                                </div>
                             </div>
                             <table class="table table-bordered mt-4" id="krs-regular">
                                 <thead>
@@ -268,9 +271,11 @@ Pembatalan KRS Mahasiswa
 
                     if(approved > 0){
                         $('#btnApprove').removeAttr('disabled');
+                        $('#btnApproveKRS').removeAttr('disabled');
 
                     }else{
                         $('#btnApprove').removeAttr('disabled');
+                        $('#btnApproveKRS').removeAttr('disabled');
                     }
                 }
             });
@@ -291,6 +296,56 @@ Pembatalan KRS Mahasiswa
         }, function() {
             $.ajax({
                 url: '{{route('univ.pembatalan-krs.store')}}',
+                type: 'get',
+                data: {
+                    nim: nim,
+                },
+                success: function(response){
+                    if (response.status == 'error') {
+                        swal({
+                            title: "Peringatan!",
+                            text: response.message,
+                            type: "warning",
+                            buttons: {
+                                confirm: {
+                                    className : 'btn btn-warning'
+                                }
+                            }
+                        });
+                        return false;
+                    }
+
+                    swal({
+                        title: "Berhasil!",
+                        text: response.message,
+                        type: "success",
+                        buttons: {
+                            confirm: {
+                                className : 'btn btn-success'
+                            }
+                        }
+                    });
+
+                    getKrs();
+                }
+            });
+        });
+    });
+
+    $('#btnApproveKRS').click(function(){
+        var nim = $('#nim').val();
+        swal({
+            title: "Konfirmasi",
+            text: "Apakah Anda yakin akan menyetujui KRS mahasiswa ini? Pastikan sudah berkoordinasi dengan dosen PA terkait.",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Ya, Setujui!",
+            cancelButtonText: "Batal",
+            closeOnConfirm: false
+        }, function() {
+            $.ajax({
+                url: '{{route('univ.pembatalan-krs.approve')}}',
                 type: 'get',
                 data: {
                     nim: nim,

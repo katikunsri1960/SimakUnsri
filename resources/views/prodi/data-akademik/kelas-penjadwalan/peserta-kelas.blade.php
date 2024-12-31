@@ -44,7 +44,7 @@ Peserta Kelas Kuliah
                         <div class="row mb-5">
                             <div class="col-xl-6 col-lg-6">
                                 <a class="btn btn-rounded bg-warning-light"
-                                    href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $matkul->id_matkul])}}"><i
+                                    href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $matkul->id_matkul, 'semester' => $kelas->id_semester])}}"><i
                                         class="fa fa-chevron-left"><span class="path1"></span><span
                                             class="path2"></span></i> Kembali</a>
                             </div>

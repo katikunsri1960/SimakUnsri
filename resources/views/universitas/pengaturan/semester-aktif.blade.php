@@ -41,6 +41,15 @@ Semester Aktif
                                 </select>
                             </div>
                             <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="semester_allow" class="form-label">Semester Allow</label>
+                                <select name="semester_allow[]" id="semester_allow" class="form-select" multiple required>
+                                    {{-- <option value="">-- Pilih Semester --</option> --}}
+                                    @foreach ($semester as $i)
+                                    <option value="{{$i->id_semester}}" {{ $data->semester_allow != null && in_array($i->id_semester, $data->semester_allow) ? 'selected' : '' }}>{{$i->nama_semester}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            <div class="col-lg-6 col-md-6 mb-3">
                                 <label for="batas_bayar_ukt" class="form-label">Batas Bayar UKT</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
@@ -148,6 +157,13 @@ Semester Aktif
 
         $('#id_semester').select2({
             placeholder: 'Pilih Semester',
+            allowClear: true,
+            width: '100%',
+        });
+
+        $('#semester_allow').select2({
+            placeholder: 'Pilih Semester',
+            array: true,
             allowClear: true,
             width: '100%',
         });

@@ -18,7 +18,7 @@ Tambah Dosen Kelas Perkuliahan
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul])}}">Detail Kelas dan Penjadwalan</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul, 'semester' => $kelas[0]['id_semester']])}}">Detail Kelas dan Penjadwalan</a></li>
                         <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.dosen-pengajar.manajemen', ['id_kelas' => $id_kelas])}}">Manajemen Dosen Pengajar Kelas</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Tambah Dosen Pengajar Kelas</li>
                     </ol>
@@ -203,7 +203,7 @@ Tambah Dosen Kelas Perkuliahan
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul])}}" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul, 'semester' => $kelas[0]['id_semester']])}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>

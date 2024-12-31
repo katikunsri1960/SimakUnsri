@@ -30,12 +30,12 @@ Kelas Penjadwalan
                     <div class="row mb-5">
                         <div class="col-lg-6 mb-10">
                             <div class="d-flex">
-                                <a type="button" class="btn btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"><i class="fa fa-arrow-left"></i> Kembali</a>
+                                <a type="button" class="btn btn-warning waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan', ['semester_view' => $semester])}}"><i class="fa fa-arrow-left"></i> Kembali</a>
                             </div>
                         </div>
                         <div class="col-lg-6 mb-10">
                             <div class="d-flex justify-content-end">
-                                <a type="button" class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.tambah',['id_matkul' => $id_matkul])}}"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</a>
+                                <a type="button" class="btn btn-success waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.tambah',['id_matkul' => $id_matkul, 'semester'=> $semester])}}"><i class="fa fa-plus"></i> Tambah Kelas Kuliah</a>
                             </div>
                         </div>
                     </div>
@@ -72,7 +72,7 @@ Kelas Penjadwalan
                                     <tr>
                                         <td class="text-center align-middle">{{$row = $row + 1}}</td>
                                         <td class="text-center align-middle">
-                                            <a class="btn btn-sm btn-rounded btn-success-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.peserta', ['id_maktul' =>  $matkul->id, 'id_kelas' => $d->id])}}"> 
+                                            <a class="btn btn-sm btn-rounded btn-success-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.peserta', ['id_maktul' =>  $matkul->id, 'id_kelas' => $d->id])}}">
                                                 <i class="fa fa-search"></i>{{$d->nama_kelas_kuliah}}
                                             </a>
                                         </td>

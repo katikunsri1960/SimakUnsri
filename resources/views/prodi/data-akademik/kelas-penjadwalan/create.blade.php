@@ -20,7 +20,7 @@ $id_matkul = $mata_kuliah[0]['id_matkul'];
                         <li class="breadcrumb-item" aria-current="page"><a
                                 href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
                         <li class="breadcrumb-item" aria-current="page"><a
-                                href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul])}}">Detail
+                                href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul, 'semester' => $semester])}}">Detail
                                 Kelas dan Penjadwalan</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Tambah Kelas Perkuliahan</li>
                     </ol>
@@ -36,7 +36,7 @@ $id_matkul = $mata_kuliah[0]['id_matkul'];
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <form class="form"
-                    action="{{route('prodi.data-akademik.kelas-penjadwalan.store', ['id_matkul' => $id_matkul])}}"
+                    action="{{route('prodi.data-akademik.kelas-penjadwalan.store', ['id_matkul' => $id_matkul, 'semester' => $semester])}}"
                     id="tambah-kelas" method="POST">
                     @csrf
                     <div class="box-body">
@@ -185,7 +185,7 @@ $id_matkul = $mata_kuliah[0]['id_matkul'];
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"
+                        <a type="button" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul, 'semester' => $semester])}}"
                             class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>

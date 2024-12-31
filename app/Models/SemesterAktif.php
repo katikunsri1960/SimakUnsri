@@ -12,6 +12,18 @@ class SemesterAktif extends Model
     protected $guarded = [];
     protected $appends = ['id_mulai_isi_nilai', 'id_batas_isi_nilai', 'id_tanggal_mulai_kprs', 'id_tanggal_akhir_kprs', 'id_krs_mulai', 'id_krs_selesai', 'id_batas_bayar_ukt'];
 
+    // semester allow json
+
+    public function getSemesterAllowAttribute($value)
+    {
+        return json_decode($value);
+    }
+
+    public function setSemesterAllowAttribute($value)
+    {
+        $this->attributes['semester_allow'] = json_encode($value);
+    }
+
     public function getIdKrsMulaiAttribute()
     {
         return date('d-m-Y', strtotime($this->krs_mulai)) ?? '';

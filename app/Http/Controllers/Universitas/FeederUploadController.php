@@ -520,8 +520,7 @@ class FeederUploadController extends Controller
                 ->where('k.id_prodi', $prodi)
                 ->where('k.feeder', 1)
                 ->where('dosen_pengajar_kelas_kuliahs.feeder', 0)
-                ->select('dosen_pengajar_kelas_kuliahs.*', 'k.nama_semester as nama_semester', 'k.nama_kelas_kuliah as nama_kelas', 'd.nidn as nidn_dosen', 'd.nama_dosen as nama',
-                        'm.kode_mata_kuliah as kode_mk', 'm.sks_mata_kuliah as sks_mk', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
+                ->select('dosen_pengajar_kelas_kuliahs.*')
                 ->get();
 
         $totalData = $data->count();
@@ -542,13 +541,9 @@ class FeederUploadController extends Controller
                     'id_aktivitas_mengajar' => $d->id_aktivitas_mengajar,
                     'id_registrasi_dosen' => $d->id_registrasi_dosen,
                     'id_kelas_kuliah' => $d->id_kelas_kuliah,
-                    'sks_substansi_total' => $d->sks_substansi_total,
-                    /*'sks_tm_subst' => 0,
-                    'sks_prak_subst' => 0,
-                    'sks_prak_lap_subst' => 0,
-                    'sks_sim_subst' => 0,*/
-                    'rencana_minggu_pertemuan' => $d->rencana_minggu_pertemuan,
-                    'realisasi_minggu_pertemuan' => $d->realisasi_minggu_pertemuan,
+                    'sks_substansi_total' => strval($d->sks_substansi_total),
+                    'rencana_minggu_pertemuan' => strval($d->rencana_minggu_pertemuan),
+                    'realisasi_minggu_pertemuan' => strval($d->realisasi_minggu_pertemuan),
                     'id_jenis_evaluasi' => $d->id_jenis_evaluasi,
                 ];
 
@@ -653,6 +648,7 @@ class FeederUploadController extends Controller
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
 
+
                 $record = [
                     'id_komponen_evaluasi' => $d->id_komponen_evaluasi,
                     'id_kelas_kuliah' => $d->id_kelas_kuliah,
@@ -660,7 +656,7 @@ class FeederUploadController extends Controller
                     'nama' => $d->nama,
                     'nama_inggris' => $d->nama_inggris,
                     'nomor_urut' => $d->nomor_urut,
-                    'bobot_evaluasi' => $d->bobot_evaluasi*100,
+                    'bobot_evaluasi' => intval($d->bobot_evaluasi * 100),
                 ];
 
                 $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
@@ -761,14 +757,13 @@ class FeederUploadController extends Controller
 
         // return response()->json(['message' => $semester.' - '.$prodi]);
 
-        $data = NilaiKomponenEvaluasi::join('komponen_evaluasi_kelas as k', 'k.id_komponen_evaluasi', 'nilai_komponen_evaluasis.id_komponen_evaluasi')
-                ->join('kelas_kuliahs as kk', 'kk.id_kelas_kuliah', 'k.id_kelas_kuliah')
+        $data = NilaiKomponenEvaluasi::join('kelas_kuliahs as kk', 'kk.id_kelas_kuliah', 'nilai_komponen_evaluasis.id_kelas')
                 ->where('kk.id_semester', $semester)
                 ->where('kk.id_prodi', $prodi)
                 ->where('nilai_komponen_evaluasis.feeder', 0)
+                ->where('kk.feeder', 1)
                 ->select('nilai_komponen_evaluasis.*')
-                ->orderBy('k.id_kelas_kuliah')
-                ->orderBy('k.nomor_urut')
+                ->orderBy('nilai_komponen_evaluasis.id_kelas')
                 ->get();
 
         $totalData = $data->count();
@@ -785,10 +780,12 @@ class FeederUploadController extends Controller
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
 
+                $nilai = $d->nilai_komp_eval != null ? $d->nilai_komp_eval : 0;
+
                 $record = [
                     'id_komponen_evaluasi' => $d->id_komponen_evaluasi,
                     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                    'nilai_komponen_evaluasi' => $d->nilai_komp_eval != null ? $d->nilai_komp_eval : 0,
+                    'nilai_komponen_evaluasi' => strval($nilai),
                     'id_kelas' => $d->id_kelas,
                 ];
 
@@ -901,9 +898,9 @@ class FeederUploadController extends Controller
                 $record = [
                     'id_kelas_kuliah' => $d->id_kelas_kuliah,
                     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                    'nilai_angka' => $d->nilai_angka,
-                    'nilai_huruf' => $d->nilai_huruf,
-                    'nilai_indeks' => $d->nilai_indeks,
+                    'nilai_angka' => strval($d->nilai_angka),
+                    'nilai_huruf' => strval($d->nilai_huruf),
+                    'nilai_indeks' => strval($d->nilai_indeks),
                 ];
 
                 $recordGet = "id_kelas = '".$d->id_kelas."'" ;
@@ -917,8 +914,8 @@ class FeederUploadController extends Controller
                     DB::beginTransaction();
 
                     $d->update([
-                        // 'id_komponen_evaluasi' => $result['data']['id_komponen_evaluasi'],
-                        'feeder' => 1
+                        'feeder' => 1,
+                        'status_sync' => 'sudah sync'
                     ]);
 
                     DB::commit();

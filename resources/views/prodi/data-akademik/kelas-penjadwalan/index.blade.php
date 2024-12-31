@@ -30,7 +30,30 @@ Kelas Penjadwalan
                         <h3>Daftar Kelas Mata Kuliah</h3>
                     </div>
                     <div class="pull-right">
-                        <p class="mb-0 text-fade fs-18">Semester - {{$semester_aktif->semester->nama_semester}}</p>
+                        <form action="{{ route('prodi.data-akademik.kelas-penjadwalan') }}" method="get" id="semesterForm">
+
+                        {{-- <p class="mb-0 text-fade fs-18">Semester - </p> --}}
+                        <div class="mb-3">
+                            <label for="semester_view" class="form-label">Semester</label>
+                            <select
+                                class="form-select"
+                                name="semester_view"
+                                id="semester_view"
+                                onchange="document.getElementById('semesterForm').submit();"
+                            >
+                                <option value="" selected disabled>-- Pilih Semester --</option>
+                                @foreach ($pilihan_semester as $p)
+                                    <option value="{{$p->id_semester}}"
+                                        @if ($semester_view != null)
+                                        {{$semester_view == $p->id_semester ? 'selected' : ''}}
+                                        @else
+                                        {{$semester_aktif->id_semester == $p->id_semester ? 'selected' : ''}}
+                                        @endif
+                                        >{{$p->nama_semester}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        </form>
                     </div>
                 </div>
                 <div class="box-body">
@@ -65,7 +88,7 @@ Kelas Penjadwalan
                                                     @endphp
                                                 </td>
                                                 <td class="text-center align-middle">
-                                                    <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
+                                                    <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul, 'semester' => $semester_view ?? $semester_aktif->id_semester])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
                                                 </td>
                                             </tr>
                                             @endif
