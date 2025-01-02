@@ -7,10 +7,11 @@ use App\Models\Referensi\PeriodePerkuliahan;
 use App\Models\Semester;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class PeriodeImport implements ToCollection, WithHeadingRow
+class PeriodeImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
 {
 
     /**
