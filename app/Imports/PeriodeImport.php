@@ -26,6 +26,9 @@ class PeriodeImport implements ToCollection, WithHeadingRow
             foreach ($collection as $index => $row) {
 
                 $prodi = ProgramStudi::where('kode_program_studi', $row['kode_prodi'])->where('status', 'A')->first();
+                if (!$prodi) {
+                    dd($row['kode_prodi']);
+                }
                 $semester = Semester::where('id_semester', $row['semester'])->first();
                 // dd($row);
                 $tanggal_awal_perkuliahan = date('Y-m-d', strtotime($row['tanggal_awal_perkuliahan']));
