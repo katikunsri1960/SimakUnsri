@@ -55,6 +55,24 @@ Tugas Akhir
             <div class="box box-outline-success bs-3 border-success">
 
                 <div class="box-body">
+                    <form action="{{ route('prodi.data-akademik.non-tugas-akhir') }}" method="get" id="semesterForm">
+
+                        {{-- <p class="mb-0 text-fade fs-18">Semester - </p> --}}
+                        <div class="mb-3">
+                            <label for="semester_view" class="form-label">Pilih Semester</label>
+                            <select class="form-select" name="semester_view" id="semester_view"
+                                onchange="document.getElementById('semesterForm').submit();">
+                                <option value="" selected disabled>-- Pilih Semester --</option>
+                                @foreach ($pilihan_semester as $p)
+                                <option value="{{$p->id_semester}}" @if ($semester_view !=null) {{$semester_view==$p->id_semester ? 'selected' : ''}}
+                                    @else
+                                    {{$semester_aktif->id_semester == $p->id_semester ? 'selected' : ''}}
+                                    @endif
+                                    >{{$p->nama_semester}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100"
                             style="font-size: 11px">
@@ -139,18 +157,18 @@ Tugas Akhir
                                             </form>
                                             @endif
                                             @if(($d->approved == 0 && $d->approved_dosen == 0) && ($d->id_jenis_aktivitas != '5' && $d->id_jenis_aktivitas != '6' && $d->id_jenis_aktivitas != '21'))
-                                                @if($semester == $d->id_semester)
+                                                {{-- @if($semester == $d->id_semester) --}}
                                                     <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-konversi', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Konversi">
                                                         <i class="fa fa-pencil-square-o"></i> Nilai Konversi
                                                     </a>
-                                                @endif
+                                                {{-- @endif --}}
                                             @endif
                                             @if(($d->approved == 0 && $d->approved_dosen == 0) && $d->id_jenis_aktivitas == '21')
-                                                @if($semester == $d->id_semester)
+                                                {{-- @if($semester == $d->id_semester) --}}
                                                     <a href="{{ route('prodi.data-akademik.non-tugas-akhir.nilai-transfer', $d->id_aktivitas) }}" class="btn btn-success btn-sm my-2" title="Nilai Transfer">
                                                         <i class="fa fa-pencil-square-o"></i> Nilai Transfer
                                                     </a>
-                                                @endif
+                                                {{-- @endif --}}
                                             @endif
                                             <a href="{{route('prodi.data-akademik.non-tugas-akhir.edit-detail', $d->id_aktivitas)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i class="fa fa-edit"></i> Edit</a>
                                             <a href="#" class="btn btn-info btn-sm my-2" title="Detail"

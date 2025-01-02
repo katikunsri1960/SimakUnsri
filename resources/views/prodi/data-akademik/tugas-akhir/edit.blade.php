@@ -198,7 +198,7 @@ Tugas Akhir
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('prodi.data-akademik.tugas-akhir')}}" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('prodi.data-akademik.tugas-akhir', ['semester_view' => $semester])}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
@@ -280,7 +280,7 @@ Tugas Akhir
                                                         <button type="submit" class="btn btn-danger btn-sm my-2 delete-button">
                                                             <i class="fa fa-trash"></i> Delete
                                                         </button>
-                                                    </div> 
+                                                    </div>
                                                 </form>
                                             @else
                                                 <h4>Data sudah di setujui</h4>
