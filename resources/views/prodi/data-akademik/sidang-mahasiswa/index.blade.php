@@ -56,6 +56,24 @@ Tugas Akhir
             <div class="box box-outline-success bs-3 border-success">
 
                 <div class="box-body">
+                    <form action="{{ route('prodi.data-akademik.sidang-mahasiswa') }}" method="get" id="semesterForm">
+
+                        {{-- <p class="mb-0 text-fade fs-18">Semester - </p> --}}
+                        <div class="mb-3">
+                            <label for="semester_view" class="form-label">Pilih Semester</label>
+                            <select class="form-select" name="semester_view" id="semester_view"
+                                onchange="document.getElementById('semesterForm').submit();">
+                                <option value="" selected disabled>-- Pilih Semester --</option>
+                                @foreach ($pilihan_semester as $p)
+                                <option value="{{$p->id_semester}}" @if ($semester_view !=null) {{$semester_view==$p->id_semester ? 'selected' : ''}}
+                                    @else
+                                    {{$semester_aktif->id_semester == $p->id_semester ? 'selected' : ''}}
+                                    @endif
+                                    >{{$p->nama_semester}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </form>
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100"
                             style="font-size: 11px">

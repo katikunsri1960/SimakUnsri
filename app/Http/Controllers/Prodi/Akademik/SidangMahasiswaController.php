@@ -11,6 +11,7 @@ use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Referensi\KategoriKegiatan;
+use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,16 +19,46 @@ use Ramsey\Uuid\Uuid;
 
 class SidangMahasiswaController extends Controller
 {
+    private function checkSemesterAllow($semester)
+    {
+        $semester_aktif = SemesterAktif::first();
+
+        if ($semester != null && $semester_aktif->semester_allow != null && !in_array($semester,$semester_aktif->semester_allow)) {
+            return false;
+        }
+        return true;
+    }
+
     public function index(Request $request)
     {
-        $semesterAktif = SemesterAktif::first();
-        $semester = $semesterAktif->id_semester;
+        $request->validate([
+            'semester_view' => 'nullable|exists:semesters,id_semester'
+        ]);
+
+        $semester_view = $request->semester_view ?? null;
+
+        $semester_aktif = SemesterAktif::first();
+
+        $semester_pilih = $semester_view == null ? $semester_aktif->id_semester : $semester_view;
+
+        if ($this->checkSemesterAllow($semester_pilih) == false) {
+            return redirect()->back()->with('error', "Semester Tidak dalam list yang di izinkan!");
+        }
+
+        $dbSemester = Semester::select('id_semester', 'nama_semester');
+
+        $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        // dd($semester_allow)
+
         $db = new AktivitasMahasiswa();
-        $data = $db->sidang(auth()->user()->fk_id, $semester );
+        $data = $db->sidang(auth()->user()->fk_id, $semester_pilih );
         // dd($data);
         return view('prodi.data-akademik.sidang-mahasiswa.index', [
             'data' => $data,
-            'semester' => $semester,
+            'semester' => $semester_pilih,
+            'pilihan_semester' => $pilihan_semester,
+            'semester_view' => $semester_view,
+            'semester_aktif' => $semester_aktif
         ]);
     }
 
@@ -41,12 +72,14 @@ class SidangMahasiswaController extends Controller
 
     public function ubah_detail_sidang($aktivitas)
     {
-        $semesterAktif = SemesterAktif::first();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'uji_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
+
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'uji_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
         // dd($data);
+        $semester = $data->id_semester;
 
         return view('prodi.data-akademik.sidang-mahasiswa.edit', [
-            'd' => $data
+            'd' => $data,
+            'semester' => $semester
         ]);
     }
 
@@ -97,14 +130,16 @@ class SidangMahasiswaController extends Controller
 
     public function tambah_dosen_penguji($aktivitas)
     {
-        $semesterAktif = SemesterAktif::first();
+        // $semesterAktif = SemesterAktif::first();
         $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110501', '110502'])->get();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'uji_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'uji_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
+        $semester = $data->id_semester;
         // dd($data);
 
         return view('prodi.data-akademik.sidang-mahasiswa.tambah-dosen', [
             'd' => $data,
-            'kategori' => $kategori
+            'kategori' => $kategori,
+            'semester' => $semester
         ]);
     }
 
@@ -122,11 +157,12 @@ class SidangMahasiswaController extends Controller
             DB::beginTransaction();
 
             $aktivitas_mahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
+            $semester = Semester::where('id_semester', $aktivitas_mahasiswa->id_semester)->first();
 
-            $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_penguji)->get();
+            $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran', $semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_penguji)->get();
 
             if($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($request->dosen_penguji)){
-                $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_penguji)->get();
+                $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_penguji)->get();
             }
             //Count jumlah dosen penguji
             $jumlah_dosen=count($request->dosen_penguji);
@@ -134,11 +170,11 @@ class SidangMahasiswaController extends Controller
             for($i=0;$i<$jumlah_dosen;$i++){
                 //Generate id uji mahasiswa
                 $id_uji_mahasiswa = Uuid::uuid4()->toString();
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_penguji[$i])->first();
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_penguji[$i])->first();
 
                 if(!$dosen)
                 {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_penguji[$i])->first();
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_penguji[$i])->first();
                 }
 
                 $pembimbing = $bimbingMahasiswa->where('id_dosen', $dosen->id_dosen)->first();
@@ -207,7 +243,7 @@ class SidangMahasiswaController extends Controller
                 ]);
         try {
             DB::beginTransaction();
-
+            
             $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_penguji)->get();
 
             if($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($request->dosen_penguji)){
@@ -320,7 +356,7 @@ class SidangMahasiswaController extends Controller
         }else{
             foreach($data_nilai_sidang as $n){
                 $n->update(['approved_prodi' => 1]);
-                
+
                 if($n->id_kategori_kegiatan == '110501' || $n->id_kategori_kegiatan == '110502'){
                     $nilai_penguji = $nilai_penguji + (($bobot_penguji/100)*$n->nilai_akhir_dosen);
                 }else{
@@ -335,7 +371,7 @@ class SidangMahasiswaController extends Controller
         $nilai_akhir_sidang = round($nilai_akhir_sidang,2);
 
         if($nilai_akhir_sidang < 0.0 || $nilai_akhir_sidang > 100.0){
-            return redirect()->back()->with('error', 'Nilai di luar skala yang ditentukan.'); 
+            return redirect()->back()->with('error', 'Nilai di luar skala yang ditentukan.');
         }
 
         $skala = $this->skala_nilai($nilai_akhir_sidang);
@@ -348,7 +384,7 @@ class SidangMahasiswaController extends Controller
             $data->update(['tanggal_selesai' => $data->jadwal_ujian]);
 
             $id_konversi_aktivitas = Uuid::uuid4()->toString();
-            
+
             if(!$nilai_akhir){
                 KonversiAktivitas::create(['feeder' => 0, 'id_konversi_aktivitas' => $id_konversi_aktivitas, 'id_matkul' => $konversi_matkul->id_matkul, 'nama_mata_kuliah' => $konversi_matkul->nama_mata_kuliah,'id_aktivitas' => $data->id_aktivitas, 'judul' => $data->judul, 'id_anggota' => $data->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $data->anggota_aktivitas_personal->nama_mahasiswa, 'nim' => $data->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $konversi_matkul->sks_mata_kuliah, 'nilai_angka' => $nilai_akhir_sidang, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $data->id_semester, 'nama_semester' => $data->nama_semester, 'status_sync' => 'Belum Sync']);
             }else{
@@ -368,7 +404,7 @@ class SidangMahasiswaController extends Controller
         }
     }
 
-    private function skala_nilai($nilai){  
+    private function skala_nilai($nilai){
         switch (true) {
             case ($nilai >= 86.0 && $nilai <= 100.0):
 
