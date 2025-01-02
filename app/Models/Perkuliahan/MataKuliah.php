@@ -191,7 +191,7 @@ class MataKuliah extends Model
         } elseif ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' ||
             $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3'
         ) {
-            $sks_max = 15;
+            $sks_max = 18;
         }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
             $sks_max = 20;
         } else {
