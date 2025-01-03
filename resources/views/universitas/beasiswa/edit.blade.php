@@ -49,6 +49,13 @@
                                 <input type="text" class="form-control" name="tanggal_akhir_beasiswa" id="edit_tanggal_akhir_beasiswa" aria-describedby="helpId" placeholder="" required />
                             </div>
                         </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="link_sk" class="form-label">Link SK</label>
+                            <div class="input-group">
+                                <span class="input-group-text" id="basic-addon1"><i class="fa fa-link"></i></span>
+                                <input type="text" class="form-control" name="link_sk" id="edit_link_sk" aria-describedby="helpId" placeholder="" required />
+                            </div>
+                        </div>
                     </div>
 
                 </div>

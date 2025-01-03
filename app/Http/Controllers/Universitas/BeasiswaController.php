@@ -32,6 +32,7 @@ class BeasiswaController extends Controller
             'id_pembiayaan' => 'required|exists:pembiayaans,id_pembiayaan',
             'tanggal_mulai_beasiswa' => 'required',
             'tanggal_akhir_beasiswa' => 'required',
+            'link_sk' => 'required'
         ]);
 
         $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->orderBy('id_periode_masuk', 'desc')->first();
@@ -72,6 +73,7 @@ class BeasiswaController extends Controller
             'id_pembiayaan' => 'required|exists:pembiayaans,id_pembiayaan',
             'tanggal_mulai_beasiswa' => 'required',
             'tanggal_akhir_beasiswa' => 'required',
+            'link_sk' => 'required'
         ]);
 
         try {
@@ -162,7 +164,7 @@ class BeasiswaController extends Controller
 
     public function beasiswa_template()
     {
-        
+
     }
 
     public function beasiswa_upload(Request $request)
