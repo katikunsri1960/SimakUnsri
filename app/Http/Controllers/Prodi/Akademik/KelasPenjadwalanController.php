@@ -604,12 +604,16 @@ class KelasPenjadwalanController extends Controller
         if ($rencana_pertemuan == 0) {
             return redirect()->back()->with('error', 'Rencana Pertemuan tidak boleh 0');
         }
-
-        if ($rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
-            return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+        
+        if($rencana_prodi){
+            if ($rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
+                return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+            }
+        }else{
+            return redirect()->back()->with('error', 'Periode perkuliahan belum di setting, Silahkan hubungi Admin Universitas!');
         }
 
-        // dd($rencana_pertemuan);
+        
         try {
             DB::beginTransaction();
 
