@@ -43,68 +43,25 @@ Update IPS
                             </div>
                         </div>
                         <div class="col-md-8">
-                            {{-- <label for="nim" class="form-label">Nomor Induk Mahasiswa</label> --}}
-                            {{-- <div class="input-group mb-3"> --}}
-                                {{-- <input type="text" class="form-control" name="nim" id="nim" required /> --}}
-                                <button class="btn btn-primary btn-md mt-30" id="basic-addon1"
-                                    onclick="getKrs()"><i class="fa fa-search"></i> Tampilkan Data</button>
-                                
-                                <button id="btnHitungIPS" class="btn btn-success btn-md mt-30">Hitung & Update IPS</button>
-                                    <div id="loading" style="display: none;">Menghitung...</div>
-                                    
-                            {{-- </div> --}}
+                            <button class="btn btn-primary btn-md mt-30" id="basic-addon1"
+                                onclick="getKrs()"><i class="fa fa-search"></i> Tampilkan Data</button>
+                            
+                            <button id="btnHitungIPS" class="btn btn-success btn-md mt-30 mx-10">Hitung & Update IPS</button>
                         </div>
                     </div>
+                                      
                 </div>
+                <div id="loading" style="display: none; text-align: center; padding-inline:10px">
+                    <div id="progress-bar-container" style="width: 100%; background-color: #f3f3f3; margin-bottom: 10px;">
+                        <div id="progress-bar" style="height: 10px; width: 0%; background-color: #4caf50;"></div>
+                    </div>
+                    <p id="loading-percentage" style="color: #4caf50;">0%</p>
+                    <p style="color: #4caf50;">Sedang menghitung IPS...</p>
+                </div>  
                 <div class="box-body text-center">
                     <div class="table-responsive">
                         <div id="khsDiv" hidden>
-                            {{-- <div class="row mb-20">
-                                <form action="{{route('fakultas.data-akademik.khs.download')}}" method="get" id="cetakForm" target="_blank">
-                                    <input type="hidden" name="nim" id="nimCetak">
-                                    <input type="hidden" name="id_semester" id="idSemesterCetak">
-                                    <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak KHS</button>
-                                </form>
-                            </div> --}}
                             <h3 class="text-center">Data AKM </h3>
-                            {{-- <table style="width:100%" class="mb-3">
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">NIM</td>
-                                    <td>:</td>
-                                    <td class="text-start" id="nimKrs" style="width: 45%; padding-left: 10px"></td>
-                                    <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="fakultasKrs"
-                                        style="width: 30%; padding-left: 10px"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">NAMA</td>
-                                    <td>:</td>
-                                    <td class="text-start" id="namaKrs" style="width: 45%; padding-left: 10px"></td>
-                                    <td class="text-start align-middle" style="width: 18%">JURUSAN</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="jurusanKrs"
-                                        style="width: 30%; padding-left: 10px"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">NIP PA</td>
-                                    <td>:</td>
-                                    <td class="text-start" id="nippaKrs" style="width: 45%; padding-left: 10px"></td>
-                                    <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="prodiKrs"
-                                        style="width: 30%; padding-left: 10px"></td>
-                                </tr>
-                                <tr>
-                                    <td class="text-start align-middle" style="width: 12%">DOSEN PA</td>
-                                    <td>:</td>
-                                    <td class="text-start" id="dosenpaKrs" style="width: 45%; padding-left: 10px"></td>
-                                    <td class="text-start align-middle" style="width: 18%">SEMESTER</td>
-                                    <td>:</td>
-                                    <td class="text-start align-middle" id="semesterKrs"
-                                        style="width: 30%; padding-left: 10px"></td>
-                                </tr>
-                            </table> --}}
                             <div class="d-flex justify-content-end align-middle">
 
                             </div>
@@ -144,126 +101,138 @@ Update IPS
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-    function getKrs() {
-        var semester = $('#semester').val();
-    
-        // Validasi input semester
-        if (semester == '') {
-            swal({
-                title: "Peringatan!",
-                text: "Tahun Akademik harus diisi!",
-                type: "warning",
-                buttons: {
-                    confirm: {
-                        className: 'btn btn-warning'
-                    }
-                }
-            });
-            return;
-        }
-    
-        // AJAX request untuk mendapatkan data
-        $.ajax({
-            url: '{{route('univ.monitoring.update-akm.data')}}',
-            type: 'GET',
-            data: {
-                semester: semester
-            },
-            success: function(response) {
-                // Jika ada error di response
-                if (response.status == 'error') {
-                    swal({
-                        title: "Peringatan!",
-                        text: response.message,
-                        type: "warning",
-                        buttons: {
-                            confirm: {
-                                className: 'btn btn-warning'
-                            }
-                        }
-                    });
-                    return;
-                }
-    
-                // Reset div
-                $('#akmDiv').empty();
-    
-                // Cek jika ada data dalam response
-                if (response.akm && response.akm.length > 0) {
-                    // Tambahkan tabel
-                    let tableContent = `
-                    <table id="akmTable" class="table p-20">
-                        <thead>
-                            <tr>
-                                <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">Nama Program Studi</th>
-                                <th class="text-center align-middle">Nama Mahasiswa</th>
-                                <th class="text-center align-middle">NIM</th>
-                                <th class="text-center align-middle">SKS Total</th>
-                                <th class="text-center align-middle">IPK</th>
-                                <th class="text-center align-middle">SKS Semester</th>
-                                <th class="text-center align-middle">IPS</th>
-                                <th class="text-center align-middle">Biaya UKT</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                    `;
+function getKrs() {
+    var semester = $('#semester').val();
 
-
-                    // Loop melalui data response
-                    response.akm.forEach(function(akm, index) {
-                        tableContent += `
-                            <tr>
-                                <td class="text-center align-middle">${index + 1}</td>
-                                <td class="text-center align-middle">${akm.nama_program_studi}</td>
-                                <td class="text-start align-middle">${akm.nama_mahasiswa}</td>
-                                <td class="text-center align-middle">${akm.nim}</td>
-                                <td class="text-center align-middle">${akm.sks_total}</td>
-                                <td class="text-center align-middle">${akm.ipk}</td>
-                                <td class="text-center align-middle">${akm.sks_semester}</td>
-                                <td class="text-center align-middle">${akm.ips}</td>
-                                <td class="text-center align-middle">${akm.biaya_kuliah_smt}</td>
-                            </tr>
-                        `;
-                    });
-    
-                    // Tutup tabel
-                    tableContent += `
-                        </tbody>
-                    </table>`;
-    
-                    // Tambahkan tabel ke div
-                    $('#akmDiv').append(tableContent);
-    
-                    // Inisialisasi DataTables
-                    $('#akmTable').DataTable({
-                        responsive: true,
-                        pageLength: 10,
-                    });
-                } else {
-                    // Jika tidak ada data
-                    $('#akmDiv').html('<p class="text-center">Tidak ada data yang ditemukan.</p>');
+    // Validasi input semester
+    if (semester == '') {
+        swal({
+            title: "Peringatan!",
+            text: "Tahun Akademik harus diisi!",
+            type: "warning",
+            buttons: {
+                confirm: {
+                    className: 'btn btn-warning'
                 }
-            },
-            error: function(xhr, status, error) {
-                // Handling error dari AJAX
+            }
+        });
+        return;
+    }
+
+    // AJAX request untuk mendapatkan data
+    $.ajax({
+        url: '{{route('univ.monitoring.update-akm.data')}}',
+        type: 'GET',
+        data: {
+            semester: semester
+        },
+        success: function(response) {
+            // Jika ada error di response
+            if (response.status == 'error') {
                 swal({
-                    title: "Error!",
-                    text: "Terjadi kesalahan saat mengambil data. Silakan coba lagi.",
-                    type: "error",
+                    title: "Peringatan!",
+                    text: response.message,
+                    type: "warning",
                     buttons: {
                         confirm: {
-                            className: 'btn btn-danger'
+                            className: 'btn btn-warning'
                         }
                     }
                 });
+                return;
             }
-        });
-    
-        $(document).ready(function() {
+
+            // Reset div
+            $('#akmDiv').empty();
+
+            // Cek jika ada data dalam response
+            if (response.akm && response.akm.length > 0) {
+                // Tambahkan tabel
+                let tableContent = `
+                <table id="akmTable" class="table p-20">
+                    <thead>
+                        <tr>
+                            <th class="text-center align-middle">No</th>
+                            <th class="text-center align-middle">Nama Program Studi</th>
+                            <th class="text-center align-middle">Nama Mahasiswa</th>
+                            <th class="text-center align-middle">NIM</th>
+                            <th class="text-center align-middle">SKS Total</th>
+                            <th class="text-center align-middle">IPK</th>
+                            <th class="text-center align-middle">SKS Semester</th>
+                            <th class="text-center align-middle">IPS</th>
+                            <th class="text-center align-middle">Biaya UKT</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                `;
+
+
+                // Loop melalui data response
+                response.akm.forEach(function(akm, index) {
+                    tableContent += `
+                        <tr>
+                            <td class="text-center align-middle">${index + 1}</td>
+                            <td class="text-center align-middle">${akm.nama_program_studi}</td>
+                            <td class="text-start align-middle">${akm.nama_mahasiswa}</td>
+                            <td class="text-center align-middle">${akm.nim}</td>
+                            <td class="text-center align-middle">${akm.sks_total}</td>
+                            <td class="text-center align-middle">${akm.ipk}</td>
+                            <td class="text-center align-middle">${akm.sks_semester}</td>
+                            <td class="text-center align-middle">${akm.ips}</td>
+                            <td class="text-center align-middle">${akm.biaya_kuliah_smt}</td>
+                        </tr>
+                    `;
+                });
+
+                // Tutup tabel
+                tableContent += `
+                    </tbody>
+                </table>`;
+
+                // Tambahkan tabel ke div
+                $('#akmDiv').append(tableContent);
+
+                // Inisialisasi DataTables
+                $('#akmTable').DataTable({
+                    responsive: true,
+                    pageLength: 10,
+                });
+            } else {
+                // Jika tidak ada data
+                $('#akmDiv').html('<p class="text-center">Tidak ada data yang ditemukan.</p>');
+            }
+        },
+        error: function(xhr, status, error) {
+            // Handling error dari AJAX
+            swal({
+                title: "Error!",
+                text: "Terjadi kesalahan saat mengambil data. Silakan coba lagi.",
+                type: "error",
+                buttons: {
+                    confirm: {
+                        className: 'btn btn-danger'
+                    }
+                }
+            });
+        }
+    });
+
+    $(document).ready(function() {
         $('#btnHitungIPS').click(function() {
             // Tampilkan indikator loading
             $('#loading').show();
+            let progressBar = $('#progress-bar');
+            let percentageText = $('#loading-percentage');
+
+            // Mulai progress bar
+            let width = 0;
+            let progressInterval = setInterval(function() {
+                if (width < 100) {
+                    width++;
+                    progressBar.css('width', width + '%');
+                    percentageText.text(width + '%');
+                }
+            }, 50); // Update setiap 50ms untuk animasi progress
 
             // Ambil data semester (atau data lain jika perlu)
             var semester = $('#semester').val();
@@ -280,6 +249,7 @@ Update IPS
                     }
                 });
                 $('#loading').hide(); // Sembunyikan loading jika ada error
+                clearInterval(progressInterval); // Hentikan progress bar
                 return;
             }
 
@@ -292,6 +262,10 @@ Update IPS
                 },
                 success: function(response) {
                     $('#loading').hide(); // Sembunyikan loading setelah selesai
+                    clearInterval(progressInterval); // Hentikan progress bar
+                    progressBar.css('width', '100%'); // Pastikan progress mencapai 100%
+                    percentageText.text('100%');
+                    
                     if (response.status === 'success') {
                         swal({
                             title: "Berhasil!",
@@ -302,12 +276,9 @@ Update IPS
                                     className: 'btn btn-success'
                                 }
                             }
+                        }).then(function() {
+                            location.reload(); // Reload halaman setelah konfirmasi
                         });
-
-                        // Reload tabel atau perbarui data
-                        // var table = $('#akmTable').DataTable();
-                        // table.ajax.reload(null, false); // false untuk mempertahankan halaman
-
                     } else {
                         swal({
                             title: "Gagal!",
@@ -323,6 +294,7 @@ Update IPS
                 },
                 error: function(xhr, status, error) {
                     $('#loading').hide(); // Sembunyikan loading jika ada error
+                    clearInterval(progressInterval); // Hentikan progress bar
                     swal({
                         title: "Error!",
                         text: "Terjadi kesalahan saat menghitung IPS.",
@@ -337,6 +309,8 @@ Update IPS
             });
         });
     });
+
+
 }
 </script>
 @endpush
