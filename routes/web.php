@@ -607,6 +607,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan');
                     Route::get('/{id_matkul}/{semester}/detail', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'detail_kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan.detail');
                     Route::get('/{id_maktul}/{id_kelas}/peserta', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'peserta_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.peserta');
+                    Route::get('/{id_kelas}/kuisioner', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kuisioner_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.kuisioner');
 
                     Route::get('/{id_kelas}/absensi', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'download_absensi'])->name('prodi.data-akademik.kelas-penjadwalan.absensi');
                     // Route::get('/get-mata-kuliah', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'get_matkul'])->name('prodi.data-akademik.kelas-penjadwalan.get-matkul');

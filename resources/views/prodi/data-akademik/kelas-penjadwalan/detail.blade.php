@@ -56,11 +56,11 @@ Kelas Penjadwalan
                                     <th class="text-center align-middle">NAMA KELAS</th>
                                     <th class="text-center align-middle">NAMA RUANG</th>
                                     <th class="text-center align-middle">PERIODE</th>
-                                    <th class="text-center align-middle">JADWAL HARI</th>
-                                    <th class="text-center align-middle">JAM KULIAH</th>
+                                    <th class="text-center align-middle">JADWAL KULIAH</th>
                                     <th class="text-center align-middle">DOSEN</th>
                                     <th class="text-center align-middle">KAPASITAS</th>
                                     <th class="text-center align-middle">JUMLAH PESERTA</th>
+                                    <th class="text-center align-middle">QUISIONER</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -82,8 +82,11 @@ Kelas Penjadwalan
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
-                                        <td class="text-center align-middle">{{$d->jadwal_hari}}</td>
-                                        <td class="text-center align-middle">{{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}</td>
+                                        {{-- <td class="text-center align-middle"></td> --}}
+                                        <td class="text-center align-middle">
+                                            {{$d->jadwal_hari}} <br>
+                                            {{$d->jadwal_jam_mulai}} - {{$d->jadwal_jam_selesai}}
+                                        </td>
                                         <td class="text-start align-middle">
                                             <ul>
                                             @if ($d->dosen_pengajar)
@@ -98,6 +101,9 @@ Kelas Penjadwalan
                                             @php
                                                 echo count($d->peserta_kelas);
                                             @endphp
+                                        </td>
+                                        <td class="text-center align-middle text-wrap">
+                                            <a href="{{route('prodi.data-akademik.kelas-penjadwalan.kuisioner', ['id_kelas' => $d->id_kelas_kuliah])}}" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"> Lihat <i class="fa fa-circle-question"></i></a>
                                         </td>
                                         <td class="text-center align-middle">
 
