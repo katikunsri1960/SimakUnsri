@@ -1141,7 +1141,9 @@ class KelasPenjadwalanController extends Controller
         $kelas = KelasKuliah::where('id_kelas_kuliah', $id_kelas)
                 ->with('matkul', 'dosen_pengajar.dosen', 'semester', 'peserta_kelas')
                 ->select('id_kelas_kuliah', 'id_matkul', 'nama_kelas_kuliah', 'id_semester')
-                ->withCount('peserta_kelas')
+                ->withCount(['peserta_kelas' => function ($query) {
+                    $query->where('approved', 1);
+                }])
                 ->first();
 
         return view('prodi.data-akademik.kelas-penjadwalan.kuisioner', [
