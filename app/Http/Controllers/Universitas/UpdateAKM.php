@@ -119,12 +119,13 @@ class UpdateAKM extends Controller
                 $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
                 
                 $ips = 0;
-                if($total_sks_semester){
+                if($total_sks_semester > 0){
                     $ips = $total_bobot / $total_sks_semester;
                 }
 
                 // Update nilai IPS pada tabel
                 $akm->update([
+                    'feeder'=>0,
                     'ips' => round($ips, 2) // Simpan dengan pembulatan 2 desimal
                 ]);
             }
