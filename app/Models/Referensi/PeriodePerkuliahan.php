@@ -16,7 +16,7 @@ class PeriodePerkuliahan extends Model
     {
         return date('d-m-Y', strtotime($value));
     }
-    
+
     public function getTanggalAkhirPerkuliahanAttribute($value)
     {
         return date('d-m-Y', strtotime($value));

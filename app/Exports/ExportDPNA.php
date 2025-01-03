@@ -301,7 +301,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         // Add formula in the column (M) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'M' . $row;
-            $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, IF(N{$row}=\"F\", 0.00, \"Tidak Ada Data\"))))))";
+            $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))";
             
             $sheet->setCellValue($cell, $formula);
         }
@@ -309,7 +309,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         // Add formula in the column (N) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'N' . $row;
-            $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"F\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Tidak Ada Data\"))))))";
+            $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Perbaiki Skala Nilai Feeder\"))))))";
             
             $sheet->setCellValue($cell, $formula);
         }

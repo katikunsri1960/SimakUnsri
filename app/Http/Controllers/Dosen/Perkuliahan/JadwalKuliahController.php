@@ -15,7 +15,10 @@ class JadwalKuliahController extends Controller
         $semester_aktif = SemesterAktif::with(['semester'])->first();
         $id_dosen = auth()->user()->fk_id;
 
-        $data = DosenPengajarKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.semester', 'kelas_kuliah.ruang_perkuliahan', 'kelas_kuliah.ruang_ujian', 'kelas_kuliah.matkul'])->where('dosen_pengajar_kelas_kuliahs.id_dosen', $id_dosen)->where('dosen_pengajar_kelas_kuliahs.id_semester', $semester_aktif->id_semester)->get();
+        $data = DosenPengajarKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.semester', 'kelas_kuliah.ruang_perkuliahan', 'kelas_kuliah.ruang_ujian', 'kelas_kuliah.matkul'])
+        
+                ->where('dosen_pengajar_kelas_kuliahs.id_dosen', $id_dosen)
+                ->where('dosen_pengajar_kelas_kuliahs.id_semester', $semester_aktif->id_semester)->get();
 
         return view('dosen.perkuliahan.jadwal-kuliah',['data' => $data]);
     }
