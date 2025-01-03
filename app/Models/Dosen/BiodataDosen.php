@@ -6,6 +6,7 @@ use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
+use App\Models\Semester;
 use App\Models\SemesterAktif;
 use App\Models\Wilayah;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -97,6 +98,31 @@ class BiodataDosen extends Model
         ])
         ->whereIn('id_registrasi_dosen', $id_registrasi_dosen)
         ->where('id_semester', $id_semester)
+        ->get();
+
+        return $data;
+    }
+
+    public function riwayat_kelas($id_dosen, $semester)
+    {
+
+        $tahun_ajaran = Semester::where('id_semester', $semester)->pluck('id_tahun_ajaran')->first();
+
+        $id_registrasi_dosen = $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
+                                        ->where('p.id_tahun_ajaran', $tahun_ajaran)
+                                        ->where('biodata_dosens.id_dosen', $id_dosen)->get()->pluck('id_registrasi_dosen');
+
+        $data = DosenPengajarKelasKuliah::with([
+            'kelas_kuliah',
+            'kelas_kuliah.matkul',
+            'kelas_kuliah.prodi',
+            'kelas_kuliah.dosen_pengajar',
+            'kelas_kuliah.peserta_kelas_approved',
+            'kelas_kuliah.nilai_perkuliahan',
+            'kelas_kuliah.dosen_pengajar.dosen'
+        ])
+        ->whereIn('id_registrasi_dosen', $id_registrasi_dosen)
+        ->where('id_semester', $semester)
         ->get();
 
         return $data;

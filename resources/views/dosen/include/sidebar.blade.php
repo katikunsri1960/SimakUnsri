@@ -138,6 +138,12 @@
                             <span>Penilaian Perkuliahan</span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('dosen.penilaian.riwayat-penilaian') | request()->routeIs('dosen.penilaian.riwayat-penilaian.*')  ? 'active' : ''}}">
+                        <a href="{{route('dosen.penilaian.riwayat-penilaian')}}">
+                            <i class="fa fa-book"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Riwayat Penilaian</span>
+                        </a>
+                    </li>
                     <li class="{{request()->routeIs('dosen.penilaian.sidang-mahasiswa') || request()->routeIs('dosen.penilaian.sidang-mahasiswa.*') ? 'active' : ''}}">
                         <a href="{{route('dosen.penilaian.sidang-mahasiswa')}}">
                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>

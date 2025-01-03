@@ -459,6 +459,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/penilaian-perkuliahan/detail/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'detail_penilaian_perkuliahan'])->name('dosen.penilaian.penilaian-perkuliahan.detail');
                 Route::get('/penilaian-perkuliahan/pdf-dpna/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PenilaianPerkuliahanController::class, 'pdf_dpna'])->name('dosen.penilaian.penilaian-perkuliahan.pdf-dpna');
                 //Detail Fitur
+
+                Route::prefix('riwayat-penilaian')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Dosen\Penilaian\RiwayatPenilaianController::class, 'index'])->name('dosen.penilaian.riwayat-penilaian');
+                    Route::get('/{kelas}', [App\Http\Controllers\Dosen\Penilaian\RiwayatPenilaianController::class, 'detail'])->name('dosen.penilaian.riwayat-penilaian.detail');
+                });
                 //Komponen Evaluasi
                 Route::get('/komponen-evaluasi/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'komponen_evaluasi'])->name('dosen.penilaian.komponen-evaluasi');
                 Route::post('/komponen-evaluasi/store/{kelas}', [App\Http\Controllers\Dosen\Penilaian\PresentasePenilaianController::class, 'komponen_evaluasi_store'])->name('dosen.penilaian.komponen-evaluasi.store');
