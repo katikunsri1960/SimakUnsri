@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
+use App\Imports\BeasiswaImport;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\JenisBeasiswaMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Referensi\Pembiayaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BeasiswaController extends Controller
 {
@@ -156,5 +158,22 @@ class BeasiswaController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+    public function beasiswa_template()
+    {
+        
+    }
+
+    public function beasiswa_upload(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $import = Excel::import(new BeasiswaImport(), $file);
+
+        return redirect()->back()->with('success', "Data successfully imported!");
     }
 }
