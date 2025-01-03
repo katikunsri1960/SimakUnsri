@@ -21,7 +21,7 @@ BEASISWA
 </div>
 @include('swal')
 @include('universitas.beasiswa.create')
-{{-- @include('universitas.beasiswa.edit') --}}
+@include('universitas.beasiswa.upload')
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -31,9 +31,16 @@ BEASISWA
                         <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
                         data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
                         <span class="divider-line mx-1"></span>
-                        {{-- <form action="{{route('univ.mahasiswa.sync-prestasi')}}" method="get" id="sync-form-2">
-                            <button class="btn btn-success waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi Prestasi</button>
-                        </form> --}}
+                        <!-- Modal trigger button -->
+                        <button
+                            type="button"
+                            class="btn btn-primary waves-effect waves-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#uploadModal"
+                        >
+                        <i class="fa fa-upload me-2"></i>Upload Data
+                        </button>
+
                     </div>
                 </div>
                 <div class="box-body">
@@ -50,6 +57,7 @@ BEASISWA
                                     <th class="text-center align-middle">Pembiayaan</th>
                                     <th class="text-center align-middle">Tanggal Mulai</th>
                                     <th class="text-center align-middle">Tanggal Selesai</th>
+                                    <th class="text-center align-middle">Link SK</th>
                                     <th class="text-center align-middle">Action</th>
                                 </tr>
                             </thead>
@@ -144,6 +152,21 @@ BEASISWA
                 {data: 'nama_pembiayaan', name: 'nama_pembiayaan', class: 'text-center', searchable: false, sortable:false},
                 {data: 'id_tanggal_mulai_beasiswa', name: 'id_tanggal_mulai_beasiswa', searchable: true, orderData: [4]},
                 {data: 'id_tanggal_akhir_beasiswa', name: 'id_tanggal_akhir_beasiswa', searchable: true, orderData: [5]},
+                {data: 'null', searchable:false, class:"text-center align-middle", sortable:false,
+                    render: function(data, type, row) {
+                        if (row.link_sk == null) {
+                            return '-';
+
+                        } else {
+                            return `
+                                <a href="${row.link_sk}" target="_blank" class="btn bg-info my-2 btn-sm" title="Lihat SK">
+                                    <i class="fa fa-eye"><span class="path1"></span><span class="path2"></span></i>
+                                </a>
+                            `;
+                        }
+
+                    }
+                },
                 {data: 'null', searchable: false, class:"text-center align-middle", sortable:false,
                     render: function(data, type, row) {
                         return `
@@ -187,6 +210,7 @@ BEASISWA
                                 id: item.id_registrasi_mahasiswa
                             }
                         })
+
                     };
                 },
             }

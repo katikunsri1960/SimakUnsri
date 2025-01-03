@@ -467,14 +467,16 @@ class PembimbingMahasiswaController extends Controller
 
 
             if (!empty($data['dosen_penguji']) && !empty($request->penguji_ke)) {
-                $semester_aktif = SemesterAktif::first();
+                // $semester_aktif = SemesterAktif::first();
 
-                $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran)
+                $semester = Semester::where('id_semester', $aktivitasMahasiswa->id_semester)->first();
+
+                $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran', $semester->id_tahun_ajaran)
                                 ->whereIn('id_registrasi_dosen', $data['dosen_penguji'])
                                 ->get();
 
                 if ($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($data['dosen_penguji'])) {
-                    $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran', $semester_aktif->semester->id_tahun_ajaran - 1)
+                    $dosen_pengajar = PenugasanDosen::where('id_tahun_ajaran', $semester->id_tahun_ajaran - 1)
                                     ->whereIn('id_registrasi_dosen', $data['dosen_penguji'])
                                     ->get();
                 }
@@ -605,7 +607,7 @@ class PembimbingMahasiswaController extends Controller
         $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])
                             ->where('id_aktivitas', $data->id_aktivitas)
                             ->first();
-        
+
         if($data->judul != $validate['judul']){
             if($pembimbing->pembimbing_ke != 1){
                 return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat merubah judul.');

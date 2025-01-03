@@ -26,13 +26,27 @@ Periode Perkuliahan
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header d-flex justify-content-between with-border">
-                    <div class="d-flex justify-content-start">
+                    <div class="d-flex justify-content-start gap-3">
                         <!-- Modal trigger button -->
                         <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-toggle="modal"
                             data-bs-target="#filter-button">
                             <i class="fa fa-filter"></i> Filter
                         </button>
+                        <!-- Modal trigger button -->
+                        <button
+                            type="button"
+                            class="btn btn-success waves-effect waves-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#uploadModal"
+                        >
+                            <i class="fa fa-upload"></i> Upload Periode
+                        </button>
+
+                        <!-- Modal Body -->
+                        <!-- if you want to close by clicking outside the modal, delete the last endpoint:data-bs-backdrop and data-bs-keyboard -->
+
                         @include('universitas.pengaturan.periode-perkuliahan.filter')
+                        @include('universitas.pengaturan.periode-perkuliahan.upload')
                     </div>
                     <div class="d-flex justify-content-end">
                         <form action="{{route('univ.pengaturan.periode-perkuliahan.sync')}}" method="get"

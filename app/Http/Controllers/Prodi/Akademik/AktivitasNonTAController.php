@@ -13,6 +13,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Referensi\KategoriKegiatan;
 use App\Models\Referensi\AllPt;
+use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -20,19 +21,48 @@ use Ramsey\Uuid\Uuid;
 
 class AktivitasNonTAController extends Controller
 {
+    private function checkSemesterAllow($semester)
+    {
+        $semester_aktif = SemesterAktif::first();
+
+        if ($semester != null && $semester_aktif->semester_allow != null && !in_array($semester,$semester_aktif->semester_allow)) {
+            return false;
+        }
+        return true;
+    }
+
     public function index(Request $request)
     {
-        $semesterAktif = SemesterAktif::first();
-        $semester = $semesterAktif->id_semester;
+        $request->validate([
+            'semester_view' => 'nullable|exists:semesters,id_semester'
+        ]);
+
+        $semester_view = $request->semester_view ?? null;
+
+        $semester_aktif = SemesterAktif::first();
+
+        $semester_pilih = $semester_view == null ? $semester_aktif->id_semester : $semester_view;
+
+        if ($this->checkSemesterAllow($semester_pilih) == false) {
+            return redirect()->back()->with('error', "Semester Tidak dalam list yang di izinkan!");
+        }
+
+        $dbSemester = Semester::select('id_semester', 'nama_semester');
+
+        $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        // dd($semester_allow)
+
         $db = new AktivitasMahasiswa();
-        $data = $db->aktivitas_non_ta(auth()->user()->fk_id, $semester );
+        $data = $db->aktivitas_non_ta(auth()->user()->fk_id, $semester_pilih);
         // dd($data);
         return view('prodi.data-akademik.non-tugas-akhir.index', [
             'data' => $data,
-            'semester' => $semester,
-            'pengisian_nilai' => $semesterAktif
+            'semester' => $semester_pilih,
+            'pilihan_semester' => $pilihan_semester,
+            'semester_view' => $semester_view,
+            'semester_aktif' => $semester_aktif
         ]);
-    } 
+    }
 
     public function approve_pembimbing(AktivitasMahasiswa $aktivitasMahasiswa)
     {
@@ -44,12 +74,13 @@ class AktivitasNonTAController extends Controller
 
     public function ubah_detail_non_tugas_akhir($aktivitas)
     {
-        $semesterAktif = SemesterAktif::first();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
-        // dd($data);
+        // $semesterAktif = SemesterAktif::first();
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
+        $semester = $data->id_semester;
 
         return view('prodi.data-akademik.non-tugas-akhir.edit', [
-            'd' => $data
+            'd' => $data,
+            'semester' => $semester
         ]);
     }
 
@@ -127,7 +158,7 @@ class AktivitasNonTAController extends Controller
     {
         $semesterAktif = SemesterAktif::first();
         $kategori = KategoriKegiatan::where('id_kategori_kegiatan', '110300')->get();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
         // dd($data);
 
         return view('prodi.data-akademik.non-tugas-akhir.tambah-dosen', [
@@ -148,11 +179,12 @@ class AktivitasNonTAController extends Controller
             DB::beginTransaction();
 
             $aktivitas_mahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
+            $semester = Semester::where('id_semester', $aktivitas_mahasiswa->id_semester)->first();
 
-            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
+            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
 
             if($dosen_pembimbing->count() == 0 || $dosen_pembimbing->count() != count($request->dosen_pembimbing)){
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
             }
             //Count jumlah dosen pengajar kelas kuliah
             $jumlah_dosen=count($request->dosen_pembimbing);
@@ -160,10 +192,10 @@ class AktivitasNonTAController extends Controller
             for($i=0;$i<$jumlah_dosen;$i++){
                 //Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
                 if(!$dosen)
                 {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
                 }
 
                 $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
@@ -208,20 +240,21 @@ class AktivitasNonTAController extends Controller
                 ]);
         try {
             DB::beginTransaction();
-
-            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
+            $aktivitas_mahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
+            $semester = Semester::where('id_semester', $aktivitas_mahasiswa->id_semester)->first();
+            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
 
             if($dosen_pembimbing->count() == 0 || $dosen_pembimbing->count() != count($request->dosen_pembimbing)){
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
             }
             //Count jumlah dosen pengajar kelas kuliah
             $jumlah_dosen=count($request->dosen_pembimbing);
 
             for($i=0;$i<$jumlah_dosen;$i++){
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
                 if(!$dosen)
                 {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
                 }
 
                 $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
@@ -259,27 +292,28 @@ class AktivitasNonTAController extends Controller
 
     public function nilai_konversi($aktivitas)
     {
-        $semesterAktif = SemesterAktif::first();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
+
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
         $nilai_konversi = KonversiAktivitas::where('id_aktivitas', $aktivitas)->get();
         // dd($nilai_konversi);
 
         return view('prodi.data-akademik.non-tugas-akhir.nilai-konversi', [
             'd' => $data,
-            'pengisian_nilai' => $semesterAktif,
             'konversi' => $nilai_konversi
         ]);
-    } 
+    }
 
     public function store_nilai_konversi($aktivitas, Request $request)
     {
-        $semester = SemesterAktif::with('semester')->first();
+        // $semester = SemesterAktif::with('semester')->first();
 
-        $aktivitas_mahasiswa = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semester->id_semester)->first();
+        $aktivitas_mahasiswa = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])->where('id_aktivitas', $aktivitas)->first();
 
         $nilai_konversi = KonversiAktivitas::with(['matkul'])->where('id_aktivitas', $aktivitas)->get();
 
-        if($semester->id_semester != $aktivitas_mahasiswa->id_semester){
+        $semester = Semester::where('id_semester', $aktivitas_mahasiswa->id_semester)->first();
+
+        if ($this->checkSemesterAllow($aktivitas_mahasiswa->id_semester) == false) {
             return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
         }
 
@@ -349,7 +383,7 @@ class AktivitasNonTAController extends Controller
                 if($request->nilai_angka[$i] > 100){
                     $nilai_akhir_sidang = 100;
                 }
-        
+
                 if($request->nilai_angka[$i] >= 86 && $request->nilai_angka[$i] <=100){
                     $nilai_indeks = '4.00';
                     $nilai_huruf = 'A';
@@ -374,7 +408,7 @@ class AktivitasNonTAController extends Controller
                 }
 
                 //Store data to table tanpa substansi kuliah
-                KonversiAktivitas::create(['feeder'=> 0, 'id_konversi_aktivitas'=> $id_konversi_aktivitas, 'id_matkul'=> $matkul->id_matkul, 'nama_mata_kuliah' => $matkul->nama_mata_kuliah, 'id_aktivitas' => $aktivitas_mahasiswa->id_aktivitas, 'judul' => $aktivitas_mahasiswa->judul, 'id_anggota' => $aktivitas_mahasiswa->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $aktivitas_mahasiswa->anggota_aktivitas_personal->nama_mahasiswa, 'nim'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $matkul->sks_mata_kuliah, 'nilai_angka' => $request->nilai_angka[$i], 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $semester->id_semester, 'nama_semester' => $semester->semester->nama_semester, 'status_sync' => 'belum sync']);
+                KonversiAktivitas::create(['feeder'=> 0, 'id_konversi_aktivitas'=> $id_konversi_aktivitas, 'id_matkul'=> $matkul->id_matkul, 'nama_mata_kuliah' => $matkul->nama_mata_kuliah, 'id_aktivitas' => $aktivitas_mahasiswa->id_aktivitas, 'judul' => $aktivitas_mahasiswa->judul, 'id_anggota' => $aktivitas_mahasiswa->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $aktivitas_mahasiswa->anggota_aktivitas_personal->nama_mahasiswa, 'nim'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $matkul->sks_mata_kuliah, 'nilai_angka' => $request->nilai_angka[$i], 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $semester->id_semester, 'nama_semester' => $semester->nama_semester, 'status_sync' => 'belum sync']);
 
             }
 
@@ -414,7 +448,7 @@ class AktivitasNonTAController extends Controller
     public function nilai_transfer($aktivitas)
     {
         $semesterAktif = SemesterAktif::first();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
         $nilai_transfer = NilaiTransferPendidikan::with(['all_pt'])->where('id_aktivitas', $aktivitas)->get();
         // dd($nilai_konversi);
 
@@ -423,19 +457,23 @@ class AktivitasNonTAController extends Controller
             'pengisian_nilai' => $semesterAktif,
             'transfer' => $nilai_transfer
         ]);
-    } 
+    }
 
     public function store_nilai_transfer($aktivitas, Request $request)
     {
-        $semester = SemesterAktif::with('semester')->first();
+        // $semester = SemesterAktif::with('semester')->first();
 
-        $aktivitas_mahasiswa = AktivitasMahasiswa::with(['anggota_aktivitas_personal','anggota_aktivitas_personal.mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semester->id_semester)->first();
+        $aktivitas_mahasiswa = AktivitasMahasiswa::with(['anggota_aktivitas_personal','anggota_aktivitas_personal.mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
+
+        if ($this->checkSemesterAllow($aktivitas_mahasiswa->id_semester) == false) {
+            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        }
 
         $nilai_transfer = NilaiTransferPendidikan::with(['matkul'])->where('id_aktivitas', $aktivitas)->get();
 
-        if($semester->id_semester != $aktivitas_mahasiswa->id_semester){
-            return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
-        }
+        // if($semester->id_semester != $aktivitas_mahasiswa->id_semester){
+        //     return redirect()->back()->with('error', 'Masa Pengisian Nilai Telah Berakhir.');
+        // }
 
         // if(strtotime(date('Y-m-d')) < strtotime($semester->mulai_isi_nilai)){
         //     return redirect()->back()->with('error', 'Masa Pengisian Nilai Belum di Mulai.');
@@ -489,7 +527,7 @@ class AktivitasNonTAController extends Controller
                 $matkul = MataKuliah::where('id_matkul', $request->mata_kuliah_transfer[$i])->first();
 
                 $jumlah_sks = $matkul->sks_mata_kuliah;
-        
+
                 if($request->nilai_huruf_transfer[$i] == 'A'){
                     $nilai_indeks = '4.00';
                 }
@@ -510,12 +548,12 @@ class AktivitasNonTAController extends Controller
 
                 //Store data
                 NilaiTransferPendidikan::create([
-                    'feeder'=> 0, 
-                    'id_transfer'=> $id_transfer, 
-                    'id_registrasi_mahasiswa'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->id_registrasi_mahasiswa, 
-                    'nim'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->nim, 
-                    'nama_mahasiswa' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->nama_mahasiswa, 
-                    'id_prodi' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->id_prodi, 
+                    'feeder'=> 0,
+                    'id_transfer'=> $id_transfer,
+                    'id_registrasi_mahasiswa'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->id_registrasi_mahasiswa,
+                    'nim'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->nim,
+                    'nama_mahasiswa' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->nama_mahasiswa,
+                    'id_prodi' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->id_prodi,
                     'nama_program_studi' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->nama_program_studi, 'id_periode_masuk' => $aktivitas_mahasiswa->anggota_aktivitas_personal->mahasiswa->id_periode_masuk, 'kode_mata_kuliah_asal' => $request->kode_mata_kuliah_asal[$i], 'nama_mata_kuliah_asal' => $request->nama_mata_kuliah_asal[$i], 'sks_mata_kuliah_asal' => $request->sks_matkul_asal[$i], 'nilai_huruf_asal' => $request->nilai_huruf_asal[$i], 'id_matkul' => $matkul->id_matkul, 'kode_matkul_diakui' => $matkul->kode_mata_kuliah, 'nama_mata_kuliah_diakui' => $matkul->nama_mata_kuliah, 'sks_mata_kuliah_diakui' => $matkul->sks_mata_kuliah, 'nilai_huruf_diakui' => $request->nilai_huruf_transfer[$i], 'nilai_angka_diakui' => $nilai_indeks, 'id_perguruan_tinggi' => $request->asal_pt[$i], 'id_aktivitas' => $aktivitas_mahasiswa->id_aktivitas, 'judul' => $aktivitas_mahasiswa->judul, 'id_jenis_aktivitas' => $aktivitas_mahasiswa->id_jenis_aktivitas, 'nama_jenis_aktivitas' => $aktivitas_mahasiswa->nama_jenis_aktivitas, 'id_semester' => $aktivitas_mahasiswa->id_semester, 'nama_semester' => $aktivitas_mahasiswa->nama_semester, 'status_sync' => 'belum sync']);
 
             }

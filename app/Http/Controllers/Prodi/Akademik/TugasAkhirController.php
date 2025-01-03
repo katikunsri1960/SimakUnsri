@@ -7,6 +7,7 @@ use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Referensi\KategoriKegiatan;
+use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,16 +15,47 @@ use Ramsey\Uuid\Uuid;
 
 class TugasAkhirController extends Controller
 {
+
+    private function checkSemesterAllow($semester)
+    {
+        $semester_aktif = SemesterAktif::first();
+
+        if ($semester != null && $semester_aktif->semester_allow != null && !in_array($semester,$semester_aktif->semester_allow)) {
+            return false;
+        }
+        return true;
+    }
+
+
     public function index(Request $request)
     {
-        $semesterAktif = SemesterAktif::first();
-        $semester = $semesterAktif->id_semester;
+
+        $request->validate([
+            'semester_view' => 'nullable|exists:semesters,id_semester'
+        ]);
+
+        $semester_view = $request->semester_view ?? null;
+
+        $semester_aktif = SemesterAktif::first();
+
+        $semester_pilih = $semester_view == null ? $semester_aktif->id_semester : $semester_view;
+
+        if ($this->checkSemesterAllow($semester_pilih) == false) {
+            return redirect()->back()->with('error', "Semester Tidak dalam list yang di izinkan!");
+        }
+
+        $dbSemester = Semester::select('id_semester', 'nama_semester');
+
+        $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        // dd($semester_allow)
+
         $db = new AktivitasMahasiswa();
-        $data = $db->ta(auth()->user()->fk_id, $semester );
+        $data = $db->ta(auth()->user()->fk_id, $semester_pilih );
         // dd($data);
         return view('prodi.data-akademik.tugas-akhir.index', [
             'data' => $data,
-            'semester' => $semester,
+            'pilihan_semester' => $pilihan_semester,
+            'semester_view' => $semester_pilih
         ]);
     }
 
@@ -37,12 +69,12 @@ class TugasAkhirController extends Controller
 
     public function ubah_detail_tugas_akhir($aktivitas)
     {
-        $semesterAktif = SemesterAktif::first();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
-        // dd($data);
 
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
+        $semester = $data->id_semester;
         return view('prodi.data-akademik.tugas-akhir.edit', [
-            'd' => $data
+            'd' => $data,
+            'semester' => $semester
         ]);
     }
 
@@ -86,7 +118,7 @@ class TugasAkhirController extends Controller
     {
         $semesterAktif = SemesterAktif::first();
         $kategori = KategoriKegiatan::whereIn('id_kategori_kegiatan', ['110405', '110403', '110404', '110408','110406', '110402', '110401', '110407'])->get();
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->where('id_semester', $semesterAktif->id_semester)->first();
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
         // dd($data);
 
         return view('prodi.data-akademik.tugas-akhir.tambah-dosen', [
@@ -97,7 +129,7 @@ class TugasAkhirController extends Controller
 
     public function store_dosen_pembimbing($aktivitas, Request $request)
     {
-        $semester_aktif = SemesterAktif::first();
+
         $data = $request->validate([
                     'dosen_pembimbing.*' => 'required',
                     'kategori.*' => 'required',
@@ -108,10 +140,12 @@ class TugasAkhirController extends Controller
 
             $aktivitas_mahasiswa = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
 
-            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
+            $semester = Semester::where('id_semester', $aktivitas_mahasiswa->id_semester)->first();
+
+            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
 
             if($dosen_pembimbing->count() == 0 || $dosen_pembimbing->count() != count($request->dosen_pembimbing)){
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->whereIn('id_registrasi_dosen', $request->dosen_pembimbing)->get();
             }
             //Count jumlah dosen pengajar kelas kuliah
             $jumlah_dosen=count($request->dosen_pembimbing);
@@ -119,10 +153,10 @@ class TugasAkhirController extends Controller
             for($i=0;$i<$jumlah_dosen;$i++){
                 //Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
                 if(!$dosen)
                 {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->where('id_registrasi_dosen', $request->dosen_pembimbing[$i])->first();
                 }
 
                 $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();
@@ -168,19 +202,23 @@ class TugasAkhirController extends Controller
         try {
             DB::beginTransaction();
 
-            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
+            $dataAktivitas = AktivitasMahasiswa::where('id_aktivitas', $aktivitas)->first();
+
+            $semester = Semester::where('id_semester', $dataAktivitas->id_semester)->first();
+
+            $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
 
             if($dosen_pembimbing->count() == 0 || $dosen_pembimbing->count() != count($request->dosen_pembimbing)){
-                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
+                $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->whereIn('id_dosen', $request->dosen_pembimbing)->get();
             }
             //Count jumlah dosen pengajar kelas kuliah
             $jumlah_dosen=count($request->dosen_pembimbing);
 
             for($i=0;$i<$jumlah_dosen;$i++){
-                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
+                $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
                 if(!$dosen)
                 {
-                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran-1)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
+                    $dosen = PenugasanDosen::where('id_tahun_ajaran',$semester->id_tahun_ajaran-1)->where('id_dosen', $request->dosen_pembimbing[$i])->first();
                 }
 
                 $kategori = KategoriKegiatan::where('id_kategori_kegiatan', $request->kategori[$i])->first();

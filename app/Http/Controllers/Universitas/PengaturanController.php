@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Universitas;
 use App\Models\SemesterAktif;
 use App\Models\Referensi\PeriodePerkuliahan;
 use App\Http\Controllers\Controller;
+use App\Imports\PeriodeImport;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Fakultas;
 use App\Models\Mahasiswa\RiwayatPendidikan;
@@ -15,6 +16,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PengaturanController extends Controller
 {
@@ -38,6 +40,18 @@ class PengaturanController extends Controller
             'semester' => $semester,
             'prodi' => $prodi
         ]);
+    }
+
+    public function periode_perkuliahan_upload(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $import = Excel::import(new PeriodeImport(), $file);
+
+        return redirect()->back()->with('success', "Data successfully imported!");
     }
 
     public function sync_periode_perkuliahan()

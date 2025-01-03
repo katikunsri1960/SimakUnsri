@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
+use App\Imports\BeasiswaImport;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\JenisBeasiswaMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Referensi\Pembiayaan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class BeasiswaController extends Controller
 {
@@ -30,6 +32,7 @@ class BeasiswaController extends Controller
             'id_pembiayaan' => 'required|exists:pembiayaans,id_pembiayaan',
             'tanggal_mulai_beasiswa' => 'required',
             'tanggal_akhir_beasiswa' => 'required',
+            'link_sk' => 'required'
         ]);
 
         $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->orderBy('id_periode_masuk', 'desc')->first();
@@ -70,6 +73,7 @@ class BeasiswaController extends Controller
             'id_pembiayaan' => 'required|exists:pembiayaans,id_pembiayaan',
             'tanggal_mulai_beasiswa' => 'required',
             'tanggal_akhir_beasiswa' => 'required',
+            'link_sk' => 'required'
         ]);
 
         try {
@@ -156,5 +160,22 @@ class BeasiswaController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+    public function beasiswa_template()
+    {
+
+    }
+
+    public function beasiswa_upload(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $import = Excel::import(new BeasiswaImport(), $file);
+
+        return redirect()->back()->with('success', "Data successfully imported!");
     }
 }
