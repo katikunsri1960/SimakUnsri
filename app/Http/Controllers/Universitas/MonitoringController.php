@@ -16,7 +16,7 @@ class MonitoringController extends Controller
 {
     public function pengisian_krs()
     {
-        $prodi =  $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
         $data = MonitoringIsiKrs::with(['prodi'])->join('program_studis', 'monitoring_isi_krs.id_prodi', 'program_studis.id_prodi')
                                 ->join('fakultas', 'fakultas.id', 'program_studis.fakultas_id')
                                 ->orderBy('program_studis.fakultas_id')

@@ -898,6 +898,23 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             });
 
             Route::prefix('monitoring')->group(function(){
+                Route::prefix('update-akm')->group(function () {
+                    
+                    Route::get('/', [App\Http\Controllers\Universitas\UpdateAKM::class, 'akm'])->name('univ.monitoring.update-akm');
+                    Route::get('/data', [App\Http\Controllers\Universitas\UpdateAKM::class, 'data'])->name('univ.monitoring.update-akm.data');
+                    Route::post('/hitung-ips', [App\Http\Controllers\Universitas\UpdateAKM::class, 'hitungIps'])->name('univ.monitoring.update-akm.hitung-ips');
+
+
+                    Route::get('/detail-mahasiswa-aktif/{prodi}', [App\Http\Controllers\Universitas\UpdateAKM::class, 'akm_mahasiswa_aktif'])->name('univ.monitoring.update-akm.detail-mahasiswa-aktif');
+                    Route::get('/detail-aktif-min-tujuh/{prodi}', [App\Http\Controllers\Universitas\UpdateAKM::class, 'detail_aktif_min_tujuh'])->name('univ.monitoring.update-akm.detail-aktif-min-tujuh');
+                    Route::get('/detail-isi-krs/{prodi}', [App\Http\Controllers\Universitas\UpdateAKM::class, 'detail_isi_krs'])->name('univ.monitoring.update-akm.detail-isi-krs');
+                    Route::get('/detail-approved-krs/{prodi}', [App\Http\Controllers\Universitas\UpdateAKM::class, 'detail_approved_krs'])->name('univ.monitoring.update-akm.detail-approved-krs');
+                    Route::get('/detail-not-approved-krs/{prodi}', [App\Http\Controllers\Universitas\UpdateAKM::class, 'detail_not_approved_krs'])->name('univ.monitoring.update-akm.detail-not-approved-krs');
+
+                    Route::post('/generate-data', [App\Http\Controllers\Universitas\UpdateAKM::class, 'generateDataIsiKrs'])->name('univ.monitoring.update-akm.generate-data');
+                    Route::get('/check-progress', [App\Http\Controllers\Universitas\UpdateAKM::class, 'checkProgress'])->name('univ.monitoring.update-akm.check-progress');
+                });
+
                 Route::prefix('pengisian-krs')->group(function () {
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs'])->name('univ.monitoring.pengisian-krs');
                     Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs_data'])->name('univ.monitoring.pengisian-krs.data');
