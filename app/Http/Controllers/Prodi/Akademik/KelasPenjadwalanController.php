@@ -17,6 +17,7 @@ use App\Models\Semester;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\JenisEvaluasi;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\KuisonerAnswer;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\SemesterAktif;
 use App\Models\ProgramStudi;
@@ -1009,6 +1010,7 @@ class KelasPenjadwalanController extends Controller
         $peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $id_kelas)->first();
 
         $dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $id_kelas)->count();
+        $semester = KelasKuliah::where('id_kelas_kuliah', $id_kelas)->first()->id_semester;
 
         // dd($dosen);
 
@@ -1030,7 +1032,7 @@ class KelasPenjadwalanController extends Controller
 
             DB::commit();
 
-            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Kelas Berhasil di Hapus!!');
+            return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul, 'semester' => $semester])->with('success', 'Data Kelas Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
             return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. '. $th->getMessage());
@@ -1124,5 +1126,34 @@ class KelasPenjadwalanController extends Controller
         $peserta = PesertaKelasKuliah::with('mahasiswa')->where('id_kelas_kuliah', $kelas->id_kelas_kuliah)->get();
         // dd($id_matkul);
         return view('prodi.data-akademik.kelas-penjadwalan.peserta-kelas', ['peserta' => $peserta, 'kelas' => $kelas, 'matkul' => $matkul]);
+    }
+
+    public function kuisioner_kelas($id_kelas)
+    {
+        $kuisioner = KuisonerAnswer::where('id_kelas_kuliah', $id_kelas)
+                    ->with('kuisoner_question')
+                    ->get()
+                    ->groupBy('kuisoner_question_id');
+
+        // Menghitung jumlah jawaban untuk setiap nilai (1 sampai 7)
+        $nilai_counts = KuisonerAnswer::where('id_kelas_kuliah', $id_kelas)
+                    ->select('kuisoner_question_id', 'nilai', DB::raw('count(*) as count'))
+                    ->groupBy('kuisoner_question_id', 'nilai')
+                    ->get()
+                    ->groupBy('kuisoner_question_id');
+
+        $kelas = KelasKuliah::where('id_kelas_kuliah', $id_kelas)
+                ->with('matkul', 'dosen_pengajar.dosen', 'semester', 'peserta_kelas')
+                ->select('id_kelas_kuliah', 'id_matkul', 'nama_kelas_kuliah', 'id_semester')
+                ->withCount(['peserta_kelas' => function ($query) {
+                    $query->where('approved', 1);
+                }])
+                ->first();
+
+        return view('prodi.data-akademik.kelas-penjadwalan.kuisioner', [
+                    'kuisioner' => $kuisioner,
+                    'nilai_counts' => $nilai_counts,
+                    'kelas' => $kelas
+                ]);
     }
 }
