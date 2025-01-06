@@ -75,7 +75,7 @@ class KelasPenjadwalanController extends Controller
         ->where('is_active', 1)
         ->get();
         // dd($data);
-        return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data, 'semester_aktif' => $semester_aktif, 'pilihan_semester'=>$pilihan_semester, 'semester_view'=>$semester_view]);
+        return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data, 'semester_aktif' => $semester_aktif, 'pilihan_semester'=>$pilihan_semester, 'semester_view'=>$semester_view, 'semester_pilih'=>$semester_pilih]);
     }
 
     public function detail_kelas_penjadwalan($id_matkul, $semester)
@@ -605,7 +605,7 @@ class KelasPenjadwalanController extends Controller
         if ($rencana_pertemuan == 0) {
             return redirect()->back()->with('error', 'Rencana Pertemuan tidak boleh 0');
         }
-        
+
         if($rencana_prodi){
             if ($rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan) {
                 return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
@@ -614,7 +614,7 @@ class KelasPenjadwalanController extends Controller
             return redirect()->back()->with('error', 'Periode perkuliahan belum di setting, Silahkan hubungi Admin Universitas!');
         }
 
-        
+
         try {
             DB::beginTransaction();
 
@@ -1155,5 +1155,35 @@ class KelasPenjadwalanController extends Controller
                     'nilai_counts' => $nilai_counts,
                     'kelas' => $kelas
                 ]);
+    }
+
+    public function kuisioner_matkul($id_matkul, $semester)
+    {
+        $kelas = KelasKuliah::where('id_matkul', $id_matkul)
+                ->where('id_semester', $semester)
+                ->select('id_kelas_kuliah')
+                ->get()->pluck('id_kelas_kuliah');
+
+        $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
+        $semester = Semester::where('id_semester', $semester)->first();
+
+        $kuisioner = KuisonerAnswer::whereIn('id_kelas_kuliah', $kelas)
+                ->with('kuisoner_question')
+                ->get()
+                ->groupBy('kuisoner_question_id');
+
+        $nilai_counts = KuisonerAnswer::whereIn('id_kelas_kuliah', $kelas)
+                ->select('kuisoner_question_id', 'nilai', DB::raw('count(*) as count'))
+                ->groupBy('kuisoner_question_id', 'nilai')
+                ->get()
+                ->groupBy('kuisoner_question_id');
+        // dd($nilai_counts);
+
+        return view('prodi.data-akademik.kelas-penjadwalan.kuisioner-matkul.index', [
+            'nilai_counts' => $nilai_counts,
+            'kuisioner' => $kuisioner,
+            'mata_kuliah' => $mata_kuliah,
+            'semester' => $semester
+        ]);
     }
 }

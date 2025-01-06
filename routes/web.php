@@ -610,6 +610,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('data-akademik')->group(function(){
                 //Kelas Penjadwalan
                 Route::prefix('kelas-penjadwalan')->group(function(){
+
+                    Route::prefix('kuisioner')->group(function(){
+                        Route::get('/{id_matkul}/{semester}', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kuisioner_matkul'])->name('prodi.data-akademik.kelas-penjadwalan.kuisioner-matkul');
+                    });
+
                     Route::get('/', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan');
                     Route::get('/{id_matkul}/{semester}/detail', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'detail_kelas_penjadwalan'])->name('prodi.data-akademik.kelas-penjadwalan.detail');
                     Route::get('/{id_maktul}/{id_kelas}/peserta', [App\Http\Controllers\Prodi\Akademik\KelasPenjadwalanController::class, 'peserta_kelas'])->name('prodi.data-akademik.kelas-penjadwalan.peserta');
@@ -900,7 +905,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('monitoring')->group(function(){
                 Route::prefix('update-akm')->group(function () {
-                    
+
                     Route::get('/', [App\Http\Controllers\Universitas\UpdateAKMController::class, 'akm'])->name('univ.monitoring.update-akm');
                     Route::get('/data', [App\Http\Controllers\Universitas\UpdateAKMController::class, 'data'])->name('univ.monitoring.update-akm.data');
                     Route::post('/hitung-ips', [App\Http\Controllers\Universitas\UpdateAKMController::class, 'hitungIps'])->name('univ.monitoring.update-akm.hitung-ips');
