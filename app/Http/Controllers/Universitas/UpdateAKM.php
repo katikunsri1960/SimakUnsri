@@ -20,6 +20,7 @@ use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class UpdateAKM extends Controller
 {
@@ -27,7 +28,7 @@ class UpdateAKM extends Controller
     {
         $semesters = Semester::orderBy('id_semester', 'desc')->get();
         $semesterAktif = SemesterAktif::with('semester')->first();
-        
+
         return view('universitas.monitoring.update-akm.index', [
             // return view('fakultas.data-akademik.khs.index',[
             'semesters' => $semesters,
@@ -38,12 +39,16 @@ class UpdateAKM extends Controller
     public function data(Request $request)
     {
         $semester = $request->semester;
-        
-        $akm = AktivitasKuliahMahasiswa::with('riwayat_pendidikan', 'prodi')
-                    ->where('id_semester', $semester)
-                    ->get();
+        $perPage = $request->get('per_page', 10); // Default 10 items per page
+        $page = $request->get('page', 1); // Default to page 1
 
-        if($akm->isEmpty() ) {
+        $akmQuery = AktivitasKuliahMahasiswa::with('riwayat_pendidikan', 'prodi')
+                    ->where('id_semester', $semester);
+
+        $total = $akmQuery->count();
+        $akm = $akmQuery->skip(($page - 1) * $perPage)->take($perPage)->get();
+
+        if ($akm->isEmpty()) {
             $response = [
                 'status' => 'error',
                 'message' => 'Data AKM pada Semester yang dipilih tidak ditemukan!',
@@ -51,10 +56,28 @@ class UpdateAKM extends Controller
             return response()->json($response);
         }
 
+        $data = $akm->map(function ($item, $index) use ($page, $perPage) {
+            return [
+                'DT_RowIndex' => $index + 1 + ($page - 1) * $perPage,
+                'nama_program_studi' => $item->prodi->nama_program_studi,
+                'nama_mahasiswa' => $item->riwayat_pendidikan->nama_mahasiswa,
+                'nim' => $item->riwayat_pendidikan->nim,
+                'sks_total' => $item->sks_total,
+                'ipk' => $item->ipk,
+                'sks_semester' => $item->sks_semester,
+                'ips' => $item->ips,
+                'biaya_kuliah_smt' => $item->biaya_kuliah_smt,
+            ];
+        });
+
         $response = [
             'status' => 'success',
-            'message' => 'Data KRS berhasil diambil',
-            'akm' => $akm,
+            'message' => 'Data AKM berhasil diambil',
+            'data' => $data,
+            'recordsTotal' => $total,
+            'recordsFiltered' => $total,
+            'per_page' => $perPage,
+            'current_page' => $page,
         ];
 
         return response()->json($response);
@@ -102,7 +125,7 @@ class UpdateAKM extends Controller
                 $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
                 $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
 
-                
+
                 // dd($semester, $tahun_ajaran, $prodi);
                 foreach ($khs as $t) {
                     $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
@@ -117,7 +140,7 @@ class UpdateAKM extends Controller
                 }
 
                 $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
-                
+
                 $ips = 0;
                 if($total_sks_semester > 0){
                     $ips = $total_bobot / $total_sks_semester;
