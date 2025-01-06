@@ -5,7 +5,7 @@ namespace App\Jobs;
 // use Log;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Bus\Batchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -17,20 +17,21 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
 class HitungIpsJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $semester;
+    public $semester, $id_registrasi_mahasiswa;
 
     /**
      * Create a new job instance.
      *
      * @param int $semester
      */
-    public function __construct($semester)
+    public function __construct($semester, $id_registrasi_mahasiswa)
     {
         $this->semester = $semester;
+        $this->id_registrasi_mahasiswa = $id_registrasi_mahasiswa;
     }
-
+    
     /**
      * Execute the job.
      *
@@ -40,39 +41,30 @@ class HitungIpsJob implements ShouldQueue
     {
         try {
             $semester = $this->semester;
+            $id_registrasi_mahasiswa = $this->id_registrasi_mahasiswa;
 
-            // Ambil data AKM mahasiswa berdasarkan semester
-            $akmData = AktivitasKuliahMahasiswa::where('id_semester', $semester)
-                        // ->where('id_prodi', '23eded88-d2fe-41ed-a039-a59c7d58a3bb')
-                        ->get();
-
-            if ($akmData->isEmpty()) {
-                return; // Tidak ada data, hentikan proses
-            }
-
+            
             // Ambil semua data KHS, KHS Konversi, dan KHS Transfer secara efisien
             $khsData = NilaiPerkuliahan::where('id_semester', $semester)
-                ->whereIn('id_registrasi_mahasiswa', $akmData->pluck('id_registrasi_mahasiswa'))
+                ->whereIn('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
                 ->get();
 
             $khsKonversiData = KonversiAktivitas::with(['matkul'])
                 ->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
                 ->where('id_semester', $semester)
-                ->whereIn('ang.id_registrasi_mahasiswa', $akmData->pluck('id_registrasi_mahasiswa'))
+                ->whereIn('ang.id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
                 ->get();
 
             $khsTransferData = NilaiTransferPendidikan::where('id_semester', $semester)
-                ->whereIn('id_registrasi_mahasiswa', $akmData->pluck('id_registrasi_mahasiswa'))
+                ->whereIn('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
                 ->get();
 
             // Proses data AKM
-            foreach ($akmData as $akm) {
-                $registrasiId = $akm->id_registrasi_mahasiswa;
-
+                
                 // Filter data KHS, KHS Konversi, dan KHS Transfer untuk mahasiswa saat ini
-                $khs = $khsData->where('id_registrasi_mahasiswa', $registrasiId);
-                $khsKonversi = $khsKonversiData->where('id_registrasi_mahasiswa', $registrasiId);
-                $khsTransfer = $khsTransferData->where('id_registrasi_mahasiswa', $registrasiId);
+                $khs = $khsData->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa);
+                $khsKonversi = $khsKonversiData->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa);
+                $khsTransfer = $khsTransferData->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa);
 
                 // Hitung total SKS semester
                 $totalSksSemester = $khs->sum('sks_mata_kuliah')
@@ -98,11 +90,11 @@ class HitungIpsJob implements ShouldQueue
                 $ips = $totalSksSemester > 0 ? round($totalBobot / $totalSksSemester, 2) : 0;
 
                 // Update nilai IPS pada tabel
-                $akm->update([
+                AktivitasKuliahMahasiswa::where('id_semester', $semester)->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)->update([
                     'feeder' => 0,
                     'ips' => number_format($ips, 2, '.', '') // Simpan dengan 2 digit di belakang koma
                 ]);  
-            }
+
         } catch (\Exception $e) {
             Log::error('Error menghitung IPS: ' . $e->getMessage());
         }

@@ -95,8 +95,8 @@ class MataKuliah extends Model
                     'efd6f97f-d7fc-42c1-bea0-2e5837e569d6',
                     '7c569912-fa48-4b93-8c16-1fc78969c337',
                     'a8d4f70f-406c-43f6-95ee-15f8ad836db3',
-                    'c4bbd3bb-3b4b-4aa3-bc50-136842747c67',
-                    '6343967c-d7e3-447c-86a4-37c5c166ad7a',
+                    // 'c4bbd3bb-3b4b-4aa3-bc50-136842747c67',//S2 Biomedik
+                    // '6343967c-d7e3-447c-86a4-37c5c166ad7a',//S3 Sains Biomedis
                     '947760c7-8b9b-40d2-af81-cdd141fddadb',
                     '90c23123-fb1e-48ee-9bdc-f923e799cd2a',
                     'a77fda16-ec5a-4d73-b076-51bac9b88ae4',
