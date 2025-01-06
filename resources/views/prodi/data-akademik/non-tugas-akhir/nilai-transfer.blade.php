@@ -6,7 +6,7 @@ Nilai Transfer Pendidikan
 @include('swal')
 @push('header')
 <div class="mx-4">
-    <a href="{{route('prodi.data-akademik.non-tugas-akhir')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+    <a href="{{route('prodi.data-akademik.non-tugas-akhir', ['semester_view'=> $d->id_semester])}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush
 <div class="content-header">
