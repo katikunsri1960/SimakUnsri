@@ -336,6 +336,7 @@ class KrsController extends Controller
         $masa_tenggang = Carbon::parse($semester_aktif->batas_bayar_ukt)->addDays(30)->toDateString();
         
         $penundaan_pembayaran = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
+                                ->where('id_semester', $semester_aktif->id_semester)
                                 ->count();
 
         $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
