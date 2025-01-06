@@ -2,26 +2,12 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use Carbon\Carbon;
-use App\Jobs\HitungIpsJob;
-use App\Jobs\HitungIpsBatchJob;
 use App\Models\Semester;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
-use App\Models\PejabatFakultas;
-use App\Models\Perpus\BebasPustaka;
 use App\Http\Controllers\Controller;
-use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\NilaiPerkuliahan;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\PesertaKelasKuliah;
-use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Bus;
 
 class UpdateAKMController extends Controller
 {
@@ -172,6 +158,10 @@ class UpdateAKMController extends Controller
 
     public function hitungIps(Request $request)
     {
+        // Tingkatkan batas memori yang dialokasikan
+        ini_set('max_execution_time', 0);
+        ini_set('memory_limit', '2G');
+
         $semester = $request->semester;
 
         if (!$semester) {
@@ -181,36 +171,20 @@ class UpdateAKMController extends Controller
             ], 400);
         }
 
-        // if ($akmData->isEmpty()) {
-        //     $response = [
-        //         'status' => 'error',
-        //         'message' => 'Data AKM pada Semester yang dipilih tidak ditemukan!',
-        //     ];
-        //     return response()->json($response);
-        // }
+        $akmData = AktivitasKuliahMahasiswa::where('id_semester', $semester)
+                    ->get();
 
-        // Dispatch job ke queue
-        HitungIpsJob::dispatch($semester);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Proses perhitungan IPS sedang berjalan di latar belakang.'
-        ]);
-    }
-
-    public function hitungIpsBatch(Request $request)
-    {
-        $semester = $request->semester;
-
-        if (!$semester) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Tahun akademik harus diisi.'
-            ], 400);
+        $count = $akmData->count();
+        $batch = Bus::batch([])->dispatch();
+        
+        foreach ($akmData as $akm) {
+            $registrasiId = $akm->id_registrasi_mahasiswa;
+            
+            for($i=0; $i < $count; $i++) {
+                $job = new \App\Jobs\HitungIpsJob($semester, $akm->id_registrasi_mahasiswa);
+                $batch->add($job);
+            }
         }
-
-        // Jalankan job batch
-        HitungIpsBatchJob::dispatch($semester);
 
         return response()->json([
             'status' => 'success',
