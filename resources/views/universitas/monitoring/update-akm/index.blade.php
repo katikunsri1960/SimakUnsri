@@ -51,12 +51,14 @@ Update IPS
                     </div>
                                       
                 </div>
+                {{-- <div id="loadingBar" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, #4CAF50, #00BCD4); z-index: 9999;"></div> --}}
+
                 <div id="loading" style="display: none; text-align: center; padding-inline:10px">
                     <div id="progress-bar-container" style="width: 100%; background-color: #f3f3f3; margin-bottom: 10px;">
                         <div id="progress-bar" style="height: 10px; width: 0%; background-color: #4caf50;"></div>
                     </div>
                     <p id="loading-percentage" style="color: #4caf50;">0%</p>
-                    <p style="color: #4caf50;">Sedang menghitung IPS...</p>
+                    <p style="color: #4caf50;">Sedang memproses data...</p>
                 </div>  
                 <div class="box-body text-center">
                     <div class="table-responsive">
@@ -119,6 +121,23 @@ function getKrs() {
         return;
     }
 
+    // Tampilkan indikator loading
+    $('#loading').show();
+    let progressBar = $('#progress-bar');
+    let percentageText = $('#loading-percentage');
+    progressBar.css('width', '0%'); // Reset progress bar
+    percentageText.text('0%'); // Reset text
+
+    // Mulai progress bar (simulasi)
+    let width = 0;
+    let progressInterval = setInterval(function() {
+        if (width < 90) { // Jangan sampai 100% sebelum proses selesai
+            width++;
+            progressBar.css('width', width + '%');
+            percentageText.text(width + '%');
+        }
+    }, 50); // Update setiap 50ms untuk animasi progress
+
     // AJAX request untuk mendapatkan data
     $.ajax({
         url: '{{route('univ.monitoring.update-akm.data')}}',
@@ -127,6 +146,14 @@ function getKrs() {
             semester: semester
         },
         success: function(response) {
+            // Hentikan dan sembunyikan loading setelah selesai
+            clearInterval(progressInterval);
+            progressBar.css('width', '100%');
+            percentageText.text('100%');
+            setTimeout(() => {
+                $('#loading').hide();
+            }, 500); // Berikan jeda agar animasi selesai
+
             // Jika ada error di response
             if (response.status == 'error') {
                 swal({
@@ -156,6 +183,7 @@ function getKrs() {
                             <th class="text-center align-middle">Nama Program Studi</th>
                             <th class="text-center align-middle">Nama Mahasiswa</th>
                             <th class="text-center align-middle">NIM</th>
+                            <th class="text-center align-middle">Semester</th>
                             <th class="text-center align-middle">SKS Total</th>
                             <th class="text-center align-middle">IPK</th>
                             <th class="text-center align-middle">SKS Semester</th>
@@ -166,20 +194,25 @@ function getKrs() {
                     <tbody>
                 `;
 
-
                 // Loop melalui data response
-                response.akm.forEach(function(akm, index) {
+                response.akm.forEach(function (akm, index) {
+                    const biayaUKT = new Intl.NumberFormat('id-ID', {
+                        style: 'currency',
+                        currency: 'IDR',
+                    }).format(akm.biaya_kuliah_smt);
+
                     tableContent += `
                         <tr>
                             <td class="text-center align-middle">${index + 1}</td>
                             <td class="text-center align-middle">${akm.nama_program_studi}</td>
                             <td class="text-start align-middle">${akm.nama_mahasiswa}</td>
                             <td class="text-center align-middle">${akm.nim}</td>
+                            <td class="text-center align-middle">${akm.nama_semester}</td>
                             <td class="text-center align-middle">${akm.sks_total}</td>
                             <td class="text-center align-middle">${akm.ipk}</td>
                             <td class="text-center align-middle">${akm.sks_semester}</td>
                             <td class="text-center align-middle">${akm.ips}</td>
-                            <td class="text-center align-middle">${akm.biaya_kuliah_smt}</td>
+                            <td class="text-center align-middle">${biayaUKT}</td>
                         </tr>
                     `;
                 });
@@ -192,6 +225,7 @@ function getKrs() {
                 // Tambahkan tabel ke div
                 $('#akmDiv').append(tableContent);
 
+
                 // Inisialisasi DataTables
                 $('#akmTable').DataTable({
                     responsive: true,
@@ -203,11 +237,13 @@ function getKrs() {
             }
         },
         error: function(xhr, status, error) {
-            // Handling error dari AJAX
+            // Hentikan dan sembunyikan loading jika ada error
+            clearInterval(progressInterval);
+            $('#loading').hide();
             swal({
                 title: "Error!",
-                text: "Terjadi kesalahan saat mengambil data. Silakan coba lagi.",
-                type: "error",
+                text: xhr.responseJSON?.message || "Terjadi kesalahan saat mengambil data. Silakan coba lagi.",
+                icon: "error",
                 buttons: {
                     confirm: {
                         className: 'btn btn-danger'
@@ -216,6 +252,7 @@ function getKrs() {
             });
         }
     });
+
 
     $(document).ready(function() {
         $('#btnHitungIPS').click(function() {
@@ -227,7 +264,7 @@ function getKrs() {
             // Mulai progress bar
             let width = 0;
             let progressInterval = setInterval(function() {
-                if (width < 100) {
+                if (width < 90) {
                     width++;
                     progressBar.css('width', width + '%');
                     percentageText.text(width + '%');
@@ -297,7 +334,7 @@ function getKrs() {
                     clearInterval(progressInterval); // Hentikan progress bar
                     swal({
                         title: "Error!",
-                        text: "Terjadi kesalahan saat menghitung IPS.",
+                        text: xhr.responseJSON?.message || "Terjadi kesalahan saat menghitung IPS.",
                         type: "error",
                         buttons: {
                             confirm: {
@@ -309,8 +346,6 @@ function getKrs() {
             });
         });
     });
-
-
 }
 </script>
 @endpush
