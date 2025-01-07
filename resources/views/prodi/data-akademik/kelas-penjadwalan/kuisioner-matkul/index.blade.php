@@ -1,21 +1,21 @@
 @extends('layouts.prodi')
 @section('title')
-Kuisioner Kelas Perkuliahan
+Kuisioner Mata Kuliah
 @endsection
 @section('content')
 @include('swal')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Kuisioner Kelas Perkuliahan</h3>
+            <h3 class="page-title">Kuisioner Mata Kuliah</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $kelas->id_matkul, 'semester'=>$kelas->id_semester])}}">Detail Kelas dan Penjadwalan</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Kuisioner Kelas Perkuliahan</li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan', ['semester_view' => $semester->id_semester])}}">Kelas dan Penjadwalan</a></li>
+                        {{-- <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $kelas->id_matkul, 'semester'=>$kelas->id_semester])}}">Detail Kelas dan Penjadwalan</a></li> --}}
+                        <li class="breadcrumb-item active" aria-current="page">Kuisioner Mata Kuliah</li>
                     </ol>
                 </nav>
             </div>
@@ -33,36 +33,17 @@ Kuisioner Kelas Perkuliahan
                         <tr>
                             <th>Mata Kuliah</th>
                             <th style="padding-left: 20px; padding-right:20px">:</th>
-                            <th>{{$kelas->matkul ? $kelas->matkul->nama_mata_kuliah : '-'}}</th>
+                            <th>{{$mata_kuliah->nama_mata_kuliah}}</th>
                         </tr>
                         <tr>
-                            <th>Nama Kelas</th>
+                            <th>Kode Mata Kuliah</th>
                             <th style="padding-left: 20px; padding-right:20px">:</th>
-                            <th>{{$kelas->nama_kelas_kuliah}}</th>
+                            <th>{{$mata_kuliah->kode_mata_kuliah}}</th>
                         </tr>
                         <tr>
                             <th>Semester</th>
                             <th style="padding-left: 20px; padding-right:20px">:</th>
-                            <th>{{$kelas->semester ? $kelas->semester->nama_semester : '-'}}</th>
-                        </tr>
-                        <tr>
-                            <th>Jumlah Peserta</th>
-                            <th style="padding-left: 20px; padding-right:20px">:</th>
-                            <th>{{$kelas->peserta_kelas_count}}</th>
-                        </tr>
-                        <tr>
-                            <th class="align-top">Dosen Ajar</th>
-                            <th class="align-top" style="padding-left: 20px; padding-right:20px">:</th>
-                            <th>
-                                @if ($kelas->dosen_pengajar)
-                                <ul >
-                                    @foreach ($kelas->dosen_pengajar as $dp)
-                                    <li style="margin-left:-20px">{{$dp->dosen->nama_dosen}}</li>
-                                    @endforeach
-
-                                </ul>
-                                @endif
-                            </th>
+                            <th>{{$semester->nama_semester}}</th>
                         </tr>
                     </table>
                     <hr>
@@ -169,6 +150,7 @@ Kuisioner Kelas Perkuliahan
 <link rel="stylesheet" href="{{asset('assets/js/flatpickr/flatpickr.min.css')}}">
 @endpush
 @push('js')
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
@@ -313,6 +295,7 @@ Kuisioner Kelas Perkuliahan
 
     $(function(){
         'use strict';
+        // $('#filterQuestions').select2();
         $('#data-kelas').DataTable({
             "paging": false,
             "lengthChange": true,
