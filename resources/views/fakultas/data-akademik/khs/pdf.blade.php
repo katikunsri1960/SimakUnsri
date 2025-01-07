@@ -267,13 +267,17 @@ Kartu Hasil Studi
             <td class="text-left text-10" width="60%">
                 {{-- Catatan: --}}
             </td>
-            <td width="40%" class="text-start text-10" >a.n Dekan</td>
+            <td width="40%" class="text-start text-10" >
+                {{ $riwayat->prodi->fakultas_id === 11 ? 'a.n Direktur' : 'a.n Dekan' }}
+            </td>
         </tr>
         <tr>
             <td class="text-left text-10" width="60%">
                 {{-- Catatan: --}}
             </td>
-            <td width="40%" class="text-start text-10" >Wakil Dekan Bidang Akademik,</td>
+            <td width="40%" class="text-start text-10" >
+                {{ $riwayat->prodi->fakultas_id === 11 ? 'Wakil Direktur Bidang Akademik dan Kemahasiswaan,' : 'Wakil Dekan Bidang Akademik,' }}
+            </td>
         </tr>
         <tr>
             <td class="text-left text-10" width="60%" style="vertical-align: text-top">
