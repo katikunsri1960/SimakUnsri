@@ -56,18 +56,18 @@ Aktivitas Mahasiswa
                         <table id="data" class="table table-hover margin-top-10 w-p100">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Prodi</th>
-                                    <th>Judul</th>
-                                    <th>Jenis</th>
-                                    <th>NIM</th>
-                                    <th>Nama</th>
-
-                                    {{-- <th>NIM</th>
-                                    <th>Program Studi</th>
-                                    <th>Angkatan</th>
-                                    <th>Status</th> --}}
-                                    {{-- <th>Aksi</th> --}}
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Prodi</th>
+                                    <th class="text-center align-middle">Judul</th>
+                                    <th class="text-center align-middle">Jenis</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Nama</th>
+                                    <th class="text-center align-middle">ACT</th>
+                                    {{-- <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Program Studi</th>
+                                    <th class="text-center align-middle">Angkatan</th>
+                                    <th class="text-center align-middle">Status</th> --}}
+                                    {{-- <th class="text-center align-middle">Aksi</th> --}}
                                 </tr>
                             </thead>
 
@@ -95,6 +95,7 @@ Aktivitas Mahasiswa
             processing: true,
             serverSide: true,
             ordering:false,
+            stateSave: true,
             ajax: {
                 url: '{{route('univ.perkuliahan.aktivitas-mahasiswa.data')}}',
                 type: 'GET',
@@ -150,6 +151,17 @@ Aktivitas Mahasiswa
                         }
                     }
                 },
+                {
+                    data: null,
+                    searchable: false,
+                    class: "text-center align-middle",
+                    sortable: false,
+                    render: function(data, type, row, meta) {
+                        var url = '{{ route("univ.perkuliahan.aktivitas-mahasiswa.edit", ":id") }}';
+                        url = url.replace(':id', data.id);
+                        var button = '<a href="' + url + '" class="btn btn-warning btn-sm" title="Edit"><i class="fa fa-edit"></i></a>';
+                        return button;
+                }},
             ],
         });
 

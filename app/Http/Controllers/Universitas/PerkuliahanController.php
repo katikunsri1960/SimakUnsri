@@ -427,6 +427,31 @@ class PerkuliahanController extends Controller
         return response()->json($response);
     }
 
+    public function aktivitas_mahasiswa_edit($id)
+    {
+        $data = AktivitasMahasiswa::where('id', $id)->with('anggota_aktivitas_personal')->first();
+
+        return view('universitas.perkuliahan.aktivitas-mahasiswa.edit', ['data' => $data]);
+    }
+
+    public function aktivitas_mahasiswa_update($id, Request $request)
+    {
+        $data = $request->validate([
+            'judul' => 'required',
+            'tanggal_mulai' => 'required',
+            'tanggal_selesai' => 'required',
+        ]);
+
+        $aktivitas = AktivitasMahasiswa::find($id);
+
+        $data['tanggal_mulai'] = date('Y-m-d', strtotime($data['tanggal_mulai']));
+        $data['tanggal_selesai'] = date('Y-m-d', strtotime($data['tanggal_selesai']));
+
+        $aktivitas->update($data);
+
+        return redirect()->route('univ.perkuliahan.aktivitas-mahasiswa')->with('success', 'Data Berhasil Diupdate!');
+    }
+
     public function sync_aktivitas_mahasiswa()
     {
         if (ProgramStudi::count() == 0 || Semester::count() == 0 || JenisAktivitasMahasiswa::count() == 0){

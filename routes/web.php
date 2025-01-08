@@ -1055,6 +1055,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('aktivitas-mahasiswa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_mahasiswa'])->name('univ.perkuliahan.aktivitas-mahasiswa');
                     Route::get('/data', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_mahasiswa_data'])->name('univ.perkuliahan.aktivitas-mahasiswa.data');
+                    Route::get('/edit/{id}', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_mahasiswa_edit'])->name('univ.perkuliahan.aktivitas-mahasiswa.edit');
+                    Route::patch('/update/{id}', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_mahasiswa_update'])->name('univ.perkuliahan.aktivitas-mahasiswa.update');
                     Route::get('/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_aktivitas_mahasiswa'])->name('univ.perkuliahan.aktivitas-mahasiswa.sync');
                     Route::get('/sync-anggota', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_anggota_aktivitas_mahasiswa'])->name('univ.perkuliahan.aktivitas-mahasiswa.sync-anggota');
                 });

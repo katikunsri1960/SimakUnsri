@@ -48,7 +48,7 @@
                     </div>
                     <div class="col-md-6">
                         <div class="mb-3">
-                            <label for="id_prodi" class="form-label">Program Studi</label>
+                            <label for="id_prodi" class="form-label">Jenis Aktivitas</label>
                             <select
                                 multiple
                                 class="form-select"
