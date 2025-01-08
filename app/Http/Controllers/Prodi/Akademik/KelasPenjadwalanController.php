@@ -1105,7 +1105,7 @@ class KelasPenjadwalanController extends Controller
 
             // dd((int) $request->kapasitas_kelas >= $data_kelas);
 
-            if((int) $request->kapasitas_kelas >= $data_kelas){
+            if($ruang->kapasitas_ruang >= $data_kelas){
                 KelasKuliah::where('id_kelas_kuliah', $id_kelas)->where('feeder', 0)->update(['ruang_perkuliahan_id' => $request->ruang_kelas,'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $ruang->kapasitas_ruang, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
             }else{
                 return redirect()->back()->with('error', 'Ubah kapasitas tidak boleh lebih kecil dari jumlah peserta kelas kuliah!!');

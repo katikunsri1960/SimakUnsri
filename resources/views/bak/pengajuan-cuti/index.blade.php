@@ -26,15 +26,32 @@ Daftar Pengajuan Cuti
             <div class="box">
                 <div class="box-body py-10">
                     <div class="col-md-6 mt-5">
-                        {{-- <div class="form-group row">
-                            <label class="col-form-label col-md-2">NIM</label>
-                            <div class="col-md-10">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="nim" placeholder="Masukan NIM mahasiswa">
-                                    <button class="btn btn-primary" id="btnCari"><i class="fa fa-search"></i> Cari</button>
-                                </div>
+                        <div class="pull-right">
+                            <form action="{{ route('bak.pengajuan-cuti') }}" method="get" id="semesterForm">
+
+                            {{-- <p class="mb-0 text-fade fs-18">Semester - </p> --}}
+                            <div class="mb-3">
+                                <label for="semester_view" class="form-label">Semester</label>
+                                <select
+                                    class="form-select"
+                                    name="semester_view"
+                                    id="semester_view"
+                                    onchange="document.getElementById('semesterForm').submit();"
+                                >
+                                    <option value="" selected disabled>-- Pilih Semester --</option>
+                                    @foreach ($pilihan_semester as $p)
+                                        <option value="{{$p->id_semester}}"
+                                            @if ($semester_view != null)
+                                            {{$semester_view == $p->id_semester ? 'selected' : ''}}
+                                            @else
+                                            {{$semester_aktif->id_semester == $p->id_semester ? 'selected' : ''}}
+                                            @endif
+                                            >{{$p->nama_semester}}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                        </div> --}}
+                            </form>
+                        </div>
                     </div>
                     <div class="table-responsive mt-5">
                         <table id="data" class="table table-bordered table-striped text-center">

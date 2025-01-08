@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Universitas;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Perkuliahan\TranskripMahasiswa;
@@ -323,14 +324,107 @@ class PerkuliahanController extends Controller
     }
 
 
-    public function aktivitas_mahasiswa()
+    public function aktivitas_mahasiswa(Request $request)
     {
-        return view('universitas.perkuliahan.aktivitas-mahasiswa');
+        $request->validate([
+            'semester' => 'nullable',
+            'semester.*' => 'nullable|exists:semesters,id_semester'
+        ]);
+
+        $pilihan_semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
+
+        $semester_view = $request->semester_view  ?? [SemesterAktif::select('id_semester')->first()->id_semester];
+        $prodi = ProgramStudi::select('id_prodi', 'kode_program_studi', 'nama_program_studi', 'nama_jenjang_pendidikan')->where('status', 'A')->orderBy('kode_program_studi')->get();
+        // $data = AktivitasMahasiswa::with(['prodi'])->whereIn('id_semester', $semester_view)->get();
+        $jenis_aktivitas = JenisAktivitasMahasiswa::select('id_jenis_aktivitas_mahasiswa', 'nama_jenis_aktivitas_mahasiswa')->get();
+        return view('universitas.perkuliahan.aktivitas-mahasiswa.index', [
+            'pilihan_semester' => $pilihan_semester,
+            'semester_view' => $semester_view,
+            // 'data' => $data,
+            'prodi' => $prodi,
+            'jenis_aktivitas' => $jenis_aktivitas
+        ]);
     }
 
     public function aktivitas_mahasiswa_data(Request $request)
     {
+        $searchValue = $request->input('search.value');
 
+        $query = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])->leftJoin('program_studis as prodi', 'aktivitas_mahasiswas.id_prodi', 'prodi.id_prodi');
+
+        if ($searchValue) {
+            $query = $query->where(function ($query) use ($searchValue) {
+                $query->where('judul', 'like', '%' . $searchValue . '%')
+                    ->orWhere('nama_jenis_aktivitas', 'like', '%' . $searchValue . '%')
+                    ->orWhereHas('anggota_aktivitas_personal', function ($query) use ($searchValue) {
+                        $query->where('nama_mahasiswa', 'like', '%' . $searchValue . '%')
+                            ->orWhere('nim', 'like', '%' . $searchValue . '%');
+                    });
+            });
+        }
+
+        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
+            $filter = $request->id_prodi;
+            $query->whereIn('aktivitas_mahasiswas.id_prodi', $filter);
+        }
+
+        if ($request->has('semester') && !empty($request->semester)) {
+            $filter = $request->semester;
+            $query->whereIn('id_semester', $filter);
+        } else {
+            $query->where('id_semester', SemesterAktif::first()->id_semester);
+        }
+
+        if($request->has('jenis') && !empty($request->jenis)){
+            $filter = $request->jenis;
+            $query->whereIn('id_jenis_aktivitas', $filter);
+        }
+
+        // if ($request->has('angkatan') && !empty($request->angkatan)) {
+        //     $filter = $request->angkatan;
+        //     $query->whereIn('angkatan', $filter);
+        // }
+
+        // if ($request->has('status_mahasiswa') && !empty($request->status_mahasiswa)) {
+        //     $filter = $request->status_mahasiswa;
+        //     $query->whereIn('id_status_mahasiswa', $filter);
+        // }
+
+        $recordsFiltered = $query->count();
+
+        $limit = $request->input('length');
+        $offset = $request->input('start');
+
+        // Define the column names that correspond to the DataTables column indices
+        if ($request->has('order')) {
+            $orderColumn = $request->input('order.0.column');
+            $orderDirection = $request->input('order.0.dir');
+
+            // Define the column names that correspond to the DataTables column indices
+            $columns = ['judul'];
+
+            // if ($columns[$orderColumn] == 'prodi') {
+            //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
+            //         ->orderBy('prodi.nama_jenjang_pendidikan', $orderDirection)
+            //         ->orderBy('prodi.nama_program_studi', $orderDirection)
+            //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
+            // } else {
+                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            // }
+        }
+
+        $data = $query->skip($offset)->take($limit)->select('aktivitas_mahasiswas.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi as nama_prodi', 'prodi.kode_program_studi as kode_prodi')->get();
+
+        $recordsTotal = AktivitasMahasiswa::count();
+
+        $response = [
+            'draw' => $request->input('draw'),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ];
+
+        return response()->json($response);
     }
 
     public function sync_aktivitas_mahasiswa()
