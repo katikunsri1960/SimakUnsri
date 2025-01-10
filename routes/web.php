@@ -827,6 +827,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('pembayaran-manual')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'index'])->name('univ.pembayaran-manual');
+                Route::post('/upload', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'pembayaran_manual_upload'])->name('univ.pembayaran-manual.upload');
                 Route::post('/store', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'store'])->name('univ.pembayaran-manual.store');
                 Route::patch('/update/{idmanual}', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'update'])->name('univ.pembayaran-manual.update');
                 Route::delete('/delete/{idmanual}', [App\Http\Controllers\Universitas\PembayaranManualMahasiswaController::class, 'destroy'])->name('univ.pembayaran-manual.delete');

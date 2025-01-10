@@ -7,8 +7,10 @@ use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Models\Mahasiswa\LulusDo;
 use App\Http\Controllers\Controller;
+use App\Imports\PembayaranManualImport;
 use App\Models\PembayaranManualMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PembayaranManualMahasiswaController extends Controller
 {
@@ -61,5 +63,17 @@ class PembayaranManualMahasiswaController extends Controller
         $idmanual->delete();
 
         return redirect()->back()->with('success', 'Data berhasil dihapus');
+    }
+
+    public function pembayaran_manual_upload(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $import = Excel::import(new PembayaranManualImport(), $file);
+
+        return redirect()->back()->with('success', "Data successfully imported!");
     }
 }
