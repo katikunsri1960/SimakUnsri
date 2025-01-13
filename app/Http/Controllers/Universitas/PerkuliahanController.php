@@ -341,7 +341,7 @@ class PerkuliahanController extends Controller
 
         $id_reg = $request->id_reg;
         $id_semester = $request->id_semester;
-        
+
         $data = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $id_semester)->first();
 
         if(!$data)
@@ -351,7 +351,7 @@ class PerkuliahanController extends Controller
 
         $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $id_semester)
-                ->orderBy('id_semester')
+                ->whereNotNull('nilai_huruf')
                 ->get();
 
             $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
