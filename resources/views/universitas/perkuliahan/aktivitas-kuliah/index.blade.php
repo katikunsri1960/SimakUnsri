@@ -179,6 +179,7 @@ Aktivitas Kuliah Mahasiswa
                 cancelButtonText: 'Batal'
             }, function(isConfirm) {
                 if (isConfirm) {
+                    $('#spinner').show();
                     $.ajax({
                         url: '{{ route("univ.perkuliahan.aktivitas-kuliah.hitung-ips") }}',
                         type: 'POST',
@@ -188,9 +189,19 @@ Aktivitas Kuliah Mahasiswa
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            console.log(response);
                             if (response.status === 'success') {
-                                swal("Berhasil!", response.message, "success");
+                                // swal("Berhasil!", response.message, "success");
+                                swal({
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                }, function(isConfirm){
+                                    if (isConfirm) {
+                                        window.location.reload();
+                                    }
+                                });
                             } else {
                                 swal("Gagal!", response.message, "error");
                             }
