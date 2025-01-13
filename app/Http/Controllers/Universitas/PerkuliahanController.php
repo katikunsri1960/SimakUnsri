@@ -8,6 +8,9 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Services\Feeder\FeederAPI;
 use App\Models\ProgramStudi;
@@ -250,6 +253,8 @@ class PerkuliahanController extends Controller
         if ($request->has('semester') && !empty($request->semester)) {
             $filter = $request->semester;
             $query->whereIn('id_semester', $filter);
+        } else {
+            $query->where('id_semester', SemesterAktif::first()->id_semester);
         }
 
         if ($request->has('angkatan') && !empty($request->angkatan)) {
@@ -321,6 +326,80 @@ class PerkuliahanController extends Controller
         $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model, $primary);
 
         return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
+    }
+
+    public function hitung_ips_per_id(Request $request)
+    {
+
+        if (!$request->has('id_reg') || empty($request->id_reg)) {
+            return response()->json(['status' => 'error', 'message' => 'ID Registrasi Mahasiswa Tidak Boleh Kosong!']);
+        }
+
+        if (!$request->has('id_semester') || empty($request->id_semester)) {
+            return response()->json(['status' => 'error', 'message' => 'ID Semester Tidak Boleh Kosong!']);
+        }
+
+        $id_reg = $request->id_reg;
+        $id_semester = $request->id_semester;
+
+        $data = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $id_semester)->first();
+
+        if(!$data)
+        {
+            return response()->json(['status' => 'error', 'message' => 'Data Tidak Ditemukan']);
+        }
+
+        $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $id_semester)
+                ->whereNotNull('nilai_huruf')
+                ->get();
+
+            $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+                        ->where('id_semester', $id_semester)
+                        ->where('ang.id_registrasi_mahasiswa', $id_reg)
+                        ->get();
+
+            $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                        ->where('id_semester', $id_semester)
+                        ->get();
+
+            $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
+            $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
+
+
+            // dd($semester, $tahun_ajaran, $prodi);
+            foreach ($khs as $t) {
+                $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+            }
+
+            foreach ($khs_transfer as $tf) {
+                $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
+            }
+
+            foreach ($khs_konversi as $kv) {
+                $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
+            }
+
+            $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
+
+            $ips = 0;
+
+            if($total_sks_semester > 0){
+                $ips = $total_bobot / $total_sks_semester;
+            }
+            try {
+                $data->update([
+                    'feeder'=>0,
+                    'ips' => round($ips, 2) // Simpan dengan pembulatan 2 desimal
+                ]);
+
+                return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
+            } catch (\Throwable $th) {
+                //throw $th;
+                return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! '.$th->getMessage()]);
+            }
+
+
     }
 
 

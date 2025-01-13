@@ -66,6 +66,7 @@ Aktivitas Kuliah Mahasiswa
                                     <th class="text-center-align-middle">SKS Semester</th>
                                     <th class="text-center-align-middle">SKS Total</th>
                                     <th class="text-center-align-middle">Jenis Pembiayaan</th>
+                                    <th class="text-center-align-middle">ACT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -155,7 +156,86 @@ Aktivitas Kuliah Mahasiswa
                 {data: 'sks_semester', name: 'sks_semester', class: "text-center align-middle", searchable: true},
                 {data: 'sks_total', name: 'sks_total', class: "text-center align-middle", searchable: true},
                 {data: 'nama_pembiayaan', name: 'nama_pembiayaan', class: "text-center align-middle", searchable: false},
+                {data: null, searchable: false, class: "text-center align-middle", sortable: false, render: function(data, type, row) {
+                    var button = '<button class="btn btn-secondary btn-sm hitung-ips" data-id-reg="' + data.id_registrasi_mahasiswa + '" data-id-semester="' + data.id_semester + '">Hitung IPS</button>';
+                    return button;
+                }},
             ],
+        });
+
+         // Event listener untuk tombol hitung IPS
+         $('#data').on('click', '.hitung-ips', function() {
+            var idReg = $(this).data('id-reg');
+            var idSemester = $(this).data('id-semester');
+
+            swal({
+                title: "Apakah Anda yakin?",
+                text: "Anda akan menghitung IPS untuk mahasiswa ini.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hitung!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $.ajax({
+                        url: '{{ route("univ.perkuliahan.aktivitas-kuliah.hitung-ips") }}',
+                        type: 'POST',
+                        data: {
+                            id_reg: idReg,
+                            id_semester: idSemester,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            if (response.status === 'success') {
+                                // swal("Berhasil!", response.message, "success");
+                                swal({
+                                    title: 'Berhasil!',
+                                    text: response.message,
+                                    type: 'success',
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                }, function(isConfirm){
+                                    if (isConfirm) {
+                                        window.location.reload();
+                                    }
+                                });
+                            } else {
+                                swal("Gagal!", response.message, "error");
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            swal("Error!", "Terjadi kesalahan saat menghitung IPS.", "error");
+                        }
+                    });
+                }
+            });
+            // }).then((willCalculate) => {
+            //     if (willCalculate) {
+            //         $.ajax({
+            //             url: '{{ route("univ.perkuliahan.aktivitas-kuliah.hitung-ips") }}',
+            //             type: 'POST',
+            //             data: {
+            //                 id_reg: idReg,
+            //                 id_semester: idSemester,
+            //                 _token: '{{ csrf_token() }}'
+            //             },
+            //             success: function(response) {
+            //                 console.log(response);
+            //                 if (response.status === 'success') {
+            //                     swal("Berhasil!", response.message, "success");
+            //                 } else {
+            //                     swal("Gagal!", response.message, "error");
+            //                 }
+            //             },
+            //             error: function(xhr, status, error) {
+            //                 swal("Error!", "Terjadi kesalahan saat menghitung IPS.", "error");
+            //             }
+            //         });
+            //     }
+            // });
         });
 
         // sweet alert sync-form
