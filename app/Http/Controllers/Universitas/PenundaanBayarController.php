@@ -3,12 +3,14 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
+use App\Imports\PenundaanBayarImport;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\PenundaanBayar;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PenundaanBayarController extends Controller
 {
@@ -18,6 +20,18 @@ class PenundaanBayarController extends Controller
         $semester = Semester::orderBy('id_semester', 'desc')->get();
 
         return view('universitas.penundaan-bayar.index', compact('data', 'semester'));
+    }
+
+    public function upload(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $import = Excel::import(new PenundaanBayarImport(), $file);
+
+        return redirect()->back()->with('success', "Data successfully imported!");
     }
 
     public function store(Request $request)

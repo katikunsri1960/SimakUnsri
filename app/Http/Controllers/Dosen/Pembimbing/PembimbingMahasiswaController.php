@@ -843,4 +843,126 @@ class PembimbingMahasiswaController extends Controller
             'semester_aktif' => $semester_aktif,
         ]);
     }
+
+    public function bimbingan_akademik_riwayat(Request $request)
+    {
+        $request->validate([
+            'semester_view' => 'nullable|exists:semesters,id_semester'
+        ]);
+
+        $semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
+
+        $semester_view = $request->semester_view ?? null;
+        $semester_pilih = $semester_view == null ? SemesterAktif::first()->id_semester : $semester_view;
+
+        $data = RiwayatPendidikan::with(['prodi', 'peserta_kelas', 'aktivitas_mahasiswa'])
+                    ->withCount(['peserta_kelas' => function($query) use ($semester_pilih) {
+                        $query->whereHas('kelas_kuliah', function($query) use ($semester_pilih) {
+                            $query->where('id_semester', $semester_pilih)
+                                ->where('approved', 0);
+                        });
+                    }, 'aktivitas_mahasiswa' => function($query) use ($semester_pilih) {
+                        $query->where('id_semester', $semester_pilih)
+                            ->where('approve_krs', 0);
+                    }])
+                    ->where(function($query) use ($semester_pilih) {
+                        $query->whereHas('peserta_kelas', function($query) use ($semester_pilih) {
+                            $query->whereHas('kelas_kuliah', function($query) use ($semester_pilih) {
+                                $query->where('id_semester', $semester_pilih);
+                            });
+                        })
+                        ->orWhereHas('aktivitas_mahasiswa', function($query) use ($semester_pilih) {
+                            $query->where('id_semester', $semester_pilih);
+                        });
+                    })
+                    ->where('dosen_pa', auth()->user()->fk_id)
+                ->get();
+        // $dataAktivitas = AktivitasMahasiswa::where('')
+
+        return view('dosen.pembimbing.akademik.riwayat.index', [
+            'data' => $data,
+            'semester' => $semester,
+            'semester_view' => $semester_view,
+            'semester_pilih' => $semester_pilih
+        ]);
+    }
+
+    public function bimbingan_akademik_riwayat_detail(RiwayatPendidikan $riwayat, $semester)
+    {
+        $id = $riwayat->id_registrasi_mahasiswa;
+        $biodata = BiodataMahasiswa::where('id_mahasiswa', $riwayat->id_mahasiswa)->first();
+        $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
+        // $semester = SemesterAktif::first();
+        $nama_semester = Semester::where('id_semester', $semester)->first()->nama_semester;
+
+        // dd($nilai_usept_mhs);
+
+        try {
+            // Set the time limit to 30 seconds (adjust as needed)
+            set_time_limit(10);
+
+            $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $biodata->nik])->max('score');
+            $db_course_usept = new CourseUsept;
+            $nilai_course = $db_course_usept->whereIn('nim', [$riwayat->nim, $biodata->nik])->get();
+
+            $nilai_usept_final = "Belum Ada Nilai";
+
+            if($nilai_usept_mhs !== null) {
+                $nilai_usept_final = $nilai_usept_mhs;
+
+                if($nilai_course){
+                    foreach($nilai_course as $n){
+                        $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
+
+                        if($nilai_hasil_course > $nilai_usept_mhs){
+                            $nilai_usept_final = $nilai_hasil_course;
+                            // Hentikan loop karena syarat sudah terpenuhi
+                            break;
+                        }
+                    }
+                }
+            }
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            $nilai_usept_final = "Belum Ada Nilai";
+            Log::error($th->getMessage());
+        }
+
+        $data = PesertaKelasKuliah::with(['kelas_kuliah.matkul'])
+                ->whereHas('kelas_kuliah', function($query) use ($semester) {
+                    $query->where('id_semester', $semester);
+                })
+                ->where('id_registrasi_mahasiswa', $id)
+                // ->withSum('kelas_kuliah.matkul as total_sks', 'sks_mata_kuliah')
+                ->orderBy('kode_mata_kuliah')
+                ->get();
+
+
+        $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
+                    ->whereHas('anggota_aktivitas_personal', function($query) use ($id) {
+                        $query->where('id_registrasi_mahasiswa', $id);
+                    })
+                    ->where('id_semester', $semester)
+                    ->whereIn('id_jenis_aktivitas', [1,2,3,4,5,6,22])
+                    ->get();
+
+        $aktivitas_mbkm = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
+                        ->whereHas('anggota_aktivitas_personal', function($query) use ($id) {
+                            $query->where('id_registrasi_mahasiswa', $id);
+                        })
+                        ->where('id_semester', $semester)
+                        ->whereIn('id_jenis_aktivitas',[13,14,15,16,17,18,19,20,21])
+                        ->get();
+
+        return view('dosen.pembimbing.akademik.riwayat.detail', [
+            'riwayat' => $riwayat,
+            'nilai_usept' => $nilai_usept_final,
+            'data' => $data,
+            'aktivitas' => $aktivitas,
+            'aktivitas_mbkm' => $aktivitas_mbkm,
+            'semester_aktif' => $semester,
+            'nama_semester' => $nama_semester
+        ]);
+    }
 }
