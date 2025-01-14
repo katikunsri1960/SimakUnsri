@@ -138,7 +138,7 @@
                             <span>Penilaian Perkuliahan</span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('dosen.penilaian.riwayat-penilaian') | request()->routeIs('dosen.penilaian.riwayat-penilaian.*')  ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('dosen.penilaian.riwayat-penilaian') || request()->routeIs('dosen.penilaian.riwayat-penilaian.*')  ? 'active' : ''}}">
                         <a href="{{route('dosen.penilaian.riwayat-penilaian')}}">
                             <i class="fa fa-book"><span class="path1"></span><span class="path2"></span></i>
                             <span>Riwayat Penilaian</span>
@@ -151,11 +151,36 @@
                         </a>
                     </li>
                     <li class="header">Pembimbing Mahasiswa</li>
-                    <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-akademik') ? 'active' : ''}}">
-                        <a href="{{route('dosen.pembimbing.bimbingan-akademik')}}">
+                    <li class="treeview {{request()->routeIs('dosen.pembimbing.bimbingan-akademik') || request()->routeIs('dosen.pembimbing.bimbingan-akademik.*') ? 'active' : ''}}">
+                        {{-- <a href="{{route('dosen.pembimbing.bimbingan-akademik')}}"> --}}
+                            <a href="#">
+                                <i class="fa fa-file-lines"><span class="path1"></span><span class="path2"></span></i>
+                                <span>Akademik</span>
+                                <span class="pull-right-container">
+                                    <i class="fa fa-angle-right pull-right"></i>
+                                </span>
+                            </a>
+                        {{-- <a href="#">
                             <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
                             <span>Pembimbing Akademik</span>
-                        </a>
+                        </a> --}}
+
+                        {{-- <a href="#">
+                            <i class="fa fa-calendar-o"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Jadwal Dosen</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a> --}}
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-akademik') ? 'active' : ''}}">
+                                <a href="{{route('dosen.pembimbing.bimbingan-akademik')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing Akademik</a>
+                            </li>
+                            <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-akademik.riwayat') | request()->routeIs('dosen.pembimbing.bimbingan-akademik.riwayat.*') ? 'active' : ''}}">
+                                <a href="{{route('dosen.pembimbing.bimbingan-akademik.riwayat')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Riwayat</a>
+                            </li>
+                        </ul>
+
                     </li>
                     <li class="{{request()->routeIs('dosen.pembimbing.bimbingan-non-akademik') ? 'active' : ''}}">
                         <a href="{{route('dosen.pembimbing.bimbingan-non-akademik')}}">
