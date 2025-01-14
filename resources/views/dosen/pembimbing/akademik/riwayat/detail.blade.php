@@ -55,7 +55,7 @@ Bimbingan Akademik Dosen
                             </table>
                         </div>
                         <div class="d-flex justify-content-end align-middle">
-                   
+
                         </div>
                     </div>
                 </div>
@@ -175,8 +175,6 @@ Bimbingan Akademik Dosen
                 "autoWidth": true,
             });
 
-            confirmSubmit('approveAll');
-            confirmSubmit('batalKRS');
         });
     </script>
 @endpush

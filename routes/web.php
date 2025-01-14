@@ -825,6 +825,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('p-bayar')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\PenundaanBayarController::class, 'index'])->name('univ.p-bayar');
+                Route::post('upload', [App\Http\Controllers\Universitas\PenundaanBayarController::class, 'upload'])->name('univ.p-bayar.upload');
                 Route::post('/store', [App\Http\Controllers\Universitas\PenundaanBayarController::class, 'store'])->name('univ.p-bayar.store');
                 Route::patch('/update/{penundaan}', [App\Http\Controllers\Universitas\PenundaanBayarController::class, 'update'])->name('univ.p-bayar.update');
                 Route::delete('/delete/{penundaan}', [App\Http\Controllers\Universitas\PenundaanBayarController::class, 'destroy'])->name('univ.p-bayar.delete');
