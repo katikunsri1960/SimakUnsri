@@ -906,10 +906,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('monitoring')->group(function(){
                 Route::prefix('update-akm')->group(function () {
-
                     Route::get('/', [App\Http\Controllers\Universitas\UpdateAKMController::class, 'akm'])->name('univ.monitoring.update-akm');
                     Route::get('/data', [App\Http\Controllers\Universitas\UpdateAKMController::class, 'data'])->name('univ.monitoring.update-akm.data');
                     Route::post('/hitung-ips', [App\Http\Controllers\Universitas\UpdateAKMController::class, 'hitungIps'])->name('univ.monitoring.update-akm.hitung-ips');
+                    Route::get('/check-sync', [App\Http\Controllers\Universitas\UpdateAKMController::class, 'getProgres'])->name('univ.get-progress');
                     Route::get('/progress-hitung-ips/{semester}', function ($semester) {
                         $progress = Cache::get("progress_hitung_ips_{$semester}", 0); // Default 0 jika tidak ada
                         return response()->json(['progress' => $progress]);
