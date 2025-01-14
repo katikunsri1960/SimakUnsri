@@ -332,9 +332,13 @@ function getKrs() {
                 error: function(xhr, status, error) {
                     $('#loading').hide(); // Sembunyikan loading jika ada error
                     clearInterval(progressInterval); // Hentikan progress bar
+                    let errorMessage = xhr.responseJSON?.message || "Terjadi kesalahan saat menghitung IPS.";
+                    if (errorMessage.length > 1000) {
+                        errorMessage = errorMessage.substring(0, 1000) + '...'; // Potong pesan hingga 1000 karakter
+                    }
                     swal({
                         title: "Error!",
-                        text: xhr.responseJSON?.message || "Terjadi kesalahan saat menghitung IPS.",
+                        text: errorMessage,
                         type: "error",
                         buttons: {
                             confirm: {
@@ -343,6 +347,7 @@ function getKrs() {
                         }
                     });
                 }
+
             });
         });
     });

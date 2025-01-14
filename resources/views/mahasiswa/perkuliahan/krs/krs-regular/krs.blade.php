@@ -242,8 +242,8 @@
                                                                                 <span class="badge badge-xl badge-warning-light">Menunggu konfirmasi dosen</span>
                                                                             @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 2)
                                                                                 <span class="badge badge-xl badge-danger-light">Ditolak dosen pembimbing</span>
-                                                                            @elseif ($data->approve_krs == 0 && $dosen_bimbing->approved == 1)
-                                                                                <span class="badge badge-xl badge-warning-light">Dibatalkan Dosen PA</span>
+                                                                            {{-- @elseif ($data->approve_krs == 0 && $dosen_bimbing->approved == 1)
+                                                                                <span class="badge badge-xl badge-warning-light">Dibatalkan Dosen PA</span> --}}
                                                                             @else
                                                                                 <span class="badge badge-xl badge-success-light">Disetujui</span>
                                                                             @endif
