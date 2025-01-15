@@ -232,7 +232,7 @@
                                                                 <td class="text-center align-middle" style="width:10%">
                                                                     @foreach ($data->bimbing_mahasiswa as $dosen_bimbing)
                                                                         <div class="mb-20">
-                                                                            @if ($data->approve_krs == 0 && $dosen_bimbing->approved == 0 && $data->submitted == 0)
+                                                                            @if ($data->approve_krs == 0 && $data->submitted == 0)
                                                                                 <span class="badge badge-xl badge-danger-light">Belum Diajukan</span>
                                                                             @elseif ($data->approve_krs == 0 && $data->submitted == 1 )
                                                                                 <span class="badge badge-xl badge-warning-light">Sudah Diajukan<br>Menunggu Persetujuan Dosen PA</span>
@@ -242,8 +242,8 @@
                                                                                 <span class="badge badge-xl badge-warning-light">Menunggu konfirmasi dosen</span>
                                                                             @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 2)
                                                                                 <span class="badge badge-xl badge-danger-light">Ditolak dosen pembimbing</span>
-                                                                            {{-- @elseif ($data->approve_krs == 0 && $dosen_bimbing->approved == 1)
-                                                                                <span class="badge badge-xl badge-warning-light">Dibatalkan Dosen PA</span> --}}
+                                                                            @elseif ($data->approve_krs == 0 && $data->submitted == 1 && $dosen_bimbing->approved == 1)
+                                                                            <span class="badge badge-xl badge-warning-light">Sudah Diajukan<br>Menunggu Persetujuan Dosen PA</span>
                                                                             @else
                                                                                 <span class="badge badge-xl badge-success-light">Disetujui</span>
                                                                             @endif

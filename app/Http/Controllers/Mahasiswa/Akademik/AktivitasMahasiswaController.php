@@ -526,9 +526,10 @@ class AktivitasMahasiswaController extends Controller
         try {
 
             if ($aktivitas->approve_krs ==1) {
+                if ($aktivitas->bimbing_mahasiswa->first()->approved == 1) {
+                    return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas ini, Aktivitas telah disetujui oleh KoProdi');
+                }
                 return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas ini, Aktivitas telah disetujui Dosen Pembimbing Akademik');
-            } elseif ($aktivitas->bimbing_mahasiswa->first()->approved == 1) {
-                return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas ini, Aktivitas telah disetujui oleh KoProdi');
             }
     
             // Menghapus bimbingan mahasiswa
