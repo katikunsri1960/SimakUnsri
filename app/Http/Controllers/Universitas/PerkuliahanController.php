@@ -250,9 +250,8 @@ class PerkuliahanController extends Controller
             'id_semester' => 'required|exists:semesters,id_semester',
             'status_mahasiswa_id' => 'required|in:A,M,C,N',
         ]);
-//  dd($validatedData);
-        $semester_aktif = SemesterAktif::first();
-
+//      dd($validatedData);
+        
         $semester = Semester::where('id_semester',$validatedData['id_semester'])->first();
 
         $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
@@ -262,11 +261,10 @@ class PerkuliahanController extends Controller
             'A' => 'Aktif',
             'M' => 'Kampus Merdeka',
             'C' => 'Cuti',
-            'N' => 'Non-Aktif'
+            'N' => 'Non-Aktif',
         ];
 
         $nama_status_mahasiswa = $statusMap[$validatedData['status_mahasiswa_id']];
-
 
         $existingData = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
                 ->where('id_semester', $validatedData['id_semester'])
@@ -280,7 +278,7 @@ class PerkuliahanController extends Controller
         
         $tagihan = Tagihan::with('pembayaran')
             ->whereIn('nomor_pembayaran', [$riwayat->nim])
-            ->where('kode_periode', $semester_aktif->id_semester)
+            ->where('kode_periode', $validatedData['id_semester'])
             ->first();
 
             try {
@@ -305,12 +303,11 @@ class PerkuliahanController extends Controller
                     'ipk' => number_format($validatedData['ipk'], 2),
                     'sks_semester' => $validatedData['sks_semester'],
                     'sks_total' => $validatedData['sks_total'],
-                    'biaya_kuliah_smt' => optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, // Isi 0 jika pembayaran kosong
+                    'biaya_kuliah_smt' => number_format(optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, 2, '.', ''), // Format biaya dengan 2 angka desimal
                     'id_pembiayaan' => $validatedData['id_pembiayaan'],
                     'status_sync' => 'belum sync',
                 ]);
-                             
-            
+                            
             DB::commit();
     
             // Jika berhasil, kembalikan respons sukses
