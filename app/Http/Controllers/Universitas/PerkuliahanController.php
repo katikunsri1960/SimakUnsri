@@ -288,11 +288,15 @@ class PerkuliahanController extends Controller
             ->where('kode_periode', $validatedData['id_semester'])
             ->first();
 
-        if ($pembayaran_manual || $beasiswa) {
+        if ($beasiswa) {
             $biaya_kuliah_smt = '0.00'; // Jika ada di tabel pembayaran_manual atau beasiswa
-        } else {
+        } elseif ($pembayaran_manual){
+            $biaya_kuliah_smt = number_format($pembayaran_manual->nominal_ukt, 2, '.', '');
+        }
+        else {
             $biaya_kuliah_smt = number_format(optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, 2, '.', '');
         }
+
         try {
             // Gunakan transaksi untuk memastikan semua operasi database berhasil
             DB::beginTransaction();
