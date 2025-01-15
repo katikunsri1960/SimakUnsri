@@ -96,27 +96,22 @@ Aktivitas Pertukaran Pelajar
                                             @endforeach
                                         </td>
                                         <td class="text-center align-middle" style="width:10%">
-                                            {{-- @if ($data->approve_krs == 0)
-                                                <span class="badge badge-lg badge-danger">Belum Disetujui</span>
-                                            @else
-                                                <span class="badge badge-lg badge-success">Disetujui</span>
-                                            @endif --}}
-
-                                            {{-- PEMBIMBING PMM --}}
                                             @foreach ($data->bimbing_mahasiswa as $dosen_bimbing)
                                                 <div class="mb-20">
-                                                    @if ($data->approve_krs == 0 && $dosen_bimbing->approved == 0)
-                                                        <span class="badge badge-lg badge-danger-light">Belum Disetujui</span>
-                                                    @elseif ($dosen_bimbing->approved == 0)
-                                                        <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi Koprodi</span>
+                                                    @if ($data->approve_krs == 0 && $data->submitted == 0)
+                                                        <span class="badge badge-xl badge-danger-light">Belum Diajukan</span>
+                                                    @elseif ($data->approve_krs == 0 && $data->submitted == 1 )
+                                                        <span class="badge badge-xl badge-warning-light">Sudah Diajukan<br>Menunggu Persetujuan Dosen PA</span>
+                                                    @elseif ($data->submitted == 1 && $dosen_bimbing->approved == 0)
+                                                        <span class="badge badge-xl badge-warning-light">Menunggu konfirmasi Koprodi</span>
                                                     @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 0)
-                                                        <span class="badge badge-lg badge-warning-light">Menunggu konfirmasi dosen</span>
-                                                    @elseif ($data->approve_krs == 0 && $dosen_bimbing->approved_dosen == 1)
-                                                        <span class="badge badge-lg badge-success-light">Disetujui Dosen Pembimbing</span>
-                                                    {{-- @elseif ($data->approve_krs == 0 && $dosen_bimbing->approved == 1)
-                                                        <span class="badge badge-lg badge-warning-light">Dibatalkan Dosen PA</span> --}}
+                                                        <span class="badge badge-xl badge-warning-light">Menunggu konfirmasi dosen</span>
+                                                    @elseif ($data->approve_krs == 1 && $dosen_bimbing->approved_dosen == 2)
+                                                        <span class="badge badge-xl badge-danger-light">Ditolak dosen pembimbing</span>
+                                                    @elseif ($data->approve_krs == 0 && $data->submitted == 1 && $dosen_bimbing->approved == 1)
+                                                    <span class="badge badge-xl badge-warning-light">Sudah Diajukan<br>Menunggu Persetujuan Dosen PA</span>
                                                     @else
-                                                        <span class="badge badge-lg badge-success-light">Disetujui</span>
+                                                        <span class="badge badge-xl badge-success-light">Disetujui</span>
                                                     @endif
                                                 </div>
                                             @endforeach
