@@ -75,7 +75,7 @@
                                 </select>
                             </div>
                             <div class="col-lg-6 mb-3">
-                                <label for="id_pembiayaan" class="form-label">Id Pembiayaan</label>
+                                <label for="id_pembiayaan" class="form-label">Jenis Pembiayaan</label>
                                 <select name="id_pembiayaan" id="id_pembiayaan" required class="form-select">
                                     <option value="" selected disabled>-- Pilih Status --</option>
                                     <option value="1">Mandiri</option>
