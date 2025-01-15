@@ -6,6 +6,7 @@ use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
+use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\DB;
@@ -15,6 +16,7 @@ use App\Models\Connection\Pembayaran;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PembayaranManualMahasiswa;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
@@ -275,38 +277,48 @@ class PerkuliahanController extends Controller
                 'error' => 'Data aktivitas kuliah sudah ada untuk mahasiswa ini di semester tersebut.'
             ])->withInput();
         }
+
+        //Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai 
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
+        // dd($beasiswa);
+        $pembayaran_manual=PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
         
         $tagihan = Tagihan::with('pembayaran')
             ->whereIn('nomor_pembayaran', [$riwayat->nim])
             ->where('kode_periode', $validatedData['id_semester'])
             ->first();
 
-            try {
-                // Gunakan transaksi untuk memastikan semua operasi database berhasil
-                DB::beginTransaction();
-                
-                // Simpan data ke tabel anggota_aktivitas_mahasiswas
-                AktivitasKuliahMahasiswa::create([
-                    'feeder' => 0,
-                    'id_registrasi_mahasiswa' => $validatedData['id_registrasi_mahasiswa'],
-                    'nim' => $riwayat->nim,
-                    'nama_mahasiswa' => $riwayat->nama_mahasiswa,
-                    'id_prodi' => $riwayat->id_prodi,
-                    'nama_program_studi' => $riwayat->nama_program_studi,
-                    'angkatan' => substr($riwayat->angkatan, 0, 4),
-                    'id_periode_masuk' => $riwayat->id_periode_masuk,
-                    'id_semester' => $validatedData['id_semester'],
-                    'nama_semester' => $semester->nama_semester,
-                    'id_status_mahasiswa' => $validatedData['status_mahasiswa_id'],
-                    'nama_status_mahasiswa' => $nama_status_mahasiswa,
-                    'ips' => number_format($validatedData['ips'], 2),
-                    'ipk' => number_format($validatedData['ipk'], 2),
-                    'sks_semester' => $validatedData['sks_semester'],
-                    'sks_total' => $validatedData['sks_total'],
-                    'biaya_kuliah_smt' => number_format(optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, 2, '.', ''), // Format biaya dengan 2 angka desimal
-                    'id_pembiayaan' => $validatedData['id_pembiayaan'],
-                    'status_sync' => 'belum sync',
-                ]);
+        if ($pembayaran_manual || $beasiswa) {
+            $biaya_kuliah_smt = '0.00'; // Jika ada di tabel pembayaran_manual atau beasiswa
+        } else {
+            $biaya_kuliah_smt = number_format(optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, 2, '.', '');
+        }
+        try {
+            // Gunakan transaksi untuk memastikan semua operasi database berhasil
+            DB::beginTransaction();
+            
+            // Simpan data ke tabel anggota_aktivitas_mahasiswas
+            AktivitasKuliahMahasiswa::create([
+                'feeder' => 0,
+                'id_registrasi_mahasiswa' => $validatedData['id_registrasi_mahasiswa'],
+                'nim' => $riwayat->nim,
+                'nama_mahasiswa' => $riwayat->nama_mahasiswa,
+                'id_prodi' => $riwayat->id_prodi,
+                'nama_program_studi' => $riwayat->nama_program_studi,
+                'angkatan' => substr($riwayat->angkatan, 0, 4),
+                'id_periode_masuk' => $riwayat->id_periode_masuk,
+                'id_semester' => $validatedData['id_semester'],
+                'nama_semester' => $semester->nama_semester,
+                'id_status_mahasiswa' => $validatedData['status_mahasiswa_id'],
+                'nama_status_mahasiswa' => $nama_status_mahasiswa,
+                'ips' => number_format($validatedData['ips'], 2),
+                'ipk' => number_format($validatedData['ipk'], 2),
+                'sks_semester' => $validatedData['sks_semester'],
+                'sks_total' => $validatedData['sks_total'],
+                'biaya_kuliah_smt' => $biaya_kuliah_smt,
+                'id_pembiayaan' => $validatedData['id_pembiayaan'],
+                'status_sync' => 'belum sync',
+            ]);
                             
             DB::commit();
     
