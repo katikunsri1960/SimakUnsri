@@ -2,24 +2,27 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Models\Perkuliahan\MataKuliah;
-use App\Http\Controllers\Controller;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\KelasKuliah;
-use App\Models\Perkuliahan\KomponenEvaluasiKelas;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\NilaiPerkuliahan;
-use App\Models\Perkuliahan\NilaiTransferPendidikan;
-use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Services\Feeder\FeederAPI;
-use App\Models\ProgramStudi;
-use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Semester;
-use App\Models\SemesterAktif;
+use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Bus;
+use App\Models\SemesterAktif;
+use App\Models\Connection\Tagihan;
+use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Bus;
+use App\Http\Controllers\Controller;
+use App\Models\Connection\Pembayaran;
+use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Referensi\JenisAktivitasMahasiswa;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
 class PerkuliahanController extends Controller
 {
@@ -233,6 +236,95 @@ class PerkuliahanController extends Controller
             'status_mahasiswa' => $status_mahasiswa
         ]);
     }
+
+    public function aktivitas_kuliah_store(Request $request)
+    {
+        // Validasi data input
+        $validatedData = $request->validate([
+            'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
+            'ips' => 'nullable|numeric|between:0,4.00',
+            'ipk' => 'nullable|numeric|between:0,4.00',
+            'sks_semester' => 'required|numeric',
+            'sks_total' => 'required|numeric',
+            'id_pembiayaan' => 'required|in:1,2,3',
+            'id_semester' => 'required|exists:semesters,id_semester',
+            'status_mahasiswa_id' => 'required|in:A,M,C',
+        ]);
+//  dd($validatedData);
+        $semester_aktif = SemesterAktif::first();
+
+        $semester = Semester::where('id_semester',$validatedData['id_semester'])->first();
+
+        $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
+
+        // Tentukan nama status mahasiswa berdasarkan input
+        $statusMap = [
+            'A' => 'Aktif',
+            'M' => 'Kampus Merdeka',
+            'C' => 'Cuti',
+        ];
+
+        $nama_status_mahasiswa = $statusMap[$validatedData['status_mahasiswa_id']];
+
+
+        $existingData = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
+                ->where('id_semester', $validatedData['id_semester'])
+                ->first();
+
+        if ($existingData) {
+            return redirect()->back()->withErrors([
+                'error' => 'Data aktivitas kuliah sudah ada untuk mahasiswa ini di semester tersebut.'
+            ])->withInput();
+        }
+        
+        $tagihan = Tagihan::with('pembayaran')
+            ->whereIn('nomor_pembayaran', [$riwayat->nim])
+            ->where('kode_periode', $semester_aktif->id_semester)
+            ->first();
+
+            try {
+                // Gunakan transaksi untuk memastikan semua operasi database berhasil
+                DB::beginTransaction();
+                
+                // Simpan data ke tabel anggota_aktivitas_mahasiswas
+                AktivitasKuliahMahasiswa::create([
+                    'feeder' => 0,
+                    'id_registrasi_mahasiswa' => $validatedData['id_registrasi_mahasiswa'],
+                    'nim' => $riwayat->nim,
+                    'nama_mahasiswa' => $riwayat->nama_mahasiswa,
+                    'id_prodi' => $riwayat->id_prodi,
+                    'nama_program_studi' => $riwayat->nama_program_studi,
+                    'angkatan' => substr($riwayat->angkatan, 0, 4),
+                    'id_periode_masuk' => $riwayat->id_periode_masuk,
+                    'id_semester' => $validatedData['id_semester'],
+                    'nama_semester' => $semester->nama_semester,
+                    'id_status_mahasiswa' => $validatedData['status_mahasiswa_id'],
+                    'nama_status_mahasiswa' => $nama_status_mahasiswa,
+                    'ips' => number_format($validatedData['ips'], 2),
+                    'ipk' => number_format($validatedData['ipk'], 2),
+                    'sks_semester' => $validatedData['sks_semester'],
+                    'sks_total' => $validatedData['sks_total'],
+                    'biaya_kuliah_smt' => optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, // Isi 0 jika pembayaran kosong
+                    'id_pembiayaan' => $validatedData['id_pembiayaan'],
+                    'status_sync' => 'belum sync',
+                ]);
+                             
+            
+            DB::commit();
+    
+            // Jika berhasil, kembalikan respons sukses
+            return redirect()->route('univ.perkuliahan.aktivitas-kuliah')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
+    
+            } catch (\Exception $e) {
+            // Handle error
+            return redirect()->back()->withErrors([
+                'error' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()
+            ])->withInput();
+        }
+    }
+
+
+    
 
     public function aktivitas_kuliah_data(Request $request)
     {

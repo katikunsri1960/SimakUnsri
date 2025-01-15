@@ -26,29 +26,34 @@ Aktivitas Kuliah Mahasiswa
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    <div class="row">
-                        <div class="col-md-6 text-start">
+                    {{-- <div class="row"> --}}
+                        <div class="d-flex justify-content-start">
                             <button type="button" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
                             data-bs-target="#filter-button">
                             <i class="fa fa-filter"></i> Filter
                         </button>
                         @include('universitas.perkuliahan.aktivitas-kuliah.filter')
                         <span class="divider-line mx-1"></span>
-                        <a href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"
-                            class="btn btn-warning waves-effect waves-light">
-                            <i class="fa fa-refresh"></i> Reset Filter
-                        </a>
+                            <a href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"
+                                class="btn btn-warning waves-effect waves-light">
+                                <i class="fa fa-refresh"></i> Reset Filter
+                            </a>
                         </div>
-                        <div class="col-md-6 text-end">
+                        <div class="d-flex justify-content-end">
                             <form action="{{route('univ.perkuliahan.aktivitas-kuliah.sync')}}" method="get" id="sync-form">
                                 <button class="btn btn-primary waves-effect waves-light" type="submit"><i
                                         class="fa fa-refresh"></i> Sinkronisasi</button>
                             </form>
                             <span class="divider-line mx-1"></span>
+                        
+                            <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
+                            data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
+                            <span class="divider-line mx-1"></span>                          
                         </div>
                     </div>
 
                 </div>
+                @include('universitas.perkuliahan.aktivitas-kuliah.create')
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table  table-hover margin-top-10 w-p100" style="font-size: 10pt">
@@ -115,6 +120,62 @@ Aktivitas Kuliah Mahasiswa
             width: '100%',
             dropdownParent: $('#filter-button')
         });
+        $('#status_mahasiswa_id').select2({
+            placeholder: 'Pilih Status',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#createModal')
+        });
+
+        $("#id_registrasi_mahasiswa").select2({
+            placeholder: '-- Masukan NIM / Nama Mahasiswa --',
+            dropdownParent: $('#createModal'),
+            width: '100%',
+            minimumInputLength: 3,
+            ajax: {
+                url: "{{route('univ.pengaturan.akun.get-mahasiswa')}}",
+                type: "GET",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // search term
+                    };
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: "("+item.nim+") "+item.nama_mahasiswa,
+                                id: item.id_registrasi_mahasiswa
+                            }
+                        })
+                    };
+                },
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const formatToTwoDecimal = (value) => {
+                if (!value) return '';
+                const number = parseFloat(value);
+                return isNaN(number) ? '' : number.toFixed(2);
+            };
+
+            // Event Listener untuk IPS
+            const ipsInput = document.getElementById('ips');
+            ipsInput.addEventListener('blur', function () {
+                this.value = formatToTwoDecimal(this.value);
+            });
+
+            // Event Listener untuk IPK
+            const ipkInput = document.getElementById('ipk');
+            ipkInput.addEventListener('blur', function () {
+                this.value = formatToTwoDecimal(this.value);
+            });
+        });
+
 
         $('#data').DataTable({
             // dom: 'Bfrtip',
@@ -212,31 +273,9 @@ Aktivitas Kuliah Mahasiswa
                     });
                 }
             });
-            // }).then((willCalculate) => {
-            //     if (willCalculate) {
-            //         $.ajax({
-            //             url: '{{ route("univ.perkuliahan.aktivitas-kuliah.hitung-ips") }}',
-            //             type: 'POST',
-            //             data: {
-            //                 id_reg: idReg,
-            //                 id_semester: idSemester,
-            //                 _token: '{{ csrf_token() }}'
-            //             },
-            //             success: function(response) {
-            //                 console.log(response);
-            //                 if (response.status === 'success') {
-            //                     swal("Berhasil!", response.message, "success");
-            //                 } else {
-            //                     swal("Gagal!", response.message, "error");
-            //                 }
-            //             },
-            //             error: function(xhr, status, error) {
-            //                 swal("Error!", "Terjadi kesalahan saat menghitung IPS.", "error");
-            //             }
-            //         });
-            //     }
-            // });
         });
+
+        
 
         // sweet alert sync-form
         $('#sync-form').submit(function(e){
