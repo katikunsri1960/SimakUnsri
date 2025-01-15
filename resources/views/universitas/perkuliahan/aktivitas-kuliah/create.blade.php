@@ -38,6 +38,7 @@
                             <option value="A">Aktif</option>
                             <option value="M">Kampus Merdeka</option>
                             <option value="C">Cuti</option>
+                            <option value="N">Non-Aktif</option>
                         </select>
                     </div>
                 </div>

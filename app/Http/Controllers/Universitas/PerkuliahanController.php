@@ -248,7 +248,7 @@ class PerkuliahanController extends Controller
             'sks_total' => 'required|numeric',
             'id_pembiayaan' => 'required|in:1,2,3',
             'id_semester' => 'required|exists:semesters,id_semester',
-            'status_mahasiswa_id' => 'required|in:A,M,C',
+            'status_mahasiswa_id' => 'required|in:A,M,C,N',
         ]);
 //  dd($validatedData);
         $semester_aktif = SemesterAktif::first();
@@ -262,6 +262,7 @@ class PerkuliahanController extends Controller
             'A' => 'Aktif',
             'M' => 'Kampus Merdeka',
             'C' => 'Cuti',
+            'N' => 'Non-Aktif'
         ];
 
         $nama_status_mahasiswa = $statusMap[$validatedData['status_mahasiswa_id']];

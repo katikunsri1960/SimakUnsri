@@ -120,13 +120,7 @@ Aktivitas Kuliah Mahasiswa
             width: '100%',
             dropdownParent: $('#filter-button')
         });
-        $('#status_mahasiswa_id').select2({
-            placeholder: 'Pilih Status',
-            allowClear: true,
-            width: '100%',
-            dropdownParent: $('#createModal')
-        });
-
+        
         $("#id_registrasi_mahasiswa").select2({
             placeholder: '-- Masukan NIM / Nama Mahasiswa --',
             dropdownParent: $('#createModal'),
