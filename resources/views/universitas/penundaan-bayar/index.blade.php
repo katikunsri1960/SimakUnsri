@@ -27,10 +27,20 @@ Penundaan Bayar
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
                         data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
+                        <span class="divider-line mx-1"></span>
+                        <button
+                        type="button"
+                        class="btn btn-primary waves-effect waves-light"
+                        data-bs-toggle="modal"
+                        data-bs-target="#uploadModal"
+                    >
+                    <i class="fa fa-upload me-2"></i>Upload Data
+                    </button>
                     </div>
                 </div>
                 @include('universitas.penundaan-bayar.create')
                 @include('universitas.penundaan-bayar.edit')
+                @include('universitas.penundaan-bayar.upload')
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
@@ -184,6 +194,25 @@ Penundaan Bayar
         }, function(isConfirm){
             if (isConfirm) {
                 $('#storeForm').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
+    });
+
+    $('#uploadForm').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Simpan Data',
+            text: "Apakah anda yakin ingin menyimpan data?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#uploadForm').unbind('submit').submit();
                 $('#spinner').show();
             }
         });

@@ -1598,6 +1598,15 @@ class PesertaKelasKuliah extends Model
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
 
+        if ($total_sks > 24 || $total_sks > $sks_max) {
+            $result = [
+                'status' => 'error',
+                'message' => 'Total SKS yang diambil melebihi batas maksimal SKS!',
+            ];
+
+            return $result;
+        }
+
         $status_akm = [
             'id_status_mahasiswa' => $riwayat_pendidikan->id_jenis_daftar == '14' || $data_mbkm > 0 || $data_mbkm_eksternal > 0 ? 'M' : 'A',
             'nama_status_mahasiswa' => $riwayat_pendidikan->id_jenis_daftar == '14' || $data_mbkm > 0 || $data_mbkm_eksternal > 0  ? 'Kampus Merdeka' : 'Aktif',

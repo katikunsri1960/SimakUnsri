@@ -265,7 +265,7 @@ Transkrip Nilai
                             checkSync(id_batch);
                         }, 3000); // Request every 2 seconds
                     } else {
-              
+
                         // reload page
                         location.reload();
                     }
@@ -380,7 +380,7 @@ Transkrip Nilai
                                 table.row.add([
                                     `<td class="text-center align-middle"></td>`,
                                     `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
-                                    `<td class="text-start align-middle">${krs.nama_mata_kuliah}</td>`,
+                                    `<td class=" align-middle">${krs.nama_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
