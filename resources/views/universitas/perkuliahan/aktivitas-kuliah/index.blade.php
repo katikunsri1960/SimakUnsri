@@ -20,39 +20,35 @@ Aktivitas Kuliah Mahasiswa
         </div>
     </div>
 </div>
-
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
-                    {{-- <div class="row"> --}}
-                        <div class="d-flex justify-content-start">
-                            <button type="button" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
+                <div class="box-header with-border d-flex justify-content-between">
+                    <div class="d-flex justify-content-start">
+                        <button type="button" class="btn btn-secondary waves-effect waves-light" data-bs-toggle="modal"
                             data-bs-target="#filter-button">
                             <i class="fa fa-filter"></i> Filter
                         </button>
-                        @include('universitas.perkuliahan.aktivitas-kuliah.filter')
                         <span class="divider-line mx-1"></span>
-                            <a href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"
-                                class="btn btn-warning waves-effect waves-light">
-                                <i class="fa fa-refresh"></i> Reset Filter
-                            </a>
-                        </div>
-                        <div class="d-flex justify-content-end">
-                            <form action="{{route('univ.perkuliahan.aktivitas-kuliah.sync')}}" method="get" id="sync-form">
-                                <button class="btn btn-primary waves-effect waves-light" type="submit"><i
-                                        class="fa fa-refresh"></i> Sinkronisasi</button>
-                            </form>
-                            <span class="divider-line mx-1"></span>
-                        
-                            <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
-                            data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
-                            <span class="divider-line mx-1"></span>                          
-                        </div>
+                        <a href="{{route('univ.perkuliahan.aktivitas-kuliah')}}"
+                            class="btn btn-warning waves-effect waves-light">
+                            <i class="fa fa-refresh"></i> Reset Filter
+                        </a>
                     </div>
-
+                    <div class="d-flex justify-content-end">
+                        <form action="{{route('univ.perkuliahan.aktivitas-kuliah.sync')}}" method="get" id="sync-form">
+                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i
+                                    class="fa fa-refresh"></i> Sinkronisasi
+                            </button>
+                        </form>
+                        <span class="divider-line mx-1"></span>
+                        <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
+                            data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data
+                        </button>
+                    </div>
                 </div>
+                @include('universitas.perkuliahan.aktivitas-kuliah.filter')
                 @include('universitas.perkuliahan.aktivitas-kuliah.create')
                 <div class="box-body">
                     <div class="table-responsive">
@@ -80,7 +76,6 @@ Aktivitas Kuliah Mahasiswa
                         </table>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

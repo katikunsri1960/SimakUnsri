@@ -308,9 +308,11 @@ class KrsController extends Controller
         // dd($batas_isi_krs_manual);
 
         if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
-            if($batas_isi_krs_manual && $today < $batas_isi_krs_manual->batas_isi_krs) {
-                    $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
-                }
+            if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
+                $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+            }else{
+                $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+            }
         } else{
             $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
         }
