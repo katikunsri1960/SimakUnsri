@@ -102,6 +102,7 @@ FEEDER UPLOAD - ANGGOTA AKTIVITAS MAHASISWA
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Status Sync</th>
+                                    <th class="text-center align-middle">Judul</th>
                                     <th class="text-center align-middle">Semester</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama</th>
@@ -166,6 +167,7 @@ FEEDER UPLOAD - ANGGOTA AKTIVITAS MAHASISWA
                     html += '<tr>';
                     html += '<td class="text-center">' + no + '</td>';
                     html += '<td>' + item.status_sync + '</td>';
+                    html += '<td class="text-start">' + item.judul + '</td>';
                     html += '<td class="text-center">' + item.nama_semester + '</td>';
                     html += '<td class="text-center">' + item.nim + '</td>';
                     html += '<td class="text-start">' + item.nama_mahasiswa + '</td>';
@@ -227,7 +229,7 @@ FEEDER UPLOAD - ANGGOTA AKTIVITAS MAHASISWA
 
                      // Serialize form data and log it to the console
                      var formData = form.serialize();
-              
+
 
                     $.ajax({
                         url: "{{ route('univ.feeder-upload.ajax') }}",

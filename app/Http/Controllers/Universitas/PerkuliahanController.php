@@ -253,7 +253,7 @@ class PerkuliahanController extends Controller
             'status_mahasiswa_id' => 'required|in:A,M,C,N',
         ]);
 //      dd($validatedData);
-        
+
         $semester = Semester::where('id_semester',$validatedData['id_semester'])->first();
 
         $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
@@ -278,11 +278,11 @@ class PerkuliahanController extends Controller
             ])->withInput();
         }
 
-        //Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai 
+        //Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
         // dd($beasiswa);
         $pembayaran_manual=PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
-        
+
         $tagihan = Tagihan::with('pembayaran')
             ->whereIn('nomor_pembayaran', [$riwayat->nim])
             ->where('kode_periode', $validatedData['id_semester'])
@@ -300,7 +300,7 @@ class PerkuliahanController extends Controller
         try {
             // Gunakan transaksi untuk memastikan semua operasi database berhasil
             DB::beginTransaction();
-            
+
             // Simpan data ke tabel anggota_aktivitas_mahasiswas
             AktivitasKuliahMahasiswa::create([
                 'feeder' => 0,
@@ -323,12 +323,12 @@ class PerkuliahanController extends Controller
                 'id_pembiayaan' => $validatedData['id_pembiayaan'],
                 'status_sync' => 'belum sync',
             ]);
-                            
+
             DB::commit();
-    
+
             // Jika berhasil, kembalikan respons sukses
             return redirect()->route('univ.perkuliahan.aktivitas-kuliah')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
-    
+
             } catch (\Exception $e) {
             // Handle error
             return redirect()->back()->withErrors([
@@ -338,7 +338,7 @@ class PerkuliahanController extends Controller
     }
 
 
-    
+
 
     public function aktivitas_kuliah_data(Request $request)
     {
@@ -493,6 +493,15 @@ class PerkuliahanController extends Controller
             if($total_sks_semester > 0){
                 $ips = $total_bobot / $total_sks_semester;
             }
+
+            // $transkrip = TranskripMahasiswa::select(
+            //                 'id_matkul', 'kode_mata_kuliah', 'nama_mata_kuliah','sks_mata_kuliah', 'nilai_angka', 'nilai_huruf','nilai_indeks'
+            //             )
+            //             ->where('id_registrasi_mahasiswa', $id_reg)
+            //             ->whereNotIn('nilai_huruf', ['F', ''])
+            //             ->get();
+
+
             try {
                 $data->update([
                     'feeder'=>0,
