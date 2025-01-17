@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('transkrip-nilai')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\TranskripController::class, 'index'])->name('bak.transkrip-nilai');
+                Route::get('/search', [App\Http\Controllers\Bak\TranskripController::class, 'search'])->name('bak.transkrip-nilai.search');
                 Route::get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'data'])->name('bak.transkrip-nilai.get');
                 Route::get('/download', [App\Http\Controllers\Bak\TranskripController::class, 'download'])->name('bak.transkrip-nilai.download');
             });
