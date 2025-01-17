@@ -23,6 +23,9 @@ use App\Models\Dosen\PenugasanDosen;
 use App\Models\Perpus\BebasPustaka;
 use App\Models\Connection\Usept;
 use App\Models\Connection\CourseUsept;
+use App\Models\Connection\Registrasi;
+use App\Models\PembayaranManualMahasiswa;
+use App\Models\Connection\Tagihan;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -335,6 +338,12 @@ class PembimbingMahasiswaController extends Controller
     public function ajuan_sidang_store(Request $request, $aktivitas)
     {
         // dd($request->judul);
+        $semester_aktif = SemesterAktif::first();
+        $aktivitasMahasiswa = AktivitasMahasiswa::with('prodi')->where('id', $aktivitas)->first();
+        $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])
+                                ->where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)
+                                ->first();
+
         $data = $request->validate([
             'judul' => 'required',
             'dosen_penguji' => 'nullable',
@@ -343,10 +352,38 @@ class PembimbingMahasiswaController extends Controller
             'penguji_ke' => 'required_if:penguji_ke,!=,null'
         ]);
 
+        $total_nilai_tagihan = 0;
+
+        try{
+            $id_test = Registrasi::where('rm_nim', $data_mahasiswa->nim)->pluck('rm_no_test')->first();
+            $tagihan = Tagihan::with('pembayaran')
+                    ->whereIn('nomor_pembayaran', [$id_test, $data_mahasiswa->nim])
+                    ->where('kode_periode', $semester_aktif->id_semester
+                    // -1
+                    )
+                    ->first();
+
+            // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
+            $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
+
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $e->getMessage());
+        }
+
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa',$data_mahasiswa->id_registrasi_mahasiswa)->first();
+
+        $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
+                ->where('id_registrasi_mahasiswa', $data_mahasiswa->id_registrasi_mahasiswa)
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->count();
+
+        if($total_nilai_tagihan == 0 || !$beasiswa || $pembayaran_manual == 0){
+            return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan pembayaran UKT.');
+        }
+
         try {
             DB::beginTransaction();
 
-            $aktivitasMahasiswa = AktivitasMahasiswa::with('prodi')->where('id', $aktivitas)->first();
             $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
             $ujiMahasiswa = UjiMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
             // dd($aktivitas, $aktivitasMahasiswa);
@@ -359,10 +396,6 @@ class PembimbingMahasiswaController extends Controller
             if (!$pembimbing || $pembimbing->pembimbing_ke != 1) {
                 return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat mengajukan.');
             }
-
-            $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])
-                                ->where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)
-                                ->first();
 
             // coding apabila ajuan sidang tanpa pengecheckan USEPT
 
