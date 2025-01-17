@@ -494,18 +494,31 @@ class PerkuliahanController extends Controller
                 $ips = $total_bobot / $total_sks_semester;
             }
 
-            // $transkrip = TranskripMahasiswa::select(
-            //                 'id_matkul', 'kode_mata_kuliah', 'nama_mata_kuliah','sks_mata_kuliah', 'nilai_angka', 'nilai_huruf','nilai_indeks'
-            //             )
-            //             ->where('id_registrasi_mahasiswa', $id_reg)
-            //             ->whereNotIn('nilai_huruf', ['F', ''])
-            //             ->get();
+            $transkrip = TranskripMahasiswa::select(
+                            'sks_mata_kuliah','nilai_indeks'
+                        )
+                        ->where('id_registrasi_mahasiswa', $id_reg)
+                        ->whereNotIn('nilai_huruf', ['F', ''])
+                        ->get();
 
+            $total_sks_transkrip = $transkrip->sum('sks_mata_kuliah');
+            $total_bobot_transkrip = 0;
+
+            foreach ($transkrip as $t) {
+                $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
+            }
+
+            $ipk = 0;
+
+            if($total_sks_transkrip > 0){
+                $ipk = $total_bobot_transkrip / $total_sks_transkrip;
+            }
 
             try {
                 $data->update([
                     'feeder'=>0,
-                    'ips' => round($ips, 2) // Simpan dengan pembulatan 2 desimal
+                    'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
+                    'ipk' => round($ipk, 2) // Simpan dengan pembulatan 2 desimal
                 ]);
 
                 return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
