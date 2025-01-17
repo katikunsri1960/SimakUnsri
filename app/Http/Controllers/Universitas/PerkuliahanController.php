@@ -518,7 +518,8 @@ class PerkuliahanController extends Controller
                 $data->update([
                     'feeder'=>0,
                     'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
-                    'ipk' => round($ipk, 2) // Simpan dengan pembulatan 2 desimal
+                    'ipk' => round($ipk, 2), // Simpan dengan pembulatan 2 desimal
+                    'sks_total' => $total_sks_transkrip
                 ]);
 
                 return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
