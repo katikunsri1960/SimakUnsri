@@ -175,9 +175,10 @@ class MataKuliah extends Model
         // Pastikan untuk mengambil nilai ips
         $ips_value = $ips ? $ips->ips : null;
 
-        $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                        ->where('id_jenis_daftar', '14')
-                        ->count();
+        // $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+        //                 ->where('id_jenis_daftar', '14')
+        //                 ->count();
+        $non_gelar = $riwayat_pendidikan->id_jenis_daftar == '14' ? 1 : 0;
 
         //  dd($non_gelar);
 
