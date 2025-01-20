@@ -214,10 +214,6 @@ class KrsController extends Controller
             // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
             ->get();
 
-        // $pembimbing= $krs_akt->bimbing_mahasiswa;
-
-        // dd($pembimbing);
-
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $semester_select)
             ->pluck('id_status_mahasiswa')
@@ -301,35 +297,20 @@ class KrsController extends Controller
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
 
-        // $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
-
+        // Fungsi cek batas isi KRS mulai
         $today = Carbon::now()->toDateString();
-
         $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
 
-        // if ($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai) {
-        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-        // }
         if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
         }
 
         $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
-        // dd($batas_isi_krs_manual);
 
         if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
             $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
         }
-
-        // if ($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai) {
-        //     if ($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs) {
-        //         $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
-        //     } else {
-        //         $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-        //     }
-        // } else {
-        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-        // }
+        // Fungsi cek batas isi KRS Selesai
 
         $batas_pembayaran = Carbon::parse($semester_aktif->batas_bayar_ukt)->toDateString();
 
@@ -344,9 +325,11 @@ class KrsController extends Controller
             ->where('id_semester', $semester_aktif->id_semester)
             ->count();
 
-        $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-            ->where('id_jenis_daftar', '14')
-            ->count();
+        // $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+        //     ->where('id_jenis_daftar', '14')
+        //     ->count();
+
+        $non_gelar = $riwayat_pendidikan->id_jenis_daftar == '14' ? 1 : 0;
 
         $regular_submitted = $krs_regular->where('submitted', 0)->count();
         $merdeka_submitted = $krs_merdeka->where('submitted', 0)->count();
