@@ -39,15 +39,19 @@ Transkrip Nilai
                         </div>
                     </div>
                     @else
-                    <div class="col-md-6 mt-5">
-
+                    <div class="col-md-8 mt-5">
                         <div class="form-group row">
-                            <label class="col-form-label col-md-2">NIM</label>
-                            <div class="col-md-10">
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="nim"
-                                        placeholder="Masukan NIM mahasiswa">
-                                    <button class="btn btn-primary" id="btnCari"><i class="fa fa-search"></i>
+                            <label class="col-form-label col-md-2">Cari</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="nim">
+                                <select name="id_registrasi_mahasiswa" id="id_registrasi_mahasiswa" required class="form-select">
+                                    <option value=""></option>
+                                </select>
+
+                            </div>
+                            <div class="col-md-2 pt-1">
+                                <div class="row">
+                                    <button class="btn btn-primary btn-sm" id="btnCari"><i class="fa fa-search"></i>
                                         Cari</button>
                                 </div>
                             </div>
@@ -230,8 +234,12 @@ Transkrip Nilai
     </div>
 </section>
 @endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
             var statusSync = @json($statusSync);
@@ -241,6 +249,37 @@ Transkrip Nilai
                 checkSync(idBatch);
             }
         });
+
+        $("#id_registrasi_mahasiswa").select2({
+            placeholder : '-- Masukan NIM / Nama Mahasiswa --',
+            width: '100%',
+            minimumInputLength: 3,
+            ajax: {
+                url: "{{route('bak.transkrip-nilai.search')}}",
+                type: "GET",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // search term
+                    };
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.nama_mahasiswa + " ("+item.nim+" - "+item.nama_program_studi+")",
+                                id: item.id_registrasi_mahasiswa
+                            }
+                        })
+                    };
+                },
+            }
+        });
+
+
+
 
         function checkSync(id_batch) {
             $.ajax({
@@ -277,14 +316,15 @@ Transkrip Nilai
         }
         $(document).ready(function () {
             $('#btnCari').click(function () {
+                console.log('masuk');
                 $("#spinner").show();
-                var nim = $('#nim').val();
+                var nim = $('#id_registrasi_mahasiswa').val();
                 // fix error cannot reinitialize DataTable
                 $('#krs-regular').DataTable().clear().destroy();
 
                 if (nim == '') {
                     $("#spinner").hide();
-                    swal('Peringatan', 'NIM tidak boleh kosong', 'warning');
+                    swal('Peringatan', 'NIM / Nama tidak boleh kosong', 'warning');
                 } else {
                     $.ajax({
                         url: '{{route('bak.transkrip-nilai.get')}}',

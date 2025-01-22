@@ -83,7 +83,7 @@ Riwayat Pembimbingan Akademik Dosen
                                         @endif
                                     </td> --}}
                                     <td class="text-center align-middle">
-                                        <a href="{{route('dosen.pembimbing.bimbingan-akademik.riwayat.detail', ['riwayat' => $d, 'semester' => $semester_view])}}" class="btn btn-primary btn-rounded btn-sm">Lihat KRS <i class="ps-1 fa fa-magnifying-glass"></i></a>
+                                        <a href="{{route('dosen.pembimbing.bimbingan-akademik.riwayat.detail', ['riwayat' => $d, 'semester' => $semester_pilih])}}" class="btn btn-primary btn-rounded btn-sm">Lihat KRS <i class="ps-1 fa fa-magnifying-glass"></i></a>
                                     </td>
                                 </tr>
                               @endforeach

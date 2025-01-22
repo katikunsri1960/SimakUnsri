@@ -33,13 +33,24 @@ class TranskripController extends Controller
         ]);
     }
 
+    public function search(Request $request)
+    {
+
+        $data = RiwayatPendidikan::select('id_registrasi_mahasiswa', 'nim', 'nama_mahasiswa', 'nama_program_studi')
+                ->where('nim', 'like', '%'.$request->q.'%')
+                ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
+                ->get();
+
+        return response()->json($data);
+    }
+
     public function data(Request $request)
     {
         $request->validate([
             'nim' => 'required',
         ]);
 
-        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('nim', $request->nim)->orderBy('id_periode_masuk', 'desc')->first();
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('id_registrasi_mahasiswa', $request->nim)->first();
 
         if(!$riwayat) {
             return response()->json([

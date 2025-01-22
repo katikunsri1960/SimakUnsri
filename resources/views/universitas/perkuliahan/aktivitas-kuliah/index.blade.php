@@ -53,7 +53,7 @@ Aktivitas Kuliah Mahasiswa
                 @include('universitas.perkuliahan.aktivitas-kuliah.edit')
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table  table-hover margin-top-10 w-p100" style="font-size: 10pt">
+                        <table id="data" class="table table-bordered table-hover margin-top-10 w-p100" style="font-size: 10pt">
                             <thead>
                                 <tr>
                                     <th class="text-center-align-middle">No</th>
@@ -116,7 +116,7 @@ Aktivitas Kuliah Mahasiswa
             width: '100%',
             dropdownParent: $('#filter-button')
         });
-        
+
         $("#id_registrasi_mahasiswa").select2({
             placeholder: '-- Masukan NIM / Nama Mahasiswa --',
             dropdownParent: $('#createModal'),
@@ -263,6 +263,10 @@ Aktivitas Kuliah Mahasiswa
                         return button;
                     }
                 },
+                {data: null, searchable: false, class: "text-center align-middle text-nowrap", sortable: false, render: function(data, type, row) {
+                    var button = '<button class="btn btn-secondary btn-sm hitung-ips" data-id-reg="' + data.id_registrasi_mahasiswa + '" data-id-semester="' + data.id_semester + '"><i class="fa fa-retweet"></i> Hitung IPS</button>';
+                    return button;
+                }},
             ],
         });
         
@@ -319,7 +323,7 @@ Aktivitas Kuliah Mahasiswa
             });
         });
 
-        
+
 
 
         // $(document).on('click', '.btn-edit', function () {
