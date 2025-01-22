@@ -241,7 +241,9 @@ Aktivitas Kuliah Mahasiswa
                         },
                         success: function(response) {
                             console.log('masuk success');
-                            if (response.status === 'success') {
+                            console.log(response);
+                            if (response.status == 'success') {
+
                                 // swal("Berhasil!", response.message, "success");
                                 swal({
                                     title: 'Berhasil!',
