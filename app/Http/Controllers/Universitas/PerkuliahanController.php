@@ -12,7 +12,6 @@ use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
-use App\Models\Connection\Pembayaran;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Mahasiswa\RiwayatPendidikan;
@@ -25,6 +24,7 @@ use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 
 class PerkuliahanController extends Controller
 {
@@ -460,74 +460,74 @@ class PerkuliahanController extends Controller
                 ->whereNotNull('nilai_huruf')
                 ->get();
 
-            $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
-                        ->where('id_semester', $id_semester)
-                        ->where('ang.id_registrasi_mahasiswa', $id_reg)
-                        ->get();
+        $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+                    ->where('id_semester', $id_semester)
+                    ->where('ang.id_registrasi_mahasiswa', $id_reg)
+                    ->get();
 
-            $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                        ->where('id_semester', $id_semester)
-                        ->get();
+        $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                    ->where('id_semester', $id_semester)
+                    ->get();
 
-            $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
-            $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
+        $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
+        $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
 
 
-            // dd($semester, $tahun_ajaran, $prodi);
-            foreach ($khs as $t) {
-                $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
-            }
+        // dd($semester, $tahun_ajaran, $prodi);
+        foreach ($khs as $t) {
+            $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+        }
 
-            foreach ($khs_transfer as $tf) {
-                $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
-            }
+        foreach ($khs_transfer as $tf) {
+            $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
+        }
 
-            foreach ($khs_konversi as $kv) {
-                $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
-            }
+        foreach ($khs_konversi as $kv) {
+            $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
+        }
 
-            $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
+        $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
 
-            $ips = 0;
+        $ips = 0;
 
-            if($total_sks_semester > 0){
-                $ips = $total_bobot / $total_sks_semester;
-            }
+        if($total_sks_semester > 0){
+            $ips = $total_bobot / $total_sks_semester;
+        }
 
-            $transkrip = TranskripMahasiswa::select(
-                            'sks_mata_kuliah','nilai_indeks'
-                        )
-                        ->where('id_registrasi_mahasiswa', $id_reg)
-                        ->whereNotIn('nilai_huruf', ['F', ''])
-                        ->get();
+        $transkrip = TranskripMahasiswa::select(
+                        'sks_mata_kuliah','nilai_indeks'
+                    )
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->whereNotIn('nilai_huruf', ['F', ''])
+                    ->get();
 
-            $total_sks_transkrip = $transkrip->sum('sks_mata_kuliah');
-            $total_bobot_transkrip = 0;
+        $total_sks_transkrip = $transkrip->sum('sks_mata_kuliah');
+        $total_bobot_transkrip = 0;
 
-            foreach ($transkrip as $t) {
-                $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
-            }
+        foreach ($transkrip as $t) {
+            $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
+        }
 
-            $ipk = 0;
+        $ipk = 0;
 
-            if($total_sks_transkrip > 0){
-                $ipk = $total_bobot_transkrip / $total_sks_transkrip;
-            }
+        if($total_sks_transkrip > 0){
+            $ipk = $total_bobot_transkrip / $total_sks_transkrip;
+        }
 
-            try {
-                $data->update([
-                    'feeder'=>0,
-                    'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
-                    'ipk' => round($ipk, 2), // Simpan dengan pembulatan 2 desimal
-                    'sks_total' => $total_sks_transkrip
-                ]);
+        try {
+            $data->update([
+                'feeder'=>0,
+                'sks_semester' => $total_sks_semester,
+                'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
+                'ipk' => round($ipk, 2), // Simpan dengan pembulatan 2 desimal
+                'sks_total' => $total_sks_transkrip
+            ]);
 
-                return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
-            } catch (\Throwable $th) {
-                //throw $th;
-                return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! '.$th->getMessage()]);
-            }
-
+            return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! '.$th->getMessage()]);
+        }
 
     }
 
