@@ -46,7 +46,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">z
+                    <div class="col-md-6">
                         <div class="mb-3">
                             <label for="status_mahasiswa" class="form-label">Status</label>
                             <select
