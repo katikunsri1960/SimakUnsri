@@ -35,6 +35,7 @@ use App\Models\Perkuliahan\RencanaPembelajaran;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
 
 class KrsController extends Controller
 {
@@ -718,7 +719,7 @@ class KrsController extends Controller
         }
 
         // Cek apakah mahasiswa sudah mengambil mata kuliah prasyarat
-        $mataKuliahDipenuhi = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+        $mataKuliahDipenuhi = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
                 ->whereIn('id_matkul', $prasyarat)
                 ->where('approved', '1')
                 ->exists();
