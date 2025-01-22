@@ -289,6 +289,7 @@ Aktivitas Kuliah Mahasiswa
             }, function(isConfirm) {
                 if (isConfirm) {
                     $('#spinner').show();
+                    console.log('masuk 1');
                     $.ajax({
                         url: '{{ route("univ.perkuliahan.aktivitas-kuliah.hitung-ips") }}',
                         type: 'POST',
@@ -298,7 +299,10 @@ Aktivitas Kuliah Mahasiswa
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            if (response.status === 'success') {
+                            console.log('masuk success');
+                            console.log(response);
+                            if (response.status == 'success') {
+
                                 // swal("Berhasil!", response.message, "success");
                                 swal({
                                     title: 'Berhasil!',
@@ -316,6 +320,7 @@ Aktivitas Kuliah Mahasiswa
                             }
                         },
                         error: function(xhr, status, error) {
+                            console.log('masuk error');
                             swal("Error!", "Terjadi kesalahan saat menghitung IPS.", "error");
                         }
                     });
