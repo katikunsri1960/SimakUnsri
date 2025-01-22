@@ -242,9 +242,7 @@ Aktivitas Kuliah Mahasiswa
                         success: function(response) {
                             console.log('masuk success');
                             console.log(response);
-                            if (response.status == "success") {
-
-                                // swal("Berhasil!", response.message, "success");
+                            if (response.status === "success") {
                                 swal({
                                     title: 'Berhasil!',
                                     text: response.message,
