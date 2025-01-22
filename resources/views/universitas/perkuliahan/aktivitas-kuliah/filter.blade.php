@@ -58,9 +58,9 @@
                                 <label for="angkatan" class="form-label">Angkatan</label>
                                 <select multiple class="form-select" name="angkatan[]" id="angkatan">
                                     @foreach ($angkatan as $a)
-                                    <option value="{{$a->angkatan}}" {{ in_array($a->angkatan, old('angkatan',
+                                    <option value="{{$a->id_tahun_ajaran}}" {{ in_array($a->id_tahun_ajaran, old('angkatan',
                                         request()->get('angkatan', []))) ? 'selected' : '' }}>
-                                        {{$a->angkatan}}
+                                        {{$a->id_tahun_ajaran}}
                                     </option>
                                     @endforeach
                                 </select>

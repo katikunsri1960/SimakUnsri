@@ -25,6 +25,7 @@ use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\StatusMahasiswa;
 
 class PerkuliahanController extends Controller
 {
@@ -228,9 +229,9 @@ class PerkuliahanController extends Controller
     public function aktivitas_kuliah()
     {
         $prodi = ProgramStudi::select('nama_program_studi', 'id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan')->orderBy('kode_program_studi')->get();
-        $angkatan = AktivitasKuliahMahasiswa::select('angkatan')->distinct()->orderBy('angkatan', 'desc')->get();
+        $angkatan = Semester::select('id_tahun_ajaran')->orderBy('id_tahun_ajaran', 'desc')->distinct()->get();
         $semester = Semester::select('nama_semester', 'id_semester')->orderBy('id_semester', 'desc')->get();
-        $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa', 'nama_status_mahasiswa')->distinct()->orderBy('id_status_mahasiswa')->get();
+        $status_mahasiswa = StatusMahasiswa::select('id_status_mahasiswa', 'nama_status_mahasiswa')->orderBy('id_status_mahasiswa')->get();
         return view('universitas.perkuliahan.aktivitas-kuliah.index', [
             'prodi' => $prodi,
             'angkatan' => $angkatan,
