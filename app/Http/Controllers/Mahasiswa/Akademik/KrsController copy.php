@@ -728,10 +728,13 @@ class KrsController extends Controller
                 // ->where('approved', '1')
                 ->exists();
 
-        $mataKuliahDipenuhi_3 = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
-                        ->whereIn('id_matkul', $prasyarat)
-                        ->where('ang.id_registrasi_mahasiswa', $id_reg)
-                        ->exists();
+        $mataKuliahDipenuhi_3 = KonversiAktivitas::with(['matkul', 'anggota_aktivitas'])
+                // ->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+                ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
+                    $query ->where('id_registrasi_mahasiswa', $id_reg);
+                })
+                ->whereIn('id_matkul', $prasyarat)
+                ->exists();
 
         if ($mataKuliahDipenuhi || $mataKuliahDipenuhi_2 || $mataKuliahDipenuhi_3) {
             return response()->json(['prasyarat_dipenuhi' => true]);
