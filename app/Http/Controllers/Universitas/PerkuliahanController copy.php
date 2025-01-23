@@ -12,6 +12,7 @@ use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
+use App\Models\Connection\Pembayaran;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Mahasiswa\RiwayatPendidikan;
@@ -24,8 +25,6 @@ use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\PesertaKelasKuliah;
-use App\Models\StatusMahasiswa;
 
 class PerkuliahanController extends Controller
 {
@@ -229,9 +228,9 @@ class PerkuliahanController extends Controller
     public function aktivitas_kuliah()
     {
         $prodi = ProgramStudi::select('nama_program_studi', 'id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan')->orderBy('kode_program_studi')->get();
-        $angkatan = Semester::select('id_tahun_ajaran')->orderBy('id_tahun_ajaran', 'desc')->distinct()->get();
+        $angkatan = AktivitasKuliahMahasiswa::select('angkatan')->distinct()->orderBy('angkatan', 'desc')->get();
         $semester = Semester::select('nama_semester', 'id_semester')->orderBy('id_semester', 'desc')->get();
-        $status_mahasiswa = StatusMahasiswa::select('id_status_mahasiswa', 'nama_status_mahasiswa')->orderBy('id_status_mahasiswa')->get();
+        $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa', 'nama_status_mahasiswa')->distinct()->orderBy('id_status_mahasiswa')->get();
         return view('universitas.perkuliahan.aktivitas-kuliah.index', [
             'prodi' => $prodi,
             'angkatan' => $angkatan,
@@ -254,7 +253,7 @@ class PerkuliahanController extends Controller
             'status_mahasiswa_id' => 'required|in:A,M,C,N',
         ]);
 //      dd($validatedData);
-
+        
         $semester = Semester::where('id_semester',$validatedData['id_semester'])->first();
 
         $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
@@ -279,11 +278,11 @@ class PerkuliahanController extends Controller
             ])->withInput();
         }
 
-        //Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai
+        //Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai 
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
         // dd($beasiswa);
         $pembayaran_manual=PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
-
+        
         $tagihan = Tagihan::with('pembayaran')
             ->whereIn('nomor_pembayaran', [$riwayat->nim])
             ->where('kode_periode', $validatedData['id_semester'])
@@ -301,7 +300,7 @@ class PerkuliahanController extends Controller
         try {
             // Gunakan transaksi untuk memastikan semua operasi database berhasil
             DB::beginTransaction();
-
+            
             // Simpan data ke tabel anggota_aktivitas_mahasiswas
             AktivitasKuliahMahasiswa::create([
                 'feeder' => 0,
@@ -324,12 +323,12 @@ class PerkuliahanController extends Controller
                 'id_pembiayaan' => $validatedData['id_pembiayaan'],
                 'status_sync' => 'belum sync',
             ]);
-
+                            
             DB::commit();
-
+    
             // Jika berhasil, kembalikan respons sukses
             return redirect()->route('univ.perkuliahan.aktivitas-kuliah')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
-
+    
             } catch (\Exception $e) {
             // Handle error
             return redirect()->back()->withErrors([
@@ -506,74 +505,51 @@ class PerkuliahanController extends Controller
                 ->whereNotNull('nilai_huruf')
                 ->get();
 
-        $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
-                    ->where('id_semester', $id_semester)
-                    ->where('ang.id_registrasi_mahasiswa', $id_reg)
-                    ->get();
+            $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+                        ->where('id_semester', $id_semester)
+                        ->where('ang.id_registrasi_mahasiswa', $id_reg)
+                        ->get();
 
-        $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->where('id_semester', $id_semester)
-                    ->get();
+            $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+                        ->where('id_semester', $id_semester)
+                        ->get();
 
-        $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
-        $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
+            $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
+            $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
 
 
-        // dd($semester, $tahun_ajaran, $prodi);
-        foreach ($khs as $t) {
-            $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
-        }
+            // dd($semester, $tahun_ajaran, $prodi);
+            foreach ($khs as $t) {
+                $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+            }
 
-        foreach ($khs_transfer as $tf) {
-            $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
-        }
+            foreach ($khs_transfer as $tf) {
+                $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
+            }
 
-        foreach ($khs_konversi as $kv) {
-            $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
-        }
+            foreach ($khs_konversi as $kv) {
+                $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
+            }
 
-        $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
+            $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
 
-        $ips = 0;
+            $ips = 0;
 
-        if($total_sks_semester > 0){
-            $ips = $total_bobot / $total_sks_semester;
-        }
+            if($total_sks_semester > 0){
+                $ips = $total_bobot / $total_sks_semester;
+            }
+            try {
+                $data->update([
+                    'feeder'=>0,
+                    'ips' => round($ips, 2) // Simpan dengan pembulatan 2 desimal
+                ]);
 
-        $transkrip = TranskripMahasiswa::select(
-                        'sks_mata_kuliah','nilai_indeks'
-                    )
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->whereNotIn('nilai_huruf', ['F', ''])
-                    ->get();
+                return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
+            } catch (\Throwable $th) {
+                //throw $th;
+                return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! '.$th->getMessage()]);
+            }
 
-        $total_sks_transkrip = $transkrip->sum('sks_mata_kuliah');
-        $total_bobot_transkrip = 0;
-
-        foreach ($transkrip as $t) {
-            $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
-        }
-
-        $ipk = 0;
-
-        if($total_sks_transkrip > 0){
-            $ipk = $total_bobot_transkrip / $total_sks_transkrip;
-        }
-
-        try {
-            $data->update([
-                'feeder'=>0,
-                'sks_semester' => $total_sks_semester,
-                'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
-                'ipk' => round($ipk, 2), // Simpan dengan pembulatan 2 desimal
-                'sks_total' => $total_sks_transkrip
-            ]);
-
-            return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
-        } catch (\Throwable $th) {
-            //throw $th;
-            return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! '.$th->getMessage()]);
-        }
 
     }
 

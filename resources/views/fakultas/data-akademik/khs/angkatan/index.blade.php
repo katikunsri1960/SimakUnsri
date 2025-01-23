@@ -195,7 +195,7 @@ KHS Mahasiswa
                                     </tr>
                                 </table>
                                 <div class="d-flex justify-content-end align-middle"></div>
-                                <table class="table table-bordered mt-4" id="krs-regular-${index}">
+                                <table class="table table-bordered mt-4" id="khs-regular-${index}">
                                     <thead>
                                         <tr>
                                             <th class="text-center align-middle">No</th>
@@ -237,51 +237,51 @@ KHS Mahasiswa
                         var no = 1;
                         var indexTable = index;
 
-                        data.nilai.forEach(function(krs, index){
+                        data.nilai.forEach(function(khs_reg, index){
                             var trClass = '';
-                            if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null) {
+                            if(khs_reg.nilai_huruf == 'F' || khs_reg.nilai_huruf == null) {
                                 trClass = 'bg-danger';
                             }
-                            $(`#krs-regular-${indexTable} tbody`).append(`
+                            $(`#khs-regular-${indexTable} tbody`).append(`
                                 <tr class="${trClass}">
                                     <td class="text-center align-middle">${no}</td>
-                                    <td class="text-center align-middle">${krs.kode_mata_kuliah}</td>
-                                    <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
-                                    <td class="text-center align-middle">${krs.nama_kelas_kuliah}</td>
-                                    <td class="text-center align-middle">${krs.nama_semester}</td>
-                                    <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
-                                    <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
-                                    <td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>
-                                    <td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>
+                                    <td class="text-center align-middle">${khs_reg.kode_mata_kuliah}</td>
+                                    <td class="text-start align-middle">${khs_reg.nama_mata_kuliah}</td>
+                                    <td class="text-center align-middle">${khs_reg.nama_kelas_kuliah}</td>
+                                    <td class="text-center align-middle">${khs_reg.semester.nama_semester}</td>
+                                    <td class="text-center align-middle">${khs_reg.sks_mata_kuliah}</td>
+                                    <td class="text-center align-middle">${khs_reg.nilai_angka ?? '-'}</td>
+                                    <td class="text-center align-middle">${khs_reg.nilai_indeks ?? '-'}</td>
+                                    <td class="text-center align-middle">${khs_reg.nilai_huruf ?? '-'}</td>
                                 </tr>
                             `);
                             no++;
                         });
 
                         if (data.konversi.length > 0) {
-                            $(`#krs-regular-${indexTable} tbody`).append(`
+                            $(`#khs-regular-${indexTable} tbody`).append(`
                                 <tr>
                                     <th class="text-center align-middle" colspan="8">Konversi Aktivitas</th>
                                 </tr>
                             `);
 
-                            data.konversi.forEach(function(krs, index){
+                            data.konversi.forEach(function(konversi, index){
                                 var trClass = '';
-                                if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
+                                if(konversi.nilai_huruf == 'F' || konversi.nilai_huruf == null)
                                 {
                                     trClass = 'bg-danger';
                                 }
-                                $(`#krs-regular-${indexTable} tbody`).append(`
+                                $(`#khs-regular-${indexTable} tbody`).append(`
                                     <tr class="${trClass}">
                                         <td class="text-center align-middle">${no}</td>
-                                        <td class="text-center align-middle">${krs.matkul.kode_mata_kuliah}</td>
-                                        <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
+                                        <td class="text-center align-middle">${konversi.matkul.kode_mata_kuliah}</td>
+                                        <td class="text-start align-middle">${konversi.nama_mata_kuliah}</td>
                                         <td class="text-center align-middle"> - </td>
-                                        <td class="text-center align-middle">${krs.nama_semester}</td>
-                                        <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
-                                        <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
-                                        <td class="text-center align-middle">${krs.nilai_indeks}</td>
-                                        <td class="text-center align-middle">${krs.nilai_huruf}</td>
+                                        <td class="text-center align-middle">${konversi.semester.nama_semester}</td>
+                                        <td class="text-center align-middle">${konversi.sks_mata_kuliah}</td>
+                                        <td class="text-center align-middle">${konversi.nilai_angka ?? '-'}</td>
+                                        <td class="text-center align-middle">${konversi.nilai_indeks}</td>
+                                        <td class="text-center align-middle">${konversi.nilai_huruf}</td>
                                     </tr>
                                 `);
                                 no++;
@@ -336,7 +336,7 @@ KHS Mahasiswa
                                         <td class="text-center align-middle">${index + 1}</td>
                                         <td class="text-center align-middle">${transfer.kode_matkul_diakui}</td>
                                         <td class="text-start align-middle">${transfer.nama_mata_kuliah_diakui}</td>
-                                        <td class="text-center align-middle">${transfer.nama_semester}</td>
+                                        <td class="text-center align-middle">${transfer.semester.nama_semester}</td>
                                         <td class="text-center align-middle">${transfer.sks_mata_kuliah_diakui}</td>
                                         <td class="text-center align-middle">${transfer.nilai_angka_diakui}</td>
                                         <td class="text-center align-middle">${transfer.nilai_huruf_diakui}</td>
@@ -362,7 +362,7 @@ KHS Mahasiswa
                     
                     
                     $('#khsDiv').removeAttr('hidden');
-                    // append response.krs to table of krs-regular
+                    // append response.krs to table of khs-regular
                     $('#nimKrs').text(response.riwayat.nim);
                     // remove "Fakultas " from nama_fakultas
                     var fakultas = response.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '');
@@ -377,7 +377,7 @@ KHS Mahasiswa
                     $('#prodiKrs').text(response.riwayat.prodi.nama_program_studi.toUpperCase());
                     var semesterText =  $('#semester option:selected').text();
                     $('#semesterKrs').text(semesterText.toUpperCase());
-                    $('#krs-regular tbody').empty();
+                    $('#khs-regular tbody').empty();
 
                     // count response.krs.approved
                     var approved = 0;
@@ -386,52 +386,52 @@ KHS Mahasiswa
 
 
 
-                    response.nilai.forEach(function(krs, index){
+                    response.nilai.forEach(function(khs_reg, index){
                         var trClass = '';
-                        if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
+                        if(khs_reg.nilai_huruf == 'F' || khs_reg.nilai_huruf == null)
                         {
                             trClass = 'bg-danger';
                         }
-                        $('#krs-regular tbody').append(`
+                        $('#khs-regular tbody').append(`
                             <tr class="${trClass}">
                                 <td class="text-center align-middle">${no}</td>
-                                <td class="text-center align-middle">${krs.kode_mata_kuliah}</td>
-                                <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
-                                <td class="text-center align-middle">${krs.nama_kelas_kuliah}</td>
-                                <td class="text-center align-middle">${krs.nama_semester}</td>
-                                <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
-                                <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
-                                <td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>
-                                <td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>
+                                <td class="text-center align-middle">${khs_reg.kode_mata_kuliah}</td>
+                                <td class="text-start align-middle">${khs_reg.nama_mata_kuliah}</td>
+                                <td class="text-center align-middle">${khs_reg.nama_kelas_kuliah}</td>
+                                <td class="text-center align-middle">${khs_reg.semester.nama_semester}</td>
+                                <td class="text-center align-middle">${khs_reg.sks_mata_kuliah}</td>
+                                <td class="text-center align-middle">${khs_reg.nilai_angka ?? '-'}</td>
+                                <td class="text-center align-middle">${khs_reg.nilai_indeks ?? '-'}</td>
+                                <td class="text-center align-middle">${khs_reg.nilai_huruf ?? '-'}</td>
                             </tr>
                         `);
                         no++;
                     });
 
                     if (response.konversi.length > 0) {
-                        $('#krs-regular tbody').append(`
+                        $('#khs-regular tbody').append(`
                             <tr>
                                 <th class="text-center align-middle" colspan="8">Konversi Aktivitas</th>
                             </tr>
                         `);
 
-                        response.konversi.forEach(function(krs, index){
+                        response.konversi.forEach(function(konversi, index){
                             var trClass = '';
-                            if(krs.nilai_huruf == 'F' || krs.nilai_huruf == null)
+                            if(konversi.nilai_huruf == 'F' || konversi.nilai_huruf == null)
                             {
                                 trClass = 'bg-danger';
                             }
-                            $('#krs-regular tbody').append(`
+                            $('#khs-regular tbody').append(`
                                 <tr class="${trClass}">
                                     <td class="text-center align-middle">${no}</td>
-                                    <td class="text-center align-middle">${krs.matkul.kode_mata_kuliah}</td>
-                                    <td class="text-start align-middle">${krs.nama_mata_kuliah}</td>
+                                    <td class="text-center align-middle">${konversi.matkul.kode_mata_kuliah}</td>
+                                    <td class="text-start align-middle">${konversi.nama_mata_kuliah}</td>
                                     <td class="text-center align-middle"> - </td>
-                                    <td class="text-center align-middle">${krs.nama_semester}</td>
-                                    <td class="text-center align-middle">${krs.sks_mata_kuliah}</td>
-                                    <td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>
-                                    <td class="text-center align-middle">${krs.nilai_indeks}</td>
-                                    <td class="text-center align-middle">${krs.nilai_huruf}</td>
+                                    <td class="text-center align-middle">${konversi.semester.nama_semester}</td>
+                                    <td class="text-center align-middle">${konversi.sks_mata_kuliah}</td>
+                                    <td class="text-center align-middle">${konversi.nilai_angka ?? '-'}</td>
+                                    <td class="text-center align-middle">${konversi.nilai_indeks}</td>
+                                    <td class="text-center align-middle">${konversi.nilai_huruf}</td>
                                 </tr>
                             `);
                             no++;
@@ -485,7 +485,7 @@ KHS Mahasiswa
                                     <td class="text-center align-middle">${index + 1}</td>
                                     <td class="text-center align-middle">${transfer.kode_matkul_diakui}</td>
                                     <td class="text-start align-middle">${transfer.nama_mata_kuliah_diakui}</td>
-                                    <td class="text-center align-middle">${transfer.nama_semester}</td>
+                                    <td class="text-center align-middle">${transfer.semester.nama_semester}</td>
                                     <td class="text-center align-middle">${transfer.sks_mata_kuliah_diakui}</td>
                                     <td class="text-center align-middle">${transfer.nilai_angka_diakui}</td>
                                     <td class="text-center align-middle">${transfer.nilai_huruf_diakui}</td>

@@ -1058,6 +1058,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah'])->name('univ.perkuliahan.aktivitas-kuliah');
                     Route::get('/data', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_data'])->name('univ.perkuliahan.aktivitas-kuliah.data');
                     Route::post('/store', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_store'])->name('univ.perkuliahan.aktivitas-kuliah.store');
+                    Route::patch('/{id}/update', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_update'])->name('univ.perkuliahan.aktivitas-kuliah.update');
+                    Route::get('/{id}/edit', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_edit'])->name('univ.perkuliahan.aktivitas-kuliah.edit');
                     Route::post('/hitung-ips', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'hitung_ips_per_id'])->name('univ.perkuliahan.aktivitas-kuliah.hitung-ips');
                     Route::get('/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_aktivitas_kuliah'])->name('univ.perkuliahan.aktivitas-kuliah.sync');
                 });
