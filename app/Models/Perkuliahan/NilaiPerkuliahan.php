@@ -2,9 +2,10 @@
 
 namespace App\Models\Perkuliahan;
 
+use App\Models\Semester;
 use App\Models\ProgramStudi;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class NilaiPerkuliahan extends Model
 {
@@ -29,5 +30,10 @@ class NilaiPerkuliahan extends Model
     public function kelas_kuliah()
     {
         return $this->belongsTo(KelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
+    }
+
+    public function semester()
+    {
+        return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');
     }
 }

@@ -61,6 +61,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('transkrip-nilai')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\TranskripController::class, 'index'])->name('bak.transkrip-nilai');
+                Route::get('/search', [App\Http\Controllers\Bak\TranskripController::class, 'search'])->name('bak.transkrip-nilai.search');
                 Route::get('/get-transkrip-nilai', [App\Http\Controllers\Bak\TranskripController::class, 'data'])->name('bak.transkrip-nilai.get');
                 Route::get('/download', [App\Http\Controllers\Bak\TranskripController::class, 'download'])->name('bak.transkrip-nilai.download');
             });
@@ -1057,6 +1058,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah'])->name('univ.perkuliahan.aktivitas-kuliah');
                     Route::get('/data', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_data'])->name('univ.perkuliahan.aktivitas-kuliah.data');
                     Route::post('/store', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_store'])->name('univ.perkuliahan.aktivitas-kuliah.store');
+                    Route::patch('/{id}/update', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_update'])->name('univ.perkuliahan.aktivitas-kuliah.update');
+                    Route::get('/{id}/edit', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_edit'])->name('univ.perkuliahan.aktivitas-kuliah.edit');
                     Route::post('/hitung-ips', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'hitung_ips_per_id'])->name('univ.perkuliahan.aktivitas-kuliah.hitung-ips');
                     Route::get('/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_aktivitas_kuliah'])->name('univ.perkuliahan.aktivitas-kuliah.sync');
                 });

@@ -103,6 +103,7 @@ FEEDER UPLOAD - PENGUJI AKTIVITAS MAHASISWA
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Status Sync</th>
                                     <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">Judul</th>
                                     <th class="text-center align-middle">NIDN</th>
                                     <th class="text-center align-middle">Nama</th>
                                     <th class="text-center align-middle">Peran</th>
@@ -166,6 +167,7 @@ FEEDER UPLOAD - PENGUJI AKTIVITAS MAHASISWA
                     html += '<td class="text-center">' + no + '</td>';
                     html += '<td>' + item.status_sync + '</td>';
                     html += '<td class="text-center">' + item.nama_semester + '</td>';
+                    html += '<td class="">' + item.judul + '</td>';
                     html += '<td class="text-center">' + item.nidn + '</td>';
                     html += '<td class="text-start">' + item.nama_dosen + '</td>';
                     html += '<td class="text-center">' + item.nama_kategori_kegiatan + '</td>';

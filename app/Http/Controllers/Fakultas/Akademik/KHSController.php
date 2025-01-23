@@ -53,17 +53,17 @@ class KHSController extends Controller
             ]);
         }
 
-        $nilai = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+        $nilai = NilaiPerkuliahan::with('semester')->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->where('id_semester', $semester)
                 ->orderBy('id_semester')
                 ->get();
 
-        $konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+        $konversi = KonversiAktivitas::with(['matkul', 'semester'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
                     ->where('id_semester', $semester)
                     ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                     ->get();
 
-        $transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+        $transfer = NilaiTransferPendidikan::with('semester')->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                     ->where('id_semester', $semester)
                     ->get();
 
@@ -239,17 +239,17 @@ class KHSController extends Controller
                     ->where('id_semester', $request->semester)
                     ->first();
 
-            $nilai = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+            $nilai = NilaiPerkuliahan::with('semester')->where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
                     ->where('id_semester', $request->semester)
                     ->orderBy('id_semester')
                     ->get();
 
-            $konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+            $konversi = KonversiAktivitas::with(['matkul','semester'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
                         ->where('id_semester', $request->semester)
                         ->where('ang.id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
                         ->get();
 
-            $transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+            $transfer = NilaiTransferPendidikan::with('semester')->where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
                         ->where('id_semester', $request->semester)
                         ->get();
 

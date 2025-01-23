@@ -30,9 +30,9 @@ class AktivitasMBKMController extends Controller
     public function index_non_pertukaran()
     {
         $id_reg = auth()->user()->fk_id;
-        
+
         $semester_aktif = SemesterAktif::first();
-        
+
         $data = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa', 'semester'])
                 ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                     $query->where('id_registrasi_mahasiswa', $id_reg);
@@ -42,21 +42,33 @@ class AktivitasMBKMController extends Controller
                 ->get();
 
         $jumlah_data=$data->first();
-                       
+
         $today = Carbon::now()->toDateString();
 
-        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
-        // dd($batas_isi_krs_manual);
+        // $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+        // // dd($batas_isi_krs_manual);
 
-        if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
-            if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
-                $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
-            }else{
-                $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-            }
-        } else{
-            $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
+        //     if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
+        //         $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+        //     }else{
+        //         $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        //     }
+        // } else{
+        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // }
+        $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+
+        if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
+            $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
         }
+
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+
+        if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
+            $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
+        }
+        // Fungsi cek batas isi KRS Selesai
 
         return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.non-pertukaran.index', ['data' => $data, 'jumlah_data' =>$jumlah_data,'semester_aktif' => $semester_aktif,'today'=>$today ,'batas_isi_krs'=>$batas_isi_krs ]);
     }
@@ -67,18 +79,30 @@ class AktivitasMBKMController extends Controller
         $semester_aktif = SemesterAktif::first();
         $today = Carbon::now()->toDateString();
 
-        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
-        // dd($batas_isi_krs_manual);
+        // $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+        // // dd($batas_isi_krs_manual);
 
-        if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
-            if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
-                $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
-            }else{
-                $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-            }
-        } else{
-            $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
+        //     if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
+        //         $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+        //     }else{
+        //         $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        //     }
+        // } else{
+        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // }
+        $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+
+        if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
+            $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
         }
+
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+
+        if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
+            $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
+        }
+        // Fungsi cek batas isi KRS Selesai
 
         $data = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -94,9 +118,9 @@ class AktivitasMBKMController extends Controller
                         ->where('id_semester', $semester_aktif->id_semester)
                         ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20'])
                         ->get();
-                        
+
         $sks_aktivitas_mbkm = [
-                                "10", 
+                                "10",
                                 "20"
                             ];
         // dd($data_aktivitas_mbkm);
@@ -108,8 +132,8 @@ class AktivitasMBKMController extends Controller
         }elseif ($jumlah_aktivitas_mbkm > 0) {
             return redirect()->back()->with('error', 'Anda telah mengajukan Aktivitas'.' '.$aktivitas_mbkm->first()->nama_jenis_aktivitas);
         }
-        
-        // Pengecekan apakah KRS sudah diApprove 
+
+        // Pengecekan apakah KRS sudah diApprove
         $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
                 ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
                     $query ->where('id_semester', $semester_aktif->id_semester);
@@ -128,7 +152,7 @@ class AktivitasMBKMController extends Controller
                 ->where('approve_krs', 1)
                 ->count();
                 // dd($approved);
-            
+
         if ( $approved_krs > 0 || $approved_akt > 0) {
             return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
         }
@@ -139,8 +163,8 @@ class AktivitasMBKMController extends Controller
                     ->first();
 
         return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.non-pertukaran.store', [
-            'data' => $data, 
-            'dosen_bimbing_aktivitas'=>$dosen_pembimbing, 
+            'data' => $data,
+            'dosen_bimbing_aktivitas'=>$dosen_pembimbing,
             'aktivitas_mbkm'=>$aktivitas_mbkm,
             'sks_aktivitas_mbkm'=>$sks_aktivitas_mbkm
         ]);
@@ -175,7 +199,7 @@ class AktivitasMBKMController extends Controller
             'aktivitas_mbkm' => 'required',
             'sks_mbkm' => 'required',
             'judul' => 'required|string|max:255',
-            'keterangan' => 'nullable|max:100', 
+            'keterangan' => 'nullable|max:100',
             'lokasi' => 'required|string|max:255',
             'dosen_bimbing_aktivitas' => 'required'
         ]);
@@ -191,12 +215,12 @@ class AktivitasMBKMController extends Controller
                         ->where('id_semester', $semester_aktif->id_semester)
                         ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                         ->get();
-         
+
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                     ->first();
-        
+
         $db = new MataKuliah();
         $db_akt = new AktivitasMahasiswa();
 
@@ -209,21 +233,21 @@ class AktivitasMBKMController extends Controller
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
-        
+
         if(!empty($krs_aktivitas_mbkm->first())){
             $sks_akt_mbkm = $krs_aktivitas_mbkm->first()-> sks_aktivitas;
         }else{
             $sks_akt_mbkm =0;
         }
 
-        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $sks_akt_mbkm ;     
+        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $sks_akt_mbkm ;
 
         if (($total_sks + $request->sks_mbkm) > $sks_max) {
             return redirect()->back()->with('error', 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS'.', Aktivitas MBKM yang Anda ambil memiliki SKS Konversi '.$sks_akt_mbkm.' SKS');
         }
 
         // dd($total_sks, $request->sks_mbkm);
-        
+
 
         // Lanjutkan proses penyimpanan jika tidak ada aktivitas yang sama
         try {
@@ -231,12 +255,12 @@ class AktivitasMBKMController extends Controller
             DB::transaction(function () use ($request, $id_reg, $aktivitas_mbkm) {
             $id_reg = auth()->user()->fk_id;
 
-            $riwayat_pendidikan = RiwayatPendidikan::with('prodi')            
+            $riwayat_pendidikan = RiwayatPendidikan::with('prodi')
                             ->where('id_registrasi_mahasiswa', $id_reg)
                             ->first();
 
             $semester_aktif = SemesterAktif::with('semester')->first();
-            
+
             $now = Carbon::now();
 
             $id_aktivitas = Uuid::uuid4()->toString();
@@ -307,10 +331,10 @@ class AktivitasMBKMController extends Controller
                     'jenis_peran'=>2,
                     'nama_jenis_peran'=>'Anggota',
                     'status_sync'=>'belum sync',
-                ]);   
+                ]);
 
                 // if()
-                
+
                 // Periksa jumlah dosen pembimbing yang dipilih
                 if (count((array)$request->dosen_bimbing_aktivitas) == 0) {
                     return redirect()->back()->with('error', 'Harap pilih minimal satu dosen pembimbing.');
@@ -318,7 +342,7 @@ class AktivitasMBKMController extends Controller
 
                 //Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
-                
+
                 $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)
                                 ->where('id_registrasi_dosen', $request->dosen_bimbing_aktivitas)->first();
 
@@ -331,16 +355,16 @@ class AktivitasMBKMController extends Controller
                     'judul'=>$aktivitas->judul,
                     'id_kategori_kegiatan'=>110300,
                     'nama_kategori_kegiatan'=>'Membimbing Kuliah Kerja Nyata, Praktek Kerja Nyata, Praktek Kerja Lapangan, termasuk membimbing pelatihan militer mahasiswa, pertukaran mahasiswa,  Magang, kuliah berbasis penelitian, wirausaha, dan bentuk lain pengabdian kepada masyarakat, dan sejenisnya',
-                    'id_dosen'=>$dosen_pembimbing->id_dosen, 
+                    'id_dosen'=>$dosen_pembimbing->id_dosen,
                     'nidn'=>$dosen_pembimbing->nidn,
                     'nama_dosen'=>$dosen_pembimbing->nama_dosen,
                     'pembimbing_ke'=>1,
                     'status_sync'=>'belum sync',
                 ]);
-                    
+
                 // $bimbing_urut=$bimbing->orderBy('pembimbing_ke', 'ASC')->get();
                 // dd($bimbing);
-                
+
             });
 
             return redirect()->route('mahasiswa.perkuliahan.mbkm.non-pertukaran')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
@@ -361,18 +385,30 @@ class AktivitasMBKMController extends Controller
             $semester_aktif = SemesterAktif::first();
             $today = Carbon::now()->toDateString();
 
-            $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
-            // dd($batas_isi_krs_manual);
+            // $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+            // // dd($batas_isi_krs_manual);
 
-            if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
-                if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
-                    $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
-                }else{
-                    $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-                }
-            } else{
-                $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+            // if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
+            //     if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
+            //         $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+            //     }else{
+            //         $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+            //     }
+            // } else{
+            //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+            // }
+            $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+
+            if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
+                $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
             }
+
+            $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+
+            if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
+                $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
+            }
+            // Fungsi cek batas isi KRS Selesai
 
             if ($today > $batas_isi_krs) {
                 return redirect()->back()->with('error', 'Periode Pengajuan Aktivitas MBKM telah berakhir, Data tidak dapat dihapus.');
@@ -387,13 +423,13 @@ class AktivitasMBKMController extends Controller
             if ($bimbing) {
                 $bimbing->delete();
             }
-            
+
             // Menghapus anggota aktivitas mahasiswa
             $anggota = AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas);
             if ($anggota) {
                 $anggota->delete();
             }
-            
+
             // Menghapus aktivitas mahasiswa
             $aktivitas = AktivitasMahasiswa::findOrFail($id);
             $aktivitas->delete();
@@ -408,22 +444,16 @@ class AktivitasMBKMController extends Controller
         }
     }
 
-
-
-
-
-
-
     //MBKM PERTUKARAN
     public function index_pertukaran()
     {
         $id_reg = auth()->user()->fk_id;
-        
+
         // $data = AktivitasMagang::where('id_registrasi_mahasiswa', $id_reg)->get();
         // $anggota_aktivitas = AnggotaAktivitasMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->get();
 
         $semester_aktif = SemesterAktif::with(['semester'])->first();
-        
+
         $data = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa', 'semester'])
                 ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
                     $query->where('id_registrasi_mahasiswa', $id_reg);
@@ -431,24 +461,36 @@ class AktivitasMBKMController extends Controller
                 ->whereIn('id_jenis_aktivitas',['21'])
                 ->orderBy('id_semester', 'DESC')
                 ->get();
-                
+
         $jumlah_data=$data->first();
         // dd($jumlah_data);
 
         $today = Carbon::now()->toDateString();
 
-        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
-        // dd($batas_isi_krs_manual);
+        // $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+        // // dd($batas_isi_krs_manual);
 
-        if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
-            if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
-                $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
-            }else{
-                $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-            }
-        } else{
-            $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
+        //     if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
+        //         $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+        //     }else{
+        //         $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        //     }
+        // } else{
+        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // }
+        $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+
+        if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
+            $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
         }
+
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+
+        if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
+            $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
+        }
+        // Fungsi cek batas isi KRS Selesai
 
         // dd($data);
 
@@ -461,18 +503,30 @@ class AktivitasMBKMController extends Controller
         $semester_aktif = SemesterAktif::first();
         $today = Carbon::now()->toDateString();
 
-        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
-        // dd($batas_isi_krs_manual);
+        // $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+        // // dd($batas_isi_krs_manual);
 
-        if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
-            if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
-                $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
-            }else{
-                $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-            }
-        } else{
-            $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
+        //     if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
+        //         $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+        //     }else{
+        //         $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        //     }
+        // } else{
+        //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        // }
+        $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+
+        if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
+            $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
         }
+
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+
+        if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
+            $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
+        }
+        // Fungsi cek batas isi KRS Selesai
 
         $data = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -488,9 +542,9 @@ class AktivitasMBKMController extends Controller
                         ->where('id_semester', $semester_aktif->id_semester)
                         ->whereIn('id_jenis_aktivitas',['21'])
                         ->get();
-                        
+
         $sks_aktivitas_mbkm = [
-                                "10", 
+                                "10",
                                 "20"
                             ];
 
@@ -527,7 +581,7 @@ class AktivitasMBKMController extends Controller
                 ->where('approve_krs', 1)
                 ->count();
                 // dd($approved);
-            
+
         if ( $approved_krs > 0 || $approved_akt > 0) {
         // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
         return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
@@ -538,7 +592,7 @@ class AktivitasMBKMController extends Controller
 
 
         return view('mahasiswa.perkuliahan.krs.aktivitas-mbkm.pertukaran.store', [
-            'data' => $data, 
+            'data' => $data,
             'aktivitas_mbkm'=>$aktivitas_mbkm,
             'sks_aktivitas_mbkm'=>$sks_aktivitas_mbkm,
             'dosen_pembimbing'=>$dosen_pembimbing
@@ -551,7 +605,7 @@ class AktivitasMBKMController extends Controller
             'aktivitas_mbkm' => 'required',
             'sks_mbkm' => 'required',
             'judul' => 'required|string|max:255',
-            'keterangan' => 'nullable|max:100', 
+            'keterangan' => 'nullable|max:100',
             'lokasi' => 'required|string|max:255'
         ]);
 
@@ -566,12 +620,12 @@ class AktivitasMBKMController extends Controller
                         ->where('id_semester', $semester_aktif->id_semester)
                         ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                         ->get();
-         
+
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                     ->first();
-        
+
         $db = new MataKuliah();
         $db_akt = new AktivitasMahasiswa();
 
@@ -590,8 +644,8 @@ class AktivitasMBKMController extends Controller
             $sks_akt_mbkm =0;
         }
 
-        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $sks_akt_mbkm ;     
-        
+        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $sks_akt_mbkm ;
+
         // dd($total_sks);
 
         if (($total_sks + $request->sks_mbkm) > $sks_max) {
@@ -603,12 +657,12 @@ class AktivitasMBKMController extends Controller
             DB::transaction(function () use ($request) {
             $id_reg = auth()->user()->fk_id;
 
-            $riwayat_pendidikan = RiwayatPendidikan::with('prodi')            
+            $riwayat_pendidikan = RiwayatPendidikan::with('prodi')
                             ->where('id_registrasi_mahasiswa', $id_reg)
                             ->first();
 
             $semester_aktif = SemesterAktif::with('semester')->first();
-            
+
             $now = Carbon::now();
 
             // $mk_konversi = MataKuliah::where('id_matkul', $request->id_matkul)->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
@@ -669,12 +723,12 @@ class AktivitasMBKMController extends Controller
                     'jenis_peran'=>2,
                     'nama_jenis_peran'=>'Anggota',
                     'status_sync'=>'belum sync',
-                ]);   
+                ]);
 
 
                 //Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
-                
+
                 $dosen_pembimbing = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)
                                 ->where('id_dosen', $riwayat_pendidikan->dosen_pa)
                                 ->first();
@@ -688,7 +742,7 @@ class AktivitasMBKMController extends Controller
                     'judul'=>$aktivitas->judul,
                     'id_kategori_kegiatan'=>110300,
                     'nama_kategori_kegiatan'=>'Membimbing Kuliah Kerja Nyata, Praktek Kerja Nyata, Praktek Kerja Lapangan, termasuk membimbing pelatihan militer mahasiswa, pertukaran mahasiswa,  Magang, kuliah berbasis penelitian, wirausaha, dan bentuk lain pengabdian kepada masyarakat, dan sejenisnya',
-                    'id_dosen'=>$dosen_pembimbing->id_dosen, 
+                    'id_dosen'=>$dosen_pembimbing->id_dosen,
                     'nidn'=>$dosen_pembimbing->nidn,
                     'nama_dosen'=>$dosen_pembimbing->nama_dosen,
                     'pembimbing_ke'=>1,
@@ -703,7 +757,7 @@ class AktivitasMBKMController extends Controller
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
             return redirect()->back()->with('error', $e->getMessage());
         }
-        
+
         return redirect()->route('mahasiswa.perkuliahan.mbkm.pertukaran')->with('success', 'Data Berhasil di Tambahkan');
     }
 
@@ -719,18 +773,30 @@ class AktivitasMBKMController extends Controller
             $semester_aktif = SemesterAktif::first();
             $today = Carbon::now()->toDateString();
 
-            $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
-            // dd($batas_isi_krs_manual);
+            // $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+            // // dd($batas_isi_krs_manual);
 
-            if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
-                if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
-                    $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
-                }else{
-                    $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
-                }
-            } else{
-                $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+            // if($today < $semester_aktif->krs_mulai || $today > $semester_aktif->krs_selesai){
+            //     if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs ) {
+            //         $batas_isi_krs =  $batas_isi_krs_manual->batas_isi_krs;
+            //     }else{
+            //         $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+            //     }
+            // } else{
+            //     $batas_isi_krs =  Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+            // }
+            $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+
+            if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
+                $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
             }
+
+            $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+
+            if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
+                $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
+            }
+            // Fungsi cek batas isi KRS Selesai
 
             if ($today > $batas_isi_krs) {
                 return redirect()->back()->with('error', 'Periode Pengajuan Aktivitas MBKM telah berakhir, Data tidak dapat dihapus.');
@@ -745,13 +811,13 @@ class AktivitasMBKMController extends Controller
             if ($bimbing) {
                 $bimbing->delete();
             }
-            
+
             // Menghapus anggota aktivitas mahasiswa
             $anggota = AnggotaAktivitasMahasiswa::where('id_aktivitas', $id_aktivitas);
             if ($anggota) {
                 $anggota->delete();
             }
-            
+
             // Menghapus aktivitas mahasiswa
             $aktivitas = AktivitasMahasiswa::findOrFail($id);
             $aktivitas->delete();
