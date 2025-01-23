@@ -363,11 +363,12 @@ Aktivitas Kuliah Mahasiswa
                     // Menampilkan SweetAlert error v1 dengan response.message
                     swal({
                         title: "Error!",
-                        text: xhr.responseJSON?.message || "Terjadi kesalahan saat menyimpan data!", // Menampilkan response.message jika ada
+                        text: "Terjadi kesalahan saat menyimpan data! " + (xhr.responseJSON?.message || ""),
                         type: "error",
                         confirmButtonColor: '#d33',
                         confirmButtonText: 'Tutup'
                     });
+
                 }
             });
 
