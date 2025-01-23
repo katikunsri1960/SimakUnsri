@@ -39,6 +39,22 @@
                                 </select>
                             </div>
                         </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label for="status_mahasiswa" class="form-label">Status</label>
+                            <select
+                                multiple
+                                class="form-select"
+                                name="status_mahasiswa[]"
+                                id="status_mahasiswa"
+                            >
+                                @foreach ($status_mahasiswa as $status)
+                                <option value="{{$status->id_status_mahasiswa}}" {{ in_array($status->id_status_mahasiswa, old('status_mahasiswa', request()->get('status_mahasiswa', []))) ? 'selected' : '' }}>
+                                    {{$status->nama_status_mahasiswa}}
+                                </option>
+                                @endforeach
+                            </select>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="status_mahasiswa" class="form-label">Status</label>

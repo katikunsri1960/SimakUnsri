@@ -6,9 +6,7 @@
             <h5 class="modal-title" id="createModalLabel">
                     Tambah Pengajuan Cuti
             </h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
         <form action="{{route('univ.perkuliahan.aktivitas-kuliah.store')}}"  method="POST" enctype="multipart/form-data">
             @csrf
