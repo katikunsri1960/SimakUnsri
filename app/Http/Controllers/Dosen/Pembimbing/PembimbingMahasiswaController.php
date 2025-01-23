@@ -353,34 +353,43 @@ class PembimbingMahasiswaController extends Controller
             'penguji_ke' => 'required_if:penguji_ke,!=,null'
         ]);
 
-        $total_nilai_tagihan = 0;
+        $sudah_bayar = 0;
 
         try{
             $id_test = Registrasi::where('rm_nim', $data_mahasiswa->nim)->pluck('rm_no_test')->first();
             $tagihan = Tagihan::with('pembayaran')
                     ->whereIn('nomor_pembayaran', [$id_test, $data_mahasiswa->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester
-                    // -1
-                    )
+                    ->where('kode_periode', $semester_aktif->id_semester)
                     ->first();
 
-            // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
-            $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
+            if (!$tagihan || $tagihan->pembayaran->isEmpty() || $tagihan->total_nilai_tagihan === NULL) {
+                $sudah_bayar = 0;
+            } else {
+                $sudah_bayar = 1;
+            }            
 
         }catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Koneksi Database Keuangan Terputus.');
         }
 
-        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa',$data_mahasiswa->id_registrasi_mahasiswa)->first();
+        if ($sudah_bayar == 0) {
 
-        $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
+            $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa',$data_mahasiswa->id_registrasi_mahasiswa)->first();
+
+            if (!$beasiswa) {
+
+                $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
                 ->where('id_registrasi_mahasiswa', $data_mahasiswa->id_registrasi_mahasiswa)
                 ->where('id_semester', $semester_aktif->id_semester)
+                ->where('status', 0)
                 ->count();
 
-        if($total_nilai_tagihan == 0 || !$beasiswa || $pembayaran_manual == 0){
-            return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan pembayaran UKT.');
+                if ($pembayaran_manual > 0) {
+                    return redirect()->back()->with('error', 'Mahasiswa belum melakukan pembayaran UKT.');
+                }
+            }
         }
+        
 
         try {
             DB::beginTransaction();
