@@ -10,12 +10,12 @@
             <div class="modal-body p-30">
                 <input type="hidden" id="edit_id" name="id">
 
-                <div class="form-group">
+                <div class="form-group mb-20">
                     <label for="edit_nama_mahasiswa">Nama Mahasiswa</label>
                     <input type="text" class="form-control" id="edit_nama_mahasiswa" name="nama_mahasiswa" readonly>
                 </div>
-                <h4 class="text-info mb-0 mt-20"><i class="fa fa-user"></i> Data Aktivitas Kuliah Mahasiswa</h4>
-                <hr class="my-15">
+                <h4 class="text-info mb-0 mt-30"><i class="fa fa-user"></i> Data Aktivitas Kuliah Mahasiswa</h4>
+                <hr class="my-5">
                 <div class="row form-group mb-10">
                     <div class="col-lg-12 mb-3">
                         <label for="edit_status_mahasiswa">Status Mahasiswa</label>
@@ -25,7 +25,6 @@
                         </select>
                     </div>
                 </div>
-
                 <div class="row form-group mb-10">
                     <div class="col-lg-6 mb-3">
                         <label for="edit_ips">IPS</label>

@@ -381,24 +381,30 @@ Aktivitas Kuliah Mahasiswa
 
         $('#editForm').on('submit', function (e) {
             e.preventDefault();
+
+            var formData = $(this).serialize(); // Ambil data form
+            console.log(formData); // Debug data yang dikirim
+
             $.ajax({
                 url: `/universitas/perkuliahan/aktivitas-kuliah/${$('#edit_id').val()}/update`,
-                method: 'PATCH', // Sesuai dengan method route
-                data: $(this).serialize(), // Mengirimkan seluruh data dari form
+                method: 'PATCH',
+                data: formData,
                 success: function (response) {
                     if (response.success) {
                         $('#editModal').modal('hide');
                         alert('Data berhasil diperbarui!');
                         $('#data').DataTable().ajax.reload(); // Refresh DataTable
                     } else {
-                        alert(response.message);
+                        alert(response.message || 'Gagal menyimpan data.');
                     }
                 },
                 error: function (xhr) {
+                    console.error(xhr.responseJSON); // Debug error
                     alert('Terjadi kesalahan saat menyimpan data!');
                 }
             });
         });
+
 
 
 
