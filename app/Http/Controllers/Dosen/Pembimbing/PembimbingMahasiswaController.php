@@ -7,6 +7,7 @@ use App\Models\AsistensiAkhir;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\BeasiswaMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
