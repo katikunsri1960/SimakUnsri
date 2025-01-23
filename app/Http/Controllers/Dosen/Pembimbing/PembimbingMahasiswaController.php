@@ -353,29 +353,26 @@ class PembimbingMahasiswaController extends Controller
             'penguji_ke' => 'required_if:penguji_ke,!=,null'
         ]);
 
-        $total_nilai_tagihan = 0;
+        $sudah_bayar = 0;
 
         try{
             $id_test = Registrasi::where('rm_nim', $data_mahasiswa->nim)->pluck('rm_no_test')->first();
             $tagihan = Tagihan::with('pembayaran')
                     ->whereIn('nomor_pembayaran', [$id_test, $data_mahasiswa->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester
-                    // -1
-                    )
+                    ->where('kode_periode', $semester_aktif->id_semester)
                     ->first();
 
-            // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
-            if (!$tagihan || $tagihan->total_nilai_tagihan === NULL) {
-                $total_nilai_tagihan = 0;
+            if (!$tagihan || $tagihan->pembayaran->isEmpty() || $tagihan->total_nilai_tagihan === NULL) {
+                $sudah_bayar = 0;
             } else {
-                $total_nilai_tagihan = $tagihan->total_nilai_tagihan;
-            }
+                $sudah_bayar = 1;
+            }            
 
         }catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Koneksi Database Keuangan Terputus.');
         }
 
-        if ($total_nilai_tagihan == 0) {
+        if ($sudah_bayar == 0) {
 
             $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa',$data_mahasiswa->id_registrasi_mahasiswa)->first();
 
