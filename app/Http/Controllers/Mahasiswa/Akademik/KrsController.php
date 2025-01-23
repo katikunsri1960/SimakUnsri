@@ -733,7 +733,6 @@ class KrsController extends Controller
         // Cek apakah mahasiswa sudah mengambil mata kuliah prasyarat
         $mataKuliahDipenuhi = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
                 ->whereIn('id_matkul', $prasyarat)
-                ->where('approved', '1')
                 ->exists();
 
         $mataKuliahDipenuhi_2 = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
