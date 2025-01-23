@@ -277,8 +277,6 @@ Aktivitas Kuliah Mahasiswa
         });
 
 
-
-
         $(document).on('click', '.btn-edit', function () {
             var id = $(this).data('id'); // Ambil ID dari tombol edit
 
@@ -340,7 +338,7 @@ Aktivitas Kuliah Mahasiswa
             e.preventDefault();
 
             var formData = $(this).serialize(); // Ambil data form
-            console.log(formData); // Debug data yang dikirim
+            // console.log(formData); // Debug data yang dikirim
 
             $.ajax({
                 url: `/universitas/perkuliahan/aktivitas-kuliah/${$('#edit_id').val()}/update`,
@@ -349,21 +347,31 @@ Aktivitas Kuliah Mahasiswa
                 success: function (response) {
                     if (response.success) {
                         $('#editModal').modal('hide');
-                        alert('Data berhasil diperbarui!');
+                        swal({
+                            title: 'Berhasil!',
+                            text: "Data Berhasil Disimpan",
+                            type: 'success',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'ok',
+                        });
                         $('#data').DataTable().ajax.reload(); // Refresh DataTable
                     } else {
                         alert(response.message || 'Gagal menyimpan data.');
                     }
                 },
-                error: function (xhr) {
-                    console.error(xhr.responseJSON); // Debug error
-                    alert('Terjadi kesalahan saat menyimpan data!');
+                error: function (xhr, status, error) {
+                    // Menampilkan SweetAlert error v1 dengan response.message
+                    swal({
+                        title: "Error!",
+                        text: xhr.responseJSON?.message || "Terjadi kesalahan saat menyimpan data!", // Menampilkan response.message jika ada
+                        type: "error",
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'Tutup'
+                    });
                 }
             });
+
         });
-
-
-
 
         // sweet alert sync-form
         $('#sync-form').submit(function(e){
