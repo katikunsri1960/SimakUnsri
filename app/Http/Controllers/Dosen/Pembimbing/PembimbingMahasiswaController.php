@@ -365,22 +365,34 @@ class PembimbingMahasiswaController extends Controller
                     ->first();
 
             // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
-            $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
+            if (!$tagihan || $tagihan->total_nilai_tagihan === NULL) {
+                $total_nilai_tagihan = 0;
+            } else {
+                $total_nilai_tagihan = $tagihan->total_nilai_tagihan;
+            }
 
         }catch (\Exception $e) {
             return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $e->getMessage());
         }
 
-        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa',$data_mahasiswa->id_registrasi_mahasiswa)->first();
+        if ($total_nilai_tagihan == 0) {
 
-        $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
+            $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa',$data_mahasiswa->id_registrasi_mahasiswa)->first();
+
+            if (!$beasiswa) {
+
+                $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
                 ->where('id_registrasi_mahasiswa', $data_mahasiswa->id_registrasi_mahasiswa)
                 ->where('id_semester', $semester_aktif->id_semester)
+                ->where('status', 0)
                 ->count();
 
-        if($total_nilai_tagihan == 0 || !$beasiswa || $pembayaran_manual == 0){
-            return redirect()->back()->with('error', 'Mahasiswa belum menyelesaikan pembayaran UKT.');
+                if ($pembayaran_manual > 0) {
+                    return redirect()->back()->with('error', 'Mahasiswa belum melakukan pembayaran UKT.');
+                }
+            }
         }
+        
 
         try {
             DB::beginTransaction();
