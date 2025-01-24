@@ -359,18 +359,20 @@ class PerkuliahanController extends Controller
 
     public function aktivitas_kuliah_update(Request $request, $id)
     {
-        try {
-            // Validasi data
-            $validated = $request->validate([
-                'edit_ips' => 'nullable|numeric|between:0,4.00',
-                'edit_ipk' => 'nullable|numeric|between:0,4.00',
-                'edit_sks_semester' => 'required|numeric',
-                'edit_sks_total' => 'required|numeric',
-                'edit_id_pembiayaan' => 'required|in:1,2,3',
-                'edit_id_semester' => 'required|exists:semesters,id_semester',
-                'edit_status_mahasiswa' => 'required|in:A,M,C,N',
-            ]);
+        // Validasi data
+        $validated = $request->validate([
+            'ips' => 'required|numeric|between:0,4.00',
+            'ipk' => 'required|numeric|between:0,4.00',
+            'sks_semester' => 'required|numeric',
+            'sks_total' => 'required|numeric',
+            'id_pembiayaan' => 'required|in:1,2,3',
+            'id_semester' => 'required|exists:semesters,id_semester',
+            'id_status_mahasiswa' => 'required|in:A,M,C,N',
+        ]);
 
+        // dd($validated);
+
+        try {
             // Cari data berdasarkan ID dan update
             $aktivitasKuliah = AktivitasKuliahMahasiswa::findOrFail($id);
             $aktivitasKuliah->update($validated);
