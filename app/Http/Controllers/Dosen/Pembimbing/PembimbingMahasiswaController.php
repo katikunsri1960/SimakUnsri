@@ -362,11 +362,11 @@ class PembimbingMahasiswaController extends Controller
                     ->where('kode_periode', $semester_aktif->id_semester)
                     ->first();
 
-            if (!$tagihan || $tagihan->pembayaran->isEmpty() || $tagihan->total_nilai_tagihan === NULL) {
-                $sudah_bayar = 0;
+            if (!$tagihan || !$tagihan->pembayaran || empty($tagihan->pembayaran) || is_null($tagihan->total_nilai_tagihan)) {
+                $sudah_bayar = 0; // Not paid
             } else {
-                $sudah_bayar = 1;
-            }            
+                $sudah_bayar = 1; // Paid
+            }                      
 
         }catch (\Exception $e) {
             return redirect()->back()->with('error', 'Koneksi Database Keuangan Terputus.');
