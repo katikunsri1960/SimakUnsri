@@ -7,6 +7,7 @@ use App\Models\AsistensiAkhir;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\BeasiswaMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
@@ -23,6 +24,9 @@ use App\Models\Dosen\PenugasanDosen;
 use App\Models\Perpus\BebasPustaka;
 use App\Models\Connection\Usept;
 use App\Models\Connection\CourseUsept;
+use App\Models\Connection\Registrasi;
+use App\Models\PembayaranManualMahasiswa;
+use App\Models\Connection\Tagihan;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -335,6 +339,12 @@ class PembimbingMahasiswaController extends Controller
     public function ajuan_sidang_store(Request $request, $aktivitas)
     {
         // dd($request->judul);
+        $semester_aktif = SemesterAktif::first();
+        $aktivitasMahasiswa = AktivitasMahasiswa::with('prodi')->where('id', $aktivitas)->first();
+        $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])
+                                ->where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)
+                                ->first();
+
         $data = $request->validate([
             'judul' => 'required',
             'dosen_penguji' => 'nullable',
@@ -343,10 +353,47 @@ class PembimbingMahasiswaController extends Controller
             'penguji_ke' => 'required_if:penguji_ke,!=,null'
         ]);
 
+        $sudah_bayar = 0;
+
+        try{
+            $id_test = Registrasi::where('rm_nim', $data_mahasiswa->nim)->pluck('rm_no_test')->first();
+            $tagihan = Tagihan::with('pembayaran')
+                    ->whereIn('nomor_pembayaran', [$id_test, $data_mahasiswa->nim])
+                    ->where('kode_periode', $semester_aktif->id_semester)
+                    ->first();
+
+            if (!$tagihan || !$tagihan->pembayaran || empty($tagihan->pembayaran) || is_null($tagihan->total_nilai_tagihan)) {
+                $sudah_bayar = 0; // Not paid
+            } else {
+                $sudah_bayar = 1; // Paid
+            }                      
+
+        }catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Koneksi Database Keuangan Terputus.');
+        }
+
+        if ($sudah_bayar == 0) {
+
+            $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa',$data_mahasiswa->id_registrasi_mahasiswa)->first();
+
+            if (!$beasiswa) {
+
+                $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
+                ->where('id_registrasi_mahasiswa', $data_mahasiswa->id_registrasi_mahasiswa)
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->where('status', 0)
+                ->count();
+
+                if ($pembayaran_manual > 0) {
+                    return redirect()->back()->with('error', 'Mahasiswa belum melakukan pembayaran UKT.');
+                }
+            }
+        }
+        
+
         try {
             DB::beginTransaction();
 
-            $aktivitasMahasiswa = AktivitasMahasiswa::with('prodi')->where('id', $aktivitas)->first();
             $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
             $ujiMahasiswa = UjiMahasiswa::where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)->get();
             // dd($aktivitas, $aktivitasMahasiswa);
@@ -359,10 +406,6 @@ class PembimbingMahasiswaController extends Controller
             if (!$pembimbing || $pembimbing->pembimbing_ke != 1) {
                 return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat mengajukan.');
             }
-
-            $data_mahasiswa = AnggotaAktivitasMahasiswa::with(['mahasiswa', 'mahasiswa.biodata'])
-                                ->where('id_aktivitas', $aktivitasMahasiswa->id_aktivitas)
-                                ->first();
 
             // coding apabila ajuan sidang tanpa pengecheckan USEPT
 
