@@ -6,6 +6,7 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 use Illuminate\Console\Command;
 
 class UpdateIps extends Command
@@ -34,7 +35,7 @@ class UpdateIps extends Command
 
         $semester = '20241';
 
-        $akmData = AktivitasKuliahMahasiswa::where('id_semester', $semester)->whereNot('id_status_mahasiswa', 'N')->get();
+        $akmData = AktivitasKuliahMahasiswa::where('id_semester', $semester)->whereNotIn('id_status_mahasiswa', ['N', 'C'])->get();
 
         $total = $akmData->count();
 
@@ -80,10 +81,33 @@ class UpdateIps extends Command
                 $ips = $total_bobot / $total_sks_semester;
             }
 
+            $transkrip = TranskripMahasiswa::select(
+                    'sks_mata_kuliah','nilai_indeks'
+                )
+                ->where('id_registrasi_mahasiswa', $akm->id_registrasi_mahasiswa)
+                ->whereNotIn('nilai_huruf', ['F', ''])
+                ->get();
+
+            $total_sks_transkrip = $transkrip->sum('sks_mata_kuliah');
+            $total_bobot_transkrip = 0;
+
+            foreach ($transkrip as $t) {
+                $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
+            }
+
+            $ipk = 0;
+
+            if($total_sks_transkrip > 0){
+                $ipk = $total_bobot_transkrip / $total_sks_transkrip;
+            }
+
             // Update nilai IPS pada tabel
             $akm->update([
                 'feeder'=>0,
-                'ips' => round($ips, 2) // Simpan dengan pembulatan 2 desimal
+                'sks_semester' => $total_sks_semester,
+                'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
+                'ipk' => round($ipk, 2), // Simpan dengan pembulatan 2 desimal
+                'sks_total' => $total_sks_transkrip
             ]);
 
             $bar->advance();
