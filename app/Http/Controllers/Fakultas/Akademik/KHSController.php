@@ -185,7 +185,7 @@ class KHSController extends Controller
     {
         $semesters = Semester::orderBy('id_semester', 'desc')->get();
         $semesterAktif = SemesterAktif::with('semester')->first();
-        $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)->orderBy('kode_program_studi')->get();
+        $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)->where('status', 'A')->orderBy('id_jenjang_pendidikan')->get();
 
         $arrayProdi = $prodi->pluck('id_prodi');
 
