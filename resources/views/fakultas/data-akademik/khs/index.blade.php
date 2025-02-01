@@ -200,6 +200,7 @@ KHS Mahasiswa
                         });
                         return false;
                     }
+                    // console.log(response);
 
                     $('#nimCetak').val(response.riwayat.nim);
                     $('#idSemesterCetak').val(semester);

@@ -132,6 +132,7 @@ KHS Mahasiswa
                     // console.log(angkatan)
                     // console.log(prodi)
                     // console.log(semester)
+                    // console.log(response);
                     if (response.status == 'error') {
                         swal({
                             title: "Peringatan!",

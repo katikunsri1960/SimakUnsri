@@ -41,7 +41,10 @@ class KHSController extends Controller
         $semester = $request->semester;
         $nim = $request->nim;
 
-        $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')
+        $riwayat = RiwayatPendidikan::with('dosen_pa','prodi', 'prodi.jurusan', 'prodi.fakultas')
+                    ->whereHas('prodi', function($query) {
+                            $query->where('status', 'A');
+                        })
                     ->where('nim', $nim)
                     ->whereIn('id_prodi', $id_prodi_fak)
                     ->first();
@@ -53,7 +56,8 @@ class KHSController extends Controller
             ]);
         }
 
-        $nilai = NilaiPerkuliahan::with('semester')->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+        $nilai = NilaiPerkuliahan::with('semester')
+                ->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->where('id_semester', $semester)
                 ->orderBy('id_semester')
                 ->get();
@@ -181,7 +185,7 @@ class KHSController extends Controller
     {
         $semesters = Semester::orderBy('id_semester', 'desc')->get();
         $semesterAktif = SemesterAktif::with('semester')->first();
-        $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)->orderBy('kode_program_studi')->get();
+        $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)->where('status', 'A')->orderBy('id_jenjang_pendidikan')->get();
 
         $arrayProdi = $prodi->pluck('id_prodi');
 
