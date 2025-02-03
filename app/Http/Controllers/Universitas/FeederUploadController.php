@@ -1732,7 +1732,7 @@ class FeederUploadController extends Controller
         $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
         $data = PeriodePerkuliahan::where('feeder', 0)
                 ->where('id_prodi', $prodi)
-                // ->where('approved', 1)
+                ->where('id_semester', $request->id_semester)
                 // ->orderBy('nama')
                 // ->orderBy('pertemuan')
                 ->get();
@@ -1781,10 +1781,12 @@ class FeederUploadController extends Controller
 
                 // dd($record);
 
-                $recordGet = "id_prosi = '".$d->id_prodi."' AND id_semester = '".$d->id_semester."'";
+                $recordGet = "id_prodi = '".$d->id_prodi."' AND id_semester = '".$d->id_semester."'";
+
+                // dd($recordGet);
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-                $result = $req->uploadRps();
+                $result = $req->uploadPeriodePerkuliahan();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
                     $d->update([
