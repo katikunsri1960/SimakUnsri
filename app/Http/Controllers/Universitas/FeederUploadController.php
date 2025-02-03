@@ -26,6 +26,7 @@ use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
+use App\Models\Referensi\PeriodePerkuliahan;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 use function PHPUnit\Framework\isNull;
@@ -1704,6 +1705,124 @@ class FeederUploadController extends Controller
 
         return $response;
     }
+
+
+
+    public function periode_perkuliahan()
+    {
+        $semesterAktif = SemesterAktif::first();
+        // $count = AktivitasKuliahMahasiswa::where('feeder', 0)->count();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        // $angkatan = AktivitasKuliahMahasiswa::select('angkatan')->distinct()->orderBy('angkatan', 'desc')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+        // $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa', 'nama_status_mahasiswa')->distinct()->orderBy('id_status_mahasiswa')->get();
+        return view('universitas.feeder-upload.pelengkap.periode-perkuliahan',
+        [
+            // 'count' => $count,
+            'prodi' => $prodi,
+            // 'angkatan' => $angkatan,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+            // 'status_mahasiswa' => $status_mahasiswa
+        ]);
+    }
+
+    public function periode_perkuliahan_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = PeriodePerkuliahan::where('feeder', 0)
+                ->where('id_prodi', $prodi)
+                // ->where('approved', 1)
+                // ->orderBy('nama')
+                // ->orderBy('pertemuan')
+                ->get();
+// dd($prodi);
+        return response()->json($data);
+    }
+
+    public function periode_perkuliahan_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
+        // $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = PeriodePerkuliahan::where('feeder', 0)
+                // ->where('approved', 1)
+                ->where('id_prodi', $prodi)
+                // ->whereNotNull('id_pembiayaan')
+                ->get();
+
+        $totalData = $data->count();
+
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertPeriodePerkuliahan';
+        $actGet = 'GetListPeriodePerkuliahan';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+                $record = [
+                    "id_prodi" => $d->id_prodi,
+                    "id_semester" => $d->id_semester,
+                    "jumlah_target_mahasiswa_baru" => strval($d->jumlah_target_mahasiswa_baru), // Konversi ke string
+                    "jumlah_pendaftar_ikut_seleksi" => strval($d->jumlah_pendaftar_ikut_seleksi), // Konversi ke string
+                    "jumlah_pendaftar_lulus_seleksi" => strval($d->jumlah_pendaftar_lulus_seleksi), // Konversi ke string
+                    "jumlah_daftar_ulang" => strval($d->jumlah_daftar_ulang), // Konversi ke string
+                    "jumlah_mengundurkan_diri" => strval($d->jumlah_mengundurkan_diri), // Konversi ke string
+                    "tanggal_awal_perkuliahan" => $d->tanggal_awal_perkuliahan,
+                    "tanggal_akhir_perkuliahan" => $d->tanggal_akhir_perkuliahan,
+                ];
+
+                // dd($record);
+
+                $recordGet = "id_prosi = '".$d->id_prodi."' AND id_semester = '".$d->id_semester."'";
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                $result = $req->uploadRps();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+                    $d->update([
+                        'feeder' => 1,
+                        'status_sync' => 'sudah sync'
+                    ]);
+                    $dataBerhasil++;
+                } else {
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+
+    // public function upload_ajax(Request $request)
+    // {
+    //     // Start the upload process and return a response immediately
+    //     // The actual progress updates will be handled by the uploadProgress method
+    //     return response()->json(['message' => 'Upload started']);
+    // }
+
+
 
     private function convert_ascii($string)
     {
