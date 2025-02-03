@@ -60,6 +60,7 @@ Aktivitas Mahasiswa
                                     <th class="text-center align-middle">Prodi</th>
                                     <th class="text-center align-middle">Judul</th>
                                     <th class="text-center align-middle">Jenis</th>
+                                    <th class="text-center align-middle">Tanggal Selesai</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama</th>
                                     <th class="text-center align-middle">ACT</th>
@@ -129,7 +130,21 @@ Aktivitas Mahasiswa
                 {data: 'nama_jenis_aktivitas', name: 'nama_jenis_aktivitas', class: 'text-start', searchable: true},
                 {
                     data: null,
+                    name: 'tanggal_selesai',
+                    class: "text-center align-middle",
+                    searchable: true,
+                    render: function (data, type, row, meta) {
+                        if (data.tanggal_selesai == null) {
+                            return 'Tidak ada data' ;
+                        } else {
+                            return data.tanggal_selesai ;
+                        }
+                    }
+                },
+                {
+                    data: null,
                     name: 'anggota',
+                    class: "text-center align-middle",
                     searchable: true,
                     render: function (data, type, row, meta) {
                         if (data.anggota_aktivitas_personal == null) {
