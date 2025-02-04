@@ -1705,16 +1705,16 @@ class FeederUploadController extends Controller
 
         return $response;
     }
-
+    
 
     public function periode_perkuliahan()
     {
         $semesterAktif = SemesterAktif::first();
-        
+
         $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
-        
+
         $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
-        
+
         return view('universitas.feeder-upload.pelengkap.periode-perkuliahan',
         [
             'prodi' => $prodi,
@@ -1726,7 +1726,6 @@ class FeederUploadController extends Controller
     public function periode_perkuliahan_data(Request $request)
     {
         $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
-        
         $data = PeriodePerkuliahan::where('feeder', 0)
                 ->where('id_prodi', $prodi)
                 ->where('id_semester', $request->id_semester)
@@ -1754,6 +1753,7 @@ class FeederUploadController extends Controller
                 ->where('id_semester', $semester)
                 ->get();
 
+
         $totalData = $data->count();
 
         if ($totalData == 0) {
@@ -1778,11 +1778,10 @@ class FeederUploadController extends Controller
                     "tanggal_awal_perkuliahan" => $d->tanggal_awal_perkuliahan,
                     "tanggal_akhir_perkuliahan" => $d->tanggal_akhir_perkuliahan,
                 ];
-
-                $recordGet = "id_prodi = '".$d->id_prodi."' AND id_semester = '".$d->id_semester."'";
-
-                $req = new FeederUpload($act, $record, $actGet, $recordGet);
                 
+                $recordGet = "id_prodi = '".$d->id_prodi."' AND id_semester = '".$d->id_semester."'";
+                
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
                 $result = $req->uploadPeriodePerkuliahan();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
