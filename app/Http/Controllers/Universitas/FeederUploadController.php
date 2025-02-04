@@ -1707,51 +1707,51 @@ class FeederUploadController extends Controller
     }
 
 
-
     public function periode_perkuliahan()
     {
         $semesterAktif = SemesterAktif::first();
-        // $count = AktivitasKuliahMahasiswa::where('feeder', 0)->count();
+        
         $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
-        // $angkatan = AktivitasKuliahMahasiswa::select('angkatan')->distinct()->orderBy('angkatan', 'desc')->get();
+        
         $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
-        // $status_mahasiswa = AktivitasKuliahMahasiswa::select('id_status_mahasiswa', 'nama_status_mahasiswa')->distinct()->orderBy('id_status_mahasiswa')->get();
+        
         return view('universitas.feeder-upload.pelengkap.periode-perkuliahan',
         [
-            // 'count' => $count,
             'prodi' => $prodi,
-            // 'angkatan' => $angkatan,
             'semester' => $semester,
             'semesterAktif' => $semesterAktif,
-            // 'status_mahasiswa' => $status_mahasiswa
         ]);
     }
 
     public function periode_perkuliahan_data(Request $request)
     {
         $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        
         $data = PeriodePerkuliahan::where('feeder', 0)
                 ->where('id_prodi', $prodi)
                 ->where('id_semester', $request->id_semester)
-                // ->orderBy('nama')
-                // ->orderBy('pertemuan')
                 ->get();
-// dd($prodi);
+
         return response()->json($data);
+    }
+
+    public function upload_periode_perkuliahan_ajax(Request $request)
+    {
+        // Start the upload process and return a response immediately
+        // The actual progress updates will be handled by the uploadAkmProgress method
+        // Log::info('Request data in upload_akm:', $request->all());
+        return response()->json(['message' => 'Upload started']);
     }
 
     public function periode_perkuliahan_upload(Request $request)
     {
         $prodi = ProgramStudi::find($request->prodi)->id_prodi;
 
-        // $semester = $request->semester;
-
-        // return response()->json(['message' => $semester.' - '.$prodi]);
+        $semester = $request->semester;
 
         $data = PeriodePerkuliahan::where('feeder', 0)
-                // ->where('approved', 1)
                 ->where('id_prodi', $prodi)
-                // ->whereNotNull('id_pembiayaan')
+                ->where('id_semester', $semester)
                 ->get();
 
         $totalData = $data->count();
@@ -1779,13 +1779,10 @@ class FeederUploadController extends Controller
                     "tanggal_akhir_perkuliahan" => $d->tanggal_akhir_perkuliahan,
                 ];
 
-                // dd($record);
-
                 $recordGet = "id_prodi = '".$d->id_prodi."' AND id_semester = '".$d->id_semester."'";
 
-                // dd($recordGet);
-
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
+                
                 $result = $req->uploadPeriodePerkuliahan();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {

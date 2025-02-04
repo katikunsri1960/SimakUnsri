@@ -216,84 +216,60 @@ class FeederUpload {
 
     public function uploadPeriodePerkuliahan()
     {
-        // dd($this->url);
-        $client = new Client();
-        $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
-        ];
-
-        $req = $client->post( $this->url, [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-            ],
-            'body' => json_encode($params)
-        ]);
-
-        $response = $req->getBody();
-        $result = json_decode($response,true);
-
-        if($result['error_code'] == 0) {
-            $token = $result['data']['token'];
-            $params = [
+            $token = $this->get_token();
+            $paramsGet = [
                 "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record
+                "act"   => $this->actGet,
+                "filter" => $this->recordGet
             ];
 
-            $req = $client->post( $this->url, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ],
-                'body' => json_encode($params)
-            ]);
+            $response = $this->service_native($paramsGet, $this->url);
 
-            $response = $req->getBody();
+            // $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = $response;
 
-            if(isset($result['error_code']) && $result['error_code'] == 1260)
-            {
-                $params = [
+            if ($result['error_code'] == 0 && count($result['data']) > 0) {
+
+                $updateRecord = $this->record;
+
+                unset($updateRecord['id_prodi']);
+
+                $paramsUpdate = [
                     "token" => $token,
-                    "act"   => 'UpdatePerkuliahanMahasiswa',
+                    "act"   => "UpdatePeriodePerkuliahan",
                     "key" => [
                         "id_prodi" => $this->record['id_prodi'],
                         "id_semester" => $this->record['id_semester']
                     ],
-                    "record" => [
-
-                        "id_prodi" => $this->record['id_prodi'],
-                        "id_semester" => $this->record['id_semester'],
-                        "jumlah_target_mahasiswa_baru" => $this->record['jumlah_target_mahasiswa_baru'],
-                        "jumlah_pendaftar_ikut_seleksi" => $this->record['jumlah_pendaftar_ikut_seleksi'],
-                        "jumlah_pendaftar_lulus_seleksi" => $this->record['jumlah_pendaftar_lulus_seleksi'],
-                        "jumlah_daftar_ulang" => $this->record['jumlah_daftar_ulang'],
-                        "jumlah_mengundurkan_diri" => $this->record['jumlah_mengundurkan_diri'],
-                        "tanggal_awal_perkuliahan" => $this->record['tanggal_awal_perkuliahan'],
-                        "tanggal_akhir_perkuliahan" => $this->record['tanggal_akhir_perkuliahan'],
-                    ]
+                    "record" => $updateRecord
                 ];
 
-                $req = $client->post( $this->url, [
-                    'headers' => [
-                        'Content-Type' => 'application/json',
-                        'Accept' => 'application/json',
-                    ],
-                    'body' => json_encode($params)
-                ]);
+                $response = $this->service_native($paramsUpdate, $this->url);
 
-                $response = $req->getBody();
+                // $response = $req->getBody();
 
-                $result = json_decode($response,true);
+                $result = $response;
+
+            } else {
+
+                    unset($this->record['id_prodi']);
+
+                    $params = [
+                        "token" => $token,
+                        "act"   => $this->act,
+                        "record" => $this->record
+                    ];
+
+                    $response = $this->service_native($params, $this->url);
+
+                    $result = $response;
             }
+
             return $result;
-        }
 
     }
+       
 
     public function uploadDosenPengajar()
     {

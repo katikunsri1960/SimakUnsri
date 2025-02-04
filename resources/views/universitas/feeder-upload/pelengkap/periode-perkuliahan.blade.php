@@ -232,7 +232,7 @@ FEEDER UPLOAD - PERIODE PERKULIAHAN
                     // console.log('Serialized form data:', formData);
 
                     $.ajax({
-                        url: "{{ route('univ.feeder-upload.ajax') }}",
+                        url: "{{ route('univ.feeder-upload.pelengkap.periode-perkuliahan.upload-ajax') }}",
                         type: 'POST',
                         data: formData,
                         success: function(response) {

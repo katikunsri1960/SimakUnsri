@@ -1036,8 +1036,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('pelengkap')->group(function(){
                     Route::prefix('periode-perkuliahan')->group(function(){
                         Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan');
-                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan_upload'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.upload');
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan_data'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan_upload'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.upload');
+                        Route::post('/upload-ajax', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_periode_perkuliahan_ajax'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.upload-ajax');
                     });
                 });
 
