@@ -258,6 +258,21 @@
                                     </li>
                                 </ul>
                             </li>
+
+                            <li class="treeview {{request()->routeIs('univ.feeder-upload.pelengkap.*') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pelengkap
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('univ.feeder-upload.pelengkap.periode-perkuliahan') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.pelengkap.periode-perkuliahan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Periode Perkuliahan</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.monitoring.*') || request()->routeIs('univ.monitoring.update-akm.*') ? 'active menu-open' : ''}}">

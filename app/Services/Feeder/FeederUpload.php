@@ -214,6 +214,63 @@ class FeederUpload {
 
     }
 
+    public function uploadPeriodePerkuliahan()
+    {
+            $token = $this->get_token();
+            $paramsGet = [
+                "token" => $token,
+                "act"   => $this->actGet,
+                "filter" => $this->recordGet
+            ];
+
+            $response = $this->service_native($paramsGet, $this->url);
+
+            // $response = $req->getBody();
+
+            $result = $response;
+
+            if ($result['error_code'] == 0 && count($result['data']) > 0) {
+
+                $updateRecord = $this->record;
+
+                unset($updateRecord['id_prodi']);
+
+                $paramsUpdate = [
+                    "token" => $token,
+                    "act"   => "UpdatePeriodePerkuliahan",
+                    "key" => [
+                        "id_prodi" => $this->record['id_prodi'],
+                        "id_semester" => $this->record['id_semester']
+                    ],
+                    "record" => $updateRecord
+                ];
+
+                $response = $this->service_native($paramsUpdate, $this->url);
+
+                // $response = $req->getBody();
+
+                $result = $response;
+
+            } else {
+
+                    unset($this->record['id_prodi']);
+
+                    $params = [
+                        "token" => $token,
+                        "act"   => $this->act,
+                        "record" => $this->record
+                    ];
+
+                    $response = $this->service_native($params, $this->url);
+
+                    $result = $response;
+            }
+
+            return $result;
+
+    }
+       
+
     public function uploadDosenPengajar()
     {
         $client = new Client();

@@ -1001,7 +1001,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar_data'])->name('univ.feeder-upload.perkuliahan.dosen-ajar.data');
                         Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'dosen_ajar_upload'])->name('univ.feeder-upload.perkuliahan.dosen-ajar.upload');
                     });
-
                 });
 
                 Route::prefix('aktivitas')->group(function(){
@@ -1031,6 +1030,15 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_konversi'])->name('univ.feeder-upload.aktivitas.nilai-konversi');
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_konversi_data'])->name('univ.feeder-upload.aktivitas.nilai-konversi.data');
                         Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'nilai_konversi_upload'])->name('univ.feeder-upload.aktivitas.nilai-konversi.upload');
+                    });
+                });
+
+                Route::prefix('pelengkap')->group(function(){
+                    Route::prefix('periode-perkuliahan')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan_data'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan_upload'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.upload');
+                        Route::post('/upload-ajax', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_periode_perkuliahan_ajax'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.upload-ajax');
                     });
                 });
 
