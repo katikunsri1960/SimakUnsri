@@ -35,7 +35,7 @@ FEEDER UPLOAD - PERIODE PERKULIAHAN
                                 <div class="col-md-6">
                                     <div class="row">
                                         <button type="submit" class="btn btn-primary btn-sm" disabled id="buttonSubmitForm"> <i
-                                                class="fa fa-upload me-3"></i>Upload RPS</button>
+                                                class="fa fa-upload me-3"></i>Upload Periode Perkuliahan</button>
                                     </div>
                                 </div>
                             </form>
