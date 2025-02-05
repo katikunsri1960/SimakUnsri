@@ -1,6 +1,6 @@
 @extends('layouts.bak')
 @section('title')
-Daftar Nilai untuk Lulus USEPT Program Studi
+Daftar Peserta Wisuda
 @endsection
 @section('content')
 <section class="content">

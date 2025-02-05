@@ -85,8 +85,18 @@
                             <li class="{{request()->routeIs('bak.wisuda.peserta.index') || request()->routeIs('bak.monitoring.pengisian-krs.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.peserta.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Calon Peserta Wisuda</a>
                             </li>
+                            <li class="{{request()->routeIs('bak.wisuda.registrasi-ijazah.index') || request()->routeIs('bak.wisuda.registrasi-ijazah.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.registrasi-ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Registrasi Ijazah</a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.wisuda.ijazah.index') || request()->routeIs('bak.wisuda.ijazah.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Ijazah</a>
+                            </li>
                             <li class="{{request()->routeIs('bak.wisuda.transkrip.index') || request()->routeIs('bak.wisuda.transkrip.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.transkrip.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Transkrip Wisudawan</a>
+                            </li>
+
+                            <li class="{{request()->routeIs('bak.wisuda.album.index') || request()->routeIs('bak.wisuda.album.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.album.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Album Wisudawan</a>
                             </li>
                             <li class="{{request()->routeIs('bak.wisuda.usept.index') || request()->routeIs('bak.wisuda.usept.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.usept.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai USEPT</a>

@@ -1,6 +1,6 @@
 @extends('layouts.bak')
 @section('title')
-Daftar Transkrip Peserta Wisuda
+Daftar Ijazah Wisudawan
 @endsection
 @section('content')
 <section class="content">
@@ -13,7 +13,7 @@ Daftar Transkrip Peserta Wisuda
                                 src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
-                            <h2>Daftar Transkrip Peserta Wisuda</h2>
+                            <h2>Daftar Ijazah Wisudawan</h2>
 
                         </div>
                     </div>

@@ -104,12 +104,24 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'peserta'])->name('bak.wisuda.peserta.index');
                 });
 
-                Route::prefix('usept')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'usept'])->name('bak.wisuda.usept.index');
+                Route::prefix('registrasi-ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'registrasi_ijazah'])->name('bak.wisuda.registrasi-ijazah.index');
+                });
+
+                Route::prefix('ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah'])->name('bak.wisuda.ijazah.index');
                 });
 
                 Route::prefix('transkrip')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'transkrip'])->name('bak.wisuda.transkrip.index');
+                });
+
+                Route::prefix('album')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'album'])->name('bak.wisuda.album.index');
+                });
+
+                Route::prefix('usept')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'usept'])->name('bak.wisuda.usept.index');
                 });
             });
         });
