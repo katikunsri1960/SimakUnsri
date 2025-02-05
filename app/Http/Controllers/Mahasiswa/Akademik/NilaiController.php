@@ -34,7 +34,7 @@ class NilaiController extends Controller
 
         // $total_sks_transfer = $nilai_transfer->whereNotIn('nilai_angka_diakui', [0, NULL] )->sum('sks_mata_kuliah_diakui');
         // $total_sks_konversi = $nilai_konversi->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
-        $total_sks_transkrip = $transkrip_mahasiswa->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
+        $total_sks_transkrip = $transkrip_mahasiswa->whereNotIn('nilai_indeks', [NULL] )->sum('sks_mata_kuliah');
 
         $total_sks = $total_sks_transkrip ;
 

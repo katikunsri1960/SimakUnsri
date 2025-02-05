@@ -98,6 +98,32 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/', [App\Http\Controllers\Bak\UseptController::class, 'index'])->name('bak.usept-prodi');
                 Route::post('/store/{kurikulum}', [App\Http\Controllers\Bak\UseptController::class, 'store'])->name('bak.usept-prodi.store');
             });
+
+            Route::prefix('wisuda')->group(function(){
+                Route::prefix('peserta')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'peserta'])->name('bak.wisuda.peserta.index');
+                });
+
+                Route::prefix('registrasi-ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'registrasi_ijazah'])->name('bak.wisuda.registrasi-ijazah.index');
+                });
+
+                Route::prefix('ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah'])->name('bak.wisuda.ijazah.index');
+                });
+
+                Route::prefix('transkrip')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'transkrip'])->name('bak.wisuda.transkrip.index');
+                });
+
+                Route::prefix('album')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'album'])->name('bak.wisuda.album.index');
+                });
+
+                Route::prefix('usept')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'usept'])->name('bak.wisuda.usept.index');
+                });
+            });
         });
     });
 
@@ -1041,7 +1067,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::post('/upload-ajax', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_periode_perkuliahan_ajax'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.upload-ajax');
                     });
                 });
-
             });
 
             Route::prefix('perkuliahan')->group(function () {
