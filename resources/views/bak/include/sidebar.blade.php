@@ -72,7 +72,27 @@
                                 <a href="{{route('bak.monitoring.pengisian-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian Nilai</a>
                             </li>
                         </ul>
-                    </li>
+                    </li>
+                    <li class="treeview {{request()->routeIs('bak.wisuda.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Wisuda</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('bak.wisuda.peserta.index') || request()->routeIs('bak.monitoring.pengisian-krs.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.peserta.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Calon Peserta Wisuda</a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.wisuda.transkrip.index') || request()->routeIs('bak.wisuda.transkrip.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.transkrip.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Transkrip Wisudawan</a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.wisuda.usept.index') || request()->routeIs('bak.wisuda.usept.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.usept.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai USEPT</a>
+                            </li>
+                        </ul>
+                    </li>
                     {{-- <li class="treeview {{request()->routeIs('dosen.profile.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-user"><span class="path1"></span><span

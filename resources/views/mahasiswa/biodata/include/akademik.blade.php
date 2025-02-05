@@ -22,17 +22,13 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Dosen PA/Wali</label>
-                                        @if (!empty($data->nama_dosen))
-                                            <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_dosen}}">
-                                        @else
-                                            <input type="name" class="form-control" disabled
-                                            value="Tidak diisi">
-                                        @endif
-                                        
-                                        
+                                        <input 
+                                            type="text" 
+                                            class="form-control" 
+                                            disabled
+                                            value="{{ isset($data->pembimbing_akademik->nama_dosen) ? $data->pembimbing_akademik->nama_dosen : 'Tidak diisi' }}">
                                     </div>
-                                </div>
+                                </div>                                                              
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>NIM</label>
@@ -72,12 +68,19 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>UKT</label>
-                                        <input type="name" class="form-control" disabled
-                                            value="Rp  {{number_format($data->biaya_kuliah_smt, 2, ',', '.') }}">
+                                        @if ($beasiswa)
+                                            <input type="text" class="form-control" disabled
+                                                value="Rp 0,00">
+                                        @elseif(isset($tagihan))
+                                            @if (isset($tagihan->pembayaran))
+                                                <input type="text" class="form-control" disabled
+                                                    value="Rp {{ number_format($tagihan->pembayaran->total_nilai_pembayaran, 2, ',', '.') }}">
+                                            @else
+                                                <input type="text" class="form-control" disabled value="Belum ada pembayaran">
+                                            @endif
+                                        @endif
                                     </div>
                                 </div>
-
-
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Angkatan</label>
@@ -101,9 +104,8 @@
                                             <input type="name" class="form-control" disabled
                                                 value="Aktif">
                                         @else
-                                        
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->nama_status_mahasiswa}}">
+                                                value="{{$data->keterangan_keluar}}">
                                         @endif
                                     </div>
                                 </div>
