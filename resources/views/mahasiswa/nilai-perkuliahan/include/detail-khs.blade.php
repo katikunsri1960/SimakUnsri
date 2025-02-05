@@ -125,7 +125,7 @@ Dashboard
                                                         @else
                                                         <td class="text-center align-middle">{{empty($d->nilai_angka) ?
                                                             '-' : $d->nilai_angka}}</td>
-                                                        <td class="text-center align-middle">{{empty($d->nilai_indeks) ?
+                                                        <td class="text-center align-middle">{{$d->nilai_indeks=NULL ?
                                                             '-' : $d->nilai_indeks}}</td>
                                                         <td class="text-center align-middle">
                                                             {{empty($d->nilai_huruf) ? '-' : $d->nilai_huruf}}</td>
@@ -150,7 +150,7 @@ Dashboard
                                                                 <td class="text-center align-middle">{{$n->kode_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$n->nama_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{empty($n->nilai_angka) ? 'Nilai Belum Diisi' : $n->nilai_angka}}</td>
-                                                                <td class="text-center align-middle">{{empty($n->nilai_indeks) ? 'Nilai Belum Diisi' : $n->nilai_indeks}}</td>
+                                                                <td class="text-center align-middle">{{$n->nilai_indeks=NULL ? 'Nilai Belum Diisi' : $n->nilai_indeks}}</td>
                                                                 <td class="text-center align-middle">{{empty($n->nilai_huruf) ? 'Nilai Belum Diisi' : $n->nilai_huruf}}</td>
                                                                 {{-- <td class="text-center align-middle">
                                                                     {{ !empty($n->nilai_indeks) ? $n->sks_mata_kuliah * $d->nilai_indeks : 'Nilai Belum Diisi' }}
@@ -181,7 +181,7 @@ Dashboard
                                                                 <td>{{$nt->nama_mata_kuliah_diakui}}</td>
                                                                 <td class="text-center align-middle">{{empty($nt->nilai_angka) ? '-' : $nt->nilai_angka}}</td>
                                                                 <td class="text-center align-middle">{{empty($nt->nilai_huruf_diakui) ? 'Nilai Belum Diisi' : $nt->nilai_huruf_diakui}}</td>
-                                                                <td class="text-center align-middle">{{empty($nt->nilai_angka_diakui) ? 'Nilai Belum Diisi' : $nt->nilai_angka_diakui}}</td>
+                                                                <td class="text-center align-middle">{{$nt->nilai_angka_diakui=NULL ? 'Nilai Belum Diisi' : $nt->nilai_angka_diakui}}</td>
                                                                 {{-- <td class="text-center align-middle">
                                                                     {{ !empty($nt->nilai_indeks) ? $nt->sks_mata_kuliah_diakui * $nt->nilai_indeks_diakui : 'Nilai Belum Diisi' }}
                                                                 </td> --}}
