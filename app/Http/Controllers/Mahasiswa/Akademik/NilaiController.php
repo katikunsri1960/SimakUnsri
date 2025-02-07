@@ -32,14 +32,8 @@ class NilaiController extends Controller
 
         $transkrip_mahasiswa=TranskripMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('nama_mata_kuliah','asc')->get();
 
-        // $total_sks_transfer = $nilai_transfer->whereNotIn('nilai_angka_diakui', [0, NULL] )->sum('sks_mata_kuliah_diakui');
-        // $total_sks_konversi = $nilai_konversi->whereNotIn('nilai_indeks', [0, NULL] )->sum('sks_mata_kuliah');
-        $total_sks_transkrip = $transkrip_mahasiswa->whereNotIn('nilai_indeks', [NULL] )->sum('sks_mata_kuliah');
+        $total_sks_transkrip = $transkrip_mahasiswa ->whereNotNull('nilai_indeks')->sum('sks_mata_kuliah');
 
-        $total_sks = $total_sks_transkrip ;
-
-        // $total_sks = $transkrip_mahasiswa->sum('sks_mata_kuliah');
-        // $nilai_mutu = $transkrip->sum('sks_mata_kuliah')*$transkrip->sum('nilai_');
         $bobot = 0;
         
         foreach ($transkrip_mahasiswa as $t) {
@@ -47,16 +41,16 @@ class NilaiController extends Controller
         }
 
         
-        if($total_sks != 0){
-            $ipk = number_format($bobot / $total_sks, 2);
+        if($total_sks_transkrip != 0){
+            $ipk = number_format($bobot / $total_sks_transkrip, 2);
         }else{
             $ipk=0;
         }
-        // dd($total_sks, $ipk, $bobot);
+        // dd($transkrip_mahasiswa,$total_sks_transkrip,$total_sks_transkrip, $ipk, $bobot);
         // dd($aktivitas_kuliah);
 
 
-        return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks'=>$total_sks, 'bobot'=>$bobot,'ipk'=>$ipk]);
+        return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks_transkrip'=>$total_sks_transkrip, 'bobot'=>$bobot,'ipk'=>$ipk]);
     }
 
     public function lihat_khs($id_semester)
