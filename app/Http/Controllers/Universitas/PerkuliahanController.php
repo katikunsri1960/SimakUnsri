@@ -503,6 +503,10 @@ class PerkuliahanController extends Controller
             return response()->json(['status' => 'error', 'message' => 'Data Tidak Ditemukan']);
         }
 
+        $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
+
+        $isMaba = $riwayat->id_periode_masuk == $id_semester ? 1 : 0;
+
         $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $id_semester)
                 ->whereNotNull('nilai_huruf')
@@ -517,8 +521,13 @@ class PerkuliahanController extends Controller
                     ->where('id_semester', $id_semester)
                     ->get();
 
-        $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
-        $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
+        $total_sks_semester = !$isMaba ? $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah') : $khs->sum('sks_mata_kuliah') + $khs_konversi->sum('sks_mata_kuliah');
+
+        $bobot = 0;
+
+        $bobot_transfer= 0;
+
+        $bobot_konversi= 0;
 
 
         // dd($semester, $tahun_ajaran, $prodi);
@@ -526,8 +535,10 @@ class PerkuliahanController extends Controller
             $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
         }
 
-        foreach ($khs_transfer as $tf) {
-            $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
+        if (!$isMaba) {
+            foreach ($khs_transfer as $tf) {
+                $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
+            }
         }
 
         foreach ($khs_konversi as $kv) {
