@@ -58,9 +58,7 @@ Transkrip Nilai
                         </div>
                     </div>
                     @endif
-
-
-                    <div class="table-responsive mt-5">
+                    <div class="mt-5">
                         <div class="box-body text-center">
                             <div class="table-responsive">
                                 <div id="krsDiv" hidden>
@@ -436,6 +434,52 @@ Transkrip Nilai
                             ipk = nilai_bobot / totalSks;
                             $('#totalSks').text(totalSks);
                             $('#ipk').text(ipk.toFixed(2));
+
+
+                            // check length of response.akm
+                            if(response.akm.length > 0) {
+                                console.log(response.akm);
+                                $('#akmDiv').removeAttr('hidden');
+                                $('#akmDiv').html(`
+                                    <h3>Data Aktivitas Kuliah Mahasiswa</h3>
+                                    <div class="m-3">
+                                         <table class="table table-bordered table-hover mt-2" id="akmTable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center align-middle">Semester</th>
+                                                    <th class="text-center align-middle">Status</th>
+                                                    <th class="text-center align-middle">SKS Semester</th>
+                                                    <th class="text-center align-middle">SKS Total</th>
+                                                    <th class="text-center align-middle">IPS</th>
+                                                    <th class="text-center align-middle">IPK</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+
+                                `);
+
+                                response.akm.forEach(function (akm, index) {
+                                    $('#akmTable tbody').append(`
+                                        <tr>
+                                            <td class="text-center align-middle">${akm.nama_semester}</td>
+                                            <td class="text-center align-middle">${akm.nama_status_mahasiswa}</td>
+                                            <td class="text-center align-middle">${akm.sks_semester}</td>
+                                            <td class="text-center align-middle">${akm.sks_total}</td>
+                                            <td class="text-center align-middle">${akm.ips}</td>
+                                            <td class="text-center align-middle">${akm.ipk}</td>
+                                        </tr>
+                                    `);
+                                });
+
+
+                            } else {
+                                $('#akmDiv').attr('hidden', true);
+                            }
 
                         }
                     });

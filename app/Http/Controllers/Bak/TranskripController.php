@@ -62,7 +62,7 @@ class TranskripController extends Controller
         $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
 
         try {
-            //code...
+
             $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
             $nilai_course = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get()->pluck('konversi');
 
@@ -76,7 +76,6 @@ class TranskripController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            //throw $th;
 
             $useptData = [
                 'score' => 0,
@@ -93,7 +92,7 @@ class TranskripController extends Controller
         $ipk = ($total_sks * $total_indeks) / $total_sks;
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                ->orderBy('id_semester', 'desc')
+                ->orderBy('id_semester')
                 ->get();
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
