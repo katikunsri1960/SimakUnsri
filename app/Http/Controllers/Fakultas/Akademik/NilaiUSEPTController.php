@@ -43,6 +43,8 @@ class NilaiUSEPTController extends Controller
 
         $course_usept = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get();
 
+        // dd($test_usept, $course_usept);
+
         if (!$test_usept) {
             return back()->with('error', 'Nilai USEPT Mahasiswa tidak ditemukan');
         }

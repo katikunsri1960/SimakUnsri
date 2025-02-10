@@ -147,24 +147,30 @@ Nilai USEPT Mahasiswa
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($test_usept as $t)
+                                            {{-- @if($test_usept->isEmpty())
                                                 <tr>
-                                                    <td>{{$loop->iteration}}</td>
-                                                    <td class="text-center align-middle" style="white-space:nowrap;">{{$riwayat->nim}}</td>
-                                                    <td class="text-start align-middle">{{$riwayat->nama_mahasiswa}}</td>
-                                                    <td>{{ date('d M Y', strtotime($t->tgl_test)) }}</td>
-                                                    <td>{{$t->score}}</td>
-                                                    <td class="text-center align-middle"> 
-                                                        @if ($t->score < $nilai_usept_prodi->nilai_usept)
-                                                            <span class="badge bg-danger">Belum Lulus</span>
-                                                        @elseif ($nilai_usept_prodi->nilai_usept == NULL)
-                                                            <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
-                                                        @elseif ($t->score >= $nilai_usept_prodi->nilai_usept)
-                                                            <span class="badge bg-success">Lulus</span>
-                                                        @endif
-                                                    </td>
+                                                    <td colspan="6" class="text-center">Data tidak ditemukan</td>
                                                 </tr>
-                                            @endforeach
+                                            @else --}}
+                                                @foreach($test_usept as $t)
+                                                    <tr>
+                                                        <td>{{$loop->iteration}}</td>
+                                                        <td class="text-center align-middle" style="white-space:nowrap;">{{$riwayat->nim}}</td>
+                                                        <td class="text-start align-middle">{{$riwayat->nama_mahasiswa}}</td>
+                                                        <td>{{ date('d M Y', strtotime($t->tgl_test)) }}</td>
+                                                        <td>{{$t->score}}</td>
+                                                        <td class="text-center align-middle"> 
+                                                            @if ($t->score < $nilai_usept_prodi->nilai_usept)
+                                                                <span class="badge bg-danger">Belum Lulus</span>
+                                                            @elseif ($nilai_usept_prodi->nilai_usept == NULL)
+                                                                <span class="badge bg-danger">Nilai Kelulusan Belum diatur</span>
+                                                            @elseif ($t->score >= $nilai_usept_prodi->nilai_usept)
+                                                                <span class="badge bg-success">Lulus</span>
+                                                            @endif
+                                                        </td>
+                                                    </tr>
+                                                @endforeach
+                                            {{-- @endif --}}
                                         </tbody>
                                     </table>
                                 </div>

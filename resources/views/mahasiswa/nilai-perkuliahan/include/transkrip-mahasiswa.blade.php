@@ -50,7 +50,7 @@
                                                                     {{-- <td class="text-center align-middle">{{$d->nama_semester}}</td> --}}
                                                                     <td class="text-center align-middle">{{empty($d->nilai_angka) ? 'Nilai Belum Diisi' : $d->nilai_angka}}</td>
                                                                     <td class="text-center align-middle">{{empty($d->nilai_huruf) ? 'Nilai Belum Diisi' : $d->nilai_huruf}}</td>
-                                                                    <td class="text-center align-middle">{{$d->nilai_indeks=NULL ? 'Nilai Belum Diisi' : $d->nilai_indeks}}</td>
+                                                                    <td class="text-center align-middle">{{$d->nilai_indeks===NULL ? 'Nilai Belum Diisi' : $d->nilai_indeks}}</td>
                                                                     {{-- <td class="text-center align-middle">
                                                                         {{ !empty($d->nilai_indeks) ? $d->sks_mata_kuliah * $d->nilai_indeks : 'Nilai Belum Diisi' }}
                                                                     </td> --}}
@@ -66,7 +66,7 @@
                                                     <tfoot>
                                                         <tr>
                                                             <td class="text-start align-middle" colspan="3"><strong>JUMLAH</strong></td>
-                                                            <td class="text-center align-middle"><strong>{{ $total_sks }}.00</strong></td>
+                                                            <td class="text-center align-middle"><strong>{{ $total_sks_transkrip }}.00</strong></td>
 
                                                             <td colspan="2"></td>
                                                             <td class="text-center align-middle"><strong>{{ $bobot }}</strong></td>
