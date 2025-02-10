@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Bak;
 
 use App\Http\Controllers\Controller;
 use App\Models\Connection\CourseUsept;
+use App\Models\Connection\Registrasi;
+use App\Models\Connection\Tagihan;
 use App\Models\Connection\Usept;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
@@ -93,9 +95,30 @@ class TranskripController extends Controller
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester')
+                ->select('nama_semester', 'sks_semester', 'sks_total', 'ipk','ips', 'nama_status_mahasiswa')
                 ->get();
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
+
+        try {
+            $id_test = Registrasi::where('rm_nim', $riwayat->nim)->pluck('rm_no_test')->first();
+
+            $pembayaran = Tagihan::with('pembayaran')
+                            ->whereIn('nomor_pembayaran', [$id_test, $riwayat->nim])
+                            ->orderBy('kode_periode', 'ASC')
+                            ->get();
+
+            $dataPembayaran = [
+                'status' => '1',
+                'data' => $pembayaran,
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            $dataPembayaran = [
+                'status' => '0',
+                'message' => 'Koneksi database keuangan terputus!!',
+            ];
+        }
 
         $data = [
             'status' => 'success',
@@ -106,6 +129,7 @@ class TranskripController extends Controller
             'ipk' => $ipk,
             'bebas_pustaka' => $bebas_pustaka,
             'usept' => $useptData,
+            'pembayaran' => $dataPembayaran,
         ];
 
         return response()->json($data);

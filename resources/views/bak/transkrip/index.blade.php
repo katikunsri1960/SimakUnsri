@@ -60,7 +60,7 @@ Transkrip Nilai
                     @endif
                     <div class="mt-5">
                         <div class="box-body text-center">
-                            <div class="table-responsive">
+                            <div class="">
                                 <div id="krsDiv" hidden>
                                     <div class="row mb-2">
                                         <form action="{{route('bak.transkrip-nilai.download')}}" method="get"
@@ -216,6 +216,10 @@ Transkrip Nilai
                                     </div>
 
                                     <div class="row mt-5" id="akmDiv">
+
+                                    </div>
+
+                                    <div class="row mt-5" id="pembayaranDiv">
 
                                     </div>
 
@@ -438,7 +442,6 @@ Transkrip Nilai
 
                             // check length of response.akm
                             if(response.akm.length > 0) {
-                                console.log(response.akm);
                                 $('#akmDiv').removeAttr('hidden');
                                 $('#akmDiv').html(`
                                     <h3>Data Aktivitas Kuliah Mahasiswa</h3>
@@ -479,6 +482,45 @@ Transkrip Nilai
 
                             } else {
                                 $('#akmDiv').attr('hidden', true);
+                            }
+
+
+                            if (response.pembayaran.status == '1') {
+                                console.log(response.pembayaran.data);
+                                $('#pembayaranDiv').removeAttr('hidden');
+                                $('#pembayaranDiv').html(`
+                                    <h3>Data Pembayaran Mahasiswa</h3>
+                                    <div class="m-3">
+                                         <table class="table table-bordered table-hover mt-2" id="pembayaranTable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center align-middle">Semester</th>
+                                                    <th class="text-center align-middle">Tagihan</th>
+                                                    <th class="text-center align-middle">Status Pembayaran</th>
+                                                    <th class="text-center align-middle">Waktu Pembayaran</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                `);
+
+                                response.pembayaran.data.forEach(function (pembayaran, index) {
+                                    var statusPembayaran = pembayaran.pembayaran && pembayaran.pembayaran.status_pembayaran == 1 ? 'Lunas' : 'Belum Lunas';
+                                    var tanggalPembayaran = pembayaran.pembayaran && pembayaran.pembayaran.status_pembayaran == 1 ? pembayaran.pembayaran.waktu_transaksi : '-';
+                                    $('#pembayaranTable tbody').append(`
+                                        <tr>
+                                            <td class="text-center align-middle">${pembayaran.kode_periode}</td>
+                                            <td class="text-center align-middle">${pembayaran.total_nilai_tagihan.toLocaleString('id-ID')}</td>
+                                            <td class="text-center align-middle">${statusPembayaran}</td>
+                                            <td class="text-center align-middle">${tanggalPembayaran}</td>
+                                        </tr>
+                                    `);
+                                });
+                            } else {
+                                $('#pembayaranDiv').attr('hidden', true);
                             }
 
                         }
