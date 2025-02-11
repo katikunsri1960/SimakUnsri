@@ -435,7 +435,10 @@ Transkrip Nilai
                             });
 
                             table.draw(); // Redraw the DataTable with new data
-                            ipk = nilai_bobot / totalSks;
+                            if (totalSks > 0) {
+                                ipk = nilai_bobot / totalSks;
+
+                            }
                             $('#totalSks').text(totalSks);
                             $('#ipk').text(ipk.toFixed(2));
 
@@ -467,9 +470,14 @@ Transkrip Nilai
                                 `);
 
                                 response.akm.forEach(function (akm, index) {
+                                    var url = '{{ route("bak.transkrip-nilai.khs", ["id_reg" => ":id_reg", "semester" => ":semester"]) }}';
+                                    url = url.replace(':id_reg', response.riwayat.id_registrasi_mahasiswa);
+                                    url = url.replace(':semester', akm.id_semester);
                                     $('#akmTable tbody').append(`
                                         <tr>
-                                            <td class="text-center align-middle">${akm.nama_semester}</td>
+                                            <td class="text-center align-middle">
+                                                 <a href="${url}" class="btn btn-primary btn-sm" target="_blank">${akm.nama_semester}</a>
+                                                </td>
                                             <td class="text-center align-middle">${akm.nama_status_mahasiswa}</td>
                                             <td class="text-center align-middle">${akm.sks_semester}</td>
                                             <td class="text-center align-middle">${akm.sks_total}</td>

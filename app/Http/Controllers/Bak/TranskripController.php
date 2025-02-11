@@ -9,7 +9,10 @@ use App\Models\Connection\Tagihan;
 use App\Models\Connection\Usept;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perpus\BebasPustaka;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -91,11 +94,14 @@ class TranskripController extends Controller
         $total_sks = $transkrip->sum('sks_mata_kuliah');
         $total_indeks = $transkrip->sum('nilai_indeks');
 
-        $ipk = ($total_sks * $total_indeks) / $total_sks;
+        $ipk = 0;
+        if($total_sks > 0){
+            $ipk = ($total_sks * $total_indeks) / $total_sks;
+        }
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester')
-                ->select('nama_semester', 'sks_semester', 'sks_total', 'ipk','ips', 'nama_status_mahasiswa')
+                ->select('nama_semester', 'sks_semester', 'sks_total', 'ipk','ips', 'nama_status_mahasiswa', 'id_semester')
                 ->get();
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
@@ -178,5 +184,34 @@ class TranskripController extends Controller
          ->setPaper('a4', 'portrait');
 
          return $pdf->stream('transkrip-'.$riwayat->nim.'.pdf');
+    }
+
+    public function khs($semester, $id_reg)
+    {
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas'])->where('id_registrasi_mahasiswa', $id_reg)->first();
+
+        $akm=AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa',$id_reg)->where('id_semester', $semester)->first();
+
+        $nilai_mahasiswa = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
+                                            ->where('id_semester', $semester)
+                                            ->orderBy('nama_mata_kuliah','asc')->get();
+
+
+        $nilai_transfer=NilaiTransferPendidikan::where('id_registrasi_mahasiswa',$id_reg)->where('id_semester', $semester)->get();
+
+        $nilai_konversi=KonversiAktivitas::with('aktivitas_mahasiswa','aktivitas_mahasiswa.bimbing_mahasiswa')
+                        ->leftJoin('anggota_aktivitas_mahasiswas', 'anggota_aktivitas_mahasiswas.id_anggota', 'konversi_aktivitas.id_anggota')
+                        ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', 'konversi_aktivitas.id_matkul')
+                        ->where('id_registrasi_mahasiswa',$id_reg)
+                        ->where('id_semester', $semester)
+                        ->get();
+
+        return view('bak.transkrip.khs', [
+            'akm' => $akm,
+            'riwayat' => $riwayat,
+            'nilai_mahasiswa' => $nilai_mahasiswa,
+            'nilai_transfer' => $nilai_transfer,
+            'nilai_konversi' => $nilai_konversi,
+        ]);
     }
 }
