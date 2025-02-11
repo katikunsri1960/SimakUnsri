@@ -126,6 +126,22 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="treeview {{request()->routeIs('prodi.data-aktivitas.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-university"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Data Lulusan</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.index') || request()->routeIs('prodi.data-aktivitas.aktivitas-mahasiswa.*')
+                                ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-aktivitas.aktivitas-mahasiswa.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i> Mahasiswa Eligible</a>
+                            </li>
+                        </ul>
+                    </li>
 
                     <li class="header">Report & Monitoring</li>
                     <li class="treeview {{request()->routeIs('prodi.report.*') ? 'active menu-open' : ''}}">
