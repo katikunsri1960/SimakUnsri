@@ -394,7 +394,8 @@ Transkrip Nilai
                                 paging: false,
                                 info: false,
                                 columnDefs: [
-                                    { orderable: false, targets: 0 } // Make the first column non-sortable
+                                    { orderable: false, targets: 0 }, // Make the first column non-sortable
+                                    { className: 'text-start', targets: 2 } // Add text-left class to the second column
                                 ],
                                 order: [], // Disable initial sorting
                                 drawCallback: function(settings) {
@@ -422,7 +423,7 @@ Transkrip Nilai
                                 table.row.add([
                                     `<td class="text-center align-middle"></td>`,
                                     `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
-                                    `<td class=" align-middle">${krs.nama_mata_kuliah}</td>`,
+                                    `<td class="text-start align-middle" style="text-align:left !important;">${krs.nama_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
