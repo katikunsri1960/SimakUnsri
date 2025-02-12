@@ -196,20 +196,17 @@ class MataKuliah extends Model
         }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
             // $sks_max = 20;
             // dd($ips_value);
+            $sks_max = 0;
             if ($ips_value !== null) {
                 if ($ips_value > 2.49) {
-                    $sks_max = 20;
+                $sks_max = 20;
                 }elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
-                    $sks_max = 18;
+                $sks_max = 18;
                 } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
-                    $sks_max = 15;
-                } elseif ($ips_value < 1.50 ) {
-                    $sks_max = 12;
+                $sks_max = 15;
                 } else {
-                    $sks_max = 0;
+                $sks_max = 12;
                 }
-            } else {
-                $sks_max = 0;
             }
         } else {
             if ($ips_value !== null) {
