@@ -23,7 +23,7 @@
                             </span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('bak.transkrip-nilai') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('bak.transkrip-nilai') || request()->routeIs('bak.transkrip-nilai.*') ? 'active' : ''}}">
                         <a href="{{route('bak.transkrip-nilai')}}">
                             <i class="fa fa-list-alt"><span class="path1"></span><span
                                     class="path2"></span></i>

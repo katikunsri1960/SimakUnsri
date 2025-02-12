@@ -58,11 +58,9 @@ Transkrip Nilai
                         </div>
                     </div>
                     @endif
-
-
-                    <div class="table-responsive mt-5">
+                    <div class="mt-5">
                         <div class="box-body text-center">
-                            <div class="table-responsive">
+                            <div class="">
                                 <div id="krsDiv" hidden>
                                     <div class="row mb-2">
                                         <form action="{{route('bak.transkrip-nilai.download')}}" method="get"
@@ -218,6 +216,10 @@ Transkrip Nilai
                                     </div>
 
                                     <div class="row mt-5" id="akmDiv">
+
+                                    </div>
+
+                                    <div class="row mt-5" id="pembayaranDiv">
 
                                     </div>
 
@@ -392,7 +394,8 @@ Transkrip Nilai
                                 paging: false,
                                 info: false,
                                 columnDefs: [
-                                    { orderable: false, targets: 0 } // Make the first column non-sortable
+                                    { orderable: false, targets: 0 }, // Make the first column non-sortable
+                                    { className: 'text-start', targets: 2 } // Add text-left class to the second column
                                 ],
                                 order: [], // Disable initial sorting
                                 drawCallback: function(settings) {
@@ -420,7 +423,7 @@ Transkrip Nilai
                                 table.row.add([
                                     `<td class="text-center align-middle"></td>`,
                                     `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
-                                    `<td class=" align-middle">${krs.nama_mata_kuliah}</td>`,
+                                    `<td class="text-start align-middle" style="text-align:left !important;">${krs.nama_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
@@ -433,9 +436,101 @@ Transkrip Nilai
                             });
 
                             table.draw(); // Redraw the DataTable with new data
-                            ipk = nilai_bobot / totalSks;
+                            if (totalSks > 0) {
+                                ipk = nilai_bobot / totalSks;
+
+                            }
                             $('#totalSks').text(totalSks);
                             $('#ipk').text(ipk.toFixed(2));
+
+
+                            // check length of response.akm
+                            if(response.akm.length > 0) {
+                                $('#akmDiv').removeAttr('hidden');
+                                $('#akmDiv').html(`
+                                    <h3>Data Aktivitas Kuliah Mahasiswa</h3>
+                                    <div class="m-3">
+                                         <table class="table table-bordered table-hover mt-2" id="akmTable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center align-middle">Semester</th>
+                                                    <th class="text-center align-middle">Status</th>
+                                                    <th class="text-center align-middle">SKS Semester</th>
+                                                    <th class="text-center align-middle">SKS Total</th>
+                                                    <th class="text-center align-middle">IPS</th>
+                                                    <th class="text-center align-middle">IPK</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                            <tfoot>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+
+                                `);
+
+                                response.akm.forEach(function (akm, index) {
+                                    var url = '{{ route("bak.transkrip-nilai.khs", ["id_reg" => ":id_reg", "semester" => ":semester"]) }}';
+                                    url = url.replace(':id_reg', response.riwayat.id_registrasi_mahasiswa);
+                                    url = url.replace(':semester', akm.id_semester);
+                                    $('#akmTable tbody').append(`
+                                        <tr>
+                                            <td class="text-center align-middle">
+                                                 <a href="${url}" class="btn btn-primary btn-sm" target="_blank">${akm.nama_semester}</a>
+                                                </td>
+                                            <td class="text-center align-middle">${akm.nama_status_mahasiswa}</td>
+                                            <td class="text-center align-middle">${akm.sks_semester}</td>
+                                            <td class="text-center align-middle">${akm.sks_total}</td>
+                                            <td class="text-center align-middle">${akm.ips}</td>
+                                            <td class="text-center align-middle">${akm.ipk}</td>
+                                        </tr>
+                                    `);
+                                });
+
+
+                            } else {
+                                $('#akmDiv').attr('hidden', true);
+                            }
+
+
+                            if (response.pembayaran.status == '1') {
+                                console.log(response.pembayaran.data);
+                                $('#pembayaranDiv').removeAttr('hidden');
+                                $('#pembayaranDiv').html(`
+                                    <h3>Data Pembayaran Mahasiswa</h3>
+                                    <div class="m-3">
+                                         <table class="table table-bordered table-hover mt-2" id="pembayaranTable">
+                                            <thead>
+                                                <tr>
+                                                    <th class="text-center align-middle">Semester</th>
+                                                    <th class="text-center align-middle">Tagihan</th>
+                                                    <th class="text-center align-middle">Status Pembayaran</th>
+                                                    <th class="text-center align-middle">Waktu Pembayaran</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                `);
+
+                                response.pembayaran.data.forEach(function (pembayaran, index) {
+                                    var statusPembayaran = pembayaran.pembayaran && pembayaran.pembayaran.status_pembayaran == 1 ? 'Lunas' : 'Belum Lunas';
+                                    var tanggalPembayaran = pembayaran.pembayaran && pembayaran.pembayaran.status_pembayaran == 1 ? pembayaran.pembayaran.waktu_transaksi : '-';
+                                    $('#pembayaranTable tbody').append(`
+                                        <tr>
+                                            <td class="text-center align-middle">${pembayaran.kode_periode}</td>
+                                            <td class="text-center align-middle">${pembayaran.total_nilai_tagihan.toLocaleString('id-ID')}</td>
+                                            <td class="text-center align-middle">${statusPembayaran}</td>
+                                            <td class="text-center align-middle">${tanggalPembayaran}</td>
+                                        </tr>
+                                    `);
+                                });
+                            } else {
+                                $('#pembayaranDiv').attr('hidden', true);
+                            }
 
                         }
                     });
