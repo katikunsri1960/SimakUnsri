@@ -454,7 +454,7 @@ class FeederUploadController extends Controller
                 } else {
                     $d->update(
                             [
-                                'status_sync' => $result['error_desc'],
+                                'status_sync' => json_encode($result),
                             ]);
                     $dataGagal++;
                 }
@@ -1705,7 +1705,7 @@ class FeederUploadController extends Controller
 
         return $response;
     }
-    
+
 
     public function periode_perkuliahan()
     {
@@ -1778,9 +1778,9 @@ class FeederUploadController extends Controller
                     "tanggal_awal_perkuliahan" => $d->tanggal_awal_perkuliahan,
                     "tanggal_akhir_perkuliahan" => $d->tanggal_akhir_perkuliahan,
                 ];
-                
+
                 $recordGet = "id_prodi = '".$d->id_prodi."' AND id_semester = '".$d->id_semester."'";
-                
+
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
                 $result = $req->uploadPeriodePerkuliahan();
 
