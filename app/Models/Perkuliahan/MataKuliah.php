@@ -5,9 +5,6 @@ namespace App\Models\Perkuliahan;
 use App\Models\Semester;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
-use Doctrine\DBAL\Query\Limit;
-use Illuminate\Support\Facades\DB;
-use function PHPUnit\Framework\isEmpty;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Mahasiswa\RiwayatPendidikan;

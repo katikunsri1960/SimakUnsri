@@ -32,6 +32,33 @@ Batas Isi KRS Manual
                 @include('universitas.batas-isi-krs-manual.create')
                 @include('universitas.batas-isi-krs-manual.edit')
                 <div class="box-body">
+                    <div class="row">
+                        <div class="col-xl-6 col-lg-6">
+                            <form action="{{ route('univ.krs-manual') }}" method="get" id="semesterForm">
+
+                                {{-- <p class="mb-0 text-fade fs-18">Semester - </p> --}}
+                                <div class="mb-3">
+                                    <label for="semester_view" class="form-label">Semester</label>
+                                    <select
+                                        class="form-select"
+                                        name="semester_view"
+                                        id="semester_view"
+                                        onchange="document.getElementById('semesterForm').submit();"
+                                    >
+                                        <option value="" selected disabled>-- Pilih Semester --</option>
+                                        @foreach ($semester as $p)
+                                            <option value="{{$p->id_semester}}"
+                                                @if ($semester_pilih != null)
+                                                {{$semester_pilih == $p->id_semester ? 'selected' : ''}}
+                                                @endif
+                                                >{{$p->nama_semester}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="table-responsive">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
                           <thead>
