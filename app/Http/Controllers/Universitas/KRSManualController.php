@@ -8,6 +8,9 @@ use App\Models\SemesterAktif;
 use App\Models\BatasIsiKRSManual;
 use App\Models\Mahasiswa\LulusDo;
 use App\Http\Controllers\Controller;
+use App\Imports\BatasIsiKRSImport;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\PembayaranManualImport;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
@@ -128,6 +131,18 @@ class KRSManualController extends Controller
         $idmanual->delete();
 
         return redirect()->back()->with('success', 'Data berhasil dihapus');
+    }
+
+    public function upload(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $import = Excel::import(new BatasIsiKRSImport(), $file);
+
+        return redirect()->back()->with('success', "Data successfully imported!");
     }
 
     public function pembatalan_krs()

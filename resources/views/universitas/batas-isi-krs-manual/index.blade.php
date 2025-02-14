@@ -27,10 +27,21 @@ Batas Isi KRS Manual
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
                         data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
+                        <span class="divider-line mx-1"></span>
+                        <!-- Modal trigger button -->
+                        <button
+                            type="button"
+                            class="btn btn-primary waves-effect waves-light"
+                            data-bs-toggle="modal"
+                            data-bs-target="#uploadModal"
+                        >
+                        <i class="fa fa-upload me-2"></i>Upload Data
+                        </button>
                     </div>
                 </div>
                 @include('universitas.batas-isi-krs-manual.create')
                 @include('universitas.batas-isi-krs-manual.edit')
+                @include('universitas.batas-isi-krs-manual.upload')
                 <div class="box-body">
                     <div class="row">
                         <div class="col-xl-6 col-lg-6">
@@ -224,6 +235,26 @@ Batas Isi KRS Manual
             }
         });
     });
+
+    $('#uploadForm').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Simpan Data',
+            text: "Apakah anda yakin ingin menyimpan data?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#uploadForm').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
+    });
+
 
     $('#editForm').submit(function(e){
         e.preventDefault();

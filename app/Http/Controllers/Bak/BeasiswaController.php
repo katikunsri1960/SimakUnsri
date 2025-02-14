@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Bak;
 
-use App\Http\Controllers\Controller;
-use App\Models\BeasiswaMahasiswa;
-use App\Models\JenisBeasiswaMahasiswa;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
+use App\Models\SemesterAktif;
+use App\Models\BeasiswaMahasiswa;
+use App\Http\Controllers\Controller;
+use App\Models\JenisBeasiswaMahasiswa;
 
 class BeasiswaController extends Controller
 {
@@ -24,7 +25,9 @@ class BeasiswaController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = BeasiswaMahasiswa::with('mahasiswa.prodi', 'jenis_beasiswa')
+        $semesterAktif = SemesterAktif::first();
+
+        $query = BeasiswaMahasiswa::with('mahasiswa.prodi', 'jenis_beasiswa', 'aktivitas_kuliah')
                 ->join('riwayat_pendidikans', 'beasiswa_mahasiswas.id_registrasi_mahasiswa', '=', 'riwayat_pendidikans.id_registrasi_mahasiswa')
                 ->leftJoin('pembiayaans', 'beasiswa_mahasiswas.id_pembiayaan', '=', 'pembiayaans.id_pembiayaan')
                 ->select('beasiswa_mahasiswas.*', 'riwayat_pendidikans.nama_program_studi as nama_program_studi', 'riwayat_pendidikans.id_periode_masuk as id_periode_masuk', 'pembiayaans.nama_pembiayaan as nama_pembiayaan');
@@ -68,6 +71,8 @@ class BeasiswaController extends Controller
         }
 
         $data = $query->skip($offset)->take($limit)->get();
+
+        // dd($data);
 
         $recordsTotal = BeasiswaMahasiswa::count();
 
