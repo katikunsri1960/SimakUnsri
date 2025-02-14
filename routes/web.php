@@ -876,6 +876,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('krs-manual')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\KRSManualController::class, 'index'])->name('univ.krs-manual');
+                Route::post('/upload', [App\Http\Controllers\Universitas\KRSManualController::class, 'upload'])->name('univ.batas-isi-krs-manual.upload');
                 Route::post('/store', [App\Http\Controllers\Universitas\KRSManualController::class, 'store'])->name('univ.batas-isi-krs-manual.store');
                 Route::patch('/update/{id}', [App\Http\Controllers\Universitas\KRSManualController::class, 'update'])->name('univ.batas-isi-krs-manual.update');
                 // Route::get('edit/{id}', [App\Http\Controllers\Universitas\KRSManualController::class, 'getDataById'])->name('univ.batas-isi-krs-manual.edit');

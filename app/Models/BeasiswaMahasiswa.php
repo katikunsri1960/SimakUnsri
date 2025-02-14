@@ -31,7 +31,7 @@ class BeasiswaMahasiswa extends Model
 
     public function aktivitas_kuliah()
     {
-        $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function getIdTanggalMulaiBeasiswaAttribute()

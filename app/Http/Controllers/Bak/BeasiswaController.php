@@ -28,9 +28,6 @@ class BeasiswaController extends Controller
         $semesterAktif = SemesterAktif::first();
 
         $query = BeasiswaMahasiswa::with('mahasiswa.prodi', 'jenis_beasiswa', 'aktivitas_kuliah')
-                ->whereHas('aktivitas_kuliah', function ($query) use ($semesterAktif) {
-                    $query->where('id_semester', $semesterAktif->id_semester);
-                })
                 ->join('riwayat_pendidikans', 'beasiswa_mahasiswas.id_registrasi_mahasiswa', '=', 'riwayat_pendidikans.id_registrasi_mahasiswa')
                 ->leftJoin('pembiayaans', 'beasiswa_mahasiswas.id_pembiayaan', '=', 'pembiayaans.id_pembiayaan')
                 ->select('beasiswa_mahasiswas.*', 'riwayat_pendidikans.nama_program_studi as nama_program_studi', 'riwayat_pendidikans.id_periode_masuk as id_periode_masuk', 'pembiayaans.nama_pembiayaan as nama_pembiayaan');
