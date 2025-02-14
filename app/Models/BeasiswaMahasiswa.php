@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Referensi\Pembiayaan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -26,6 +27,11 @@ class BeasiswaMahasiswa extends Model
     public function pembiayaan()
     {
         return $this->belongsTo(Pembiayaan::class, 'id_pembiayaan', 'id_pembiayaan');
+    }
+
+    public function aktivitas_kuliah()
+    {
+        $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function getIdTanggalMulaiBeasiswaAttribute()

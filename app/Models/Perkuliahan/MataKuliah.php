@@ -194,7 +194,6 @@ class MataKuliah extends Model
         ) {
             $sks_max = 18;
         }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
-            // $sks_max = 20;
             // dd($ips_value);
             $sks_max = 0;
             if ($ips_value !== null) {

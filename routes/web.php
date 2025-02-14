@@ -397,6 +397,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Mahasiswa\Cuti\CutiController::class, 'delete'])->name('mahasiswa.pengajuan-cuti.delete');
             });
 
+            Route::prefix('pendaftaran-wisuda')->group(function () {
+                Route::get('/', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'index'])->name('mahasiswa.wisuda.index');
+                Route::get('/tambah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'tambah'])->name('mahasiswa.wisuda.tambah');
+                Route::post('/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'store'])->name('mahasiswa.wisuda.store');
+                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'delete'])->name('mahasiswa.wisuda.delete');
+            });
+
             // Route::get('/nilai-suliet', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.nilai-suliet');
             Route::get('/kegiatan-akademik', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'akademik'])->name('mahasiswa.akademik');
             Route::get('/kegiatan-seminar', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'seminar'])->name('mahasiswa.seminar');
