@@ -72,7 +72,7 @@ class BeasiswaController extends Controller
 
         $data = $query->skip($offset)->take($limit)->get();
 
-        dd($data);
+        // dd($data);
 
         $recordsTotal = BeasiswaMahasiswa::count();
 
