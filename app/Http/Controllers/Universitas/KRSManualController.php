@@ -16,11 +16,22 @@ class KRSManualController extends Controller
 {
     public function index(Request $request)
     {
-        $data = BatasIsiKRSManual::with(['riwayat'])->get();
+        $request->validate([
+            'semester_view' => 'nullable|exists:semesters,id_semester'
+        ]);
 
-        // $semester = Semester::orderBy('id_semester', 'desc')->get();
+        $semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
 
-        return view('universitas.batas-isi-krs-manual.index', compact('data'));
+        $semester_view = $request->semester_view ?? null;
+        $semester_pilih = $semester_view == null ? SemesterAktif::first()->id_semester : $semester_view;
+
+        $data = BatasIsiKRSManual::with(['riwayat'])->where('id_semester', $semester_pilih)->get();
+
+        return view('universitas.batas-isi-krs-manual.index', [
+            'data' => $data,
+            'semester' => $semester,
+            'semester_pilih' => $semester_pilih,
+        ]);
     }
 
     public function getDataById($id)
