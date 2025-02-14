@@ -452,10 +452,19 @@ class FeederUploadController extends Controller
 
                     $dataBerhasil++;
                 } else {
-                    $d->update(
+                    if (isset($result['error_code']) && $result['error_code'] == 119) {
+                        $d->update(
                             [
-                                'status_sync' => json_encode($result),
+                                'feeder' => 1,
+                                'status_sync' => $result['error_desc'],
                             ]);
+                    } else {
+                        $d->update(
+                        [
+                            'status_sync' => json_encode($result),
+                        ]);
+                    }
+
                     $dataGagal++;
                 }
 
