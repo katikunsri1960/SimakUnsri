@@ -152,7 +152,7 @@ class MataKuliah extends Model
 
         $jenjang_pendidikan = $riwayat_pendidikan->prodi;
 
-        // dd($riwayat_pendidikan);
+        // dd($jenjang_pendidikan);
 
         $ips = AktivitasKuliahMahasiswa::select('ips')
                     ->where('id_registrasi_mahasiswa', $id_reg)
@@ -188,8 +188,9 @@ class MataKuliah extends Model
             $sks_max = 24;
         } elseif ($riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14'){
             $sks_max = $riwayat_pendidikan->sks_maks_pmm;
-        } elseif ($jenjang_pendidikan->nama_jenjang_pendidikan == 'S2' ||
-            $jenjang_pendidikan->nama_jenjang_pendidikan == 'S3'
+        } elseif ($jenjang_pendidikan->id_jenjang_pendidikan == '35' ||
+            $jenjang_pendidikan->id_jenjang_pendidikan == '40' || 
+            $jenjang_pendidikan->id_jenjang_pendidikan == '37' 
         ) {
             $sks_max = 18;
         }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
