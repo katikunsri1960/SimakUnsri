@@ -87,25 +87,27 @@ class MataKuliah extends Model
                             ->first();
 
         $prodi_fk = [
-                    '98223413-b27d-4afe-a2b8-d0d80173506e',
-                    'be779246-fe70-4e66-8fa2-8929d97779a2',
-                    'efd6f97f-d7fc-42c1-bea0-2e5837e569d6',
-                    '7c569912-fa48-4b93-8c16-1fc78969c337',
-                    'a8d4f70f-406c-43f6-95ee-15f8ad836db3',
-                    // 'c4bbd3bb-3b4b-4aa3-bc50-136842747c67',//S2 Biomedik
-                    // '6343967c-d7e3-447c-86a4-37c5c166ad7a',//S3 Sains Biomedis
-                    '947760c7-8b9b-40d2-af81-cdd141fddadb',
-                    '90c23123-fb1e-48ee-9bdc-f923e799cd2a',
-                    'a77fda16-ec5a-4d73-b076-51bac9b88ae4',
-                    '132e62cc-dfdc-437d-9df3-e5317f80a6ff',
-                    '67c6cb06-f882-48c2-8a8f-33ab9457d1a6',
-                    '95290672-5f13-4776-9c0e-9c84ff0611ed',
-                    'e2f2ac47-8844-456b-b525-482db9da0abf',
-                    'bb06fc41-9e48-443e-aa02-df83da6bb467',
-                    'b3dce9a8-25b8-4f27-96cc-2abe5e0d9fa9',
-                    '9965f1cf-563f-4671-9dca-4874e8c5d075',
-                    'fd61ecb4-d6b0-4135-b7e2-7e23665c3e0d',
-                    '40693f4c-5177-4bd3-b3df-7321320583a6',
+                    'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Profesi Dokter Gigi
+                    '91360393-8632-4240-bed0-bfc707406efa', //Profesi Profesi Ners
+                    '98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Profesi Dokter
+                    'efd6f97f-d7fc-42c1-bea0-2e5837e569d6', //S1 Kedokteran Gigi
+                    '7c569912-fa48-4b93-8c16-1fc78969c337', //S1 Pendidikan Dokter
+                    '857cd112-bb6c-4ea9-9fe7-6782290c61e0', //S1 Ilmu Keperawatan
+                    'a8d4f70f-406c-43f6-95ee-15f8ad836db3', //S1 Psikologi
+                    '33a06776-e6aa-41e0-be5b-593d52ddff7f', //S1 Ilmu Biomedik
+                    '9965f1cf-563f-4671-9dca-4874e8c5d075', //Sp-1 Ilmu Penyakit THT
+                    'a77fda16-ec5a-4d73-b076-51bac9b88ae4', //Sp-1 Ilmu Bedah
+                    '947760c7-8b9b-40d2-af81-cdd141fddadb', //Sp-1 Anestesiologi Dan Reanimasi
+                    'e2f2ac47-8844-456b-b525-482db9da0abf', //Sp-1 Ilmu Penyakit Kulit Dan Kelamin
+                    'bb06fc41-9e48-443e-aa02-df83da6bb467', //Sp-1 Ilmu Penyakit Mata
+                    '73cd2292-67e9-43cb-a83f-9ecc5412365a', //Sp-1 Ilmu Kebidanan Dan Penyakit Kandungan
+                    'b3dce9a8-25b8-4f27-96cc-2abe5e0d9fa9', //Sp-1 Ilmu Penyakit Syaraf
+                    'fd61ecb4-d6b0-4135-b7e2-7e23665c3e0d', //Sp-1 Ortopedi dan Traumatologi
+                    '132e62cc-dfdc-437d-9df3-e5317f80a6ff', //Sp-1 Ilmu Kesehatan Anak
+                    '90c23123-fb1e-48ee-9bdc-f923e799cd2a', //Sp-1 Bedah Toraks, Kardiak, dan Vaskular
+                    '95290672-5f13-4776-9c0e-9c84ff0611ed', //Sp-1 Ilmu Penyakit Dalam
+                    '67c6cb06-f882-48c2-8a8f-33ab9457d1a6', //Sp-1 Ilmu Patologi Anatomi
+                    // S2, S3, Dan Sp-2 tidak mengunakan sistem Blok (24 SKS)
         ];
 
         $prodi_profesi=ProgramStudi::where('id_jenjang_pendidikan', '31')->where('status', 'A')->get()->pluck('id_prodi');
