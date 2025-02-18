@@ -455,7 +455,6 @@ class FeederUploadController extends Controller
                     if (isset($result['error_code']) && $result['error_code'] == 119) {
                         $d->update(
                             [
-                                'feeder' => 1,
                                 'status_sync' => $result['error_desc'],
                             ]);
                     } else {

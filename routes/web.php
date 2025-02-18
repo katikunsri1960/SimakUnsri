@@ -67,6 +67,17 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/{semester}/{id_reg}/khs', [App\Http\Controllers\Bak\TranskripController::class, 'khs'])->name('bak.transkrip-nilai.khs');
             });
 
+            Route::prefix('pejabat')->group(function(){
+                Route::prefix('fakultas')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\PejabatController::class, 'pejabat_fakultas'])->name('bak.pejabat.fakultas');
+                });
+
+                Route::prefix('universitas')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\PejabatController::class, 'pejabat_universitas'])->name('bak.pejabat.universitas');
+                });
+
+            });
+
             Route::prefix('pengajuan-cuti')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\PengajuanCutiController::class, 'index'])->name('bak.pengajuan-cuti');
             });

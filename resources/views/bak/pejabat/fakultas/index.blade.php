@@ -1,4 +1,4 @@
-@extends('layouts.fakultas')
+@extends('layouts.bak')
 @section('title')
 Pejabat Fakultas
 @endsection
@@ -24,12 +24,12 @@ Pejabat Fakultas
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    <div class="d-flex justify-content-end">
+                    {{-- <div class="d-flex justify-content-end">
                         <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
                         data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
-                    </div>
+                    </div> --}}
                 </div>
-                @include('fakultas.data-master.pejabat-fakultas.create')
+                {{-- @include('fakultas.data-master.pejabat-fakultas.create') --}}
                 {{-- @include('fakultas.data-master.pejabat-fakultas.edit') --}}
                 <div class="box-body">
                     <div class="table-responsive">
@@ -37,39 +37,29 @@ Pejabat Fakultas
                           <thead>
                              <tr>
                                 <th class="text-center align-middle">No</th>
+                                <th class="text-center align-middle">FAKULTAS</th>
                                 <th class="text-center align-middle">JABATAN</th>
                                 <th class="text-center align-middle">NAMA</th>
+                                <th class="text-center align-middle">NIP</th>
                                 <th class="text-center align-middle">NIDN</th>
-                                <th class="text-center align-middle">GELAR DEPAN</th>
-                                <th class="text-center align-middle">GELAR BELAKANG</th>
                                 <th class="text-center align-middle">PERIODE MENJABAT</th>
-                                <th class="text-center align-middle">ACTION</th>
+
                              </tr>
                           </thead>
                           <tbody>
                             @foreach ($data as $d)
                             <tr>
                                 <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                <td class="text-center align-middle">{{$d->nama_jabatan}}</td>
-                                <td class="text-start align-middle">{{$d->nama_dosen}}</td>
+                                <td class="text-start align-middle">{{$d->nama_fakultas}}</td>
+                                <td class="text-start align-middle">{{$d->nama_jabatan}}</td>
+                                <td class="text-start align-middle">{{$d->gelar_depan}} {{$d->nama_dosen}}, {{$d->gelar_belakang}}</td>
+                                <td class="text-start align-middle">{{$d->nip}}</td>
                                 <td class="text-start align-middle">{{$d->nidn}}</td>
-                                <td class="text-center align-middle">{{$d->gelar_depan}}</td>
-                                <td class="text-center align-middle">{{$d->gelar_belakang}}</td>
+
                                 <td class="text-center align-middle">
                                     {{date('d M Y', strtotime($d->tgl_mulai_jabatan))}} - {{date('d M Y', strtotime($d->tgl_selesai_jabatan))}}
                                 </td>
-                                <td class="text-center align-middle">
-                                    {{-- <a href="{{ route('fakultas.data-master.pejabat-fakultas.edit', $d->id) }}" class="btn btn-rounded bg-warning" title="Edit Data">
-                                        <i class="fa fa-pencil"></i>
-                                    </a>--}}
-                                    <form action="{{route('fakultas.data-master.pejabat-fakultas.delete', $d->id)}}" method="POST" id="delete-form-{{$d->id}}">
-                                        @csrf
-                                        @method('delete')
-                                        <button type="submit" class="btn btn-rounded bg-danger" title="Delete Data">
-                                            <i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i>
-                                        </button>
-                                    </form>
-                                </td>
+
                             </tr>
                             @endforeach
                           </tbody>
