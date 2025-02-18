@@ -13,6 +13,23 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
+                    <li class="treeview {{request()->routeIs('bak.pejabat.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-sitemap"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Pejabat</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('bak.pejabat.fakultas') || request()->routeIs('bak.pejabat.fakultas.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.pejabat.fakultas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Fakultas</a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.pejabat.universitas') || request()->routeIs('bak.pejabat.universitas.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.pejabat.universitas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Universitas</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="{{request()->routeIs('bak.usept-prodi') || request()->routeIs('bak.usept-prodi.*') ? 'active' : ''}}">
                         <a href="{{route('bak.usept-prodi')}}">
                             <i class="fa fa-pen-square"><span class="path1"></span><span
