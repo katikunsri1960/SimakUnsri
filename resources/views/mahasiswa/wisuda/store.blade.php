@@ -182,7 +182,7 @@ Pendaftaran Wisuda Mahasiswa
                                         </textarea>
                                     </div>
                                     <div class=" col-lg-12 mb-3">
-                                        <label for="kosentrasi" class="form-label">Kosentrasi</label>
+                                        <label for="kosentrasi" class="form-label">Bidang Kajian Utama (BKU) / Kosentrasi</label>
                                         <input type="text"class="form-control"name="kosentrasi"id="kosentrasi"aria-describedby="helpId" placeholder="Masukkan Kosentrasi" required/>
                                     </div>
                                     <div class=" col-lg-12 mb-3">

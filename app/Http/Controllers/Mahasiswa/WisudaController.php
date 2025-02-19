@@ -40,6 +40,12 @@ class WisudaController extends Controller
                 ->where('id_semester', $semester_aktif->id_semester)
                 ->first();
 
+        $kurikulum = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
+
+        if ($aktivitas_kuliah->sks_total < $kurikulum->jumlah_sks_lulus) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal'.$kurikulum->jumlah_sks_lulus.' sks!');
+        }
+
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
                 ->whereHas('bimbing_mahasiswa', function ($query) {
                     $query->whereNotNull('id_bimbing_mahasiswa');
@@ -59,7 +65,7 @@ class WisudaController extends Controller
         // dd($aktivitas_kuliah);
 
         if (!$aktivitas) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal 144 sks');
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
         }
 
         $wisuda=Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
@@ -105,7 +111,7 @@ class WisudaController extends Controller
             'bebas_pustaka' => $bebas_pustaka,
             'usept' => $useptData,
             'riwayat_pendidikan' => $riwayat_pendidikan,
-            // 'pembimbing_ke' => $pembimbing_ke,
+            'kurikulum' => $kurikulum,
         ]);
     }
 
@@ -145,12 +151,6 @@ class WisudaController extends Controller
             return redirect()->back()->with('error', 'Anda telah melakukan pendaftaran wisuda !!');
         }
 
-        $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
-
-        if (!$bebas_pustaka) {
-            return redirect()->back()->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silahkan menghubungi Admin Perpustakaan !!');
-        }
-        
         if(!$riwayat_pendidikan->id_kurikulum ) {
             return response()->json([
                 'status' => 'error',
@@ -186,6 +186,12 @@ class WisudaController extends Controller
 
         if($useptData['class'] == 'danger') {
             return redirect()->route('mahasiswa.wisuda.index')->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
+        }
+
+        $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
+
+        if (!$bebas_pustaka) {
+            return redirect()->back()->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silahkan menghubungi Admin Perpustakaan !!');
         }
         // dd($useptData);
 
@@ -232,9 +238,9 @@ class WisudaController extends Controller
             'lokasi_kuliah' => 'required',
             'wisuda_ke' => 'required',
             'kosentrasi' => 'required',
-            'abstrak_ta' => 'required',
-            'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:2048',
-            'abstrak_file' => 'required|file|mimes:pdf|max:2048',
+            'abstrak_ta' => 'required|max:500',
+            'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500kb',
+            'abstrak_file' => 'required|file|mimes:pdf|max:1024',
         ]);
 
         $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
