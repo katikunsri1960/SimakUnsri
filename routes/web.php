@@ -830,6 +830,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/aktivitas-organisasi', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_organisasi'])->name('prodi.data-aktivitas.aktivitas-organisasi');
             });
 
+            //Route for Lulusan
+            Route::prefix('data-lulusan')->group(function(){
+                Route::prefix('mhs-eligible')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'index'])->name('prodi.data-lulusan.mhs-eligible.index');
+                    // Route::get('/tambah', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'create'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.create');
+                });
+            });
+
             //Route for Report
             Route::prefix('report')->group(function(){
                 Route::get('/kemahasiswaan', [App\Http\Controllers\Prodi\Report\ReportKemahasiswaanController::class, 'index'])->name('prodi.report.kemahasiswaan');

@@ -753,6 +753,7 @@ class PembimbingMahasiswaController extends Controller
         $konversi_matkul = MataKuliah::where('id_matkul', $data->mk_konversi)->first();
         $bimbingMahasiswa = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
+        $tanggal_penilaian = date('Y-m-d');
 
         if(is_null($data->sk_tugas)){
             return redirect()->back()->with('error', 'SK Tugas Aktivitas Harus Di Isi.');
@@ -808,7 +809,7 @@ class PembimbingMahasiswaController extends Controller
         try {
             DB::beginTransaction();
 
-            $data->update(['tanggal_selesai' => $data->jadwal_ujian]);
+            $data->update(['tanggal_selesai' => $tanggal_penilaian]);
 
             $id_konversi_aktivitas = Uuid::uuid4()->toString();
 
