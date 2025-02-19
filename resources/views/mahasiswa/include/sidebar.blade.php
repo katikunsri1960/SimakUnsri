@@ -124,13 +124,13 @@
                         </a>
                     </li>
                     
-                    <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.wisuda.index')}}">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Pendaftaran Wisuda</span>
                         </a>
-                    </li>
+                    </li> --}}
                     
 
                     <li class="header">BANTUAN</li>

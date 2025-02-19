@@ -113,8 +113,11 @@ class WisudaController extends Controller
     {
         // dd($semester_aktif->id_semester);
         $id_reg = auth()->user()->fk_id;
+        
         $riwayat_pendidikan = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan')->where('id_registrasi_mahasiswa', $id_reg)->first();
+        
         $semester_aktif=SemesterAktif::with('semester')->first();
+
         $today = Carbon::now()->toDateString();
 
         $wisuda_ke = ['177', '178', '179', '180'];
