@@ -26,6 +26,7 @@ Pejabat Universitas
         <div class="col-lg-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
+                    @include('bak.pejabat.universitas.edit')
                     <div class="table-responsive">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
                             <thead>
@@ -44,12 +45,20 @@ Pejabat Universitas
                                     <td class="text-start align-middle">{{$d->nama}}</td>
                                     @if ($d->pejabat)
                                     <td class="text-start align-middle">{{$d->pejabat->gelar_depan}}
-                                        {{$d->pejabat->nama}} {{$d->pejabat->gelar_belakang}}</td>
+                                        {{$d->pejabat->nama}}, {{$d->pejabat->gelar_belakang}}</td>
                                     <td class="text-center align-middle">{{$d->pejabat->nip}} </td>
-                                    <td class="text-center align-middle"></td>
+                                    <td class="text-center align-middle">
+                                        <div class="row px-3">
+                                            <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal"
+                                            data-bs-target="#editModal" onclick="edit({{$d}})"><i class="fa fa-pencil"></i> Edit Data</button>
+                                        </div>
+                                    </td>
                                     @else
                                     <td class="text-center align-middle" colspan="3">
-
+                                        <div class="row px-3">
+                                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal"
+                                            data-bs-target="#editModal" onclick="edit({{$d}})"><i class="fa fa-plus"></i> Isi Data</button>
+                                        </div>
                                     </td>
                                     @endif
                                 </tr>
@@ -69,32 +78,11 @@ Pejabat Universitas
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
 
-    $('#data').DataTable();
-
-    $('#storeForm').submit(function(e){
+    $('#editForm').submit(function(e){
         e.preventDefault();
         swal({
             title: 'Simpan Data',
             text: "Apakah anda yakin ingin menyimpan data?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#storeForm').unbind('submit').submit();
-                $('#spinner').show();
-            }
-        });
-    });
-
-    $('#editForm').submit(function(e){
-        e.preventDefault();
-        swal({
-            title: 'Edit Data',
-            text: "Apakah anda yakin ingin merubah data?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -108,6 +96,24 @@ Pejabat Universitas
             }
         });
     });
+
+    $('#data').DataTable();
+
+    function edit(data) {
+        document.getElementById('editForm').reset();
+
+        $('#jabatan_id').val(data.id);
+        $('#jabatan').val(data.nama);
+
+        document.getElementById('gelar_depan').value = data.pejabat ? data.pejabat.gelar_depan : '';
+        document.getElementById('nama').value = data.pejabat ? data.pejabat.nama : '';
+        document.getElementById('gelar_belakang').value = data.pejabat ? data.pejabat.gelar_belakang : '';
+        document.getElementById('nip').value = data.pejabat ? data.pejabat.nip : '';
+
+    }
+
+
+
 
 
 </script>

@@ -74,6 +74,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::prefix('universitas')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\PejabatController::class, 'pejabat_universitas'])->name('bak.pejabat.universitas');
+                    Route::post('/store', [App\Http\Controllers\Bak\PejabatController::class, 'pejabat_universitas_store'])->name('bak.pejabat.universitas.store');
                 });
 
             });
