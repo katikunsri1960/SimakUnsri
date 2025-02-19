@@ -7,6 +7,25 @@ use Illuminate\Http\Request;
 
 class WisudaController extends Controller
 {
+
+    public function pengaturan()
+    {
+        return view('bak.wisuda.pengaturan.index');
+    }
+
+    public function pengaturan_store(Request $request)
+    {
+        $data = $request->validate([
+            'tanggal_wisuda' => 'required',
+            'tanggal_mulai_daftar' => 'required',
+            'tanggal_akhir_daftar' => 'required',
+            'is_active' => 'required|boolean',
+        ]);
+
+        
+
+    }
+
     public function peserta(Request $request)
     {
         return view('bak.wisuda.peserta.index');
