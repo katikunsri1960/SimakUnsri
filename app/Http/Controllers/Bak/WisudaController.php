@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bak;
 
 use App\Http\Controllers\Controller;
+use App\Models\PeriodeWisuda;
 use Illuminate\Http\Request;
 
 class WisudaController extends Controller
@@ -10,7 +11,11 @@ class WisudaController extends Controller
 
     public function pengaturan()
     {
-        return view('bak.wisuda.pengaturan.index');
+        $data = PeriodeWisuda::all();
+
+        return view('bak.wisuda.pengaturan.index', [
+            
+        ]);
     }
 
     public function pengaturan_store(Request $request)
@@ -22,7 +27,7 @@ class WisudaController extends Controller
             'is_active' => 'required|boolean',
         ]);
 
-        
+
 
     }
 
