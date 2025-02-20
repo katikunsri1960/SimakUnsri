@@ -115,8 +115,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('wisuda')->group(function(){
 
                 Route::prefix('pengaturan')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'pengaturan'])->name('bak.wisuda.pengaturan.index');
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'pengaturan'])->name('bak.wisuda.pengaturan');
                     Route::post('/store', [App\Http\Controllers\Bak\WisudaController::class, 'pengaturan_store'])->name('bak.wisuda.pengaturan.store');
+                    Route::patch('/update/{periodeWisuda}', [App\Http\Controllers\Bak\WisudaController::class, 'pengaturan_update'])->name('bak.wisuda.pengaturan.update');
+                    Route::delete('/delete/{periodeWisuda}', [App\Http\Controllers\Bak\WisudaController::class, 'pengaturan_delete'])->name('bak.wisuda.pengaturan.delete');
                 });
 
                 Route::prefix('peserta')->group(function(){
