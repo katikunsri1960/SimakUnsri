@@ -99,6 +99,9 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('bak.wisuda.pengaturan') || request()->routeIs('bak.wisuda.pengaturan.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.pengaturan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembukaan Wisuda</a>
+                            </li>
                             <li class="{{request()->routeIs('bak.wisuda.peserta.index') || request()->routeIs('bak.monitoring.pengisian-krs.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.peserta.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Calon Peserta Wisuda</a>
                             </li>
