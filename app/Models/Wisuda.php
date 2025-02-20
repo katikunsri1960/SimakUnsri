@@ -26,7 +26,13 @@ class Wisuda extends Model
         'pas_foto',
         'lokasi_kuliah',
         'abstrak_ta',
-        'abstrak_file',
+        'no_sk_yudisium',
+        'tgl_sk_yudisium',
         'approved',
     ];
+
+    public function prodi()
+    {
+        return $this->belongsTo(ProgramStudi::class, 'id_prodi', 'id_prodi');
+    }
 }

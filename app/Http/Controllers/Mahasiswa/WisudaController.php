@@ -68,7 +68,7 @@ class WisudaController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
         }
 
-        $wisuda=Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
+        $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
