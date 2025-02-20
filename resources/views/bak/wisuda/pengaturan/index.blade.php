@@ -59,7 +59,7 @@ Pembukaan Wisuda
                                         <td class="text-center align-middle">{{$d->id_tanggal_akhir_daftar}}</td>
                                         <td class="text-center align-middle">
                                             @if ($d->is_active == 1)
-                                                <i class="fa fa-check text-success"></i>
+                                                <i class="fa fa-check text-success" style="font-size: 16pt"></i>
                                             @else
 
                                             @endif
