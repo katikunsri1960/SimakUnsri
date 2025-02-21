@@ -30,6 +30,16 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="{{request()->routeIs('bak.gelar-lulusan') || request()->routeIs('bak.gelar-lulusan.*') ? 'active' : ''}}">
+                        <a href="{{route('bak.gelar-lulusan')}}">
+                            <i class="fa fa-graduation-cap"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Gelar Lulusan</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
                     <li class="{{request()->routeIs('bak.usept-prodi') || request()->routeIs('bak.usept-prodi.*') ? 'active' : ''}}">
                         <a href="{{route('bak.usept-prodi')}}">
                             <i class="fa fa-pen-square"><span class="path1"></span><span
@@ -92,7 +102,7 @@
                     </li>
                     <li class="treeview {{request()->routeIs('bak.wisuda.*') ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i span class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i>
+                            <i span class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i>
                             <span>Wisuda</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>

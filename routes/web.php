@@ -79,6 +79,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             });
 
+            Route::prefix('gelar-lulusan')->group(function(){
+                Route::get('/', [App\Http\Controllers\Bak\GelarLulusanController::class, 'index'])->name('bak.gelar-lulusan');
+                Route::post('/store', [App\Http\Controllers\Bak\GelarLulusanController::class, 'store'])->name('bak.gelar-lulusan.store');
+            });
+
             Route::prefix('pengajuan-cuti')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\PengajuanCutiController::class, 'index'])->name('bak.pengajuan-cuti');
             });

@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Referensi\GelarLulusan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -31,5 +32,10 @@ class ProgramStudi extends Model
     public function peserta_kelas()
     {
         return $this->hasManyThrough(PesertaKelasKuliah::class, KelasKuliah::class, 'id_prodi', 'id_kelas_kuliah', 'id_prodi', 'id_kelas_kuliah');
+    }
+
+    public function gelar_lulusan()
+    {
+        return $this->hasOne(GelarLulusan::class, 'id_prodi', 'id_prodi');
     }
 }
