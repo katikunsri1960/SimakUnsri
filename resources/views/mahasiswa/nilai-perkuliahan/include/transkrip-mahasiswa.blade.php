@@ -10,6 +10,20 @@
                                     <h3 class="fw-500 text-dark mt-0 mb-20">Transkrip Mahasiswa</h3>
                                 </div>                             
                             </div>
+                            @if ($statusSync == 1)
+                            <div class="alert alert-warning mt-4">
+                                <h3 class="alert-heading">Perhatian!</h3>
+                                <hr>
+                                <p class="mb-0">Data Transkrip sedang proses sinkronisasi. Harap menunggu terlebih dahulu!</p>
+                                {{-- progress bar --}}
+                                <div class="progress mt-3">
+                                    <div id="sync-progress-bar"
+                                        class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                        role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                        style="width: 0%"></div>
+                                </div>
+                            </div>
+                            @else
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -83,6 +97,7 @@
                                     </div>
                                 </div>
                             </div>	
+                            @endif
                         </div>
                     </div>
                 </div>  

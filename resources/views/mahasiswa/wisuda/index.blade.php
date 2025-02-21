@@ -149,6 +149,7 @@ Pendaftaran Wisuda Mahasiswa
                     @endif
                 </div>
 
+                @if($wisuda)
                 <div class="box-header with-border d-flex justify-content-between mx-20">
                     <div class="d-flex justify-content-start">
                         <h4 class="text-info mb-0"><i class="fa fa-graduation-cap"></i> Detail Pendaftaran Wisuda</h4>
@@ -156,68 +157,67 @@ Pendaftaran Wisuda Mahasiswa
                     </div>                  
                 </div>
                 <div class="box box-body mb-0">
-                    @if($wisuda)
-                        <div class="row mx-20">
-                            <div class="col-12">
-                                <div class="box">
-                                    <div class="box-body">
-                                        <div class="row text-center mb-20">
-                                            <div class="widget-user-image">
-                                                @php
-                                                $imagePath =
-                                                public_path($wisuda->pas_foto);
-                                                @endphp
-                                                <img class="rounded bg-success"
-                                                    src="{{file_exists($imagePath) ? asset($wisuda->pas_foto) : asset('images/images/avatar/avatar-15.png')}}"
-                                                    alt="User Avatar" style="width: 250px;">
-                                            </div>
+                    <div class="row mx-20">
+                        <div class="col-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="row text-center mb-20">
+                                        <div class="widget-user-image">
+                                            @php
+                                            $imagePath =
+                                            public_path($wisuda->pas_foto);
+                                            @endphp
+                                            <img class="rounded bg-success"
+                                                src="{{file_exists($imagePath) ? asset($wisuda->pas_foto) : asset('images/images/avatar/avatar-15.png')}}"
+                                                alt="User Avatar" style="width: 250px;">
                                         </div>
-                                        <div class="table-responsive">
-                                            <table class="table table-striped">
-                                                <tr>
-                                                    <td class="text-left">Wisuda Ke-</td>
-                                                    <td class="text-center">:</td>
-                                                    <td class="text-left" style="text-align: justify">{{$wisuda->wisuda_ke}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-left">Bidang Kajian Utama (BKU) / Kosentrasi</td>
-                                                    <td class="text-center">:</td>
-                                                    <td class="text-left" style="text-align: justify">{{$wisuda->kosentrasi}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-left">Abstrak Tugas Akhir</td>
-                                                    <td class="text-center">:</td>
-                                                    <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_ta}}</td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-left">Status Pendaftaran Wisuda</td>
-                                                    <td class="text-center">:</td>
-                                                    <td class="text-center align-middle" style="width:10%">
-                                                        @if($wisuda->approved == 0)
-                                                            <span class="badge badge-xl badge-warning mb-5">Belum Disetujui Koor. Prodi</span>
-                                                        @elseif($wisuda->approved == 1)
-                                                            <span class="badge badge-xl badge-primary mb-5">Disetujui Koor. Prodi</span>
-                                                        @elseif($wisuda->approved == 2)
-                                                            <span class="badge badge-xl badge-primary mb-5">Disetujui Fakultas</span>
-                                                        @elseif($wisuda->approved == 3)
-                                                            <span class="badge badge-xl badge-success mb-5">Disetujui BAK</span>
-                                                        @elseif($wisuda->approved == 97)
-                                                            <span class="badge badge-xl badge-danger mb-5">Ditolak Koor. Prodi</span>
-                                                        @elseif($wisuda->approved == 98)
-                                                            <span class="badge badge-xl badge-danger mb-5">Ditolak Fakultas</span>
-                                                        @elseif($wisuda->approved == 99)
-                                                            <span class="badge badge-xl badge-danger mb-5">Ditolak BAK</span>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td class="text-left">Wisuda Ke-</td>
+                                                <td class="text-center">:</td>
+                                                <td class="text-left" style="text-align: justify">{{$wisuda->wisuda_ke}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">Bidang Kajian Utama (BKU) / Kosentrasi</td>
+                                                <td class="text-center">:</td>
+                                                <td class="text-left" style="text-align: justify">{{$wisuda->kosentrasi}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">Abstrak Tugas Akhir</td>
+                                                <td class="text-center">:</td>
+                                                <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_ta}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left">Status Pendaftaran Wisuda</td>
+                                                <td class="text-center">:</td>
+                                                <td class="text-center align-middle" style="width:10%">
+                                                    @if($wisuda->approved == 0)
+                                                        <span class="badge badge-xl badge-warning mb-5">Belum Disetujui Koor. Prodi</span>
+                                                    @elseif($wisuda->approved == 1)
+                                                        <span class="badge badge-xl badge-primary mb-5">Disetujui Koor. Prodi</span>
+                                                    @elseif($wisuda->approved == 2)
+                                                        <span class="badge badge-xl badge-primary mb-5">Disetujui Fakultas</span>
+                                                    @elseif($wisuda->approved == 3)
+                                                        <span class="badge badge-xl badge-success mb-5">Disetujui BAK</span>
+                                                    @elseif($wisuda->approved == 97)
+                                                        <span class="badge badge-xl badge-danger mb-5">Ditolak Koor. Prodi</span>
+                                                    @elseif($wisuda->approved == 98)
+                                                        <span class="badge badge-xl badge-danger mb-5">Ditolak Fakultas</span>
+                                                    @elseif($wisuda->approved == 99)
+                                                        <span class="badge badge-xl badge-danger mb-5">Ditolak BAK</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @endif
+                    </div>
                 </div>
+                @endif
             </div>
         </div>
     </div>
