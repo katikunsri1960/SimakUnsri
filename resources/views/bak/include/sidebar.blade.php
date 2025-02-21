@@ -102,8 +102,8 @@
                             <li class="{{request()->routeIs('bak.wisuda.pengaturan') || request()->routeIs('bak.wisuda.pengaturan.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.pengaturan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembukaan Wisuda</a>
                             </li>
-                            <li class="{{request()->routeIs('bak.wisuda.peserta.index') || request()->routeIs('bak.monitoring.pengisian-krs.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.peserta.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Calon Peserta Wisuda</a>
+                            <li class="{{request()->routeIs('bak.wisuda.peserta') || request()->routeIs('bak.wisuda.peserta.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.peserta')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Calon Peserta Wisuda</a>
                             </li>
                             <li class="{{request()->routeIs('bak.wisuda.registrasi-ijazah.index') || request()->routeIs('bak.wisuda.registrasi-ijazah.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.registrasi-ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Registrasi Ijazah</a>

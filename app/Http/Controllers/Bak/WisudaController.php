@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Bak;
 
 use App\Http\Controllers\Controller;
+use App\Models\Fakultas;
 use App\Models\PeriodeWisuda;
+use App\Models\ProgramStudi;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -102,9 +104,25 @@ class WisudaController extends Controller
         return redirect()->route('bak.wisuda.pengaturan')->with('success', 'Data berhasil dihapus');
     }
 
-    public function peserta(Request $request)
+    public function peserta()
     {
-        return view('bak.wisuda.peserta.index');
+        $fakultas = Fakultas::select('id','nama_fakultas')->get();
+        $prodi = ProgramStudi::where('status', 'A')->get();
+        $periode = PeriodeWisuda::select('periode')->get();
+        return view('bak.wisuda.peserta.index', [
+            'fakultas' => $fakultas,
+            'prodi' => $prodi,
+            'periode' => $periode,
+        ]);
+    }
+
+    public function peserta_data(Request $request)
+    {
+        $request->validate([
+            'periode' => 'required',
+            'fakultas' => 'required',
+            'prodi' => 'required',
+        ]);
     }
 
     public function registrasi_ijazah(Request $request)

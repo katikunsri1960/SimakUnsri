@@ -122,7 +122,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
 
                 Route::prefix('peserta')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'peserta'])->name('bak.wisuda.peserta.index');
+                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'peserta'])->name('bak.wisuda.peserta');
                 });
 
                 Route::prefix('registrasi-ijazah')->group(function(){
