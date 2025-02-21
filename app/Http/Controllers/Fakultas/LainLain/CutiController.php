@@ -30,6 +30,7 @@ class CutiController extends Controller
 
     public function cuti_approve(PengajuanCuti $cuti)
     {
+        // dd($cuti);
         $store = $cuti->update([
             'approved' => 1,
             'alasan_pembatalan' => NULL

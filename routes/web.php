@@ -309,6 +309,15 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::post('/decline/{cuti}', [App\Http\Controllers\Fakultas\LainLain\CutiController::class, 'pembatalan_cuti'])->name('fakultas.pengajuan-cuti.decline');
             });
 
+            Route::prefix('pendaftaran-wisuda')->group(function () {
+                Route::get('/', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
+                Route::post('/approve/{wisuda}', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'approve'])->name('fakultas.wisuda.approve');
+                Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
+                Route::get('/tambah', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
+                Route::post('/store', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
+                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'delete'])->name('fakultas.wisuda.delete');
+            });
+
             //ROUTE BANTUAN
             Route::prefix('bantuan')->group(function () {
                 Route::get('/ganti-password', [App\Http\Controllers\Fakultas\Bantuan\GantiPasswordController::class, 'ganti_password'])->name('fakultas.bantuan.ganti-password');

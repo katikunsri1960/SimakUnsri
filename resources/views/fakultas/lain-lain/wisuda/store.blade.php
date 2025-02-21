@@ -5,7 +5,7 @@ Pendaftaran Wisuda Mahasiswa
 @section('content')
 @push('header')
 <div class="mx-4">
-    <a href="{{route('mahasiswa.wisuda.index')}}"
+    <a href="{{route('fakultas.wisuda.index')}}"
         class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush
@@ -18,7 +18,7 @@ Pendaftaran Wisuda Mahasiswa
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('mahasiswa.wisuda.index')}}">Wisuda</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('fakultas.wisuda.index')}}">Wisuda</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Pendaftaran Wisuda Mahasiswa</li>
                     </ol>
                 </nav>
@@ -31,7 +31,7 @@ Pendaftaran Wisuda Mahasiswa
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <form class="form" action="{{route('mahasiswa.wisuda.store')}}" id="tambah-wisuda" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{route('fakultas.wisuda.store')}}" id="tambah-wisuda" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body">
                         <h4 class="text-info mb-0"><i class="fa fa-user"></i> Data Diri Mahasiswa</h4>
@@ -200,7 +200,7 @@ Pendaftaran Wisuda Mahasiswa
                         </div>
                     </div>
                     <div class="box-footer">
-                        <a type="button" href="{{route('mahasiswa.wisuda.index')}}" class="btn btn-danger waves-effect waves-light">
+                        <a type="button" href="{{route('fakultas.wisuda.index')}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
                         <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
