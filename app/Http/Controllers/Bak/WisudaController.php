@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Fakultas;
 use App\Models\PeriodeWisuda;
 use App\Models\ProgramStudi;
+use App\Models\Wisuda;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -118,11 +119,46 @@ class WisudaController extends Controller
 
     public function peserta_data(Request $request)
     {
-        $request->validate([
+        $req = $request->validate([
             'periode' => 'required',
-            'fakultas' => 'required',
-            'prodi' => 'required',
+            'fakultas' => [
+            'required',
+                function ($attribute, $value, $fail) {
+                    if ($value !== '*' && !Fakultas::where('id', $value)->exists()) {
+                    $fail('Fakultas tidak valid.');
+                    }
+                },
+            ],
+            'prodi' => [
+            'required',
+                function ($attribute, $value, $fail) {
+                    if ($value !== '*' && !ProgramStudi::where('id_prodi', $value)->exists()) {
+                    $fail('Program Studi tidak valid.');
+                    }
+                },
+            ],
         ]);
+
+        $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'wisudas.id_registrasi_mahasiswa')
+                ->select('wisudas.*');
+
+        if ($req['prodi'] != "*") {
+            $data->where('r.id_prodi', $req['prodi']);
+        }
+
+        if ($req['fakultas'] != "*") {
+            $data->where('r.fakultas_id', $req['fakultas']);
+        }
+
+        $data = $data->get();
+
+        $response = [
+            'status' => 'success',
+            'message' => 'Data berhasil diambil',
+            'data' => $data,
+        ];
+
+        return response()->json($response);
     }
 
     public function registrasi_ijazah(Request $request)

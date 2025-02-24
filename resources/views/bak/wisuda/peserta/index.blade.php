@@ -120,7 +120,69 @@ Daftar Peserta Wisuda
 <script>
 function getData()
 {
-    console.log('get data');
+    var fakultas = $('#fakultas').val();
+    var prodi = $('#prodi').val();
+    var periode = $('#periode').val();
+
+    console.log(fakultas, prodi, periode);
+
+    if (fakultas == '' || prodi == '' || periode == '') {
+        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
+        return;
+
+    }
+
+    $.ajax({
+        url: `{{route('bak.wisuda.peserta.data')}}`,
+        type: 'GET',
+        data: {
+            fakultas: fakultas,
+            prodi: prodi,
+            periode: periode
+        },
+        success: function (response) {
+
+            if (response.status === 'success') {
+                var table = $('#data').DataTable();
+                table.clear().draw();
+                $.each(response.data, function (index, item) {
+                    table.row.add([
+                        index + 1,
+                        item.periode,
+                        item.status,
+                        item.ijazah_terakhir,
+                        item.berkas_registrasi_wisuda,
+                        item.nomor_registrasi,
+                        item.foto,
+                        item.fakultas,
+                        item.program_studi,
+                        item.jenjang,
+                        item.nim,
+                        item.nama,
+                        item.nik,
+                        item.tempat_kuliah,
+                        item.jalur_masuk,
+                        item.tempat_lahir,
+                        item.tanggal_lahir,
+                        item.ipk,
+                        item.alamat,
+                        item.telp,
+                        item.email,
+                        item.nama_orang_tua,
+                        item.alamat_orang_tua,
+                        item.tanggal_masuk,
+                        item.tanggal_yudisium,
+                        item.masa_studi,
+                        item.judul_tugas_akhir,
+                        item.scor_usept
+                    ]).draw(false);
+                });
+            } else {
+                swal('Error', 'Gagal mengambil data peserta wisuda', 'error');
+            }
+
+        }
+    });
 }
 
 function filterProdi()
