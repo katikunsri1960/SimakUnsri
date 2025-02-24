@@ -248,7 +248,7 @@ class WisudaController extends Controller
             'wisuda_ke' => 'required',
             'kosentrasi' => 'required',
             'abstrak_ta' => 'required|max:500',
-            'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500kb',
+            'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500',
             'abstrak_file' => 'required|file|mimes:pdf|max:1024',
         ]);
 
@@ -260,16 +260,16 @@ class WisudaController extends Controller
         // dd($request->wisuda_ke);
 
         // Generate file name
-        $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . time() . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
         $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . time() . '.' . $request->file('pas_foto')->getClientOriginalExtension();
+        $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . time() . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
 
         // Simpan file ke folder public/storage/wisuda/abstrak dan wisuda/pas_foto
-        $abstrakPath = $request->file('abstrak_file')->storeAs('wisuda/abstrak', $abstrakName, 'public');
         $pasFotoPath = $request->file('pas_foto')->storeAs('wisuda/pas_foto', $pasFotoName, 'public');
+        $abstrakPath = $request->file('abstrak_file')->storeAs('wisuda/abstrak', $abstrakName, 'public');
 
         // Simpan path ke database
-        $abstrak_file = 'storage/' . $abstrakPath;
         $pas_foto = 'storage/' . $pasFotoPath;
+        $abstrak_file = 'storage/' . $abstrakPath;
 
         // Cek apakah file berhasil diupload
         if (!$pasFotoPath) {
@@ -279,6 +279,8 @@ class WisudaController extends Controller
         if (!$abstrakPath) {
             return redirect()->back()->with('error', 'File abstrak gagal diunggah. Silakan coba lagi.');
         }
+
+        // dd($abstrakPath, $abstrak_file);
 
         Wisuda::create([
             'id_perguruan_tinggi' => $perguruan_tinggi->id_perguruan_tinggi,
@@ -297,7 +299,6 @@ class WisudaController extends Controller
             'abstrak_ta' => $request->abstrak_ta,
             'abstrak_file' => $abstrak_file,
             'approved' => 0,
-            // 'status_sync' => 'belum sync',
         ]);
 
         // Redirect kembali ke halaman index dengan pesan sukses
