@@ -98,7 +98,7 @@ Pendaftaran Wisuda Mahasiswa
                                             @if(!$bebas_pustaka)
                                                 <span class="badge bg-danger">Belum Bebas Pustaka</span>
                                             @else
-                                                <a class="btn btn-sm btn-info" href="{{ asset('storage') }}/". $bebas_pustaka->file_bebas_pustaka" type="button" title="Lihat Repository" target="_blank">{{$repository->link_repo}}</a>
+                                                <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$bebas_pustaka->file_bebas_pustaka}}" type="button" title="Lihat Bebas Pustaka" target="_blank">{{$bebas_pustaka->file_bebas_pustaka}}</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -109,7 +109,7 @@ Pendaftaran Wisuda Mahasiswa
                                             @if(!$bebas_pustaka)
                                                 <span class="badge bg-danger">Belum Upload Repositroy</span>
                                             @else
-                                                <a class="btn btn-sm btn-info" href="{{$bebas_pustaka->link_repo}}" type="button" title="Lihat Repository" target="_blank">{{$repository->link_repo}}</a>
+                                                <a class="btn btn-sm btn-success" href="{{$bebas_pustaka->link_repo}}" type="button" title="Lihat Repository" target="_blank">{{$bebas_pustaka->link_repo}}</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -190,23 +190,35 @@ Pendaftaran Wisuda Mahasiswa
                                                 <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_ta}}</td>
                                             </tr>
                                             <tr>
+                                                <td class="text-left">File Abstak Tugas Akhir</td>
+                                                <td class="text-center">:</td>
+                                                {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
+                                                <td class="text-left" style="text-align: justify">
+                                                    @if(!$wisuda)
+                                                        <span class="badge bg-danger">Belum Bebas Pustaka</span>
+                                                    @else
+                                                        <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$wisuda->abstrak_file}}" type="button" title="Lihat File Abstrak" target="_blank">{{$wisuda->abstrak_file}}</a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
                                                 <td class="text-left">Status Pendaftaran Wisuda</td>
                                                 <td class="text-center">:</td>
-                                                <td class="text-center align-middle" style="width:10%">
+                                                <td class="text-left align-middle" style="width:10%">
                                                     @if($wisuda->approved == 0)
-                                                        <span class="badge badge-xl badge-warning mb-5">Belum Disetujui Koor. Prodi</span>
+                                                        <span class="badge badge-lg badge-warning mb-5">Belum Disetujui Koor. Prodi</span>
                                                     @elseif($wisuda->approved == 1)
-                                                        <span class="badge badge-xl badge-primary mb-5">Disetujui Koor. Prodi</span>
+                                                        <span class="badge badge-lg badge-primary mb-5">Disetujui Koor. Prodi</span>
                                                     @elseif($wisuda->approved == 2)
-                                                        <span class="badge badge-xl badge-primary mb-5">Disetujui Fakultas</span>
+                                                        <span class="badge badge-lg badge-primary mb-5">Disetujui Fakultas</span>
                                                     @elseif($wisuda->approved == 3)
-                                                        <span class="badge badge-xl badge-success mb-5">Disetujui BAK</span>
+                                                        <span class="badge badge-lg badge-success mb-5">Disetujui BAK</span>
                                                     @elseif($wisuda->approved == 97)
-                                                        <span class="badge badge-xl badge-danger mb-5">Ditolak Koor. Prodi</span>
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi</span>
                                                     @elseif($wisuda->approved == 98)
-                                                        <span class="badge badge-xl badge-danger mb-5">Ditolak Fakultas</span>
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas</span>
                                                     @elseif($wisuda->approved == 99)
-                                                        <span class="badge badge-xl badge-danger mb-5">Ditolak BAK</span>
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak BAK</span>
                                                     @endif
                                                 </td>
                                             </tr>
