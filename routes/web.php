@@ -832,10 +832,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             //Route for Lulusan
             Route::prefix('data-lulusan')->group(function(){
-                Route::prefix('mhs-eligible')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'index'])->name('prodi.data-lulusan.mhs-eligible.index');
-                    // Route::get('/tambah', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'create'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.create');
-                });
+                Route::get('/', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'index'])->name('prodi.data-lulusan.index');
+                // Route::get('/tambah', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'create'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.create');
             });
 
             //Route for Report

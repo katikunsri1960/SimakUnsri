@@ -101,7 +101,7 @@ class MahasiswaEligibleController extends Controller
             }
         }
 
-        dd($data);
+        // dd($data);
 
         
 
