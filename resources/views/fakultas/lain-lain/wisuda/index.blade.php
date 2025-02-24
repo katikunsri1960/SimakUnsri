@@ -47,8 +47,12 @@ Pendaftaran Wisuda Fakultas
                                     <th>NIM</th>
                                     <th>Nama Mahasiswa</th>
                                     <th>Program Studi</th>
+                                    <th>Bebas Pustaka</th>
+                                    <th>Repository</th>
+                                    <th>Nilai USEPT</th>
                                     <th>No SK Yudisium</th>
                                     <th>Tanggal SK Yudisium</th>
+                                    <th>Lama Studi</th>
                                     <th>Status Pendaftaran Wisuda</th>
                                     <th>Action</th>
                                 </tr>
@@ -81,8 +85,40 @@ Pendaftaran Wisuda Fakultas
                                         <td class="text-center align-middle">{{$d->nim}}</td>
                                         <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
                                         <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} - {{$d->prodi->nama_program_studi}}</td>
+                                        <td class="text-start align-middle text-nowrap">
+                                            @if(!$d->bebas_pustaka)
+                                                <span class="badge bg-danger">Belum Bebas Pustaka</span>
+                                            @else
+                                                <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$d->bebas_pustaka->file_bebas_pustaka}}" type="button" title="Lihat Bebas Pustaka" target="_blank">{{$d->bebas_pustaka->file_bebas_pustaka}}</a>
+                                            @endif
+                                        </td>
+                                        <td class="text-start align-middle text-nowrap">
+                                            @if(!$d->bebas_pustaka)
+                                                <span class="badge bg-danger">Belum Upload Repositroy</span>
+                                            @else
+                                                <a class="btn btn-sm btn-success" href="{{$d->bebas_pustaka->link_repo}}" type="button" title="Lihat Repository" target="_blank">{{$d->bebas_pustaka->link_repo}}</a>
+                                            @endif
+                                        </td>
+                                        <td class="text-left align-middle text-nowrap">
+                                            @if(!$d->riwayat_pendidikan->id_kurikulum)
+                                                <span class="badge bg-warning">Kurikulum Belum Diatur</span>
+                                            @elseif(isset($d->useptData['class']) && $d->useptData['class'] == "danger")
+                                                {{ isset($d->useptData['score']) ? $d->useptData['score'] : 0 }}<br>
+                                                <span class="badge bg-danger">  
+                                                    ({{$d->useptData['status'] ?? 'N/A'}})
+                                                </span>
+                                            @endif
+                                        </td>   
                                         <td class="text-start align-middle">{{$d->no_sk_yudisium}}</td>
-                                        <td class="text-start align-middle">{{$d->tgl_sk_yudisium}}</td>
+                                        <td class="text-start align-middle text-nowrap">{{$d->tgl_sk_yudisium}}</td>
+                                        <td class="text-start align-middle text-nowrap">
+                                            @php
+                                                $years = floor($d->lama_studi / 12);
+                                                $months = $d->lama_studi % 12;
+                                            @endphp
+                                            {{$years}} tahun {{$months}} bulan
+                                        </td>
+
                                         
                                         
                                         <td class="text-center align-middle" style="width:10%">
