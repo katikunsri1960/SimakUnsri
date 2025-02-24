@@ -10,6 +10,7 @@ use App\Models\Connection\Tagihan;
 use Illuminate\Support\Facades\DB;
 use App\Models\Mahasiswa\Dashboard;
 use App\Models\Perpus\BebasPustaka;
+use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
 use App\Models\Connection\Registrasi;
 use App\Models\Connection\CourseUsept;
@@ -105,5 +106,19 @@ class DashboardController extends Controller
             'semester_ke', 'akm','transkrip','ips_sks_ipk', 
             'usept_data', 'bebas_pustaka'
         ));
+    }
+
+    public function check_sync(Request $request)
+    {
+        $id_batch = $request->id_batch;
+        $batching = Bus::findBatch($id_batch);
+
+        return [
+            'total' => $batching->totalJobs,
+            'job_processed' => $batching->processedJobs(),
+            'job_pending' => $batching->pendingJobs,
+            'progress' => $batching->progress(),
+        ];
+
     }
 }
