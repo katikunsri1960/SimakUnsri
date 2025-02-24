@@ -2,18 +2,19 @@
 
 namespace App\Http\Controllers\Mahasiswa\Akademik;
 
-use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
+use App\Models\SemesterAktif;
 use App\Models\KuisonerAnswer;
 use App\Models\KuisonerQuestion;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\KelasKuliah;
-use App\Models\Perkuliahan\NilaiPerkuliahan;
-use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\NilaiTransferPendidikan;
-use App\Models\SemesterAktif;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
 class NilaiController extends Controller
 {
@@ -21,6 +22,13 @@ class NilaiController extends Controller
     {
         $id_reg_mhs = auth()->user()->fk_id;
 
+        $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
+
+        $statusSync = $jobData ? 1 : 0;
+
+        $id_batch = $jobData ? $jobData->id : null;
+
+        // dd($jobData);
         $aktivitas_kuliah=AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','desc')->get();
         $nilai_transfer=NilaiTransferPendidikan::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('id_semester','asc')->get();
         $nilai_konversi=KonversiAktivitas::leftJoin('anggota_aktivitas_mahasiswas', 'anggota_aktivitas_mahasiswas.id_anggota', 'konversi_aktivitas.id_anggota')
@@ -50,7 +58,7 @@ class NilaiController extends Controller
         // dd($aktivitas_kuliah);
 
 
-        return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks_transkrip'=>$total_sks_transkrip, 'bobot'=>$bobot,'ipk'=>$ipk]);
+        return view('mahasiswa.nilai-perkuliahan.index', ['data_aktivitas' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'nilai_konversi' => $nilai_konversi, 'nilai_transfer' => $nilai_transfer, 'total_sks_transkrip'=>$total_sks_transkrip, 'bobot'=>$bobot,'ipk'=>$ipk, 'statusSync' => $statusSync, 'id_batch' => $id_batch,]);
     }
 
     public function lihat_khs($id_semester)

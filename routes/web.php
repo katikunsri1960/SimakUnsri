@@ -335,6 +335,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
     Route::group(['middleware' => ['role:mahasiswa']], function() {
         Route::prefix('mahasiswa')->group(function () {
             Route::get('/dashboard', [App\Http\Controllers\Mahasiswa\Dashboard\DashboardController::class, 'index'])->name('mahasiswa.dashboard');
+            Route::get('/check-sync', [App\Http\Controllers\Mahasiswa\Dashboard\DashboardController::class, 'check_sync'])->name('mahasiswa.check-sync');
             Route::get('/biodata', [App\Http\Controllers\Mahasiswa\Biodata\BiodataController::class, 'index_rev'])->name('mahasiswa.biodata');
             Route::prefix('ukt')->group(function(){
                 Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\BiayaKuliahController::class, 'index'])->name('mahasiswa.biaya-kuliah');

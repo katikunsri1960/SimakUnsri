@@ -45,3 +45,51 @@ Dashboard
     </div>
 </section>
 @endsection
+@push('js')
+<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var statusSync = @json($statusSync);
+        var idBatch = @json($id_batch); // Assuming you have $idBatch available in your Blade template
+
+        if (statusSync == 1) {
+            checkSync(idBatch);
+        }
+    });
+
+    function checkSync(id_batch) {
+        $.ajax({
+            url: '{{ route('mahasiswa.check-sync') }}',
+            type: 'GET',
+            data: {
+                id_batch: id_batch
+            },
+            success: function(response) {
+                console.log('Sync response:', response);
+                // Handle the response here
+
+
+                // Update the progress bar
+                var progressBar = document.getElementById('sync-progress-bar');
+                progressBar.style.width = response.progress + '%';
+                progressBar.setAttribute('aria-valuenow', response.progress);
+                // set text percentage
+                progressBar.innerHTML = response.progress + '%';
+
+                if (response.progress < 100) {
+                    setTimeout(function() {
+                        checkSync(id_batch);
+                    }, 3000); // Request every 2 seconds
+                } else {
+                
+                    // reload page
+                    location.reload();
+                }
+            },
+            error: function(xhr, status, error) {
+                console.error('Error checking sync:', error);
+            }
+        });
+    }
+</script>
+@endpush
