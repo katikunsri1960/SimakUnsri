@@ -61,10 +61,10 @@ Pembimbingan Aktivitas Mahasiswa
                                 <tr>
 
                                     <td class="text-center align-middle" style="width: 10%">{{$d->nama_prodi}}</td>
-                                    <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal->nim}}<br>{{$d->anggota_aktivitas_personal->nama_mahasiswa}}</td>
+                                    <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nim : ""}}<br>{{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : ''}}</td>
                                     <td class="text-center align-middle">
                                         @if ($d->id_jenis_aktivitas == '5' || $d->id_jenis_aktivitas == '6')
-                                            <span class="badge badge-lg badge-warning">{{$d->nama_jenis_aktivitas}}<br> ({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})</span>
+                                            <span class="badge badge-lg badge-warning">{{$d->nama_jenis_aktivitas}}<br> ({{$d->konversi ? $d->konversi->kode_mata_kuliah : ''}} - {{$d->konversi ? $d->konversi->nama_mata_kuliah : ''}})</span>
                                         @else
                                             <span class="badge badge-lg badge-success">MBKM</span>
                                         @endif
@@ -80,6 +80,7 @@ Pembimbingan Aktivitas Mahasiswa
                                             </ul>
                                     </td>
                                     <td class="text-center align-middle" style="width: 10%">
+                                        @if ($d->bimbing_mahasiswa)
                                         @foreach($d->bimbing_mahasiswa as $db)
                                             @if ($db->approved == 1 && $db->approved_dosen == 0)
                                                 <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-warning">Menunggu Persetujuan Dosen</span></li>
@@ -91,6 +92,8 @@ Pembimbingan Aktivitas Mahasiswa
                                                 <li>Pembimbing {{$db->pembimbing_ke}} : <br><span class="badge bg-warning">{{$db->approved_dosen}}</span></li>
                                             @endif
                                         @endforeach
+                                        @endif
+
                                     </td>
                                     <td class="text-center align-middle text-nowrap">
                                         <div class="row">
