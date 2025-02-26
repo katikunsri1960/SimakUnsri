@@ -26,7 +26,7 @@ class MonitoringController extends Controller
                     ->orderBy('nama_program_studi')
                     ->pluck('id_prodi');
         // $id_prodi_fak=$prodi_fak->pluck('id_prodi');
-        
+
         $data = MonitoringIsiKrs::with(['prodi'])
                 ->join('program_studis', 'monitoring_isi_krs.id_prodi', 'program_studis.id_prodi')
                 ->join('fakultas', 'fakultas.id', 'program_studis.fakultas_id')
@@ -159,8 +159,8 @@ class MonitoringController extends Controller
                     ->orderBy('nama_program_studi')
                     ->pluck('id_prodi');
         // $id_prodi_fak=$prodi_fak->pluck('id_prodi');
-        
-        
+
+
         $db = new LulusDo();
         $jenis_keluar = $db->select('id_jenis_keluar', 'nama_jenis_keluar')->distinct()->get();
 
@@ -340,7 +340,7 @@ class MonitoringController extends Controller
     {
         $prodi = $request->input('prodi');
         $id_prodi = ProgramStudi::find($prodi)->id_prodi;
-        $semester = '20241';
+        $semester = SemesterAktif::first()->id_semester;
 
         $db = new DosenPengajarKelasKuliah();
 
