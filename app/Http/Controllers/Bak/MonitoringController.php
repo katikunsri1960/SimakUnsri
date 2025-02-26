@@ -21,10 +21,12 @@ class MonitoringController extends Controller
 {
     public function pengisian_krs()
     {
+        $semesterAktif = SemesterAktif::first()->id_semester;
         $data = MonitoringIsiKrs::with(['prodi'])->join('program_studis', 'monitoring_isi_krs.id_prodi', 'program_studis.id_prodi')
                 ->join('fakultas', 'fakultas.id', 'program_studis.fakultas_id')
                 ->orderBy('program_studis.fakultas_id')
                 ->orderBy('program_studis.kode_program_studi')
+                ->where('monitoring_isi_krs.id_semester', $semesterAktif)
                 ->get();
 
         return view('bak.monitoring.pengisian-krs.index', [

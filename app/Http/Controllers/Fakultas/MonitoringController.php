@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Fakultas;
 
-use App\Models\Fakultas;
 use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
@@ -26,13 +25,14 @@ class MonitoringController extends Controller
                     ->orderBy('nama_program_studi')
                     ->pluck('id_prodi');
         // $id_prodi_fak=$prodi_fak->pluck('id_prodi');
-
+        $semesterAktif = SemesterAktif::first()->id_semester;
         $data = MonitoringIsiKrs::with(['prodi'])
                 ->join('program_studis', 'monitoring_isi_krs.id_prodi', 'program_studis.id_prodi')
                 ->join('fakultas', 'fakultas.id', 'program_studis.fakultas_id')
                 ->whereIn('program_studis.id_prodi', $id_prodi_fak)
                 ->orderBy('program_studis.id_jenjang_pendidikan')
                 ->orderBy('program_studis.kode_program_studi')
+                ->where('monitoring_isi_krs.id_semester', $semesterAktif)
                 ->get();
                 // dd($id_prodi_fak);
 

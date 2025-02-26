@@ -17,11 +17,15 @@ class MonitoringController extends Controller
     public function pengisian_krs()
     {
         $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
+        $semesterAktif = SemesterAktif::first()->id_semester;
+        
         $data = MonitoringIsiKrs::with(['prodi'])->join('program_studis', 'monitoring_isi_krs.id_prodi', 'program_studis.id_prodi')
                                 ->join('fakultas', 'fakultas.id', 'program_studis.fakultas_id')
                                 ->orderBy('program_studis.fakultas_id')
                                 ->orderBy('program_studis.kode_program_studi')
+                                ->where('monitoring_isi_krs.id_semester', $semesterAktif)
                                 ->get();
+
         return view('universitas.monitoring.pengisian-krs.index', [
             'prodi' => $prodi,
             'data' => $data
@@ -155,7 +159,10 @@ class MonitoringController extends Controller
             ->count();
 
         MonitoringIsiKrs::updateOrCreate(
-            ['id_prodi' => $p->id_prodi],
+            [
+                'id_semester' => $semesterAktif
+                ,'id_prodi' => $p->id_prodi
+            ],
             [
                 'mahasiswa_aktif' => $jumlah_mahasiswa,
                 'mahasiswa_aktif_min_7' => $jumlah_mahasiswa_now,
