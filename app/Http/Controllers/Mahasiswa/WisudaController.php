@@ -40,6 +40,12 @@ class WisudaController extends Controller
                 ->where('id_semester', $semester_aktif->id_semester)
                 ->first();
 
+        if (!$aktivitas_kuliah) {
+            $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
+                ->orderBy('id_semester', 'desc')
+                ->first();
+        }
+
         $kurikulum = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
 
         if ($aktivitas_kuliah->sks_total < $kurikulum->jumlah_sks_lulus) {
@@ -119,15 +125,15 @@ class WisudaController extends Controller
     {
         // dd($semester_aktif->id_semester);
         $id_reg = auth()->user()->fk_id;
-        
+
         $riwayat_pendidikan = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan')->where('id_registrasi_mahasiswa', $id_reg)->first();
-        
+
         $semester_aktif=SemesterAktif::with('semester')->first();
 
         $today = Carbon::now()->toDateString();
 
         $wisuda_ke = ['177', '178', '179', '180'];
-        
+
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
                 ->whereHas('bimbing_mahasiswa', function ($query) {
                     $query->whereNotNull('id_bimbing_mahasiswa');
@@ -196,14 +202,14 @@ class WisudaController extends Controller
         // dd($useptData);
 
         $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
-                    ->select('reg_master.rm_pddk_sd_nama','reg_master.rm_pddk_sd_lokasi', 'reg_master.rm_pddk_sd_thn_lulus', 
-                            'reg_master.rm_pddk_sltp_nama', 'reg_master.rm_pddk_sltp_lokasi', 'reg_master.rm_pddk_sltp_thn_lulus', 
+                    ->select('reg_master.rm_pddk_sd_nama','reg_master.rm_pddk_sd_lokasi', 'reg_master.rm_pddk_sd_thn_lulus',
+                            'reg_master.rm_pddk_sltp_nama', 'reg_master.rm_pddk_sltp_lokasi', 'reg_master.rm_pddk_sltp_thn_lulus',
                             'data_sekolah.nama_sekolah', 'reg_master.rm_pddk_slta_jurusan', 'reg_master.rm_pddk_slta_thn_lulus',
                             'data_sekolah.nama_kabupaten', 'data_sekolah.nama_provinsi', 'data_sekolah.akreditasi_sekolah')
                     ->where('rm_nim', $riwayat_pendidikan->nim)->first();
         // dd($asal_sekolah);
 
-        return view('mahasiswa.wisuda.store', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 'wisuda_ke' => $wisuda_ke, 
+        return view('mahasiswa.wisuda.store', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 'wisuda_ke' => $wisuda_ke,
                     'aktivitas' => $aktivitas, 'usept' => $useptData, 'bebas_pustaka' => $bebas_pustaka, 'asal_sekolah' => $asal_sekolah]);
     }
 
@@ -215,7 +221,7 @@ class WisudaController extends Controller
         $id_reg = auth()->user()->fk_id;
 
         $semester_aktif = SemesterAktif::first();
-        
+
         $riwayat_pendidikan = RiwayatPendidikan::select('*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();

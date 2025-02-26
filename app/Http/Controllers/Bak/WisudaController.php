@@ -108,8 +108,8 @@ class WisudaController extends Controller
     public function peserta()
     {
         $fakultas = Fakultas::select('id','nama_fakultas')->get();
-        $prodi = ProgramStudi::where('status', 'A')->get();
-        $periode = PeriodeWisuda::select('periode')->get();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
         return view('bak.wisuda.peserta.index', [
             'fakultas' => $fakultas,
             'prodi' => $prodi,
