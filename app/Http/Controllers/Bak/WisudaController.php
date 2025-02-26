@@ -139,18 +139,30 @@ class WisudaController extends Controller
             ],
         ]);
 
-        $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'wisudas.id_registrasi_mahasiswa')
-                ->select('wisudas.*');
+        $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
+                ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
+                ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
+                ->select('data_wisuda.*');
 
         if ($req['prodi'] != "*") {
             $data->where('r.id_prodi', $req['prodi']);
         }
 
         if ($req['fakultas'] != "*") {
-            $data->where('r.fakultas_id', $req['fakultas']);
+            $data->where('p.fakultas_id', $req['fakultas']);
         }
 
         $data = $data->get();
+
+        if ($data->isEmpty()) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan',
+                'data' => [],
+            ];
+
+            return response()->json($response);
+        }
 
         $response = [
             'status' => 'success',

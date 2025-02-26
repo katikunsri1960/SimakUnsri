@@ -177,6 +177,8 @@ function getData()
                         item.scor_usept
                     ]).draw(false);
                 });
+            } else if(response.status === 'error') {
+                swal('Error', response.message, 'error');
             } else {
                 swal('Error', 'Gagal mengambil data peserta wisuda', 'error');
             }

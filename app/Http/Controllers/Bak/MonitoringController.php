@@ -316,7 +316,8 @@ class MonitoringController extends Controller
     {
         $prodi = $request->input('prodi');
         $id_prodi = ProgramStudi::find($prodi)->id_prodi;
-        $semester = '20241';
+        $semesterAktif = SemesterAktif::first()->id_semester;
+        $semester = $semesterAktif;
 
         $db = new DosenPengajarKelasKuliah();
 
