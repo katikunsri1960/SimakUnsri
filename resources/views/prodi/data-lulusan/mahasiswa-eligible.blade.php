@@ -59,7 +59,7 @@ Ajuan Wisuda Mahasiswa
                                             <td class="text-center align-middle">{{ $aktivitas->tanggal_selesai }}</td>
                                             <td class="text-center align-middle">{{ $d->transkrip_mahasiswa_sum_sks_mata_kuliah }}</td>
                                             <td class="text-center align-middle">
-                                                @if ($d->jumlah_sks != 1 || $d->masa_studi != 1)
+                                                @if ($d->jumlah_sks != 1 || $d->masa_studi != 1 || $d->status_ipk != 1)
                                                     <span class="badge badge-lg badge-danger">Belum Eligible</span>
                                                 @else
                                                     <span class="badge badge-lg badge-success">Eligible</span>
@@ -67,7 +67,7 @@ Ajuan Wisuda Mahasiswa
                                             </td>
                                             <td class="text-center align-middle">
                                                 <div class="row d-flex justify-content-center">
-                                                    <a href="" class="btn btn-secondary btn-sm my-2" title="Edit" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
+                                                    <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-secondary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
                                                 </div>
                                             </td>
                                         </tr>

@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\ProgramStudi;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -38,10 +43,6 @@ class Wisuda extends Model
         'abstrak_ta',
         'abstrak_file',
         'approved',
-        'alasan_pembatalan',
-        // KOLOM SEMENTARA
-        'bebas_pustaka',
-        'useptData',
     ];
 
     public function prodi()
@@ -54,22 +55,18 @@ class Wisuda extends Model
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
-    public function getIdTanggalSkYudisiumAttribute()
+    public function aktivitas_kuliah()
     {
-        Carbon::setLocale('id');
-        return Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium)->translatedFormat('d F Y');
+        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
-    public function getMasaStudiAttribute()
+    public function aktivitas_mahasiswa()
     {
-        // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
-        $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
-        $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
-        $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
-        $tahun = floor($masa_studi / 12);
-        $bulan = $masa_studi % 12;
-        return $tahun . ' tahun, ' . $bulan . ' bulan';
+        return $this->hasManyThrough(AktivitasMahasiswa::class, AnggotaAktivitasMahasiswa::class, 'id_registrasi_mahasiswa', 'id_aktivitas', 'id_registrasi_mahasiswa', 'id_aktivitas');
     }
 
-
+    public function transkrip_mahasiswa()
+    {
+        return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
 }

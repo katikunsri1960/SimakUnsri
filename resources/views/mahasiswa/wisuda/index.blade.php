@@ -98,7 +98,7 @@ Pendaftaran Wisuda Mahasiswa
                                             @if(!$bebas_pustaka)
                                                 <span class="badge bg-danger">Belum Bebas Pustaka</span>
                                             @else
-                                                <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$bebas_pustaka->file_bebas_pustaka}}" type="button" title="Lihat Bebas Pustaka" target="_blank">{{$bebas_pustaka->file_bebas_pustaka}}</a>
+                                                <a class="btn btn-sm btn-info" href="{{ asset('storage/'. $bebas_pustaka->file_bebas_pustaka) }}" type="button" title="Lihat Repository" target="_blank">{{$bebas_pustaka->link_repo}}</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -109,7 +109,7 @@ Pendaftaran Wisuda Mahasiswa
                                             @if(!$bebas_pustaka)
                                                 <span class="badge bg-danger">Belum Upload Repositroy</span>
                                             @else
-                                                <a class="btn btn-sm btn-success" href="{{$bebas_pustaka->link_repo}}" type="button" title="Lihat Repository" target="_blank">{{$bebas_pustaka->link_repo}}</a>
+                                                <a class="btn btn-sm btn-info" href="{{$bebas_pustaka->link_repo}}" type="button" title="Lihat Repository" target="_blank">{{$bebas_pustaka->link_repo}}</a>
                                             @endif
                                         </td>
                                     </tr>

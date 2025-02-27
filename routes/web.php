@@ -833,7 +833,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             //Route for Lulusan
             Route::prefix('data-lulusan')->group(function(){
                 Route::get('/', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'index'])->name('prodi.data-lulusan.index');
-                // Route::get('/tambah', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'create'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.create');
+                Route::get('/detail/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'detail_mahasiswa'])->name('prodi.data-lulusan.detail');
+                Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
             });
 
             //Route for Report
