@@ -83,9 +83,9 @@ Pendaftaran Wisuda Mahasiswa
                                         <td class="text-left" style="text-align: justify">
                                             @if($riwayat_pendidikan->id_kurikulum === NULL)
                                                 <span class="badge bg-warning rounded" style="padding: 7px">Kurikulum Belum Diatur</span>
-                                            @elseif(isset($usept['class']) && $usept['class'] == "danger")
-                                                {{ isset($usept['score']) ? $usept['score'] : 0 }}<br>
-                                                <span class="badge bg-danger rounded" style="padding: 7px">  
+                                            @elseif($usept)
+                                                <strong>{{ isset($usept['score']) ? $usept['score'] : 0 }}</strong><br>
+                                                <span class="badge bg-{{$usept['class']}} rounded" style="padding: 7px">  
                                                     ({{$usept['status'] ?? 'N/A'}})
                                                 </span>
                                             @endif

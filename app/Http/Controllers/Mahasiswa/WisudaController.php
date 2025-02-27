@@ -42,15 +42,17 @@ class WisudaController extends Controller
                 ->first();
 
         if (!$aktivitas_kuliah) {
-            $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
-                ->orderBy('id_semester', 'desc')
-                ->first();
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Aktivitas kuliah mahasiswa (AKM) anda semeter ini tidak ditemukan, Silahkan hubungi Koor. Prodi!');
         }
 
         $kurikulum = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
 
+        if (!$kurikulum) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Kurikulum Anda tidak ditemukan, Silahkan hubungi Koor. Prodi!');
+        }
+
         if ($aktivitas_kuliah->sks_total < $kurikulum->jumlah_sks_lulus) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal'.$kurikulum->jumlah_sks_lulus.' sks!');
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal '.$kurikulum->jumlah_sks_lulus.' sks!');
         }
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
@@ -71,9 +73,9 @@ class WisudaController extends Controller
 
         // dd($aktivitas_kuliah);
 
-        if (!$aktivitas) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
-        }
+        // if (!$aktivitas) {
+        //     return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
+        // }
 
         $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -155,6 +157,8 @@ class WisudaController extends Controller
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                 ->whereIn('id_jenis_aktivitas', ['2', '3', '1', '22'])
                 ->first();
+
+        // dd($wisuda_ke);
 
         $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
