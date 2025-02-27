@@ -4,9 +4,14 @@ namespace App\Http\Controllers\Bak;
 
 use App\Http\Controllers\Controller;
 use App\Models\Fakultas;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\PeriodeWisuda;
 use App\Models\ProgramStudi;
+use App\Models\Referensi\AllPt;
 use App\Models\Wisuda;
+use App\Models\WisudaChecklist;
+use App\Models\WisudaSyaratAdm;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -115,6 +120,30 @@ class WisudaController extends Controller
             'prodi' => $prodi,
             'periode' => $periode,
         ]);
+    }
+
+    public function peserta_formulir(Wisuda $id)
+    {
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'biodata'])->where('id_registrasi_mahasiswa', $id->id_registrasi_mahasiswa)->first();
+        $pt = AllPt::where('id_perguruan_tinggi', $id->id_perguruan_tinggi)->select('nama_perguruan_tinggi')->first();
+        $syaratAdm = WisudaSyaratAdm::orderBy('urutan')->select('syarat')->get();
+        $checklist = WisudaChecklist::orderBy('urutan')->select('checklist')->get();
+
+        Carbon::setLocale('id');
+        $now = Carbon::now()->format('d-m-Y');
+        $now = Carbon::createFromFormat('d-m-Y', $now)->translatedFormat('d F Y');
+
+        $pdf = PDF::loadview('bak.wisuda.peserta.formulir', [
+            'riwayat' => $riwayat,
+            'pt' => $pt,
+            'data' => $id,
+            'syaratAdm' => $syaratAdm,
+            'checklist' => $checklist,
+            'now' => $now,
+         ])
+         ->setPaper('legal', 'portrait');
+
+         return $pdf->stream('Formulir_pendaftara_wisuda-'.$riwayat->nim.'.pdf');
     }
 
     public function peserta_data(Request $request)
