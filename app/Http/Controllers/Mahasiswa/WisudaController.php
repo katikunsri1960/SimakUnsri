@@ -20,6 +20,7 @@ use App\Models\Connection\CourseUsept;
 use App\Models\Mahasiswa\PengajuanCuti;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PeriodeWisuda;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
@@ -132,7 +133,12 @@ class WisudaController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        $wisuda_ke = ['177', '178', '179', '180'];
+        $wisuda_ke = PeriodeWisuda::where('tanggal_mulai_daftar', '<=', $today)
+                    ->where('tanggal_akhir_daftar', '>=', $today)
+                    ->where('is_active', '1')
+                    ->get();
+
+                    // dd($wisuda_ke);
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
                 ->whereHas('bimbing_mahasiswa', function ($query) {
@@ -196,9 +202,9 @@ class WisudaController extends Controller
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        // if (!$bebas_pustaka) {
-        //     return redirect()->back()->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silahkan menghubungi Admin Perpustakaan !!');
-        // }
+        if (!$bebas_pustaka) {
+            return redirect()->back()->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silahkan menghubungi Admin Perpustakaan !!');
+        }
         // dd($useptData);
 
         $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
@@ -246,6 +252,10 @@ class WisudaController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['2', '3', '1', '22'])
                 ->first();
         // dd($akm);
+        if($request->wisuda_ke == '0') {
+            return redirect()->back()->with('error',
+                'Tidak ada periode Wisuda yang tersedia !!');
+        }
 
         // Validate request data
         $request->validate([
@@ -258,16 +268,18 @@ class WisudaController extends Controller
             'abstrak_file' => 'required|file|mimes:pdf|max:1024',
         ]);
 
-        $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
-        . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
+        
 
-        $alamat = str_replace(', ,', ',', $alamat);
+        // $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
+        // . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
+
+        // $alamat = str_replace(', ,', ',', $alamat);
 
         // dd($request->wisuda_ke);
 
         // Generate file name
-        $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . time() . '.' . $request->file('pas_foto')->getClientOriginalExtension();
-        $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . time() . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
+        $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('pas_foto')->getClientOriginalExtension();
+        $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
 
         // Simpan file ke folder public/storage/wisuda/abstrak dan wisuda/pas_foto
         $pasFotoPath = $request->file('pas_foto')->storeAs('wisuda/pas_foto', $pasFotoName, 'public');

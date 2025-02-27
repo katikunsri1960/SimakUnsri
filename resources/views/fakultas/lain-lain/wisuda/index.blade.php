@@ -87,24 +87,24 @@ Pendaftaran Wisuda Fakultas
                                         <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} - {{$d->prodi->nama_program_studi}}</td>
                                         <td class="text-start align-middle text-nowrap">
                                             @if(!$d->bebas_pustaka)
-                                                <span class="badge bg-danger">Belum Bebas Pustaka</span>
+                                                <span class="badge rounded bg-danger" style="padding: 8px">Belum Bebas Pustaka</span>
                                             @else
-                                                <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$d->bebas_pustaka->file_bebas_pustaka}}" type="button" title="Lihat Bebas Pustaka" target="_blank">{{$d->bebas_pustaka->file_bebas_pustaka}}</a>
+                                                <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$d->bebas_pustaka->file_bebas_pustaka}}" type="button" target="_blank">Lihat Bebas Pustaka</a>
                                             @endif
                                         </td>
                                         <td class="text-start align-middle text-nowrap">
                                             @if(!$d->bebas_pustaka)
-                                                <span class="badge bg-danger">Belum Upload Repositroy</span>
+                                                <span class="badge rounded bg-danger" style="padding: 8px">Belum Upload Repositroy</span>
                                             @else
-                                                <a class="btn btn-sm btn-success" href="{{$d->bebas_pustaka->link_repo}}" type="button" title="Lihat Repository" target="_blank">{{$d->bebas_pustaka->link_repo}}</a>
+                                                <a class="btn btn-sm btn-success" href="{{$d->bebas_pustaka->link_repo}}" type="button" target="_blank">Lihat Repository</a>
                                             @endif
                                         </td>
                                         <td class="text-left align-middle text-nowrap">
                                             @if(!$d->riwayat_pendidikan->id_kurikulum)
-                                                <span class="badge bg-warning">Kurikulum Belum Diatur</span>
+                                                <span class="badge rounded bg-warning" style="padding: 8px">Kurikulum Belum Diatur</span>
                                             @elseif(isset($d->useptData['class']) && $d->useptData['class'] == "danger")
                                                 {{ isset($d->useptData['score']) ? $d->useptData['score'] : 0 }}<br>
-                                                <span class="badge bg-danger">  
+                                                <span class="badge rounded bg-danger" style="padding: 8px">  
                                                     ({{$d->useptData['status'] ?? 'N/A'}})
                                                 </span>
                                             @endif
@@ -112,30 +112,35 @@ Pendaftaran Wisuda Fakultas
                                         <td class="text-start align-middle">{{$d->no_sk_yudisium}}</td>
                                         <td class="text-start align-middle text-nowrap">{{$d->tgl_sk_yudisium}}</td>
                                         <td class="text-start align-middle text-nowrap">
-                                            @php
-                                                $years = floor($d->lama_studi / 12);
-                                                $months = $d->lama_studi % 12;
-                                            @endphp
-                                            {{$years}} tahun {{$months}} bulan
+                                            @if ($d->tgl_sk_yudisium)
+                                                @php
+                                                    $years = floor($d->lama_studi / 12);
+                                                    $months = $d->lama_studi % 12;
+                                                @endphp
+                                                {{$years}} tahun {{$months}} bulan
+                                            @else
+                                                <span class="badge rounded bg-danger" style="padding: 8px">Tanggal SK Yudisium Belum Diisi</span>
+                                            @endif
+                                            
                                         </td>
 
                                         
                                         
                                         <td class="text-center align-middle" style="width:10%">
                                             @if($d->approved == 0)
-                                                <span class="badge badge-xl badge-warning-light mb-5">Belum Disetujui Koor. Prodi</span>
+                                                <span class="badge rounded badge-warning" style="padding: 8px">Belum Disetujui Koor. Prodi</span>
                                             @elseif($d->approved == 1)
-                                                <span class="badge badge-xl badge-primary-light mb-5">Disetujui Koor. Prodi</span>
+                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Koor. Prodi</span>
                                             @elseif($d->approved == 2)
-                                                <span class="badge badge-xl badge-primary-light mb-5">Disetujui Fakultas</span>
+                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Fakultas</span>
                                             @elseif($d->approved == 3)
-                                                <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
+                                                <span class="badge rounded badge-success" style="padding: 8px">Disetujui BAK</span>
                                             @elseif($d->approved == 97)
-                                                <span class="badge badge-xl badge-danger-light mb-5">Ditolak Koor. Prodi</span>
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Koor. Prodi</span>
                                             @elseif($d->approved == 98)
-                                                <span class="badge badge-xl badge-danger-light mb-5">Ditolak Fakultas</span>
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Fakultas</span>
                                             @elseif($d->approved == 99)
-                                                <span class="badge badge-xl badge-danger-light mb-5">Ditolak BAK</span>
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak BAK</span>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle text-nowrap">
