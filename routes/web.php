@@ -835,6 +835,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'index'])->name('prodi.data-lulusan.index');
                 Route::get('/detail/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'detail_mahasiswa'])->name('prodi.data-lulusan.detail');
                 Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
+                Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
             });
 
             //Route for Report

@@ -284,6 +284,20 @@ class MahasiswaEligibleController extends Controller
         }
     }
 
+    public function decline_ajuan(Request $request, $id)
+    {
+        $data = $request->validate([
+            'alasan_pembatalan' => 'required'
+        ]);
+
+        Wisuda::where('id',$id)->update([
+            'approved' => 97,
+            'alasan_pembatalan' => $request->alasan_pembatalan
+        ]);
+
+        return redirect()->back()->with('success', 'Data berhasil dibatalkan');
+    }
+
     private function getYearMonthDifference($tanggal_masuk) {
         $start = new DateTime($tanggal_masuk);
         $end = new DateTime();

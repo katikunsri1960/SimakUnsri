@@ -20,7 +20,6 @@ Ajuan Wisuda Mahasiswa
 
     </div>
 </div>
-
 <section class="content">
     <div class="row">
         <div class="col-12">
@@ -48,6 +47,7 @@ Ajuan Wisuda Mahasiswa
                                 @endphp
 
                                 @foreach ($data as $d)
+                                @include('prodi.data-lulusan.pembatalan-ajuan')
                                     @foreach ($d->aktivitas_mahasiswa as $aktivitas)
                                         <tr>
                                             <td class="text-center align-middle">{{ $no_a++ }}</td>
@@ -59,15 +59,35 @@ Ajuan Wisuda Mahasiswa
                                             <td class="text-center align-middle">{{ $aktivitas->tanggal_selesai }}</td>
                                             <td class="text-center align-middle">{{ $d->transkrip_mahasiswa_sum_sks_mata_kuliah }}</td>
                                             <td class="text-center align-middle">
-                                                @if ($d->jumlah_sks != 1 || $d->masa_studi != 1 || $d->status_ipk != 1)
-                                                    <span class="badge badge-lg badge-danger">Belum Eligible</span>
-                                                @else
-                                                    <span class="badge badge-lg badge-success">Eligible</span>
-                                                @endif
+                                                <div class="row">
+                                                    @if ($d->jumlah_sks != 1 || $d->masa_studi != 1 || $d->status_ipk != 1)
+                                                        <span class="badge badge-lg badge-danger">Belum Eligible</span>
+                                                    @else
+                                                        <span class="badge badge-lg badge-success">Eligible</span>
+                                                    @endif
+                                                </div>
+                                                <div class="row mt-10">
+                                                    @if($d->approved == 0)
+                                                        <span class="badge badge-lg badge-warning mb-5">Belum Disetujui Koor. Prodi</span>
+                                                    @elseif($d->approved == 1)
+                                                        <span class="badge badge-lg badge-primary mb-5">Disetujui Koor. Prodi</span>
+                                                    @elseif($d->approved == 2)
+                                                        <span class="badge badge-lg badge-primary mb-5">Disetujui Fakultas</span>
+                                                    @elseif($d->approved == 3)
+                                                        <span class="badge badge-lg badge-success mb-5">Disetujui BAK</span>
+                                                    @elseif($d->approved == 97)
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi</span>
+                                                    @elseif($d->approved == 98)
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas</span>
+                                                    @elseif($d->approved == 99)
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak BAK</span>
+                                                    @endif
+                                                </div>
                                             </td>
                                             <td class="text-center align-middle">
                                                 <div class="row d-flex justify-content-center">
                                                     <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-secondary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
+                                                    <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Wisuda" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
                                                 </div>
                                             </td>
                                         </tr>
