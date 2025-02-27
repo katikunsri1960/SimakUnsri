@@ -189,8 +189,8 @@ class MataKuliah extends Model
         } elseif ($riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14'){
             $sks_max = $riwayat_pendidikan->sks_maks_pmm;
         } elseif ($jenjang_pendidikan->id_jenjang_pendidikan == '35' ||
-            $jenjang_pendidikan->id_jenjang_pendidikan == '40' || 
-            $jenjang_pendidikan->id_jenjang_pendidikan == '37' 
+            $jenjang_pendidikan->id_jenjang_pendidikan == '40' ||
+            $jenjang_pendidikan->id_jenjang_pendidikan == '37'
         ) {
             $sks_max = 18;
         }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
@@ -226,7 +226,7 @@ class MataKuliah extends Model
                 $sks_max = 0;
             }
         }
-    // dd($sks_max);
+    // dd($sks_max); 
         return $sks_max;
 
     }

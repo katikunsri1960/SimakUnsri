@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Wisuda extends Model
 {
     use HasFactory;
     protected $table = 'data_wisuda';
+    protected $appends = ['id_tanggal_sk_yudisium'];
 
     // App\Models\Wisuda.php
     protected $fillable = [
@@ -50,6 +52,23 @@ class Wisuda extends Model
     public function riwayat_pendidikan()
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function getIdTanggalSkYudisiumAttribute()
+    {
+        Carbon::setLocale('id');
+        return Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium)->translatedFormat('d F Y');
+    }
+
+    public function getMasaStudiAttribute()
+    {
+        // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
+        $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
+        $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
+        $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
+        $tahun = floor($masa_studi / 12);
+        $bulan = $masa_studi % 12;
+        return $tahun . ' tahun, ' . $bulan . ' bulan';
     }
 
 

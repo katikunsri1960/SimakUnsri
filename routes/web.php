@@ -129,6 +129,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('peserta')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'peserta'])->name('bak.wisuda.peserta');
                     Route::get('/data', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data'])->name('bak.wisuda.peserta.data');
+                    Route::get('/formulir/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_formulir'])->name('bak.wisuda.peserta.formulir');
                 });
 
                 Route::prefix('registrasi-ijazah')->group(function(){
