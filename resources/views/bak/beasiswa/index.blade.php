@@ -51,6 +51,8 @@ BEASISWA
                                     <th class="text-center align-middle">Nama</th>
                                     <th class="text-center align-middle">Angkatan</th>
                                     <th class="text-center align-middle">Jenis Beasiswa</th>
+                                    <th class="text-center align-middle">IPS</th>
+                                    <th class="text-center align-middle">IPK</th>
                                     <th class="text-center align-middle">Pembiayaan</th>
                                     <th class="text-center align-middle">Tanggal Mulai</th>
                                     <th class="text-center align-middle">Tanggal Selesai</th>
@@ -94,11 +96,15 @@ BEASISWA
                 data: function (d) {
                     d.prodi = $('#prodi').val();
                     d.jenis_beasiswa = $('#jenis_beasiswa').val();
+                    // d.aktivitas_kuliah = $('#aktivitas_kuliah').val();
+                    // console.log(d.jenis_beasiswa);
+                    
                 },
                 error: function (xhr, error, thrown) {
                     alert('An error occurred. ' + thrown);
                 }
             },
+            
             columns: [
                 {
                     data: null,
@@ -113,6 +119,28 @@ BEASISWA
                 {data: 'nama_mahasiswa', name: 'nama_mahasiswa', class: 'text-start', searchable: true, orderData: [2]},
                 {data: 'mahasiswa.angkatan', name: 'mahasiswa.angkatan', class: "text-center align-middle", searchable: true, orderData: [3]},
                 {data: 'jenis_beasiswa.nama_jenis_beasiswa', name: 'jenis_beasiswa.nama_jenis_beasiswa', class: 'text-center', searchable: false, sortable:false},
+                {
+                    data: 'aktivitas_kuliah',
+                    name: 'aktivitas_kuliah',
+                    class: 'text-center',
+                    searchable: true,
+                    render: function(data, type, row) {
+                        return data.map(function(aktivitas) {
+                            return aktivitas.ips;
+                        }).join(', ');
+                    }
+                },
+                {
+                    data: 'aktivitas_kuliah',
+                    name: 'aktivitas_kuliah',
+                    class: 'text-center',
+                    searchable: true,
+                    render: function(data, type, row) {
+                        return data.map(function(aktivitas) {
+                            return aktivitas.ipk;
+                        }).join(', ');
+                    }
+                },
                 {data: 'nama_pembiayaan', name: 'nama_pembiayaan', class: 'text-center', searchable: false, sortable:false},
                 {data: 'id_tanggal_mulai_beasiswa', name: 'id_tanggal_mulai_beasiswa', searchable: true, orderData: [4]},
                 {data: 'id_tanggal_akhir_beasiswa', name: 'id_tanggal_akhir_beasiswa', searchable: true, orderData: [5]},
