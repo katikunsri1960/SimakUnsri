@@ -138,7 +138,7 @@ class WisudaController extends Controller
         $wisuda_ke = PeriodeWisuda::where('tanggal_mulai_daftar', '<=', $today)
                     ->where('tanggal_akhir_daftar', '>=', $today)
                     ->where('is_active', '1')
-                    ->get();
+                    ->first();
 
                     // dd($wisuda_ke);
 
@@ -225,6 +225,17 @@ class WisudaController extends Controller
 
     public function store(Request $request)
     {
+        // Validate request data
+        $request->validate([
+            'nik' => 'required',
+            'lokasi_kuliah' => 'required',
+            'wisuda_ke' => 'required',
+            'kosentrasi' => 'required',
+            'abstrak_ta' => 'required|max:500',
+            'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500',
+            'abstrak_file' => 'required|file|mimes:pdf|max:1024',
+        ]);
+
         $perguruan_tinggi= AllPt::where('kode_perguruan_tinggi', '001009')->first();
 
         // Define variable
@@ -260,19 +271,6 @@ class WisudaController extends Controller
             return redirect()->back()->with('error',
                 'Tidak ada periode Wisuda yang tersedia !!');
         }
-
-        // Validate request data
-        $request->validate([
-            'nik' => 'required',
-            'lokasi_kuliah' => 'required',
-            'wisuda_ke' => 'required',
-            'kosentrasi' => 'required',
-            'abstrak_ta' => 'required|max:500',
-            'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500',
-            'abstrak_file' => 'required|file|mimes:pdf|max:1024',
-        ]);
-
-        
 
         // $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
         // . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
