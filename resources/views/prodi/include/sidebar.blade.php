@@ -90,9 +90,6 @@
                             <li class="{{request()->routeIs('prodi.data-akademik.sidang-mahasiswa') || request()->routeIs('prodi.data-akademik.sidang-mahasiswa.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.sidang-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Sidang Mahasiswa</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-akademik.yudisium-mahasiswa') || request()->routeIs('prodi.data-akademik.yudisium-mahasiswa.*') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-akademik.yudisium-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Yudisium Mahasiswa</a>
-                            </li>
                             <li class="{{request()->routeIs('prodi.data-akademik.nilai-transfer-rpl') || request()->routeIs('prodi.data-akademik.nilai-transfer-rpl.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.nilai-transfer-rpl')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai Transfer Pendidikan</a>
                             </li>
@@ -119,10 +116,7 @@
                                 <a href="{{route('prodi.data-aktivitas.aktivitas-pa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas PA</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-lomba') || request()->routeIs('prodi.data-aktivitas.aktivitas-lomba.*') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-aktivitas.aktivitas-lomba')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas Lomba</a>
-                            </li>
-                            <li class="{{request()->routeIs('prodi.data-aktivitas.aktivitas-organisasi') || request()->routeIs('prodi.data-aktivitas.aktivitas-organisasi.*') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-aktivitas.aktivitas-organisasi')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i> Aktivitas Organisasi</a>
+                                <a href="{{route('prodi.data-aktivitas.aktivitas-lomba')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Prestasi Mahasiswa</a>
                             </li>
                         </ul>
                     </li>
@@ -144,14 +138,8 @@
                             <li class="{{request()->routeIs('prodi.report.kemahasiswaan') ? 'active' : ''}}"><a href="{{route('prodi.report.kemahasiswaan')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Data Kemahasiswaan</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.report.mahasiswa-aktif') ? 'active' : ''}}">
-                                <a href="{{route('prodi.report.mahasiswa-aktif')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Mahasiswa Aktif</a>
-                            </li>
-                            <li class="{{request()->routeIs('prodi.report.perkuliahan') ? 'active' : ''}}">
-                                <a href="{{route('prodi.report.perkuliahan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Kuliah Mahasiswa</a>
-                            </li>
                             <li class="{{request()->routeIs('prodi.report.aktivitas-mahasiswa') ? 'active' : ''}}">
-                                <a href="{{route('prodi.report.aktivitas-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Aktivitas Mahasiswa</a>
+                                <a href="{{route('prodi.report.aktivitas-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Aktivitas</a>
                             </li>
                         </ul>
                     </li>
