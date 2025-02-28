@@ -143,15 +143,19 @@ function getData()
         success: function (response) {
 
             if (response.status === 'success') {
+                console.log(response.data);
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
+                    var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
+                    url_berkas = url_berkas.replace('ID', item.id);
+                    var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     table.row.add([
                         index + 1,
-                        item.periode,
+                        item.wisuda_ke,
                         item.status,
                         item.ijazah_terakhir,
-                        item.berkas_registrasi_wisuda,
+                        berkasButton,
                         item.nomor_registrasi,
                         item.foto,
                         item.fakultas,
@@ -177,6 +181,7 @@ function getData()
                         item.scor_usept
                     ]).draw(false);
                 });
+
             } else if(response.status === 'error') {
                 swal('Error', response.message, 'error');
             } else {
