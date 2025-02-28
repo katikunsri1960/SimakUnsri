@@ -20,6 +20,7 @@ use App\Models\Connection\CourseUsept;
 use App\Models\Mahasiswa\PengajuanCuti;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PeriodeWisuda;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
@@ -38,6 +39,7 @@ class WisudaController extends Controller
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $semester_aktif->id_semester)
+                ->orderBy('id_semester', 'desc')
                 ->first();
 
         if (!$aktivitas_kuliah) {
@@ -46,10 +48,16 @@ class WisudaController extends Controller
                 ->first();
         }
 
+        // dd($aktivitas_kuliah);
+
         $kurikulum = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
 
+        if (!$kurikulum) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Kurikulum Anda tidak ditemukan, Silahkan hubungi Koor. Prodi!');
+        }
+
         if ($aktivitas_kuliah->sks_total < $kurikulum->jumlah_sks_lulus) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal'.$kurikulum->jumlah_sks_lulus.' sks!');
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal '.$kurikulum->jumlah_sks_lulus.' sks!');
         }
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
@@ -132,7 +140,12 @@ class WisudaController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        $wisuda_ke = ['177', '178', '179', '180'];
+        $wisuda_ke = PeriodeWisuda::where('tanggal_mulai_daftar', '<=', $today)
+                    ->where('tanggal_akhir_daftar', '>=', $today)
+                    ->where('is_active', '1')
+                    ->first();
+
+                    // dd($wisuda_ke);
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
                 ->whereHas('bimbing_mahasiswa', function ($query) {
@@ -149,6 +162,8 @@ class WisudaController extends Controller
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                 ->whereIn('id_jenis_aktivitas', ['2', '3', '1', '22'])
                 ->first();
+
+        // dd($wisuda_ke);
 
         $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -190,15 +205,15 @@ class WisudaController extends Controller
             ];
         }
 
-        // if($useptData['class'] == 'danger') {
-        //     return redirect()->route('mahasiswa.wisuda.index')->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
-        // }
+        if($useptData['class'] == 'danger') {
+            return redirect()->back()->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
+        }
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        // if (!$bebas_pustaka) {
-        //     return redirect()->back()->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silahkan menghubungi Admin Perpustakaan !!');
-        // }
+        if (!$bebas_pustaka) {
+            return redirect()->back()->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silahkan menghubungi Admin Perpustakaan !!');
+        }
         // dd($useptData);
 
         $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
@@ -215,6 +230,17 @@ class WisudaController extends Controller
 
     public function store(Request $request)
     {
+        // Validate request data
+        $request->validate([
+            'nik' => 'required',
+            'lokasi_kuliah' => 'required',
+            'wisuda_ke' => 'required',
+            'kosentrasi' => 'required',
+            'abstrak_ta' => 'required|max:500',
+            'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500',
+            'abstrak_file' => 'required|file|mimes:pdf|max:1024',
+        ]);
+
         $perguruan_tinggi= AllPt::where('kode_perguruan_tinggi', '001009')->first();
 
         // Define variable
@@ -246,28 +272,21 @@ class WisudaController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['2', '3', '1', '22'])
                 ->first();
         // dd($akm);
+        if($request->wisuda_ke == '0') {
+            return redirect()->back()->with('error',
+                'Tidak ada periode Wisuda yang tersedia !!');
+        }
 
-        // Validate request data
-        $request->validate([
-            'nik' => 'required',
-            'lokasi_kuliah' => 'required',
-            'wisuda_ke' => 'required',
-            'kosentrasi' => 'required',
-            'abstrak_ta' => 'required|max:500',
-            'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500',
-            'abstrak_file' => 'required|file|mimes:pdf|max:1024',
-        ]);
+        // $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
+        // . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
 
-        $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
-        . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
-
-        $alamat = str_replace(', ,', ',', $alamat);
+        // $alamat = str_replace(', ,', ',', $alamat);
 
         // dd($request->wisuda_ke);
 
         // Generate file name
-        $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . time() . '.' . $request->file('pas_foto')->getClientOriginalExtension();
-        $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . time() . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
+        $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('pas_foto')->getClientOriginalExtension();
+        $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
 
         // Simpan file ke folder public/storage/wisuda/abstrak dan wisuda/pas_foto
         $pasFotoPath = $request->file('pas_foto')->storeAs('wisuda/pas_foto', $pasFotoName, 'public');

@@ -179,6 +179,7 @@
                             <span>Pendaftaran Wisuda</span>
                         </a>
                     </li>
+
                     {{-- <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
                         <a href="{{route('fakultas.wisuda.index')}}">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span
