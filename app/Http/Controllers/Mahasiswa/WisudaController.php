@@ -38,12 +38,10 @@ class WisudaController extends Controller
                     ->first();
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $semester_aktif->id_semester)
+                ->orderBy('id_semester', 'desc')
                 ->first();
 
-        if (!$aktivitas_kuliah) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Aktivitas kuliah mahasiswa (AKM) anda semeter ini tidak ditemukan, Silahkan hubungi Koor. Prodi!');
-        }
+                // dd($aktivitas_kuliah);
 
         $kurikulum = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
 
@@ -73,9 +71,9 @@ class WisudaController extends Controller
 
         // dd($aktivitas_kuliah);
 
-        // if (!$aktivitas) {
-        //     return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
-        // }
+        if (!$aktivitas) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
+        }
 
         $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -200,9 +198,9 @@ class WisudaController extends Controller
             ];
         }
 
-        // if($useptData['class'] == 'danger') {
-        //     return redirect()->route('mahasiswa.wisuda.index')->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
-        // }
+        if($useptData['class'] == 'danger') {
+            return redirect()->back()->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
+        }
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 

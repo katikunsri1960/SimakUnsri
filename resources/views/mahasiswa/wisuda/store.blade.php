@@ -219,11 +219,7 @@ Pendaftaran Wisuda Mahasiswa
                                         <select id="wisuda_ke" name="wisuda_ke" class="form-select" required>
                                             <option value="">-- Pilih Angkatan Wisuda --</option>
                                             @if ($wisuda_ke)
-                                                @foreach($wisuda_ke as $w)
-                                                    {{-- @if($w)) --}}
-                                                        <option value="{{$w->periode}}">{{$w->periode}}</option>
-                                                    {{-- @endif --}}
-                                                @endforeach
+                                                <option value="{{$wisuda_ke->periode}}">{{$wisuda_ke->periode}}</option>
                                             @else
                                                 <option value="0">Tidak ada periode Wisuda</option>
                                             @endif
