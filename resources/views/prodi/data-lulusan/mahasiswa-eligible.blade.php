@@ -61,7 +61,7 @@ Ajuan Wisuda Mahasiswa
                                             <td class="text-center align-middle">
                                                 <div class="row">
                                                     @if($d->approved == 0)
-                                                        @if ($d->jumlah_sks != 1 || $d->masa_studi != 1 || $d->status_ipk != 1)
+                                                        @if ($d->jumlah_sks != 1 || $d->status_masa_studi != 1 || $d->status_ipk != 1 || $d->status_semester_pendek != 1)
                                                             <span class="badge badge-lg badge-danger">Belum Eligible</span>
                                                         @else
                                                             <span class="badge badge-lg badge-success">Eligible</span>

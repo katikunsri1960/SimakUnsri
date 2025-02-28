@@ -40,6 +40,17 @@ class MahasiswaEligibleController extends Controller
             'Sp2' => 6
         ];
 
+        // Define required Masa Studi for each "jenjang_pendidikan"
+        $requiredIPK = [
+            'D3'  => 2,
+            'S1'  => 2,
+            'S2'  => 3,
+            'S3'  => 3,
+            'Profesi' => 3,
+            'Sp1' => 3,
+            'Sp2' => 3
+        ];
+
         $data = Wisuda::with([
                 'riwayat_pendidikan',
                 'transkrip_mahasiswa',
@@ -92,19 +103,20 @@ class MahasiswaEligibleController extends Controller
 
             $hitung_masa_studi = $this->getYearMonthDifference($tanggal_masuk);
 
-            $d->masa_studi = isset($requiredMasaStudi[$jenjang]) && $hitung_masa_studi <= $requiredMasaStudi[$jenjang] ? '1' : '0';
+            $d->status_masa_studi = isset($requiredMasaStudi[$jenjang]) && $hitung_masa_studi <= $requiredMasaStudi[$jenjang] ? '1' : '0';
 
             foreach($d->transkrip_mahasiswa as $dt){
                 $temp = $temp + ($dt->nilai_indeks * $dt->sks_mata_kuliah);
                 $d->ipk = $temp/$sks_transkrip;
-                $d->status_ipk = $temp/$sks_transkrip == $akm_terakhir->ipk ? '1' : '0';
+                $d->status_ipk = isset($requiredIPK[$jenjang]) && ($akm_terakhir->ipk >= $requiredIPK[$jenjang] && $temp/$sks_transkrip == $akm_terakhir->ipk) ? '1' : '0';
             }
+
+            $akm_semester_pendek = AktivitasKuliahMahasiswa::whereRaw("RIGHT(id_semester, 1) = '3'")->where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)->sum('sks_semester');
+
+            $d->status_semester_pendek = $akm_semester_pendek <= 9 ? '1' : '0';
         }
 
         // dd($data);
-
-        
-
         return view('prodi.data-lulusan.mahasiswa-eligible', ['data' => $data ]);
     }
 
@@ -235,7 +247,7 @@ class MahasiswaEligibleController extends Controller
 
         $hitung_masa_studi = $this->getYearMonthDifference($tanggal_masuk);
 
-        $data->masa_studi = isset($requiredMasaStudi[$jenjang]) && $hitung_masa_studi <= $requiredMasaStudi[$jenjang] ? '1' : '0';
+        $data->status_masa_studi = isset($requiredMasaStudi[$jenjang]) && $hitung_masa_studi <= $requiredMasaStudi[$jenjang] ? '1' : '0';
 
         foreach($data->transkrip_mahasiswa as $dt){
             $temp = $temp + ($dt->nilai_indeks * $dt->sks_mata_kuliah);
