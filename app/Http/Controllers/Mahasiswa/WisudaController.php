@@ -38,10 +38,17 @@ class WisudaController extends Controller
                     ->first();
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $semester_aktif->id_semester)
                 ->orderBy('id_semester', 'desc')
                 ->first();
 
-                // dd($aktivitas_kuliah);
+        if (!$aktivitas_kuliah) {
+            $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
+                ->orderBy('id_semester', 'desc')
+                ->first();
+        }
+
+        // dd($aktivitas_kuliah);
 
         $kurikulum = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
 
