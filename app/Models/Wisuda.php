@@ -43,6 +43,10 @@ class Wisuda extends Model
         'abstrak_ta',
         'abstrak_file',
         'approved',
+        'alasan_pembatalan',
+        // KOLOM SEMENTARA
+        'bebas_pustaka',
+        'useptData',
     ];
 
     public function prodi()
@@ -69,4 +73,23 @@ class Wisuda extends Model
     {
         return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
+
+    public function getIdTanggalSkYudisiumAttribute()
+    {
+        Carbon::setLocale('id');
+        return Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium)->translatedFormat('d F Y');
+    }
+
+    public function getMasaStudiAttribute()
+    {
+        // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
+        $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
+        $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
+        $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
+        $tahun = floor($masa_studi / 12);
+        $bulan = $masa_studi % 12;
+        return $tahun . ' tahun, ' . $bulan . ' bulan';
+    }
+
+
 }
