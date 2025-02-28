@@ -70,6 +70,7 @@
 
         .table-pdf {
             border: 1px solid;
+            margin: 0;
             padding-left: 5px;
             padding-right: 5px;
         }
