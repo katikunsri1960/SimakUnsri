@@ -60,15 +60,12 @@ Ajuan Wisuda Mahasiswa
                                             <td class="text-center align-middle">{{ $d->transkrip_mahasiswa_sum_sks_mata_kuliah }}</td>
                                             <td class="text-center align-middle">
                                                 <div class="row">
-                                                    @if ($d->jumlah_sks != 1 || $d->masa_studi != 1 || $d->status_ipk != 1)
-                                                        <span class="badge badge-lg badge-danger">Belum Eligible</span>
-                                                    @else
-                                                        <span class="badge badge-lg badge-success">Eligible</span>
-                                                    @endif
-                                                </div>
-                                                <div class="row mt-10">
                                                     @if($d->approved == 0)
-                                                        <span class="badge badge-lg badge-warning mb-5">Belum Disetujui Koor. Prodi</span>
+                                                        @if ($d->jumlah_sks != 1 || $d->masa_studi != 1 || $d->status_ipk != 1)
+                                                            <span class="badge badge-lg badge-danger">Belum Eligible</span>
+                                                        @else
+                                                            <span class="badge badge-lg badge-success">Eligible</span>
+                                                        @endif
                                                     @elseif($d->approved == 1)
                                                         <span class="badge badge-lg badge-primary mb-5">Disetujui Koor. Prodi</span>
                                                     @elseif($d->approved == 2)

@@ -82,10 +82,10 @@ Pendaftaran Wisuda Mahasiswa
                                         <td class="text-center">:</td>
                                         <td class="text-left" style="text-align: justify">
                                             @if($riwayat_pendidikan->id_kurikulum === NULL)
-                                                <span class="badge bg-warning">Kurikulum Belum Diatur</span>
-                                            @elseif(isset($usept['class']) && $usept['class'] == "danger")
-                                                {{ isset($usept['score']) ? $usept['score'] : 0 }}<br>
-                                                <span class="badge bg-danger">  
+                                                <span class="badge bg-warning rounded" style="padding: 7px">Kurikulum Belum Diatur</span>
+                                            @elseif($usept)
+                                                <strong>{{ isset($usept['score']) ? $usept['score'] : 0 }}</strong><br>
+                                                <span class="badge bg-{{$usept['class']}} rounded" style="padding: 7px">  
                                                     ({{$usept['status'] ?? 'N/A'}})
                                                 </span>
                                             @endif
@@ -98,7 +98,7 @@ Pendaftaran Wisuda Mahasiswa
                                             @if(!$bebas_pustaka)
                                                 <span class="badge bg-danger">Belum Bebas Pustaka</span>
                                             @else
-                                                <a class="btn btn-sm btn-info" href="{{ asset('storage/'. $bebas_pustaka->file_bebas_pustaka) }}" type="button" title="Lihat Repository" target="_blank">{{$bebas_pustaka->link_repo}}</a>
+                                                <a class="btn btn-sm btn-success" href="{{asset($bebas_pustaka->file_bebas_pustaka)}}" type="button" target="_blank">Lihat Bebas Pustaka</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -109,7 +109,7 @@ Pendaftaran Wisuda Mahasiswa
                                             @if(!$bebas_pustaka)
                                                 <span class="badge bg-danger">Belum Upload Repositroy</span>
                                             @else
-                                                <a class="btn btn-sm btn-info" href="{{$bebas_pustaka->link_repo}}" type="button" title="Lihat Repository" target="_blank">{{$bebas_pustaka->link_repo}}</a>
+                                                <a class="btn btn-sm btn-success" href="{{$bebas_pustaka->link_repo}}" type="button" target="_blank">Lihat Repository</a>
                                             @endif
                                         </td>
                                     </tr>
@@ -118,9 +118,9 @@ Pendaftaran Wisuda Mahasiswa
                                         <td class="text-center">:</td>
                                         <td class="text-left" style="text-align: justify">{{$aktivitas_kuliah->sks_total}} SKS<br>
                                             @if ($aktivitas_kuliah->sks_total >= $kurikulum->jumlah_sks_lulus)
-                                                <span class="badge bg-success"> (Memenuhi Syarat)</span>
+                                                <span class="badge rounded bg-success" style="padding: 7px"> (Memenuhi Syarat)</span>
                                             @else
-                                                <span class="badge bg-danger"> (Tidak Memenuhi Syarat SKS Lulus)</span>
+                                                <span class="badge rounded bg-danger" style="padding: 7px"> (Tidak Memenuhi Syarat SKS Lulus)</span>
                                             @endif
                                         </td>
                                     </tr>
@@ -195,9 +195,9 @@ Pendaftaran Wisuda Mahasiswa
                                                 {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
                                                 <td class="text-left" style="text-align: justify">
                                                     @if(!$wisuda)
-                                                        <span class="badge bg-danger">Belum Bebas Pustaka</span>
+                                                        <span class="badge bg-danger rounded" style="padding: 8px">Belum Bebas Pustaka</span>
                                                     @else
-                                                        <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$wisuda->abstrak_file}}" type="button" title="Lihat File Abstrak" target="_blank">{{$wisuda->abstrak_file}}</a>
+                                                        <a class="btn btn-sm btn-success" href="{{ asset($wisuda->abstrak_file) }}" type="button" target="_blank">Lihat File Abstak</a>
                                                     @endif
                                                 </td>
                                             </tr>

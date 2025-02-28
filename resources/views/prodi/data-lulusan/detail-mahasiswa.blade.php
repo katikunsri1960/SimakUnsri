@@ -178,16 +178,22 @@ Dashboard
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data->transkrip_mahasiswa as $t)
+                                    @if($data->transkrip_mahasiswa)
+                                        @foreach ($data->transkrip_mahasiswa as $t)
+                                            <tr>
+                                                <td>{{$t->kode_mata_kuliah}}</td>
+                                                <td>{{$t->nama_mata_kuliah}}</td>
+                                                <td>{{$t->sks_mata_kuliah}}</td>
+                                                <td>{{$t->nilai_angka}}</td>
+                                                <td>{{$t->nilai_indeks}}</td>
+                                                <td>{{$t->nilai_huruf}}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <td>{{$t->kode_mata_kuliah}}</td>
-                                            <td>{{$t->nama_mata_kuliah}}</td>
-                                            <td>{{$t->sks_mata_kuliah}}</td>
-                                            <td>{{$t->nilai_angka}}</td>
-                                            <td>{{$t->nilai_indeks}}</td>
-                                            <td>{{$t->nilai_huruf}}</td>
+                                            <td colspan="6">TIDAK ADA DATA</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </tbody>
                                 <tfoot>
                                     <tr>
@@ -220,15 +226,21 @@ Dashboard
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data->aktivitas_kuliah as $akm)
+                                    @if($data->aktivitas_kuliah)
+                                        @foreach ($data->aktivitas_kuliah as $akm)
+                                            <tr>
+                                                <td>{{$akm->nama_semester}}</td>
+                                                <td>{{$akm->sks_semester}}</td>
+                                                <td>{{$akm->sks_total}}</td>
+                                                <td>{{$akm->ips}}</td>
+                                                <td>{{$akm->ipk}}</td>
+                                            </tr>
+                                        @endforeach
+                                    @else
                                         <tr>
-                                            <td>{{$akm->nama_semester}}</td>
-                                            <td>{{$akm->sks_semester}}</td>
-                                            <td>{{$akm->sks_total}}</td>
-                                            <td>{{$akm->ips}}</td>
-                                            <td>{{$akm->ipk}}</td>
+                                            <td colspan="5">TIDAK ADA DATA</td>
                                         </tr>
-                                    @endforeach
+                                    @endif
                                 </tbody>
                             </table>
                         </div>

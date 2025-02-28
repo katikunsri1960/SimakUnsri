@@ -49,9 +49,6 @@ class MahasiswaEligibleController extends Controller
                 'aktivitas_mahasiswa.semester'
             ])
             ->where('id_prodi', $prodi_id)
-            ->whereHas('aktivitas_mahasiswa', function ($query) {
-                $query->whereIn('id_jenis_aktivitas', ['3', '4', '22']);
-            })
             ->whereHas('aktivitas_mahasiswa.nilai_konversi', function ($query) {
                 $query->where('nilai_angka', '!=', 0);
             })
@@ -159,9 +156,6 @@ class MahasiswaEligibleController extends Controller
                 'aktivitas_mahasiswa.semester'
             ])
             ->where('id', $id)
-            ->whereHas('aktivitas_mahasiswa', function ($query) {
-                $query->whereIn('id_jenis_aktivitas', ['3', '4', '22']);
-            })
             ->whereHas('aktivitas_mahasiswa.nilai_konversi', function ($query) {
                 $query->where('nilai_angka', '!=', 0);
             })
