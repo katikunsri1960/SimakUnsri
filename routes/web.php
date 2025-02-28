@@ -830,6 +830,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/aktivitas-organisasi', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_organisasi'])->name('prodi.data-aktivitas.aktivitas-organisasi');
             });
 
+            //Route for Lulusan
+            Route::prefix('data-lulusan')->group(function(){
+                Route::get('/', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'index'])->name('prodi.data-lulusan.index');
+                Route::get('/detail/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'detail_mahasiswa'])->name('prodi.data-lulusan.detail');
+                Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
+                Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
+            });
+
             //Route for Report
             Route::prefix('report')->group(function(){
                 Route::get('/kemahasiswaan', [App\Http\Controllers\Prodi\Report\ReportKemahasiswaanController::class, 'index'])->name('prodi.report.kemahasiswaan');

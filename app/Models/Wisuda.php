@@ -4,6 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\ProgramStudi;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -54,6 +59,21 @@ class Wisuda extends Model
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
+    public function aktivitas_kuliah()
+    {
+        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function aktivitas_mahasiswa()
+    {
+        return $this->hasManyThrough(AktivitasMahasiswa::class, AnggotaAktivitasMahasiswa::class, 'id_registrasi_mahasiswa', 'id_aktivitas', 'id_registrasi_mahasiswa', 'id_aktivitas');
+    }
+
+    public function transkrip_mahasiswa()
+    {
+        return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
     public function getIdTanggalSkYudisiumAttribute()
     {
         Carbon::setLocale('id');
@@ -70,6 +90,5 @@ class Wisuda extends Model
         $bulan = $masa_studi % 12;
         return $tahun . ' tahun, ' . $bulan . ' bulan';
     }
-
 
 }
