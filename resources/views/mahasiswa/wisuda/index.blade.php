@@ -98,7 +98,7 @@ Pendaftaran Wisuda Mahasiswa
                                             @if(!$bebas_pustaka)
                                                 <span class="badge bg-danger">Belum Bebas Pustaka</span>
                                             @else
-                                                <a class="btn btn-sm btn-success" href="{{asset($bebas_pustaka->file_bebas_pustaka)}}" type="button" target="_blank">Lihat Bebas Pustaka</a>
+                                                <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$bebas_pustaka->file_bebas_pustaka}}" type="button" target="_blank">Lihat Bebas Pustaka</a>
                                             @endif
                                         </td>
                                     </tr>
