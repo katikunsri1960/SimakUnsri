@@ -265,6 +265,7 @@ class PerkuliahanController extends Controller
             'M' => 'Kampus Merdeka',
             'C' => 'Cuti',
             'N' => 'Non-Aktif',
+            'U' => 'Menunggu Ujian',
         ];
 
         $nama_status_mahasiswa = $statusMap[$validatedData['status_mahasiswa_id']];
@@ -379,6 +380,7 @@ class PerkuliahanController extends Controller
                 'C' => 'Cuti',
                 'M' => 'Kampus Merdeka',
                 'N' => 'Non-Aktif',
+                'U' => 'Menunggu Ujian',
             ];
             
             $validated['nama_status_mahasiswa'] = $statusMapping[$validated['id_status_mahasiswa']] ?? null;
