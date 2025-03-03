@@ -37,6 +37,7 @@
                             <option value="M">Kampus Merdeka</option>
                             <option value="C">Cuti</option>
                             <option value="N">Non-Aktif</option>
+                            <option value="U">Menunggu Ujian</option>
                         </select>
                     </div>
                 </div>
