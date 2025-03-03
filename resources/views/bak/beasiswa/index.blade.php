@@ -137,7 +137,7 @@ BEASISWA
                     searchable: true,
                     render: function(data, type, row) {
                         return data.map(function(aktivitas) {
-                            return aktivitas.sks_semester;
+                            return aktivitas.ipk;
                         }).join(', ');
                     }
                 },
