@@ -252,18 +252,19 @@ class KrsController extends Controller
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
-        // dd($id_test, $riwayat_pendidikan->nim);
-        $tagihan = Tagihan::with('pembayaran')
-        // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-        // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
-        ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+        try {
+            // dd($id_test, $riwayat_pendidikan->nim);
+            $tagihan = Tagihan::with('pembayaran')
+            // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
+            // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+            ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
             // ->whereNotIn('nomor_pembayaran', '08051182126003')
-            ->where(
-                'kode_periode',
-                $semester_aktif->id_semester
-                // -1
-            )
+            ->where('kode_periode', $semester_aktif->id_semester)
+            // -1
             ->first();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan: ' . $e->getMessage());
+        }
 
         // dd($beasiswa, $tagihan);
 
