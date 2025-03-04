@@ -263,11 +263,10 @@ class KrsController extends Controller
             // -1
             ->first();
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
         }
 
         // dd($beasiswa, $tagihan);
-
 
         $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
         // dd($cuti);
@@ -280,8 +279,6 @@ class KrsController extends Controller
             ->where('id_registrasi_mahasiswa', $id_reg)
             ->whereNotIn('nilai_huruf', ['F', ''])
             ->first();
-
-
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
         ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
@@ -327,10 +324,6 @@ class KrsController extends Controller
         ->where('id_registrasi_mahasiswa', $id_reg)
             ->where('id_semester', $semester_aktif->id_semester)
             ->count();
-
-        // $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-        //     ->where('id_jenis_daftar', '14')
-        //     ->count();
 
         $non_gelar = $riwayat_pendidikan->id_jenis_daftar == '14' ? 1 : 0;
 
