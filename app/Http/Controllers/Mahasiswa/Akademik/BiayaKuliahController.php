@@ -35,10 +35,14 @@ class BiayaKuliahController extends Controller
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
         // dd($beasiswa);
 
-        $tagihan = Tagihan::with('pembayaran')
+        try {
+            $tagihan = Tagihan::with('pembayaran')
                 ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
                 ->where('tagihan.kode_periode', $semester_aktif->id_semester)
                 ->first();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+        }
 
         if ($tagihan) {
             $tagihan->waktu_berakhir = Carbon::parse($tagihan->waktu_berakhir)->translatedFormat('d F Y');

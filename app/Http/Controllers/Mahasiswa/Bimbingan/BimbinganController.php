@@ -80,7 +80,7 @@ class BimbinganController extends Controller
             }
 
         } catch (\Exception $e) {
-            return redirect()->back()->withErrors('Terjadi kesalahan saat memeriksa pembayaran: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
         }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
