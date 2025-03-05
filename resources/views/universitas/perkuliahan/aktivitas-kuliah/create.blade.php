@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
             <h5 class="modal-title" id="createModalLabel">
-                    Tambah Pengajuan Cuti
+                    Tambah Aktivitas Kuliah Mahasiswa
             </h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -37,6 +37,7 @@
                             <option value="M">Kampus Merdeka</option>
                             <option value="C">Cuti</option>
                             <option value="N">Non-Aktif</option>
+                            <option value="U">Menunggu Ujian</option>
                         </select>
                     </div>
                 </div>

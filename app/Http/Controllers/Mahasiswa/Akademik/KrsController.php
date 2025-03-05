@@ -252,21 +252,21 @@ class KrsController extends Controller
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
-        // dd($id_test, $riwayat_pendidikan->nim);
-        $tagihan = Tagihan::with('pembayaran')
-        // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-        // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
-        ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+        try {
+            // dd($id_test, $riwayat_pendidikan->nim);
+            $tagihan = Tagihan::with('pembayaran')
+            // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
+            // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+            ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
             // ->whereNotIn('nomor_pembayaran', '08051182126003')
-            ->where(
-                'kode_periode',
-                $semester_aktif->id_semester
-                // -1
-            )
+            ->where('kode_periode', $semester_aktif->id_semester)
+            // -1
             ->first();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+        }
 
         // dd($beasiswa, $tagihan);
-
 
         $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
         // dd($cuti);
@@ -279,8 +279,6 @@ class KrsController extends Controller
             ->where('id_registrasi_mahasiswa', $id_reg)
             ->whereNotIn('nilai_huruf', ['F', ''])
             ->first();
-
-
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
         ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
@@ -326,10 +324,6 @@ class KrsController extends Controller
         ->where('id_registrasi_mahasiswa', $id_reg)
             ->where('id_semester', $semester_aktif->id_semester)
             ->count();
-
-        // $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-        //     ->where('id_jenis_daftar', '14')
-        //     ->count();
 
         $non_gelar = $riwayat_pendidikan->id_jenis_daftar == '14' ? 1 : 0;
 

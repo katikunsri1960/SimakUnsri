@@ -53,14 +53,21 @@ class BimbinganController extends Controller
                     ->where('id_semester', $semester_select)
                     ->get();
 
+        // Pengecekan apakah $data kosong atau tidak
+        if ($data->isEmpty()) {
+            return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
+        }
+        
+        
         // PENGECEKAN STATUS PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
 
-        $tagihan = Tagihan::with('pembayaran')
+        try {
+            $tagihan = Tagihan::with('pembayaran')
             ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
             ->where('kode_periode', $semester_select)
             ->first();
-        
+            
             if($tagihan){
                 if($tagihan->pembayaran){
                     $pembayaran = $tagihan->pembayaran;
@@ -71,25 +78,15 @@ class BimbinganController extends Controller
             }else{
                 $pembayaran = NULL;
             }
-        // $pembayaran = 0;
 
-        // dd($pembayaran, $data, $beasiswa);
-
-        // Pengecekan apakah $data kosong atau tidak
-        if ($data->isEmpty()) {
-            return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
         }
-        // if ($data->isEmpty()) {
-        //     session()->flash('error', 'Data Aktivitas Mahasiswa tidak ditemukan.');
-        // }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
         if ($pembayaran == NULL && $beasiswa == 0) {
             session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
-        // if ($pembayaran == 0) {
-        //     return redirect()->back()->withErrors('Anda belum menyelesaikan pembayaran untuk semester ini!');
-        // }
 
         // dd($tagihan);
         return view('mahasiswa.bimbingan.tugas-akhir.index', [

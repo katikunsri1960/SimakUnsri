@@ -10,7 +10,7 @@
                                 <div class="col-xl-12">
                                     <div class="box box-body mb-0 bg-white">
                                         {{-- @if($krs_regular->isNotEmpty() || $krs_merdeka->isNotEmpty() || $krs_akt->isNotEmpty()) --}}
-                                        @if($total_krs_submitted > 0)
+                                        @if($total_krs_submitted > 0 && $semester_select == $semester_aktif->id_semester)
                                         <div class="row mb-10">
                                             <span class="text-danger text-center">*Silahkan klik tombol "Ajukan KRS" agar pengajuan KRS dapat disetujui Dosen PA!</span>
                                         </div>
