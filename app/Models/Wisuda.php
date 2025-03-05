@@ -91,4 +91,13 @@ class Wisuda extends Model
         return $tahun . ' tahun, ' . $bulan . ' bulan';
     }
 
+    public function getStatusAttribute()
+    {
+        $status = [
+            '0' => 'Belum Diapprove',
+            '1' => 'Approve',
+            '2' => 'Pembatalan',
+        ];
+    }
+
 }

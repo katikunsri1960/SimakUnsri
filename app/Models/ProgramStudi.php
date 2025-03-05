@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Referensi\GelarLulusan;
@@ -37,5 +38,10 @@ class ProgramStudi extends Model
     public function gelar_lulusan()
     {
         return $this->hasOne(GelarLulusan::class, 'id_prodi', 'id_prodi');
+    }
+
+    public function aktivitas_kuliah()
+    {
+        return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_prodi', 'id_prodi');
     }
 }

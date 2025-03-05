@@ -1020,6 +1020,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'lulus_do'])->name('univ.monitoring.lulus-do');
                     Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'lulus_do_data'])->name('univ.monitoring.lulus-do.data');
                 });
+
+                Route::prefix('upload-feeder')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'upload_feeder'])->name('univ.monitoring.upload-feeder');
+                    Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'upload_feeder_data'])->name('univ.monitoring.upload-feeder.data');
+                });
             });
 
             Route::prefix('feeder-upload')->group(function(){

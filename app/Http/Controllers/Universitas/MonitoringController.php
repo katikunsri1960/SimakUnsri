@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\MonitoringIsiKrs;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\ProgramStudi;
+use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -14,11 +16,89 @@ use Illuminate\Support\Facades\Cache;
 
 class MonitoringController extends Controller
 {
+
+    public function upload_feeder()
+    {
+        $semester = Semester::orderBy('id_semester', 'desc')->get();
+
+        $semester = '20241';
+
+        $result = [];
+
+        $prodi = ProgramStudi::where('status', 'A')
+            ->select('id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'nama_program_studi')
+            ->withCount([
+                'aktivitas_kuliah as akm_feeder_1' => function ($query) use ($semester) {
+                    $query->where('id_semester', $semester)->where('feeder', 1);
+                },
+                'aktivitas_kuliah as akm_feeder_0' => function ($query) use ($semester) {
+                    $query->where('id_semester', $semester)->where('feeder', 0);
+                }
+            ])
+            ->get();
+
+        foreach ($prodi as $p) {
+            $result[] = [
+                'id_prodi' => $p->id_prodi,
+                'kode_program_studi' => $p->kode_program_studi,
+                'nama_prodi' => $p->nama_jenjang_pendidikan . ' - ' . $p->nama_program_studi,
+                'akm' => $p->akm,
+                'akm_feeder_1' => $p->akm_feeder_1,
+                'akm_feeder_0' => $p->akm_feeder_0,
+            ];
+        }
+
+        // dd($result);
+
+        return view('universitas.monitoring.upload-feeder.index', [
+            'semester' => $semester
+        ]);
+    }
+
+    public function upload_feeder_data(Request $request)
+    {
+        $data = $request->validate([
+            'semester' => 'required|exists:semesters,id_semester',
+        ]);
+
+        $semester = $data['semester'];
+
+        $result = [];
+
+        $prodi = ProgramStudi::where('status', 'A')
+            ->select('id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'nama_program_studi')
+            ->withCount([
+                'aktivitasKuliahMahasiswa as akm' => function ($query) use ($semester) {
+                    $query->where('id_semester', $semester);
+                },
+                'aktivitasKuliahMahasiswa as akm_feeder_1' => function ($query) use ($semester) {
+                    $query->where('id_semester', $semester)->where('feeder', 1);
+                },
+                'aktivitasKuliahMahasiswa as akm_feeder_0' => function ($query) use ($semester) {
+                    $query->where('id_semester', $semester)->where('feeder', 0);
+                }
+            ])
+            ->get();
+
+        foreach ($prodi as $p) {
+            $result[] = [
+                'id_prodi' => $p->id_prodi,
+                'kode_program_studi' => $p->kode_program_studi,
+                'nama_prodi' => $p->nama_jenjang_pendidikan . ' - ' . $p->nama_program_studi,
+                'akm' => $p->akm,
+                'akm_feeder_1' => $p->akm_feeder_1,
+                'akm_feeder_0' => $p->akm_feeder_0,
+            ];
+        }
+
+        return response()->json($result);
+    }
+
     public function pengisian_krs()
     {
         $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
         $semesterAktif = SemesterAktif::first()->id_semester;
-        
+
         $data = MonitoringIsiKrs::with(['prodi'])->join('program_studis', 'monitoring_isi_krs.id_prodi', 'program_studis.id_prodi')
                                 ->join('fakultas', 'fakultas.id', 'program_studis.fakultas_id')
                                 ->orderBy('program_studis.fakultas_id')
