@@ -284,19 +284,27 @@ class PerkuliahanController extends Controller
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
         // dd($beasiswa);
         $pembayaran_manual=PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
+        
+        try {
+            $tagihan = Tagihan::with('pembayaran')
+                ->whereIn('nomor_pembayaran', [$riwayat->nim])
+                ->where('kode_periode', $validatedData['id_semester'])
+                ->first();
 
-        $tagihan = Tagihan::with('pembayaran')
-            ->whereIn('nomor_pembayaran', [$riwayat->nim])
-            ->where('kode_periode', $validatedData['id_semester'])
-            ->first();
+            if ($beasiswa) {
+                $biaya_kuliah_smt = '0.00'; // Jika ada di tabel pembayaran_manual atau beasiswa
+            } elseif ($pembayaran_manual){
+                $biaya_kuliah_smt = number_format($pembayaran_manual->nominal_ukt, 2, '.', '');
+            }
+            else {
+                $biaya_kuliah_smt = number_format(optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, 2, '.', '');
+            }
 
-        if ($beasiswa) {
-            $biaya_kuliah_smt = '0.00'; // Jika ada di tabel pembayaran_manual atau beasiswa
-        } elseif ($pembayaran_manual){
-            $biaya_kuliah_smt = number_format($pembayaran_manual->nominal_ukt, 2, '.', '');
-        }
-        else {
-            $biaya_kuliah_smt = number_format(optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, 2, '.', '');
+        } catch (\Throwable $th) {
+            //throw $th;
+            return redirect()->back()->withErrors([
+                'error' => 'Data Tagihan Tidak Ditemukan!. '.$th->getMessage()
+            ])->withInput();
         }
 
         try {
