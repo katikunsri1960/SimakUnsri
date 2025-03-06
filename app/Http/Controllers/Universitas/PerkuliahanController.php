@@ -251,7 +251,7 @@ class PerkuliahanController extends Controller
             'sks_total' => 'required|numeric',
             'id_pembiayaan' => 'required|in:1,2,3',
             'id_semester' => 'required|exists:semesters,id_semester',
-            'status_mahasiswa_id' => 'required|in:A,M,C,N',
+            'status_mahasiswa_id' => 'required|exists:status_mahasiswas,id_status_mahasiswa',
         ]);
 //      dd($validatedData);
 
@@ -373,7 +373,7 @@ class PerkuliahanController extends Controller
 
         try {
             $aktivitasKuliah = AktivitasKuliahMahasiswa::findOrFail($id);
-            
+
             // Ubah id_status_mahasiswa ke nama_status_mahasiswa
             $statusMapping = [
                 'A' => 'Aktif',
@@ -382,9 +382,9 @@ class PerkuliahanController extends Controller
                 'N' => 'Non-Aktif',
                 'U' => 'Menunggu Ujian',
             ];
-            
+
             $validated['nama_status_mahasiswa'] = $statusMapping[$validated['id_status_mahasiswa']] ?? null;
-            
+
             $aktivitasKuliah->update($validated);
 
             return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui']);
