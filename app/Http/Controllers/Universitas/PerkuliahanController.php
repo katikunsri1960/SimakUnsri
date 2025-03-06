@@ -368,7 +368,7 @@ class PerkuliahanController extends Controller
             'sks_total' => 'required|numeric',
             'id_pembiayaan' => 'required|in:1,2,3',
             'id_semester' => 'required|exists:semesters,id_semester',
-            'id_status_mahasiswa' => 'required|in:A,M,C,N',
+            'id_status_mahasiswa' => 'required|exists:status_mahasiswas,id_status_mahasiswa',
         ]);
 
         try {
