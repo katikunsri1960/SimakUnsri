@@ -23,7 +23,18 @@ Penundaan Bayar
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
+                <div class="box-header with-border d-flex justify-content-between">
+                    <div class="d-flex justify-content-start">
+                        <form action="{{route('univ.p-bayar')}}" method="get" id="semesterForm">
+                            <select name="id_semester" id="id_semester" class="form-select"
+                                onchange="document.getElementById('semesterForm').submit();">
+                                <option value="">-- Pilih Semester --</option>
+                                @foreach ($semester as $s)
+                                <option value="{{$s->id_semester}}" {{ request('id_semester') == $s->id_semester ? 'selected' : '' }}>{{$s->nama_semester}}</option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
                         data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
