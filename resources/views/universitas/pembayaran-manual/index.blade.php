@@ -11,7 +11,8 @@ Pembayaran Manual
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">Pembayaran Manual</li>
                     </ol>
                 </nav>
@@ -23,19 +24,26 @@ Pembayaran Manual
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
+                <div class="box-header with-border d-flex justify-content-between">
+                    <div class="d-flex justify-content-start">
+                        <form action="{{route('univ.pembayaran-manual')}}" method="get" id="semesterForm">
+                            <select name="id_semester" id="id_semester" class="form-select"
+                                onchange="document.getElementById('semesterForm').submit();">
+                                <option value="">-- Pilih Semester --</option>
+                                @foreach ($semester as $s)
+                                <option value="{{$s->id_semester}}" {{ request('id_semester') == $s->id_semester ? 'selected' : '' }}>{{$s->nama_semester}}</option>
+                                @endforeach
+                            </select>
+                        </form>
+                    </div>
                     <div class="d-flex justify-content-end">
                         <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
-                        data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
+                            data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data</button>
                         <span class="divider-line mx-1"></span>
                         <!-- Modal trigger button -->
-                        <button
-                            type="button"
-                            class="btn btn-primary waves-effect waves-light"
-                            data-bs-toggle="modal"
-                            data-bs-target="#uploadModal"
-                        >
-                        <i class="fa fa-upload me-2"></i>Upload Data
+                        <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal"
+                            data-bs-target="#uploadModal">
+                            <i class="fa fa-upload me-2"></i>Upload Data
                         </button>
                     </div>
                 </div>
@@ -45,66 +53,76 @@ Pembayaran Manual
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
-                          <thead>
-                             <tr>
-                                <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">Semester</th>
-                                <th class="text-center align-middle">NIM</th>
-                                <th class="text-center align-middle">Nama Mahasiswa</th>
-                                <th class="text-center align-middle">Nominal UKT</th>
-                                <th class="text-center align-middle">Status</th>
-                                <th class="text-center align-middle">Terakhir Update</th>
-                                <th class="text-center align-middle">AKSI</th>
-                             </tr>
-                          </thead>
-                          <tbody>
-                            @foreach ($data as $d)
-                            <tr>
-                                <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
-                                <td class="text-center align-middle">{{$d->nim}}</td>
-                                <td class="text-start align-middle">{{$d->riwayat ? $d->riwayat->nama_mahasiswa : ''}}</td>
-                                <td class="text-end align-middle">{{$d->nf_nominal_ukt}}</td>
-                                <td class="text-center align-middle">
-                                    @php
-                                    switch ($d->status) {
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Nama Mahasiswa</th>
+                                    <th class="text-center align-middle">Nominal UKT</th>
+                                    <th class="text-center align-middle">Status</th>
+                                    <th class="text-center align-middle">Terakhir Update</th>
+                                    <th class="text-center align-middle">AKSI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $d)
+                                <tr>
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
+                                    <td class="text-center align-middle">{{$d->nim}}</td>
+                                    <td class="text-start align-middle">{{$d->riwayat ? $d->riwayat->nama_mahasiswa :
+                                        ''}}</td>
+                                    <td class="text-end align-middle">{{$d->nf_nominal_ukt}}</td>
+                                    <td class="text-center align-middle">
+                                        @php
+                                        switch ($d->status) {
                                         case 0:
-                                            $text = 'warning';
-                                            break;
+                                        $text = 'warning';
+                                        break;
                                         case 1:
-                                            $text = 'success';
-                                            break;
+                                        $text = 'success';
+                                        break;
                                         default:
-                                            $text = 'danger';
-                                            break;
-                                    }
-                                @endphp
-                                <span class="badge bg-{{$text}}">
-                                    {{$d->status_text}}
-                                </span>
+                                        $text = 'danger';
+                                        break;
+                                        }
+                                        @endphp
+                                        <span class="badge bg-{{$text}}">
+                                            {{$d->status_text}}
+                                        </span>
 
-                                </td>
-                                <td class="text-center align-middle">{{date('d-m-Y', strtotime($d->tanggal_pembayaran))}}</td>
-                                <td class="text-center align-middle">
-                                    {{-- <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editRuang({{$d}}, {{$d->id}})">
-                                        <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
-                                    </button> --}}
-                                    <button type="button" class="btn btn-rounded bg-danger my-2" title="Delete Data" onclick="deleteRuang({{$d->id}})">
-                                        <i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i>
-                                    </button>
-                                    <form action="{{route('univ.pembayaran-manual.delete', $d->id)}}" method="POST" id="delete-form-{{$d->id}}">
-                                        @csrf
-                                        @method('delete')
-                                        {{-- <button type="submit" class="btn btn-rounded bg-danger" title="Delete Data">
-                                            <i class="fa fa-trash"><span class="path1"></span><span class="path2"></span></i>
+                                    </td>
+                                    <td class="text-center align-middle">{{date('d-m-Y',
+                                        strtotime($d->tanggal_pembayaran))}}</td>
+                                    <td class="text-center align-middle">
+                                        {{-- <button class="btn btn-rounded bg-warning" title="Edit Data"
+                                            data-bs-toggle="modal" data-bs-target="#editModal"
+                                            onclick="editRuang({{$d}}, {{$d->id}})">
+                                            <i class="fa fa-pencil-square-o"><span class="path1"></span><span
+                                                    class="path2"></span></i>
                                         </button> --}}
-                                    </form>
-                                </td>
-                            </tr>
-                            @endforeach
-                          </tbody>
-                      </table>
-                      </div>
+                                        <button type="button" class="btn btn-rounded bg-danger my-2" title="Delete Data"
+                                            onclick="deleteRuang({{$d->id}})">
+                                            <i class="fa fa-trash"><span class="path1"></span><span
+                                                    class="path2"></span></i>
+                                        </button>
+                                        <form action="{{route('univ.pembayaran-manual.delete', $d->id)}}" method="POST"
+                                            id="delete-form-{{$d->id}}">
+                                            @csrf
+                                            @method('delete')
+                                            {{-- <button type="submit" class="btn btn-rounded bg-danger"
+                                                title="Delete Data">
+                                                <i class="fa fa-trash"><span class="path1"></span><span
+                                                        class="path2"></span></i>
+                                            </button> --}}
+                                        </form>
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
             </div>
@@ -118,7 +136,7 @@ Pembayaran Manual
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/js/cleave.min.js')}}"></script>
 <script>
-     $(function() {
+    $(function() {
         // "use strict";
 
         var nominal = new Cleave('#nominal_ukt', {
