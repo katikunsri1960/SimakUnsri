@@ -70,7 +70,7 @@ class PerkuliahanController extends Controller
     private function sync2($act, $limit, $offset, $order, $job, $name, $model, $primary)
     {
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();
-        $semester = Semester::pluck('id_semester')->toArray();
+        $semester = Semester::whereNotIn('id_semester', ['20241','20242'])->pluck('id_semester')->toArray();
         $semester = array_chunk($semester, 6);
         $semester = array_map(function ($value) {
             return "id_semester IN ('" . implode("','", $value) . "')";
@@ -284,7 +284,7 @@ class PerkuliahanController extends Controller
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
         // dd($beasiswa);
         $pembayaran_manual=PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
-        
+
         try {
             $tagihan = Tagihan::with('pembayaran')
                 ->whereIn('nomor_pembayaran', [$riwayat->nim])
