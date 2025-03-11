@@ -406,31 +406,31 @@ class SidangMahasiswaController extends Controller
 
     public function decline_sidang(Request $request, $id)
     {
+        $data = $request->validate([
+            'alasan_pembatalan' => 'required'
+        ]);
+
         $data_aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id', $id)->first();
         $nilai_akhir = KonversiAktivitas::where('id_aktivitas', $data_aktivitas->id_aktivitas)->where('nim', $data_aktivitas->anggota_aktivitas_personal->nim)->first();
         $penguji = UjiMahasiswa::where('id_aktivitas', $data_aktivitas->id_aktivitas)->where('status_uji_mahasiswa', 2)->where('feeder', 0)->first();
 
-        $data = $request->validate([
-            'alasan_pembatalan' => 'required'
-        ]);
+        if($nilai_akhir){
+            return redirect()->back()->with('error', 'Sidang Sudah di Nilai.');
+        }
+
+        if($penguji){
+            return redirect()->back()->with('error', 'Dosen Penguji Sudah Menyetujui.');
+        }
         
         try {
             DB::beginTransaction();
+            
+            AktivitasMahasiswa::where('id',$id)->update([
+                'approve_sidang' => 0,
+                'alasan_pembatalan_sidang' => $request->alasan_pembatalan
+            ]);
 
-            if(!$nilai_akhir){
-                if(!$penguji){
-                    AktivitasMahasiswa::where('id',$id)->update([
-                        'approve_sidang' => 0,
-                        'alasan_pembatalan_sidang' => $request->alasan_pembatalan
-                    ]);
-
-                    UjiMahasiswa::where('id_aktivitas', $data_aktivitas->id_aktivitas)->delete();
-                }else{
-                    return redirect()->back()->with('error', 'Dosen Penguji Sudah Menyetujui.');
-                }
-            }else{
-                return redirect()->back()->with('error', 'Sidang Sudah di Nilai.');
-            }
+            UjiMahasiswa::where('id_aktivitas', $data_aktivitas->id_aktivitas)->delete();
 
             DB::commit();
 
