@@ -728,7 +728,9 @@ class PembimbingMahasiswaController extends Controller
         // dd($data);
         $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
 
-        $today = Carbon::now()->locale('id')->isoFormat('D MMMM YYYY');
+        $today = Carbon::parse($data_nilai->created_at)->locale('id')->isoFormat('D MMMM YYYY');
+
+        // $today = Carbon::now()->locale('id')->isoFormat('D MMMM YYYY');
 
         $pdf = PDF::loadview('dosen.pembimbing.non-tugas-akhir.dpna', [
             'data' => $data,
