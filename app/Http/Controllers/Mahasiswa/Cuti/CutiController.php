@@ -166,8 +166,8 @@ class CutiController extends Controller
             $akm_sebelum = null;
         }
 
-        $jumlah_sks_lulus = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
-                        ->pluck('jumlah_sks_lulus')->first();
+        $jumlah_sks_wajib = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
+                        ->pluck('jumlah_sks_wajib')->first();
 
         $jumlah_sks_diambil = intval(
                         AktivitasKuliahMahasiswa::where('id_semester', $akm_sebelum)
@@ -176,11 +176,11 @@ class CutiController extends Controller
                         ->first()
                     );
 
-                    // dd($jumlah_sks_lulus,
+                    // dd($jumlah_sks_wajib,
                     // $jumlah_sks_diambil, $akm_sebelum);
         $showAlert4 = false;
         
-        if ($jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
+        if ($jumlah_sks_diambil < ($jumlah_sks_wajib/2)) {
             $showAlert4 = true;
         } 
         
