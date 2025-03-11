@@ -1,6 +1,6 @@
 @extends('layouts.doc-nologo')
 @section('title')
-Nilai Konversi Aktivitas
+DPNA Konversi Aktivitas
 @endsection
 @section('content')
 @include('swal')
@@ -19,7 +19,7 @@ Nilai Konversi Aktivitas
 
         <tr>
             <td class="text-12 text-center text-upper" height="10" colspan="3">
-                <strong>NILAI KONVERSI AKTIVITAS</strong>
+                <strong>DPNA KONVERSI AKTIVITAS</strong>
             </td>
         </tr>
     </table>
