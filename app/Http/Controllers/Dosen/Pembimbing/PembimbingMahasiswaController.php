@@ -29,6 +29,8 @@ use App\Models\PembayaranManualMahasiswa;
 use App\Models\Connection\Tagihan;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -366,7 +368,7 @@ class PembimbingMahasiswaController extends Controller
                 $sudah_bayar = 0; // Not paid
             } else {
                 $sudah_bayar = 1; // Paid
-            }                      
+            }
 
         }catch (\Exception $e) {
             return redirect()->back()->with('error', 'Koneksi Database Keuangan Terputus.');
@@ -389,7 +391,7 @@ class PembimbingMahasiswaController extends Controller
                 }
             }
         }
-        
+
 
         try {
             DB::beginTransaction();
@@ -719,6 +721,26 @@ class PembimbingMahasiswaController extends Controller
         ]);
     }
 
+    public function penilaian_langsung_dpna($aktivitas)
+    {
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal.mahasiswa', 'bimbing_mahasiswa'])
+                ->where('id', $aktivitas)->first();
+        // dd($data);
+        $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
+
+        $today = Carbon::now()->locale('id')->isoFormat('D MMMM YYYY');
+
+        $pdf = PDF::loadview('dosen.pembimbing.non-tugas-akhir.dpna', [
+            'data' => $data,
+            'nilai' => $data_nilai,
+            'today' => $today
+         ])
+         ->setPaper('a4', 'landscape');
+        //  dd($pdf);
+
+         return $pdf->stream('DPNA-.pdf');
+    }
+
     public function penilaian_langsung_tim($aktivitas)
     {
         $id_dosen = auth()->user()->fk_id;
@@ -739,8 +761,8 @@ class PembimbingMahasiswaController extends Controller
         $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'anggota_aktivitas_personal.mahasiswa'])
                                     ->where('id', $aktivitas)->first();
 
-        $data_nilai = KonversiAktivitas::where('id_aktivitas', $data->id_aktivitas)->first();
-        // dd($penguji);
+        $data_nilai = KonversiAktivitas::with(['matkul'])->where('id_aktivitas', $data->id_aktivitas)->first();
+        // dd($data_nilai);
         return view('dosen.pembimbing.non-tugas-akhir.penilaian-langsung', [
             'data' => $data,
             'data_nilai' => $data_nilai

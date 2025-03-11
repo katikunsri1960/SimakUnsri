@@ -624,6 +624,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                     Route::prefix('penilaian-langsung')->group(function(){
                         Route::get('/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung_aktivitas'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung');
+                        Route::get('/dpna/{aktivitas}', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung_dpna'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung.dpna');
                         Route::post('/{aktivitas}/store', [App\Http\Controllers\Dosen\Pembimbing\PembimbingMahasiswaController::class, 'penilaian_langsung_store'])->name('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung.store');
                     });
                 });
