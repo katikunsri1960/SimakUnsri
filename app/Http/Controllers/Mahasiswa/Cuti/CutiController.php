@@ -87,6 +87,8 @@ class CutiController extends Controller
         if($tagihan){
             if($tagihan->pembayaran){
                 $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+            }else{
+                $statusPembayaran = NULL;
             }
         }else{
             $statusPembayaran = NULL;
