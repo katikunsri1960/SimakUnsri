@@ -6,26 +6,28 @@ use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
+use App\Models\StatusMahasiswa;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Imports\AktivitasKuliahImport;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
-use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\PembayaranManualMahasiswa;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\PesertaKelasKuliah;
-use App\Models\StatusMahasiswa;
 
 class PerkuliahanController extends Controller
 {
@@ -266,6 +268,8 @@ class PerkuliahanController extends Controller
             'C' => 'Cuti',
             'N' => 'Non-Aktif',
             'U' => 'Menunggu Ujian',
+            'G' => 'Sedang Double Degree',
+            
         ];
 
         $nama_status_mahasiswa = $statusMap[$validatedData['status_mahasiswa_id']];
@@ -347,6 +351,18 @@ class PerkuliahanController extends Controller
         }
     }
 
+    public function aktivitas_kuliah_upload(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $import = Excel::import(new AktivitasKuliahImport(), $file);
+
+        return redirect()->back()->with('success', "Data successfully imported!");
+    }
+
     public function aktivitas_kuliah_edit($id)
     {
         // Ambil data berdasarkan kolom 'id' dari tabel 'aktivitas_kuliah_mahasiswa'
@@ -389,6 +405,8 @@ class PerkuliahanController extends Controller
                 'M' => 'Kampus Merdeka',
                 'N' => 'Non-Aktif',
                 'U' => 'Menunggu Ujian',
+                'G' => 'Sedang Double Degree',
+                
             ];
 
             $validated['nama_status_mahasiswa'] = $statusMapping[$validated['id_status_mahasiswa']] ?? null;

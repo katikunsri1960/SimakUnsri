@@ -34,7 +34,7 @@ class PembayaranManualImport implements ToCollection, WithHeadingRow, SkipsEmpty
                 $row['tanggal_pembayaran'] = date('Y-m-d', strtotime($row['tanggal_pembayaran']));
 
                 if (!$mahasiswa) {
-                    dd("Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!");
+                    return back()->withErrors(["Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!"]);
                 }
 
                 PembayaranManualMahasiswa::updateOrCreate(['id_registrasi_mahasiswa' => $mahasiswa->id_registrasi_mahasiswa, 'id_semester' => $row['id_semester']], [

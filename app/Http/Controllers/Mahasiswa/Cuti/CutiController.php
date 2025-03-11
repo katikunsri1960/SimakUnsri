@@ -76,28 +76,30 @@ class CutiController extends Controller
         $pengecekan = $this->checkConditions($jenjang_pendidikan->prodi->id_jenjang_pendidikan, $beasiswa, $data, $semester_ke, $user->fk_id, $id_semester);
         // dd($jenjang_pendidikan->prodi->id_jenjang_pendidikan);
 
-        $tagihan = Tagihan::with('pembayaran')
-        ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
-            ->where('kode_periode', $id_semester)
-            ->first();
+        // $tagihan = Tagihan::with('pembayaran')
+        // ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
+        //     ->where('kode_periode', $id_semester)
+        //     ->first();
 
-        // $ = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
-            // dd($tagihan);
+        // // $ = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
+        //     // dd($tagihan);
     
-        if($tagihan){
-            if($tagihan->pembayaran){
-                $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
-            }
-        }else{
-            $statusPembayaran = NULL;
-        }
+        // if($tagihan){
+        //     if($tagihan->pembayaran){
+        //         $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
+        //     }else{
+        //         $statusPembayaran = NULL;
+        //     }
+        // }else{
+        //     $statusPembayaran = NULL;
+        // }
     
         return view('mahasiswa.pengajuan-cuti.index', [
             'data' => $data,
             'jenjang_pendidikan' => $jenjang_pendidikan,
             'beasiswa' => $beasiswa,
-            'tagihan' => $tagihan,
-            'statusPembayaran' => $statusPembayaran,
+            // 'tagihan' => $tagihan,
+            // 'statusPembayaran' => $statusPembayaran,
             'max_cuti' => $pengecekan['max_cuti'],
             'showAlert1' => $pengecekan['showAlert1'],
             'showAlert2' => $pengecekan['showAlert2'],

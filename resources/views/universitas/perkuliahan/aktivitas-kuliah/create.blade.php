@@ -38,6 +38,7 @@
                             <option value="C">Cuti</option>
                             <option value="N">Non-Aktif</option>
                             <option value="U">Menunggu Ujian</option>
+                            <option value="G">Sedang Double Degree</option>
                         </select>
                     </div>
                 </div>
