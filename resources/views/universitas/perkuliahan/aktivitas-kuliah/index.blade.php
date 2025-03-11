@@ -38,7 +38,7 @@ Aktivitas Kuliah Mahasiswa
                     </div>
                     <div class="d-flex justify-content-end">
                         <form action="{{route('univ.perkuliahan.aktivitas-kuliah.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i
+                            <button class="btn btn-info waves-effect waves-light" type="submit"><i
                                     class="fa fa-refresh"></i> Sinkronisasi
                             </button>
                         </form>
@@ -46,11 +46,22 @@ Aktivitas Kuliah Mahasiswa
                         <button class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
                             data-bs-target="#createModal"><i class="fa fa-plus"></i> Tambah Data
                         </button>
+                        <!-- Modal trigger button -->
+                        <span class="divider-line mx-1"></span>
+                        <button
+                                type="button"
+                                class="btn btn-primary waves-effect waves-light"
+                                data-bs-toggle="modal"
+                                data-bs-target="#uploadModal"
+                            >
+                            <i class="fa fa-upload me-2"></i>Upload Data
+                        </button>
                     </div>
                 </div>
                 @include('universitas.perkuliahan.aktivitas-kuliah.filter')
                 @include('universitas.perkuliahan.aktivitas-kuliah.create')
                 @include('universitas.perkuliahan.aktivitas-kuliah.edit')
+                @include('universitas.perkuliahan.aktivitas-kuliah.upload')
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100" style="font-size: 10pt">
@@ -296,6 +307,8 @@ Aktivitas Kuliah Mahasiswa
                             <option value="M" ${response.data.id_status_mahasiswa == 'M' ? 'selected' : ''}>Kampus Merdeka</option>
                             <option value="C" ${response.data.id_status_mahasiswa == 'C' ? 'selected' : ''}>Cuti</option>
                             <option value="N" ${response.data.id_status_mahasiswa == 'N' ? 'selected' : ''}>Non-Aktif</option>
+                            <option value="U" ${response.data.id_status_mahasiswa == 'U' ? 'selected' : ''}>Menunggu Ujian</option>
+                            <option value="G" ${response.data.id_status_mahasiswa == 'G' ? 'selected' : ''}>Sedang Double Degree</option>
                         `;
                         $('#edit_status_mahasiswa').html(statusOptions);
 
