@@ -78,7 +78,19 @@ Penilaian Langsung Mahasiswa
                                 />
                             </div>
                         </div>
+                        <hr>
+
                         <h4 class="text-info mb-0"><i class="fa fa-user"></i> Penilaian Langsung Mahasiswa</h4>
+                        @if ($data_nilai)
+                        <div class="row justify-content-end">
+                            <div class="col-md-4">
+                                <div class="row px-4">
+                                    <a href="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir.penilaian-langsung.dpna', ['aktivitas' => $data->id])}}" target="_blank" class="btn btn-sm btn-rounded btn-success waves-effect waves-light"><i class="fa fa-file"></i> Download DPNA</a>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
+
                         <hr class="my-15">
                         <div class="row">
                             <div class="col-md-1 text-center align-middle">
@@ -113,6 +125,7 @@ Penilaian Langsung Mahasiswa
                             </div>
                         </div>
                     </div>
+
                     <div class="row p-5">
                             <strong>
                                 <p class="text-danger p-5">Data yang sudah diiskan tidak dapat dirubah kembali, mohon berhati-hati dalam menyimpan data.</p>
@@ -122,7 +135,7 @@ Penilaian Langsung Mahasiswa
                         <a type="button" href="{{route('dosen.pembimbing.bimbingan-non-tugas-akhir')}}" class="btn btn-danger btn-rounded waves-effect waves-light">
                             Batal
                         </a>
-                        <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light" 
+                        <button type="submit" id="submit-button" class="btn btn-primary btn-rounded waves-effect waves-light"
                                 @if($data_nilai) disabled @endif>
                             <i class="fa fa-hdd-o"></i> Simpan
                         </button>

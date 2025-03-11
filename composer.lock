@@ -7716,16 +7716,16 @@
         },
         {
             "name": "laravel-lang/actions",
-            "version": "1.10.0",
+            "version": "1.10.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/actions.git",
-                "reference": "7d6be7a2ff7f2d4c0f35eb7a6b9e2ca04363b74b"
+                "reference": "61ccf44b51382bf198a4178446062c2ede1322c6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/actions/zipball/7d6be7a2ff7f2d4c0f35eb7a6b9e2ca04363b74b",
-                "reference": "7d6be7a2ff7f2d4c0f35eb7a6b9e2ca04363b74b",
+                "url": "https://api.github.com/repos/Laravel-Lang/actions/zipball/61ccf44b51382bf198a4178446062c2ede1322c6",
+                "reference": "61ccf44b51382bf198a4178446062c2ede1322c6",
                 "shasum": ""
             },
             "require": {
@@ -7777,22 +7777,22 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/actions/issues",
-                "source": "https://github.com/Laravel-Lang/actions/tree/1.10.0"
+                "source": "https://github.com/Laravel-Lang/actions/tree/1.10.1"
             },
-            "time": "2025-02-25T02:36:52+00:00"
+            "time": "2025-03-10T17:07:52+00:00"
         },
         {
             "name": "laravel-lang/attributes",
-            "version": "2.13.1",
+            "version": "2.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/attributes.git",
-                "reference": "394329d99eaa990626c194c5eb39648e881ecc35"
+                "reference": "80927aa4433d9950f891b8bb72a239e421a43c7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/attributes/zipball/394329d99eaa990626c194c5eb39648e881ecc35",
-                "reference": "394329d99eaa990626c194c5eb39648e881ecc35",
+                "url": "https://api.github.com/repos/Laravel-Lang/attributes/zipball/80927aa4433d9950f891b8bb72a239e421a43c7c",
+                "reference": "80927aa4433d9950f891b8bb72a239e421a43c7c",
                 "shasum": ""
             },
             "require": {
@@ -7846,9 +7846,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/attributes/issues",
-                "source": "https://github.com/Laravel-Lang/attributes/tree/2.13.1"
+                "source": "https://github.com/Laravel-Lang/attributes/tree/2.13.3"
             },
-            "time": "2025-03-04T07:28:17+00:00"
+            "time": "2025-03-10T12:59:26+00:00"
         },
         {
             "name": "laravel-lang/common",
@@ -7938,16 +7938,16 @@
         },
         {
             "name": "laravel-lang/http-statuses",
-            "version": "3.10.1",
+            "version": "3.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Laravel-Lang/http-statuses.git",
-                "reference": "061870d98bf213bccfdc8e7421a820ee7916922d"
+                "reference": "49d427304c695fada70e37fcc05b58e76423e75c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Laravel-Lang/http-statuses/zipball/061870d98bf213bccfdc8e7421a820ee7916922d",
-                "reference": "061870d98bf213bccfdc8e7421a820ee7916922d",
+                "url": "https://api.github.com/repos/Laravel-Lang/http-statuses/zipball/49d427304c695fada70e37fcc05b58e76423e75c",
+                "reference": "49d427304c695fada70e37fcc05b58e76423e75c",
                 "shasum": ""
             },
             "require": {
@@ -7999,9 +7999,9 @@
             ],
             "support": {
                 "issues": "https://github.com/Laravel-Lang/http-statuses/issues",
-                "source": "https://github.com/Laravel-Lang/http-statuses/tree/3.10.1"
+                "source": "https://github.com/Laravel-Lang/http-statuses/tree/3.10.2"
             },
-            "time": "2025-03-02T15:29:55+00:00"
+            "time": "2025-03-10T15:44:56+00:00"
         },
         {
             "name": "laravel-lang/lang",
@@ -8496,16 +8496,16 @@
         },
         {
             "name": "laravel/pint",
-            "version": "v1.21.0",
+            "version": "v1.21.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/pint.git",
-                "reference": "531fa0871fbde719c51b12afa3a443b8f4e4b425"
+                "reference": "c44bffbb2334e90fba560933c45948fa4a3f3e86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/pint/zipball/531fa0871fbde719c51b12afa3a443b8f4e4b425",
-                "reference": "531fa0871fbde719c51b12afa3a443b8f4e4b425",
+                "url": "https://api.github.com/repos/laravel/pint/zipball/c44bffbb2334e90fba560933c45948fa4a3f3e86",
+                "reference": "c44bffbb2334e90fba560933c45948fa4a3f3e86",
                 "shasum": ""
             },
             "require": {
@@ -8516,9 +8516,9 @@
                 "php": "^8.2.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.68.5",
-                "illuminate/view": "^11.42.0",
-                "larastan/larastan": "^3.0.4",
+                "friendsofphp/php-cs-fixer": "^3.70.2",
+                "illuminate/view": "^11.44.1",
+                "larastan/larastan": "^3.1.0",
                 "laravel-zero/framework": "^11.36.1",
                 "mockery/mockery": "^1.6.12",
                 "nunomaduro/termwind": "^2.3",
@@ -8558,7 +8558,7 @@
                 "issues": "https://github.com/laravel/pint/issues",
                 "source": "https://github.com/laravel/pint"
             },
-            "time": "2025-02-18T03:18:57+00:00"
+            "time": "2025-03-11T03:22:21+00:00"
         },
         {
             "name": "laravel/sail",

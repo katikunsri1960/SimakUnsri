@@ -28,7 +28,7 @@ class PenilaianPerkuliahanController extends Controller
 
         // List of program codes not requiring scheduling checks
         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
-       
+
         // dd($data);
 
         return view('dosen.penilaian.penilaian-perkuliahan.index', [
@@ -94,7 +94,8 @@ class PenilaianPerkuliahanController extends Controller
         )->get();
 
         $kode_matkul = $data->matkul ? $data->matkul->kode_mata_kuliah : '';
-        $today = Carbon::now()->locale('id')->translatedFormat('d F Y');
+        $today = Carbon::parse($nilai_komponen->first()->created_at)->locale('id')->translatedFormat('d F Y');
+        // $today = Carbon::now()->locale('id')->translatedFormat('d F Y');
         // dd($today);
 
         $pdf = PDF::loadview('dosen.penilaian.penilaian-perkuliahan.pdf-dpna', [
