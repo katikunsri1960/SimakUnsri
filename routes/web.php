@@ -752,6 +752,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::delete('/delete-dosen/{uji}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'delete_dosen_penguji'])->name('prodi.data-akademik.sidang-mahasiswa.delete-dosen');
                     Route::get('/detail/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'detail_sidang'])->name('prodi.data-akademik.sidang-mahasiswa.detail');
                     Route::post('/approve-hasil-sidang/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'approve_hasil_sidang'])->name('prodi.data-akademik.sidang-mahasiswa.approve-hasil-sidang');
+                    Route::post('/decline-sidang/{aktivitas}', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'decline_sidang'])->name('prodi.data-akademik.sidang-mahasiswa.decline-sidang');
                 });
 
                 Route::prefix('tugas-akhir')->group(function(){

@@ -91,6 +91,7 @@ Tugas Akhir
                             </thead>
                             <tbody>
                                 @foreach ($data as $d)
+                                @include('prodi.data-akademik.sidang-mahasiswa.pembatalan-sidang')
                                 <tr>
                                     <td class="text-center align-middle"></td>
                                     <td class="text-center align-middle">
@@ -100,8 +101,12 @@ Tugas Akhir
                                         {{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : "-"}}
                                     </td>
                                     <td class="text-center align-middle">
-                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>@if ($d->konversi)
-                                        ({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                        {{ strtoupper($d->nama_jenis_aktivitas)}}<br>
+                                        @if ($d->konversi)
+                                            ({{$d->konversi->kode_mata_kuliah}} - {{$d->konversi->nama_mata_kuliah}})
+                                        @endif<br>
+                                        @if (!$d->nilai_konversi->isEmpty())
+                                            <span class="badge badge-lg badge-success">Sudah di Nilai</span>
                                         @endif
                                     </td>
                                     <td class="text-start align-middle">
@@ -147,6 +152,17 @@ Tugas Akhir
                                             <a href="{{route('prodi.data-akademik.sidang-mahasiswa.detail', $d->id)}}" class="btn btn-secondary btn-sm my-2">
                                                 <i class="fa fa-eye"></i> Detail
                                             </a>
+                                            @if($d->nilai_konversi->isEmpty())
+                                                <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Sidang Mahasiswa" 
+                                                data-bs-toggle="modal" data-bs-target="#PembatalanSidangModal{{$d->id}}" 
+                                                style="white-space: nowrap;">
+                                                <i class="fa fa-ban"></i> Decline
+                                                </a>
+                                            @else
+                                                <button type="button" class="btn btn-danger btn-sm my-2" style="white-space: nowrap;" disabled>
+                                                    <i class="fa fa-ban"></i> Decline
+                                                </button>
+                                            @endif
                                         </div>
                                     </td>
                                 </tr>
