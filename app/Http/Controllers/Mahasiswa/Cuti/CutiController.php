@@ -74,10 +74,13 @@ class CutiController extends Controller
                     ->get();
 
         $semester_ke = Semester::orderBy('id_semester', 'ASC')
-            ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $riwayat_pendidikan->id_registrasi_mahasiswa])
+            ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
             ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
             ->pluck('id_semester');
 
+        $semester_count=$semester_ke->count();
+
+        // dd($semester_count);
 
         $index_semester_terakhir = $semester_ke->search($semester_ke->last());
 
@@ -97,8 +100,8 @@ class CutiController extends Controller
                             ->sum('sks_mata_kuliah');
                     // dd($jumlah_sks_diambil);
 
-        if($riwayat_pendidikan->prodi->id_jenjang_pendidikan==30 && $semester_ke <= 4){
-            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda belum menempuh 4 semester!');
+        if($riwayat_pendidikan->prodi->id_jenjang_pendidikan==30 && $semester_count <= 4){
+            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda belum menyelesaikan 4 semester!');
         }
 
         if($riwayat_pendidikan->prodi->id_jenjang_pendidikan !=30 && $jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
