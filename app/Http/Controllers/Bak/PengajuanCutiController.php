@@ -54,7 +54,7 @@ class PengajuanCutiController extends Controller
 
         // dd($akm_terakhir);
 
-        $cuti->riwayat->aktivitas_kuliah()->updateOrCreate(
+        AktivitasKuliahMahasiswa::updateOrCreate(
             [
                 'id_semester' => $cuti->id_semester,
                 'id_registrasi_mahasiswa' => $cuti->id_registrasi_mahasiswa,
