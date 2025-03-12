@@ -103,8 +103,8 @@ class CutiController extends Controller
             'max_cuti' => $pengecekan['max_cuti'],
             'showAlert1' => $pengecekan['showAlert1'],
             'showAlert2' => $pengecekan['showAlert2'],
-            'showAlert3' => $pengecekan['showAlert3'],
-            'showAlert4' => $pengecekan['showAlert4']
+            'showAlert4' => $pengecekan['showAlert4'],
+            'showAlert3' => $pengecekan['showAlert3']
         ]);
     }
     
