@@ -22,6 +22,7 @@ use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Connection\ConnectionKeuangan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 
 class CutiController extends Controller
 {
@@ -89,21 +90,18 @@ class CutiController extends Controller
             $akm_sebelum = null;
         }
 
-        $jumlah_sks_wajib = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
-                        ->pluck('jumlah_sks_wajib')->first();
+        $jumlah_sks_lulus = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
+                        ->pluck('jumlah_sks_lulus')->first();
 
-        $jumlah_sks_diambil = intval(
-                        AktivitasKuliahMahasiswa::where('id_semester', $akm_sebelum)
-                        ->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                        ->pluck('sks_total')
-                        ->first()
-                    );
+        $jumlah_sks_diambil = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                            ->sum('sks_mata_kuliah');
+                    // dd($jumlah_sks_diambil);
 
         if($riwayat_pendidikan->prodi->id_jenjang_pendidikan==30 && $semester_ke <= 4){
             return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda belum menempuh 4 semester!');
         }
 
-        if($riwayat_pendidikan->prodi->id_jenjang_pendidikan !=30 && $jumlah_sks_diambil < ($jumlah_sks_wajib/2)) {
+        if($riwayat_pendidikan->prodi->id_jenjang_pendidikan !=30 && $jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
             return redirect()->back()->with('error','Anda tidak bisa mengajukan cuti, Silahkan selesaikan minimal 50% dari total sks yang wajib ditempuh!');
         } 
     
