@@ -45,154 +45,98 @@ class CutiController extends Controller
             }
         }
 
-        // dd($semester_aktif->tgl_mulai_pengajuan_cuti, $today);
-        
-        
-        $user = auth()->user();
-        $nim = $user->username;
-
-        // dd($riwayat_pendidikan);
-        $id_semester = SemesterAktif::first()->id_semester;
-
-        $data = PengajuanCuti::where('id_registrasi_mahasiswa', $user->fk_id)->get();
-
-        $jenjang_pendidikan = RiwayatPendidikan::with('prodi')
-                    ->where('id_registrasi_mahasiswa', $user->fk_id)
+        $riwayat_pendidikan = RiwayatPendidikan::with('prodi')
+                    ->where('id_registrasi_mahasiswa', auth()->user()->fk_id)
                     ->first();
 
-        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
+        $data = PengajuanCuti::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                            ->get();
+
+        $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
                     ->count();
+
+        if ($beasiswa > 0) {
+            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda merupakan mahasiswa penerima Beasiswa');
+        } 
+
+        $existingCuti=$data->where('approved', 2)
+                    ->count();
+
+        $max_cuti= $this->calculateMaxCuti($riwayat_pendidikan->prodi->id_jenjang_pendidikan);
+
+        if($max_cuti == 0 || $existingCuti >= $max_cuti){
+            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda telah mencapai maksimum pengajuan cuti!');
+        }
         
-        $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
+        $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
                     ->orderBy('id_semester', 'DESC')
                     ->get();
 
-        $semester_ke = $semester->filter(function($item) {
-                return substr($item->id_semester, -1) != '3';
-            })->count();
-            
-        $pengecekan = $this->checkConditions($jenjang_pendidikan->prodi->id_jenjang_pendidikan, $beasiswa, $data, $semester_ke, $user->fk_id, $id_semester);
-        // dd($jenjang_pendidikan->prodi->id_jenjang_pendidikan);
-
-        // $tagihan = Tagihan::with('pembayaran')
-        // ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
-        //     ->where('kode_periode', $id_semester)
-        //     ->first();
-
-        // // $ = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->first();
-        //     // dd($tagihan);
-    
-        // if($tagihan){
-        //     if($tagihan->pembayaran){
-        //         $statusPembayaran = $tagihan->pembayaran->status_pembayaran;
-        //     }else{
-        //         $statusPembayaran = NULL;
-        //     }
-        // }else{
-        //     $statusPembayaran = NULL;
-        // }
-    
-        return view('mahasiswa.pengajuan-cuti.index', [
-            'data' => $data,
-            'jenjang_pendidikan' => $jenjang_pendidikan,
-            'beasiswa' => $beasiswa,
-            // 'tagihan' => $tagihan,
-            // 'statusPembayaran' => $statusPembayaran,
-            'max_cuti' => $pengecekan['max_cuti'],
-            'showAlert1' => $pengecekan['showAlert1'],
-            'showAlert2' => $pengecekan['showAlert2'],
-            'showAlert3' => $pengecekan['showAlert3'],
-            'showAlert4' => $pengecekan['showAlert4']
-        ]);
-    }
-    
-    private function calculateMaxCuti($jenjang_pendidikan, $beasiswa)
-    {
-        // if ($beasiswa = 0) {
-            if ($jenjang_pendidikan == 30 ||
-                        $jenjang_pendidikan == 22) {
-                return 1;
-            } elseif ($jenjang_pendidikan == 35 ||
-                        $jenjang_pendidikan == 40) {
-                return 2;
-            } else {
-                return 0;
-            }
-        // } else {
-        //     return 0;
-        // }
-    }
-    
-    private function checkConditions($jenjang_pendidikan, $beasiswa, $data, $semester_ke, $fk_id, $id_semester)
-    {
-        $max_cuti = $this->calculateMaxCuti($jenjang_pendidikan, $beasiswa);
-    
-        $showAlert1 = false;
-        $showAlert2 = false;
-        $showAlert3 = false;
-    
-        if ($beasiswa > 0) {
-            $showAlert2 = true;
-        } elseif  ($max_cuti == 0 && $data->isEmpty()){
-            $showAlert1 = true;
-        }
-        
-        
-
-        // CARI 50% SKS TOTAL 
-        // $user = auth()->user();
-
-        $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
-                    ->select('riwayat_pendidikans.*')
-                    ->where('id_registrasi_mahasiswa', $fk_id)
-                    ->first();
-        
-        $akm = Semester::orderBy('id_semester', 'ASC')
-                ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $id_semester])
-                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
-                ->pluck('id_semester');
+        $semester_ke = Semester::orderBy('id_semester', 'ASC')
+            ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $riwayat_pendidikan->id_registrasi_mahasiswa])
+            ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+            ->pluck('id_semester');
 
 
-        $index_semester_terakhir = $akm->search($akm->last());
+        $index_semester_terakhir = $semester_ke->search($semester_ke->last());
 
         // Pastikan bahwa indeks tidak berada di posisi pertama
         if ($index_semester_terakhir > 0) {
             // Mundur satu semester dari yang terakhir
-            $akm_sebelum = $akm[$index_semester_terakhir - 1];
+            $akm_sebelum = $semester_ke[$index_semester_terakhir - 1];
         } else {
             // Jika tidak ada semester sebelumnya (semester pertama), bisa didefinisikan logika lain
             $akm_sebelum = null;
         }
 
-        $jumlah_sks_lulus = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
-                        ->pluck('jumlah_sks_lulus')->first();
+        $jumlah_sks_wajib = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
+                        ->pluck('jumlah_sks_wajib')->first();
 
         $jumlah_sks_diambil = intval(
                         AktivitasKuliahMahasiswa::where('id_semester', $akm_sebelum)
-                        ->where('id_registrasi_mahasiswa', $fk_id)
+                        ->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
                         ->pluck('sks_total')
                         ->first()
                     );
 
-                    // dd($jumlah_sks_lulus,
-                    // $jumlah_sks_diambil, $akm_sebelum);
-        $showAlert4 = false;
-        
-        if ($jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
-            $showAlert4 = true;
-        } 
-
-        if ($semester_ke <= 4) {
-            $showAlert3 = true;
+        if($riwayat_pendidikan->prodi->id_jenjang_pendidikan==30 && $semester_ke <= 4){
+            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda belum menempuh 4 semester!');
         }
-        
-        return [
-            'max_cuti' => $max_cuti,
-            'showAlert1' => $showAlert1,
-            'showAlert2' => $showAlert2,
-            'showAlert4' => $showAlert4,
-            'showAlert3' => $showAlert3,
-        ];
+
+        if($riwayat_pendidikan->prodi->id_jenjang_pendidikan !=30 && $jumlah_sks_diambil < ($jumlah_sks_wajib/2)) {
+            return redirect()->back()->with('error','Anda tidak bisa mengajukan cuti, Silahkan selesaikan minimal 50% dari total sks yang wajib ditempuh!');
+        } 
+    
+        return view('mahasiswa.pengajuan-cuti.index', [
+            'data' => $data,
+            'jenjang_pendidikan' => $riwayat_pendidikan,
+            'beasiswa' => $beasiswa,
+            // 'tagihan' => $tagihan,
+            // 'statusPembayaran' => $statusPembayaran,
+        ]);
+    }
+    
+    private function calculateMaxCuti($jenjang_pendidikan)
+    {
+        // Pedoman Akademik dan Kemahasiswaan Universitas Sriwijaya Tahun Akademik 2024/2025
+        // Halaman 50
+        // k. Lama PKA atau SO maksimum 1 (satu) semester bagi program Diploma dan Program Sarjana.
+        // l. Lama PKA atau SO maksimum 2 (dua) semester Program Magister dan Program Doktor,
+            // yang dapat diambil berturut-turut atau terpisah.
+        // m. Mahasiswa program profesi dan spesialis hanya diperkenankan mengajukan permohonan
+            // PKA atau SO satu kali. Apabila akan mengajukan izin meninggalkan kuliah karena alasan
+            // penting, maka tetap membayar Uang Kuliah Tunggal (UKT).
+            
+        if ($jenjang_pendidikan == 30 || $jenjang_pendidikan == 22 ||
+            $jenjang_pendidikan == 31 || $jenjang_pendidikan == 32 ||
+            $jenjang_pendidikan == 37) {
+            return 1;
+        } elseif ($jenjang_pendidikan == 35 ||
+                    $jenjang_pendidikan == 40) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 
     public function tambah()
