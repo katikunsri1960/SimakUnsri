@@ -192,8 +192,8 @@ class CutiController extends Controller
             'max_cuti' => $max_cuti,
             'showAlert1' => $showAlert1,
             'showAlert2' => $showAlert2,
+            'showAlert3' => $showAlert3,
             'showAlert4' => $showAlert4,
-            'showAlert3' => $showAlert3
         ];
     }
 
