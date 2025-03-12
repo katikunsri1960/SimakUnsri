@@ -1,55 +1,80 @@
 @extends('layouts.fakultas')
 @section('title')
-Pengajuan Cuti Fakultas
+Daftar Pengajuan Cuti
 @endsection
 @section('content')
-@include('swal')
-<section class="content bg-white">
-    <div class="row align-items-end">
-        <div class="col-12">
-			<div class="box pull-up">
-				<div class="box-body bg-img bg-primary-light">
-					<div class="d-lg-flex align-items-center justify-content-between">
-						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
-			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
-							<div class="ms-30">
-								<h2 class="mb-10">Pengajuan Cuti Fakultas</h2>
-								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
-							</div>
-						</div>
-					<div>
-				</div>
-			</div>							
-		</div>
+<div class="content-header">
+    <div class="d-flex align-items-center">
+        <div class="me-auto">
+            <h3 class="page-title">Daftar Pengajuan Cuti Mahasiswa</h3>
+            <div class="d-inline-block align-items-center">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{route('fakultas')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item" aria-current="page">Beasiswa Mahasiswa</li>
+                        <li class="breadcrumb-item active" aria-current="page">Daftar</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
     </div>
+</div>
+@include('swal')
+<section class="content">
     <div class="row">
-        <div class="col-xxl-12">
-            <div class="box box-body mb-0">
-                <div class="row">
-                    <div class="col-xl-6 col-lg-12">
-                        <h3 class="fw-500 text-dark mt-0">Daftar Pengajuan Cuti Fakultas</h3>
-                    </div>                             
+        <div class="col-12">
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-header with-border d-flex justify-content-between">
+                    <div class="d-flex justify-content-start">
+                        <!-- Modal trigger button -->
+                        <form action="{{ route('fakultas.pengajuan-cuti') }}" method="get" id="semesterForm">
+                            <div class="mb-3">
+                                <label for="semester_view" class="form-label">Semester</label>
+                                <select
+                                    class="form-select"
+                                    name="semester_view"
+                                    id="semester_view"
+                                    onchange="document.getElementById('semesterForm').submit();"
+                                >
+                                    <option value="" selected disabled>-- Pilih Semester --</option>
+                                    @foreach ($pilihan_semester as $p)
+                                        <option value="{{$p->id_semester}}"
+                                            @if ($semester_view != null)
+                                            {{$semester_view == $p->id_semester ? 'selected' : ''}}
+                                            @else
+                                            {{$semester_aktif->id_semester == $p->id_semester ? 'selected' : ''}}
+                                            @endif
+                                            >{{$p->nama_semester}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </form>
+                        {{-- <button type="button" class="btn btn-primary waves-effect waves" data-bs-toggle="modal"
+                            data-bs-target="#filter-button">
+                            <i class="fa fa-filter"></i> Filter
+                        </button>
+                        <span class="divider-line mx-1"></span>
+                        <a href="{{route('fakultas.beasiswa')}}" class="btn btn-warning waves-effect waves" >
+                            <i class="fa fa-rotate"></i> Reset Filter
+                        </a>
+                        @include('fakultas.lain-lain.beasiswa.filter') --}}
+
+                    </div>
                 </div>
-                {{-- <div class="row mb-5">
-                    <div class="col-xl-12 col-lg-12 text-end">
-                        <div class="btn-group">
-                            <a class="btn btn-rounded bg-success-light " href="{{route('fakultas.pengajuan-cuti.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Pengajuan Cuti</a>
-                        </div>   
-                    </div>                           
-                </div><br> --}}
-                <div class="row">
+                <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>NIM</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Program Studi</th>
-                                    <th>Semester</th>
-                                    <th>Alasan Pengajuan Cuti</th>
-                                    <th>Status Pengajuan Cuti</th>
-                                    <th>Action</th>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">Program Studi</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Nama Mahasiswa</th>
+                                    <th class="text-center align-middle">Alasan Pengajuan Cuti</th>
+                                    <th class="text-center align-middle">Status </th>
+                                    <th class="text-center align-middle">Alasan Ditolak</th>
+                                    <th class="text-center align-middle">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,17 +89,18 @@ Pengajuan Cuti Fakultas
                                         <td class="text-start align-middle">{{$d->alasan_cuti}}</td>
                                         <td class="text-center align-middle" style="width:10%">
                                             @if($d->approved == 0)
-                                                <span class="badge badge-xl badge-danger-light mb-5">Belum Disetujui</span>
+                                                <span class="badge badge-xl badge-danger mb-5">Belum Disetujui</span>
                                             @elseif($d->approved == 1)
-                                                <span class="badge badge-xl badge-warning-light mb-5">Disetujui Fakultas</span>
+                                                <span class="badge badge-xl badge-warning mb-5">Disetujui Fakultas</span>
                                             @elseif($d->approved == 2)
-                                                <span class="badge badge-xl badge-success-light mb-5">Disetujui BAK</span>
+                                                <span class="badge badge-xl badge-success mb-5">Disetujui BAK</span>
                                             @elseif($d->approved == 3)
-                                                <span class="badge badge-xl badge-danger-light mb-5">Ditolak Fakultas</span>
+                                                <span class="badge badge-xl badge-danger mb-5">Ditolak Fakultas</span>
                                             @elseif($d->approved == 4)
-                                                <span class="badge badge-xl badge-danger-light mb-5">Ditolak BAK</span>
+                                                <span class="badge badge-xl badge-danger mb-5">Ditolak BAK</span>
                                             @endif
                                         </td>
+                                        <td class="text-start align-middle">{{$d->alasan_pembatalan}}</td>
                                         <td class="text-center align-middle text-nowrap">
                                             <div class="row">
                                                 @if($d->approved == 0)
@@ -83,14 +109,14 @@ Pengajuan Cuti Fakultas
                                                     <div class="row  mb-5">
                                                         <button 
                                                         type="submit" 
-                                                        class="btn btn-sm btn-primary" title="Setujui Pengajuan Cuti"><i class="fa fa-thumbs-up"></i> Approve</button>
+                                                        class="btn btn-sm btn-success" title="Setujui Pengajuan Cuti"><i class="fa fa-thumbs-up"></i> Approve</button>
                                                     </div>
                                                 </form>
                                                 @endif
                                                 @if($d->approved < 3)
-                                                    <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
+                                                    <a href="#" class="btn btn-danger btn-sm mb-5" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
                                                 @endif
-                                                <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-primary">
+                                                <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-sm btn-primary mb-5">
                                                     <i class="fa fa-file-pdf-o"></i> File Pendukung
                                                 </a>                                                                                            
                                             </div>
@@ -98,7 +124,7 @@ Pengajuan Cuti Fakultas
                                     </tr>
                                 @endforeach
                             </tbody>
-					  </table>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -117,7 +143,7 @@ Pengajuan Cuti Fakultas
             "ordering": true,
             "info": true,
             "autoWidth": true,
-            "responsive": true,
+            // "responsive": true,
         });
     });
 </script>

@@ -86,6 +86,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('pengajuan-cuti')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\PengajuanCutiController::class, 'index'])->name('bak.pengajuan-cuti');
+                Route::post('/approve/{cuti}', [App\Http\Controllers\Bak\PengajuanCutiController::class, 'cuti_approve'])->name('bak.pengajuan-cuti.approve');
+                Route::post('/decline/{cuti}', [App\Http\Controllers\Bak\PengajuanCutiController::class, 'pembatalan_cuti'])->name('bak.pengajuan-cuti.decline');
             });
 
             Route::prefix('monitoring')->group(function(){
