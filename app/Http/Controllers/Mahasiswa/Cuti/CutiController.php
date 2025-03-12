@@ -52,8 +52,6 @@ class CutiController extends Controller
         $nim = $user->username;
 
         // dd($riwayat_pendidikan);
-        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
-        
         $id_semester = SemesterAktif::first()->id_semester;
 
         $data = PengajuanCuti::where('id_registrasi_mahasiswa', $user->fk_id)->get();
@@ -192,8 +190,8 @@ class CutiController extends Controller
             'max_cuti' => $max_cuti,
             'showAlert1' => $showAlert1,
             'showAlert2' => $showAlert2,
-            'showAlert3' => $showAlert3,
             'showAlert4' => $showAlert4,
+            'showAlert3' => $showAlert3,
         ];
     }
 
