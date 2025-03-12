@@ -111,7 +111,7 @@ Pengajuan Cuti Mahasiswa
          
             swal({
                 title: 'Pengajuan Cuti Tidak Diizinkan',
-                text: 'Anda tidak bisa mengajukan cuti, karena Anda Mahasiswa Program Pendidikan Profesi',
+                text: 'Anda tidak bisa mengajukan cuti, karena Anda telah mencapai maksimum pengajuan cuti!',
                 type: 'warning',
                 button: 'OK'
             }, function() {
@@ -120,16 +120,7 @@ Pengajuan Cuti Mahasiswa
         @elseif ($showAlert2)
             swal({
                 title: 'Pengajuan Cuti Tidak Diizinkan',
-                text: 'Anda tidak bisa mengajukan cuti, karena Anda Mahasiswa Penerima Beasiswa',
-                type: 'warning',
-                button: 'OK'
-            }, function() {
-                window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
-            });
-        @elseif ($showAlert3)
-            swal({
-                title: 'Pengajuan Cuti Tidak Diizinkan',
-                text: 'Anda tidak bisa mengajukan cuti, karena belum menyelesaikan 4 semester',
+                text: 'Anda tidak bisa mengajukan cuti, karena Anda mahasiswa penerima Beasiswa',
                 type: 'warning',
                 button: 'OK'
             }, function() {
@@ -139,6 +130,15 @@ Pengajuan Cuti Mahasiswa
             swal({
                 title: 'Pengajuan Cuti Tidak Diizinkan',
                 text: 'Anda tidak bisa mengajukan cuti, karena belum menyelesaikan 50% dari SKS Total Yang harus ditempuh.',
+                type: 'warning',
+                button: 'OK'
+            }, function() {
+                window.location.href = "{{ route('mahasiswa.dashboard') }}"; // Ganti dengan rute yang sesuai, jika ada
+            });
+        @elseif ($showAlert3)
+            swal({
+                title: 'Pengajuan Cuti Tidak Diizinkan',
+                text: 'Anda tidak bisa mengajukan cuti, karena belum menyelesaikan 4 semester',
                 type: 'warning',
                 button: 'OK'
             }, function() {

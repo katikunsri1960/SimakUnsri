@@ -137,9 +137,9 @@ class CutiController extends Controller
             $showAlert2 = true;
         } elseif  ($max_cuti == 0 && $data->isEmpty()){
             $showAlert1 = true;
-        } elseif ($semester_ke <= 4) {
-            $showAlert3 = true;
         }
+        
+        
 
         // CARI 50% SKS TOTAL 
         // $user = auth()->user();
@@ -183,13 +183,17 @@ class CutiController extends Controller
         if ($jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
             $showAlert4 = true;
         } 
+
+        if ($semester_ke <= 4) {
+            $showAlert3 = true;
+        }
         
         return [
             'max_cuti' => $max_cuti,
             'showAlert1' => $showAlert1,
             'showAlert2' => $showAlert2,
-            'showAlert3' => $showAlert3,
-            'showAlert4' => $showAlert4
+            'showAlert4' => $showAlert4,
+            'showAlert3' => $showAlert3
         ];
     }
 

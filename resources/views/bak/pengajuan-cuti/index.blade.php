@@ -103,7 +103,7 @@ Daftar Pengajuan Cuti
                                                     </div>
                                                 </form>
                                                 @endif
-                                                @if($d->approved == 1)
+                                                @if($d->approved == 1 || $d->approved < 3)
                                                     <a href="#" class="btn btn-danger btn-sm mb-5" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
                                                 @endif
                                                 <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-sm btn-primary mb-5">
