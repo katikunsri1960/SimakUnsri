@@ -123,6 +123,7 @@ class PenilaianPerkuliahanController extends Controller
         if($data_dosen->urutan != 1){
             return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
         }
+
         // List of program codes not requiring scheduling checks
         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
 
