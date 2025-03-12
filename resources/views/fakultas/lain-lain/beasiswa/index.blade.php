@@ -10,7 +10,7 @@ BEASISWA
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('fakultas')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Beasiswa Mahasiswa</li>
                         <li class="breadcrumb-item active" aria-current="page">Daftar</li>
                     </ol>
