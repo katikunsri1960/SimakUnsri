@@ -73,7 +73,7 @@ Daftar Pengajuan Cuti
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>
-                                        <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} {{$d->prodi->nama_program_studi}}</td>
+                                        <td class="text-start align-middle">{{$d->prodi ? $d->prodi->nama_jenjang_pendidikan : ''}} {{$d->prodi ? $d->prodi->nama_program_studi : ''}}</td>
                                         <td class="text-start align-middle">{{$d->riwayat->nim}}</td>
                                         <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
                                         <td class="text-start align-middle">{{$d->alasan_cuti}}</td>
@@ -97,8 +97,8 @@ Daftar Pengajuan Cuti
                                                 <form action="{{route('bak.pengajuan-cuti.approve', $d)}}" method="post" id="approveForm{{$d->id_cuti}}" class="approve-class" data-id='{{$d->id_cuti}}'>
                                                     @csrf
                                                     <div class="row  mb-5">
-                                                        <button 
-                                                        type="submit" 
+                                                        <button
+                                                        type="submit"
                                                         class="btn btn-sm btn-success" title="Setujui Pengajuan Cuti"><i class="fa fa-thumbs-up"></i> Approve</button>
                                                     </div>
                                                 </form>
@@ -108,7 +108,7 @@ Daftar Pengajuan Cuti
                                                 @endif
                                                 <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-sm btn-primary mb-5">
                                                     <i class="fa fa-file-pdf-o"></i> File Pendukung
-                                                </a>                                                                                            
+                                                </a>
                                             </div>
                                         </td>
                                     </tr>
