@@ -35,7 +35,7 @@ class BatasIsiKRSImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
                 $row['batas_isi_krs'] = date('Y-m-d', strtotime($row['batas_isi_krs']));
 
                 if (!$mahasiswa) {
-                    dd("Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!");
+                    return back()->withErrors(["Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!"]);
                 }
 
                 BatasIsiKRSManual::updateOrCreate(['id_registrasi_mahasiswa' => $mahasiswa->id_registrasi_mahasiswa, 'id_semester' => $row['id_semester']], [

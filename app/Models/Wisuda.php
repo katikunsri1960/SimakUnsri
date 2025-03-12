@@ -66,7 +66,7 @@ class Wisuda extends Model
 
     public function aktivitas_mahasiswa()
     {
-        return $this->hasManyThrough(AktivitasMahasiswa::class, AnggotaAktivitasMahasiswa::class, 'id_registrasi_mahasiswa', 'id_aktivitas', 'id_registrasi_mahasiswa', 'id_aktivitas');
+        return $this->belongsTo(AktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
     }
 
     public function transkrip_mahasiswa()

@@ -270,7 +270,7 @@ class AktivitasMahasiswa extends Model
 
     public function sidang($id_prodi, $semester)
     {
-        $data = $this->with(['uji_mahasiswa', 'bimbing_mahasiswa','anggota_aktivitas_personal', 'prodi'])
+        $data = $this->with(['uji_mahasiswa', 'bimbing_mahasiswa','anggota_aktivitas_personal', 'prodi', 'konversi', 'nilai_konversi'])
                     ->withCount([
                         'uji_mahasiswa as status_uji' => function($query) {
                             $query->where('status_uji_mahasiswa', 0);
