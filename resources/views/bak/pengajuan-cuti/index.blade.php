@@ -20,6 +20,7 @@ Daftar Pengajuan Cuti
     </div>
 </div>
 @include('swal')
+@include('bak.pengajuan-cuti.create')
 <section class="content">
     <div class="row">
         <div class="col-12">

@@ -24,18 +24,22 @@ class CutiManualController extends Controller
     {
         $db = new PengajuanCuti;
 
+        $request->validate([
+            'semester_view' => 'nullable|exists:semesters,id_semester',
+        ]);
+
         $data = $db->with(['riwayat', 'prodi']);
 
-        if ($request->has('semester')) {
-            $data = $data->where('id_semester', $request->semester);
-        }
+        $pilihan_semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
+        $semester_view = $request->semester_view ?? SemesterAktif::select('id_semester')->first()->id_semester;
 
-        $data = $data->get();
-        $semester = Semester::orderBy('id_semester', 'desc')->get();
+        $data = $data->where('id_semester', $semester_view)
+                ->get();
 
         // dd($data);
         return view('universitas.cuti-manual.index', [
-            'semester' => $semester,
+            'pilihan_semester' => $pilihan_semester,
+            'semester_view' => $semester_view,
             'data' => $data,
         ]);
     }
@@ -102,7 +106,7 @@ class CutiManualController extends Controller
             if (!empty($existingCuti)) {
                 if ($existingCuti->approved == 0) {
                     return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
-                } elseif ($existingCuti->approved == 1 || $existingCuti->approved == 2 || $existingCuti->approved == 3) {
+                } elseif ($existingCuti->approved == 1 || $existingCuti->approved == 2) {
                     return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sudah disetujui.');
                 }
             }
@@ -153,7 +157,7 @@ class CutiManualController extends Controller
                 'handphone' => $riwayat_pendidikan->biodata->handphone,
                 'alasan_cuti' => $alasan,
                 'file_pendukung' => $filePath,
-                'approved' => 3,
+                'approved' => 2,
                 'status_sync' => 'belum sync',
             ]);
 
@@ -162,8 +166,8 @@ class CutiManualController extends Controller
             CutiManual::create($data);
 
             // dd($data['approved']);
-            // Jika approved == 3, buat data di tabel aktivitas_kuliah_mahasiswas
-            if ($data['approved'] == 3) {
+            // Jika approved == 4, buat data di tabel aktivitas_kuliah_mahasiswas
+            if ($data['approved'] == 2) {
 
                 $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->count();
 
@@ -245,7 +249,7 @@ class CutiManualController extends Controller
 
             DB::commit(); // Commit jika semua berhasil
             // Redirect kembali ke halaman index dengan pesan sukses
-            return redirect()->route('univ.cuti-kuliah')->with('success', 'Data Berhasil di Tambahkan');
+            return redirect()->route('univ.cuti-manual')->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Exception $e) {
             // Tampilkan pesan error jika ada masalah
@@ -259,7 +263,7 @@ class CutiManualController extends Controller
             $cuti = PengajuanCuti::where('id_cuti', $id_cuti)->first();
 
             // Cek apakah approved = 3
-            if ($cuti->approved == 3) {
+            if ($cuti->approved == 2) {
                 return redirect()->back()->with('error','Data tidak dapat dihapus karena sudah disetujui BAK!');
             }
 
@@ -272,7 +276,7 @@ class CutiManualController extends Controller
 
             // Jika pengajuan cuti tidak ditemukan, lemparkan pesan error
             if (!$cuti) {
-                return redirect()->route('univ.cuti-kuliah')->with('error', 'Pengajuan cuti tidak ditemukan.');
+                return redirect()->route('univ.cuti-manual')->with('error', 'Pengajuan cuti tidak ditemukan.');
             }
 
 
@@ -288,10 +292,10 @@ class CutiManualController extends Controller
             $akm->delete();
 
             // Redirect kembali ke halaman index dengan pesan sukses
-            return redirect()->route('univ.cuti-kuliah')->with('success', 'Pengajuan cuti berhasil dihapus.');
+            return redirect()->route('univ.cuti-manual')->with('success', 'Pengajuan cuti berhasil dihapus.');
         } catch (\Exception $e) {
             // Tangani error dan tampilkan pesan error
-            return redirect()->route('univ.cuti-kuliah')->with('error', 'Terjadi kesalahan saat menghapus pengajuan cuti.');
+            return redirect()->route('univ.cuti-manual')->with('error', 'Terjadi kesalahan saat menghapus pengajuan cuti.');
         }
     }
 

@@ -106,7 +106,7 @@ class CutiController extends Controller
 
         if($riwayat_pendidikan->prodi->id_jenjang_pendidikan !=30 && $jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
             return redirect()->back()->with('error','Anda tidak bisa mengajukan cuti, Silahkan selesaikan minimal 50% dari total sks yang wajib ditempuh!');
-        } 
+        }
     
         return view('mahasiswa.pengajuan-cuti.index', [
             'data' => $data,
