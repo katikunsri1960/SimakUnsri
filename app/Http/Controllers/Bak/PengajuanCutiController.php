@@ -23,7 +23,7 @@ class PengajuanCutiController extends Controller
 
         $data = $db->with(['riwayat', 'prodi']);
 
-        $pilihan_semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
+        $pilihan_semester = Semester::select('id_semester', 'nama_semester')->whereNot('semester', 3)->orderBy('id_semester', 'desc')->get();
         $semester_view = $request->semester_view ?? SemesterAktif::select('id_semester')->first()->id_semester;
 
         $prodi = ProgramStudi::all();
@@ -88,7 +88,7 @@ class PengajuanCutiController extends Controller
     public function pembatalan_cuti(Request $request, $cuti)
     {
         $pengajuan_cuti = PengajuanCuti::where('id_cuti',$cuti)->first();
-        
+
         PengajuanCuti::where('id_cuti',$cuti)->update([
             'approved' => 4,
             'alasan_pembatalan' => $request->alasan_pembatalan

@@ -54,6 +54,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::get('/check-sync', [App\Http\Controllers\Bak\DashboardController::class, 'check_sync'])->name('bak.check-sync');
 
+            Route::prefix('tunda-bayar')->group(function() {
+                Route::get('/', [App\Http\Controllers\Bak\TundaBayarController::class, 'index'])->name('bak.tunda-bayar');
+            });
+
             Route::prefix('beasiswa')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\BeasiswaController::class, 'index'])->name('bak.beasiswa');
                 Route::get('/data', [App\Http\Controllers\Bak\BeasiswaController::class, 'data'])->name('bak.beasiswa.data');
