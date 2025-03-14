@@ -4,11 +4,11 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">
-                    Pembatalan Pengajuan Cuti
+                    Pembatalan Penundaan Bayar
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('fakultas.pengajuan-cuti.decline', $d->id_cuti)}}" method="post" id="decline-class-{{$d->id}}">
+            <form action="{{route('fakultas.penundaan-bayar.decline', $d->id)}}" method="post" id="decline-class-{{$d->id}}">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -35,8 +35,8 @@
     $('#decline-class-{{$d->id}}').submit(function(e){
         e.preventDefault();
         swal({
-            title: 'Melakukan pembatalan bimbingan mahasiswa',
-            text: "Apakah anda yakin ingin?",
+            title: 'Apakah anda yakin?',
+            text: "Anda akan membatalkan pengajuan Penundaan Bayar ini.",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

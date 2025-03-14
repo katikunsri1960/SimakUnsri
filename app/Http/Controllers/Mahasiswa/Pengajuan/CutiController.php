@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa\Cuti;
+namespace App\Http\Controllers\Mahasiswa\Pengajuan;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -108,7 +108,7 @@ class CutiController extends Controller
             return redirect()->back()->with('error','Anda tidak bisa mengajukan cuti, Silahkan selesaikan minimal 50% dari total sks yang wajib ditempuh!');
         }
     
-        return view('mahasiswa.pengajuan-cuti.index', [
+        return view('mahasiswa.pengajuan.cuti.index', [
             'data' => $data,
             'jenjang_pendidikan' => $riwayat_pendidikan,
             'beasiswa' => $beasiswa,
@@ -156,7 +156,7 @@ class CutiController extends Controller
         }
         // dd($data);
 
-        return view('mahasiswa.pengajuan-cuti.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);
+        return view('mahasiswa.pengajuan.cuti.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);
     }
 
     
