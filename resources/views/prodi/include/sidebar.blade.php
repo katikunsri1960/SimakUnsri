@@ -138,6 +138,9 @@
                             <li class="{{request()->routeIs('prodi.report.cuti-mahasiswa') ? 'active' : ''}}"><a href="{{route('prodi.report.cuti-mahasiswa')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Cuti Mahasiswa</a>
                             </li>
+                            <li class="{{request()->routeIs('prodi.report.tunda-bayar') ? 'active' : ''}}"><a href="{{route('prodi.report.tunda-bayar')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Tunda bayar</a>
+                            </li>
                             <li class="{{request()->routeIs('prodi.report.kemahasiswaan') ? 'active' : ''}}"><a href="{{route('prodi.report.kemahasiswaan')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Data Kemahasiswaan</a>
                             </li>
