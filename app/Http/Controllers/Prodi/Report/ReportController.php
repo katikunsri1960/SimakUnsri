@@ -44,4 +44,9 @@ class ReportController extends Controller
             'count' => $count,
         ]);
     }
+
+    public function tunda_bayar(Request $request)
+    {
+        
+    }
 }

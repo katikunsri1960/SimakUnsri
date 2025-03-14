@@ -19,22 +19,22 @@ class CutiManual extends Model
             'status' => 'Belum Disetujui',
             'class' => 'fa-user',
          ],
-            1 => [
-                'status' => 'Disetujui Fakultas',
-                'class' => 'fa-user-check text-primary',
-            ],
-            2 => [
-                'status' => 'Disetujui BAK',
-                'class' => 'fa-check text-success',
-            ],
-            3 => [
-                'status' => 'Ditolak Fakultas',
-                'class' => 'fa-user-times text-danger',
-            ],
-            4 => [
-                'status' => 'Ditolak BAK',
-                'class' => 'fa-times text-danger',
-            ],
+        1 => [
+            'status' => 'Disetujui Fakultas',
+            'class' => 'fa-user-check text-primary',
+        ],
+        2 => [
+            'status' => 'Disetujui BAK',
+            'class' => 'fa-check text-success',
+        ],
+        3 => [
+            'status' => 'Ditolak Fakultas',
+            'class' => 'fa-user-times text-danger',
+        ],
+        4 => [
+            'status' => 'Ditolak BAK',
+            'class' => 'fa-times text-danger',
+        ],
     ];
 
     // protected $fillable = ['id_registrasi_mahasiswa'];
