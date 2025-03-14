@@ -39,7 +39,7 @@ Daftar Pengajuan Cuti
                         <span class="divider-line mx-1"></span>
                     </div>
                 </div>
-                
+
                 <div class="table-responsive mt-5">
                     <table id="data" class="table table-bordered table-striped text-center">
                         <thead>
@@ -94,7 +94,7 @@ Daftar Pengajuan Cuti
                                             <span class="text-muted">Tidak ada file</span>
                                         @endif
                                     </td>
-                                    
+
                                     <td class="text-center align-middle" style="width:3%">
                                         <button class="btn btn-rounded bg-warning" title="Edit Data" data-bs-toggle="modal" data-bs-target="#editModal" onclick="editBatas({{$d}}, {{$d->id}})">
                                             <i class="fa fa-pencil-square-o"><span class="path1"></span><span class="path2"></span></i>
@@ -179,7 +179,7 @@ $(document).ready(function() {
     // Fetch mahasiswa data on selection
     $('#id_registrasi_mahasiswa').on('change', function() {
         var id_registrasi_mahasiswa = $(this).val();
-        
+
         $.ajax({
             url: "{{ url('/universitas/stop-out/get-data-mahasiswa') }}/" + id_registrasi_mahasiswa,
             type: "GET",
@@ -187,14 +187,14 @@ $(document).ready(function() {
             success: function(response) {
                 var data = response.data;
                 var semester_aktif = response.semester_aktif;
-                
+
                 if (data) {
                     // Mengisi data mahasiswa pada input form
                     $('#fakultas_mahasiswa').val(data.prodi.fakultas.nama_fakultas);
                     $('#jurusan_mahasiswa').val(data.prodi.jurusan.nama_jurusan_id);
                     // $('#jenjang_mahasiswa').;
                     $('#prodi_mahasiswa').val(data.prodi.nama_jenjang_pendidikan + " - " + data.prodi.nama_program_studi);
-                    
+
                     $('#jalan').val(data.biodata.jalan);
                     $('#dusun').val(data.biodata.dusun);
                     $('#rt').val(data.biodata.rt);

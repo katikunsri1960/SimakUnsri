@@ -844,6 +844,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             //Route for Report
             Route::prefix('report')->group(function(){
+
+                Route::get('/cuti-mahasiswa', [App\Http\Controllers\Prodi\Report\ReportController::class, 'cuti_mahasiswa'])->name('prodi.report.cuti-mahasiswa');
+
                 Route::get('/kemahasiswaan', [App\Http\Controllers\Prodi\Report\ReportKemahasiswaanController::class, 'index'])->name('prodi.report.kemahasiswaan');
                 Route::get('/mahasiswa-aktif', [App\Http\Controllers\Prodi\Report\ReportMahasiswaAktifController::class, 'index'])->name('prodi.report.mahasiswa-aktif');
                 Route::get('/perkuliahan', [App\Http\Controllers\Prodi\Report\ReportPerkuliahanMahasiswaController::class, 'index'])->name('prodi.report.perkuliahan');
