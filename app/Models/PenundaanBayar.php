@@ -13,6 +13,26 @@ class PenundaanBayar extends Model
 
     protected $appends = ['status_text', 'terakhir_update'];
 
+    const STATUS = [
+        0 => [
+            'status' => 'Diajukan',
+            'class' => 'fa-user',
+        ],
+        3 => [
+            'status' => 'Disetujui Fakultas',
+            'class' => 'fa-user-check text-success',
+        ],
+        4 => [
+            'status' => 'Disetujui BAK',
+            'class' => 'fa-check text-success',
+        ],
+        5 => [
+            'status' => 'Ditolak',
+            'class' => 'fa-times text-danger',
+        ],
+
+    ];
+
     public function riwayat()
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
