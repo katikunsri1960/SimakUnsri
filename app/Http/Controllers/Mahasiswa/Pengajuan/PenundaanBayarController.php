@@ -94,11 +94,11 @@ class PenundaanbayarController extends Controller
         ->first();
 
         // Jika sudah ada Penundaan Bayar yang sedang diproses, tampilkan pesan error
-        if (!empty($existingData)) {
+        if ($existingData) {
             if ($existingData->approved == 0) {
                 return redirect()->back()->with('error', 'Anda sudah memiliki Penundaan Bayar yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
-            } elseif ($existingData->approved == 1) {
-                return redirect()->back()->with('error', 'Anda sudah memiliki Penundaan Bayar yang sudah disetujui.');
+            } elseif ($existingData->approved > 0) {
+                return redirect()->back()->with('error', 'Anda sudah memiliki Penundaan Bayar yang sudah diproses!');
             }
         }
 
@@ -153,7 +153,7 @@ class PenundaanbayarController extends Controller
     {
         try {
             // Temukan Penundaan Bayar berdasarkan ID
-            $penundaan = PenundaanBayar::where('id', $id)->first();
+            $penundaan = PenundaanBayar::find($id);
 
             // Jika Penundaan Bayar tidak ditemukan, lemparkan pesan error
             if (!$penundaan) {

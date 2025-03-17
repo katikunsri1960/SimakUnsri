@@ -103,11 +103,11 @@ class CutiManualController extends Controller
                         ->first();
 
             // Jika sudah ada pengajuan cuti yang sedang diproses, tampilkan pesan error
-            if (!empty($existingCuti)) {
+            if ($existingCuti) {
                 if ($existingCuti->approved == 0) {
                     return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
-                } elseif ($existingCuti->approved == 1 || $existingCuti->approved == 2) {
-                    return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sudah disetujui.');
+                } elseif ($existingCuti->approved > 0 || $existingCuti->approved == 2) {
+                    return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang telah diproses.');
                 }
             }
 
@@ -264,7 +264,7 @@ class CutiManualController extends Controller
 
             // Cek apakah approved = 3
             if ($cuti->approved == 2) {
-                return redirect()->back()->with('error','Data tidak dapat dihapus karena sudah disetujui BAK!');
+                return redirect()->back()->with('error','Data tidak dapat dihapus karena sudah disetujui!');
             }
 
             // Temukan pengajuan cuti berdasarkan ID
@@ -279,12 +279,10 @@ class CutiManualController extends Controller
                 return redirect()->route('univ.cuti-manual')->with('error', 'Pengajuan cuti tidak ditemukan.');
             }
 
-
-
             // Hapus file pendukung dari storage jika ada
-            // if ($cuti->file_pendukung) {
-            //     \Storage::disk('public')->delete($cuti->file_pendukung);
-            // }
+            if ($cuti->file_pendukung) {
+                Storage::disk('public')->delete($cuti->file_pendukung);
+            }
 
             // Hapus data pengajuan cuti dari database
             $cuti->delete();
