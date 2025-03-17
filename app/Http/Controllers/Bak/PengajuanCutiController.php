@@ -26,8 +26,14 @@ class PengajuanCutiController extends Controller
 
         $data = $db->with(['riwayat', 'prodi']);
 
-        $pilihan_semester = Semester::select('id_semester', 'nama_semester')->whereNot('semester', 3)->orderBy('id_semester', 'desc')->get();
-        $semester_view = $request->semester_view ?? SemesterAktif::select('id_semester')->first()->id_semester;
+        $semester_aktif = SemesterAktif::first()->id_semester;
+
+        $pilihan_semester = Semester::select('id_semester', 'nama_semester')
+                        ->where('id_semester', '<=', $semester_aktif)
+                        ->whereNot('semester', 3)
+                        ->orderBy('id_semester', 'desc')->get();
+                        
+        $semester_view = $request->semester_view ?? $semester_aktif;
 
         $prodi = ProgramStudi::all();
 
