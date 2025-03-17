@@ -32,7 +32,6 @@ Ajuan Wisuda Mahasiswa
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA MAHASISWA</th>
-                                    <th class="text-center align-middle">NAMA PROGRAM STUDI</th>
                                     <th class="text-center align-middle">ANGKATAN</th>
                                     <th class="text-center align-middle">JUDUL SKRIPSI</th>
                                     <th class="text-center align-middle">TANGGAL SIDANG</th>
@@ -52,9 +51,8 @@ Ajuan Wisuda Mahasiswa
                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                         <td class="text-start align-middle">{{ $d->nim }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_mahasiswa }}</td>
-                                        <td class="text-start align-middle">{{ $d->riwayat_pendidikan->nama_program_studi }}</td>
                                         <td class="text-center align-middle">{{ $d->angkatan }}</td>
-                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->aktivitas_mahasiswa->judul }}</td>
+                                        <td class="text-start align-middle">{{ $d->aktivitas_mahasiswa->judul }}</td>
                                         <td class="text-center align-middle">{{ $d->aktivitas_mahasiswa->tanggal_selesai }}</td>
                                         <td class="text-center align-middle">{{ $d->transkrip_mahasiswa_sum_sks_mata_kuliah }}</td>
                                         <td class="text-center align-middle">

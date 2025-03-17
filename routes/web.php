@@ -840,15 +840,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/aktivitas-mahasiswa/update/{rencana_ajar}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'update'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.update');
                     Route::delete('/delete/{id}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'delete'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.delete');
                 });
-                Route::get('/aktivitas-penelitian', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_penelitian'])->name('prodi.data-aktivitas.aktivitas-penelitian');
+                
 
                 Route::prefix('aktivitas-pa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_pa'])->name('prodi.data-aktivitas.aktivitas-pa');
                     Route::post('/update/{id}', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_pa_update'])->name('prodi.data-aktivitas.aktivitas-pa.update');
                     Route::get('/anggota/{id}', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'anggota_pa'])->name('prodi.data-aktivitas.aktivitas-pa.anggota');
                 });
-                Route::get('/aktivitias-lomba', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_lomba'])->name('prodi.data-aktivitas.aktivitas-lomba');
-                Route::get('/aktivitas-organisasi', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_organisasi'])->name('prodi.data-aktivitas.aktivitas-organisasi');
             });
 
             //Route for Lulusan
@@ -864,11 +862,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::get('/cuti-mahasiswa', [App\Http\Controllers\Prodi\Report\ReportController::class, 'cuti_mahasiswa'])->name('prodi.report.cuti-mahasiswa');
                 Route::get('/tunda-bayar', [App\Http\Controllers\Prodi\Report\ReportController::class, 'tunda_bayar'])->name('prodi.report.tunda-bayar');
-
-                Route::get('/kemahasiswaan', [App\Http\Controllers\Prodi\Report\ReportKemahasiswaanController::class, 'index'])->name('prodi.report.kemahasiswaan');
-                Route::get('/mahasiswa-aktif', [App\Http\Controllers\Prodi\Report\ReportMahasiswaAktifController::class, 'index'])->name('prodi.report.mahasiswa-aktif');
-                Route::get('/perkuliahan', [App\Http\Controllers\Prodi\Report\ReportPerkuliahanMahasiswaController::class, 'index'])->name('prodi.report.perkuliahan');
-                Route::get('/aktivitas-mahasiswa', [App\Http\Controllers\Prodi\Report\ReportAktivitasMahasiswaController::class, 'index'])->name('prodi.report.aktivitas-mahasiswa');
+                Route::get('/aktivitas-penelitian', [App\Http\Controllers\Prodi\Report\ReportController::class, 'aktivitas_penelitian'])->name('prodi.report.aktivitas-penelitian');
+                Route::get('/aktivitias-lomba', [App\Http\Controllers\Prodi\Report\ReportController::class, 'aktivitas_lomba'])->name('prodi.report.aktivitas-lomba');
             });
 
             //Route for Monitoring
