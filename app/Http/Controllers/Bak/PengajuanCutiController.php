@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Bak;
 
+use Carbon\Carbon;
+use Ramsey\Uuid\Uuid;
 use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
@@ -9,6 +11,7 @@ use App\Models\SemesterAktif;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\PengajuanCuti;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
 class PengajuanCutiController extends Controller
@@ -111,4 +114,5 @@ class PengajuanCutiController extends Controller
 
         return redirect()->back()->with('success', 'Pengajuan Cuti berhasil dibatalkan');
     }
+
 }

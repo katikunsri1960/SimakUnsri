@@ -86,7 +86,7 @@ Ajuan Wisuda Mahasiswa
                                                 <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Wisuda" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
                                             </div>
                                         </td>
-                                    </tr>
+                                    </tr>     
                                 @endforeach
                             </tbody>
                       </table>

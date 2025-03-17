@@ -317,18 +317,24 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             });
 
             Route::prefix('pengajuan-cuti')->group(function(){
-                Route::get('/', [App\Http\Controllers\Fakultas\LainLain\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti');
+                Route::get('/', [App\Http\Controllers\Fakultas\LainLain\CutiController::class, 'index'])->name('fakultas.pengajuan-cuti.index');
                 Route::post('/approve/{cuti}', [App\Http\Controllers\Fakultas\LainLain\CutiController::class, 'cuti_approve'])->name('fakultas.pengajuan-cuti.approve');
                 Route::post('/decline/{cuti}', [App\Http\Controllers\Fakultas\LainLain\CutiController::class, 'pembatalan_cuti'])->name('fakultas.pengajuan-cuti.decline');
             });
 
+            Route::prefix('penundaan-bayar')->group(function(){
+                Route::get('/', [App\Http\Controllers\Fakultas\LainLain\PenundaanBayarController::class, 'index'])->name('fakultas.penundaan-bayar.index');
+                Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\LainLain\PenundaanBayarController::class, 'approve'])->name('fakultas.penundaan-bayar.approve');
+                Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\LainLain\PenundaanBayarController::class, 'decline'])->name('fakultas.penundaan-bayar.decline');
+            });
+
             Route::prefix('pendaftaran-wisuda')->group(function () {
-                Route::get('/', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
-                Route::post('/approve/{wisuda}', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'approve'])->name('fakultas.wisuda.approve');
-                Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
-                Route::get('/tambah', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
-                Route::post('/store', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
-                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Fakultas\LainLain\WisudaController::class, 'delete'])->name('fakultas.wisuda.delete');
+                Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
+                Route::post('/approve/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'approve'])->name('fakultas.wisuda.approve');
+                Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
+                Route::get('/tambah', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
+                Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
+                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'delete'])->name('fakultas.wisuda.delete');
             });
 
             //ROUTE BANTUAN
@@ -432,19 +438,26 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
             });
 
-            //Route for prestasi mahasiswa
+            //Route for pengajuan cuti
             Route::prefix('pengajuan-cuti')->group(function () {
-                Route::get('/', [App\Http\Controllers\Mahasiswa\Cuti\CutiController::class, 'index'])->name('mahasiswa.pengajuan-cuti.index');
-                Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Cuti\CutiController::class, 'tambah'])->name('mahasiswa.pengajuan-cuti.tambah');
-                Route::post('/store', [App\Http\Controllers\Mahasiswa\Cuti\CutiController::class, 'store'])->name('mahasiswa.pengajuan-cuti.store');
-                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Mahasiswa\Cuti\CutiController::class, 'delete'])->name('mahasiswa.pengajuan-cuti.delete');
+                Route::get('/', [App\Http\Controllers\Mahasiswa\Pengajuan\CutiController::class, 'index'])->name('mahasiswa.pengajuan-cuti.index');
+                Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Pengajuan\CutiController::class, 'tambah'])->name('mahasiswa.pengajuan-cuti.tambah');
+                Route::post('/store', [App\Http\Controllers\Mahasiswa\Pengajuan\CutiController::class, 'store'])->name('mahasiswa.pengajuan-cuti.store');
+                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Mahasiswa\Pengajuan\CutiController::class, 'delete'])->name('mahasiswa.pengajuan-cuti.delete');
+            });
+            //Route for penundaan bayar
+            Route::prefix('penundaan-bayar')->group(function () {
+                Route::get('/', [App\Http\Controllers\Mahasiswa\Pengajuan\PenundaanBayarController::class, 'index'])->name('mahasiswa.penundaan-bayar.index');
+                Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Pengajuan\PenundaanBayarController::class, 'tambah'])->name('mahasiswa.penundaan-bayar.tambah');
+                Route::post('/store', [App\Http\Controllers\Mahasiswa\Pengajuan\PenundaanBayarController::class, 'store'])->name('mahasiswa.penundaan-bayar.store');
+                Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\Pengajuan\PenundaanBayarController::class, 'delete'])->name('mahasiswa.penundaan-bayar.delete');
             });
 
             Route::prefix('pendaftaran-wisuda')->group(function () {
                 Route::get('/', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'index'])->name('mahasiswa.wisuda.index');
                 Route::get('/tambah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'tambah'])->name('mahasiswa.wisuda.tambah');
                 Route::post('/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'store'])->name('mahasiswa.wisuda.store');
-                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'delete'])->name('mahasiswa.wisuda.delete');
+                Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'delete'])->name('mahasiswa.wisuda.delete');
             });
 
             // Route::get('/nilai-suliet', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.nilai-suliet');

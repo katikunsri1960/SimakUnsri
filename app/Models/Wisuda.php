@@ -77,7 +77,7 @@ class Wisuda extends Model
     public function getIdTanggalSkYudisiumAttribute()
     {
         Carbon::setLocale('id');
-        return Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium)->translatedFormat('d F Y');
+        return $this->tanggal_sk_yudisium ?  Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium)->translatedFormat('d F Y') : '-';
     }
 
     public function getMasaStudiAttribute()

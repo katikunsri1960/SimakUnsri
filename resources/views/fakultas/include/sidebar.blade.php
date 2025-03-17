@@ -103,12 +103,12 @@
                                     Aktivitas Non Tugas Akhir
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.data-akademik.sidang-mahasiswa') || request()->routeIs('fakultas.data-akademik.sidang-mahasiswa.*') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('fakultas.data-akademik.sidang-mahasiswa') || request()->routeIs('fakultas.data-akademik.sidang-fakultas.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-akademik.sidang-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     Sidang Mahasiswa
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.data-akademik.yudisium-mahasiswa') || request()->routeIs('fakultas.data-akademik.yudisium-mahasiswa.*') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('fakultas.data-akademik.yudisium-mahasiswa') || request()->routeIs('fakultas.data-akademik.yudisium-fakultas.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-akademik.yudisium-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     Yudisium Mahasiswa
                                 </a>
@@ -119,6 +119,13 @@
                                 </a>
                             </li>
                         </ul>
+                    </li>
+                    <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
+                        <a href="{{route('fakultas.wisuda.index')}}">
+                            <i class="fa fa-user-graduate"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Wisuda</span>
+                        </a>
                     </li>
 
                     <li class="header">Monitoring</li>
@@ -162,7 +169,7 @@
                             </span>
                         </a>
                     </li>
-                    <li class="{{request()->routeIs('fakultas.pengajuan-cuti') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('fakultas.pengajuan-cuti') ? 'active' : ''}}">
                         <a href="{{route('fakultas.pengajuan-cuti')}}">
                             <i class="fa fa-exclamation-triangle"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -171,18 +178,34 @@
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
-                    </li>
-                    <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
+                    </li> --}}
+                    <li class="treeview {{request()->routeIs('fakultas.pengajuan-cuti.index') || request()->routeIs('fakultas.pengajuan-cuti.*') ||
+                        request()->routeIs('fakultas.penundaan-bayar.index') || request()->routeIs('fakultas.penundaan-bayar.*')
+                            ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i class="fa fa-graduation-cap"><span class="path1"></span><span
+                            <i span class="fa fa-calendar-times-o"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Pendaftaran Wisuda</span>
+                            <span>Pengajuan</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
                         </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('fakultas.pengajuan-cuti.index') || request()->routeIs('fakultas.pengajuan-cuti.*')  ? 'active' : ''}}">
+                                <a href="{{route('fakultas.pengajuan-cuti.index')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                Cuti Kuliah</a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.penundaan-bayar.index') || request()->routeIs('fakultas.penundaan-bayar.*')  ? 'active' : ''}}">
+                                <a href="{{route('fakultas.penundaan-bayar.index')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                Penundaan Bayar</a>
+                            </li>
+                        </ul>
                     </li>
-
                     {{-- <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
-                        <a href="{{route('fakultas.wisuda.index')}}">
-                            <i class="fa fa-graduation-cap"><span class="path1"></span><span
+                        <a href="#">
+                            <i class="fa fa-user-graduate"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Pendaftaran Wisuda</span>
                         </a>
