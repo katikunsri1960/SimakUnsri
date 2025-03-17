@@ -196,7 +196,7 @@ Dosen Kelas Perkuliahan
                                     '</div>'+
                                     '<div class="col-md-3 mb-2">'+
                                         '<label for="penyelenggara" class="form-label">Penyelenggara</label>'+
-                                        '<input type="number" class="form-control" name="penyelenggara[]" id="penyelenggara" aria-describedby="helpId" value="" placeholder="Masukkan Instansi / Organisasi Penyelenggara" required/>'+
+                                        '<input type="text" class="form-control" name="penyelenggara[]" id="penyelenggara" aria-describedby="helpId" value="" placeholder="Masukkan Instansi / Organisasi Penyelenggara" required/>'+
                                     '</div>'+
                                     '<div class="col-md-1 mb-2">'+
                                         '<label class="form-label">&nbsp;</label>'+
