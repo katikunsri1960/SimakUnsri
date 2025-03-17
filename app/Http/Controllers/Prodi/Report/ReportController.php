@@ -7,6 +7,8 @@ use App\Models\CutiManual;
 use App\Models\PenundaanBayar;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Mahasiswa\PrestasiMahasiswa;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -78,5 +80,31 @@ class ReportController extends Controller
             'data' => $data,
             'count' => $count,
         ]);
+    }
+
+    public function aktivitas_penelitian()
+    {
+        $id_prodi = auth()->user()->fk_id;
+        $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id_prodi', $id_prodi)->whereIn('id_jenis_aktivitas', ['15','23'])->get();
+
+        return view('prodi.report.penelitian-mahasiswa.index', ['data' => $data]);
+    }
+
+    public function aktivitas_lomba()
+    {
+        $id_prodi = auth()->user()->fk_id;
+        $data = PrestasiMahasiswa::with([
+            'biodata_mahasiswa',
+            'biodata_mahasiswa.riwayat_pendidikan' => function ($query) use ($id_prodi) {
+                $query->where('id_prodi', $id_prodi);
+            }
+        ])
+        ->whereHas('biodata_mahasiswa.riwayat_pendidikan', function ($query) use ($id_prodi) {
+            $query->where('id_prodi', $id_prodi);
+        })
+        ->get();    
+
+        // dd($data);
+        return view('prodi.report.prestasi-mahasiswa.index', ['data' => $data]);
     }
 }

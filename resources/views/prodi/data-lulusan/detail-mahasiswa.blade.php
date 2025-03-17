@@ -105,7 +105,7 @@ Dashboard
                                         name="judul"
                                         id="judul"
                                         aria-describedby="helpId"
-                                        value="{{$data->aktivitas_mahasiswa[0]->judul}}"
+                                        value="{{$data->aktivitas_mahasiswa->judul}}"
                                         disabled
                                     />
                                 </div>
@@ -119,7 +119,7 @@ Dashboard
                                         name="jenis_aktivitas"
                                         id="jenis_aktivitas"
                                         aria-describedby="helpId"
-                                        value="{{$data->aktivitas_mahasiswa[0]->jadwal_ujian}}"
+                                        value="{{$data->aktivitas_mahasiswa->jadwal_ujian}}"
                                         disabled
                                     />
                                 </div>
