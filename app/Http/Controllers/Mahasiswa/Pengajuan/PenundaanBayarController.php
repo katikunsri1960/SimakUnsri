@@ -21,7 +21,7 @@ class PenundaanbayarController extends Controller
     public function index()
     {
         // SYARAT UNTUK PENGAJUAN CUTI
-        // - Sesuai dengan ketentuan yang berlaku, mahasiswa diperkenankan mengambil cuti kuliah atau
+        // - Sesuai dengan ketentuan yang berlaku, mahasiswa diperkenankan mengambil Penundaan Bayar kuliah atau
         // - SO (Stop Out), kecuali mahasiswa penerima beasiswa Bidikmisi/KIP-K, mahasiswa penerima
         // - beasiswa penuh lainnya, dan Mahasiswa Program Pendidikan Profesi.
         // - mahasiswa telah menempuh minimal 4 semester untuk program sarjana, 
@@ -34,7 +34,7 @@ class PenundaanbayarController extends Controller
 
         if($semester_aktif->batas_bayar_ukt){
             if($today > $semester_aktif->batas_bayar_ukt){
-            // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+            // return redirect()->back()->with('error', 'Periode Pengajuan Penundaan Bayar telah berakhir!');
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat mengajukan Penundaan Bayar, Periode pengajuan Penundaan Bayar telah berakhir!');
             }
         }
@@ -56,29 +56,6 @@ class PenundaanbayarController extends Controller
         ]);
     }
     
-    private function calculateMaxCuti($jenjang_pendidikan)
-    {
-        // Pedoman Akademik dan Kemahasiswaan Universitas Sriwijaya Tahun Akademik 2024/2025
-        // Halaman 50
-        // k. Lama PKA atau SO maksimum 1 (satu) semester bagi program Diploma dan Program Sarjana.
-        // l. Lama PKA atau SO maksimum 2 (dua) semester Program Magister dan Program Doktor,
-            // yang dapat diambil berturut-turut atau terpisah.
-        // m. Mahasiswa program profesi dan spesialis hanya diperkenankan mengajukan permohonan
-            // PKA atau SO satu kali. Apabila akan mengajukan izin meninggalkan kuliah karena alasan
-            // penting, maka tetap membayar Uang Kuliah Tunggal (UKT).
-            
-        if ($jenjang_pendidikan == 30 || $jenjang_pendidikan == 22 ||
-            $jenjang_pendidikan == 31 || $jenjang_pendidikan == 32 ||
-            $jenjang_pendidikan == 37) {
-            return 1;
-        } elseif ($jenjang_pendidikan == 35 ||
-                    $jenjang_pendidikan == 40) {
-            return 2;
-        } else {
-            return 0;
-        }
-    }
-
     public function tambah()
     {
         // dd($semester_aktif->id_semester);
@@ -92,16 +69,15 @@ class PenundaanbayarController extends Controller
 
         if($semester_aktif->batas_bayar_ukt){
             if($today > $semester_aktif->batas_bayar_ukt){
-            // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat mengajukan Penundaan Bayar, Periode pengajuan Penundaan Bayar telah berakhir!');
+                return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat mengajukan Penundaan Bayar, Periode pengajuan Penundaan Bayar telah berakhir!');
             }
         }
 
-        $existingCuti=$penundaan_bayar->where('id_semester', $semester_aktif->id_semester)
+        $existingData=$penundaan_bayar->where('id_semester', $semester_aktif->id_semester)
                     ->count();
 
-        if($existingCuti){
-            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda telah mencapai maksimum Penundaan Bayar semester ini!');
+        if($existingData){
+            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan Penundaan Bayar, Anda telah mencapai maksimum Penundaan Bayar semester ini!');
         }
 
         return view('mahasiswa.pengajuan.penundaan-bayar.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);
@@ -119,15 +95,15 @@ class PenundaanbayarController extends Controller
                     ->first();
 
         // Cek apakah sudah ada Penundaan Bayar yang sedang diproses
-        $existingCuti = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
+        $existingData = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
         ->where('id_semester', $semester_aktif->id_semester)
         ->first();
 
         // Jika sudah ada Penundaan Bayar yang sedang diproses, tampilkan pesan error
-        if (!empty($existingCuti)) {
-            if ($existingCuti->approved == 0) {
+        if (!empty($existingData)) {
+            if ($existingData->approved == 0) {
                 return redirect()->back()->with('error', 'Anda sudah memiliki Penundaan Bayar yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
-            } elseif ($existingCuti->approved == 1) {
+            } elseif ($existingData->approved == 1) {
                 return redirect()->back()->with('error', 'Anda sudah memiliki Penundaan Bayar yang sudah disetujui.');
             }
         }
@@ -183,22 +159,22 @@ class PenundaanbayarController extends Controller
     {
         try {
             // Temukan Penundaan Bayar berdasarkan ID
-            $cuti = PenundaanBayar::where('id', $id)->first();
+            $penundaan = PenundaanBayar::where('id', $id)->first();
 
             // Jika Penundaan Bayar tidak ditemukan, lemparkan pesan error
-            if (!$cuti) {
-                return redirect()->route('mahasiswa.penundaan-bayar.index')->with('error', 'Pengajuan cuti tidak ditemukan.');
+            if (!$penundaan) {
+                return redirect()->route('mahasiswa.penundaan-bayar.index')->with('error', 'Pengajuan Penundaan Bayar tidak ditemukan.');
             }
 
-            if ($cuti->approved != 0) {
-                return redirect()->route('mahasiswa.penundaan-bayar.index')->with('error', 'Pengajuan cuti tidak dapat dihapus! Pengajuan Cuti sudah disetujui!');
+            if ($penundaan->approved != 0) {
+                return redirect()->route('mahasiswa.penundaan-bayar.index')->with('error', 'Pengajuan Penundaan Bayar tidak dapat dihapus! Pengajuan Penundaan Bayar sudah disetujui!');
             }
 
             // Hapus data Penundaan Bayar dari database
-            $cuti->delete();
+            $penundaan->delete();
 
             // Redirect kembali ke halaman index dengan pesan sukses
-            return redirect()->route('mahasiswa.penundaan-bayar.index')->with('success', 'Pengajuan cuti berhasil dihapus.');
+            return redirect()->route('mahasiswa.penundaan-bayar.index')->with('success', 'Pengajuan Penundaan Bayar berhasil dihapus.');
         } catch (\Exception $e) {
             // Tangani error dan tampilkan pesan error
             return redirect()->route('mahasiswa.penundaan-bayar.index')->with('error', 'Terjadi kesalahan saat menghapus Penundaan Bayar.');
