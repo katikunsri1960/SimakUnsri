@@ -124,7 +124,7 @@ function getData()
     var prodi = $('#prodi').val();
     var periode = $('#periode').val();
 
-    console.log(fakultas, prodi, periode);
+    // console.log(fakultas, prodi, periode);
 
     if (fakultas == '' || prodi == '' || periode == '') {
         swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');

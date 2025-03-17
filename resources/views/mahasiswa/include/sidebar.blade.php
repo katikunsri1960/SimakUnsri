@@ -29,36 +29,6 @@
                     </li>
 
                     <li class="header">PERKULIAHAN</li>
-                    {{-- <li class="treeview {{request()->routeIs('mahasiswa.krs') || request()->routeIs('mahasiswa.krs.index.*') ||
-                                        request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index') || request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.tambah')
-                    ? 'active menu-open' : ''}}">
-                        <a href="{{route('mahasiswa.krs')}}">
-                            <i span class="fa fa-newspaper-o"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Kartu Rencana Studi</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('mahasiswa.krs.index') || request()->routeIs('mahasiswa.krs.index.*') ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.krs.index')}}">
-                                    <i class="fa fa-newspaper-o"><span class="path1"></span><span
-                                            class="path2"></span></i>
-                                    <span>Kartu Studi Mahasiswa</span>
-                                </a>
-                            </li>
-                            <li class="{{request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index') || request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.index.*') ||
-                                        request()->routeIs('mahasiswa.perkuliahan.aktivitas-magang.tambah')
-                             ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.perkuliahan.aktivitas-magang.index')}}">
-                                    <i class="fa fa-newspaper-o"><span class="path1"></span><span
-                                            class="path2"></span></i>
-                                    <span>Aktivitas Magang</span>
-                                </a>
-                            </li>
-                        </ul>
-                    </li> --}}
                     <li class="{{request()->routeIs('mahasiswa.krs.*') || request()->routeIs('mahasiswa.krs') ||
                                 request()->routeIs('mahasiswa.perkuliahan.mbkm.*')
                     ? 'active menu-open' : ''}}">
@@ -82,6 +52,30 @@
                             <span>Nilai USEPT</span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
+                        <a href="#">
+                            <i class="fa fa-user-graduate"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Wisuda</span>
+                        </a>
+                    </li>
+                    
+                    {{-- <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.wisuda.index')}}">
+                            <i class="fa fa-graduation-cap"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Wisuda</span>
+                        </a>
+                    </li> --}}
+                    
+                    <li class="header">Bimbingan</li>
+                    <li class="{{request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir') | request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir')}}">
+                            <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Bimbingan Tugas Akhir</span>
+                        </a>
+                    </li>
+
                     <li class="header">PRESTASI MAHASISWA</li>
                     <li class="treeview {{request()->routeIs('mahasiswa.prestasi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
@@ -105,40 +99,32 @@
                             </li> --> --}}
                         </ul>
                     </li>
-                    
-
-                    <li class="header">Bimbingan</li>
-                    <li class="{{request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir') | request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.bimbingan.bimbingan-tugas-akhir')}}">
-                            <i class="fa fa-users"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Bimbingan Tugas Akhir</span>
-                        </a>
-                    </li>
 
                     <li class="header">LAIN-LAIN</li>
-                    <li class="{{request()->routeIs('mahasiswa.pengajuan-cuti.index') | request()->routeIs('mahasiswa.pengajuan-cuti.tambah') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.pengajuan-cuti.index')}}">
-                            <i class="fa fa-calendar-times-o"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Pengajuan Cuti</span>
-                        </a>
-                    </li>
-                    <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
+                    <li class="treeview {{request()->routeIs('mahasiswa.pengajuan-cuti.index') || request()->routeIs('mahasiswa.pengajuan-cuti.*') ||
+                                            request()->routeIs('mahasiswa.penundaan-bayar.index') || request()->routeIs('mahasiswa.penundaan-bayar.*')
+                            ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i class="fa fa-graduation-cap"><span class="path1"></span><span
+                            <i span class="fa fa-calendar-times-o"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Pendaftaran Wisuda</span>
+                            <span>Pengajuan</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
                         </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('mahasiswa.pengajuan-cuti.index') || request()->routeIs('mahasiswa.pengajuan-cuti.*')  ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.pengajuan-cuti.index')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                Cuti Kuliah</a>
+                            </li>
+                            <li class="{{request()->routeIs('mahasiswa.penundaan-bayar.index') || request()->routeIs('mahasiswa.penundaan-bayar.*')  ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.penundaan-bayar.index')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                Penundaan Bayar</a>
+                            </li>
+                        </ul>
                     </li>
-                    
-                    {{-- <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.wisuda.index')}}">
-                            <i class="fa fa-graduation-cap"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Pendaftaran Wisuda</span>
-                        </a>
-                    </li> --}}
-                    
 
                     <li class="header">BANTUAN</li>
                     <li class="{{request()->routeIs('mahasiswa.bantuan.ganti-password') ? 'active' : ''}}">

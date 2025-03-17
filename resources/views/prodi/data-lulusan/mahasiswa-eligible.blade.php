@@ -48,7 +48,7 @@ Ajuan Wisuda Mahasiswa
 
                                 @foreach ($data as $d)
                                 @include('prodi.data-lulusan.pembatalan-ajuan')
-                                    @foreach ($d->aktivitas_mahasiswa as $aktivitas)
+                                    {{-- @foreach ($d->aktivitas_mahasiswa as $aktivitas) --}}
                                         <tr>
                                             <td class="text-center align-middle">{{ $no_a++ }}</td>
                                             <td class="text-start align-middle">{{ $d->nim }}</td>
@@ -88,7 +88,7 @@ Ajuan Wisuda Mahasiswa
                                                 </div>
                                             </td>
                                         </tr>
-                                    @endforeach
+                                    {{-- @endforeach --}}
                                 @endforeach
                             </tbody>
                       </table>

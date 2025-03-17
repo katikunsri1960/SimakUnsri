@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Mahasiswa\Cuti;
+namespace App\Http\Controllers\Mahasiswa\Pengajuan;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -106,9 +106,9 @@ class CutiController extends Controller
 
         if($riwayat_pendidikan->prodi->id_jenjang_pendidikan !=30 && $jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
             return redirect()->back()->with('error','Anda tidak bisa mengajukan cuti, Silahkan selesaikan minimal 50% dari total sks yang wajib ditempuh!');
-        } 
+        }
     
-        return view('mahasiswa.pengajuan-cuti.index', [
+        return view('mahasiswa.pengajuan.cuti.index', [
             'data' => $data,
             'jenjang_pendidikan' => $riwayat_pendidikan,
             'beasiswa' => $beasiswa,
@@ -144,6 +144,7 @@ class CutiController extends Controller
     {
         // dd($semester_aktif->id_semester);
         $id_reg = auth()->user()->fk_id;
+        
         $data = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan')->where('id_registrasi_mahasiswa', $id_reg)->first();
         $semester_aktif=SemesterAktif::with('semester')->first();
         $today = Carbon::now()->toDateString();
@@ -154,9 +155,26 @@ class CutiController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Periode Pengajuan Cuti telah berakhir!');
             }
         }
+
+        $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $data->id_registrasi_mahasiswa)
+                            ->get();
+
+        $existingCuti=$cuti->where('id_semester', $semester_aktif->id_semester)
+                    ->count();
+        // dd($cuti->count());
+
+        if ($existingCuti) {
+            return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti pada Semester ini!');
+        }
+
+        $max_cuti= $this->calculateMaxCuti($data->prodi->id_jenjang_pendidikan);
+
+        if($max_cuti == 0 || $cuti->count() >= $max_cuti){
+            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda telah mencapai maksimum pengajuan cuti!');
+        }
         // dd($data);
 
-        return view('mahasiswa.pengajuan-cuti.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);
+        return view('mahasiswa.pengajuan.cuti.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);
     }
 
     
@@ -175,13 +193,11 @@ class CutiController extends Controller
         ->where('id_semester', $semester_aktif->id_semester)
         ->first();
 
+        // dd($existingCuti);
+
         // Jika sudah ada pengajuan cuti yang sedang diproses, tampilkan pesan error
-        if (!empty($existingCuti)) {
-            if ($existingCuti->approved == 0) {
-                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
-            } elseif ($existingCuti->approved == 1) {
-                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti yang sudah disetujui.');
-            }
+        if ($existingCuti) {
+            return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti pada Semester ini!');
         }
 
         // Validate request data
@@ -202,10 +218,10 @@ class CutiController extends Controller
         $alamat = str_replace(', ,', ',', $alamat);
 
         // Generate file name
-        $fileName = 'file_pendukung_' . str_replace(' ', '_', $riwayat_pendidikan->nama_mahasiswa) . '_' . time() . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
+        $fileName = 'cuti_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . $semester_aktif->id_semester . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
 
         // Simpan file ke folder public/pdf dengan nama kustom
-        $filePath = $request->file('file_pendukung')->storeAs('pdf', $fileName, 'public');
+        $filePath = $request->file('file_pendukung')->storeAs('cuti', $fileName, 'public');
 
         // Cek apakah file berhasil diupload
         if (!$filePath) {
@@ -249,9 +265,9 @@ class CutiController extends Controller
             }
 
             // Hapus file pendukung dari storage jika ada
-            // if ($cuti->file_pendukung) {
-            //     \Storage::disk('public')->delete($cuti->file_pendukung);
-            // }
+            if ($cuti->file_pendukung) {
+                Storage::disk('public')->delete($cuti->file_pendukung);
+            }
 
             // Hapus data pengajuan cuti dari database
             $cuti->delete();

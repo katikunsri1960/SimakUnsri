@@ -42,25 +42,25 @@ Pendaftaran Wisuda Fakultas
                         <table id="data" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
-                                    <th>No</th>
-                                    <th>Pas Foto</th>
-                                    <th>NIM</th>
-                                    <th>Nama Mahasiswa</th>
-                                    <th>Program Studi</th>
-                                    <th>Bebas Pustaka</th>
-                                    <th>Repository</th>
-                                    <th>Nilai USEPT</th>
-                                    <th>No SK Yudisium</th>
-                                    <th>Tanggal SK Yudisium</th>
-                                    <th>Lama Studi</th>
-                                    <th>Status Pendaftaran Wisuda</th>
-                                    <th>Action</th>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Pas Foto</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Nama Mahasiswa</th>
+                                    <th class="text-center align-middle">Program Studi</th>
+                                    <th class="text-center align-middle">Bebas Pustaka</th>
+                                    <th class="text-center align-middle">Repository</th>
+                                    <th class="text-center align-middle">Nilai USEPT</th>
+                                    <th class="text-center align-middle">File Abstrak</th>
+                                    <th class="text-center align-middle text-nowrap">SK Yudisium<br>(Tgl Yudisium)</th>
+                                    <th class="text-center align-middle">Lama Studi</th>
+                                    <th class="text-center align-middle">Status Pendaftaran Wisuda</th>
+                                    <th class="text-center align-middle">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($data as $d)
-                                @include('fakultas.lain-lain.wisuda.approve-wisuda')
-                                @include('fakultas.lain-lain.wisuda.decline-wisuda')
+                                @include('fakultas.data-akademik.wisuda.approve-wisuda')
+                                @include('fakultas.data-akademik.wisuda.decline-wisuda')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-center align-middle text-nowrap">
@@ -85,21 +85,21 @@ Pendaftaran Wisuda Fakultas
                                         <td class="text-center align-middle">{{$d->nim}}</td>
                                         <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
                                         <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} - {{$d->prodi->nama_program_studi}}</td>
-                                        <td class="text-start align-middle text-nowrap">
+                                        <td class="text-center align-middle text-nowrap">
                                             @if(!$d->bebas_pustaka)
                                                 <span class="badge rounded bg-danger" style="padding: 8px">Belum Bebas Pustaka</span>
                                             @else
                                                 <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$d->bebas_pustaka->file_bebas_pustaka}}" type="button" target="_blank">Lihat Bebas Pustaka</a>
                                             @endif
                                         </td>
-                                        <td class="text-start align-middle text-nowrap">
+                                        <td class="text-center align-middle text-nowrap">
                                             @if(!$d->bebas_pustaka)
                                                 <span class="badge rounded bg-danger" style="padding: 8px">Belum Upload Repositroy</span>
                                             @else
                                                 <a class="btn btn-sm btn-success" href="{{$d->bebas_pustaka->link_repo}}" type="button" target="_blank">Lihat Repository</a>
                                             @endif
                                         </td>
-                                        <td class="text-left align-middle text-nowrap">
+                                        <td class="text-center align-middle text-nowrap">
                                             @if(!$d->riwayat_pendidikan->id_kurikulum)
                                                 <span class="badge rounded bg-warning" style="padding: 8px">Kurikulum Belum Diatur</span>
                                             @elseif(isset($d->useptData['class']) && $d->useptData['class'] == "danger")
@@ -108,9 +108,23 @@ Pendaftaran Wisuda Fakultas
                                                     ({{$d->useptData['status'] ?? 'N/A'}})
                                                 </span>
                                             @endif
-                                        </td>   
-                                        <td class="text-start align-middle">{{$d->no_sk_yudisium}}</td>
-                                        <td class="text-start align-middle text-nowrap">{{$d->tgl_sk_yudisium}}</td>
+                                        </td> 
+                                        <td class="text-center align-middle text-nowrap">
+                                            @if(!$d->abstrak_file)
+                                                <span class="badge rounded bg-warning" style="padding: 8px">File tidak diupload</span>
+                                            @else
+                                                <a href="{{ asset($d->abstrak_file) }}" target="_blank" class="btn btn-sm btn-primary my-2">
+                                                    <i class="fa fa-file-pdf-o"></i> Lihat File
+                                                </a>
+                                            @endif
+                                        </td> 
+                                        <td class="text-center align-middle text-nowrap">
+                                            @if ($d->no_sk_yudisium && $d->tgl_sk_yudisium)
+                                                {{$d->no_sk_yudisium}}<br>( {{$d->tgl_sk_yudisium}} )
+                                            @else
+                                                -
+                                            @endif
+                                        </td>
                                         <td class="text-start align-middle text-nowrap">
                                             @if ($d->tgl_sk_yudisium)
                                                 @php
@@ -154,11 +168,7 @@ Pendaftaran Wisuda Fakultas
                                                 @endif
                                                 @if($d->approved == 1 || $d->approved == 2)
                                                     <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Pangajuan" data-bs-toggle="modal" data-bs-target="#declineModal{{$d->id}}"><i class="fa fa-ban"> </i>  Decline</a>
-                                                @endif
-                                                <a href="{{ asset($d->abstrak_file) }}" target="_blank" class="btn btn-sm btn-primary my-2">
-                                                    <i class="fa fa-file-pdf-o"></i> File Abstrak
-                                                </a>
-                                                
+                                                @endif                                                
                                             </div>
                                         </td>
                                     </tr>

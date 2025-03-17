@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Fakultas\LainLain;
+namespace App\Http\Controllers\Fakultas\Akademik;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -80,7 +80,7 @@ class WisudaController extends Controller
         }
         // dd($data, $useptData);
 
-        return view('fakultas.lain-lain.wisuda.index', [
+        return view('fakultas.data-akademik.wisuda.index', [
             'data' => $data,
             // 'bebas_pustaka' => $bebas_pustaka,
             // 'useptData' => $useptData,
