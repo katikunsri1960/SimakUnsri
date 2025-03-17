@@ -120,7 +120,7 @@ class PenundaanbayarController extends Controller
         $alamat = str_replace(', ,', ',', $alamat);
 
         // Generate file name
-        $fileName = 'penundaan_bayar' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
+        $fileName = 'penundaan_bayar_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . $semester_aktif->id_semester . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
 
         // Simpan file ke folder public/pdf dengan nama kustom
         $filePath = $request->file('file_pendukung')->storeAs('penundaan_bayar', $fileName, 'public');
@@ -162,6 +162,11 @@ class PenundaanbayarController extends Controller
 
             if ($penundaan->approved != 0) {
                 return redirect()->route('mahasiswa.penundaan-bayar.index')->with('error', 'Pengajuan Penundaan Bayar tidak dapat dihapus! Pengajuan Penundaan Bayar sudah disetujui!');
+            }
+
+            // Hapus file pendukung dari storage
+            if ($penundaan->file_pendukung) {
+                Storage::disk('public')->delete($penundaan->file_pendukung);
             }
 
             // Hapus data Penundaan Bayar dari database

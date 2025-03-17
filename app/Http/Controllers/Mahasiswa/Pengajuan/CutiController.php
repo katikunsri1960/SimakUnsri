@@ -218,10 +218,10 @@ class CutiController extends Controller
         $alamat = str_replace(', ,', ',', $alamat);
 
         // Generate file name
-        $fileName = 'file_pendukung_' . str_replace(' ', '_', $riwayat_pendidikan->nama_mahasiswa) . '_' . time() . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
+        $fileName = 'cuti_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . $semester_aktif->id_semester . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
 
         // Simpan file ke folder public/pdf dengan nama kustom
-        $filePath = $request->file('file_pendukung')->storeAs('pdf', $fileName, 'public');
+        $filePath = $request->file('file_pendukung')->storeAs('cuti', $fileName, 'public');
 
         // Cek apakah file berhasil diupload
         if (!$filePath) {
