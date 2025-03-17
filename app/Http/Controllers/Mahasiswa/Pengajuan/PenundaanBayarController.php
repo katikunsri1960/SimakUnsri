@@ -20,12 +20,6 @@ class PenundaanbayarController extends Controller
 {
     public function index()
     {
-        // SYARAT UNTUK PENGAJUAN CUTI
-        // - Sesuai dengan ketentuan yang berlaku, mahasiswa diperkenankan mengambil Penundaan Bayar kuliah atau
-        // - SO (Stop Out), kecuali mahasiswa penerima beasiswa Bidikmisi/KIP-K, mahasiswa penerima
-        // - beasiswa penuh lainnya, dan Mahasiswa Program Pendidikan Profesi.
-        // - mahasiswa telah menempuh minimal 4 semester untuk program sarjana, 
-        // - atau telah menempuh minimal 50% dari total sks yang wajib ditempuh pada program studinya.
         $id_reg = auth()->user()->fk_id;
         
         $semester_aktif = SemesterAktif::first();
