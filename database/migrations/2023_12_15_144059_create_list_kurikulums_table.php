@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->integer("id_jenj_didik")->nullable();
             $table->integer("jml_sem_normal")->nullable();
-            $table->string("id_kurikulum")->nullable();
-            $table->index("id_kurikulum");
+            $table->string("id_kurikulum")->unique();
+            // $table->index("id_kurikulum");
             $table->string("nama_kurikulum");
             $table->string("id_prodi");
             $table->string("nama_program_studi");
