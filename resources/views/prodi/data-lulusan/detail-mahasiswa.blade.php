@@ -172,7 +172,6 @@ Dashboard
                                         <th>Kode Mata Kuliah</th>
                                         <th>Nama Mata Kuliah</th>
                                         <th>SKS Mata Kuliah</th>
-                                        <th>Nilai Angka</th>
                                         <th>Nilai Indeks</th>
                                         <th>Nilai Huruf</th>
                                     </tr>
@@ -184,7 +183,6 @@ Dashboard
                                                 <td>{{$t->kode_mata_kuliah}}</td>
                                                 <td>{{$t->nama_mata_kuliah}}</td>
                                                 <td>{{$t->sks_mata_kuliah}}</td>
-                                                <td>{{$t->nilai_angka}}</td>
                                                 <td>{{$t->nilai_indeks}}</td>
                                                 <td>{{$t->nilai_huruf}}</td>
                                             </tr>
@@ -203,7 +201,7 @@ Dashboard
                                     </tr>
                                     <tr>
                                         <td class="text-start align-middle" colspan="2"><strong>INDEKS PRESTASI KUMULATIF</strong></td>
-                                        <td class="text-center align-middle"><strong>{{ $data->ipk }}</strong></td>
+                                        <td class="text-center align-middle"><strong>{{ number_format($data->ipk,2) }}</strong></td>
                                         <td class="text-center align-middle" colspan="3"></td>
                                     </tr>
                                 </tfoot>
@@ -233,7 +231,7 @@ Dashboard
                                                 <td>{{$akm->sks_semester}}</td>
                                                 <td>{{$akm->sks_total}}</td>
                                                 <td>{{$akm->ips}}</td>
-                                                <td>{{$akm->ipk}}</td>
+                                                <td>{{number_format($akm->ipk,2)}}</td>
                                             </tr>
                                         @endforeach
                                     @else
