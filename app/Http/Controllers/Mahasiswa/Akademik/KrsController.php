@@ -489,6 +489,7 @@ class KrsController extends Controller
             $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->fk_id, $kelas->id_matkul);
         }
 
+        //  dd($kelas);
 
         return response()->json($kelasKuliah);
     }
@@ -631,7 +632,7 @@ class KrsController extends Controller
             $jumlah_peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)->count();
 
             // Pengecekan kapasitas kelas
-            if ($jumlah_peserta >= $kelas_mk->kapasitas) {
+            if ($jumlah_peserta >= $kelas_mk->ruang_perkuliahan->kapasitas_ruang) {
                 return response()->json(['message' => 'Kapasitas kelas sudah penuh.'], 400);
             }
 

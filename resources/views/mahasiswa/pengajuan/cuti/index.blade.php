@@ -120,7 +120,8 @@ Pengajuan Cuti Mahasiswa
             e.preventDefault();
             var formId = $(this).data('id');
             swal({
-                title: 'Apakah Anda Yakin??',
+                title: 'Hapus Data',
+                text: "Apakah anda yakin ingin menghapus data?",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

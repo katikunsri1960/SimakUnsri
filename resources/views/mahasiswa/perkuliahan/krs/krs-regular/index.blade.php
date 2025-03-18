@@ -336,6 +336,7 @@ Kartu Rencana Studi
             var table = '<table class="table table-bordered table-striped text-center">';
             table += '<thead><tr><th>No</th><th>Kelas Kuliah</th><th>Nama Ruang</th><th>Dosen Pengajar</th><th style="width: 400px;">Jadwal Kuliah</th><th>Peserta</th><th>Action</th></tr></thead>';
             table += '<tbody>';
+            // console.log(data)
 
             $.each(data, function(index, kelas) {
                 table += '<tr>';
@@ -358,10 +359,10 @@ Kartu Rencana Studi
                 table += '<td>' + formatJadwalKuliah(kelas.jadwal_hari, kelas.jadwal_jam_mulai, kelas.jadwal_jam_selesai) + '</td>';
 
                 // Menampilkan kapasitas dan peserta
-                if (kelas.kapasitas == null) {
+                if (kelas.ruang_perkuliahan.kapasitas_ruang == null) {
                     table += '<td>' + kelas.peserta_kelas_count + '/' + '-' + '</td>';
                 } else {
-                    table += '<td>' + kelas.peserta_kelas_count + '/' + kelas.kapasitas + '</td>';
+                    table += '<td>' + kelas.peserta_kelas_count + '/' + kelas.ruang_perkuliahan.kapasitas_ruang + '</td>';
                 }
 
                 // Menampilkan tombol action
@@ -391,32 +392,45 @@ Kartu Rencana Studi
                 // Cek prasyarat sebelum mengirimkan request
                 cekPrasyarat(idMatkul, id_reg, csrfToken, function(response) {
                     if (response.prasyarat_dipenuhi) {
-                        // Jika prasyarat terpenuhi, lanjutkan dengan proses AJAX request untuk menyimpan kelas kuliah
-                        $.ajax({
-                            url: '{{ route("mahasiswa.krs.store_kelas_kuliah") }}',
-                            type: 'POST',
-                            data: {
-                                id_kelas_kuliah: idKelas,
-                                _token: csrfToken  // Sertakan CSRF token di sini
-                            },
-                            success: function(response) {
-                       
-                                swal({
-                                    title: 'Berhasil!',
-                                    text: response.message,
-                                    type: 'success',
-                                    button: 'OK'
-                                }, function() {
-                                    location.reload();
-                                });
-                            },
-                            error: function(response) {
-                                var errorMessage = response.responseJSON.message;
-                                swal({
-                                    title: 'Gagal!',
-                                    text: errorMessage,
-                                    type: 'warning',
-                                    button: 'OK'
+                        // Jika prasyarat terpenuhi, tampilkan konfirmasi sebelum melanjutkan
+                        swal({
+                            title: 'Ambil Kelas!',
+                            text: 'Apakah anda yakin mengambil kelas ini?',
+                            type: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: 'Lanjutkan',
+                            cancelButtonText: 'Batal'
+                        }, function(isConfirm) {
+                            if (isConfirm) {
+                                // Lanjutkan dengan proses AJAX request untuk menyimpan kelas kuliah
+                                $.ajax({
+                                    url: '{{ route("mahasiswa.krs.store_kelas_kuliah") }}',
+                                    type: 'POST',
+                                    data: {
+                                        id_kelas_kuliah: idKelas,
+                                        _token: csrfToken  // Sertakan CSRF token di sini
+                                    },
+                                    success: function(response) {
+                                        swal({
+                                            title: 'Berhasil!',
+                                            text: response.message,
+                                            type: 'success',
+                                            button: 'OK'
+                                        }, function() {
+                                            location.reload();
+                                        });
+                                    },
+                                    error: function(response) {
+                                        var errorMessage = response.responseJSON.message;
+                                        swal({
+                                            title: 'Gagal!',
+                                            text: errorMessage,
+                                            type: 'warning',
+                                            button: 'OK'
+                                        });
+                                    }
                                 });
                             }
                         });
@@ -479,7 +493,8 @@ Kartu Rencana Studi
         e.preventDefault();
         var formId = $(this).data('id');
         swal({
-            title: 'Apakah Anda Yakin??',
+            title: 'Hapus Data',
+            text: "Apakah anda yakin ingin menghapus data?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -493,6 +508,7 @@ Kartu Rencana Studi
             }
         });
     });
+    
 
     // HAPUS MK KRS
     document.addEventListener('DOMContentLoaded', function () {
@@ -634,12 +650,14 @@ Kartu Rencana Studi
         // Pengecekan tanggal
         var today = @json($today);
         var batasIsiKrs = @json($batas_isi_krs);
+        var semesterAktif = @json($semester_aktif->id_semester);
+        var semesterSelect = @json($semester_select);
 
-        // console.log(today)
-        // console.log(batasIsiKrs)
+        // console.log(semesterAktif)
+        // console.log(semesterSelect)
 
         // Jika periode pengisian KRS telah berakhir, tampilkan SweetAlert
-        if (!batasIsiKrs || today > batasIsiKrs || semesterAktif > semesterSelect) {
+        if (!batasIsiKrs || today > batasIsiKrs || semesterAktif != semesterSelect) {
 
             swal({
                 title: "Perhatian",
