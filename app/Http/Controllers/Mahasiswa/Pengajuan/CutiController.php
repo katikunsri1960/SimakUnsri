@@ -189,45 +189,44 @@ class CutiController extends Controller
             'alasan_cuti' => 'required',
             'file_pendukung' => 'required|file|mimes:pdf|max:2048',
         ]);
+
+        // Define variable
+        $id_reg = auth()->user()->fk_id;
+        $semester_aktif = SemesterAktif::first();
+        
+        $riwayat_pendidikan = RiwayatPendidikan::select('*')
+                    ->where('id_registrasi_mahasiswa', $id_reg)
+                    ->first();
+
+        // Cek apakah sudah ada pengajuan cuti yang sedang diproses
+        $existingCuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)
+        ->where('id_semester', $semester_aktif->id_semester)
+        ->first();
+
+        // Jika sudah ada pengajuan cuti yang sedang diproses, tampilkan pesan error
+        if ($existingCuti) {
+            return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti pada Semester ini!');
+        }
+
+        $id_cuti = Uuid::uuid4()->toString();
+
+        $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
+        . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
+
+        $alamat = str_replace(', ,', ',', $alamat);
+
+        // Generate file name
+        $fileName = 'cuti_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . $semester_aktif->id_semester . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
+
+        // Simpan file ke folder public/pdf dengan nama kustom
+        $filePath = $request->file('file_pendukung')->storeAs('cuti', $fileName, 'public');
+
+        // Cek apakah file berhasil diupload
+        if (!$filePath) {
+            return redirect()->back()->with('error', 'File pendukung gagal diunggah. Silakan coba lagi.');
+        }
         
         try {
-            
-            // Define variable
-            $id_reg = auth()->user()->fk_id;
-            $semester_aktif = SemesterAktif::first();
-            
-            $riwayat_pendidikan = RiwayatPendidikan::select('*')
-                        ->where('id_registrasi_mahasiswa', $id_reg)
-                        ->first();
-
-            // Cek apakah sudah ada pengajuan cuti yang sedang diproses
-            $existingCuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)
-            ->where('id_semester', $semester_aktif->id_semester)
-            ->first();
-
-            // Jika sudah ada pengajuan cuti yang sedang diproses, tampilkan pesan error
-            if ($existingCuti) {
-                return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti pada Semester ini!');
-            }
-
-            $id_cuti = Uuid::uuid4()->toString();
-
-            $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
-            . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
-
-            $alamat = str_replace(', ,', ',', $alamat);
-
-            // Generate file name
-            $fileName = 'cuti_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . $semester_aktif->id_semester . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
-
-            // Simpan file ke folder public/pdf dengan nama kustom
-            $filePath = $request->file('file_pendukung')->storeAs('cuti', $fileName, 'public');
-
-            // Cek apakah file berhasil diupload
-            if (!$filePath) {
-                return redirect()->back()->with('error', 'File pendukung gagal diunggah. Silakan coba lagi.');
-            }
-
             PengajuanCuti::create([
                 'id_cuti' => $id_cuti,
                 'id_registrasi_mahasiswa' => $id_reg,
@@ -255,24 +254,24 @@ class CutiController extends Controller
 
     public function delete($id_cuti)
     {
+        // Temukan pengajuan cuti berdasarkan ID
+        $cuti = PengajuanCuti::where('id_cuti', $id_cuti)->first();
+
+        // Jika pengajuan cuti tidak ditemukan, lemparkan pesan error
+        if (!$cuti) {
+            return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak ditemukan.');
+        }
+
+        if ($cuti->approved != 0) {
+            return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak dapat dihapus! Pengajuan Cuti sudah disetujui!');
+        }
+
+        // Hapus file pendukung dari storage jika ada
+        if ($cuti->file_pendukung) {
+            Storage::disk('public')->delete($cuti->file_pendukung);
+        }
+        
         try {
-            // Temukan pengajuan cuti berdasarkan ID
-            $cuti = PengajuanCuti::where('id_cuti', $id_cuti)->first();
-
-            // Jika pengajuan cuti tidak ditemukan, lemparkan pesan error
-            if (!$cuti) {
-                return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak ditemukan.');
-            }
-
-            if ($cuti->approved != 0) {
-                return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak dapat dihapus! Pengajuan Cuti sudah disetujui!');
-            }
-
-            // Hapus file pendukung dari storage jika ada
-            if ($cuti->file_pendukung) {
-                Storage::disk('public')->delete($cuti->file_pendukung);
-            }
-
             // Hapus data pengajuan cuti dari database
             $cuti->delete();
 
