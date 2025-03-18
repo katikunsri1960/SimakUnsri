@@ -10,7 +10,6 @@ use App\Services\Feeder\FeederAPI;
 use App\Http\Controllers\Controller;
 use App\Models\Referensi\AllPt;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ReferensiController extends Controller
 {
