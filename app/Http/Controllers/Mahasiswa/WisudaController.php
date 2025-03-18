@@ -318,7 +318,7 @@ class WisudaController extends Controller
             'wisuda_ke' => $request->wisuda_ke,
             'sks_diakui' => $akm->sks_total,
             'id_aktivitas' => $aktivitas->id_aktivitas,
-            'angkatan' => $akm->sks_total,
+            'angkatan' => $akm->angkatan,
             'nim' => $riwayat_pendidikan->nim,
             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
             'kosentrasi' => $request->kosentrasi,
