@@ -251,7 +251,6 @@ Pendaftaran Wisuda Mahasiswa
             }
         });
     });
-</script>
 
 </script>
 @endpush

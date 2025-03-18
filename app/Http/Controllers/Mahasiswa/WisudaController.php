@@ -255,7 +255,7 @@ class WisudaController extends Controller
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                 ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                 ->orderBy('id_semester', 'desc')
-                ->get();
+                ->first();
 
                 // dd($akm);
 
