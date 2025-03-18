@@ -253,8 +253,11 @@ class WisudaController extends Controller
                     ->first();
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $semester_aktif->id_semester)
-                ->first();
+                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                ->orderBy('id_semester', 'desc')
+                ->get();
+
+                // dd($akm);
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
                 ->whereHas('bimbing_mahasiswa', function ($query) {
@@ -313,9 +316,9 @@ class WisudaController extends Controller
             'id_prodi' => $riwayat_pendidikan->id_prodi,
             'tgl_masuk' => $riwayat_pendidikan->tanggal_daftar,
             'wisuda_ke' => $request->wisuda_ke,
-            'sks_diakui' => $akm->sks_total,
+            'sks_diakui' => $akm->first()->sks_total,
             'id_aktivitas' => $aktivitas->id_aktivitas,
-            'angkatan' => $akm->angkatan,
+            'angkatan' => $akm->first()->sks_total,
             'nim' => $riwayat_pendidikan->nim,
             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
             'kosentrasi' => $request->kosentrasi,
