@@ -73,7 +73,7 @@ class WisudaController extends Controller
                 })
                 // ->where('id_semester', $semester_aktif)
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                ->whereIn('id_jenis_aktivitas', ['2', '3', '1', '22'])
+                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
         // dd($aktivitas_kuliah);
@@ -160,7 +160,7 @@ class WisudaController extends Controller
                 })
                 // ->where('id_semester', $semester_aktif)
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                ->whereIn('id_jenis_aktivitas', ['2', '3', '1', '22'])
+                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
         // dd($wisuda_ke);
@@ -272,7 +272,7 @@ class WisudaController extends Controller
                 })
                 // ->where('id_semester', $semester_aktif)
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                ->whereIn('id_jenis_aktivitas', ['2', '3', '1', '22'])
+                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
         // dd($akm);
         if($request->wisuda_ke == '0') {
