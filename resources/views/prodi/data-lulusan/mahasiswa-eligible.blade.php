@@ -54,7 +54,7 @@ Ajuan Wisuda Mahasiswa
                                         <td class="text-center align-middle">{{ $d->angkatan }}</td>
                                         <td class="text-start align-middle">{{ $d->aktivitas_mahasiswa->judul }}</td>
                                         <td class="text-center align-middle">{{ $d->aktivitas_mahasiswa->tanggal_selesai }}</td>
-                                        <td class="text-center align-middle">{{ $d->transkrip_mahasiswa_sum_sks_mata_kuliah }}</td>
+                                        <td class="text-center align-middle">{{ $d->aktivitas_kuliah_sum_sks_semester }}</td>
                                         <td class="text-center align-middle">
                                             <div class="row">
                                                 @if($d->approved == 0)
