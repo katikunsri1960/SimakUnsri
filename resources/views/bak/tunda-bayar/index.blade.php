@@ -3,6 +3,7 @@
 Daftar Tunda Bayar
 @endsection
 @section('content')
+@include('bak.tunda-bayar.decline')
 <section class="content">
     <div class="row align-items-end">
         <div class="col-xl-12 col-12">
@@ -141,13 +142,12 @@ Daftar Tunda Bayar
                                                     title="Approve">Approve <i class="fa fa-check"></i></button>
                                             </div>
                                         </form>
-                                        @endif
-
                                         <div class="row mt-3 px-3">
-                                            <a href="#" class="btn btn-danger btn-sm" title="Decline"> Tolak <i
+                                            <a href="#" class="btn btn-danger btn-sm" title="Decline" data-bs-toggle="modal"
+                                            data-bs-target="#declineModal" onclick="tolak({{$d->id}})"> Tolak <i
                                                     class="fa fa-circle-xmark"></i></a>
                                         </div>
-
+                                        @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -167,7 +167,7 @@ Daftar Tunda Bayar
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(document).ready(function() {
-        
+
         var t = $('#data').DataTable({
             "paging": true,      // Menampilkan pagination
             "ordering": true,    // Mengizinkan pengurutan kolom
@@ -189,6 +189,13 @@ Daftar Tunda Bayar
         });
 
     });
+
+    function tolak(id) {
+        document.getElementById('declineForm').action = '/bak/tunda-bayar/decline/' + id;
+        document.getElementById('alasan_pembatalan').value = '';
+    }
+
+    confirmSubmit('declineForm', 'Apakah anda yakin ingin menolak ajuan tunda bayar?');
 
     $('.approve-form').submit(function(e){
             e.preventDefault();
