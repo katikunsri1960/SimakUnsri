@@ -411,6 +411,7 @@ class PerkuliahanController extends Controller
 
             $validated['nama_status_mahasiswa'] = $statusMapping[$validated['id_status_mahasiswa']] ?? null;
 
+            $validated['feeder'] = 0;
             $aktivitasKuliah->update($validated);
 
             return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui']);
