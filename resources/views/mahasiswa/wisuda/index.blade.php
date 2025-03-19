@@ -4,32 +4,8 @@ Pendaftaran Wisuda Mahasiswa
 @endsection
 @section('content')
 @include('swal')
-{{-- @include('mahasiswa.bimbingan.tugas-akhir.asistensi-tambah') --}}
-<section class="content bg-white">
-    
-    {{-- @if ($wisuda)
-        <div class="row align-items-end">
-            <div class="col-md-12">
-                <div class="box box-widget widget-user-2">
-                    <div class="widget-user-header bg-gradient-secondary">
-                        <div class="widget-user-image">
-                            @php
-                            $imagePath =
-                            public_path($wisuda->pas_foto.'.jpg');
-                            @endphp
-                            <img class="rounded bg-success"
-                                src="{{$wisuda->pas_foto.'.jpg'}}"
-                                alt="User Avatar">
-                        </div>
-                        <h3 class="widget-user-username">{{$aktivitas->anggota_aktivitas_personal->nama_mahasiswa}} </h3>
-                        <h4 class="widget-user-desc">NIM: {{$aktivitas->anggota_aktivitas_personal->nim}}<br
-                            class="mb-1">ANGKATAN: {{$aktivitas->anggota_aktivitas_personal->mahasiswa->angkatan}}</h4>                   
-                    </div>
-                </div>
-            </div>
-        </div>
-    @endif --}}
 
+<section class="content bg-white">
     <div class="row">
         <div class="col-xxl-12">
             <div class="box box-outline-success bs-3 border-success">
@@ -139,7 +115,8 @@ Pendaftaran Wisuda Mahasiswa
                         <div class="col-xl-12 col-lg-12 text-center">
                             <div class="d-flex justify-content-center">
                                 <a class="btn btn-lg btn-rounded bg-primary" 
-                                    href="{{ route('mahasiswa.wisuda.tambah') }}">
+                                    href="{{ route('mahasiswa.wisuda.tambah') }}"
+                                    id="daftar-wisuda-btn">
                                     <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i> 
                                     Daftar Wisuda
                                 </a>
@@ -255,7 +232,25 @@ Pendaftaran Wisuda Mahasiswa
             "autoWidth": true,
         });
     });
-</script>
+    
+    $('#daftar-wisuda-btn').click(function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        swal({
+            title: 'Daftar Wisuda',
+            text: "Apakah anda yakin ingin mendaftar wisuda?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                window.location.href = url;
+            }
+        });
+    });
 
 </script>
 @endpush
