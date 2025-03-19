@@ -56,6 +56,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('tunda-bayar')->group(function() {
                 Route::get('/', [App\Http\Controllers\Bak\TundaBayarController::class, 'index'])->name('bak.tunda-bayar');
+                Route::post('/approve/{tunda_bayar}', [App\Http\Controllers\Bak\TundaBayarController::class, 'approve'])->name('bak.tunda-bayar.approve');
+                Route::post('/decline/{tunda_bayar}', [App\Http\Controllers\Bak\TundaBayarController::class, 'decline'])->name('bak.tunda-bayar.decline');
             });
 
             Route::prefix('beasiswa')->group(function(){
@@ -841,7 +843,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/aktivitas-mahasiswa/update/{rencana_ajar}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'update'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.update');
                     Route::delete('/delete/{id}', [App\Http\Controllers\Prodi\Akademik\AktivitasMahasiswaKonversiController::class, 'delete'])->name('prodi.data-aktivitas.aktivitas-mahasiswa.delete');
                 });
-                
+
 
                 Route::prefix('aktivitas-pa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\Aktivitas\AktivitasMahasiswaController::class, 'aktivitas_pa'])->name('prodi.data-aktivitas.aktivitas-pa');

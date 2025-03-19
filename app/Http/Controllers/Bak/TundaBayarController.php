@@ -40,4 +40,33 @@ class TundaBayarController extends Controller
             'count' => $count,
         ]);
     }
+
+    public function approve(PenundaanBayar $tunda_bayar)
+    {
+        if ($tunda_bayar->status != 3) {
+            return redirect()->back()->with('error', 'Data tidak dapat disetujui');
+        }
+
+        $tunda_bayar->update(['status' => 4]);
+
+        return redirect()->back()->with('success', 'Data berhasil disetujui');
+    }
+
+    public function decline(PenundaanBayar $tunda_bayar, Request $request)
+    {
+        $data = $request->validate([
+            'alasan_pembatalan' => 'required',
+        ]);
+
+        if ($tunda_bayar->status != 3) {
+            return redirect()->back()->with('error', 'Data tidak dapat ditolak');
+        }
+
+        $tunda_bayar->update([
+            'alasan_pembatalan' => $data['alasan_pembatalan'],
+            'status' => 5
+        ]);
+
+        return redirect()->back()->with('success', 'Data berhasil ditolak');
+    }
 }

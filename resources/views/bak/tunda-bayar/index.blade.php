@@ -69,8 +69,9 @@ Daftar Tunda Bayar
                                             </div>
                                             <div class="progress progress-xxs mt-10 mb-0">
                                                 <div class="progress-bar" role="progressbar"
-                                                    style="width: {{$c['persen']}}%; height: 5px;" aria-valuenow="{{$c['jumlah']}}"
-                                                    aria-valuemin="0" aria-valuemax="100"></div>
+                                                    style="width: {{$c['persen']}}%; height: 5px;"
+                                                    aria-valuenow="{{$c['jumlah']}}" aria-valuemin="0"
+                                                    aria-valuemax="100"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -82,54 +83,74 @@ Daftar Tunda Bayar
                     <div class="table-responsive mt-5">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
                             <thead>
-                               <tr>
-                                  <th class="text-center align-middle">No</th>
-                                  <th class="text-center align-middle">Semester</th>
-                                  <th class="text-center align-middle">Prodi</th>
-                                  <th class="text-center align-middle">NIM</th>
-                                  <th class="text-center align-middle">Nama Mahasiswa</th>
-                                  <th class="text-center align-middle">Keterangan</th>
-                                  <th class="text-center align-middle">Status</th>
-                                  <th class="text-center align-middle">Terakhir Update</th>
+                                <tr>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">Prodi</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Nama Mahasiswa</th>
+                                    <th class="text-center align-middle">Keterangan</th>
+                                    <th class="text-center align-middle">Status</th>
+                                    <th class="text-center align-middle">Terakhir Update</th>
+                                    <th class="text-center align-middle">Aksi</th>
 
-                               </tr>
+                                </tr>
                             </thead>
                             <tbody>
-                              @foreach ($data as $d)
-                              <tr>
-                                  <td class="text-center align-middle"></td>
-                                  <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
-                                  <td class="text-start align-middle">{{$d->riwayat->prodi->nama_jenjang_pendidikan}} {{$d->riwayat->prodi->nama_program_studi}}</td>
-                                  <td class="text-center align-middle">{{$d->nim}}</td>
-                                  <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
-                                  <td class="text-start align-middle">{{$d->keterangan}}</td>
-                                  <td class="text-center align-middle">
-                                      @php
-                                      switch ($d->status) {
-                                          case 0:
-                                              $text = 'warning';
-                                              break;
-                                          case 2:
-                                          case 3:
-                                              $text = 'primary';
-                                              break;
-                                          case 4:
-                                              $text = 'success';
-                                              break;
-                                          default:
-                                              $text = 'danger';
-                                              break;
-                                      }
-                                  @endphp
-                                  <span class="badge bg-{{$text}}">
-                                      {{$d->status_text}}
-                                  </span>
+                                @foreach ($data as $d)
+                                <tr>
+                                    <td class="text-center align-middle"></td>
+                                    <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
+                                    <td class="text-start align-middle">{{$d->riwayat->prodi->nama_jenjang_pendidikan}}
+                                        {{$d->riwayat->prodi->nama_program_studi}}</td>
+                                    <td class="text-center align-middle">{{$d->nim}}</td>
+                                    <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
+                                    <td class="text-start align-middle">{{$d->keterangan}}</td>
+                                    <td class="text-center align-middle">
+                                        @php
+                                        switch ($d->status) {
+                                        case 0:
+                                        $text = 'warning';
+                                        break;
+                                        case 2:
+                                        case 3:
+                                        $text = 'primary';
+                                        break;
+                                        case 4:
+                                        $text = 'success';
+                                        break;
+                                        default:
+                                        $text = 'danger';
+                                        break;
+                                        }
+                                        @endphp
+                                        <span class="badge bg-{{$text}}">
+                                            {{$d->status_text}}
+                                        </span>
 
-                                  </td>
-                                  <td class="text-center align-middle">{{$d->terakhir_update}}</td>
+                                    </td>
+                                    <td class="text-center align-middle">{{$d->terakhir_update}}</td>
+                                    <td class="text-center align-middle text-nowrap">
+                                        @if ($d->status == 3)
+                                        <form action="{{route('bak.tunda-bayar.approve', ['tunda_bayar' => $d->id])}}"
+                                            method="post" class="d-inline approve-form" id="approveForm{{ $d->id }}"
+                                            data-id="{{ $d->id }}">
+                                            @csrf
+                                            <div class="row px-3">
+                                                <button type="submit" class="btn btn-success btn-sm"
+                                                    title="Approve">Approve <i class="fa fa-check"></i></button>
+                                            </div>
+                                        </form>
+                                        @endif
 
-                              </tr>
-                              @endforeach
+                                        <div class="row mt-3 px-3">
+                                            <a href="#" class="btn btn-danger btn-sm" title="Decline"> Tolak <i
+                                                    class="fa fa-circle-xmark"></i></a>
+                                        </div>
+
+                                    </td>
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -146,29 +167,49 @@ Daftar Tunda Bayar
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(document).ready(function() {
-
-
-    var t = $('#data').DataTable({
-        "paging": true,      // Menampilkan pagination
-        "ordering": true,    // Mengizinkan pengurutan kolom
-        "searching": true,   // Menambahkan kotak pencarian
-        "columnDefs": [
-            { "orderable": false, "targets": 0 }  // Kolom 0 tidak dapat diurutkan
-        ],
-        "order": []  // Tidak ada pengurutan default
-    });
-
-    t.on('order.dt search.dt', function () {
-        t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
-            cell.innerHTML = i + 1;
+        
+        var t = $('#data').DataTable({
+            "paging": true,      // Menampilkan pagination
+            "ordering": true,    // Mengizinkan pengurutan kolom
+            "searching": true,   // Menambahkan kotak pencarian
+            "columnDefs": [
+                { "orderable": false, "targets": 0 }  // Kolom 0 tidak dapat diurutkan
+            ],
+            "order": []  // Tidak ada pengurutan default
         });
-    }).draw();
 
-    $('#id_semester').select2({
-        width: '100%'
+        t.on('order.dt search.dt', function () {
+            t.column(0, { search: 'applied', order: 'applied' }).nodes().each(function (cell, i) {
+                cell.innerHTML = i + 1;
+            });
+        }).draw();
+
+        $('#id_semester').select2({
+            width: '100%'
+        });
+
     });
 
-});
+    $('.approve-form').submit(function(e){
+            e.preventDefault();
+            var formId = $(this).data('id');
+            swal({
+                title: 'Approve Ajuan',
+                text: "Apakah anda yakin ingin melakukan approve pada data ini? Data yang sudah diapprove tidak dapat diubah kembali!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Approve',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $(`#approveForm${formId}`).unbind('submit').submit();
+                    $('#spinner').show();
+                }
+            });
+
+        });
 
 </script>
 @endpush
