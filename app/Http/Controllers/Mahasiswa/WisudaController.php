@@ -379,6 +379,7 @@ class WisudaController extends Controller
             // Update biodata_mahasiswas table
             BiodataMahasiswa::where('id_mahasiswa', $riwayat_pendidikan->id_mahasiswa)
                 ->update([
+                'feeder' => 0,
                 'nik' => $request->nik,
                 'jalan' => $request->jalan,
                 'dusun' => $request->dusun,
