@@ -151,6 +151,7 @@ function getData()
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
+                    var namaOrtu = item.nama_ayah ? item.nama_ayah : '' + (item.nama_ibu_kandung ? ' & ' + item.nama_ibu_kandung : '');
                     table.row.add([
                         index + 1,
                         item.wisuda_ke,
@@ -173,12 +174,12 @@ function getData()
                         item.alamat,
                         item.handphone,
                         item.email,
-                        item.nama_orang_tua,
+                        namaOrtu,
                         item.alamat_orang_tua,
                         item.tanggal_daftar,
                         item.tanggal_sk_yudisium,
                         item.masa_studi,
-                        item.judul_tugas_akhir,
+                        item.judul,
                         item.scor_usept
                     ]).draw(false);
                 });
