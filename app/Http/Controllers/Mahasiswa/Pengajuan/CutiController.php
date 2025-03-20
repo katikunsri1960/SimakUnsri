@@ -73,10 +73,17 @@ class CutiController extends Controller
                     ->orderBy('id_semester', 'DESC')
                     ->get();
 
-        $semester_ke = Semester::orderBy('id_semester', 'ASC')
-            ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+        if($riwayat_pendidikan->id_jenis_daftar==8){
+            $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
             ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
             ->pluck('id_semester');
+        }else{
+            $semester_ke = Semester::orderBy('id_semester', 'ASC')
+                ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                ->pluck('id_semester');
+        }
+        // dd($semester_ke);
 
         $semester_count=$semester_ke->count();
 
