@@ -49,7 +49,7 @@ Pendaftaran Wisuda Mahasiswa
                             </div>
                         </div>
                         
-                        <h4 class="text-info mb-10 mt-20">Alamat</h4>
+                        <h4 class="text-info mb-10 mt-20">Alamat Mahasiswa</h4>
                         <div class="data-wisuda-field row">
                             <div class=" col-lg-12 mb-3">
                                 <label for="jalan" class="form-label">Jalan</label>
@@ -81,10 +81,9 @@ Pendaftaran Wisuda Mahasiswa
                                 <input type="text" class="form-control" name="kode_pos" id="kode_pos" aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->kode_pos}}"/>
                             </div>
-                            <div class=" col-lg-8 mb-3">
-                                <label for="nama_wilayah" class="form-label">Kecamatan / Kabupaten / Provinsi</label>
-                                <input type="text"class="form-control"name="nama_wilayah"id="nama_wilayah"aria-describedby="helpId"
-                                    value="{{$riwayat_pendidikan->biodata->nama_wilayah}}" required/>
+                            <div class="col-lg-8 mb-3">
+                                <label for="id_wilayah" class="form-label">Wilayah</label>
+                                <select id="id_wilayah"  name="id_wilayah"></select>
                             </div>
                         </div>
                         <div class="data-wisuda-field row">
@@ -97,6 +96,12 @@ Pendaftaran Wisuda Mahasiswa
                                 <label for="email" class="form-label">Email</label>
                                 <input type="text"class="form-control"name="email"id="email"aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->email}}" required/>
+                            </div>
+                        </div>
+                        <h4 class="text-info mb-10 mt-20">Alamat Mahasiswa</h4>
+                        <div class="data-wisuda-field row">
+                            <div class=" col-lg-12 mb-3">
+                                <textarea placeholder="Masukkan Alamat Orang Tua" class="form-control" name="alamat_orang_tua" id="alamat_orang_tua" aria-describedby="helpId" required></textarea>
                             </div>
                         </div>
 
@@ -253,8 +258,16 @@ Pendaftaran Wisuda Mahasiswa
                                         <label for="kosentrasi" class="form-label">Bidang Kajian Utama (BKU) / Kosentrasi</label>
                                         <input type="text"class="form-control"name="kosentrasi"id="kosentrasi"aria-describedby="helpId" placeholder="Masukkan Kosentrasi" required/>
                                     </div>
+                                    <div class="col-lg-6 mb-3">
+                                        <label for="tgl_sk_pembimbing" class="form-label">Tanggal SK Pembimbing</label>
+                                        <input type="date" class="form-control" name="tgl_sk_pembimbing" id="tgl_sk_pembimbing" aria-describedby="helpId" required />
+                                    </div>
+                                    <div class="col-lg-6 mb-3">
+                                        <label for="no_sk_pembimbing" class="form-label">Nomor SK Pembimbing</label>
+                                        <input type="text" class="form-control" name="no_sk_pembimbing" id="no_sk_pembimbing" aria-describedby="helpId" required />
+                                    </div>
                                     <div class=" col-lg-12 mb-3">
-                                        <label for="abstrak_ta" class="form-label">Abstak</label>
+                                        <label for="abstrak_ta" class="form-label">Abstrak</label>
                                         <textarea type="text" class="form-control" name="abstrak_ta" id="abstrak_ta" aria-describedby="helpId"
                                         placeholder="Masukkan Abstrak Tugas Akhir" required></textarea>
                                     </div>
@@ -281,6 +294,7 @@ Pendaftaran Wisuda Mahasiswa
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(document).ready(function(){
         $('#tambah-wisuda').submit(function(e){
@@ -303,5 +317,35 @@ Pendaftaran Wisuda Mahasiswa
         });
     });
 
+    $("#id_wilayah").select2({
+        placeholder: {
+            id: '{{$riwayat_pendidikan->biodata->id_wilayah}}',
+            text: '{{$riwayat_pendidikan->biodata->nama_wilayah}}, {{$riwayat_pendidikan->biodata->wilayah->kab_kota->nama_wilayah}}'
+        },
+        width: '100%',
+        minimumInputLength: 3,
+        ajax: {
+            url: "{{route('mahasiswa.wisuda.get-kecamatan')}}",
+            type: "GET",
+            dataType: 'json',
+            delay: 250,
+            data: function (params) {
+                return {
+                    q: params.term // search term
+                };
+            },
+            processResults: function (data) {
+                // console.log(data); // Display data in console
+                return {
+                    results: $.map(data, function (item) {
+                        return {
+                            text: item.nama_wilayah+", " + item.kab_kota.nama_wilayah,
+                            id: item.id_wilayah
+                        }
+                    })
+                };
+            },
+        }
+    }).data('select2').$container.find('.select2-selection__placeholder').css('color', 'black');
 </script>
 @endpush
