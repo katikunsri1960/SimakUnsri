@@ -16,7 +16,7 @@ class Wisuda extends Model
 {
     use HasFactory;
     protected $table = 'data_wisuda';
-    protected $appends = ['id_tanggal_sk_yudisium'];
+    protected $appends = ['id_tanggal_sk_yudisium', 'approved_text'];
 
     // App\Models\Wisuda.php
     protected $fillable = [
@@ -47,6 +47,7 @@ class Wisuda extends Model
         // KOLOM SEMENTARA
         'bebas_pustaka',
         'useptData',
+
     ];
 
     public function prodi()
@@ -80,6 +81,21 @@ class Wisuda extends Model
         return $this->tanggal_sk_yudisium ?  Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium)->translatedFormat('d F Y') : '-';
     }
 
+    public function getApprovedTextAttribute()
+    {
+        $status = [
+            '0' => 'Belum Diapproved',
+            '1' => 'Disetujui Prodi',
+            '2' => 'Disetujui Fakultas',
+            '3' => 'Disetujui BAK',
+            '97' => 'Ditolak Prodi',
+            '98' => 'Ditolak Fakultas',
+            '99' => 'Ditolak BAK',
+        ];
+
+        return $status[$this->approved];
+    }
+
     public function getMasaStudiAttribute()
     {
         // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
@@ -94,9 +110,13 @@ class Wisuda extends Model
     public function getStatusAttribute()
     {
         $status = [
-            '0' => 'Belum Diapprove',
-            '1' => 'Approve',
-            '2' => 'Pembatalan',
+            '0' => 'Belum Diapproved',
+            '1' => 'Disetujui Prodi',
+            '2' => 'Disetujui Fakultas',
+            '3' => 'Disetujui BAK',
+            '97' => 'Ditolak Prodi',
+            '98' => 'Ditolak Fakultas',
+            '99' => 'Ditolak BAK',
         ];
     }
 

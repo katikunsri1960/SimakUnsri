@@ -1512,7 +1512,7 @@ class FeederUploadController extends Controller
                 ->where('a.approve_krs', 1)
                 ->where('a.feeder', 1)
                 ->where('bimbing_mahasiswas.feeder', 0)
-                ->select('bimbing_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi')
+                ->select('bimbing_mahasiswas.*', 'a.nama_semester as nama_semester', 'a.nama_prodi as nama_prodi', 'a.judul as judul_aktivitas')
                 // ->where('id_aktivitas', '4e3b451f-c254-40eb-8b6d-37de00947080')
                 ->get();
 

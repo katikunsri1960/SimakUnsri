@@ -150,21 +150,22 @@ function getData()
                     var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
+                    var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
                     table.row.add([
                         index + 1,
                         item.wisuda_ke,
-                        item.status,
+                        spanStatus,
                         item.ijazah_terakhir,
                         berkasButton,
                         item.nomor_registrasi,
                         item.foto,
-                        item.fakultas,
-                        item.program_studi,
+                        item.nama_fakultas,
+                        item.nama_prodi,
                         item.jenjang,
                         item.nim,
-                        item.nama,
+                        item.nama_mahasiswa,
                         item.nik,
-                        item.tempat_kuliah,
+                        item.lokasi_kuliah,
                         item.jalur_masuk,
                         item.tempat_lahir,
                         item.tanggal_lahir,
