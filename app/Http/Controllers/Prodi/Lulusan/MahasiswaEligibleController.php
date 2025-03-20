@@ -9,6 +9,7 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Connection\Usept;
 use App\Models\Connection\CourseUsept;
 use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
