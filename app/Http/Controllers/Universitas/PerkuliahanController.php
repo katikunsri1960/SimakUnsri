@@ -22,7 +22,6 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
@@ -269,7 +268,7 @@ class PerkuliahanController extends Controller
             'N' => 'Non-Aktif',
             'U' => 'Menunggu Ujian',
             'G' => 'Sedang Double Degree',
-            
+
         ];
 
         $nama_status_mahasiswa = $statusMap[$validatedData['status_mahasiswa_id']];
@@ -406,7 +405,7 @@ class PerkuliahanController extends Controller
                 'N' => 'Non-Aktif',
                 'U' => 'Menunggu Ujian',
                 'G' => 'Sedang Double Degree',
-                
+
             ];
 
             $validated['nama_status_mahasiswa'] = $statusMapping[$validated['id_status_mahasiswa']] ?? null;

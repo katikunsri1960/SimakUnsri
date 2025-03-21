@@ -10,7 +10,6 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\MonitoringIsiKrs;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
-use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;

@@ -80,6 +80,16 @@
                             </span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('bak.tunda-bayar') ? 'active' : ''}}">
+                        <a href="{{route('bak.tunda-bayar')}}">
+                            <i class="fa fa-calendar-times"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Tunda Bayar</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                    </li>
                     <li class="treeview {{request()->routeIs('bak.monitoring.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-television"><span class="path1"></span><span class="path2"></span></i>

@@ -17,7 +17,6 @@ use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perpus\BebasPustaka;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 
 class TranskripController extends Controller

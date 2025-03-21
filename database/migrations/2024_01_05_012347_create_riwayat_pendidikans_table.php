@@ -17,8 +17,8 @@ return new class extends Migration
 
         Schema::create('riwayat_pendidikans', function (Blueprint $table) {
             $table->id();
-            $table->string("id_registrasi_mahasiswa");
-            $table->index('id_registrasi_mahasiswa', 'idx_riwayat');
+            $table->string("id_registrasi_mahasiswa")->unique();
+            // $table->index('id_registrasi_mahasiswa', 'idx_riwayat');
             $table->string("id_mahasiswa");
             $table->index('id_mahasiswa', 'idx_biodata');
             $table->string("nim");
