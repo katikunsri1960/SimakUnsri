@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\MonitoringIsiKrs;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;

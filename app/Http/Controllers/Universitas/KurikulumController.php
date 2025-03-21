@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Universitas;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\MataKuliah;
 use App\Services\Feeder\FeederAPI;
-use App\Jobs\ProccessSync;
 use App\Http\Controllers\Controller;
 use App\Models\ProgramStudi;
 use App\Models\Semester;

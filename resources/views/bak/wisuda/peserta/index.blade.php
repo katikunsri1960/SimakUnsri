@@ -150,35 +150,39 @@ function getData()
                     var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
+                    var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
+                    var namaOrtu = item.nama_ayah ? item.nama_ayah : '' + (item.nama_ibu_kandung ? ' & ' + item.nama_ibu_kandung : '');
+                    var alamat = 'RT ' + item.rt + ' RW ' + item.rw + ', ' + item.dusun + ', ' + item.kelurahan + ', ' + item.jalan + ', ' + item.nama_wilayah;
+                    var foto = item.pas_foto ? '<img src="{{ asset('' ) }}' + item.pas_foto + '" class="img-fluid" style="max-width: 300px; max-height: 500px;">' : '';
                     table.row.add([
                         index + 1,
                         item.wisuda_ke,
-                        item.status,
-                        item.ijazah_terakhir,
+                        spanStatus,
+                        item.ijazah_terakhir ?? '-',
                         berkasButton,
-                        item.nomor_registrasi,
-                        item.foto,
-                        item.fakultas,
-                        item.program_studi,
+                        item.nomor_registrasi ?? '-',
+                        foto,
+                        item.nama_fakultas,
+                        item.nama_prodi,
                         item.jenjang,
                         item.nim,
-                        item.nama,
+                        item.nama_mahasiswa,
                         item.nik,
-                        item.tempat_kuliah,
+                        item.lokasi_kuliah,
                         item.jalur_masuk,
                         item.tempat_lahir,
                         item.tanggal_lahir,
-                        item.ipk,
-                        item.alamat,
-                        item.telp,
+                        item.ipk ?? '-',
+                        alamat,
+                        item.handphone,
                         item.email,
-                        item.nama_orang_tua,
-                        item.alamat_orang_tua,
-                        item.tanggal_masuk,
-                        item.tanggal_yudisium,
-                        item.masa_studi,
-                        item.judul_tugas_akhir,
-                        item.scor_usept
+                        namaOrtu,
+                        item.alamat_orang_tua ?? '-',
+                        item.tanggal_daftar,
+                        item.tanggal_sk_yudisium ?? spanStatus,
+                        item.masa_studi ?? spanStatus,
+                        item.judul,
+                        item.scor_usept ?? '-'
                     ]).draw(false);
                 });
 

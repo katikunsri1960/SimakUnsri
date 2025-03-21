@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
-use App\Models\Dosen\PenugasanDosen;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use Illuminate\Http\Request;

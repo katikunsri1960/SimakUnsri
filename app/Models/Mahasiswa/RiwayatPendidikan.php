@@ -17,6 +17,7 @@ use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Support\Facades\DB;
@@ -26,7 +27,12 @@ class RiwayatPendidikan extends Model
     use HasFactory;
     protected $guarded = [];
 
-    protected $appends = ['angkatan', 'gelombang_masuk'];
+    protected $appends = ['angkatan', 'gelombang_masuk', 'id_tanggal_daftar'];
+
+    public function getIdTanggalDaftarAttribute()
+    {
+        return $this->tanggal_daftar ? Carbon::parse($this->tanggal_daftar)->format('d-m-Y') : '';
+    }
 
     public function anggota_aktivitas_mahasiswa()
     {
@@ -285,7 +291,7 @@ class RiwayatPendidikan extends Model
         }
         // dd($data);
         return $data;
-    } 
+    }
 
     public function nilai_transfer_pendidikan($id_prodi, $semester)
     {

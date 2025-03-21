@@ -10,7 +10,6 @@ use App\Services\Feeder\FeederAPI;
 use App\Http\Controllers\Controller;
 use App\Models\Referensi\AllPt;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ReferensiController extends Controller
 {
@@ -103,6 +102,7 @@ class ReferensiController extends Controller
             ['act' => 'GetPekerjaan' , 'primary' => 'id_pekerjaan', 'model' => \App\Models\Referensi\Pekerjaan::class],
             ['act' => 'GetJenisPrestasi' , 'primary' => 'id_jenis_prestasi', 'model' => \App\Models\Referensi\JenisPrestasi::class],
             ['act' => 'GetTingkatPrestasi' , 'primary' => 'id_tingkat_prestasi', 'model' => \App\Models\Referensi\TingkatPrestasi::class],
+            ['act' => 'GetProfilPT' , 'primary' => 'id_perguruan_tinggi', 'model' => \App\Models\ProfilPt::class],
             // ['act' => 'GetAllPT', 'primary' => 'id_perguruan_tinggi', 'model' => \App\Models\Referensi\AllPt::class],
         ];
 

@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Models\SyncError;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;

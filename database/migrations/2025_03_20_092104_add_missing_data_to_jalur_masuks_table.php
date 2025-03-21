@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Models;
+use App\Models\JalurMasuk;
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class JalurMasuk extends Model
+return new class extends Migration
 {
-    use HasFactory;
-    protected $guarded = [];
-
-
-    public function missingJalurMasuk()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         $data = [
             [
@@ -39,5 +38,18 @@ class JalurMasuk extends Model
                 'nama_jalur_masuk' => 'Ujian Masuk Bersama PTS (UMB-PTS)',
             ],
         ];
+
+        foreach ($data as $d) {
+            JalurMasuk::updateOrCreate(['id_jalur_masuk' => $d['id_jalur_masuk']], $d);
+        }
     }
-}
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+
+    }
+
+};

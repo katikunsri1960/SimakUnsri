@@ -9,6 +9,7 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Connection\Usept;
 use App\Models\Connection\CourseUsept;
 use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
@@ -229,7 +230,7 @@ class MahasiswaEligibleController extends Controller
 
                 $data->jumlah_sks = isset($requiredSks[$jenjang]) && $sks_total >= $requiredSks[$jenjang] ? '1' : '0';
 
-                $data->sks_transkrip_akm = $sks_total >= $sks_transkrip ? '1' : '0';
+                $data->sks_transkrip_akm = $akm_terakhir->sks_total == $sks_transkrip ? '1' : '0';
             }
         }else{
             $kampus_merdeka = $data->aktivitas_kuliah->where('id_status_mahasiswa', 'M')->first();
@@ -242,7 +243,7 @@ class MahasiswaEligibleController extends Controller
             }else{
                 $data->jumlah_sks = isset($requiredSks[$jenjang]) && $sks_akm >= $requiredSks[$jenjang] ? '1' : '0';
 
-                $data->sks_transkrip_akm = $sks_akm >= $sks_transkrip ? '1' : '0';
+                $data->sks_transkrip_akm = $akm_terakhir->sks_total == $sks_transkrip ? '1' : '0';
             }
         }
 

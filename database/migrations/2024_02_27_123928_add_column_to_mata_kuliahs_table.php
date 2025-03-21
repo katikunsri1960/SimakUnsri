@@ -16,7 +16,7 @@ return new class extends Migration
             // change tanggal akhir efektif to tanggal selesai efektif
             $table->dropColumn('tanggal_akhir_efektif');
             $table->date('tanggal_selesai_efektif')->nullable()->after('tanggal_mulai_efektif');
-            $table->unique('id_matkul');
+            // $table->unique('id_matkul');
         });
     }
 
@@ -30,7 +30,7 @@ return new class extends Migration
             // change tanggal selesai efektif to tanggal akhir efektif
             $table->dropColumn('tanggal_selesai_efektif');
             $table->date('tanggal_akhir_efektif')->nullable()->after('tanggal_mulai_efektif');
-            $table->dropUnique('mata_kuliahs_id_matkul_unique');
+            // $table->dropUnique('mata_kuliahs_id_matkul_unique');
         });
     }
 };
