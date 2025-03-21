@@ -39,6 +39,19 @@ class TranskripController extends Controller
             'nim' => 'required',
         ]);
 
+        $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
+
+        $statusSync = $jobData ? 1 : 0;
+
+        if ($statusSync) {
+            return response()->json([
+            'status' => 'error',
+            'message' => 'Tidak dapat mencari data, proses sinkronisasi sedang berjalan!!',
+            'refresh' => true,
+            'route' => route('fakultas.data-akademik.transkrip-nilai'),
+            ]);
+        }
+
         $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
                     ->orderBy('id_jenjang_pendidikan')
                     ->orderBy('nama_program_studi')
