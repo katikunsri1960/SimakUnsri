@@ -386,7 +386,7 @@ class WisudaController extends Controller
                 'rt' => $request->rt,
                 'rw' => $request->rw,
                 'kelurahan' => $request->kelurahan,
-                'kode_pos' => $request->kodepos,
+                'kode_pos' => $request->kode_pos,
                 'id_wilayah' => $wilayah->id_wilayah,
                 'nama_wilayah' => $wilayah->nama_wilayah,
                 'handphone' => $request->handphone,
