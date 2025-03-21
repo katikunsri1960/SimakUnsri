@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\PeriodeWisuda;
 use App\Models\SemesterAktif;
 use App\Models\AsistensiAkhir;
-use App\Models\Referensi\AllPt;
+use App\Models\ProfilPt;
 use App\Models\Connection\Usept;
 use Illuminate\Cache\Repository;
 use App\Models\BeasiswaMahasiswa;
@@ -260,7 +260,7 @@ class WisudaController extends Controller
             'alamat_orang_tua' => 'required',
         ]);
 
-        $perguruan_tinggi = AllPt::where('kode_perguruan_tinggi', '001009')->first();
+        $perguruan_tinggi = ProfilPt::where('kode_perguruan_tinggi', '001009')->first();
 
         // Define variable
         $id_reg = auth()->user()->fk_id;
