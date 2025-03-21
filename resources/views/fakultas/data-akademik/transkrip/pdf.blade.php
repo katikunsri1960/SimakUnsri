@@ -9,13 +9,12 @@
     <div class="row mt-3">
         <table style="width:100%" class="mb-3">
             <tr>
-                <td class="text-start align-middle" style="width: 12%">NIM</td>
-                <td>:</td>
-                <td class="text-start" id="nimKrs" style="width: 45%; padding-left: 10px">{{$riwayat->nim}}</td>
-                <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
-                <td>:</td>
-                <td class="text-start align-middle" id="fakultasKrs"
-                    style="width: 30%; padding-left: 10px">{{$riwayat->prodi->fakultas->nama_fakultas}}</td>
+                <td class="text-start align-top" style="width: 12%; vertical-align: top;">NIM</td>
+                <td class="text-start align-top" style="vertical-align: top;">:</td>
+                <td class="text-start align-top" id="nimKrs" style="width: 45%; padding-left: 10px; vertical-align: top;">{{$riwayat->nim}}</td>
+                <td class="text-start align-top" style="width: 18%; vertical-align: top;">FAKULTAS</td>
+                <td class="text-start align-top" style="vertical-align: top;">:</td>
+                <td class="text-start align-top" id="fakultasKrs" style="width: 30%; padding-left: 10px; vertical-align: top;">{{$riwayat->prodi->fakultas->nama_fakultas}}</td>
             </tr>
             <tr>
                 <td class="text-start align-middle" style="width: 12%">NAMA</td>
@@ -70,71 +69,73 @@
             </tbody>
             <tfoot>
                 <tr>
-                    <th colspan="3" class="text-start align-middle table-pdf text-pdf">Jumlah</th>
-                    <th class="text-center align-middle table-pdf text-pdf" id="totalSks">{{$total_sks}}</th>
-                    <th class="text-center align-middle table-pdf text-pdf"></th>
-                    <th class="text-center align-middle table-pdf text-pdf"></th>
-                    <th class="text-center align-middle table-pdf text-pdf" id="bobot">{{$bobot}}</th>
+                    <th height="15" colspan="3" class="text-start align-middle table-pdf text-pdf">Jumlah</th>
+                    <th height="15" class="text-center align-middle table-pdf text-pdf" id="totalSks">{{$total_sks}}</th>
+                    <th height="15" class="text-center align-middle table-pdf text-pdf"></th>
+                    <th height="15" class="text-center align-middle table-pdf text-pdf"></th>
+                    <th height="15" class="text-center align-middle table-pdf text-pdf" id="bobot">{{$bobot}}</th>
                 </tr>
                 <tr>
-                    <th colspan="3" class="text-start align-middle table-pdf text-pdf">Total SKS</th>
-                    <th colspan="4" class="text-center align-middle table-pdf text-pdf">{{$total_sks}}</th>
+                    <th height="15" colspan="3" class="text-start align-middle table-pdf text-pdf">Total SKS</th>
+                    <th height="15" colspan="4" class="text-center align-middle table-pdf text-pdf">{{$total_sks}}</th>
                 </tr>
                 <tr>
-                    <th colspan="3" class="text-start align-middle table-pdf text-pdf">IPK</th>
-                    <th colspan="4" class="text-center align-middle table-pdf text-pdf">{{$ipk}}</th>
+                    <th height="15" colspan="3" class="text-start align-middle table-pdf text-pdf">IPK</th>
+                    <th height="15" colspan="4" class="text-center align-middle table-pdf text-pdf">{{$ipk}}</th>
                 </tr>
             </tfoot>
         </table>
     </div>
-    <table style="width: 100%" class="no-break">
-        <tbody>
-            <tr>
-                <td height="20"></td>
-            </tr>
-            <tr width="100%">
-                <td width="60%"></td>
-                <td width="40%" class="text-start text-10" >
-                    Inderalaya, {{ $today->locale('id')->translatedFormat('d F Y')}}
-                </td>
-            </tr>
-            <tr>
-                <td class="text-left text-10" width="60%">
-                    {{-- Catatan: --}}
-                </td>
-                <td width="40%" class="text-start text-10" >
-                    {{ $riwayat->prodi->fakultas_id === 11 ? 'a.n Direktur' : 'a.n Dekan' }}
-                </td>
-            </tr>
-            <tr>
-                <td class="text-left text-10" width="60%">
-                    {{-- Catatan: --}}
-                </td>
-                <td width="40%" class="text-start text-10" >
-                    {{ $riwayat->prodi->fakultas_id === 11 ? 'Wakil Direktur Bidang Akademik dan Kemahasiswaan,' : 'Wakil Dekan Bidang Akademik,' }}
-                </td>
-            </tr>
-            <tr>
-                <td class="text-left text-10" width="60%" style="vertical-align: text-top">
-                    {{-- KSM harus dibawa pada saat mengikuti ujian akhir semester --}}
-                </td>
-                <td height="60" width="40%" class="text-right text-10 mx-50"><strong><strong></td>
-            </tr>
-            <tr>
-                <td width="60%"></td>
-                <td width="40%" class="text-start text-10">
-                    {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->gelar_depan . ' ' . ucwords(strtolower($wd1->nama_dosen)) . ', ' . $wd1->gelar_belakang }}
-                </td>
-            </tr>
-            <tr>
-                <td class="text-left text-10" width="60%" style="font-style: italic;">
-                    {{-- Lembar untuk mahasiswa --}}
-                </td>
-                <td width="40%" class="text-start text-10">
-                    NIP. {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->dosen->nip}}
-                </td>
-            </tr>
-        </tbody>
-    </table>    
+    <div style="page-break-inside: avoid;">
+        <table style="width: 100%" class="no-break">
+            <tbody>
+                <tr>
+                    <td height="20"></td>
+                </tr>
+                <tr width="100%">
+                    <td width="60%"></td>
+                    <td width="40%" class="text-start text-10">
+                        Inderalaya, {{ $today->locale('id')->translatedFormat('d F Y')}}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left text-10" width="60%">
+                        {{-- Catatan: --}}
+                    </td>
+                    <td width="40%" class="text-start text-10">
+                        {{ $riwayat->prodi->fakultas_id === 11 ? 'a.n Direktur' : 'a.n Dekan' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left text-10" width="60%">
+                        {{-- Catatan: --}}
+                    </td>
+                    <td width="40%" class="text-start text-10">
+                        {{ $riwayat->prodi->fakultas_id === 11 ? 'Wakil Direktur Bidang Akademik dan Kemahasiswaan,' : 'Wakil Dekan Bidang Akademik,' }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left text-10" width="60%" style="vertical-align: text-top">
+                        {{-- KSM harus dibawa pada saat mengikuti ujian akhir semester --}}
+                    </td>
+                    <td height="60" width="40%" class="text-right text-10 mx-50"><strong><strong></td>
+                </tr>
+                <tr>
+                    <td width="60%"></td>
+                    <td width="40%" class="text-start text-10">
+                        {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->gelar_depan . ' ' . ucwords(strtolower($wd1->nama_dosen)) . ', ' . $wd1->gelar_belakang }}
+                    </td>
+                </tr>
+                <tr>
+                    <td class="text-left text-10" width="60%" style="font-style: italic;">
+                        {{-- Lembar untuk mahasiswa --}}
+                    </td>
+                    <td width="40%" class="text-start text-10">
+                        NIP. {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->dosen->nip}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
 @endsection
