@@ -1200,6 +1200,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('transkrip')->group(function(){
                     Route::get('/', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'transkrip'])->name('univ.perkuliahan.transkrip');
                     Route::get('/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_transkrip'])->name('univ.perkuliahan.transkrip.sync');
+
+                    Route::get('/search', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'search_transkrip'])->name('univ.perkuliahan.transkrip.search');
+                    Route::get('/get-data', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'get_transkrip'])->name('univ.perkuliahan.transkrip.get');
+                    Route::get('/delete-transkrip', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'delete_transkrip'])->name('univ.perkuliahan.transkrip.delete');
                 });
 
 

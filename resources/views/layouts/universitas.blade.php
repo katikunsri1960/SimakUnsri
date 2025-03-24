@@ -46,7 +46,7 @@
         <div id="loader"></div>
 
         @include('swal')
-        
+
         @include('universitas.include.header')
 
         @include('universitas.include.sidebar')
@@ -115,8 +115,9 @@
     <!-- EduAdmin App -->
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/js/pages/chat-popup.js')}}"></script>
-    @stack('js')
     @include('swal')
+    @stack('js')
+
     {{-- <script src="{{asset('assets/js/pages/dashboard3.js')}}"></script> --}}
 
 

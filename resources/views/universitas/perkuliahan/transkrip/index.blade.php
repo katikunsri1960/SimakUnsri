@@ -10,7 +10,8 @@ Transkrip Mahasiswa
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a>
+                        </li>
                         <li class="breadcrumb-item" aria-current="page">Perkuliahan</li>
                         <li class="breadcrumb-item active" aria-current="page">Transkrip Mahasiswa</li>
                     </ol>
@@ -32,29 +33,28 @@ Transkrip Mahasiswa
                         <p class="mb-0">Data Transkrip sedang proses sinkronisasi. Harap menunggu terlebih dahulu!</p>
                         {{-- progress bar --}}
                         <div class="progress mt-3">
-                            <div id="sync-progress-bar" class="progress-bar progress-bar-striped progress-bar-animated bg-primary" role="progressbar"
-                                aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                            <div id="sync-progress-bar"
+                                class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                                role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"
+                                style="width: 0%"></div>
                         </div>
                     </div>
                     @else
                     <div class="d-flex justify-content-end">
                         <form action="{{route('univ.perkuliahan.transkrip.sync')}}" method="get" id="sync-form">
-                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i class="fa fa-refresh"></i> Sinkronisasi</button>
+                            <button class="btn btn-primary waves-effect waves-light" type="submit"><i
+                                    class="fa fa-refresh"></i> Sinkronisasi</button>
                         </form>
                         <span class="divider-line mx-1"></span>
-                        {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
+                        {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i
+                                class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
                     </div>
                     @endif
                 </div>
                 <div class="box-body">
-                    <div class="table-responsive">
-                        <table id="data" class="table  table-hover margin-top-10 w-p100">
-
-                          <tbody>
-
-                          </tbody>
-                      </table>
-                      </div>
+                    @if ($statusSync != 1)
+                    @include('universitas.perkuliahan.transkrip.delete-transkrip')
+                    @endif
                 </div>
 
             </div>
@@ -62,11 +62,14 @@ Transkrip Mahasiswa
     </div>
 </section>
 @endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
-<script>
 
+<script>
     document.addEventListener('DOMContentLoaded', function() {
         var statusSync = @json($statusSync);
         var idBatch = @json($id_batch); // Assuming you have $idBatch available in your Blade template
@@ -99,7 +102,7 @@ Transkrip Mahasiswa
                         checkSync(id_batch);
                     }, 3000); // Request every 2 seconds
                 } else {
-                 
+
                     // reload page
                     location.reload();
                 }
@@ -133,5 +136,7 @@ Transkrip Mahasiswa
         });
 
     });
+
+    
 </script>
 @endpush

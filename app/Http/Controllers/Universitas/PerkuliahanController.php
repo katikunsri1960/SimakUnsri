@@ -1027,4 +1027,79 @@ class PerkuliahanController extends Controller
         return redirect()->back()->with('success', 'Sinkronisasi Nilai Komponen Evaluasi Berhasil!');
     }
 
+    public function search_transkrip(Request $request)
+    {
+
+        $data = RiwayatPendidikan::select('id_registrasi_mahasiswa', 'nim', 'nama_mahasiswa', 'nama_program_studi')
+                ->where('nim', 'like', '%'.$request->q.'%')
+                ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
+                ->get();
+
+        return response()->json($data);
+    }
+
+    public function get_transkrip(Request $request)
+    {
+        $request->validate([
+            'nim' => 'required',
+        ]);
+
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('id_registrasi_mahasiswa', $request->nim)->first();
+
+        if(!$riwayat) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Mahasiswa tidak ditemukan!!',
+            ]);
+        }
+
+
+        $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                                        ->where('feeder', 1) // Untuk Dihapus saat selesai
+                                        ->get();
+
+        $total_sks = $transkrip->sum('sks_mata_kuliah');
+        $total_indeks = $transkrip->sum('nilai_indeks');
+
+        $ipk = 0;
+        if($total_sks > 0){
+            $ipk = ($total_sks * $total_indeks) / $total_sks;
+        }
+
+
+        $data = [
+            'status' => 'success',
+            'data' => $transkrip,
+            'riwayat' => $riwayat,
+            'total_sks' => $total_sks,
+            'ipk' => $ipk,
+        ];
+
+        return response()->json($data);
+
+    }
+
+    public function delete_transkrip(Request $request)
+    {
+        $data = $request->validate([
+            'id' => 'required',
+        ]);
+
+        $transkrip = TranskripMahasiswa::find($data['id']);
+
+        return response()->json([
+            'status' => 1,
+            'message' => 'Data Transkrip tidak ditemukan!!',
+        ]);
+
+        if(!$transkrip) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Transkrip tidak ditemukan!!',
+            ]);
+        }
+
+
+    }
+
 }
