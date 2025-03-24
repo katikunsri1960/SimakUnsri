@@ -98,7 +98,7 @@ Pendaftaran Wisuda Mahasiswa
                                     value="{{$riwayat_pendidikan->biodata->email}}" required/>
                             </div>
                         </div>
-                        <h4 class="text-info mb-10 mt-20">Alamat Mahasiswa</h4>
+                        <h4 class="text-info mb-10 mt-20">Alamat Orang Tua</h4>
                         <div class="data-wisuda-field row">
                             <div class=" col-lg-12 mb-3">
                                 <textarea placeholder="Masukkan Alamat Orang Tua" class="form-control" name="alamat_orang_tua" id="alamat_orang_tua" aria-describedby="helpId" required></textarea>
