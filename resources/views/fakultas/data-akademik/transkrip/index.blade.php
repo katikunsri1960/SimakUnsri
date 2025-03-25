@@ -4,23 +4,25 @@ Transkrip Nilai
 @endsection
 @section('content')
 <section class="content">
-    <div class="row align-items-end">
-        <div class="col-xl-12 col-12">
-            <div class="box bg-primary-light pull-up">
-                <div class="box-body p-xl-0">
-                    <div class="row align-items-center">
-                        <div class="col-12 col-lg-3"><img
-                                src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
-                        </div>
-                        <div class="col-12 col-lg-9">
-                            <h2>Transkrip Nilai Mahasiswa</h2>
+<div class="row align-items-end">
+    <div class="col-xl-12 col-12">
+        <div class="box bg-primary-light pull-up">
+            <div class="box-body p-xl-0">
+                <div class="row align-items-center">
+                    <div class="col-12 col-lg-3"><img
+                            src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
+                    </div>
+                    <div class="col-12 col-lg-9">
+                        <h2>Transkrip Nilai Mahasiswa</h2>
 
-                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+@include('swal')
+<section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box">
@@ -76,13 +78,13 @@ Transkrip Nilai
                                         <div class="col-md-10">
                                             <table style="width:100%" class="mb-3">
                                                 <tr>
-                                                    <td class="text-start align-middle" style="width: 12%">NIM</td>
-                                                    <td>:</td>
-                                                    <td class="text-start" id="nimKrs"
+                                                    <td class="text-start align-top" style="width: 12%">NIM</td>
+                                                    <td class="text-start align-top">:</td>
+                                                    <td class="text-start align-top" id="nimKrs"
                                                         style="width: 45%; padding-left: 10px"></td>
-                                                    <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
-                                                    <td>:</td>
-                                                    <td class="text-start align-middle" id="fakultasKrs"
+                                                    <td class="text-start align-top" style="width: 18%">FAKULTAS</td>
+                                                    <td class="text-start align-top">:</td>
+                                                    <td class="text-start align-top" id="fakultasKrs"
                                                         style="width: 30%; padding-left: 10px"></td>
                                                 </tr>
                                                 <tr>
@@ -176,7 +178,7 @@ Transkrip Nilai
                                         </tbody>
                                         <tfoot>
                                             <tr>
-                                                <th colspan="3" class="text-center align-middle">Total SKS</th>
+                                                <th colspan="3" class="text-center align-middle">TOTAL SKS</th>
                                                 <th class="text-center align-middle" id="totalSks"></th>
                                                 <th></th>
                                                 <th></th>
@@ -310,7 +312,7 @@ Transkrip Nilai
                             // append response.krs to table of krs-regular
                             $('#nimKrs').text(response.riwayat.nim);
                             // remove "Fakultas " from nama_fakultas
-                            var fakultas = response.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '');
+                            var fakultas = response.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '').toUpperCase();
                             $('#fakultasKrs').text(fakultas);
                             $('#namaKrs').text(response.riwayat.nama_mahasiswa);
                             var jurusan = (response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-').toUpperCase();
@@ -319,7 +321,7 @@ Transkrip Nilai
                             $('#nippaKrs').text(nip_pa);
                             var dosen_pa = response.riwayat.pembimbing_akademik ? response.riwayat.pembimbing_akademik.nama_dosen : '-';
                             $('#dosenpaKrs').text(dosen_pa);
-                            var fullProdi = response.riwayat.prodi.nama_jenjang_pendidikan + ' ' + response.riwayat.prodi.nama_program_studi;
+                            var fullProdi = (response.riwayat.prodi.nama_jenjang_pendidikan + ' ' + response.riwayat.prodi.nama_program_studi).toUpperCase();
                             $('#prodiKrs').text(fullProdi);
                             var semesterText =  $('#semester option:selected').text();
                             $('#semesterKrs').text(semesterText);
@@ -384,7 +386,7 @@ Transkrip Nilai
                                 table.row.add([
                                     `<td class="text-center align-middle"></td>`,
                                     `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
-                                    `<td class="text-start align-middle">${krs.nama_mata_kuliah}</td>`,
+                                    `<td class="text-start align-middle">${krs.nama_mata_kuliah.toUpperCase()}</td>`,
                                     `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
