@@ -3,13 +3,16 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\GenerateMonevStatus;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Monitoring\MonevStatusMahasiswa;
 use App\Models\MonitoringIsiKrs;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Cache;
 
@@ -581,5 +584,32 @@ class MonitoringController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+    public function status_mahasiswa()
+    {
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
+        $semesterAktif = SemesterAktif::first()->id_semester;
+
+        $data = MonevStatusMahasiswa::where('id_semester', $semesterAktif)->get();
+
+        return view('universitas.monitoring.status-mahasiswa.index', [
+            'data' => $data,
+            'prodi' => $prodi
+        ]);
+    }
+
+    public function generate_status_mahasiswa()
+    {
+        // dd('generate status mahasiswa');
+        // make batch job to generate status mahasiswa
+        $prodi = ProgramStudi::where('status', 'A')->get();
+        $batch = Bus::batch([])->name('generate-monev-status')->dispatch();
+
+        foreach ($prodi as $p) {
+            $batch->add(new GenerateMonevStatus($p->id_prodi, 'mahasiswa_lewat_semester'));
+        }
+
+        return redirect()->route('univ.monitoring.status-mahasiswa')->with('success', 'Proses generate status mahasiswa sedang berjalan');
     }
 }

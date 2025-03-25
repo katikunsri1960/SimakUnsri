@@ -1,0 +1,118 @@
+<?php
+
+namespace App\Jobs;
+
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Monitoring\MonevStatusMahasiswa;
+use App\Models\Monitoring\MonevStatusMahasiswaDetail;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Illuminate\Bus\Batchable;
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+class GenerateMonevStatus implements ShouldQueue
+{
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    public $prodi;
+
+    protected $semesters, $semester;
+    /**
+     * Create a new job instance.
+     */
+    public function __construct($prodi)
+    {
+
+        $this->prodi = $prodi;
+
+        $this->semester = SemesterAktif::first()->id_semester;
+        $this->semesters = Semester::orderBy('id_semester', 'ASC')
+                        ->whereNot('semester', 3)
+                        ->get();
+    }
+
+    /**
+     * Execute the job.
+     */
+    public function handle(): void
+    {
+
+        $this->lewat_semester();
+
+    }
+
+    private function hitung_semester($semester_masuk, $semester_sekarang)
+    {
+        $total_semester = $this->semesters
+            ->whereBetween('id_semester', [$semester_masuk, $semester_sekarang])
+            ->count();
+
+        return $total_semester;
+    }
+
+    public function lewat_semester()
+    {
+
+        $jenjang = [
+            22 => ['nama' => 'D3', 'max_semester' => 10],
+            30 => ['nama' => 'S1', 'max_semester' => 14],
+            35 => ['nama' => 'S2', 'max_semester' => 8],
+            40 => ['nama' => 'S3', 'max_semester' => 14],
+            31 => ['nama' => 'Profesi', 'max_semester' => 10],
+            32 => ['nama' => 'Sp-1', 'max_semester' => 16],
+            37 => ['nama' => 'Sp-2', 'max_semester' => 12],
+        ];
+
+        $riwayat = RiwayatPendidikan::with('prodi')->where('id_prodi', $this->prodi)
+            ->whereNull('id_jenis_keluar')
+            ->get();
+
+        $monev = MonevStatusMahasiswa::firstOrCreate([
+            'id_prodi' => $this->prodi,
+            'id_semester' => $this->semester,
+        ]);
+
+        $monevDetail = [];
+
+        $countLewatSemester = 0;
+
+        foreach ($riwayat as $r) {
+            $semester_masuk = $r->id_periode_masuk;
+            $semester_sekarang = $this->semester;
+            $id_jenjang = $r->prodi->id_jenjang_pendidikan;
+
+            if (isset($jenjang[$id_jenjang])) {
+                $total_semester = $this->hitung_semester($semester_masuk, $semester_sekarang);
+                $max_semester = $jenjang[$id_jenjang]['max_semester'];
+
+                if ($total_semester > $max_semester) {
+
+                    $monevDetail[] = [
+                        'monev_status_mahasiswa_id' => $monev->id,
+                        'status' => 'mahasiswa_lewat_semester',
+                        'id_registrasi_mahasiswa' => $r->id_registrasi_mahasiswa,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+
+                    $countLewatSemester++;
+                }
+            }
+        }
+
+        $monev->update([
+            'mahasiswa_lewat_semester' => $countLewatSemester,
+        ]);
+
+        if (count($monevDetail) > 0) {
+            MonevStatusMahasiswaDetail::insert($monevDetail);
+        }
+
+        return true;
+
+    }
+}

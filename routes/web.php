@@ -1028,6 +1028,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     });
                 });
 
+                Route::prefix('status-mahasiswa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_mahasiswa'])->name('univ.monitoring.status-mahasiswa');
+                    Route::post('/generate-data', [App\Http\Controllers\Universitas\MonitoringController::class, 'generate_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.generate-data');
+                });
+
                 Route::prefix('pengisian-krs')->group(function () {
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs'])->name('univ.monitoring.pengisian-krs');
                     Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'pengisian_krs_data'])->name('univ.monitoring.pengisian-krs.data');

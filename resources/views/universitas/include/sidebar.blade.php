@@ -284,6 +284,9 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('univ.monitoring.status-mahasiswa') || request()->routeIs('univ.monitoring.status-mahasiswa.*') ? 'active' : ''}}">
+                                <a href="{{route('univ.monitoring.status-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status Mahasiswa</a>
+                            </li>
                             <li class="{{request()->routeIs('univ.monitoring.update-akm') || request()->routeIs('univ.monitoring.update-akm.*') ? 'active' : ''}}">
                                 <a href="{{route('univ.monitoring.update-akm')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Update AKM</a>
                             </li>
