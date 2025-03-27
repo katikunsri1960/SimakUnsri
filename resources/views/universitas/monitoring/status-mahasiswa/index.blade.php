@@ -47,7 +47,7 @@ Monev Status Mahasiswa
                                     <th class="text-center align-middle">Fakultas</th>
                                     <th class="text-center align-middle">Kode Prodi</th>
                                     <th class="text-center align-middle" >Prodi</th>
-                                    <th class="text-center align-middle" >Total DO Sistem</th>
+                                    <th class="text-center align-middle" >Lewat Masa Studi</th>
                                     <th class="text-center align-middle" >Terakhir Update</th>
                                     <th class="text-center align-middle" >ACT</th>
                                 </tr>
