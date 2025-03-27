@@ -60,7 +60,7 @@ class GenerateMonevStatus implements ShouldQueue
         $jenjang = [
             22 => ['nama' => 'D3', 'max_semester' => 10, 'min_semester_down' => 2, 'min_sks_down' => 27, 'min_semester_up' => 8, 'min_sks_up' => 108, 'min_ipk' => 2],
             30 => ['nama' => 'S1', 'max_semester' => 14, 'min_semester_down' => 4, 'min_sks_down' => 52, 'min_semester_up' => 10, 'min_sks_up' => 108, 'min_ipk' => 2],
-            35 => ['nama' => 'S2', 'max_semester' => 8, 'min_semester_down' => 2, 'min_sks_down' => 18,],
+            35 => ['nama' => 'S2', 'max_semester' => 8, 'min_semester_down' => 2, 'min_sks_down' => 18],
             40 => ['nama' => 'S3', 'max_semester' => 14],
             31 => ['nama' => 'Profesi', 'max_semester' => 10],
             32 => ['nama' => 'Sp-1', 'max_semester' => 16],
