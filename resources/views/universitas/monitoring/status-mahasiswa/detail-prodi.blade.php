@@ -92,18 +92,27 @@ LIST {{ strtoupper(str_replace('_', ' ', $status)) }}
 
     $(document).ready(function(){
         $('#data').DataTable({
-            "paging":false,
+            "paging": false,
+            "info": false,
             "scrollX": true,
-            "scrollY": "50vh",
-            "scrollCollapse": true,
+            "scrollY": "45vh",
+            "dom": 'Bfrtip', // Add buttons for export
+            "buttons": [
+            {
+            extend: 'excelHtml5',
+            title: 'Monev Status Mahasiswa',
+            text: '<i class="fa fa-file-excel-o"></i> Download Excel', // Add Excel icon
+            className: 'btn btn-success' // Optional: Add custom styling
+            }
+            ],
             "columnDefs": [
             [{
-                "targets": 0, // Kolom pertama
-                "type": "num" // Menentukan tipe data sebagai numerik
+            "targets": 0, // Kolom pertama
+            "type": "num" // Menentukan tipe data sebagai numerik
             }],
             [{
-                "targets": 5, // Kolom pertama
-                "orderable": false // Menentukan tipe data sebagai numerik
+            "targets": 5, // Kolom pertama
+            "orderable": false // Menentukan tipe data sebagai numerik
             }]
         ]
         });

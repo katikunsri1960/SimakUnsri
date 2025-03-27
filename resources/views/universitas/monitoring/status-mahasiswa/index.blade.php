@@ -24,13 +24,17 @@ Monev Status Mahasiswa
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-body">
-                    <div class="mb-5">
-                        <form action="{{route('univ.monitoring.status-mahasiswa.generate-data')}}" method="post" id="postForm">
+                <div class="box-header with-border">
+                    <div class="row text-end">
+                        <form action="{{route('univ.monitoring.status-mahasiswa.generate-data')}}" method="post"
+                            id="postForm">
                             @csrf
                             <button id="start-process" class="btn btn-primary">Mulai Proses</button>
                         </form>
                     </div>
+                </div>
+                <div class="box-body">
+
                     {{-- <div class="progress mt-3">
                         <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;"
                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
@@ -40,7 +44,8 @@ Monev Status Mahasiswa
                             <thead>
                                 <tr>
 
-                                    <th class="text-center align-middle" colspan="2">Fakultas</th>
+                                    <th class="text-center align-middle" colspan="2"></th>
+                                    <th class="text-center align-middle" rowspan="2">Kode Prodi</th>
                                     <th class="text-center align-middle" rowspan="2">Prodi</th>
 
                                     <th class="text-center align-middle" rowspan="2">Total DO Sistem</th>
@@ -49,7 +54,7 @@ Monev Status Mahasiswa
                                 </tr>
                                 <tr>
                                     <th class="text-center align-middle">ID</th>
-                                    <th class="text-center align-middle">Nama</th>
+                                    <th class="text-center align-middle">Fakultas</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -59,15 +64,19 @@ Monev Status Mahasiswa
                                         {{$item->prodi->fakultas->id}}
                                     </td>
                                     <td class="text-start align-middle">
-                                       {{$item->prodi->fakultas->nama_fakultas}}
+                                        {{$item->prodi->fakultas->nama_fakultas}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$item->prodi->kode_program_studi}}
                                     </td>
                                     <td class="text-start align-middle">
-                                        {{$item->prodi->nama_jenjang_pendidikan}} - {{$item->prodi->nama_program_studi}} ({{$item->prodi->kode_program_studi}})
+                                        {{$item->prodi->nama_jenjang_pendidikan}} - {{$item->prodi->nama_program_studi}}
                                     </td>
 
                                     <td class="text-center align-middle">
                                         @if ($item->mahasiswa_lewat_semester > 0)
-                                        <a href="{{route('univ.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
+                                        <a
+                                            href="{{route('univ.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
                                             {{$item->mahasiswa_lewat_semester}}
                                         </a>
                                         @else
@@ -86,10 +95,11 @@ Monev Status Mahasiswa
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="3">Total</td>
+                                    <td colspan="4">Total</td>
                                     <td class="text-center">
                                         @if ($data->sum('mahasiswa_lewat_semester') > 0)
-                                        <a href="{{route('univ.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'mahasiswa_lewat_semester'])}}">{{$data->sum('mahasiswa_lewat_semester')}}</a>
+                                        <a
+                                            href="{{route('univ.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'mahasiswa_lewat_semester'])}}">{{$data->sum('mahasiswa_lewat_semester')}}</a>
                                         @else
                                         {{$data->sum('mahasiswa_lewat_semester')}}
                                         @endif
@@ -110,26 +120,42 @@ Monev Status Mahasiswa
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-
     confirmSubmit('postForm');
 
     $(document).ready(function(){
         $('#data').DataTable({
-            "paging":false,
-            "info":false,
+            "paging": false,
+            "info": false,
             "scrollX": true,
             "scrollY": "45vh",
-            // "scrollCollapse": true,
+            "dom": 'Bfrtip', // Add buttons for export
+            "buttons": [
+                {
+                    extend: 'excelHtml5',
+                    title: 'Monev Status Mahasiswa',
+                    text: '<i class="fa fa-file-excel-o"></i> Download Excel', // Add Excel icon
+                    className: 'btn btn-success', // Optional: Add custom styling
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5] // Tentukan kolom yang ingin diekspor
+                    },
+                    customize: function (xlsx) {
+                        var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+                        // Modifikasi header kolom kedua
+                        $('row c[r="B2"]', sheet).text('Nama Fakultas (Custom Header)');
+                    }
+                }
+            ],
             "columnDefs": [
-            [{
-                "targets": 0, // Kolom pertama
-                "type": "num" // Menentukan tipe data sebagai numerik
-            }],
-            [{
-                "targets": 5, // Kolom pertama
-                "orderable": false // Menentukan tipe data sebagai numerik
-            }]
-        ]
+                {
+                    "targets": 0, // Kolom pertama
+                    "type": "num" // Menentukan tipe data sebagai numerik
+                },
+                {
+                    "targets": 5, // Kolom ke-6
+                    "orderable": false // Menonaktifkan pengurutan pada kolom ini
+                }
+            ]
         });
 
     });
