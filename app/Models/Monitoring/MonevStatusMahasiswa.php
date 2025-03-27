@@ -12,6 +12,7 @@ class MonevStatusMahasiswa extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
+
     public function semester()
     {
         return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');

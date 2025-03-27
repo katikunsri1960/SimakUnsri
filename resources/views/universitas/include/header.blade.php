@@ -47,6 +47,7 @@
                     </a>
                 </li> --}}
             </ul>
+            @stack('header')
         </div>
 
         <div class="navbar-custom-menu r-side">

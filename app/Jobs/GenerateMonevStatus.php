@@ -58,8 +58,8 @@ class GenerateMonevStatus implements ShouldQueue
     {
 
         $jenjang = [
-            22 => ['nama' => 'D3', 'max_semester' => 10],
-            30 => ['nama' => 'S1', 'max_semester' => 14],
+            22 => ['nama' => 'D3', 'max_semester' => 10, 'min_semester_down' => 2, 'min_sks_down' => 27, 'min_semester_up' => 8, 'min_sks_up' => 108, 'min_ipk' => 2],
+            30 => ['nama' => 'S1', 'max_semester' => 14, 'min_semester_down' => 4, 'min_sks_down' => 52, 'min_semester_up' => 10, 'min_ipk' => 2],
             35 => ['nama' => 'S2', 'max_semester' => 8],
             40 => ['nama' => 'S3', 'max_semester' => 14],
             31 => ['nama' => 'Profesi', 'max_semester' => 10],
@@ -67,14 +67,26 @@ class GenerateMonevStatus implements ShouldQueue
             37 => ['nama' => 'Sp-2', 'max_semester' => 12],
         ];
 
-        $riwayat = RiwayatPendidikan::with('prodi')->where('id_prodi', $this->prodi)
-            ->whereNull('id_jenis_keluar')
+        // $riwayat = RiwayatPendidikan::with('prodi')
+        //     ->withSum('transkrip_mahasiswa', 'sks_mata_kuliah')
+        //     ->whereNull('id_jenis_keluar')
+        //     ->get();
+
+        $riwayat = RiwayatPendidikan::whereNull('id_jenis_keluar')
+            ->where('id_prodi', $this->prodi)
+            ->select('id_registrasi_mahasiswa', 'id_prodi', 'id_periode_masuk')
+            ->with('prodi')
+            ->withSum('transkrip_mahasiswa as total_sks', 'sks_mata_kuliah')
             ->get();
 
         $monev = MonevStatusMahasiswa::firstOrCreate([
             'id_prodi' => $this->prodi,
             'id_semester' => $this->semester,
         ]);
+
+        $removeDetail = MonevStatusMahasiswaDetail::where('monev_status_mahasiswa_id', $monev->id)
+            ->where('status', 'mahasiswa_lewat_semester')
+            ->delete();
 
         $monevDetail = [];
 
@@ -113,6 +125,16 @@ class GenerateMonevStatus implements ShouldQueue
         }
 
         return true;
+
+    }
+
+    public function do_under_4()
+    {
+        // Syarat DO
+
+        // D3
+        // 1. Pada semester 3 < 27 sks
+        // 2. pada semester 3 kredit >= 27 sks dan IPK < 2.00
 
     }
 }

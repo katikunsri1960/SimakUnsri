@@ -7,6 +7,7 @@ use App\Jobs\GenerateMonevStatus;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Monitoring\MonevStatusMahasiswa;
+use App\Models\Monitoring\MonevStatusMahasiswaDetail;
 use App\Models\MonitoringIsiKrs;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
@@ -591,7 +592,9 @@ class MonitoringController extends Controller
         $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
         $semesterAktif = SemesterAktif::first()->id_semester;
 
-        $data = MonevStatusMahasiswa::where('id_semester', $semesterAktif)->get();
+        $db = new MonevStatusMahasiswa();
+
+        $data = $db->with(['prodi.fakultas', 'details', 'semester'])->where('id_semester', $semesterAktif)->get();
 
         return view('universitas.monitoring.status-mahasiswa.index', [
             'data' => $data,
@@ -611,5 +614,31 @@ class MonitoringController extends Controller
         }
 
         return redirect()->route('univ.monitoring.status-mahasiswa')->with('success', 'Proses generate status mahasiswa sedang berjalan');
+    }
+
+    public function detail_total_status_mahasiswa($semester, $status)
+    {
+
+        $data = MonevStatusMahasiswaDetail::whereHas('monevStatusMahasiswa', function ($query) use ($semester) {
+            $query->where('id_semester', $semester);
+        })->where('status', $status)->with(['riwayat.prodi'])->get();
+
+        return view('universitas.monitoring.status-mahasiswa.detail-total', [
+            'data' => $data,
+            'status' => $status
+        ]);
+    }
+
+    public function detail_prodi_status_mahasiswa(int $id, string $status)
+    {
+        $data = MonevStatusMahasiswaDetail::where('monev_status_mahasiswa_id', $id)
+            ->where('status', $status)
+            ->with(['riwayat.prodi'])
+            ->get();
+
+        return view('universitas.monitoring.status-mahasiswa.detail-prodi', [
+            'data' => $data,
+            'status' => $status
+        ]);
     }
 }

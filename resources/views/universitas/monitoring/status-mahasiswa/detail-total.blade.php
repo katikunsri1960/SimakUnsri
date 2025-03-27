@@ -1,19 +1,25 @@
 @extends('layouts.universitas')
 @section('title')
-Monev Status Mahasiswa
+LIST {{ strtoupper(str_replace('_', ' ', $status)) }}
 @endsection
 @section('content')
+@push('header')
+<div class="mx-4">
+    <a href="{{route('univ.monitoring.status-mahasiswa')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+</div>
+@endpush
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Monev Status Mahasiswa</h3>
+            <h3 class="page-title">LIST {{ strtoupper(str_replace('_', ' ', $status)) }}</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
-                        <li class="breadcrumb-item active" aria-current="page">Status Mahasiswa</li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('univ.monitoring.status-mahasiswa')}}">Status Mahasiswa</a></li>
+                        <li class="breadcrumb-item active" aria-current="page"> {{ ucwords(str_replace('_', ' ', $status)) }}</li>
                     </ol>
                 </nav>
             </div>
@@ -26,10 +32,7 @@ Monev Status Mahasiswa
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
                     <div class="mb-5">
-                        <form action="{{route('univ.monitoring.status-mahasiswa.generate-data')}}" method="post" id="postForm">
-                            @csrf
-                            <button id="start-process" class="btn btn-primary">Mulai Proses</button>
-                        </form>
+
                     </div>
                     {{-- <div class="progress mt-3">
                         <div id="progress-bar" class="progress-bar" role="progressbar" style="width: 0%;"
@@ -39,64 +42,38 @@ Monev Status Mahasiswa
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100 table-sm">
                             <thead>
                                 <tr>
-
-                                    <th class="text-center align-middle" colspan="2">Fakultas</th>
-                                    <th class="text-center align-middle" rowspan="2">Prodi</th>
-
-                                    <th class="text-center align-middle" rowspan="2">Total DO Sistem</th>
-                                    <th class="text-center align-middle" rowspan="2">Terakhir Update</th>
-                                    <th class="text-center align-middle" rowspan="2">ACT</th>
-                                </tr>
-                                <tr>
-                                    <th class="text-center align-middle">ID</th>
+                                    <th class="text-center align-middle">Prodi</th>
+                                    <th class="text-center align-middle">Kode Prodi</th>
+                                    <th class="text-center align-middle">Angkatan</th>
+                                    <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama</th>
+                                    <th class="text-center align-middle">ACT</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($data as $item)
                                 <tr>
-                                    <td class="text-end align-middle">
-                                        {{$item->prodi->fakultas->id}}
+                                    <td class="text-start align-middle">
+                                        {{$item->riwayat->prodi->nama_jenjang_pendidikan}} - {{$item->riwayat->prodi->nama_program_studi}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$item->riwayat->prodi->kode_program_studi}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$item->riwayat->angkatan}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$item->riwayat->nim}}
                                     </td>
                                     <td class="text-start align-middle">
-                                       {{$item->prodi->fakultas->nama_fakultas}}
+                                        {{$item->riwayat->nama_mahasiswa}}
                                     </td>
                                     <td class="text-start align-middle">
-                                        {{$item->prodi->nama_jenjang_pendidikan}} - {{$item->prodi->nama_program_studi}} ({{$item->prodi->kode_program_studi}})
-                                    </td>
-
-                                    <td class="text-center align-middle">
-                                        @if ($item->mahasiswa_lewat_semester > 0)
-                                        <a href="{{route('univ.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
-                                            {{$item->mahasiswa_lewat_semester}}
-                                        </a>
-                                        @else
-                                        {{$item->mahasiswa_lewat_semester}}
-                                        @endif
-
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        {{$item->updated_at}}
-                                    </td>
-                                    <td class="text-center align-middle">
 
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
-                            <tfoot>
-                                <tr>
-                                    <td colspan="3">Total</td>
-                                    <td class="text-center">
-                                        @if ($data->sum('mahasiswa_lewat_semester') > 0)
-                                        <a href="{{route('univ.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'mahasiswa_lewat_semester'])}}">{{$data->sum('mahasiswa_lewat_semester')}}</a>
-                                        @else
-                                        {{$data->sum('mahasiswa_lewat_semester')}}
-                                        @endif
-                                    </td>
-                                    <td colspan="2"></td>
-                                </tr>
-                            </tfoot>
                         </table>
                     </div>
                 </div>
@@ -118,8 +95,8 @@ Monev Status Mahasiswa
             "paging":false,
             "info":false,
             "scrollX": true,
-            "scrollY": "45vh",
-            // "scrollCollapse": true,
+            "scrollY": "50vh",
+            "scrollCollapse": true,
             "columnDefs": [
             [{
                 "targets": 0, // Kolom pertama

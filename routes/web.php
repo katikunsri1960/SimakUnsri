@@ -1031,6 +1031,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('status-mahasiswa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_mahasiswa'])->name('univ.monitoring.status-mahasiswa');
                     Route::post('/generate-data', [App\Http\Controllers\Universitas\MonitoringController::class, 'generate_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.generate-data');
+
+                    Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.detail-total');
+                    Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.detail-prodi');
                 });
 
                 Route::prefix('pengisian-krs')->group(function () {
