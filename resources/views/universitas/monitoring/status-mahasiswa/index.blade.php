@@ -43,19 +43,15 @@ Monev Status Mahasiswa
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100 table-sm">
                             <thead>
                                 <tr>
-
-                                    <th class="text-center align-middle" colspan="2"></th>
-                                    <th class="text-center align-middle" rowspan="2">Kode Prodi</th>
-                                    <th class="text-center align-middle" rowspan="2">Prodi</th>
-
-                                    <th class="text-center align-middle" rowspan="2">Total DO Sistem</th>
-                                    <th class="text-center align-middle" rowspan="2">Terakhir Update</th>
-                                    <th class="text-center align-middle" rowspan="2">ACT</th>
-                                </tr>
-                                <tr>
-                                    <th class="text-center align-middle">ID</th>
+                                    <th class="text-center align-middle">-</th>
                                     <th class="text-center align-middle">Fakultas</th>
+                                    <th class="text-center align-middle">Kode Prodi</th>
+                                    <th class="text-center align-middle" >Prodi</th>
+                                    <th class="text-center align-middle" >Total DO Sistem</th>
+                                    <th class="text-center align-middle" >Terakhir Update</th>
+                                    <th class="text-center align-middle" >ACT</th>
                                 </tr>
+
                             </thead>
                             <tbody>
                                 @foreach ($data as $item)
