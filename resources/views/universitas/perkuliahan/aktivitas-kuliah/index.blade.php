@@ -121,7 +121,7 @@ Aktivitas Kuliah Mahasiswa
             width: '100%',
             dropdownParent: $('#filter-button')
         });
-        
+
         $('#status_mahasiswa').select2({
             placeholder: 'Pilih Status',
             allowClear: true,
@@ -157,7 +157,7 @@ Aktivitas Kuliah Mahasiswa
                 },
             }
         });
-        
+
 
         document.addEventListener('DOMContentLoaded', function () {
             const formatToTwoDecimal = (value) => {
@@ -195,7 +195,7 @@ Aktivitas Kuliah Mahasiswa
                     alert('An error occurred. ' + thrown);
                 }
             },
-            
+
             columns: [
                 // console.log('masuk 2');
                 {
@@ -217,12 +217,15 @@ Aktivitas Kuliah Mahasiswa
                 {data: 'sks_semester', name: 'sks_semester', class: "text-center align-middle", searchable: true},
                 {data: 'sks_total', name: 'sks_total', class: "text-center align-middle", searchable: true},
                 {data: 'nama_pembiayaan', name: 'nama_pembiayaan', class: "text-center align-middle", searchable: false},
-                {data: null, searchable: false, class: "text-center align-middle text-nowrap", sortable: false, render: function(data, type, row) {
+                {data: null, searchable: false, class: "text-center align-middle ", sortable: false, render: function(data, type, row) {
                     var button = `
-                                <button class="btn btn-secondary btn-sm hitung-ips" data-id-reg="${data.id_registrasi_mahasiswa}" data-id-semester="${data.id_semester}">
+                                <button class="btn btn-success btn-sm hitung-sks m-2 p-2 text-nowrap" data-id-reg="${data.id_registrasi_mahasiswa}" data-id-semester="${data.id_semester}">
+                                    <i class="fa fa-retweet"></i> Hitung SKS
+                                </button>
+                                <button class="btn btn-secondary btn-sm hitung-ips m-2 p-2 text-nowrap" data-id-reg="${data.id_registrasi_mahasiswa}" data-id-semester="${data.id_semester}">
                                     <i class="fa fa-retweet"></i> Hitung IPS
                                 </button>
-                                <button class="btn btn-primary btn-sm btn-edit" data-bs-toggle="modal" data-bs-target="#editModal" data-id="${data.id}">
+                                <button class="btn btn-primary btn-sm btn-edit m-2 p-2 text-nowrap" data-bs-toggle="modal" data-bs-target="#editModal" data-id="${data.id}">
                                     <i class="fa fa-edit"></i> Edit
                                 </button>
                             `;
@@ -230,8 +233,8 @@ Aktivitas Kuliah Mahasiswa
                 }},
             ],
         });
-        
-        
+
+
 
         // Event listener untuk tombol hitung IPS
         $('#data').on('click', '.hitung-ips', function() {
@@ -260,9 +263,11 @@ Aktivitas Kuliah Mahasiswa
                             _token: '{{ csrf_token() }}'
                         },
                         success: function(response) {
-                            console.log('masuk success');
-                            console.log(response);
+
+
                             if (String(response.status) === "success") {
+                                $('#spinner').hide();
+                                console.log('masuk success 2');
                                 swal({
                                     title: 'Berhasil!',
                                     text: response.message,
@@ -277,10 +282,69 @@ Aktivitas Kuliah Mahasiswa
                             } else {
                                 swal("Gagal!", response.message, "error");
                             }
+
+
                         },
                         error: function(xhr, status, error) {
+                            $('#spinner').hide();
                             console.log('masuk error');
+                            console.log(xhr);
+                            console.log(status);
+                            console.log(error);
                             swal("Error!", "Terjadi kesalahan saat menghitung IPS.", "error");
+                        }
+                    });
+                }
+            });
+        });
+
+        $('#data').on('click', '.hitung-sks', function() {
+            var idReg = $(this).data('id-reg');
+            var idSemester = $(this).data('id-semester');
+
+            swal({
+                title: "Apakah Anda yakin?",
+                text: "Anda akan menghitung SKS untuk mahasiswa ini.",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Hitung!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    $('#spinner').show();
+                    console.log('masuk 1');
+                    $.ajax({
+                        url: '{{ route("univ.perkuliahan.aktivitas-kuliah.hitung-sks") }}',
+                        type: 'POST',
+                        data: {
+                            id_reg: idReg,
+                            id_semester: idSemester,
+                            _token: '{{ csrf_token() }}'
+                        },
+                        success: function(response) {
+                            $('#spinner').hide();
+                            console.log('masuk success');
+                            console.log(response.status);
+                            if (String(response.status) === "success") {
+                                alert(
+                                    'Berhasil! ' + response.message
+                                );
+                                $('#data').DataTable().ajax.reload(); // Refresh DataTable
+                            } else {
+                                alert(
+                                    'Gagal! ' + response.message
+                                );
+                            }
+                        },
+                        error: function(xhr, status, error) {
+                            $('#spinner').hide();
+                            console.log('masuk error');
+                            console.log(xhr);
+                            console.log(status);
+                            console.log(error);
+                            alert('Error! Terjadi kesalahan saat menghitung SKS.');
                         }
                     });
                 }
@@ -316,7 +380,7 @@ Aktivitas Kuliah Mahasiswa
                         $('#edit_sks_semester').val(response.data.sks_semester);
                         $('#edit_ipk').val(response.data.ipk);
                         $('#edit_sks_total').val(response.data.sks_total);
-                        
+
                         // Isi dropdown jenis pembiayaan
                         let pembiayaanOptions = `
                             <option value="" disabled>-- Pilih Jenis Pembiayaan --</option>

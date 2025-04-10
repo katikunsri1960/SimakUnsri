@@ -625,6 +625,26 @@ class PerkuliahanController extends Controller
 
     }
 
+    public function hitung_sks_per_id(Request $request)
+    {
+        if (!$request->has('id_reg') || empty($request->id_reg)) {
+            return response()->json(['status' => 'error', 'message' => 'ID Registrasi Mahasiswa Tidak Boleh Kosong!']);
+        }
+
+        if (!$request->has('id_semester') || empty($request->id_semester)) {
+            return response()->json(['status' => 'error', 'message' => 'ID Semester Tidak Boleh Kosong!']);
+        }
+
+        $id_reg = $request->id_reg;
+        $id_semester = $request->id_semester;
+
+        $db = new AktivitasKuliahMahasiswa();
+
+        $res = $db->hitung_sks_per_id($id_reg, $id_semester);
+
+        return response()->json($res);
+    }
+
 
     public function aktivitas_mahasiswa(Request $request)
     {
