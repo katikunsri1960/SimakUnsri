@@ -1105,20 +1105,11 @@ class PerkuliahanController extends Controller
             'id' => 'required',
         ]);
 
-        $transkrip = TranskripMahasiswa::find($data['id']);
+        $db = new TranskripMahasiswa();
 
-        return response()->json([
-            'status' => 1,
-            'message' => 'Data Transkrip tidak ditemukan!!',
-        ]);
+        $res = $db->delete_transkrip($data['id']);
 
-        if(!$transkrip) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data Transkrip tidak ditemukan!!',
-            ]);
-        }
-
+        return response()->json($res);
 
     }
 

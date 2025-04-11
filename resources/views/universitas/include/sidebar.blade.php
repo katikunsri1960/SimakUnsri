@@ -299,6 +299,9 @@
                             <li class="{{request()->routeIs('univ.monitoring.lulus-do') || request()->routeIs('univ.monitoring.lulus-do.*') ? 'active' : ''}}">
                                 <a href="{{route('univ.monitoring.lulus-do')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus Do</a>
                             </li>
+                            <li class="{{request()->routeIs('univ.monitoring.batch-job') || request()->routeIs('univ.monitoring.batch-job.*') ? 'active' : ''}}">
+                                <a href="{{route('univ.monitoring.batch-job')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Sync Feeder</a>
+                            </li>
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('univ.pengaturan.*') ? 'active menu-open' : ''}}">

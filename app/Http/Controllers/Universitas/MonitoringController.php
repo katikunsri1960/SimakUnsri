@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
 use App\Jobs\GenerateMonevStatus;
+use App\Models\JobBatch;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Monitoring\MonevStatusMahasiswa;
@@ -640,5 +641,34 @@ class MonitoringController extends Controller
             'data' => $data,
             'status' => $status
         ]);
+    }
+
+    public function getUnfinishedBatches()
+    {
+        $batches = JobBatch::whereNull('finished_at')
+                    ->orderByDesc('created_at')
+                    ->get()
+                    ->map(function ($batch) {
+                        return [
+                            'id' => $batch->id,
+                            'name' => $batch->name,
+                            'total_jobs' => $batch->total_jobs,
+                            'pending_jobs' => $batch->pending_jobs,
+                            'failed_jobs' => $batch->failed_jobs,
+                            'processed_jobs' => $batch->processed_jobs,
+                            'progress' => $batch->total_jobs > 0
+                                ? round(($batch->processed_jobs / $batch->total_jobs) * 100)
+                                : 0,
+                            'status' => $batch->cancelled_at ? 'cancelled' : 'running',
+                            'created_at' => $batch->created_at->toDateTimeString(),
+                        ];
+                    });
+
+        return response()->json($batches);
+    }
+
+    public function batch_job()
+    {
+        return view('universitas.monitoring.sync-feeder.index');
     }
 }
