@@ -646,25 +646,30 @@ class MonitoringController extends Controller
     public function getUnfinishedBatches()
     {
         $batches = JobBatch::whereNull('finished_at')
-                    ->orderByDesc('created_at')
-                    ->get()
-                    ->map(function ($batch) {
-                        return [
-                            'id' => $batch->id,
-                            'name' => $batch->name,
-                            'total_jobs' => $batch->total_jobs,
-                            'pending_jobs' => $batch->pending_jobs,
-                            'failed_jobs' => $batch->failed_jobs,
-                            'processed_jobs' => $batch->processed_jobs,
-                            'progress' => $batch->total_jobs > 0
-                                ? round(($batch->processed_jobs / $batch->total_jobs) * 100)
-                                : 0,
-                            'status' => $batch->cancelled_at ? 'cancelled' : 'running',
-                            'created_at' => $batch->created_at->toDateTimeString(),
-                        ];
-                    });
+                ->orderByDesc('created_at')
+                ->get();
 
-        return response()->json($batches);
+    
+        $data = [];
+
+        foreach ($batches as $batch) {
+            $busBatch = Bus::findBatch($batch->id);
+
+            if ($busBatch) {
+                $data[] = [
+                    'id' => $batch->id,
+                    'name' => $batch->name,
+                    'progress' => $busBatch->progress() ?? 0,
+                    'processed_jobs' => $busBatch->processedJobs(),
+                    'total_jobs' => $busBatch->totalJobs,
+                    'failed_jobs' => $busBatch->failedJobs,
+                    'status' => $busBatch->cancelled() ? 'cancelled' : ($busBatch->finished() ? 'finished' : 'running'),
+                    'created_at' => $batch->created_at->toDateTimeString(),
+                ];
+            }
+        }
+
+        return response()->json($data);
     }
 
     public function batch_job()

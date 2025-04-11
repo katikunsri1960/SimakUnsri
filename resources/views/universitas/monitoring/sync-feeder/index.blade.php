@@ -55,8 +55,9 @@ Sync Feeder
 <script>
     function fetchBatches() {
         fetch('/universitas/monitoring/batch-job/data')
-            .then(res => res.json())
+        .then(res => res.json())
             .then(data => {
+                console.log(data);
                 let html = '';
                 if (data.length === 0) {
                     html = '<p>Tidak ada batch yang sedang berjalan.</p>';
@@ -72,7 +73,8 @@ Sync Feeder
                                 </div>
                                 <small>Jobs: ${batch.processed_jobs}/${batch.total_jobs}, Gagal: ${batch.failed_jobs}</small>
                                 <hr>
-                            </div>`;
+                            </div>
+                        `;
                     });
                 }
 
@@ -81,6 +83,6 @@ Sync Feeder
     }
 
     fetchBatches();
-    setInterval(fetchBatches, 3000); // refresh tiap 3 detik
+    setInterval(fetchBatches, 3000); // refresh setiap 3 detik
 </script>
 @endpush
