@@ -153,7 +153,7 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('prodi.monitoring.entry-nilai') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('prodi.monitoring.entry-nilai') || request()->routeIs('prodi.monitoring.entry-nilai.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.monitoring.entry-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Entry Nilai Dosen</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.monitoring.pengajaran-dosen') ? 'active' : ''}}">

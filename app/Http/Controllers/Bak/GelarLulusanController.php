@@ -17,6 +17,18 @@ class GelarLulusanController extends Controller
         ]);
     }
 
+    public function edit(ProgramStudi $prodi)
+    {
+        dd($prodi);
+
+        $gelar = GelarLulusan::where('id_prodi', $prodi->id_prodi)->get();
+
+        return view('bak.gelar-lulusan.edit', [
+            'prodi' => $prodi,
+            'gelar' => $gelar
+        ]);
+    }
+
     public function store(Request $request)
     {
         $data = $request->validate([

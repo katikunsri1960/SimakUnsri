@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Prodi\Monitoring;
 
 use App\Http\Controllers\Controller;
+use App\Models\Dosen\BiodataDosen;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -14,7 +17,89 @@ class MonitoringDosenController extends Controller
 {
     public function monitoring_nilai()
     {
-        return view('prodi.monitoring.entry-nilai.index');
+        $id_prodi = auth()->user()->fk_id;
+
+        // $id_prodi = ProgramStudi::find($prodi)->id_prodi;
+        $semester = SemesterAktif::first()->id_semester;
+
+        $db = new DosenPengajarKelasKuliah();
+
+        // Query untuk mendapatkan data dosen dan jumlah kelas yang dinilai dan belum dinilai
+        $data = $db->join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
+            ->join('biodata_dosens as d', 'd.id_dosen', 'dosen_pengajar_kelas_kuliahs.id_dosen')
+            ->where('k.id_semester', $semester)
+            ->where('dosen_pengajar_kelas_kuliahs.urutan', 1)
+            ->where('k.id_prodi', $id_prodi)
+            ->whereRaw('EXISTS (SELECT * FROM peserta_kelas_kuliahs WHERE peserta_kelas_kuliahs.id_kelas_kuliah = k.id_kelas_kuliah AND peserta_kelas_kuliahs.approved = 1)')
+            ->select(
+                'dosen_pengajar_kelas_kuliahs.id_dosen',
+                'd.nidn',
+                'd.nama_dosen',
+                DB::raw('COUNT(k.id_kelas_kuliah) as total_kelas'),
+                DB::raw('SUM(CASE WHEN EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah AND nilai_perkuliahans.nilai_huruf IS NOT NULL) THEN 1 ELSE 0 END) as total_kelas_dinilai')
+            )
+            ->groupBy('dosen_pengajar_kelas_kuliahs.id_dosen', 'd.nidn', 'd.nama_dosen')
+            ->get();
+
+        // Proses data untuk menghitung total kelas yang belum dinilai
+        $dataAccumulation = $data->map(function ($item) {
+            $item->total_kelas_belum_dinilai = $item->total_kelas - $item->total_kelas_dinilai;
+            return $item;
+        });
+
+        return view('prodi.monitoring.entry-nilai.index', [
+            'data' => $dataAccumulation,
+        ]);
+    }
+
+    public function monitoring_nilai_detail(string $mode, string $dosen)
+    {
+        $semesterAktif = SemesterAktif::first()->id_semester;
+        $id_prodi = auth()->user()->fk_id;
+        $biodataDosen = BiodataDosen::where('id_dosen', $dosen)
+                ->select('nidn', 'nama_dosen')
+                ->first();
+
+        $db = new DosenPengajarKelasKuliah();
+
+        $titles = [
+            1 => "Total Kelas Ajar",
+            2 => "Kelas Sudah Dinilai",
+            3 => "Kelas Belum Dinilai"
+        ];
+
+        $title = $titles[$mode] ?? "Unknown Mode";
+
+        $query = $db->join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
+            ->join('biodata_dosens as d', 'd.id_dosen', 'dosen_pengajar_kelas_kuliahs.id_dosen')
+            ->where('k.id_semester', $semesterAktif)
+            ->where('dosen_pengajar_kelas_kuliahs.urutan', 1)
+            ->where('k.id_prodi', $id_prodi)
+            ->where('d.id_dosen', $dosen)
+            ->whereRaw('EXISTS (SELECT * FROM peserta_kelas_kuliahs WHERE peserta_kelas_kuliahs.id_kelas_kuliah = k.id_kelas_kuliah AND peserta_kelas_kuliahs.approved = 1)');
+
+        if ($mode == 2) {
+            $query->whereRaw('EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah AND nilai_perkuliahans.nilai_huruf IS NOT NULL)');
+        } elseif ($mode == 3) {
+            $query->whereRaw('NOT EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah AND nilai_perkuliahans.nilai_huruf IS NOT NULL)');
+        }
+
+        $id_kelas = $query->select('k.id_kelas_kuliah')
+                    ->distinct()
+                    ->pluck('k.id_kelas_kuliah');
+
+        $data = KelasKuliah::whereIn('id_kelas_kuliah', $id_kelas)
+            ->with(['matkul', 'prodi', 'dosen_pengajar','peserta_kelas' => function ($query) {
+                $query->where('approved', 1);
+            }])
+            ->get();
+
+        return view('prodi.monitoring.entry-nilai.detail', [
+            'title' => $title,
+            'data' => $data,
+            'dosen' => $biodataDosen,
+        ]);
+
     }
 
     public function monitoring_pengajaran()

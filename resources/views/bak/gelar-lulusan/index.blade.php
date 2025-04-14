@@ -33,8 +33,7 @@ Gelar Lulusan
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Fakultas</th>
                                     <th class="text-center align-middle">Prodi</th>
-                                    <th class="text-center align-middle">Gelar Panjang</th>
-                                    <th class="text-center align-middle">Gelar Singkatan</th>
+                                    <th class="text-center align-middle">Gelar</th>
                                     <th class="text-center align-middle">ACT</th>
                                 </tr>
                             </thead>
@@ -44,12 +43,18 @@ Gelar Lulusan
                                     <td class="text-center align-middle"></td>
                                     <td class="text-start align-middle">{{$d->fakultas->nama_fakultas}}</td>
                                     <td class="text-start align-middle">{{$d->nama_jenjang_pendidikan}} - {{$d->nama_program_studi}}</td>
-                                    <td class="text-center align-middle">{{$d->gelar_lulusan ? $d->gelar_lulusan->gelar_panjang : ''}}</td>
-                                    <td class="text-center align-middle">{{$d->gelar_lulusan ? $d->gelar_lulusan->gelar : ''}}</td>
+                                    <td class="text-center align-middle">
+                                        @if ($d->gelar_lulusan)
+                                        <ul>
+                                            @foreach ($d->gelar_lulusan as $gelar)
+                                            <li>{{$gelar->gelar_panjang}} ({{$gelar->gelar}})</li>
+                                            @endforeach
+                                        </ul>
+                                        @endif
+                                    </td>
                                     <td class="text-center align-middle">
                                         <div class="row px-3">
-                                            <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal"
-                                            data-bs-target="#editModal" onclick="edit({{$d}})"><i class="fa fa-pencil"></i></button>
+                                            <a class="btn btn-warning btn-sm" href="{{route('bak.gelar-lulusan.edit', ['prodi' => $d->id])}}"><i class="fa fa-pencil"></i></a>
                                         </div>
                                     </td>
                                 </tr>
@@ -101,20 +106,6 @@ Gelar Lulusan
             cell.innerHTML = i + 1;
         });
     }).draw();
-
-    function edit(data) {
-        document.getElementById('editForm').reset();
-
-        $('#id_prodi').val(data.id_prodi);
-
-        document.getElementById('fakultas').value = data.fakultas ? data.fakultas.nama_fakultas : '';
-        document.getElementById('prodi').value = data.nama_jenjang_pendidikan + " - " + data.nama_program_studi;
-        document.getElementById('gelar_panjang').value = data.gelar_lulusan ? data.gelar_lulusan.gelar_panjang : '';
-        document.getElementById('gelar').value = data.gelar_lulusan ? data.gelar_lulusan.gelar : '';
-
-    }
-
-
 
 
 </script>

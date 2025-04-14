@@ -36,26 +36,37 @@ Monitoring Entry Nilai Dosen
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-hover margin-top-10 w-p100">
+                        <table class="table table-bordered table-hover" id="data-monitoring">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">NIDK/NIDN</th>
-                                    <th class="text-center align-middle">NIP</th>
+                                    <th class="text-center align-middle">NIDN</th>
                                     <th class="text-center align-middle">NAMA DOSEN</th>
-                                    <th class="text-center align-middle">NAMA KELAS</th>
-                                    <th class="text-center align-middle">NAMA MATA KULIAH</th>
-                                    <th class="text-center align-middle">PERIODE PERKUlIAHAN</th>
-                                    <th class="text-center align-middle">TANGGAL MULAI ENTRY</th>
-                                    <th class="text-center align-middle">TANGGAL AKHIR ENTRY</th>
-                                    <th class="text-center align-middle">PROGRESS ENTRY</th>
-                                    <th class="text-center align-middle">AKSI</th>
+                                    <th class="text-center align-middle">TOTAL KELAS AJAR</th>
+                                    <th class="text-center align-middle">SUDAH DINILAI</th>
+                                    <th class="text-center align-middle">BELUM DINILAI</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @foreach ($data as $d)
+                                <tr>
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{$d->nidn}}</td>
+                                    <td class="text-start align-middle">{{$d->nama_dosen}}</td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', ['mode' => 1, 'dosen' => $d->id_dosen])}}">{{$d->total_kelas}}</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', ['mode' => 2, 'dosen' => $d->id_dosen])}}">{{$d->total_kelas_dinilai}}</a>
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', ['mode' => 3, 'dosen' => $d->id_dosen])}}">{{$d->total_kelas_belum_dinilai}}</a>
+                                    </td>
+                                </tr>
+                                @endforeach
 
                             </tbody>
-                      </table>
+                        </table>
                       </div>
                 </div>
 
@@ -70,8 +81,8 @@ Monitoring Entry Nilai Dosen
 <script>
     $(function() {
         "use strict";
-        
-        $('#data').DataTable();
+
+        $('#data-monitoring').DataTable();
     });
 </script>
 @endpush

@@ -87,6 +87,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('gelar-lulusan')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\GelarLulusanController::class, 'index'])->name('bak.gelar-lulusan');
+                Route::get('/edit/{prodi}', [App\Http\Controllers\Bak\GelarLulusanController::class, 'edit'])->name('bak.gelar-lulusan.edit');
                 Route::post('/store', [App\Http\Controllers\Bak\GelarLulusanController::class, 'store'])->name('bak.gelar-lulusan.store');
             });
 
@@ -873,7 +874,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             //Route for Monitoring
             Route::prefix('monitoring')->group(function(){
-                Route::get('/entry-nilai', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'monitoring_nilai'])->name('prodi.monitoring.entry-nilai');
+                Route::prefix('entry-nilai')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'monitoring_nilai'])->name('prodi.monitoring.entry-nilai');
+                    Route::get('/detail/{mode}/{dosen}', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'monitoring_nilai_detail'])->name('prodi.monitoring.entry-nilai.detail');
+                });
+
                 Route::get('/pengajaran-dosen', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'monitoring_pengajaran'])->name('prodi.monitoring.pengajaran-dosen');
 
                 Route::prefix('/pengisian-krs')->group(function(){
