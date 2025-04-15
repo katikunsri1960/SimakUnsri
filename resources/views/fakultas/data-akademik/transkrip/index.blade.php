@@ -293,7 +293,7 @@ Transkrip Nilai
                             nim: nim
                         },
                         success: function (response) {
-                            // console.log(response);
+                            console.log(response);
                             if (response.status == 'error') {
                                 swal({
                                     title: "Peringatan!",
@@ -403,6 +403,11 @@ Transkrip Nilai
                             $('#totalSks').text(totalSks);
                             $('#ipk').text(ipk.toFixed(2));
 
+                        },
+                        error: function(xhr) {
+                            console.log(response);
+                            var errorMessage = xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses data.';
+                            swal('Error', errorMessage, 'error');
                         }
                     });
 
