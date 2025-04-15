@@ -96,11 +96,11 @@ class TranskripController extends Controller
             ];
 
             } catch (\Throwable $th) {
-            $useptData = [
-                'score' => 0,
-                'class' => 'danger',
-                'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
-            ];
+                $useptData = [
+                    'score' => 0,
+                    'class' => 'danger',
+                    'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
+                ];
             }
 
             $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
@@ -108,7 +108,10 @@ class TranskripController extends Controller
             $total_sks = $transkrip->sum('sks_mata_kuliah');
             $total_indeks = $transkrip->sum('nilai_indeks');
 
-            $ipk = ($total_sks * $total_indeks) / $total_sks;
+            $ipk = 0;
+            if($total_sks > 0){
+                $ipk = ($total_sks * $total_indeks) / $total_sks;
+            }
 
             $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester', 'desc')
