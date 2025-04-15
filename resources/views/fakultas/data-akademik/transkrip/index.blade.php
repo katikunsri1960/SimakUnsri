@@ -403,6 +403,10 @@ Transkrip Nilai
                             $('#totalSks').text(totalSks);
                             $('#ipk').text(ipk.toFixed(2));
 
+                        },
+                        error: function(xhr) {
+                            var errorMessage = xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses data.';
+                            swal('Error', errorMessage, 'error');
                         }
                     });
 
