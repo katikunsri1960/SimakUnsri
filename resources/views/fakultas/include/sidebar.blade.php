@@ -124,7 +124,7 @@
                         <a href="{{route('fakultas.wisuda.index')}}">
                             <i class="fa fa-user-graduate"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Wisuda</span>
+                            <span>Ajuan Wisuda</span>
                         </a>
                     </li>
 
