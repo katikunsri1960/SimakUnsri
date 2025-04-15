@@ -405,6 +405,7 @@ Transkrip Nilai
 
                         },
                         error: function(xhr) {
+                            console.log(response);
                             var errorMessage = xhr.responseJSON?.message || 'Terjadi kesalahan saat memproses data.';
                             swal('Error', errorMessage, 'error');
                         }
