@@ -370,7 +370,7 @@ class AktivitasMBKMController extends Controller
 
             return redirect()->route('mahasiswa.perkuliahan.mbkm.non-pertukaran')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
     }
 
@@ -441,7 +441,7 @@ class AktivitasMBKMController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return redirect()->route('mahasiswa.perkuliahan.mbkm.non-pertukaran')->with('error', $e->getMessage());
+            return redirect()->route('mahasiswa.perkuliahan.mbkm.non-pertukaran')->with('error', 'Terjadi kesalahan saat menghapus aktivitas.');
         }
     }
 
@@ -756,7 +756,7 @@ class AktivitasMBKMController extends Controller
 
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
 
         return redirect()->route('mahasiswa.perkuliahan.mbkm.pertukaran')->with('success', 'Data Berhasil di Tambahkan');
@@ -829,7 +829,7 @@ class AktivitasMBKMController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return redirect()->route('mahasiswa.perkuliahan.mbkm.pertukaran')->with('error', $e->getMessage());
+            return redirect()->route('mahasiswa.perkuliahan.mbkm.pertukaran')->with('error', 'Terjadi kesalahan saat menghapus aktivitas.');
         }
     }
 }

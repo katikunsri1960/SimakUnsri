@@ -60,7 +60,7 @@ class BeasiswaController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Gagal menyimpan data beasiswa mahasiswa. '.$th->getMessage());
+            return redirect()->back()->with('error', 'Gagal menyimpan data beasiswa mahasiswa. ');
         }
 
         return redirect()->back()->with('success', 'Data beasiswa mahasiswa berhasil disimpan.');
@@ -86,7 +86,7 @@ class BeasiswaController extends Controller
         } catch (\Throwable $th) {
             DB::rollBack();
 
-            return redirect()->back()->with('error', 'Gagal menyimpan data beasiswa mahasiswa. '.$th->getMessage());
+            return redirect()->back()->with('error', 'Gagal menyimpan data beasiswa mahasiswa. ');
         }
 
         return redirect()->back()->with('success', 'Data beasiswa mahasiswa berhasil disimpan.');
@@ -100,7 +100,7 @@ class BeasiswaController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal menghapus data beasiswa mahasiswa. '.$th->getMessage());
+            return redirect()->back()->with('error', 'Gagal menghapus data beasiswa mahasiswa. ');
         }
 
         return redirect()->back()->with('success', 'Data beasiswa mahasiswa berhasil dihapus.');

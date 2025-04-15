@@ -270,7 +270,7 @@ class WisudaController extends Controller
         $riwayat_pendidikan = RiwayatPendidikan::with('biodata', 'biodata.wilayah.kab_kota')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
-        
+
         if($request->id_wilayah) {
             $wilayah = Wilayah::where('id_wilayah', $request->id_wilayah)->first();
         }else{
@@ -305,7 +305,7 @@ class WisudaController extends Controller
         $ipk = TranskripMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                 ->whereNot('nilai_huruf', 'F')
                 ->get();
-                
+
         // dd($ipk, $riwayat_pendidikan);
 
         $ipk_total = 0;
@@ -400,7 +400,7 @@ class WisudaController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             // Handle exception
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
     }
 }

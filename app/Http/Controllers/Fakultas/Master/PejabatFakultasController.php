@@ -50,14 +50,14 @@ class PejabatFakultasController extends Controller
         $semester_aktif = SemesterAktif::first();
 
         $tahun_ajaran = substr($semester_aktif->id_semester, 0, 4);
-        
+
         try {
             $dosen = PenugasanDosen::with(['prodi', 'prodi.fakultas', 'biodata' ])->where('id_tahun_ajaran', $tahun_ajaran-1)
                     ->where('id_dosen', $request->id_dosen)
                     ->firstOrFail();
 
             $fakultas= Fakultas::where('id', $fakultas_id)->first();
-            
+
             if ($request->id_jabatan == 0) {
                 $nama_jabatan = 'Dekan Fakultas';
             } elseif ($request->id_jabatan == 1) {
@@ -85,7 +85,7 @@ class PejabatFakultasController extends Controller
             $data['nama_fakultas'] = $fakultas->nama_fakultas;
             $data['tgl_mulai_jabatan'] = $request->tgl_mulai_jabatan;
             $data['tgl_selesai_jabatan'] = $request->tgl_selesai_jabatan;
-            
+
             PejabatFakultas::create($data);
 
             // Melakukan debug dengan dd() untuk menampilkan data yang berhasil disimpan
@@ -93,7 +93,7 @@ class PejabatFakultasController extends Controller
 
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi masalah saat menyimpan data.' );
         }
     }
 
@@ -102,10 +102,10 @@ class PejabatFakultasController extends Controller
     {
         $search = $request->get('q');
 
-       
+
         $tahun_ajaran = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
-        
+
         $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran-1)
                                 ->orderby('nama_dosen', 'asc');
         if ($search) {
@@ -151,7 +151,7 @@ class PejabatFakultasController extends Controller
             return redirect()->route('pejabat-fakultas.index')->with('success', 'Data pejabat berhasil diperbarui.');
         } catch (\Exception $e) {
             // Tangani error jika terjadi
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat memperbarui data: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi masalah saat menyimpan data. Silakan coba lagi.');
         }
     }
 

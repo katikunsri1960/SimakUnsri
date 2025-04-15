@@ -306,7 +306,7 @@ class PerkuliahanController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             return redirect()->back()->withErrors([
-                'error' => 'Data Tagihan Tidak Ditemukan!. '.$th->getMessage()
+                'error' => 'Data Tagihan Tidak Ditemukan!. '
             ])->withInput();
         }
 
@@ -345,7 +345,7 @@ class PerkuliahanController extends Controller
             } catch (\Exception $e) {
             // Handle error
             return redirect()->back()->withErrors([
-                'error' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()
+                'error' => 'Terjadi kesalahan saat menyimpan data.'
             ])->withInput();
         }
     }
@@ -415,7 +415,7 @@ class PerkuliahanController extends Controller
 
             return response()->json(['success' => true, 'message' => 'Data berhasil diperbarui']);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+            return response()->json(['success' => false, 'message' => 'Gagal mengupdate data.'], 500);
         }
     }
 
@@ -620,7 +620,7 @@ class PerkuliahanController extends Controller
             return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
         } catch (\Throwable $th) {
             //throw $th;
-            return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! '.$th->getMessage()]);
+            return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! ']);
         }
 
     }

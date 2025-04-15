@@ -124,7 +124,7 @@ class PesertaKelasKuliah extends Model
 
             $result = [
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan! '. $e->getMessage(),
+                'message' => 'Terjadi kesalahan! ',
             ];
 
             return $result;
@@ -720,7 +720,7 @@ class PesertaKelasKuliah extends Model
 
             $result = [
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan!'. $e->getMessage(),
+                'message' => 'Terjadi kesalahan!',
             ];
 
             return $result;
@@ -858,7 +858,7 @@ class PesertaKelasKuliah extends Model
 
             $result = [
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan!'. $e->getMessage(),
+                'message' => 'Terjadi kesalahan!',
             ];
 
             return $result;
@@ -1467,7 +1467,7 @@ class PesertaKelasKuliah extends Model
 
             $result = [
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan!'. $e->getMessage(),
+                'message' => 'Terjadi kesalahan!',
             ];
 
             return $result;
@@ -1696,7 +1696,7 @@ class PesertaKelasKuliah extends Model
 
             $result = [
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan!'. $e->getMessage(),
+                'message' => 'Terjadi kesalahan!',
             ];
 
             return $result;

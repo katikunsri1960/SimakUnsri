@@ -28,7 +28,7 @@ class BimbinganController extends Controller
                     ->select('riwayat_pendidikans.*')
                     ->where('id_registrasi_mahasiswa', $user->fk_id)
                     ->first();
-        
+
         $semester = Semester::orderBy('id_semester', 'DESC')
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
                     // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
@@ -57,8 +57,8 @@ class BimbinganController extends Controller
         if ($data->isEmpty()) {
             return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
         }
-        
-        
+
+
         // PENGECEKAN STATUS PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
 
@@ -67,7 +67,7 @@ class BimbinganController extends Controller
             ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
             ->where('kode_periode', $semester_select)
             ->first();
-            
+
             if($tagihan){
                 if($tagihan->pembayaran){
                     $pembayaran = $tagihan->pembayaran;
@@ -97,7 +97,7 @@ class BimbinganController extends Controller
             'beasiswa'=>$beasiswa
         ]);
     }
-    
+
     public function asistensi(AktivitasMahasiswa $aktivitas)
     {
         $user = auth()->user();
@@ -110,7 +110,7 @@ class BimbinganController extends Controller
 
         $pembimbing_ke = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
                             ->first()->pembimbing_ke;
-                    
+
         $dosen_pembimbing = $aktivitas->load(['bimbing_mahasiswa']);
         // dd($dosen_pembimbing);
         return view('mahasiswa.bimbingan.tugas-akhir.asistensi', [
@@ -133,7 +133,7 @@ class BimbinganController extends Controller
         $data['approved'] = 0;
         $data['id_dosen'] = $request->dosen_pembimbing;
         $data['tanggal'] = date('Y-m-d', strtotime($data['tanggal']));
-        
+
         AsistensiAkhir::create($data);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
@@ -156,7 +156,7 @@ class BimbinganController extends Controller
             return redirect()->back()->with('success', 'Data berhasil dihapus');
         } catch (\Exception $e) {
             // Redirect kembali dengan pesan error jika terjadi kesalahan
-            return redirect()->back()->withErrors('Gagal menghapus data: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Gagal menghapus data. ');
         }
     }
 }

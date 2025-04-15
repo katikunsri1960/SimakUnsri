@@ -53,7 +53,7 @@ class AktivitasMahasiswaKonversiController extends Controller
     {
         $prodi_id = auth()->user()->fk_id;
         $kurikulum_id = $request->input('kurikulum_id');
-        
+
         $id_matkul = Konversi::where('id_prodi', $prodi_id)
                 ->where('id_kurikulum', $kurikulum_id)
                 ->pluck('id_matkul');
@@ -123,16 +123,16 @@ class AktivitasMahasiswaKonversiController extends Controller
                 ]);
                 // dd($koversi);
             });
-            
+
             // Jika berhasil, kembalikan respons sukses
             return redirect()->route('prodi.data-aktivitas.aktivitas-mahasiswa.index')->with('success', 'Data konversi aktivitas berhasil disimpan');
 
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
             // return redirect()->back()->with(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
         }
-        
+
         return redirect()->route('prodi.data-aktivitas.aktivitas-mahasiswa.index')->with('success', 'Data Berhasil di Tambahkan');
     }
 
@@ -176,8 +176,8 @@ class AktivitasMahasiswaKonversiController extends Controller
             'kurikulum' =>'required',
             'jenis_aktivitas' => 'required',
             'mk_konversi' => 'required',
-            'tipe_penilaian' => 'required', 
-        ]);       
+            'tipe_penilaian' => 'required',
+        ]);
 
         try {
             // Gunakan transaksi untuk memastikan semua operasi database berhasil
@@ -227,7 +227,7 @@ class AktivitasMahasiswaKonversiController extends Controller
 
         } catch (Exception $e) {
             return redirect()->route('prodi.data-aktivitas.aktivitas-mahasiswa.index')
-                            ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                            ->with('error', 'Terjadi kesalahan.');
         }
     }
 
@@ -239,7 +239,7 @@ class AktivitasMahasiswaKonversiController extends Controller
         try {
             $prodi_id = auth()->user()->fk_id;
             $semester = SemesterAktif::first();
-            
+
             $latest_mk_konversi = Konversi::where('id', $id)->first();
 
             $check_mk_konversi = AktivitasMahasiswa::where('id_prodi', $prodi_id)->where('id_semester', $semester->id_semester)->where('mk_konversi', $latest_mk_konversi->id_matkul)->count();
@@ -255,7 +255,7 @@ class AktivitasMahasiswaKonversiController extends Controller
                              ->with('success', 'Data berhasil dihapus');
         } catch (Exception $e) {
             return redirect()->route('prodi.data-aktivitas.aktivitas-mahasiswa.index')
-                             ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                             ->with('error', 'Terjadi kesalahan.');
         }
     }
 }

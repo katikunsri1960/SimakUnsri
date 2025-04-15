@@ -128,7 +128,7 @@ class PenilaianSidangController extends Controller
             if($penguji->id_kategori_kegiatan == '110501'){
                 for($i=0;$i<$jumlah_notulensi;$i++){
                     NotulensiSidangMahasiswa::create(['id_aktivitas' => $data->id_aktivitas, 'id_dosen' => $penguji->id_dosen, 'lokasi' => $request->lokasi, 'tanggal_sidang' => $tanggal_sidang, 'jam_mulai_sidang' => $jam_mulai_sidang, 'jam_selesai_sidang' => $jam_selesai_sidang, 'jam_mulai_presentasi' => $jam_mulai_presentasi, 'jam_selesai_presentasi' => $jam_selesai_presentasi, 'uraian' => $request->notulensi[$i]]);
-                }   
+                }
             }else{
                 return redirect()->back()->with('error', 'Notulensi Hanya Bisa di Isi Oleh Ketua Penguji.');
             }
@@ -138,7 +138,7 @@ class PenilaianSidangController extends Controller
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. Terjadi masalah saat menyimpan data. ');
         }
     }
 
@@ -188,7 +188,7 @@ class PenilaianSidangController extends Controller
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. Terjadi masalah saat menyimpan data. ');
         }
     }
     public function penilaian_sidang($aktivitas)
@@ -233,7 +233,7 @@ class PenilaianSidangController extends Controller
 
         try {
             DB::beginTransaction();
-            
+
             if(!$nilai_sidang){
                 NilaiSidangMahasiswa::create(['approved_prodi' => 0, 'id_aktivitas' => $data->id_aktivitas, 'id_dosen' => $penguji->id_dosen, 'id_kategori_kegiatan' => $penguji->id_kategori_kegiatan,'nilai_kualitas_skripsi' => $request->kualitas_skripsi, 'nilai_presentasi_dan_diskusi' => $request->presentasi, 'nilai_performansi' => $request->performansi, 'nilai_akhir_dosen' => $nilai_akhir_sidang, 'tanggal_penilaian_sidang' => $tanggal_penilaian]);
             }else{
@@ -241,7 +241,7 @@ class PenilaianSidangController extends Controller
                     NilaiSidangMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen',$id_dosen)->update(['nilai_kualitas_skripsi' => $request->kualitas_skripsi, 'nilai_presentasi_dan_diskusi' => $request->presentasi, 'nilai_performansi' => $request->performansi, 'nilai_akhir_dosen' => $nilai_akhir_sidang, 'tanggal_penilaian_sidang' => $tanggal_penilaian]);
                 }else{
                     return redirect()->back()->with('error', 'Data nilai sudah disetujui prodi.');
-                }  
+                }
             }
 
             DB::commit();
@@ -249,7 +249,7 @@ class PenilaianSidangController extends Controller
             return redirect()->route('dosen.penilaian.sidang-mahasiswa.detail-sidang', $aktivitas)->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. Terjadi masalah saat menyimpan data. ');
         }
     }
 }

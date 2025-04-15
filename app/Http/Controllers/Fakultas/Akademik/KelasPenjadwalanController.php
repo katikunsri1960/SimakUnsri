@@ -34,12 +34,12 @@ class KelasPenjadwalanController extends Controller
         ->orderBy('nama_program_studi')
         ->get();
 
-        $id_prodi_fak=$prodi_fak->pluck('id_prodi');      
+        $id_prodi_fak=$prodi_fak->pluck('id_prodi');
 
         $semester_aktif = SemesterAktif::first();
         // dd($prodi_fak);
-        // $prodi_id = auth()->user()->fk_id;        
-        
+        // $prodi_id = auth()->user()->fk_id;
+
         $data = ListKurikulum::with(['mata_kuliah' => function ($query) use ($id_prodi_fak, $semester_aktif) {
             $query->with(['matkul_konversi' => function ($query) use ($id_prodi_fak) {
                 $query->whereIn('id_prodi', $id_prodi_fak);
@@ -101,7 +101,7 @@ class KelasPenjadwalanController extends Controller
         // $kelas = KelasKuliah::where('id', $id_kelas)->first();
 
 
-                    
+
         // dd($tgl_ujian, $hari_ujian, $jam_mulai_ujian, $jam_selesai_ujian);
         return view('fakultas.data-akademik.kelas-penjadwalan.detail', ['data' => $data, 'id_matkul' => $id_matkul, 'matkul' => $mata_kuliah, 'tgl_ujian'=>$tgl_ujian, 'hari_ujian'=>$hari_ujian, 'jam_mulai_ujian'=>$jam_mulai_ujian, 'jam_selesai_ujian'=>$jam_selesai_ujian]);
     }
@@ -173,7 +173,7 @@ class KelasPenjadwalanController extends Controller
         $table->addRow();
         $table->addCell(2000)->addText('Dosen', array('name' => 'Arial', 'size' => 10, 'bold' => true));
         $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        
+
         $cell = $table->addCell(5000);
 
         $listStyle = array(
@@ -213,7 +213,7 @@ class KelasPenjadwalanController extends Controller
         );
         $firstRowStyle = array('bgColor' => 'ffffff');
         $phpWord->addTableStyle('Fancy Table', $tableStyle, $firstRowStyle);
-        
+
         // Add table with the defined style
         $table = $section->addTable('Fancy Table');
         $table->addRow();
@@ -258,13 +258,13 @@ class KelasPenjadwalanController extends Controller
         $table->addCell(6000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'restart'])->addText('PENGAWAS II', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'right', 'valign' => 'center']);
 
         $table->addRow(600);
-        
+
         $table->addRow();
         $table->addCell(6000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText('(..................................)', array('name' => 'Arial', 'size' => 9), ['align' => 'left', 'valign' => 'center']);
-        $table->addCell(6000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText('(..................................)', array('name' => 'Arial', 'size' => 9),['align' => 'right', 'valign' => 'center']); 
-        // Keterangan// 
+        $table->addCell(6000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText('(..................................)', array('name' => 'Arial', 'size' => 9),['align' => 'right', 'valign' => 'center']);
+        // Keterangan//
 
-        
+
         if(!$data->matkul){
             $filename = 'Daftar_Hadir-'.$data->kode_mata_kuliah.'-'.$data->nama_kelas_kuliah.'-'.$data->id_semester.'.docx';
         }else{
@@ -291,13 +291,13 @@ class KelasPenjadwalanController extends Controller
     {
         // dd($id_matkul);
         $semester_aktif = SemesterAktif::first();
-        
+
         $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
         ->orderBy('id_jenjang_pendidikan')
         ->orderBy('nama_program_studi')
         ->get();
 
-        $id_prodi_fak=$prodi_fak->pluck('id_prodi');      
+        $id_prodi_fak=$prodi_fak->pluck('id_prodi');
 
         $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
         $kelas = KelasKuliah::leftJoin('ruang_perkuliahans', 'ruang_perkuliahans.id', 'kelas_kuliahs.ruang_perkuliahan_id')
@@ -312,7 +312,7 @@ class KelasPenjadwalanController extends Controller
                                     // ->where('lokasi', $kelas->lokasi)
                                     ->get();
 
-        return view('fakultas.data-akademik.kelas-penjadwalan.edit', ['kelas' => $kelas, 'matkul' => $mata_kuliah, 
+        return view('fakultas.data-akademik.kelas-penjadwalan.edit', ['kelas' => $kelas, 'matkul' => $mata_kuliah,
         'ruang' => $ruang
         ]);
     }
@@ -345,7 +345,7 @@ class KelasPenjadwalanController extends Controller
             DB::rollback();
 
             // Redirect kembali ke halaman sebelumnya dengan pesan error
-            return redirect()->back()->with('error', 'Data Kelas Gagal diubah. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Kelas Gagal diubah. Terjadi masalah saat menyimpan data. ');
         }
     }
 
@@ -379,7 +379,7 @@ class KelasPenjadwalanController extends Controller
             return redirect()->route('fakultas.data-akademik.kelas-penjadwalan.detail', $id_matkul)->with('success', 'Data Kelas Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. Terjadi masalah saat menyimpan data. ');
         }
     }
 

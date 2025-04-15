@@ -176,7 +176,7 @@ class DataMasterController extends Controller
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data Gagal di tambahkan',
-                'error' => $e->getMessage()
+                'error' => 'Terjadi kesalahan.'
             ], 500); // Added error handling and HTTP status code
         }
     }

@@ -212,7 +212,7 @@ class AktivitasNonTAController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -271,7 +271,7 @@ class AktivitasNonTAController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -286,7 +286,7 @@ class AktivitasNonTAController extends Controller
                              ->with('success', 'Data berhasil dihapus');
         } catch (\Exception $e) {
             return redirect()->back()
-                             ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                             ->with('error', 'Terjadi kesalahan.');
         }
     }
 
@@ -418,7 +418,7 @@ class AktivitasNonTAController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -441,7 +441,7 @@ class AktivitasNonTAController extends Controller
             return redirect()->back()->with('success', 'Data Nilai Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Nilai Gagal di Hapus. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Nilai Gagal di Hapus. ');
         }
     }
 
@@ -564,7 +564,7 @@ class AktivitasNonTAController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -587,7 +587,7 @@ class AktivitasNonTAController extends Controller
             return redirect()->back()->with('success', 'Data Nilai Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Nilai Gagal di Hapus. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Nilai Gagal di Hapus. ');
         }
     }
 }

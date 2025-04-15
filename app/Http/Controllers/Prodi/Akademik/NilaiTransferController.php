@@ -24,7 +24,7 @@ class NilaiTransferController extends Controller
         // dd($data);
 
         return view('prodi.data-akademik.nilai-transfer.index', ['data' => $data]);
-    } 
+    }
 
     public function get_matkul(Request $request, $nim)
     {
@@ -72,7 +72,7 @@ class NilaiTransferController extends Controller
             'pengisian_nilai' => $semesterAktif,
             'transfer' => $nilai_transfer
         ]);
-    } 
+    }
 
     public function store_nilai_transfer($id_reg, Request $request)
     {
@@ -124,7 +124,7 @@ class NilaiTransferController extends Controller
                 $matkul = MataKuliah::where('id_matkul', $request->mata_kuliah_transfer[$i])->first();
 
                 $jumlah_sks = $matkul->sks_mata_kuliah;
-        
+
                 if($request->nilai_huruf_transfer[$i] == 'A'){
                     $nilai_indeks = '4.00';
                 }
@@ -145,12 +145,12 @@ class NilaiTransferController extends Controller
 
                 //Store data
                 NilaiTransferPendidikan::create([
-                    'feeder'=> 0, 
-                    'id_transfer'=> $id_transfer, 
-                    'id_registrasi_mahasiswa'=> $mahasiswa->id_registrasi_mahasiswa, 
-                    'nim'=> $mahasiswa->nim, 
-                    'nama_mahasiswa' => $mahasiswa->nama_mahasiswa, 
-                    'id_prodi' => $mahasiswa->id_prodi, 
+                    'feeder'=> 0,
+                    'id_transfer'=> $id_transfer,
+                    'id_registrasi_mahasiswa'=> $mahasiswa->id_registrasi_mahasiswa,
+                    'nim'=> $mahasiswa->nim,
+                    'nama_mahasiswa' => $mahasiswa->nama_mahasiswa,
+                    'id_prodi' => $mahasiswa->id_prodi,
                     'nama_program_studi' => $mahasiswa->nama_program_studi, 'id_periode_masuk' => $mahasiswa->id_periode_masuk, 'kode_mata_kuliah_asal' => $request->kode_mata_kuliah_asal[$i], 'nama_mata_kuliah_asal' => $request->nama_mata_kuliah_asal[$i], 'sks_mata_kuliah_asal' => $request->sks_matkul_asal[$i], 'nilai_huruf_asal' => $request->nilai_huruf_asal[$i], 'id_matkul' => $matkul->id_matkul, 'kode_matkul_diakui' => $matkul->kode_mata_kuliah, 'nama_mata_kuliah_diakui' => $matkul->nama_mata_kuliah, 'sks_mata_kuliah_diakui' => $matkul->sks_mata_kuliah, 'nilai_huruf_diakui' => $request->nilai_huruf_transfer[$i], 'nilai_angka_diakui' => $nilai_indeks, 'id_perguruan_tinggi' => $request->asal_pt[$i], 'id_semester' => $semester->id_semester, 'nama_semester' => $semester->semester->nama_semester, 'status_sync' => 'belum sync']);
 
             }
@@ -161,7 +161,7 @@ class NilaiTransferController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -184,7 +184,7 @@ class NilaiTransferController extends Controller
             return redirect()->back()->with('success', 'Data Nilai Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Nilai Gagal di Hapus. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Nilai Gagal di Hapus. ');
         }
     }
 }

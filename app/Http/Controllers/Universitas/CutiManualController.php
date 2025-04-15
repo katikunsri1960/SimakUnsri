@@ -58,7 +58,7 @@ class CutiManualController extends Controller
             'data' => $data
         ]);
     }
-    
+
     public function getMahasiswaData($id_registrasi_mahasiswa)
     {
         $mahasiswa = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan')
@@ -76,7 +76,7 @@ class CutiManualController extends Controller
     }
 
     public function store(Request $request)
-    { 
+    {
         $validatedData = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'tanggal_sk' => 'nullable|date',
@@ -88,11 +88,11 @@ class CutiManualController extends Controller
             DB::beginTransaction();
             // dd($request->tanggal_sk, $request->no_sk);
             // Validate request data
-            
+
             // Define variable
             $id_reg = $request->id_registrasi_mahasiswa;
             $semester_aktif=SemesterAktif::with('semester')->first();
-            
+
             $riwayat_pendidikan = RiwayatPendidikan::with('biodata')
                         ->where('id_registrasi_mahasiswa', $id_reg)
                         ->first();
@@ -219,7 +219,7 @@ class CutiManualController extends Controller
                             ->whereNotIn('nilai_huruf', ['F', ''])
                             ->groupBy('id_registrasi_mahasiswa')
                             ->first();
-                            
+
                 $akm = AktivitasKuliahMahasiswa::create([
                     'feeder' => 0,
                     'id_registrasi_mahasiswa' => $riwayat_pendidikan->id_registrasi_mahasiswa,
@@ -253,7 +253,7 @@ class CutiManualController extends Controller
 
         } catch (\Exception $e) {
             // Tampilkan pesan error jika ada masalah
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan.');
         }
     }
 
@@ -268,7 +268,7 @@ class CutiManualController extends Controller
             }
 
             // Temukan pengajuan cuti berdasarkan ID
-            
+
             // dd($cuti);
             $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $cuti->id_registrasi_mahasiswa)
                                 ->where('id_semester', $cuti->id_semester)

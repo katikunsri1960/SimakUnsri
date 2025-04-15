@@ -173,7 +173,7 @@ class TugasAkhirController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -235,7 +235,7 @@ class TugasAkhirController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -250,7 +250,7 @@ class TugasAkhirController extends Controller
                              ->with('success', 'Data berhasil dihapus');
         } catch (\Exception $e) {
             return redirect()->back()
-                             ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                             ->with('error', 'Terjadi kesalahan.');
         }
     }
 

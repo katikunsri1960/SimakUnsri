@@ -60,7 +60,7 @@ class SidangMahasiswaController extends Controller
             'semester_view' => $semester_view,
             'semester_aktif' => $semester_aktif
         ]);
-    } 
+    }
 
     public function approve_penguji(AktivitasMahasiswa $aktivitasMahasiswa)
     {
@@ -213,7 +213,7 @@ class SidangMahasiswaController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -243,7 +243,7 @@ class SidangMahasiswaController extends Controller
                 ]);
         try {
             DB::beginTransaction();
-            
+
             $dosen_penguji = PenugasanDosen::where('id_tahun_ajaran',$semester_aktif->semester->id_tahun_ajaran)->whereIn('id_dosen', $request->dosen_penguji)->get();
 
             if($dosen_penguji->count() == 0 || $dosen_penguji->count() != count($request->dosen_penguji)){
@@ -279,7 +279,7 @@ class SidangMahasiswaController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -294,7 +294,7 @@ class SidangMahasiswaController extends Controller
                              ->with('success', 'Data berhasil dihapus');
         } catch (\Exception $e) {
             return redirect()->back()
-                             ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                             ->with('error', 'Terjadi kesalahan, tidak dapat menghapus data');
         }
     }
 
@@ -400,7 +400,7 @@ class SidangMahasiswaController extends Controller
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -421,10 +421,10 @@ class SidangMahasiswaController extends Controller
         if($penguji){
             return redirect()->back()->with('error', 'Dosen Penguji Sudah Menyetujui.');
         }
-        
+
         try {
             DB::beginTransaction();
-            
+
             AktivitasMahasiswa::where('id',$id)->update([
                 'approve_sidang' => 0,
                 'alasan_pembatalan_sidang' => $request->alasan_pembatalan
@@ -437,7 +437,7 @@ class SidangMahasiswaController extends Controller
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan.');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 

@@ -86,7 +86,7 @@ class AktivitasKuliahMahasiswa extends Model
             return ['status' => 'success', 'message' => 'Data berhasil diupdate'];
         } catch (\Throwable $th) {
             DB::rollBack();
-            return ['status' => 'error', 'message' => 'Data Gagal Diupdate! ' . $th->getMessage()];
+            return ['status' => 'error', 'message' => 'Data Gagal Diupdate! '];
         }
     }
 

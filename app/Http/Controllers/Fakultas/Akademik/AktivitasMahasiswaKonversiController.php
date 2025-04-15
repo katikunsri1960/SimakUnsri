@@ -54,7 +54,7 @@ class AktivitasMahasiswaKonversiController extends Controller
     {
         $prodi_id = auth()->user()->fk_id;
         $kurikulum_id = $request->input('kurikulum_id');
-        
+
         $id_matkul = Konversi::where('id_prodi', $prodi_id)
                 ->where('id_kurikulum', $kurikulum_id)
                 ->pluck('id_matkul');
@@ -83,7 +83,7 @@ class AktivitasMahasiswaKonversiController extends Controller
         $validated = $request->validate([
             'kurikulum' =>'required',
             'jenis_aktivitas' => 'required',
-            'mk_konversi' => 'required', 
+            'mk_konversi' => 'required',
         ]);
 
         try {
@@ -122,16 +122,16 @@ class AktivitasMahasiswaKonversiController extends Controller
                 ]);
                 // dd($koversi);
             });
-            
+
             // Jika berhasil, kembalikan respons sukses
             return redirect()->route('fakultas.data-aktivitas.aktivitas-mahasiswa.index')->with('success', 'Data konversi aktivitas berhasil disimpan');
 
         } catch (\Exception $e) {
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi masalah saat menyimpan data. ');
             // return redirect()->back()->with(['message' => 'Terjadi kesalahan saat menyimpan data'], 500);
         }
-        
+
         return redirect()->route('fakultas.data-aktivitas.aktivitas-mahasiswa.index')->with('success', 'Data Berhasil di Tambahkan');
     }
 
@@ -174,8 +174,8 @@ class AktivitasMahasiswaKonversiController extends Controller
         $validated = $request->validate([
             'kurikulum' =>'required',
             'jenis_aktivitas' => 'required',
-            'mk_konversi' => 'required', 
-        ]);       
+            'mk_konversi' => 'required',
+        ]);
 
         // try {
             // Gunakan transaksi untuk memastikan semua operasi database berhasil
@@ -212,7 +212,7 @@ class AktivitasMahasiswaKonversiController extends Controller
                     'semester' =>$mk_konversi->semester,
                 ]);
                 // dd($koversi);
-        
+
         return redirect()->route('fakultas.data-aktivitas.aktivitas-mahasiswa.index')->with('success', 'Data Berhasil Diubah');
     }
 
@@ -229,7 +229,7 @@ class AktivitasMahasiswaKonversiController extends Controller
                              ->with('success', 'Data berhasil dihapus');
         } catch (Exception $e) {
             return redirect()->route('fakultas.data-aktivitas.aktivitas-mahasiswa.index')
-                             ->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+                             ->with('error', 'Terjadi masalah saat menghapus data. ');
         }
     }
 }

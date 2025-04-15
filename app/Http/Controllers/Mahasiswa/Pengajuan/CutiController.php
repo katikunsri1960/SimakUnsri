@@ -32,9 +32,9 @@ class CutiController extends Controller
         // - Sesuai dengan ketentuan yang berlaku, mahasiswa diperkenankan mengambil cuti kuliah atau
         // - SO (Stop Out), kecuali mahasiswa penerima beasiswa Bidikmisi/KIP-K, mahasiswa penerima
         // - beasiswa penuh lainnya, dan Mahasiswa Program Pendidikan Profesi.
-        // - mahasiswa telah menempuh minimal 4 semester untuk program sarjana, 
+        // - mahasiswa telah menempuh minimal 4 semester untuk program sarjana,
         // - atau telah menempuh minimal 50% dari total sks yang wajib ditempuh pada program studinya.
-        
+
         $semester_aktif = SemesterAktif::first();
 
         $today = Carbon::now()->toDateString();
@@ -58,7 +58,7 @@ class CutiController extends Controller
 
         if ($beasiswa > 0) {
             return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda merupakan mahasiswa penerima Beasiswa');
-        } 
+        }
 
         $existingCuti=$data->where('approved', 2)
                     ->count();
@@ -68,7 +68,7 @@ class CutiController extends Controller
         if($max_cuti == 0 || $existingCuti >= $max_cuti){
             return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda telah mencapai maksimum pengajuan cuti!');
         }
-        
+
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
                     ->orderBy('id_semester', 'DESC')
                     ->get();
@@ -114,7 +114,7 @@ class CutiController extends Controller
         if($riwayat_pendidikan->prodi->id_jenjang_pendidikan !=30 && $jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
             return redirect()->back()->with('error','Anda tidak bisa mengajukan cuti, Silahkan selesaikan minimal 50% dari total sks yang wajib ditempuh!');
         }
-    
+
         return view('mahasiswa.pengajuan.cuti.index', [
             'data' => $data,
             'jenjang_pendidikan' => $riwayat_pendidikan,
@@ -123,7 +123,7 @@ class CutiController extends Controller
             // 'statusPembayaran' => $statusPembayaran,
         ]);
     }
-    
+
     private function calculateMaxCuti($jenjang_pendidikan)
     {
         // Pedoman Akademik dan Kemahasiswaan Universitas Sriwijaya Tahun Akademik 2024/2025
@@ -134,7 +134,7 @@ class CutiController extends Controller
         // m. Mahasiswa program profesi dan spesialis hanya diperkenankan mengajukan permohonan
             // PKA atau SO satu kali. Apabila akan mengajukan izin meninggalkan kuliah karena alasan
             // penting, maka tetap membayar Uang Kuliah Tunggal (UKT).
-            
+
         if ($jenjang_pendidikan == 30 || $jenjang_pendidikan == 22 ||
             $jenjang_pendidikan == 31 || $jenjang_pendidikan == 32 ||
             $jenjang_pendidikan == 37) {
@@ -151,7 +151,7 @@ class CutiController extends Controller
     {
         // dd($semester_aktif->id_semester);
         $id_reg = auth()->user()->fk_id;
-        
+
         $data = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan')->where('id_registrasi_mahasiswa', $id_reg)->first();
         $semester_aktif=SemesterAktif::with('semester')->first();
         $today = Carbon::now()->toDateString();
@@ -184,7 +184,7 @@ class CutiController extends Controller
         return view('mahasiswa.pengajuan.cuti.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);
     }
 
-    
+
     public function store(Request $request)
     {
         // Validate request data
@@ -200,7 +200,7 @@ class CutiController extends Controller
         // Define variable
         $id_reg = auth()->user()->fk_id;
         $semester_aktif = SemesterAktif::first();
-        
+
         $riwayat_pendidikan = RiwayatPendidikan::select('*')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
@@ -232,7 +232,7 @@ class CutiController extends Controller
         if (!$filePath) {
             return redirect()->back()->with('error', 'File pendukung gagal diunggah. Silakan coba lagi.');
         }
-        
+
         try {
             PengajuanCuti::create([
                 'id_cuti' => $id_cuti,
@@ -254,7 +254,7 @@ class CutiController extends Controller
             return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Exception $e) {
             // Tangani error dan tampilkan pesan error
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data. ');
         }
     }
 
@@ -277,7 +277,7 @@ class CutiController extends Controller
         if ($cuti->file_pendukung) {
             Storage::disk('public')->delete($cuti->file_pendukung);
         }
-        
+
         try {
             // Hapus data pengajuan cuti dari database
             $cuti->delete();

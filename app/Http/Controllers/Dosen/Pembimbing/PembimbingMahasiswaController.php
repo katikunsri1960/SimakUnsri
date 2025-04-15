@@ -567,7 +567,7 @@ class PembimbingMahasiswaController extends Controller
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. Terjadi Masalah saat menyimpan data.');
         }
     }
 
@@ -703,7 +703,7 @@ class PembimbingMahasiswaController extends Controller
             return redirect()->route('dosen.pembimbing.bimbingan-tugas-akhir.asistensi', $data)->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -853,7 +853,7 @@ class PembimbingMahasiswaController extends Controller
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ' . $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 

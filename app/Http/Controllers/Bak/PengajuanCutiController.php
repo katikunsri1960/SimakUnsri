@@ -111,7 +111,7 @@ class PengajuanCutiController extends Controller
                 DB::commit();
             } catch (\Throwable $th) {
                 DB::rollBack();
-                return redirect()->back()->with('error', 'Gagal menghapus data Aktivitas Kuliah Mahasiswa. '.$th->getMessage());
+                return redirect()->back()->with('error', 'Gagal menghapus data Aktivitas Kuliah Mahasiswa. Terjadi masalah saat menghapus data.');
             }
         }
 

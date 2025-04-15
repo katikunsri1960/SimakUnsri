@@ -725,7 +725,7 @@ class KelasPenjadwalanController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
 
     }
@@ -913,7 +913,7 @@ class KelasPenjadwalanController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -1000,7 +1000,7 @@ class KelasPenjadwalanController extends Controller
             return redirect()->back()->with('success', 'Data Pengajar Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Pengajar Gagal di Hapus. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Pengajar Gagal di Hapus. ');
         }
     }
 
@@ -1035,7 +1035,7 @@ class KelasPenjadwalanController extends Controller
             return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul, 'semester' => $semester])->with('success', 'Data Kelas Berhasil di Hapus!!');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Kelas Gagal di Hapus. ');
         }
     }
 
@@ -1115,7 +1115,7 @@ class KelasPenjadwalanController extends Controller
             return redirect()->back()->with('success', 'Data Kelas Berhasil di Ubah!!');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Kelas Gagal di Ubah. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Kelas Gagal di Ubah. ');
         }
     }
 

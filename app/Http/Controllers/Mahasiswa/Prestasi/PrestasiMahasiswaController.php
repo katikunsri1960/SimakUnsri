@@ -84,7 +84,7 @@ class PrestasiMahasiswaController extends Controller
             }
             return redirect()->route('mahasiswa.prestasi.prestasi-non-pendanaan')->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan.' );
         }
     }
 
@@ -96,7 +96,7 @@ class PrestasiMahasiswaController extends Controller
 
             return redirect()->route('mahasiswa.prestasi.prestasi-non-pendanaan')->with('success', 'Data Berhasil di Hapus');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan.' );
         }
     }
 }

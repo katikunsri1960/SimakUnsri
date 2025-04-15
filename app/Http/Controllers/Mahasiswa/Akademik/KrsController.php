@@ -98,7 +98,7 @@ class KrsController extends Controller
 
         } catch (\Exception $e) {
             // Error umum lainnya
-            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan. Silakan coba lagi.');
         }
     }
 
@@ -168,7 +168,7 @@ class KrsController extends Controller
             return redirect()->back()->with('success', 'Data berhasil disubmit.');
         } catch (\Exception $e) {
             // Redirect dengan pesan error jika terjadi kesalahan
-            return redirect()->back()->withErrors('Gagal submit data: ' . $e->getMessage());
+            return redirect()->back()->withErrors('Gagal submit data. Silakan coba lagi.');
         }
 
     }
@@ -681,7 +681,7 @@ class KrsController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage()], 500);
+            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data. '], 500);
         }
     }
 

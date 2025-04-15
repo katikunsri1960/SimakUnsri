@@ -57,7 +57,7 @@ class MahasiswaEligibleController extends Controller
                 'transkrip_mahasiswa',
                 'aktivitas_kuliah',
                 'prodi', // Assuming 'prodi' contains 'jenjang_pendidikan'
-                'aktivitas_mahasiswa.nilai_konversi', 
+                'aktivitas_mahasiswa.nilai_konversi',
                 'aktivitas_mahasiswa.semester'
             ])
             ->where('id_prodi', $prodi_id)
@@ -166,7 +166,7 @@ class MahasiswaEligibleController extends Controller
                 'aktivitas_mahasiswa',
                 'prodi', // Assuming 'prodi' contains 'jenjang_pendidikan'
                 'riwayat_pendidikan.biodata',
-                'aktivitas_mahasiswa.nilai_konversi', 
+                'aktivitas_mahasiswa.nilai_konversi',
                 'aktivitas_mahasiswa.semester'
             ])
             ->where('id', $id)
@@ -288,7 +288,7 @@ class MahasiswaEligibleController extends Controller
 
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. ');
         }
     }
 
@@ -310,15 +310,15 @@ class MahasiswaEligibleController extends Controller
         $start = new DateTime($tanggal_masuk);
         $end = new DateTime();
         $diff = $start->diff($end);
-    
+
         // Calculate total months
         $totalMonths = ($diff->y * 12) + $diff->m;
-    
+
         // Convert to years and decimal months
         $years = floor($totalMonths / 12);
         $months = $totalMonths % 12;
         $decimalMonths = round($months / 12, 1); // Convert months to decimal
-    
+
         return ($years + $decimalMonths);
     }
 }

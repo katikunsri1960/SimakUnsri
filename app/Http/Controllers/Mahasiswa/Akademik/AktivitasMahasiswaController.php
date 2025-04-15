@@ -520,7 +520,7 @@ class AktivitasMahasiswaController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
-            return redirect()->back()->with('error', $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
     }
 
@@ -571,7 +571,7 @@ class AktivitasMahasiswaController extends Controller
         } catch (\Exception $e) {
             DB::rollback();
 
-            return redirect()->route('mahasiswa.krs.index')->with('error', $e->getMessage());
+            return redirect()->route('mahasiswa.krs.index')->with('error', 'Terjadi kesalahan saat menghapus aktivitas.');
         }
     }
 

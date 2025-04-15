@@ -296,7 +296,7 @@ class PengaturanController extends Controller
         } catch (\Throwable $th) {
             //throw $th;
             DB::rollback();
-            return redirect()->back()->with('error', 'Data gagal disimpan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data gagal disimpan. ');
         }
 
 
@@ -348,7 +348,7 @@ class PengaturanController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data gagal disimpan. '. $th->getMessage());
+            return redirect()->back()->with('error', 'Data gagal disimpan. ');
         }
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
