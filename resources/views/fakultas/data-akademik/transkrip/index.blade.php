@@ -293,7 +293,7 @@ Transkrip Nilai
                             nim: nim
                         },
                         success: function (response) {
-                            // console.log(response);
+                            console.log(response);
                             if (response.status == 'error') {
                                 swal({
                                     title: "Peringatan!",
