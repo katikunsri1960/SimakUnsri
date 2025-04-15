@@ -35,52 +35,52 @@ class TranskripController extends Controller
 
     public function data(Request $request)
     {
-        $request->validate([
+        try {
+            $request->validate([
             'nim' => 'required',
-        ]);
-
-        $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
-
-        $statusSync = $jobData ? 1 : 0;
-
-        if ($statusSync) {
-            return response()->json([
-            'status' => 'error',
-            'message' => 'Tidak dapat mencari data, proses sinkronisasi sedang berjalan!!',
-            'refresh' => true,
-            'route' => route('fakultas.data-akademik.transkrip-nilai'),
             ]);
-        }
 
-        $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                    ->orderBy('id_jenjang_pendidikan')
-                    ->orderBy('nama_program_studi')
-                    ->pluck('id_prodi');
+            $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
 
-        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])
-                    ->whereIn('id_prodi', $prodi_fak)
-                    ->where('nim', $request->nim)
-                    ->orderBy('id_periode_masuk', 'desc')
-                    ->first();
+            $statusSync = $jobData ? 1 : 0;
 
-        // dd($riwayat);
-        if(!$riwayat ) {
+            if ($statusSync) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Tidak dapat mencari data, proses sinkronisasi sedang berjalan!!',
+                'refresh' => true,
+                'route' => route('fakultas.data-akademik.transkrip-nilai'),
+            ]);
+            }
+
+            $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                ->orderBy('id_jenjang_pendidikan')
+                ->orderBy('nama_program_studi')
+                ->pluck('id_prodi');
+
+            $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])
+                ->whereIn('id_prodi', $prodi_fak)
+                ->where('nim', $request->nim)
+                ->orderBy('id_periode_masuk', 'desc')
+                ->first();
+
+            if (!$riwayat) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data Mahasiswa tidak ditemukan!!',
             ]);
-        }
+            }
 
-        if(!$riwayat->id_kurikulum ) {
+            if (!$riwayat->id_kurikulum) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Kurikulum Mahasiswa Belum Diatur!!',
             ]);
-        }else{
+            } else {
             $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
-        }
+            }
 
-        try {
+            try {
             set_time_limit(10);
 
             $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
@@ -95,29 +95,28 @@ class TranskripController extends Controller
                 'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
             ];
 
-        } catch (\Throwable $th) {
-            //throw $th;
+            } catch (\Throwable $th) {
             $useptData = [
                 'score' => 0,
                 'class' => 'danger',
                 'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
             ];
-        }
+            }
 
-        $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
+            $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
-        $total_sks = $transkrip->sum('sks_mata_kuliah');
-        $total_indeks = $transkrip->sum('nilai_indeks');
+            $total_sks = $transkrip->sum('sks_mata_kuliah');
+            $total_indeks = $transkrip->sum('nilai_indeks');
 
-        $ipk = ($total_sks * $total_indeks) / $total_sks;
+            $ipk = ($total_sks * $total_indeks) / $total_sks;
 
-        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+            $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester', 'desc')
                 ->get();
 
-        $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
+            $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
 
-        $data = [
+            $data = [
             'status' => 'success',
             'data' => $transkrip,
             'akm' => $akm,
@@ -126,9 +125,16 @@ class TranskripController extends Controller
             'ipk' => $ipk,
             'bebas_pustaka' => $bebas_pustaka,
             'usept' => $useptData,
-        ];
+            ];
+        } catch (\Throwable $e) {
+            return response()->json([
+            'status' => 'error',
+            'message' => 'Terjadi kesalahan: ' . $e->getMessage(),
+            ]);
+        }
 
         return response()->json($data);
+
     }
 
     public function download(Request $request)
