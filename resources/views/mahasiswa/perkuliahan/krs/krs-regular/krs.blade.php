@@ -220,14 +220,18 @@
                                                                     </div>
                                                                 </td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap; width:20%">
-                                                                    @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
-                                                                        <ul>
-                                                                            <li>
-                                                                                {{$dosen_bimbing->nama_dosen}} 
-                                                                                <p>{{$dosen_bimbing->pembimbing_ke == 1 ? '(Pembimbing Utama)' : '(Pembimbing Pendamping)'}}</p>
-                                                                            </li>
-                                                                        </ul> 
-                                                                    @endforeach
+                                                                    @if($data->bimbing_mahasiswa->isEmpty())
+                                                                        <div class="text-danger">Tidak ada dosen pembimbing</div>
+                                                                    @else
+                                                                        @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
+                                                                            <ul>
+                                                                                <li>
+                                                                                    {{$dosen_bimbing->nama_dosen}} 
+                                                                                    <p>{{$dosen_bimbing->pembimbing_ke == 1 ? '(Pembimbing Utama)' : '(Pembimbing Pendamping)'}}</p>
+                                                                                </li>
+                                                                            </ul> 
+                                                                        @endforeach
+                                                                    @endif
                                                                 </td>
                                                                 <td class="text-center align-middle" style="width:10%">
                                                                     @foreach ($data->bimbing_mahasiswa as $dosen_bimbing)
