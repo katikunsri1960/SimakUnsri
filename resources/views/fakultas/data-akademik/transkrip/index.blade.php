@@ -383,10 +383,13 @@ Transkrip Nilai
                                 if (krs.nilai_huruf == 'F' || krs.nilai_huruf == null) {
                                     trClass = 'bg-danger';
                                 }
+
+                                krs.nama_mata_kuliah = (krs.nama_mata_kuliah ?? 'null').toUpperCase();
+
                                 table.row.add([
                                     `<td class="text-center align-middle"></td>`,
                                     `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
-                                    `<td class="text-start align-middle">${krs.nama_mata_kuliah.toUpperCase()}</td>`,
+                                    `<td class="text-start align-middle" style="text-align:left !important;">${krs.nama_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
@@ -399,7 +402,9 @@ Transkrip Nilai
                             });
 
                             table.draw(); // Redraw the DataTable with new data
-                            ipk = nilai_bobot / totalSks;
+                            if (totalSks > 0) {
+                                ipk = nilai_bobot / totalSks;
+                            }
                             $('#totalSks').text(totalSks);
                             $('#ipk').text(ipk.toFixed(2));
 

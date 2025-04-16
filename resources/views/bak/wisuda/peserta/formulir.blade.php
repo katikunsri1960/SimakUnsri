@@ -55,48 +55,48 @@
             <tr>
                 <td>NIK </td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->nik : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->nik : '-'}}</td>
             </tr>
             <tr>
                 <td>Tempat Lahir</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->tempat_lahir : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->tempat_lahir : '-'}}</td>
             </tr>
             <tr>
                 <td>Tanggal Lahir</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? Str::upper($riwayat->biodata->id_tanggal_lahir) : ''}}</td>
+                <td>{{$riwayat->biodata ? Str::upper($riwayat->biodata->id_tanggal_lahir) : '-'}}</td>
             </tr>
             <tr>
                 <td>IPK</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td></td>
+                <td>{{$data->ipk ? $data->ipk : '-'}}</td>
             </tr>
             <tr>
                 <td>Alamat Alumni</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td></td>
+                <td>{{$riwayat->biodata ? Str::upper($riwayat->biodata->jalan.', '. $riwayat->biodata->dusun.', RT.'.$riwayat->biodata->rt.'/RW.'.$riwayat->biodata->rw.', '.$riwayat->biodata->kelurahan.', '.$riwayat->biodata->nama_wilayah) : '-'}}</td>
             </tr>
             <tr>
                 <td>No. Telepon</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->handphone : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->handphone : '-'}}</td>
             </tr>
             <tr>
                 <td>E-Mail</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->email : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->email : '-'}}</td>
             </tr>
             <tr>
                 <td>Nama Orang Tua</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
                 <td>{{$riwayat->biodata ? $riwayat->biodata->nama_ayah." DAN ".$riwayat->biodata->nama_ibu_kandung :
-                    ''}}</td>
+                    '-'}}</td>
             </tr>
             <tr>
                 <td>Alamat Orang Tua</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->alamat : ''}}</td>
+                <td>{{$data->alamat_orang_tua ? Str::upper($data->alamat_orang_tua) : '-'}}</td>
             </tr>
             <tr>
                 <td>Terdaftar di Unsri</td>
@@ -107,7 +107,7 @@
             <tr>
                 <td>Tanggal Yudisium</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{Str::upper($data->id_tanggal_sk_yudisium)}}</td>
+                <td>{{Str::upper($data->tgl_sk_yudisium)}}</td>
             </tr>
             <tr>
                 <td>Masa Studi</td>
@@ -116,10 +116,9 @@
             </tr>
         </table>
         <div id="" style="margin-top: 20px">
-            Judul T.A./Skripsi/Tesis/Disertasi:
+            Judul {{Str::title($data->aktivitas_mahasiswa->nama_jenis_aktivitas)}}:
         </div>
-        <div class="">alkdsjfa;lksdjf;alsdkjf;alsdfj;asdfakjsdfhalksdjhflakjsdhflakjsdhflkajshdl asdfasdfasdfadf adf
-            asdf asd fasdf asdfasdfasdfasdfasd adf asdf asdf</div>
+        <div class="">{{$data->aktivitas_mahasiswa ? $data->aktivitas_mahasiswa->judul : '-'}}</div>
 
         <div id="" style="margin-top: 25px">
             Saya Telah memenuhi semua persyaratan akademis serta administratif yang ditetapkan (Nilai, SPP, pinjaman
@@ -216,17 +215,17 @@
             <tr>
                 <td>NIK </td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->nik : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->nik : '-'}}</td>
             </tr>
             <tr>
                 <td>Tempat Lahir</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->tempat_lahir : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->tempat_lahir : '-'}}</td>
             </tr>
             <tr>
                 <td>Tanggal Lahir</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? Str::upper($riwayat->biodata->id_tanggal_lahir) : ''}}</td>
+                <td>{{$riwayat->biodata ? Str::upper($riwayat->biodata->id_tanggal_lahir) : '-'}}</td>
             </tr>
             <tr>
                 <td>IPK</td>
@@ -241,23 +240,23 @@
             <tr>
                 <td>No. Telepon</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->handphone : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->handphone : '-'}}</td>
             </tr>
             <tr>
                 <td>E-Mail</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->email : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->email : '-'}}</td>
             </tr>
             <tr>
                 <td>Nama Orang Tua</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
                 <td>{{$riwayat->biodata ? $riwayat->biodata->nama_ayah." DAN ".$riwayat->biodata->nama_ibu_kandung :
-                    ''}}</td>
+                    '-'}}</td>
             </tr>
             <tr>
                 <td>Alamat Orang Tua</td>
                 <td style="padding-left:40px; padding-right:20px">:</td>
-                <td>{{$riwayat->biodata ? $riwayat->biodata->alamat : ''}}</td>
+                <td>{{$riwayat->biodata ? $riwayat->biodata->alamat : '-'}}</td>
             </tr>
             <tr>
                 <td>Terdaftar di Unsri</td>
