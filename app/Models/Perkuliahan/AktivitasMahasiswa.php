@@ -205,9 +205,9 @@ class AktivitasMahasiswa extends Model
 
         // AKTIVITAS MAHASISWA YG DIAMBIL
         $krs_akt = $this::with(['anggota_aktivitas','bimbing_mahasiswa', 'konversi'])
-                            ->whereHas('bimbing_mahasiswa' , function($query) {
-                                $query->whereNot('id_bimbing_mahasiswa', NUll);
-                            })
+                            // ->whereHas('bimbing_mahasiswa' , function($query) {
+                            //     $query->whereNot('id_bimbing_mahasiswa', NUll);
+                            // })
                             ->whereHas('anggota_aktivitas' , function($query) use ( $id_reg){
                                 $query->where('id_registrasi_mahasiswa', $id_reg);
                             })
