@@ -32,9 +32,9 @@ class RedirectIfAuthenticated
                     return redirect(RouteServiceProvider::PRODI);
                 } elseif (auth()->user()->role === 'mahasiswa') {
                     return redirect(RouteServiceProvider::MAHASISWA);
-                }elseif (auth()->user()->role === 'bak') {
+                } elseif (auth()->user()->role === 'bak') {
                     return redirect(RouteServiceProvider::BAAK);
-                }elseif (auth()->user()->role === 'perpus') {
+                } elseif (auth()->user()->role === 'perpus') {
                     return redirect(RouteServiceProvider::PERPUS);
                 }
 

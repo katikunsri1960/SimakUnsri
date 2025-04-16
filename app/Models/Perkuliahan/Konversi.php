@@ -3,14 +3,15 @@
 namespace App\Models\Perkuliahan;
 
 use App\Models\Semester;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Perkuliahan\ListKurikulum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Konversi extends Model
 {
     use HasFactory;
+
     protected $table = 'aktivitas_konversi';
+
     protected $guarded = [];
 
     // public function kurikulum()

@@ -10,11 +10,8 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class PembayaranManualImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
+class PembayaranManualImport implements SkipsEmptyRows, ToCollection, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
     public function collection(Collection $collection)
     {
         ini_set('max_execution_time', 300);
@@ -33,7 +30,7 @@ class PembayaranManualImport implements ToCollection, WithHeadingRow, SkipsEmpty
                 // tanggal_pembayaran adalah date format di excel
                 $row['tanggal_pembayaran'] = date('Y-m-d', strtotime($row['tanggal_pembayaran']));
 
-                if (!$mahasiswa) {
+                if (! $mahasiswa) {
                     return back()->withErrors(["Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!"]);
                 }
 

@@ -10,11 +10,8 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class BeasiswaImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
+class BeasiswaImport implements SkipsEmptyRows, ToCollection, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
     public function collection(Collection $collection)
     {
         ini_set('max_execution_time', 300);
@@ -35,21 +32,21 @@ class BeasiswaImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
                 $row['tanggal_mulai_beasiswa'] = date('Y-m-d', strtotime($row['tanggal_mulai_beasiswa']));
                 $row['tanggal_akhir_beasiswa'] = date('Y-m-d', strtotime($row['tanggal_akhir_beasiswa']));
 
-                if (!$mahasiswa) {
+                if (! $mahasiswa) {
                     dd("Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!");
                 }
 
                 BeasiswaMahasiswa::updateOrCreate(['id_registrasi_mahasiswa' => $mahasiswa->id_registrasi_mahasiswa],
-                [
-                    'id_registrasi_mahasiswa' => $mahasiswa->id_registrasi_mahasiswa,
-                    'nim' => $mahasiswa->nim,
-                    'nama_mahasiswa' => $mahasiswa->nama_mahasiswa,
-                    'id_jenis_beasiswa' => $row['jenis_beasiswa'],
-                    'id_pembiayaan' => $row['pembiayaan'],
-                    'tanggal_mulai_beasiswa' => $row['tanggal_mulai_beasiswa'],
-                    'tanggal_akhir_beasiswa' => $row['tanggal_akhir_beasiswa'],
-                    'link_sk' => $row['link_sk'],
-                ]);
+                    [
+                        'id_registrasi_mahasiswa' => $mahasiswa->id_registrasi_mahasiswa,
+                        'nim' => $mahasiswa->nim,
+                        'nama_mahasiswa' => $mahasiswa->nama_mahasiswa,
+                        'id_jenis_beasiswa' => $row['jenis_beasiswa'],
+                        'id_pembiayaan' => $row['pembiayaan'],
+                        'tanggal_mulai_beasiswa' => $row['tanggal_mulai_beasiswa'],
+                        'tanggal_akhir_beasiswa' => $row['tanggal_akhir_beasiswa'],
+                        'link_sk' => $row['link_sk'],
+                    ]);
 
             }
 

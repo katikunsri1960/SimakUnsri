@@ -2,6 +2,9 @@
 
 use Illuminate\Support\Facades\Facade;
 use Illuminate\Support\ServiceProvider;
+use NunoMaduro\Collision\Provider;
+
+ServiceProvider::addProviderToBootstrapFile(Provider::class);
 
 return [
 

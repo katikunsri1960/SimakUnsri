@@ -3,41 +3,42 @@
 namespace App\Jobs;
 
 // use Log;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Bus\Queueable;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use Illuminate\Bus\Batchable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use App\Models\Perkuliahan\NilaiPerkuliahan;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\NilaiTransferPendidikan;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class HitungIpsJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $semester, $id_registrasi_mahasiswa;
+    public $semester;
+
+    public $id_registrasi_mahasiswa;
 
     /**
      * Create a new job instance.
      *
-     * @param int $semester
+     * @param  int  $semester
      */
     public function __construct($semester, $id_registrasi_mahasiswa)
     {
         $this->semester = $semester;
         $this->id_registrasi_mahasiswa = $id_registrasi_mahasiswa;
     }
-    
+
     /**
      * Execute the job.
      *
      * @return void
      */
-    
     public function handle()
     {
         // Tingkatkan batas memori yang dialokasikan
@@ -48,7 +49,6 @@ class HitungIpsJob implements ShouldQueue
             $semester = $this->semester;
             $id_registrasi_mahasiswa = $this->id_registrasi_mahasiswa;
 
-            
             // Ambil semua data KHS, KHS Konversi, dan KHS Transfer secara efisien
             $khsData = NilaiPerkuliahan::where('id_semester', $semester)
                 ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
@@ -63,7 +63,7 @@ class HitungIpsJob implements ShouldQueue
             $khsTransferData = NilaiTransferPendidikan::where('id_semester', $semester)
                 ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
                 ->get();
-                
+
             // Hitung total SKS semester
             $totalSksSemester = $khsData->sum('sks_mata_kuliah')
                 + $khsKonversiData->sum('sks_mata_kuliah_diakui')
@@ -89,13 +89,13 @@ class HitungIpsJob implements ShouldQueue
 
             // Update nilai IPS pada tabel
             AktivitasKuliahMahasiswa::where('id_semester', $semester)->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
-            ->update([
-                'feeder' => 0,
-                'ips' => number_format($ips, 2, '.', '') // Simpan dengan 2 digit di belakang koma
-            ]);  
+                ->update([
+                    'feeder' => 0,
+                    'ips' => number_format($ips, 2, '.', ''), // Simpan dengan 2 digit di belakang koma
+                ]);
 
         } catch (\Exception $e) {
-            Log::error('Error menghitung IPS: ' . $e->getMessage());
+            Log::error('Error menghitung IPS: '.$e->getMessage());
         }
     }
 }

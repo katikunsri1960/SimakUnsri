@@ -2,23 +2,23 @@
 
 namespace App\Models;
 
-use App\Models\Mahasiswa\BiodataMahasiswa;
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class CutiManual extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     protected $table = 'cuti_kuliahs';
 
-     const STATUS = [
-         0 => [
+    const STATUS = [
+        0 => [
             'status' => 'Belum Disetujui',
             'class' => 'fa-user',
-         ],
+        ],
         1 => [
             'status' => 'Disetujui Fakultas',
             'class' => 'fa-user-check text-primary',
@@ -53,7 +53,7 @@ class CutiManual extends Model
 
     public function scopeFilter($query, $request)
     {
-        if($request->has('id_semester') && $request->id_semester != '') {
+        if ($request->has('id_semester') && $request->id_semester != '') {
             $query->where('id_semester', $request->id_semester);
         } else {
             $semester_aktif = SemesterAktif::first()->id_semester;

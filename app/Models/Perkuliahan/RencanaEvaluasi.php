@@ -2,14 +2,15 @@
 
 namespace App\Models\Perkuliahan;
 
-use App\Models\ProgramStudi;
 use App\Models\JenisEvaluasi;
+use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RencanaEvaluasi extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function jenis_evaluasi()

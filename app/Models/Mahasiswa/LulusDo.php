@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class LulusDo extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function prodi()
@@ -25,5 +26,4 @@ class LulusDo extends Model
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
-
 }

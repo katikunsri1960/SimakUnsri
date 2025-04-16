@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\User;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class GenerateUserDosen extends Command
 {
@@ -28,16 +27,16 @@ class GenerateUserDosen extends Command
      */
     public function handle()
     {
-        $notGenerateStatus = [2,22];
+        $notGenerateStatus = [2, 22];
 
-        $dosen = BiodataDosen::select('id_dosen','nidn', 'nama_dosen', 'email')->whereNotIn('id_status_aktif', $notGenerateStatus)->get();
+        $dosen = BiodataDosen::select('id_dosen', 'nidn', 'nama_dosen', 'email')->whereNotIn('id_status_aktif', $notGenerateStatus)->get();
 
-        $db = new User();
+        $db = new User;
         $countDosen = $dosen->count();
         $count = 0;
-        foreach($dosen as $d) {
+        foreach ($dosen as $d) {
             $user = $db->where('username', $d->nidn)->first();
-            if (!$user) {
+            if (! $user) {
                 $db->create([
                     'username' => $d->nidn,
                     'password' => bcrypt($d->nidn),
@@ -46,7 +45,6 @@ class GenerateUserDosen extends Command
                     'name' => $d->nama_dosen,
                     'email' => $d->email,
                 ]);
-
 
             }
 

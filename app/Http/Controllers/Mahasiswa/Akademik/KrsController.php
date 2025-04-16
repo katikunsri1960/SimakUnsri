@@ -2,40 +2,38 @@
 
 namespace App\Http\Controllers\Mahasiswa\Akademik;
 
-use Carbon\Carbon;
-use App\Models\Fakultas;
-use App\Models\Semester;
-use App\Models\ProgramStudi;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\PenundaanBayar;
-use Barryvdh\DomPDF\Facade\Pdf;
+use App\Http\Controllers\Controller;
 use App\Models\BatasIsiKRSManual;
 use App\Models\BeasiswaMahasiswa;
+use App\Models\Connection\Registrasi;
 use App\Models\Connection\Tagihan;
 use App\Models\Dosen\BiodataDosen;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Models\Dosen\PenugasanDosen;
-use App\Models\Connection\Registrasi;
-use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Fakultas;
 use App\Models\Mahasiswa\PengajuanCuti;
-use App\Models\Perkuliahan\KelasKuliah;
-use function PHPUnit\Framework\isEmpty;
-use Illuminate\Cache\RateLimiting\Limit;
-use App\Models\PembayaranManualMahasiswa;
-use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\PrasyaratMatkul;
-use App\Models\Perkuliahan\BimbingMahasiswa;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\PesertaKelasKuliah;
-use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Models\Perkuliahan\RencanaPembelajaran;
-use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\PembayaranManualMahasiswa;
+use App\Models\PenundaanBayar;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Perkuliahan\PrasyaratMatkul;
+use App\Models\Perkuliahan\RencanaPembelajaran;
+use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\ProgramStudi;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+
+use function PHPUnit\Framework\isEmpty;
 
 class KrsController extends Controller
 {
@@ -46,7 +44,7 @@ class KrsController extends Controller
 
         // Ambil data riwayat pendidikan mahasiswa
         $riwayat_pendidikan = RiwayatPendidikan::with('prodi')->where('id_registrasi_mahasiswa', $id_reg)->first();
-    // dd($riwayat_pendidikan);
+        // dd($riwayat_pendidikan);
 
         return view('mahasiswa.perkuliahan.krs.index', ['riwayat_pendidikan' => $riwayat_pendidikan]);
     }
@@ -58,7 +56,7 @@ class KrsController extends Controller
             $riwayat_pendidikan = RiwayatPendidikan::findOrFail($id);
 
             // Periksa apakah sks_maks_pmm kosong
-            if (!$riwayat_pendidikan->sks_maks_pmm) {
+            if (! $riwayat_pendidikan->sks_maks_pmm) {
                 // Tampilkan halaman untuk update sks_maks_pmm
                 return view('mahasiswa.perkuliahan.krs.krs-regular.sks_maks_pmm', compact('riwayat_pendidikan'));
             } else {
@@ -117,7 +115,7 @@ class KrsController extends Controller
 
             // Ambil data peserta
             $peserta = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
-                ->where('nama_kelas_kuliah', 'like', '%' . $kode_kelas_kuliah . '%') // menggunakan like dengan 3 karakter paling kanan
+                ->where('nama_kelas_kuliah', 'like', '%'.$kode_kelas_kuliah.'%') // menggunakan like dengan 3 karakter paling kanan
                 ->get();
 
             // Ambil aktivitas mahasiswa
@@ -135,13 +133,13 @@ class KrsController extends Controller
                 ->get();
 
             $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-                ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
-                        $query->where('id_registrasi_mahasiswa', $id_reg);
+                ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                    $query->where('id_registrasi_mahasiswa', $id_reg);
                 })
                 // ->where('approve_krs', 1)
                 ->where('id_semester', $semester_aktif)
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
+                ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
                 ->get();
 
             // Validasi jika data peserta atau aktivitas tidak ditemukan
@@ -188,8 +186,8 @@ class KrsController extends Controller
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
-        ->select('riwayat_pendidikans.*')
-        ->where('id_registrasi_mahasiswa', $id_reg)
+            ->select('riwayat_pendidikans.*')
+            ->where('id_registrasi_mahasiswa', $id_reg)
             ->first();
 
         // dd($riwayat_pendidikan->sks_maks_pmm);
@@ -202,17 +200,17 @@ class KrsController extends Controller
         $total_sks_regular = 0;
         $total_sks_merdeka = 0;
 
-        //DATA AKTIVITAS
-        $db = new MataKuliah();
+        // DATA AKTIVITAS
+        $db = new MataKuliah;
 
-        $db_akt = new AktivitasMahasiswa();
+        $db_akt = new AktivitasMahasiswa;
 
         // $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
-        list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_select);
+        [$krs_akt, $data_akt_ids, $mk_akt] = $db_akt->getKrsAkt($id_reg, $semester_select);
 
         $semester = Semester::orderBy('id_semester', 'DESC')
-        ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+            ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
             // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
             ->get();
 
@@ -257,11 +255,11 @@ class KrsController extends Controller
             $tagihan = Tagihan::with('pembayaran')
             // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
             // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
-            ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
             // ->whereNotIn('nomor_pembayaran', '08051182126003')
-            ->where('kode_periode', $semester_aktif->id_semester)
+                ->where('kode_periode', $semester_aktif->id_semester)
             // -1
-            ->first();
+                ->first();
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
         }
@@ -281,9 +279,9 @@ class KrsController extends Controller
             ->first();
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-        ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
-            $query->where('id_registrasi_mahasiswa', $id_reg);
-        })
+            ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                $query->where('id_registrasi_mahasiswa', $id_reg);
+            })
             // ->where('approve_krs', 1)
             ->where('id_semester', $semester_aktif->id_semester)
             ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
@@ -302,13 +300,13 @@ class KrsController extends Controller
         $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
 
         if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
-            $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
+            $batas_isi_krs = Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
         }
 
         $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
 
-        if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
-            $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
+        if ($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs) {
+            $batas_isi_krs = Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
         }
         // Fungsi cek batas isi KRS Selesai
 
@@ -321,7 +319,7 @@ class KrsController extends Controller
             ->count();
 
         $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
-        ->where('id_registrasi_mahasiswa', $id_reg)
+            ->where('id_registrasi_mahasiswa', $id_reg)
             ->where('id_semester', $semester_aktif->id_semester)
             ->count();
 
@@ -335,12 +333,12 @@ class KrsController extends Controller
         // dd($total_krs_submitted, $mbkm_submitted);
 
         $sks_aktivitas_mbkm = [
-            "10",
-            "20"
+            '10',
+            '20',
         ];
 
         // Periksa apakah sks_maks_pmm kosong
-        if (!$riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14') {
+        if (! $riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14') {
             // Tampilkan halaman untuk update sks_maks_pmm
             return view('mahasiswa.perkuliahan.krs.krs-regular.sks_maks_pmm', compact(
                 'sks_aktivitas_mbkm',
@@ -383,7 +381,7 @@ class KrsController extends Controller
             return view('mahasiswa.perkuliahan.krs.krs-regular.index', [
                 'formatDosenPengajar' => function ($dosenPengajar) {
                     return $this->formatDosenPengajar($dosenPengajar);
-                }
+                },
             ], compact(
                 'mk_regular',
                 'semester_select',
@@ -431,7 +429,6 @@ class KrsController extends Controller
         return response()->json(['prodi' => $prodi]);
     }
 
-
     public function pilihMataKuliahMerdeka(Request $request)
     {
         $id_reg = auth()->user()->fk_id;
@@ -441,16 +438,14 @@ class KrsController extends Controller
 
         $id_prodi = $request->input('id_prodi');
 
-        $prodi_mhs =RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->pluck('id_prodi')->first();
-
+        $prodi_mhs = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
+            ->pluck('id_prodi')->first();
 
         // $selectedFakultasId = $request->input('fakultas_id');
 
         // $prodi = ProgramStudi::where('fakultas_id', $selectedFakultasId)->get();
 
-
-        $db = new MataKuliah();
+        $db = new MataKuliah;
 
         // Query untuk mengambil data mata kuliah merdeka berdasarkan id_prodi yang dipilih
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif, $prodi_mhs);
@@ -458,9 +453,8 @@ class KrsController extends Controller
         $mkMerdeka = $db->getMKMerdeka($semester_aktif, $id_prodi);
         // dd($mkMerdeka);
 
-        return response()->json(['mk_merdeka' => $mkMerdeka, 'krs_merdeka'=>$krs_merdeka, 'prodi_mhs'=>$prodi_mhs, 'prodi_mk'=>$id_prodi ]);
+        return response()->json(['mk_merdeka' => $mkMerdeka, 'krs_merdeka' => $krs_merdeka, 'prodi_mhs' => $prodi_mhs, 'prodi_mk' => $id_prodi]);
     }
-
 
     public function get_kelas_kuliah(Request $request)
     {
@@ -468,22 +462,22 @@ class KrsController extends Controller
 
         $id_reg = auth()->user()->fk_id;
         $prodi_id = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->pluck('id_prodi');
+            ->pluck('id_prodi');
 
         $semester_aktif = SemesterAktif::pluck('id_semester');
 
-        $kelasKuliah = KelasKuliah::with(['dosen_pengajar','dosen_pengajar.dosen', 'ruang_perkuliahan'])
-                    ->whereHas('dosen_pengajar' , function($query) {
-                            $query->whereNotNull('id_dosen');
-                        })
-                    ->withCount('peserta_kelas')
-                    ->where('id_matkul', $idMatkul)
-                    ->where('id_semester',  $semester_aktif)
-                    ->where('id_prodi', $prodi_id)
-                    ->orderBy('nama_kelas_kuliah')
-                    ->get();
+        $kelasKuliah = KelasKuliah::with(['dosen_pengajar', 'dosen_pengajar.dosen', 'ruang_perkuliahan'])
+            ->whereHas('dosen_pengajar', function ($query) {
+                $query->whereNotNull('id_dosen');
+            })
+            ->withCount('peserta_kelas')
+            ->where('id_matkul', $idMatkul)
+            ->where('id_semester', $semester_aktif)
+            ->where('id_prodi', $prodi_id)
+            ->orderBy('nama_kelas_kuliah')
+            ->get();
 
-                    // dd($kelasKuliah);
+        // dd($kelasKuliah);
 
         foreach ($kelasKuliah as $kelas) {
             $kelas->is_kelas_ambil = $this->cekApakahKelasSudahDiambil($request->user()->fk_id, $kelas->id_matkul);
@@ -493,7 +487,6 @@ class KrsController extends Controller
 
         return response()->json($kelasKuliah);
     }
-
 
     public function get_kelas_kuliah_merdeka(Request $request)
     {
@@ -507,16 +500,16 @@ class KrsController extends Controller
 
         $semester_aktif = SemesterAktif::pluck('id_semester');
 
-        $kelasKuliah = KelasKuliah::with(['dosen_pengajar','dosen_pengajar.dosen', 'ruang_perkuliahan'])
-                    ->whereHas('dosen_pengajar' , function($query) {
-                            $query->whereNotNull('id_dosen');
-                        })
-                    ->withCount('peserta_kelas')
-                    ->where('id_matkul', $idMatkul)
-                    ->where('id_semester',  $semester_aktif)
-                    ->where('id_prodi', $idProdi)
-                    ->orderBy('nama_kelas_kuliah')
-                    ->get();
+        $kelasKuliah = KelasKuliah::with(['dosen_pengajar', 'dosen_pengajar.dosen', 'ruang_perkuliahan'])
+            ->whereHas('dosen_pengajar', function ($query) {
+                $query->whereNotNull('id_dosen');
+            })
+            ->withCount('peserta_kelas')
+            ->where('id_matkul', $idMatkul)
+            ->where('id_semester', $semester_aktif)
+            ->where('id_prodi', $idProdi)
+            ->orderBy('nama_kelas_kuliah')
+            ->get();
 
         // dd($kelasKuliah);
 
@@ -527,7 +520,6 @@ class KrsController extends Controller
         // dd($kelasKuliah);
         return response()->json($kelasKuliah);
     }
-
 
     private function cekApakahKelasSudahDiambil($id_registrasi_mahasiswa, $id_matkul)
     {
@@ -545,9 +537,9 @@ class KrsController extends Controller
             $id_reg = auth()->user()->fk_id;
 
             $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
-                    ->first();
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+                ->first();
             // $prodi = $riwayat_pendidikan->id_prodi;
             // $kurikulum = $riwayat_pendidikan->id_kurikulum;
 
@@ -555,43 +547,43 @@ class KrsController extends Controller
 
             // Pengecekan apakah KRS sudah diApprove
             $approved_krs = PesertaKelasKuliah::with(['kelas_kuliah'])
-                        ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
-                            $query ->where('id_semester', $semester_aktif->id_semester);
-                        })
-                        ->where('id_registrasi_mahasiswa', $id_reg)
-                        ->where('nama_kelas_kuliah', 'LIKE', '241%' )
-                        ->where('approved', 1)
-                        ->count();
-                        // dd($approved_krs);
+                ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
+                    $query->where('id_semester', $semester_aktif->id_semester);
+                })
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('nama_kelas_kuliah', 'LIKE', '241%')
+                ->where('approved', 1)
+                ->count();
+            // dd($approved_krs);
 
             $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas'])
-                        ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
-                            $query ->where('id_registrasi_mahasiswa', $id_reg);
-                        })
-                        ->where('id_semester', $semester_aktif->id_semester )
-                        ->where('approve_krs', 1)
-                        ->whereNotIn('id_jenis_aktivitas', ['7'])
-                        ->count();
-                        // dd($approved);
+                ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                    $query->where('id_registrasi_mahasiswa', $id_reg);
+                })
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->where('approve_krs', 1)
+                ->whereNotIn('id_jenis_aktivitas', ['7'])
+                ->count();
+            // dd($approved);
 
-            if ( $approved_krs > 0 || $approved_akt > 0) {
+            if ($approved_krs > 0 || $approved_akt > 0) {
                 return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
                 // return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
             }
 
             $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-                    ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
-                            $query->where('id_registrasi_mahasiswa', $id_reg);
-                    })
+                ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                    $query->where('id_registrasi_mahasiswa', $id_reg);
+                })
                     // ->where('approve_krs', 1)
-                    ->where('id_semester', $semester_aktif->id_semester)
-                    ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
-                    ->get();
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
+                ->get();
 
-            $db = new MataKuliah();
-            $db_akt = new AktivitasMahasiswa();
+            $db = new MataKuliah;
+            $db_akt = new AktivitasMahasiswa;
 
-            list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
+            [$krs_akt, $data_akt_ids] = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
             $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
             $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
@@ -602,21 +594,21 @@ class KrsController extends Controller
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
             $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm ;
+            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
 
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
-                    ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
-                    ->where('id_kelas_kuliah', $idKelasKuliah)
-                    ->pluck('sks_mata_kuliah')
-                    ->first();
+                ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
+                ->where('id_kelas_kuliah', $idKelasKuliah)
+                ->pluck('sks_mata_kuliah')
+                ->first();
 
             $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->where('id_jenis_daftar', '14')
-                    ->count();
+                ->where('id_jenis_daftar', '14')
+                ->count();
 
             // dd($krs_aktivitas_mbkm);
             // Pengecekan apakah SKS maksimum telah tercapai
-            if ($sks_max == 0  && $non_gelar == 0) {
+            if ($sks_max == 0 && $non_gelar == 0) {
                 return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
             }
 
@@ -624,10 +616,8 @@ class KrsController extends Controller
                 return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS', 'sks_max' => $sks_max], 400);
             }
 
-
-
-            $kelas_mk = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul','=','kelas_kuliahs.id_matkul')
-                    ->where('id_kelas_kuliah', $idKelasKuliah)->first();
+            $kelas_mk = KelasKuliah::leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
+                ->where('id_kelas_kuliah', $idKelasKuliah)->first();
 
             $jumlah_peserta = PesertaKelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)->count();
 
@@ -636,8 +626,8 @@ class KrsController extends Controller
                 return response()->json(['message' => 'Kapasitas kelas sudah penuh.'], 400);
             }
 
-            //QUERY RPS
-            $rps=RencanaPembelajaran::where('id_matkul', $kelas_mk->id_matkul)->get();
+            // QUERY RPS
+            $rps = RencanaPembelajaran::where('id_matkul', $kelas_mk->id_matkul)->get();
 
             if ($rps->count() == 0) {
                 return response()->json(['message' => 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.'], 400);
@@ -685,13 +675,12 @@ class KrsController extends Controller
         }
     }
 
-
     public function hapus_kelas_kuliah(PesertaKelasKuliah $pesertaKelas)
     {
         // $peserta= PesertaKelasKuliah::where('id', $pesertaKelas)->first();
         // dd($pesertaKelas);
 
-        if ($pesertaKelas->approved ==1) {
+        if ($pesertaKelas->approved == 1) {
             // return redirect()->back()->with('error', 'Rencana Pembelajaran Semester tidak ditemukan untuk mata kuliah ini.');
             // return response()->json(['message' => 'Anda tidak dapat menghapus Mata Kuliah ini.'], 400);
             return redirect()->back()->with('error', 'Anda tidak dapat menghapus Mata Kuliah ini, Mata Kuliah telah disetujui Dosen Pembimbing Akademik');
@@ -708,14 +697,14 @@ class KrsController extends Controller
         $id_reg = $request->get('id_reg');
 
         $id_prodi = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->pluck('id_prodi')->first();
+            ->pluck('id_prodi')->first();
 
         $prodi_non_homebase = KelasKuliah::whereIn('id_prodi', [$id_prodi])
                         // ->whereHas('kelas_kuliah', function($query) use ($idMatkul) {
                         //     $query ->where('id_matkul', $idMatkul);
                         // })
-                        ->where('id_matkul', $idMatkul)
-                        ->first();
+            ->where('id_matkul', $idMatkul)
+            ->first();
 
         // Dapatkan mata kuliah prasyarat
         $prasyarat = PrasyaratMatkul::where('id_matkul', $idMatkul)->pluck('id_matkul_prasyarat');
@@ -727,18 +716,18 @@ class KrsController extends Controller
 
         // Cek apakah mahasiswa sudah mengambil mata kuliah prasyarat
         $mataKuliahDipenuhi = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
-                ->whereIn('id_matkul', $prasyarat)
-                ->exists();
+            ->whereIn('id_matkul', $prasyarat)
+            ->exists();
 
         $mataKuliahDipenuhi_2 = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                ->whereIn('id_matkul', $prasyarat)
+            ->whereIn('id_matkul', $prasyarat)
                 // ->where('approved', '1')
-                ->exists();
+            ->exists();
 
         $mataKuliahDipenuhi_3 = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
-                        ->whereIn('id_matkul', $prasyarat)
-                        ->where('ang.id_registrasi_mahasiswa', $id_reg)
-                        ->exists();
+            ->whereIn('id_matkul', $prasyarat)
+            ->where('ang.id_registrasi_mahasiswa', $id_reg)
+            ->exists();
 
         if ($mataKuliahDipenuhi || $mataKuliahDipenuhi_2 || $mataKuliahDipenuhi_3) {
             return response()->json(['prasyarat_dipenuhi' => true]);
@@ -756,7 +745,7 @@ class KrsController extends Controller
                 'prasyarat_dipenuhi' => false,
                 'mata_kuliah_syarat' => $mataKuliahSyaratString,
                 'prodi_non_homebase' => $prodi_non_homebase,
-                'id_prodi'=>$id_prodi
+                'id_prodi' => $id_prodi,
             ]);
         }
     }
@@ -766,13 +755,13 @@ class KrsController extends Controller
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
-                ->where('id_registrasi_mahasiswa', $id_reg)
-                ->first();
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->first();
 
         $prodi = ProgramStudi::with(['fakultas', 'jurusan'])
-                ->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
+            ->where('id_prodi', $riwayat_pendidikan->id_prodi)->first();
 
-        $fakultas_pdf = (str_replace("Fakultas ","",$prodi->fakultas->nama_fakultas));
+        $fakultas_pdf = (str_replace('Fakultas ', '', $prodi->fakultas->nama_fakultas));
         // dd($fakultas_pdf);
 
         $semester_aktif = SemesterAktif::first();
@@ -780,18 +769,15 @@ class KrsController extends Controller
         $today = Carbon::now();
         $deadline = Carbon::parse($semester_aktif->krs_selesai);
 
-        $db = new MataKuliah();
+        $db = new MataKuliah;
 
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
-        if(isEmpty($data_akt))
-        {
-            $mk_akt=NULL;
-            $data_akt_ids = NULL;
+        if (isEmpty($data_akt)) {
+            $mk_akt = null;
+            $data_akt_ids = null;
 
-        }
-        else
-        {
+        } else {
             $mk_akt = $data_akt;
             $data_akt_ids = array_column($mk_akt, 'id_matkul');
         }
@@ -803,11 +789,11 @@ class KrsController extends Controller
         }
 
         $data = PesertaKelasKuliah::with('kelas_kuliah')
-                    ->whereHas('kelas_kuliah', function($query) use ($id_semester) {
-                        $query ->where('id_semester', $id_semester);
-                    })
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->get();
+            ->whereHas('kelas_kuliah', function ($query) use ($id_semester) {
+                $query->where('id_semester', $id_semester);
+            })
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->get();
         // dd($prodi);
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $id_semester, $data_akt_ids)->where('approved', 1);
@@ -823,25 +809,25 @@ class KrsController extends Controller
             return response()->json(['error' => 'Dosen PA tidak ditemukan.']);
         }
 
-        //DATA AKTIVITAS
-        $db = new MataKuliah();
+        // DATA AKTIVITAS
+        $db = new MataKuliah;
 
-        $db_akt = new AktivitasMahasiswa();
+        $db_akt = new AktivitasMahasiswa;
 
         $data_akt = $db->getMKAktivitas($riwayat_pendidikan->id_prodi, $riwayat_pendidikan->id_kurikulum);
 
-        list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $id_semester);
+        [$krs_akt, $data_akt_ids] = $db_akt->getKrsAkt($id_reg, $id_semester);
 
         $krs_akt = $krs_akt->where('approve_krs', 1);
 
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->orderBy('id_semester', 'DESC')
-                    ->get();
+            ->orderBy('id_semester', 'DESC')
+            ->get();
 
         // Mengambil status mahasiswa untuk semester aktif
         $status_mahasiswa = $semester->where('id_semester', $id_semester)
-                    ->pluck('id_status_mahasiswa')
-                    ->first();
+            ->pluck('id_status_mahasiswa')
+            ->first();
 
         // Menentukan status mahasiswa berdasarkan hasil query
         $data_status_mahasiswa = $status_mahasiswa !== null ? $status_mahasiswa : 'X';
@@ -849,13 +835,13 @@ class KrsController extends Controller
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $id_semester, $riwayat_pendidikan->id_prodi)->where('approved', 1);
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-                    ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
-                            $query->where('id_registrasi_mahasiswa', $id_reg);
-                    })
-                    ->where('approve_krs', 1)
-                    ->where('id_semester', $semester_aktif->id_semester)
-                    ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
-                    ->get();
+            ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                $query->where('id_registrasi_mahasiswa', $id_reg);
+            })
+            ->where('approve_krs', 1)
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
+            ->get();
 
         // dd($krs_akt);
         // if(!empty($krs_aktivitas_mbkm->get())){
@@ -864,13 +850,13 @@ class KrsController extends Controller
         //     $sks_akt_mbkm =0;
         // }
 
-    // TOTAL SELURUH SKS
+        // TOTAL SELURUH SKS
         $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
         $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
         $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm ;
+        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
         // $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
         // dd($total_sks_mbkm);
@@ -884,35 +870,27 @@ class KrsController extends Controller
         //     return response()->json(['error' => 'KRS anda belum disetujui Dosen PA.']);
         // }
 
-        if (empty($krs_regular->first()) && empty($krs_merdeka->first()) && empty($krs_akt->first())&& empty($krs_aktivitas_mbkm->first())) {
-            return redirect()->back()->with('error' , 'KRS tidak dapat dicetak, KRS belum disetujui Dosen PA');
+        if (empty($krs_regular->first()) && empty($krs_merdeka->first()) && empty($krs_akt->first()) && empty($krs_aktivitas_mbkm->first())) {
+            return redirect()->back()->with('error', 'KRS tidak dapat dicetak, KRS belum disetujui Dosen PA');
         }
 
-        if (!empty($tgl_krs_regular)) {
+        if (! empty($tgl_krs_regular)) {
             $tanggal_approve = Carbon::parse($tgl_krs_regular->tanggal_approve);
-        }
-        elseif (!empty($tgl_krs_merdeka))
-        {
+        } elseif (! empty($tgl_krs_merdeka)) {
             $tanggal_approve = Carbon::parse($tgl_krs_merdeka->tanggal_approve);
-        }
-        elseif (!empty($tgl_krs_akt))
-        {
+        } elseif (! empty($tgl_krs_akt)) {
             $tanggal_approve = Carbon::parse($tgl_krs_akt->tanggal_approve);
-        }
-        elseif (!empty($tgl_krs_mbkm))
-        {
+        } elseif (! empty($tgl_krs_mbkm)) {
             $tanggal_approve = Carbon::parse($tgl_krs_mbkm->tanggal_approve);
-        }
-        else
-        {
+        } else {
             $tanggal_approve = '-';
         }
 
         // dd($tgl_krs_mbkm);
 
         $pdf = PDF::loadview('mahasiswa.perkuliahan.krs.krs-regular.pdf', [
-            'today'=> $today,
-            'deadline'=> $deadline,
+            'today' => $today,
+            'deadline' => $deadline,
             'data' => $data,
             'nim' => $nim,
             'nama_mhs' => $nama_mhs,
@@ -923,7 +901,7 @@ class KrsController extends Controller
             'semester_aktif' => $semester_aktif,
             'id_semester' => $id_semester,
             'total_sks_regular' => $total_sks_regular,
-            'krs_regular'=> $krs_regular,
+            'krs_regular' => $krs_regular,
             'data_status_mahasiswa' => $data_status_mahasiswa,
             'krs_regular' => $krs_regular,
             'krs_merdeka' => $krs_merdeka,
@@ -934,10 +912,10 @@ class KrsController extends Controller
             'total_sks_mbkm' => $total_sks_mbkm,
             'total_sks' => $total_sks,
             'tanggal_approve' => $tanggal_approve,
-            'krs_aktivitas_mbkm' => $krs_aktivitas_mbkm
+            'krs_aktivitas_mbkm' => $krs_aktivitas_mbkm,
         ])->setPaper('a4', 'portrait');
 
-        return $pdf->stream('KRS_' . $nim . '_' . $nama_smt . '.pdf');
+        return $pdf->stream('KRS_'.$nim.'_'.$nama_smt.'.pdf');
     }
 
     public function checkDosenPA($id_semester)
@@ -956,5 +934,4 @@ class KrsController extends Controller
 
         return response()->json(['success' => true]);
     }
-
 }

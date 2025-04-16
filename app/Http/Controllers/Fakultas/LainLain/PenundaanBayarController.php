@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Fakultas\LainLain;
 
-use Ramsey\Uuid\Uuid;
-use App\Models\Semester;
-use App\Models\ProgramStudi;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\PenundaanBayar;
 use App\Http\Controllers\Controller;
-use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PenundaanBayar;
+use App\Models\ProgramStudi;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Illuminate\Http\Request;
 
 class PenundaanBayarController extends Controller
 {
@@ -28,16 +26,16 @@ class PenundaanBayarController extends Controller
         $fak_id = auth()->user()->fk_id;
 
         $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                    ->orderBy('id_jenjang_pendidikan')
-                    ->orderBy('nama_program_studi')
-                    ->pluck('id_prodi');
-        
+            ->orderBy('id_jenjang_pendidikan')
+            ->orderBy('nama_program_studi')
+            ->pluck('id_prodi');
+
         $data = PenundaanBayar::with(['riwayat', 'riwayat.prodi'])
-                ->whereHas('riwayat', function($query) use ($id_prodi_fak) {
+            ->whereHas('riwayat', function ($query) use ($id_prodi_fak) {
                 $query->whereIn('id_prodi', $id_prodi_fak);
-                })
-                ->where('id_semester', $semester_view)
-                ->get();
+            })
+            ->where('id_semester', $semester_view)
+            ->get();
         // dd($data);
 
         return view('fakultas.lain-lain.penundaan-bayar.index', [
@@ -52,7 +50,7 @@ class PenundaanBayarController extends Controller
         // dd($id);
         $store = $id->update([
             'status' => 3,
-            'alasan_pembatalan' => NULL
+            'alasan_pembatalan' => null,
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan Penundaan berhasil disetujui');
@@ -60,9 +58,9 @@ class PenundaanBayarController extends Controller
 
     public function decline(Request $request, $id)
     {
-        PenundaanBayar::where('id',$id)->update([
+        PenundaanBayar::where('id', $id)->update([
             'status' => 5,
-            'alasan_pembatalan' => $request->alasan_pembatalan
+            'alasan_pembatalan' => $request->alasan_pembatalan,
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan Penundaan berhasil dibatalkan');

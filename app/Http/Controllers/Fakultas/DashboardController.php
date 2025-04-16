@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Fakultas;
 
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
-use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {

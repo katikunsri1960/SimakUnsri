@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
 class SemesterAktif extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
     protected $appends = ['id_mulai_isi_nilai', 'id_batas_isi_nilai', 'id_tanggal_mulai_kprs', 'id_tanggal_akhir_kprs', 'id_krs_mulai', 'id_krs_selesai', 'id_batas_bayar_ukt'];
 
     // semester allow json

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class AnggotaAktivitasMahasiswa extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function aktivitas_mahasiswa()
@@ -20,6 +21,4 @@ class AnggotaAktivitasMahasiswa extends Model
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
-
-    
 }

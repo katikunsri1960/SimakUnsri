@@ -15,12 +15,24 @@ class SyncJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $act, $limit, $offset, $order, $filter, $model, $primary;
+    public $act;
+
+    public $limit;
+
+    public $offset;
+
+    public $order;
+
+    public $filter;
+
+    public $model;
+
+    public $primary;
 
     /**
      * Create a new job instance.
      */
-    public function __construct($act, $limit, $offset, $order, $filter = null, $model, $primary)
+    public function __construct($act, $limit, $offset, $order, $filter, $model, $primary)
     {
         $this->act = $act;
         $this->limit = $limit;
@@ -41,20 +53,19 @@ class SyncJob implements ShouldQueue
         $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
         $response = $data->runWS();
 
-        if (!empty($response['data'])) {
+        if (! empty($response['data'])) {
 
             $result = $response['data'];
             $result = array_chunk($result, 500);
 
-            foreach($result as $r)
-            {
-                if($this->act == 'GetListMahasiswaLulusDO')
-                {
+            foreach ($result as $r) {
+                if ($this->act == 'GetListMahasiswaLulusDO') {
                     $r = array_map(function ($value) {
                         $value['tgl_masuk_sp'] = empty($value['tgl_masuk_sp']) ? null : date('Y-m-d', strtotime($value['tgl_masuk_sp']));
                         $value['tgl_keluar'] = empty($value['tgl_keluar']) ? null : date('Y-m-d', strtotime($value['tgl_keluar']));
                         $value['tgl_create'] = empty($value['tgl_create']) ? null : date('Y-m-d', strtotime($value['tgl_create']));
                         $value['tgl_sk_yudisium'] = empty($value['tgl_sk_yudisium']) ? null : date('Y-m-d', strtotime($value['tgl_sk_yudisium']));
+
                         return $value;
                     }, $r);
                 }
@@ -64,6 +75,7 @@ class SyncJob implements ShouldQueue
                         $value['tanggal_sk_tugas'] = empty($value['tanggal_sk_tugas']) ? null : date('Y-m-d', strtotime($value['tanggal_sk_tugas']));
                         $value['tanggal_mulai'] = empty($value['tanggal_mulai']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai']));
                         $value['tanggal_selesai'] = empty($value['tanggal_selesai']) ? null : date('Y-m-d', strtotime($value['tanggal_selesai']));
+
                         return $value;
                     }, $r);
                 }
@@ -71,6 +83,7 @@ class SyncJob implements ShouldQueue
                 if ($this->act == 'GetRiwayatFungsionalDosen') {
                     $r = array_map(function ($value) {
                         $value['mulai_sk_jabatan'] = empty($value['mulai_sk_jabatan']) ? null : date('Y-m-d', strtotime($value['mulai_sk_jabatan']));
+
                         return $value;
                     }, $r);
                 }
@@ -79,6 +92,7 @@ class SyncJob implements ShouldQueue
                     $r = array_map(function ($value) {
                         $value['tanggal_mulai_efektif'] = empty($value['tanggal_mulai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai_efektif']));
                         $value['tanggal_akhir_efektif'] = empty($value['tanggal_akhir_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_akhir_efektif']));
+
                         return $value;
                     }, $r);
                 }
@@ -87,6 +101,7 @@ class SyncJob implements ShouldQueue
                     $r = array_map(function ($value) {
                         $value['tanggal_mulai_efektif'] = empty($value['tanggal_mulai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai_efektif']));
                         $value['tanggal_selesai_efektif'] = empty($value['tanggal_selesai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_selesai_efektif']));
+
                         return $value;
                     }, $r);
                 }
@@ -96,6 +111,7 @@ class SyncJob implements ShouldQueue
                         if (isset($value['nilai_indeks']) && $value['nilai_indeks'] === 'NaN') {
                             $value['nilai_indeks'] = null;
                         }
+
                         return $value;
                     }, $r);
                 }
@@ -106,11 +122,10 @@ class SyncJob implements ShouldQueue
 
                 } catch (\Throwable $th) {
 
-                    foreach($r as $row)
-                    {
+                    foreach ($r as $row) {
                         try {
                             $conditions = is_array($this->primary)
-                                ? array_combine($this->primary, array_map(fn($key) => $row[$key], $this->primary))
+                                ? array_combine($this->primary, array_map(fn ($key) => $row[$key], $this->primary))
                                 : [$this->primary => $row[$this->primary]];
 
                             $this->model::updateOrCreate($conditions, $row);
@@ -119,7 +134,7 @@ class SyncJob implements ShouldQueue
 
                             SyncError::create([
                                 'model' => $this->model,
-                                'message' => $th->getMessage()
+                                'message' => $th->getMessage(),
                             ]);
 
                             continue;

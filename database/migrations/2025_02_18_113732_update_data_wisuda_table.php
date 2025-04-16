@@ -15,7 +15,7 @@ return new class extends Migration
             // Menambahkan kolom approved
             $table->integer('approved')->default('0')->after('abstrak_file');
             $table->string('wisuda_ke')->nullable()->after('no_ijazah');
-            
+
             // Menghapus kolom judul dan lama_studi
             $table->dropColumn(['judul', 'lama_studi']);
         });
@@ -30,7 +30,7 @@ return new class extends Migration
             // Menghapus kolom approved
             $table->dropColumn('approved');
             $table->dropColumn('wisuda_ke');
-            
+
             // Menambahkan kembali kolom judul dan lama_studi
             $table->text('judul')->nullable();
             $table->integer('lama_studi')->nullable();

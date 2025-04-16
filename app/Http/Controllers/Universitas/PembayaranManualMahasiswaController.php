@@ -2,14 +2,14 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Models\Semester;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\Mahasiswa\LulusDo;
 use App\Http\Controllers\Controller;
 use App\Imports\PembayaranManualImport;
-use App\Models\PembayaranManualMahasiswa;
+use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PembayaranManualMahasiswa;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Facades\Excel;
 
 class PembayaranManualMahasiswaController extends Controller
@@ -27,8 +27,8 @@ class PembayaranManualMahasiswaController extends Controller
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status' => 'required | in:0,1',
-            'tanggal_pembayaran'=>'required | date',
-            'nominal_ukt' => 'required'
+            'tanggal_pembayaran' => 'required | date',
+            'nominal_ukt' => 'required',
         ]);
 
         $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
@@ -68,12 +68,12 @@ class PembayaranManualMahasiswaController extends Controller
     public function pembayaran_manual_upload(Request $request)
     {
         $data = $request->validate([
-            'file' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-        $import = Excel::import(new PembayaranManualImport(), $file);
+        $import = Excel::import(new PembayaranManualImport, $file);
 
-        return redirect()->back()->with('success', "Data successfully imported!");
+        return redirect()->back()->with('success', 'Data successfully imported!');
     }
 }

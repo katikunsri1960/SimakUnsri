@@ -6,18 +6,28 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Semester;
 use GuzzleHttp\Client;
 
-class FeederUpload {
+class FeederUpload
+{
     // url Feeder Dikti
     private $url;
+
     // Username Feeder Dikti
     private $username;
+
     // Password
     private $password;
-    //data
-    private $act, $record, $actGet, $recordGet;
 
+    // data
+    private $act;
 
-    function __construct($act, $record, $actGet, $recordGet) {
+    private $record;
+
+    private $actGet;
+
+    private $recordGet;
+
+    public function __construct($act, $record, $actGet, $recordGet)
+    {
 
         $this->url = env('FEEDER_URL');
         $this->username = env('FEEDER_USERNAME');
@@ -31,43 +41,43 @@ class FeederUpload {
 
     public function uploadRps()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
-                "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
             // if(isset($result['error_code']) && $result['error_code'] == 1260)
             // {
@@ -112,75 +122,74 @@ class FeederUpload {
     public function uploadAkm()
     {
         // dd($this->url);
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
-                "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
-            if(isset($result['error_code']) && $result['error_code'] == 1260)
-            {
+            if (isset($result['error_code']) && $result['error_code'] == 1260) {
                 $params = [
-                    "token" => $token,
-                    "act"   => 'UpdatePerkuliahanMahasiswa',
-                    "key" => [
-                        "id_registrasi_mahasiswa" => $this->record['id_registrasi_mahasiswa'],
-                        "id_semester" => $this->record['id_semester']
+                    'token' => $token,
+                    'act' => 'UpdatePerkuliahanMahasiswa',
+                    'key' => [
+                        'id_registrasi_mahasiswa' => $this->record['id_registrasi_mahasiswa'],
+                        'id_semester' => $this->record['id_semester'],
                     ],
-                    "record" => [
-                        "id_status_mahasiswa" => $this->record['id_status_mahasiswa'],
-                        "ips" => $this->record['ips'],
-                        "ipk" => $this->record['ipk'],
-                        "sks_semester" => $this->record['sks_semester'],
-                        "total_sks" => $this->record['total_sks'],
-                        "biaya_kuliah_smt" => $this->record['biaya_kuliah_smt'],
-                        "id_pembiayaan" => $this->record['id_pembiayaan']
-                    ]
+                    'record' => [
+                        'id_status_mahasiswa' => $this->record['id_status_mahasiswa'],
+                        'ips' => $this->record['ips'],
+                        'ipk' => $this->record['ipk'],
+                        'sks_semester' => $this->record['sks_semester'],
+                        'total_sks' => $this->record['total_sks'],
+                        'biaya_kuliah_smt' => $this->record['biaya_kuliah_smt'],
+                        'id_pembiayaan' => $this->record['id_pembiayaan'],
+                    ],
                 ];
 
-                $req = $client->post( $this->url, [
+                $req = $client->post($this->url, [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => 'application/json',
                     ],
-                    'body' => json_encode($params)
+                    'body' => json_encode($params),
                 ]);
 
                 $response = $req->getBody();
 
-                $result = json_decode($response,true);
+                $result = json_decode($response, true);
 
             }
 
@@ -216,11 +225,11 @@ class FeederUpload {
 
     public function uploadPeriodePerkuliahan()
     {
-        $client = new Client();
+        $client = new Client;
         $paramsToken = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
         // Mendapatkan token
@@ -238,7 +247,7 @@ class FeederUpload {
         if ($resultToken['error_code'] != 0) {
             return [
                 'error_code' => $resultToken['error_code'],
-                'message' => 'Gagal mendapatkan token: ' . $resultToken['message'],
+                'message' => 'Gagal mendapatkan token: '.$resultToken['message'],
             ];
         }
 
@@ -246,9 +255,9 @@ class FeederUpload {
 
         // Ambil data berdasarkan filter
         $paramsGet = [
-            "token" => $token,
-            "act"   => $this->actGet,
-            "filter" => $this->recordGet,
+            'token' => $token,
+            'act' => $this->actGet,
+            'filter' => $this->recordGet,
         ];
 
         $reqGet = $client->post($this->url, [
@@ -268,13 +277,13 @@ class FeederUpload {
             unset($updateRecord['id_prodi']); // Hapus id_prodi dari record jika tidak diperlukan
 
             $paramsUpdate = [
-                "token" => $token,
-                "act"   => "UpdatePeriodePerkuliahan",
-                "key" => [
-                    "id_prodi" => $this->record['id_prodi'],
-                    "id_semester" => $this->record['id_semester'],
+                'token' => $token,
+                'act' => 'UpdatePeriodePerkuliahan',
+                'key' => [
+                    'id_prodi' => $this->record['id_prodi'],
+                    'id_semester' => $this->record['id_semester'],
                 ],
-                "record" => $updateRecord,
+                'record' => $updateRecord,
             ];
 
             $reqUpdate = $client->post($this->url, [
@@ -292,9 +301,9 @@ class FeederUpload {
         } else {
             // Jika data tidak ditemukan, lakukan insert
             $paramsInsert = [
-                "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record,
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
             ];
 
             $reqInsert = $client->post($this->url, [
@@ -312,47 +321,46 @@ class FeederUpload {
         }
     }
 
-
     public function uploadDosenPengajar()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
 
             $token = $result['data']['token'];
             $paramsGet = [
-                "token" => $token,
-                "act"   => $this->actGet,
-                "filter" => $this->recordGet
+                'token' => $token,
+                'act' => $this->actGet,
+                'filter' => $this->recordGet,
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($paramsGet)
+                'body' => json_encode($paramsGet),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
             if ($result['error_code'] == 0 && count($result['data']) > 0) {
 
@@ -361,46 +369,46 @@ class FeederUpload {
                 unset($updateRecord['id_aktivitas_mengajar']);
 
                 $paramsUpdate = [
-                    "token" => $token,
-                    "act"   => "UpdateDosenPengajarKelasKuliah",
-                    "key" => [
-                        "id_aktivitas_mengajar" => $this->record['id_aktivitas_mengajar']
+                    'token' => $token,
+                    'act' => 'UpdateDosenPengajarKelasKuliah',
+                    'key' => [
+                        'id_aktivitas_mengajar' => $this->record['id_aktivitas_mengajar'],
                     ],
-                    "record" => $updateRecord
+                    'record' => $updateRecord,
                 ];
 
-                $req = $client->post( $this->url, [
-                        'headers' => [
-                            'Content-Type' => 'application/json',
-                            'Accept' => 'application/json',
-                        ],
-                        'body' => json_encode($paramsUpdate)
-                    ]);
+                $req = $client->post($this->url, [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => json_encode($paramsUpdate),
+                ]);
 
                 $response = $req->getBody();
 
-                $result = json_decode($response,true);
+                $result = json_decode($response, true);
             } else {
 
                 unset($this->record['id_aktivitas_mengajar']);
 
                 $params = [
-                    "token" => $token,
-                    "act"   => $this->act,
-                    "record" => $this->record
+                    'token' => $token,
+                    'act' => $this->act,
+                    'record' => $this->record,
                 ];
 
-                $req = $client->post( $this->url, [
+                $req = $client->post($this->url, [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => 'application/json',
                     ],
-                    'body' => json_encode($params)
+                    'body' => json_encode($params),
                 ]);
 
                 $response = $req->getBody();
 
-                $result = json_decode($response,true);
+                $result = json_decode($response, true);
             }
 
             return $result;
@@ -411,156 +419,154 @@ class FeederUpload {
     public function uploadAktivitas()
     {
 
+        $token = $this->get_token();
+        $paramsGet = [
+            'token' => $token,
+            'act' => $this->actGet,
+            'filter' => $this->recordGet,
+        ];
 
-            $token = $this->get_token();
-            $paramsGet = [
-                "token" => $token,
-                "act"   => $this->actGet,
-                "filter" => $this->recordGet
+        $response = $this->service_native($paramsGet, $this->url);
+
+        // $response = $req->getBody();
+
+        $result = $response;
+
+        if ($result['error_code'] == 0 && count($result['data']) > 0) {
+
+            $updateRecord = $this->record;
+
+            unset($updateRecord['id_aktivitas']);
+
+            $paramsUpdate = [
+                'token' => $token,
+                'act' => 'UpdateAktivitasMahasiswa',
+                'key' => [
+                    'id_aktivitas' => $this->record['id_aktivitas'],
+                ],
+                'record' => $updateRecord,
             ];
 
-            $response = $this->service_native($paramsGet, $this->url);
+            $response = $this->service_native($paramsUpdate, $this->url);
 
             // $response = $req->getBody();
 
             $result = $response;
 
-            if ($result['error_code'] == 0 && count($result['data']) > 0) {
+        } else {
 
-                $updateRecord = $this->record;
+            unset($this->record['id_aktivitas']);
 
-                unset($updateRecord['id_aktivitas']);
+            $params = [
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
+            ];
 
-                $paramsUpdate = [
-                    "token" => $token,
-                    "act"   => "UpdateAktivitasMahasiswa",
-                    "key" => [
-                        "id_aktivitas" => $this->record['id_aktivitas']
-                    ],
-                    "record" => $updateRecord
-                ];
+            $response = $this->service_native($params, $this->url);
 
-                $response = $this->service_native($paramsUpdate, $this->url);
+            $result = $response;
+        }
 
-                // $response = $req->getBody();
-
-                $result = $response;
-
-            } else {
-
-                    unset($this->record['id_aktivitas']);
-
-                    $params = [
-                        "token" => $token,
-                        "act"   => $this->act,
-                        "record" => $this->record
-                    ];
-
-                    $response = $this->service_native($params, $this->url);
-
-                    $result = $response;
-            }
-
-            return $result;
+        return $result;
 
     }
 
     public function uploadNilaiTransfer()
     {
 
+        $token = $this->get_token();
+        $paramsGet = [
+            'token' => $token,
+            'act' => $this->actGet,
+            'filter' => $this->recordGet,
+        ];
 
-            $token = $this->get_token();
-            $paramsGet = [
-                "token" => $token,
-                "act"   => $this->actGet,
-                "filter" => $this->recordGet
+        $response = $this->service_native($paramsGet, $this->url);
+
+        // $response = $req->getBody();
+
+        $result = $response;
+
+        if ($result['error_code'] == 0 && count($result['data']) > 0) {
+
+            $updateRecord = $this->record;
+
+            unset($updateRecord['id_transfer']);
+
+            $paramsUpdate = [
+                'token' => $token,
+                'act' => 'UpdateNilaiTransferPendidikanMahasiswa',
+                'key' => [
+                    'id_transfer' => $this->record['id_transfer'],
+                ],
+                'record' => $updateRecord,
             ];
 
-            $response = $this->service_native($paramsGet, $this->url);
+            $response = $this->service_native($paramsUpdate, $this->url);
 
             // $response = $req->getBody();
 
             $result = $response;
 
-            if ($result['error_code'] == 0 && count($result['data']) > 0) {
+        } else {
 
-                $updateRecord = $this->record;
+            unset($this->record['id_transfer']);
 
-                unset($updateRecord['id_transfer']);
+            $params = [
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
+            ];
 
-                $paramsUpdate = [
-                    "token" => $token,
-                    "act"   => "UpdateNilaiTransferPendidikanMahasiswa",
-                    "key" => [
-                        "id_transfer" => $this->record['id_transfer']
-                    ],
-                    "record" => $updateRecord
-                ];
+            $response = $this->service_native($params, $this->url);
 
-                $response = $this->service_native($paramsUpdate, $this->url);
+            $result = $response;
+        }
 
-                // $response = $req->getBody();
-
-                $result = $response;
-
-            } else {
-
-                    unset($this->record['id_transfer']);
-
-                    $params = [
-                        "token" => $token,
-                        "act"   => $this->act,
-                        "record" => $this->record
-                    ];
-
-                    $response = $this->service_native($params, $this->url);
-
-                    $result = $response;
-            }
-
-            return $result;
+        return $result;
 
     }
 
     public function uploadKelas()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
-                "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
             // if(isset($result['error_code']) && $result['error_code'] == 1260)
             // {
@@ -604,25 +610,25 @@ class FeederUpload {
 
     public function uploadKomponen()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
 
             $id_evaluasi = $this->record['id_komponen_evaluasi'];
@@ -630,52 +636,51 @@ class FeederUpload {
             unset($this->record['id_komponen_evaluasi']);
 
             $params = [
-                "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
-            if(isset($result['error_code']) && $result['error_code'] != 0)
-            {
+            if (isset($result['error_code']) && $result['error_code'] != 0) {
                 $params = [
-                    "token" => $token,
-                    "act"   => 'UpdateKomponenEvaluasiKelas',
-                    "key" => [
-                        "id_komponen_evaluasi" => $id_evaluasi,
+                    'token' => $token,
+                    'act' => 'UpdateKomponenEvaluasiKelas',
+                    'key' => [
+                        'id_komponen_evaluasi' => $id_evaluasi,
                     ],
-                    "record" => [
+                    'record' => [
                         'id_kelas_kuliah' => $this->record['id_kelas_kuliah'],
                         'id_jenis_evaluasi' => $this->record['id_jenis_evaluasi'],
                         'nama' => $this->record['nama'],
-                        'nama_inggris' =>$this->record['nama_inggris'],
+                        'nama_inggris' => $this->record['nama_inggris'],
                         'nomor_urut' => $this->record['nomor_urut'],
                         'bobot_evaluasi' => $this->record['bobot_evaluasi'],
-                    ]
+                    ],
                 ];
 
-                $req = $client->post( $this->url, [
+                $req = $client->post($this->url, [
                     'headers' => [
                         'Content-Type' => 'application/json',
                         'Accept' => 'application/json',
                     ],
-                    'body' => json_encode($params)
+                    'body' => json_encode($params),
                 ]);
 
                 $response = $req->getBody();
 
-                $result = json_decode($response,true);
+                $result = json_decode($response, true);
 
             }
 
@@ -687,43 +692,43 @@ class FeederUpload {
 
     public function uploadGeneral()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
-                "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
             // if(isset($result['error_code']) && $result['error_code'] == 1260)
             // {
@@ -767,49 +772,49 @@ class FeederUpload {
 
     public function uploadNilaiKomponen()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
-                "act"   => $this->act,
-                "token" => $token,
-                "record" => [
-                    "nilai_komponen_evaluasi" => $this->record['nilai_komponen_evaluasi']
+                'act' => $this->act,
+                'token' => $token,
+                'record' => [
+                    'nilai_komponen_evaluasi' => $this->record['nilai_komponen_evaluasi'],
                 ],
-                "key" => [
-                    "id_komponen_evaluasi" => $this->record['id_komponen_evaluasi'],
-                    "id_registrasi_mahasiswa" => $this->record['id_registrasi_mahasiswa']
-                ]
+                'key' => [
+                    'id_komponen_evaluasi' => $this->record['id_komponen_evaluasi'],
+                    'id_registrasi_mahasiswa' => $this->record['id_registrasi_mahasiswa'],
+                ],
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
             // if(isset($result['error_code']) && $result['error_code'] == 1260)
             // {
@@ -853,25 +858,25 @@ class FeederUpload {
 
     public function uploadNilaiKonversi()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $id_reg = $this->record['id_registrasi_mahasiswa'];
             $id_matkul = $this->record['id_matkul'];
@@ -879,22 +884,22 @@ class FeederUpload {
             unset($this->record['id_registrasi_mahasiswa']);
 
             $params = [
-                "token" => $token,
-                "act"   => $this->act,
-                "record" => $this->record
+                'token' => $token,
+                'act' => $this->act,
+                'record' => $this->record,
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
             if (isset($result['error_code']) && $result['error_code'] == 0) {
 
@@ -911,63 +916,62 @@ class FeederUpload {
     private function smtDiambil($id_reg, $id_semester)
     {
         $periode_masuk = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                                        ->select('id_periode_masuk')
-                                        ->first()->id_periode_masuk;
+            ->select('id_periode_masuk')
+            ->first()->id_periode_masuk;
 
         $semester_ke = Semester::orderBy('id_semester', 'ASC')
-                                        ->whereBetween('id_semester', [$periode_masuk, $id_semester])
-                                        ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
-                                        ->count();
+            ->whereBetween('id_semester', [$periode_masuk, $id_semester])
+            ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+            ->count();
 
         return $semester_ke;
-
 
     }
 
     private function insertTranskrip($recordGet, $token, $id_reg, $id_matkul, $id_konversi_aktivitas, $smtDiambil)
     {
-        $client = new Client();
+        $client = new Client;
 
         $params = [
-            "token" => $token,
-            "act"   => "GetTranskripMahasiswa",
-            "filter" => $recordGet
+            'token' => $token,
+            'act' => 'GetTranskripMahasiswa',
+            'filter' => $recordGet,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
 
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
         if (isset($result['error_code']) && $result['error_code'] == 0 && count($result['data']) > 0) {
 
             $params = [
-                "token" => $token,
-                "act"   => "DeleteTranskripMahasiswa",
-                "key" => [
-                    "id_registrasi_mahasiswa" => $id_reg,
-                    "id_matkul" => $id_matkul
-                ]
+                'token' => $token,
+                'act' => 'DeleteTranskripMahasiswa',
+                'key' => [
+                    'id_registrasi_mahasiswa' => $id_reg,
+                    'id_matkul' => $id_matkul,
+                ],
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
         }
 
         $params = [
@@ -978,71 +982,71 @@ class FeederUpload {
                 'id_matkul' => $id_matkul,
                 'id_konversi_aktivitas' => $id_konversi_aktivitas,
                 'smt_diambil' => strval($smtDiambil),
-            ]
+            ],
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
 
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
         return true;
     }
 
     public function uploadNilaiKelas()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
-                "token" => $token,
-                "act"   => $this->act,
-                "key" => [
-                    "id_kelas_kuliah" => $this->record['id_kelas_kuliah'],
-                    "id_registrasi_mahasiswa" => $this->record['id_registrasi_mahasiswa'],
+                'token' => $token,
+                'act' => $this->act,
+                'key' => [
+                    'id_kelas_kuliah' => $this->record['id_kelas_kuliah'],
+                    'id_registrasi_mahasiswa' => $this->record['id_registrasi_mahasiswa'],
                 ],
-                "record" => [
-                    "nilai_angka" => $this->record['nilai_angka'],
-                    "nilai_huruf" => $this->record['nilai_huruf'],
-                    "nilai_indeks" => $this->record['nilai_indeks'],
+                'record' => [
+                    'nilai_angka' => $this->record['nilai_angka'],
+                    'nilai_huruf' => $this->record['nilai_huruf'],
+                    'nilai_indeks' => $this->record['nilai_indeks'],
                 ],
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
             // if(isset($result['error_code']) && $result['error_code'] == 1260)
             // {
@@ -1086,28 +1090,29 @@ class FeederUpload {
 
     private function get_token()
     {
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
         return $result['data']['token'];
     }
 
-    private function service_native($data,$url,$type='POST') {
+    private function service_native($data, $url, $type = 'POST')
+    {
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_POST, 1);
@@ -1120,8 +1125,8 @@ class FeederUpload {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
         $data = json_encode($data);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        //curl_setopt($ch, CURLOPT_HEADER, 1);
-         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        // curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_ENCODING, '');
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
         curl_setopt($ch, CURLOPT_TIMEOUT, 0);
@@ -1133,7 +1138,7 @@ class FeederUpload {
 
         $result = curl_exec($ch);
 
-        //print_r($data);
+        // print_r($data);
         curl_close($ch);
 
         return json_decode($result, true);

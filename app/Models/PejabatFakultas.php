@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\ProgramStudi;
 use App\Models\Dosen\BiodataDosen as Dosen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,8 +11,8 @@ class PejabatFakultas extends Model
     use HasFactory;
 
     protected $guarded = [];
-    protected $table = 'pejabat_fakultas';
 
+    protected $table = 'pejabat_fakultas';
 
     public function dosen()
     {

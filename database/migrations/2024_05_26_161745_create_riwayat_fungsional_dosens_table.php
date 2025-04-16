@@ -13,14 +13,14 @@ return new class extends Migration
     {
         Schema::create('riwayat_fungsional_dosens', function (Blueprint $table) {
             $table->id();
-            $table->string("id_dosen");
-            $table->string("nidn")->nullable();
-            $table->string("nama_dosen")->nullable();
-            $table->string("id_jabatan_fungsional");
+            $table->string('id_dosen');
+            $table->string('nidn')->nullable();
+            $table->string('nama_dosen')->nullable();
+            $table->string('id_jabatan_fungsional');
             $table->unique(['id_dosen', 'id_jabatan_fungsional'], 'idx_id_dosen_id_jabatan_fungsional');
-            $table->string("nama_jabatan_fungsional")->nullable();
-            $table->string("sk_jabatan_fungsional")->nullable();
-            $table->date("mulai_sk_jabatan")->nullable();
+            $table->string('nama_jabatan_fungsional')->nullable();
+            $table->string('sk_jabatan_fungsional')->nullable();
+            $table->date('mulai_sk_jabatan')->nullable();
             $table->timestamps();
         });
     }

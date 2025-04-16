@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('komponen_evaluasi_kelas', function (Blueprint $table) {
             $table->id();
-            $table->string("id_komponen_evaluasi")->nullable();
-            $table->string("id_kelas_kuliah");
+            $table->string('id_komponen_evaluasi')->nullable();
+            $table->string('id_kelas_kuliah');
             $table->foreign('id_kelas_kuliah')->references('id_kelas_kuliah')->on('kelas_kuliahs');
-            $table->integer("id_jenis_evaluasi");
-            $table->foreign("id_jenis_evaluasi")->references("id_jenis_evaluasi")->on("jenis_evaluasis");
-            $table->string("nama")->nullable();
-            $table->string("nama_inggris")->nullable();
-            $table->integer("nomor_urut")->nullable();
-            $table->integer("bobot_evaluasi")->nullable();
-            $table->string("last_update")->nullable();
-            $table->string("tgl_create")->nullable();
+            $table->integer('id_jenis_evaluasi');
+            $table->foreign('id_jenis_evaluasi')->references('id_jenis_evaluasi')->on('jenis_evaluasis');
+            $table->string('nama')->nullable();
+            $table->string('nama_inggris')->nullable();
+            $table->integer('nomor_urut')->nullable();
+            $table->integer('bobot_evaluasi')->nullable();
+            $table->string('last_update')->nullable();
+            $table->string('tgl_create')->nullable();
             $table->timestamps();
         });
     }

@@ -3,10 +3,9 @@
 namespace App\Models\Perkuliahan;
 
 use App\Models\KuisonerAnswer;
-use App\Models\Semester;
-use App\Models\Perkuliahan\MataKuliah;
 use App\Models\ProgramStudi;
 use App\Models\RuangPerkuliahan;
+use App\Models\Semester;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +16,7 @@ class KelasKuliah extends Model
 
     protected $guarded = [];
 
-    protected $appends = [ 'id_tanggal_mulai_efektif', 'id_tanggal_akhir_efektif'];
+    protected $appends = ['id_tanggal_mulai_efektif', 'id_tanggal_akhir_efektif'];
 
     public function getIdTanggalMulaiEfektifAttribute()
     {
@@ -91,16 +90,16 @@ class KelasKuliah extends Model
                 $query->where('approved', 1);
             },
             'nilai_perkuliahan',
-            'nilai_komponen' => function($query) {
+            'nilai_komponen' => function ($query) {
                 $query->orderBy('urutan');
             },
             'matkul',
             'ruang_perkuliahan',
             'prodi',
-            'semester'
+            'semester',
         ])
-        ->where('id_kelas_kuliah', $kelas)
-        ->first();
+            ->where('id_kelas_kuliah', $kelas)
+            ->first();
 
         // dd($data);
         return $data;

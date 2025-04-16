@@ -15,16 +15,17 @@ class AktivitasMahasiswaController extends Controller
     public function aktivitas_pa(Request $request)
     {
 
-        $db = new BimbingMahasiswa();
+        $db = new BimbingMahasiswa;
 
         $id_prodi = auth()->user()->fk_id;
 
         $semester = SemesterAktif::first()->id_semester;
 
         $data = $db->aktivitas_pa_prodi($id_prodi, $semester);
+
         // dd($data);
         return view('prodi.data-aktivitas.aktivitas-pa.index', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -32,7 +33,7 @@ class AktivitasMahasiswaController extends Controller
     {
         $data = $request->validate([
             'sk_tugas' => 'required',
-            'tanggal_sk_tugas' => 'required'
+            'tanggal_sk_tugas' => 'required',
         ]);
 
         $aktivitas = AktivitasMahasiswa::where('id', $id)->first();
@@ -42,7 +43,7 @@ class AktivitasMahasiswaController extends Controller
         $aktivitas->update([
             'feeder' => 0,
             'sk_tugas' => $data['sk_tugas'],
-            'tanggal_sk_tugas' => $data['tanggal_sk_tugas']
+            'tanggal_sk_tugas' => $data['tanggal_sk_tugas'],
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil diupdate');
@@ -50,16 +51,16 @@ class AktivitasMahasiswaController extends Controller
 
     public function anggota_pa($id)
     {
-        $aktivitas = AktivitasMahasiswa::where('id',$id)->select('id_aktivitas')->first();
+        $aktivitas = AktivitasMahasiswa::where('id', $id)->select('id_aktivitas')->first();
         $bimbingan = BimbingMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)->first();
 
         $data = AnggotaAktivitasMahasiswa::where('id_aktivitas', $aktivitas->id_aktivitas)
-                                        ->select('nim', 'nama_mahasiswa')->get();
+            ->select('nim', 'nama_mahasiswa')->get();
 
         return view('prodi.data-aktivitas.aktivitas-pa.anggota', [
             'data' => $data,
             'bimbingan' => $bimbingan,
-            'aktivitas' => $aktivitas
+            'aktivitas' => $aktivitas,
         ]);
     }
 }

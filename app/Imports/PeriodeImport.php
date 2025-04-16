@@ -11,12 +11,8 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class PeriodeImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
+class PeriodeImport implements SkipsEmptyRows, ToCollection, WithHeadingRow
 {
-
-    /**
-    * @param Collection $collection
-    */
     public function collection(Collection $collection)
     {
         ini_set('max_execution_time', 300);
@@ -27,7 +23,7 @@ class PeriodeImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
             foreach ($collection as $index => $row) {
 
                 $prodi = ProgramStudi::where('kode_program_studi', $row['kode_prodi'])->where('status', 'A')->first();
-                if (!$prodi) {
+                if (! $prodi) {
                     dd($row['kode_prodi']);
                 }
                 $semester = Semester::where('id_semester', $row['semester'])->first();
@@ -55,14 +51,11 @@ class PeriodeImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
 
             DB::commit();
 
-
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             DB::rollBack();
             dd($th);
         }
-
-
 
     }
 }

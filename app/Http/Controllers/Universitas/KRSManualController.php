@@ -2,23 +2,23 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Models\Semester;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\BatasIsiKRSManual;
 use App\Http\Controllers\Controller;
 use App\Imports\BatasIsiKRSImport;
-use Maatwebsite\Excel\Facades\Excel;
+use App\Models\BatasIsiKRSManual;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class KRSManualController extends Controller
 {
     public function index(Request $request)
     {
         $request->validate([
-            'semester_view' => 'nullable|exists:semesters,id_semester'
+            'semester_view' => 'nullable|exists:semesters,id_semester',
         ]);
 
         $semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
@@ -39,7 +39,7 @@ class KRSManualController extends Controller
     {
         $data = BatasIsiKRSManual::find($id);
         // dd($data);
-        if (!$data) {
+        if (! $data) {
             return response()->json(['error' => 'Data not found'], 404);
         }
 
@@ -61,14 +61,14 @@ class KRSManualController extends Controller
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status_bayar' => 'required | in:0,1,2,3',
-            'batas_isi_krs'=>'required | date'
+            'batas_isi_krs' => 'required | date',
         ]);
 
-        $semester_aktif= SemesterAktif::first();
-        $batas_isi_krs_manual=BatasIsiKRSManual::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])
-                                ->where('id_semester', $semester_aktif->id_semester)->first();
+        $semester_aktif = SemesterAktif::first();
+        $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])
+            ->where('id_semester', $semester_aktif->id_semester)->first();
 
-        $riwayat_pendidikan= RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
+        $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
         // $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
 
         if ($batas_isi_krs_manual) {
@@ -80,7 +80,6 @@ class KRSManualController extends Controller
         $data['nama_mahasiswa'] = $riwayat_pendidikan->nama_mahasiswa;
         $data['id_semester'] = $semester_aktif->id_semester;
         $data['keterangan'] = $request->keterangan;
-
 
         BatasIsiKRSManual::create($data);
 
@@ -95,7 +94,7 @@ class KRSManualController extends Controller
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status_bayar' => 'required|in:0,1,2,3',
             'batas_isi_krs' => 'required|date',
-            'keterangan' => 'nullable|string'
+            'keterangan' => 'nullable|string',
         ]);
 
         // Ambil data Semester Aktif
@@ -123,7 +122,6 @@ class KRSManualController extends Controller
         return redirect()->back()->with('success', 'Berhasil mengubah data barang!');
     }
 
-
     public function destroy(BatasIsiKRSManual $idmanual)
     {
         $idmanual->delete();
@@ -134,13 +132,13 @@ class KRSManualController extends Controller
     public function upload(Request $request)
     {
         $data = $request->validate([
-            'file' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-        $import = Excel::import(new BatasIsiKRSImport(), $file);
+        $import = Excel::import(new BatasIsiKRSImport, $file);
 
-        return redirect()->back()->with('success', "Data successfully imported!");
+        return redirect()->back()->with('success', 'Data successfully imported!');
     }
 
     public function pembatalan_krs()
@@ -155,7 +153,7 @@ class KRSManualController extends Controller
 
         $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')->where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
         // dd($riwayat);
-        if (!$riwayat) {
+        if (! $riwayat) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data mahasiswa tidak ditemukan',
@@ -163,32 +161,33 @@ class KRSManualController extends Controller
         }
 
         $krs = PesertaKelasKuliah::with('kelas_kuliah.matkul')->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                ->whereHas('kelas_kuliah' , function($query) use ($semester) {
-                    $query->where('id_semester', $semester);
-                })
-                ->get();
+            ->whereHas('kelas_kuliah', function ($query) use ($semester) {
+                $query->where('id_semester', $semester);
+            })
+            ->get();
 
         $aktivitas = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
-                ->whereHas('anggota_aktivitas_personal', function($query) use ($riwayat) {
-                    $query->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa);
-                })
-                ->where('id_semester', $semester)
-                ->whereIn('id_jenis_aktivitas', [1,2,3,4,5,6,22])
-                ->get();
+            ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat) {
+                $query->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa);
+            })
+            ->where('id_semester', $semester)
+            ->whereIn('id_jenis_aktivitas', [1, 2, 3, 4, 5, 6, 22])
+            ->get();
 
         $aktivitas_mbkm = AktivitasMahasiswa::with('anggota_aktivitas_personal', 'konversi')
-                    ->whereHas('anggota_aktivitas_personal', function($query) use ($riwayat) {
-                        $query->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa);
-                    })
-                    ->where('id_semester', $semester)
-                    ->whereIn('id_jenis_aktivitas',[13,14,15,16,17,18,19,20,21])
-                    ->get();
+            ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat) {
+                $query->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa);
+            })
+            ->where('id_semester', $semester)
+            ->whereIn('id_jenis_aktivitas', [13, 14, 15, 16, 17, 18, 19, 20, 21])
+            ->get();
 
-        if($krs->isEmpty() && $aktivitas->isEmpty() && $aktivitas_mbkm->isEmpty()) {
+        if ($krs->isEmpty() && $aktivitas->isEmpty() && $aktivitas_mbkm->isEmpty()) {
             $response = [
                 'status' => 'error',
                 'message' => 'Data KRS tidak ditemukan!',
             ];
+
             return response()->json($response);
         }
 
@@ -201,7 +200,6 @@ class KRSManualController extends Controller
             'riwayat' => $riwayat,
         ];
 
-
         return response()->json($response);
     }
 
@@ -211,14 +209,14 @@ class KRSManualController extends Controller
 
         $riwayat = RiwayatPendidikan::where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
 
-        if(!$riwayat) {
+        if (! $riwayat) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data mahasiswa tidak ditemukan',
             ]);
         }
 
-        $db = new PesertaKelasKuliah();
+        $db = new PesertaKelasKuliah;
 
         $response = $db->batal_all($riwayat->id_registrasi_mahasiswa);
 
@@ -231,14 +229,14 @@ class KRSManualController extends Controller
 
         $riwayat = RiwayatPendidikan::where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
 
-        if(!$riwayat) {
+        if (! $riwayat) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data mahasiswa tidak ditemukan',
             ]);
         }
 
-        $db = new PesertaKelasKuliah();
+        $db = new PesertaKelasKuliah;
 
         $response = $db->approve_all_univ($riwayat->id_registrasi_mahasiswa);
 

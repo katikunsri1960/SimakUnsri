@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class BebasPustaka extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function user()
@@ -21,6 +22,4 @@ class BebasPustaka extends Model
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
-
-
 }

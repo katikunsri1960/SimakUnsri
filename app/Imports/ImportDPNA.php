@@ -2,22 +2,29 @@
 
 namespace App\Imports;
 
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Illuminate\Support\Collection;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Perkuliahan\MataKuliah;
-use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
+class ImportDPNA implements ToCollection, WithCalculatedFormulas, WithHeadingRow
 {
     protected $kelas;
-    protected $matkul, $sks_matkul, $semester_kelas, $nama_semester_kelas;
+
+    protected $matkul;
+
+    protected $sks_matkul;
+
+    protected $semester_kelas;
+
+    protected $nama_semester_kelas;
 
     public function __construct(string $kelas, string $matkul)
     {
@@ -44,8 +51,9 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
             try {
                 $mahasiswa_kelas = PesertaKelasKuliah::where('nim', $row['nim'])->where('id_kelas_kuliah', $this->kelas)->first();
 
-                if (!$mahasiswa_kelas) {
+                if (! $mahasiswa_kelas) {
                     Log::error("Mahasiswa not found for NIM: {$row['nim']} in class: {$this->kelas}");
+
                     continue;
                 }
 
@@ -116,37 +124,37 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
 
                 // } else {
 
-                    // $komponen_evaluasi = KomponenEvaluasiKelas::where('id_kelas_kuliah', $this->kelas)->orderBy('nomor_urut')->get();
+                // $komponen_evaluasi = KomponenEvaluasiKelas::where('id_kelas_kuliah', $this->kelas)->orderBy('nomor_urut')->get();
 
-                    // foreach ($komponen_evaluasi as $komponen) {
+                // foreach ($komponen_evaluasi as $komponen) {
 
-                    //     $nilai_field = $this->getNilaiField($komponen['nomor_urut']);
+                //     $nilai_field = $this->getNilaiField($komponen['nomor_urut']);
 
-                    //     NilaiKomponenEvaluasi::updateOrCreate(
-                    //         ['id_komponen_evaluasi' => $komponen['id_komponen_evaluasi'], 'id_kelas' => $this->kelas, 'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa, 'urutan' => $komponen['nomor_urut']],
-                    //         [
-                    //             'feeder' => 0,
-                    //             'id_prodi' => $mahasiswa_kelas->id_prodi,
-                    //             'nama_program_studi' => $mahasiswa_kelas->nama_program_studi,
-                    //             'id_periode' => $this->semester_kelas,
-                    //             'id_matkul' => $this->matkul,
-                    //             'nama_mata_kuliah' => $mahasiswa_kelas->nama_mata_kuliah,
-                    //             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
-                    //             'sks_mata_kuliah' => $this->sks_matkul,
-                    //             'nama_mahasiswa' => $row['nama_mahasiswa'],
-                    //             'nim' => $row['nim'],
-                    //             'nama_mahasiswa' => $row['nama_mahasiswa'],
-                    //             'id_jns_eval' => $komponen['id_jenis_evaluasi'],
-                    //             'nama' => $komponen['nama'],
-                    //             'nama_inggris' => $komponen['nama_inggris'],
-                    //             'bobot' => $komponen['bobot_evaluasi'],
-                    //             'angkatan' => $mahasiswa_kelas->angkatan,
-                    //             'status_sync' => 'belum sync',
-                    //             'nilai_komp_eval' => $row[$nilai_field] ?? 0,
-                    //         ]
-                    //     );
+                //     NilaiKomponenEvaluasi::updateOrCreate(
+                //         ['id_komponen_evaluasi' => $komponen['id_komponen_evaluasi'], 'id_kelas' => $this->kelas, 'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa, 'urutan' => $komponen['nomor_urut']],
+                //         [
+                //             'feeder' => 0,
+                //             'id_prodi' => $mahasiswa_kelas->id_prodi,
+                //             'nama_program_studi' => $mahasiswa_kelas->nama_program_studi,
+                //             'id_periode' => $this->semester_kelas,
+                //             'id_matkul' => $this->matkul,
+                //             'nama_mata_kuliah' => $mahasiswa_kelas->nama_mata_kuliah,
+                //             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
+                //             'sks_mata_kuliah' => $this->sks_matkul,
+                //             'nama_mahasiswa' => $row['nama_mahasiswa'],
+                //             'nim' => $row['nim'],
+                //             'nama_mahasiswa' => $row['nama_mahasiswa'],
+                //             'id_jns_eval' => $komponen['id_jenis_evaluasi'],
+                //             'nama' => $komponen['nama'],
+                //             'nama_inggris' => $komponen['nama_inggris'],
+                //             'bobot' => $komponen['bobot_evaluasi'],
+                //             'angkatan' => $mahasiswa_kelas->angkatan,
+                //             'status_sync' => 'belum sync',
+                //             'nilai_komp_eval' => $row[$nilai_field] ?? 0,
+                //         ]
+                //     );
 
-                    // }
+                // }
                 // }
 
                 $nilai_perkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)->first();
@@ -185,9 +193,8 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                     ]);
                 }
 
-
             } catch (\Exception $e) {
-                Log::error('Error processing row: ' . $e->getMessage());
+                Log::error('Error processing row: '.$e->getMessage());
             }
         }
 

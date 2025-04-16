@@ -13,7 +13,7 @@ class KuisionerController extends Controller
         $data = KuisonerQuestion::all();
 
         return view('universitas.kuisioner.index', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -21,7 +21,7 @@ class KuisionerController extends Controller
     {
         $data = $request->validate([
             'question_indonesia' => 'required',
-            'question_english' => 'required'
+            'question_english' => 'required',
         ]);
 
         KuisonerQuestion::create($data);
@@ -33,7 +33,7 @@ class KuisionerController extends Controller
     {
         $data = $request->validate([
             'question_indonesia' => 'required',
-            'question_english' => 'required'
+            'question_english' => 'required',
         ]);
 
         $kuisioner->update($data);

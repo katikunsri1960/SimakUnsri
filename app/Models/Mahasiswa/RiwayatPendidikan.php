@@ -6,25 +6,25 @@ use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Registrasi;
 use App\Models\Connection\Tagihan;
 use App\Models\Dosen\BiodataDosen;
-use App\Models\Semester;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\JalurMasuk;
 use App\Models\PenundaanBayar;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\ProgramStudi;
-use App\Models\SemesterAktif;
+use App\Models\Semester;
 use Carbon\Carbon;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
 class RiwayatPendidikan extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     protected $appends = ['angkatan', 'gelombang_masuk', 'id_tanggal_daftar'];
@@ -125,14 +125,14 @@ class RiwayatPendidikan extends Model
 
             $result = [
                 'status' => 'success',
-                'message' => 'Kurikulum berhasil diubah'
+                'message' => 'Kurikulum berhasil diubah',
             ];
 
         } catch (\Exception $e) {
             DB::rollBack();
             $result = [
                 'status' => 'error',
-                'message' => 'Kurikulum gagal diubah'
+                'message' => 'Kurikulum gagal diubah',
             ];
 
             return $result;
@@ -144,15 +144,15 @@ class RiwayatPendidikan extends Model
     public function detail_isi_krs($id_prodi, $semesterAktif)
     {
         $data = $this->with('pembimbing_akademik')->where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
-                ->where(function ($query) use ($semesterAktif) {
-                    $query->whereExists(function ($subquery) use ($semesterAktif) {
-                        $subquery->select(DB::raw(1))
-                            ->from('peserta_kelas_kuliahs as p')
-                            ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
-                            ->where('k.id_semester', $semesterAktif)
-                            ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
-                    })
+            ->whereNull('id_jenis_keluar')
+            ->where(function ($query) use ($semesterAktif) {
+                $query->whereExists(function ($subquery) use ($semesterAktif) {
+                    $subquery->select(DB::raw(1))
+                        ->from('peserta_kelas_kuliahs as p')
+                        ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+                        ->where('k.id_semester', $semesterAktif)
+                        ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                })
                     ->orWhere(function ($query) use ($semesterAktif) {
                         $query->whereNotExists(function ($subquery) use ($semesterAktif) {
                             $subquery->select(DB::raw(1))
@@ -161,18 +161,18 @@ class RiwayatPendidikan extends Model
                                 ->where('k.id_semester', $semesterAktif)
                                 ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
                         })
-                        ->whereExists(function ($subquery) use ($semesterAktif) {
-                            $subquery->select(DB::raw(1))
-                                ->from('anggota_aktivitas_mahasiswas as aam')
-                                ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
-                                ->where('a.id_semester', $semesterAktif)
-                                ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
-                                ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
-                        });
+                            ->whereExists(function ($subquery) use ($semesterAktif) {
+                                $subquery->select(DB::raw(1))
+                                    ->from('anggota_aktivitas_mahasiswas as aam')
+                                    ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
+                                    ->where('a.id_semester', $semesterAktif)
+                                    ->whereIn('a.id_jenis_aktivitas', [1, 2, 3, 4, 5, 6, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
+                                    ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                            });
                     });
-                })
-                ->distinct()
-                ->get();
+            })
+            ->distinct()
+            ->get();
 
         return $data;
     }
@@ -180,16 +180,16 @@ class RiwayatPendidikan extends Model
     public function krs_data($id_prodi, $semesterAktif, $isApproved)
     {
         $data = $this->with(['beasiswa'])->where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
-                ->where(function ($query) use ($semesterAktif, $isApproved) {
-                    $query->whereExists(function ($subquery) use ($semesterAktif, $isApproved) {
-                        $subquery->select(DB::raw(1))
-                            ->from('peserta_kelas_kuliahs as p')
-                            ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
-                            ->where('k.id_semester', $semesterAktif)
-                            ->where('p.approved', $isApproved)
-                            ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
-                    })
+            ->whereNull('id_jenis_keluar')
+            ->where(function ($query) use ($semesterAktif, $isApproved) {
+                $query->whereExists(function ($subquery) use ($semesterAktif, $isApproved) {
+                    $subquery->select(DB::raw(1))
+                        ->from('peserta_kelas_kuliahs as p')
+                        ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+                        ->where('k.id_semester', $semesterAktif)
+                        ->where('p.approved', $isApproved)
+                        ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                })
                     ->orWhere(function ($query) use ($semesterAktif, $isApproved) {
                         $query->whereNotExists(function ($subquery) use ($semesterAktif, $isApproved) {
                             $subquery->select(DB::raw(1))
@@ -199,47 +199,47 @@ class RiwayatPendidikan extends Model
                                 ->where('p.approved', $isApproved)
                                 ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
                         })
-                        ->whereExists(function ($subquery) use ($semesterAktif, $isApproved) {
-                            $subquery->select(DB::raw(1))
-                                ->from('anggota_aktivitas_mahasiswas as aam')
-                                ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
-                                ->where('a.id_semester', $semesterAktif)
-                                ->where('a.approve_krs', $isApproved)
-                                ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
-                                ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
-                        });
+                            ->whereExists(function ($subquery) use ($semesterAktif, $isApproved) {
+                                $subquery->select(DB::raw(1))
+                                    ->from('anggota_aktivitas_mahasiswas as aam')
+                                    ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
+                                    ->where('a.id_semester', $semesterAktif)
+                                    ->where('a.approve_krs', $isApproved)
+                                    ->whereIn('a.id_jenis_aktivitas', [1, 2, 3, 4, 5, 6, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
+                                    ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                            });
                     });
-                })
-                ->distinct()
-                ->get();
+            })
+            ->distinct()
+            ->get();
 
-            // foreach($data as $key => $value) {
-            //     $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
-            // }
-                // $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
+        // foreach($data as $key => $value) {
+        //     $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
+        // }
+        // $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
 
-                // // dd($beasiswa);
+        // // dd($beasiswa);
 
-                // $tagihan = Tagihan::with('pembayaran')
-                //         ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
-                //         ->where('tagihan.kode_periode', $semester_aktif->id_semester)
-                //         ->first();
+        // $tagihan = Tagihan::with('pembayaran')
+        //         ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
+        //         ->where('tagihan.kode_periode', $semester_aktif->id_semester)
+        //         ->first();
 
-                // if ($tagihan) {
-                //     $tagihan->waktu_berakhir = Carbon::parse($tagihan->waktu_berakhir)->translatedFormat('d F Y');
-                // }
+        // if ($tagihan) {
+        //     $tagihan->waktu_berakhir = Carbon::parse($tagihan->waktu_berakhir)->translatedFormat('d F Y');
+        // }
 
-                // $pembayaran = Tagihan::with('pembayaran')
-                //     ->whereIn('nomor_pembayaran', [$id_test, $nim])
-                //     ->orderBy('kode_periode', 'ASC')
-                //     ->get();
+        // $pembayaran = Tagihan::with('pembayaran')
+        //     ->whereIn('nomor_pembayaran', [$id_test, $nim])
+        //     ->orderBy('kode_periode', 'ASC')
+        //     ->get();
 
-                // foreach ($pembayaran as $item) {
-                //     if ($item->pembayaran) {
-                //         $item->pembayaran->waktu_transaksi = Carbon::parse($item->pembayaran->waktu_transaksi)->translatedFormat('d F Y');
-                //     }
-                // }
-            //  dd($data);
+        // foreach ($pembayaran as $item) {
+        //     if ($item->pembayaran) {
+        //         $item->pembayaran->waktu_transaksi = Carbon::parse($item->pembayaran->waktu_transaksi)->translatedFormat('d F Y');
+        //     }
+        // }
+        //  dd($data);
         return $data;
     }
 
@@ -248,47 +248,48 @@ class RiwayatPendidikan extends Model
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
 
-        $data = $this->with(['pembimbing_akademik', 'beasiswa', ])->where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
-                ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
-                ->where(function ($query) use ($semesterAktif) {
-                    $query->whereNotExists(function ($subquery) use ($semesterAktif) {
-                        $subquery->select(DB::raw(1))
-                            ->from('peserta_kelas_kuliahs as p')
-                            ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
-                            ->where('k.id_semester', $semesterAktif)
-                            ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
-                    })
+        $data = $this->with(['pembimbing_akademik', 'beasiswa'])->where('id_prodi', $id_prodi)
+            ->whereNull('id_jenis_keluar')
+            ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
+            ->where(function ($query) use ($semesterAktif) {
+                $query->whereNotExists(function ($subquery) use ($semesterAktif) {
+                    $subquery->select(DB::raw(1))
+                        ->from('peserta_kelas_kuliahs as p')
+                        ->join('kelas_kuliahs as k', 'p.id_kelas_kuliah', '=', 'k.id_kelas_kuliah')
+                        ->where('k.id_semester', $semesterAktif)
+                        ->whereColumn('p.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
+                })
                     ->where(function ($query) use ($semesterAktif) {
                         $query->whereNotExists(function ($subquery) use ($semesterAktif) {
                             $subquery->select(DB::raw(1))
                                 ->from('anggota_aktivitas_mahasiswas as aam')
                                 ->join('aktivitas_mahasiswas as a', 'aam.id_aktivitas', '=', 'a.id_aktivitas')
                                 ->where('a.id_semester', $semesterAktif)
-                                ->whereIn('a.id_jenis_aktivitas', [1,2,3,4,5,6,13,14,15,16,17,18,19,20,21,22])
+                                ->whereIn('a.id_jenis_aktivitas', [1, 2, 3, 4, 5, 6, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22])
                                 ->whereColumn('aam.id_registrasi_mahasiswa', 'riwayat_pendidikans.id_registrasi_mahasiswa');
                         });
                     });
-                })
-                ->distinct()
-                ->get();
+            })
+            ->distinct()
+            ->get();
 
-        foreach($data as $key => $value) {
+        foreach ($data as $key => $value) {
             $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
 
             $value->tagihan = Tagihan::with('pembayaran')
-                        ->whereIn('tagihan.nomor_pembayaran', [$value->rm_no_test, $value->nim])
-                        ->where('tagihan.kode_periode', $semesterAktif)
-                        ->first();
+                ->whereIn('tagihan.nomor_pembayaran', [$value->rm_no_test, $value->nim])
+                ->where('tagihan.kode_periode', $semesterAktif)
+                ->first();
 
             // if ($value->tagihan) {
             // dd($value->tagihan);
             // }
 
             $value->penundaan_bayar = PenundaanBayar::where('id_registrasi_mahasiswa', $value->id_registrasi_mahasiswa)
-                                    ->where('id_semester', $semesterAktif)
-                                    ->first() ? 1 : 0;
+                ->where('id_semester', $semesterAktif)
+                ->first() ? 1 : 0;
         }
+
         // dd($data);
         return $data;
     }
@@ -296,13 +297,11 @@ class RiwayatPendidikan extends Model
     public function nilai_transfer_pendidikan($id_prodi, $semester)
     {
         $data = $this->where('id_prodi', $id_prodi)
-                    ->where('id_periode_masuk', $semester)
-                    ->whereNull('id_jenis_keluar')
-                    ->whereIn('id_jenis_daftar', [2,16])
-                    ->get();
+            ->where('id_periode_masuk', $semester)
+            ->whereNull('id_jenis_keluar')
+            ->whereIn('id_jenis_daftar', [2, 16])
+            ->get();
 
         return $data;
     }
-
-
 }

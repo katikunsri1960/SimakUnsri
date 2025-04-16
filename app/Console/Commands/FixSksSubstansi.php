@@ -30,10 +30,10 @@ class FixSksSubstansi extends Command
 
         // Fetch the data
         $data = DosenPengajarKelasKuliah::leftJoin('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
-                ->join('mata_kuliahs as m', 'm.id_matkul', 'k.id_matkul')
-                ->where('dosen_pengajar_kelas_kuliahs.id_semester', $semester)
-                ->select('dosen_pengajar_kelas_kuliahs.*', 'm.sks_mata_kuliah as total_sks')
-                ->get();
+            ->join('mata_kuliahs as m', 'm.id_matkul', 'k.id_matkul')
+            ->where('dosen_pengajar_kelas_kuliahs.id_semester', $semester)
+            ->select('dosen_pengajar_kelas_kuliahs.*', 'm.sks_mata_kuliah as total_sks')
+            ->get();
 
         // Group the data by 'id_kelas_kuliah'
         $groupedData = $data->groupBy('id_kelas_kuliah');
@@ -87,7 +87,7 @@ class FixSksSubstansi extends Command
                 DosenPengajarKelasKuliah::where('id_aktivitas_mengajar', $d['id_aktivitas_mengajar'])
                     ->update([
                         'feeder' => 0,
-                        'sks_substansi_total' => $d['sks_substansi_total']
+                        'sks_substansi_total' => $d['sks_substansi_total'],
                     ]);
             }
 

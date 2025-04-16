@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Fakultas\Akademik;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 
 class YudisiumMahasiswaController extends Controller
 {

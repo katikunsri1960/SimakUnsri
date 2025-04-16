@@ -28,13 +28,13 @@ class GetMhsAktif extends Command
     public function handle()
     {
         $data = RiwayatPendidikan::leftJoin('program_studis as prodi', 'prodi.id_prodi', 'riwayat_pendidikans.id_prodi')
-                ->leftJoin('fakultas as f', 'f.id', 'prodi.fakultas_id')
-                ->whereNull('riwayat_pendidikans.id_jenis_keluar')
-                ->select('f.nama_fakultas', 'prodi.kode_program_studi', 'prodi.nama_jenjang_pendidikan as jenjang', 'prodi.nama_program_studi as prodi', 'riwayat_pendidikans.nim', 'riwayat_pendidikans.nama_mahasiswa')
-                ->get();
-        
-        $id_test = Registrasi::where('rm_nim',)->pluck('rm_no_test')->first();
+            ->leftJoin('fakultas as f', 'f.id', 'prodi.fakultas_id')
+            ->whereNull('riwayat_pendidikans.id_jenis_keluar')
+            ->select('f.nama_fakultas', 'prodi.kode_program_studi', 'prodi.nama_jenjang_pendidikan as jenjang', 'prodi.nama_program_studi as prodi', 'riwayat_pendidikans.nim', 'riwayat_pendidikans.nama_mahasiswa')
+            ->get();
 
-        $this->info('Data mahasiswa aktif: ' . $data->count());
+        $id_test = Registrasi::where('rm_nim')->pluck('rm_no_test')->first();
+
+        $this->info('Data mahasiswa aktif: '.$data->count());
     }
 }

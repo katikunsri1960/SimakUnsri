@@ -18,6 +18,7 @@ class BeasiswaController extends Controller
     {
         $jenis = JenisBeasiswaMahasiswa::all();
         $pembiayaan = Pembiayaan::all();
+
         return view('universitas.beasiswa.index', [
             'jenis' => $jenis,
             'pembiayaan' => $pembiayaan,
@@ -32,13 +33,13 @@ class BeasiswaController extends Controller
             'id_pembiayaan' => 'required|exists:pembiayaans,id_pembiayaan',
             'tanggal_mulai_beasiswa' => 'required',
             'tanggal_akhir_beasiswa' => 'required',
-            'link_sk' => 'required'
+            'link_sk' => 'required',
         ]);
 
         $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->orderBy('id_periode_masuk', 'desc')->first();
 
-        if (!$riwayat) {
-            return redirect()->back()->with('error', "Data mahasiswa dengan NIM tersebut tidak ditemukan!!");
+        if (! $riwayat) {
+            return redirect()->back()->with('error', 'Data mahasiswa dengan NIM tersebut tidak ditemukan!!');
         }
 
         $check = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
@@ -73,7 +74,7 @@ class BeasiswaController extends Controller
             'id_pembiayaan' => 'required|exists:pembiayaans,id_pembiayaan',
             'tanggal_mulai_beasiswa' => 'required',
             'tanggal_akhir_beasiswa' => 'required',
-            'link_sk' => 'required'
+            'link_sk' => 'required',
         ]);
 
         try {
@@ -100,6 +101,7 @@ class BeasiswaController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollBack();
+
             return redirect()->back()->with('error', 'Gagal menghapus data beasiswa mahasiswa. ');
         }
 
@@ -111,16 +113,16 @@ class BeasiswaController extends Controller
         $searchValue = $request->input('search.value');
 
         $query = BeasiswaMahasiswa::with('mahasiswa.prodi', 'jenis_beasiswa')
-                ->join('riwayat_pendidikans', 'beasiswa_mahasiswas.id_registrasi_mahasiswa', '=', 'riwayat_pendidikans.id_registrasi_mahasiswa')
-                ->leftJoin('pembiayaans', 'beasiswa_mahasiswas.id_pembiayaan', '=', 'pembiayaans.id_pembiayaan')
-                ->select('beasiswa_mahasiswas.*', 'riwayat_pendidikans.nama_program_studi as nama_program_studi', 'riwayat_pendidikans.id_periode_masuk as id_periode_masuk', 'pembiayaans.nama_pembiayaan as nama_pembiayaan');
+            ->join('riwayat_pendidikans', 'beasiswa_mahasiswas.id_registrasi_mahasiswa', '=', 'riwayat_pendidikans.id_registrasi_mahasiswa')
+            ->leftJoin('pembiayaans', 'beasiswa_mahasiswas.id_pembiayaan', '=', 'pembiayaans.id_pembiayaan')
+            ->select('beasiswa_mahasiswas.*', 'riwayat_pendidikans.nama_program_studi as nama_program_studi', 'riwayat_pendidikans.id_periode_masuk as id_periode_masuk', 'pembiayaans.nama_pembiayaan as nama_pembiayaan');
 
         if ($searchValue) {
-            $query = $query->where('beasiswa_mahasiswas.nim', 'like', '%' . $searchValue . '%')
-                ->orWhere('beasiswa_mahasiswas.nama_mahasiswa', 'like', '%' . $searchValue . '%');
+            $query = $query->where('beasiswa_mahasiswas.nim', 'like', '%'.$searchValue.'%')
+                ->orWhere('beasiswa_mahasiswas.nama_mahasiswa', 'like', '%'.$searchValue.'%');
         }
 
-        if ($request->has('prodi') && !empty($request->prodi)) {
+        if ($request->has('prodi') && ! empty($request->prodi)) {
             $filter = $request->prodi;
             $query->whereIn('id_prodi', $filter);
         }
@@ -144,7 +146,7 @@ class BeasiswaController extends Controller
             //         ->orderBy('prodi.nama_program_studi', $orderDirection)
             //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
             // } else {
-                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
             // }
         }
 
@@ -162,20 +164,17 @@ class BeasiswaController extends Controller
         return response()->json($response);
     }
 
-    public function beasiswa_template()
-    {
-
-    }
+    public function beasiswa_template() {}
 
     public function beasiswa_upload(Request $request)
     {
         $data = $request->validate([
-            'file' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-        $import = Excel::import(new BeasiswaImport(), $file);
+        $import = Excel::import(new BeasiswaImport, $file);
 
-        return redirect()->back()->with('success', "Data successfully imported!");
+        return redirect()->back()->with('success', 'Data successfully imported!');
     }
 }

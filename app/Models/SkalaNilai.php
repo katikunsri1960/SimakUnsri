@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class SkalaNilai extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function prodi()
@@ -39,6 +40,4 @@ class SkalaNilai extends Model
     {
         return number_format($value, 2);
     }
-
-
 }

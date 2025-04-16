@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\DB;
 class PrasyaratMatkul extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function matkul_prasyarat()
@@ -29,7 +30,7 @@ class PrasyaratMatkul extends Model
                         'id_matkul' => $id_matkul,
                         'id_matkul_prasyarat' => $p,
                         'created_at' => $now,
-                        'updated_at' => $now
+                        'updated_at' => $now,
                     ];
                 }, $prasyarat);
 
@@ -42,14 +43,15 @@ class PrasyaratMatkul extends Model
             DB::rollBack();
             $result = [
                 'status' => 'error',
-                'message' => "Terdapat mata kuliah prasyarat yang sama!!"
+                'message' => 'Terdapat mata kuliah prasyarat yang sama!!',
             ];
+
             return $result;
         }
 
         $result = [
             'status' => 'success',
-            'message' => 'Data berhasil disimpan'
+            'message' => 'Data berhasil disimpan',
         ];
 
         return $result;
@@ -66,17 +68,17 @@ class PrasyaratMatkul extends Model
             DB::rollBack();
             $result = [
                 'status' => 'error',
-                'message' => "Data gagal dihapus"
+                'message' => 'Data gagal dihapus',
             ];
+
             return $result;
         }
 
         $result = [
             'status' => 'success',
-            'message' => 'Data berhasil dihapus'
+            'message' => 'Data berhasil dihapus',
         ];
 
         return $result;
     }
-
 }

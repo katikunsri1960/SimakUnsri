@@ -2,27 +2,20 @@
 
 namespace App\Http\Controllers\Mahasiswa\Pengajuan;
 
-use Carbon\Carbon;
-use Ramsey\Uuid\Uuid;
-use App\Models\Semester;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
-use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Models\Connection\Registrasi;
 use App\Models\Mahasiswa\PengajuanCuti;
-use App\Models\Referensi\JenisPrestasi;
-use Illuminate\Support\Facades\Storage;
-use App\Models\Perkuliahan\ListKurikulum;
-use App\Models\Referensi\TingkatPrestasi;
-use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Connection\ConnectionKeuangan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Uuid;
 
 class CutiController extends Controller
 {
@@ -39,45 +32,45 @@ class CutiController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        if($semester_aktif->tgl_mulai_pengajuan_cuti && $semester_aktif->tgl_selesai_pengajuan_cuti){
-            if($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti ){
-            // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+        if ($semester_aktif->tgl_mulai_pengajuan_cuti && $semester_aktif->tgl_selesai_pengajuan_cuti) {
+            if ($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti) {
+                // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+                return redirect()->route('mahasiswa.dashboard')->with('error', 'Periode Pengajuan Cuti telah berakhir!');
             }
         }
 
         $riwayat_pendidikan = RiwayatPendidikan::with('prodi')
-                    ->where('id_registrasi_mahasiswa', auth()->user()->fk_id)
-                    ->first();
+            ->where('id_registrasi_mahasiswa', auth()->user()->fk_id)
+            ->first();
 
         $data = PengajuanCuti::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                            ->get();
+            ->get();
 
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                    ->count();
+            ->count();
 
         if ($beasiswa > 0) {
-            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda merupakan mahasiswa penerima Beasiswa');
+            return redirect()->back()->with('error', 'Anda tidak bisa mengajukan cuti, Anda merupakan mahasiswa penerima Beasiswa');
         }
 
-        $existingCuti=$data->where('approved', 2)
-                    ->count();
+        $existingCuti = $data->where('approved', 2)
+            ->count();
 
-        $max_cuti= $this->calculateMaxCuti($riwayat_pendidikan->prodi->id_jenjang_pendidikan);
+        $max_cuti = $this->calculateMaxCuti($riwayat_pendidikan->prodi->id_jenjang_pendidikan);
 
-        if($max_cuti == 0 || $existingCuti >= $max_cuti){
-            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda telah mencapai maksimum pengajuan cuti!');
+        if ($max_cuti == 0 || $existingCuti >= $max_cuti) {
+            return redirect()->back()->with('error', 'Anda tidak bisa mengajukan cuti, Anda telah mencapai maksimum pengajuan cuti!');
         }
 
         $semester = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                    ->orderBy('id_semester', 'DESC')
-                    ->get();
+            ->orderBy('id_semester', 'DESC')
+            ->get();
 
-        if($riwayat_pendidikan->id_jenis_daftar==8){
+        if ($riwayat_pendidikan->id_jenis_daftar == 8) {
             $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-            ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
-            ->pluck('id_semester');
-        }else{
+                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                ->pluck('id_semester');
+        } else {
             $semester_ke = Semester::orderBy('id_semester', 'ASC')
                 ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
                 ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
@@ -85,7 +78,7 @@ class CutiController extends Controller
         }
         // dd($semester_ke);
 
-        $semester_count=$semester_ke->count();
+        $semester_count = $semester_ke->count();
 
         // dd($semester_count);
 
@@ -101,18 +94,18 @@ class CutiController extends Controller
         }
 
         $jumlah_sks_lulus = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)
-                        ->pluck('jumlah_sks_lulus')->first();
+            ->pluck('jumlah_sks_lulus')->first();
 
         $jumlah_sks_diambil = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                            ->sum('sks_mata_kuliah');
-                    // dd($jumlah_sks_diambil);
+            ->sum('sks_mata_kuliah');
+        // dd($jumlah_sks_diambil);
 
-        if($riwayat_pendidikan->prodi->id_jenjang_pendidikan==30 && $semester_count <= 4){
-            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda belum menyelesaikan 4 semester!');
+        if ($riwayat_pendidikan->prodi->id_jenjang_pendidikan == 30 && $semester_count <= 4) {
+            return redirect()->back()->with('error', 'Anda tidak bisa mengajukan cuti, Anda belum menyelesaikan 4 semester!');
         }
 
-        if($riwayat_pendidikan->prodi->id_jenjang_pendidikan !=30 && $jumlah_sks_diambil < ($jumlah_sks_lulus/2)) {
-            return redirect()->back()->with('error','Anda tidak bisa mengajukan cuti, Silahkan selesaikan minimal 50% dari total sks yang wajib ditempuh!');
+        if ($riwayat_pendidikan->prodi->id_jenjang_pendidikan != 30 && $jumlah_sks_diambil < ($jumlah_sks_lulus / 2)) {
+            return redirect()->back()->with('error', 'Anda tidak bisa mengajukan cuti, Silahkan selesaikan minimal 50% dari total sks yang wajib ditempuh!');
         }
 
         return view('mahasiswa.pengajuan.cuti.index', [
@@ -130,10 +123,10 @@ class CutiController extends Controller
         // Halaman 50
         // k. Lama PKA atau SO maksimum 1 (satu) semester bagi program Diploma dan Program Sarjana.
         // l. Lama PKA atau SO maksimum 2 (dua) semester Program Magister dan Program Doktor,
-            // yang dapat diambil berturut-turut atau terpisah.
+        // yang dapat diambil berturut-turut atau terpisah.
         // m. Mahasiswa program profesi dan spesialis hanya diperkenankan mengajukan permohonan
-            // PKA atau SO satu kali. Apabila akan mengajukan izin meninggalkan kuliah karena alasan
-            // penting, maka tetap membayar Uang Kuliah Tunggal (UKT).
+        // PKA atau SO satu kali. Apabila akan mengajukan izin meninggalkan kuliah karena alasan
+        // penting, maka tetap membayar Uang Kuliah Tunggal (UKT).
 
         if ($jenjang_pendidikan == 30 || $jenjang_pendidikan == 22 ||
             $jenjang_pendidikan == 31 || $jenjang_pendidikan == 32 ||
@@ -153,37 +146,36 @@ class CutiController extends Controller
         $id_reg = auth()->user()->fk_id;
 
         $data = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan')->where('id_registrasi_mahasiswa', $id_reg)->first();
-        $semester_aktif=SemesterAktif::with('semester')->first();
+        $semester_aktif = SemesterAktif::with('semester')->first();
         $today = Carbon::now()->toDateString();
 
-        if($semester_aktif->tgl_mulai_pengajuan_cuti && $semester_aktif->tgl_selesai_pengajuan_cuti){
-            if($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti ){
-            // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+        if ($semester_aktif->tgl_mulai_pengajuan_cuti && $semester_aktif->tgl_selesai_pengajuan_cuti) {
+            if ($today < $semester_aktif->tgl_mulai_pengajuan_cuti || $today > $semester_aktif->tgl_selesai_pengajuan_cuti) {
+                // return redirect()->back()->with('error', 'Periode Pengajuan Cuti telah berakhir!');
+                return redirect()->route('mahasiswa.dashboard')->with('error', 'Periode Pengajuan Cuti telah berakhir!');
             }
         }
 
         $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $data->id_registrasi_mahasiswa)
-                            ->get();
+            ->get();
 
-        $existingCuti=$cuti->where('id_semester', $semester_aktif->id_semester)
-                    ->count();
+        $existingCuti = $cuti->where('id_semester', $semester_aktif->id_semester)
+            ->count();
         // dd($cuti->count());
 
         if ($existingCuti) {
             return redirect()->back()->with('error', 'Anda sudah memiliki pengajuan cuti pada Semester ini!');
         }
 
-        $max_cuti= $this->calculateMaxCuti($data->prodi->id_jenjang_pendidikan);
+        $max_cuti = $this->calculateMaxCuti($data->prodi->id_jenjang_pendidikan);
 
-        if($max_cuti == 0 || $cuti->count() >= $max_cuti){
-            return redirect()->back()->with('error',  'Anda tidak bisa mengajukan cuti, Anda telah mencapai maksimum pengajuan cuti!');
+        if ($max_cuti == 0 || $cuti->count() >= $max_cuti) {
+            return redirect()->back()->with('error', 'Anda tidak bisa mengajukan cuti, Anda telah mencapai maksimum pengajuan cuti!');
         }
         // dd($data);
 
         return view('mahasiswa.pengajuan.cuti.store', ['data' => $data, 'semester_aktif' => $semester_aktif]);
     }
-
 
     public function store(Request $request)
     {
@@ -202,13 +194,13 @@ class CutiController extends Controller
         $semester_aktif = SemesterAktif::first();
 
         $riwayat_pendidikan = RiwayatPendidikan::select('*')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->first();
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->first();
 
         // Cek apakah sudah ada pengajuan cuti yang sedang diproses
         $existingCuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)
-        ->where('id_semester', $semester_aktif->id_semester)
-        ->first();
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->first();
 
         // Jika sudah ada pengajuan cuti yang sedang diproses, tampilkan pesan error
         if ($existingCuti) {
@@ -217,19 +209,19 @@ class CutiController extends Controller
 
         $id_cuti = Uuid::uuid4()->toString();
 
-        $alamat = $request->jalan . ', ' . $request->dusun . ', RT-' . $request->rt . '/RW-' . $request->rw
-        . ', ' . $request->kelurahan . ', ' . $request->nama_wilayah;
+        $alamat = $request->jalan.', '.$request->dusun.', RT-'.$request->rt.'/RW-'.$request->rw
+        .', '.$request->kelurahan.', '.$request->nama_wilayah;
 
         $alamat = str_replace(', ,', ',', $alamat);
 
         // Generate file name
-        $fileName = 'cuti_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '_' . $semester_aktif->id_semester . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
+        $fileName = 'cuti_'.str_replace(' ', '_', $riwayat_pendidikan->nim).'_'.$semester_aktif->id_semester.'.'.$request->file('file_pendukung')->getClientOriginalExtension();
 
         // Simpan file ke folder public/pdf dengan nama kustom
         $filePath = $request->file('file_pendukung')->storeAs('cuti', $fileName, 'public');
 
         // Cek apakah file berhasil diupload
-        if (!$filePath) {
+        if (! $filePath) {
             return redirect()->back()->with('error', 'File pendukung gagal diunggah. Silakan coba lagi.');
         }
 
@@ -238,11 +230,11 @@ class CutiController extends Controller
                 'id_cuti' => $id_cuti,
                 'id_registrasi_mahasiswa' => $id_reg,
                 'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                'nim'=>$riwayat_pendidikan->nim,
+                'nim' => $riwayat_pendidikan->nim,
                 'id_semester' => $semester_aktif->id_semester,
-                'nama_semester'=> $semester_aktif->semester->nama_semester,
-                'id_prodi'=>$riwayat_pendidikan->id_prodi,
-                'alamat'=> $alamat,
+                'nama_semester' => $semester_aktif->semester->nama_semester,
+                'id_prodi' => $riwayat_pendidikan->id_prodi,
+                'alamat' => $alamat,
                 'handphone' => $request->handphone,
                 'alasan_cuti' => $request->alasan_cuti,
                 'file_pendukung' => $filePath,
@@ -258,14 +250,13 @@ class CutiController extends Controller
         }
     }
 
-
     public function delete($id_cuti)
     {
         // Temukan pengajuan cuti berdasarkan ID
         $cuti = PengajuanCuti::where('id_cuti', $id_cuti)->first();
 
         // Jika pengajuan cuti tidak ditemukan, lemparkan pesan error
-        if (!$cuti) {
+        if (! $cuti) {
             return redirect()->route('mahasiswa.pengajuan-cuti.index')->with('error', 'Pengajuan cuti tidak ditemukan.');
         }
 

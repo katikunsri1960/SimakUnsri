@@ -2,31 +2,31 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Models\Semester;
-use App\Models\ProgramStudi;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\StatusMahasiswa;
+use App\Http\Controllers\Controller;
+use App\Imports\AktivitasKuliahImport;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
-use App\Services\Feeder\FeederAPI;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Bus;
-use App\Http\Controllers\Controller;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Imports\AktivitasKuliahImport;
-use App\Models\Perkuliahan\MataKuliah;
-use App\Models\Perkuliahan\KelasKuliah;
-use App\Models\PembayaranManualMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\NilaiPerkuliahan;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Models\Perkuliahan\KomponenEvaluasiKelas;
-use App\Models\Referensi\JenisAktivitasMahasiswa;
-use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\PembayaranManualMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\KelasKuliah;
+use App\Models\Perkuliahan\KomponenEvaluasiKelas;
+use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\ProgramStudi;
+use App\Models\Referensi\JenisAktivitasMahasiswa;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use App\Models\StatusMahasiswa;
+use App\Services\Feeder\FeederAPI;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class PerkuliahanController extends Controller
 {
@@ -34,12 +34,13 @@ class PerkuliahanController extends Controller
     {
         $semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
         $prodi = ProgramStudi::select('id_prodi', 'kode_program_studi', 'nama_program_studi', 'nama_jenjang_pendidikan')->get();
+
         return view('universitas.perkuliahan.kelas-kuliah.index', ['prodi' => $prodi, 'semester' => $semester]);
     }
 
     private function count_value($act)
     {
-        $data = new FeederAPI($act,0,0, '');
+        $data = new FeederAPI($act, 0, 0, '');
         $response = $data->runWS();
         $count = $response['data'];
 
@@ -52,7 +53,7 @@ class PerkuliahanController extends Controller
         $semester = Semester::pluck('id_semester')->toArray();
         $semester = array_chunk($semester, 4);
         $semester = array_map(function ($value) {
-            return "id_semester IN ('" . implode("','", $value) . "')";
+            return "id_semester IN ('".implode("','", $value)."')";
         }, $semester);
 
         $batch = Bus::batch([])->name($name)->dispatch();
@@ -71,10 +72,10 @@ class PerkuliahanController extends Controller
     private function sync2($act, $limit, $offset, $order, $job, $name, $model, $primary)
     {
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();
-        $semester = Semester::whereNotIn('id_semester', ['20241','20242'])->pluck('id_semester')->toArray();
+        $semester = Semester::whereNotIn('id_semester', ['20241', '20242'])->pluck('id_semester')->toArray();
         $semester = array_chunk($semester, 6);
         $semester = array_map(function ($value) {
-            return "id_semester IN ('" . implode("','", $value) . "')";
+            return "id_semester IN ('".implode("','", $value)."')";
         }, $semester);
 
         $batch = Bus::batch([])->name($name)->dispatch();
@@ -89,8 +90,6 @@ class PerkuliahanController extends Controller
 
         return $batch;
     }
-
-
 
     public function sync_kelas_kuliah()
     {
@@ -111,7 +110,7 @@ class PerkuliahanController extends Controller
         $model = \App\Models\Perkuliahan\KelasKuliah::class;
         $primary = 'id_kelas_kuliah';
 
-        $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model,$primary);
+        $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model, $primary);
 
         return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
 
@@ -161,7 +160,7 @@ class PerkuliahanController extends Controller
         $chunks = array_chunk($kelasKuliahIds, 20);
 
         foreach ($chunks as $chunk) {
-            $filter = "id_matkul IN ('" . implode("','", $chunk) . "')";
+            $filter = "id_matkul IN ('".implode("','", $chunk)."')";
             // dd($filter);
             $batch->add(new \App\Jobs\Perkuliahan\PesertaKelasJob($act, $limit, $offset, $order, $filter));
         }
@@ -174,7 +173,7 @@ class PerkuliahanController extends Controller
         $searchValue = $request->input('search.value');
 
         $query = KelasKuliah::with('dosen_pengajar', 'prodi', 'semester', 'dosen_pengajar.dosen', 'matkul')
-                            ->withCount('peserta_kelas');
+            ->withCount('peserta_kelas');
 
         if ($request->filled('id_prodi')) {
             $query->whereIn('id_prodi', $request->id_prodi);
@@ -185,9 +184,9 @@ class PerkuliahanController extends Controller
         }
 
         if ($searchValue) {
-            $query = $query->where('kode_mata_kuliah', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_kelas_kuliah', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mata_kuliah', 'like', '%' . $searchValue . '%');
+            $query = $query->where('kode_mata_kuliah', 'like', '%'.$searchValue.'%')
+                ->orWhere('nama_kelas_kuliah', 'like', '%'.$searchValue.'%')
+                ->orWhere('nama_mata_kuliah', 'like', '%'.$searchValue.'%');
         }
 
         $recordsFiltered = $query->count();
@@ -212,6 +211,7 @@ class PerkuliahanController extends Controller
             $kelasKuliahArray['nama_dosen'] = $kelasKuliah->dosen_pengajar->map(function ($dosenPengajar) {
                 return $dosenPengajar->dosen->nama_dosen;
             })->implode(', ');
+
             return $kelasKuliahArray;
         });
 
@@ -233,11 +233,12 @@ class PerkuliahanController extends Controller
         $angkatan = Semester::select('id_tahun_ajaran')->orderBy('id_tahun_ajaran', 'desc')->distinct()->get();
         $semester = Semester::select('nama_semester', 'id_semester')->orderBy('id_semester', 'desc')->get();
         $status_mahasiswa = StatusMahasiswa::select('id_status_mahasiswa', 'nama_status_mahasiswa')->orderBy('id_status_mahasiswa')->get();
+
         return view('universitas.perkuliahan.aktivitas-kuliah.index', [
             'prodi' => $prodi,
             'angkatan' => $angkatan,
             'semester' => $semester,
-            'status_mahasiswa' => $status_mahasiswa
+            'status_mahasiswa' => $status_mahasiswa,
         ]);
     }
 
@@ -254,9 +255,9 @@ class PerkuliahanController extends Controller
             'id_semester' => 'required|exists:semesters,id_semester',
             'status_mahasiswa_id' => 'required|exists:status_mahasiswas,id_status_mahasiswa',
         ]);
-//      dd($validatedData);
+        //      dd($validatedData);
 
-        $semester = Semester::where('id_semester',$validatedData['id_semester'])->first();
+        $semester = Semester::where('id_semester', $validatedData['id_semester'])->first();
 
         $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
 
@@ -274,19 +275,19 @@ class PerkuliahanController extends Controller
         $nama_status_mahasiswa = $statusMap[$validatedData['status_mahasiswa_id']];
 
         $existingData = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
-                ->where('id_semester', $validatedData['id_semester'])
-                ->first();
+            ->where('id_semester', $validatedData['id_semester'])
+            ->first();
 
         if ($existingData) {
             return redirect()->back()->withErrors([
-                'error' => 'Data aktivitas kuliah sudah ada untuk mahasiswa ini di semester tersebut.'
+                'error' => 'Data aktivitas kuliah sudah ada untuk mahasiswa ini di semester tersebut.',
             ])->withInput();
         }
 
-        //Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai
+        // Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
         // dd($beasiswa);
-        $pembayaran_manual=PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
+        $pembayaran_manual = PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
 
         try {
             $tagihan = Tagihan::with('pembayaran')
@@ -296,17 +297,16 @@ class PerkuliahanController extends Controller
 
             if ($beasiswa) {
                 $biaya_kuliah_smt = '0.00'; // Jika ada di tabel pembayaran_manual atau beasiswa
-            } elseif ($pembayaran_manual){
+            } elseif ($pembayaran_manual) {
                 $biaya_kuliah_smt = number_format($pembayaran_manual->nominal_ukt, 2, '.', '');
-            }
-            else {
+            } else {
                 $biaya_kuliah_smt = number_format(optional($tagihan->pembayaran)->total_nilai_pembayaran ?? 0, 2, '.', '');
             }
 
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             return redirect()->back()->withErrors([
-                'error' => 'Data Tagihan Tidak Ditemukan!. '
+                'error' => 'Data Tagihan Tidak Ditemukan!. ',
             ])->withInput();
         }
 
@@ -342,10 +342,10 @@ class PerkuliahanController extends Controller
             // Jika berhasil, kembalikan respons sukses
             return redirect()->route('univ.perkuliahan.aktivitas-kuliah')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
 
-            } catch (\Exception $e) {
+        } catch (\Exception $e) {
             // Handle error
             return redirect()->back()->withErrors([
-                'error' => 'Terjadi kesalahan saat menyimpan data.'
+                'error' => 'Terjadi kesalahan saat menyimpan data.',
             ])->withInput();
         }
     }
@@ -353,13 +353,13 @@ class PerkuliahanController extends Controller
     public function aktivitas_kuliah_upload(Request $request)
     {
         $data = $request->validate([
-            'file' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-        $import = Excel::import(new AktivitasKuliahImport(), $file);
+        $import = Excel::import(new AktivitasKuliahImport, $file);
 
-        return redirect()->back()->with('success', "Data successfully imported!");
+        return redirect()->back()->with('success', 'Data successfully imported!');
     }
 
     public function aktivitas_kuliah_edit($id)
@@ -367,7 +367,7 @@ class PerkuliahanController extends Controller
         // Ambil data berdasarkan kolom 'id' dari tabel 'aktivitas_kuliah_mahasiswa'
         $data = AktivitasKuliahMahasiswa::findOrFail($id);
 
-        if (!$data) {
+        if (! $data) {
             return response()->json(['success' => false, 'message' => 'Data tidak ditemukan!']);
         }
 
@@ -428,28 +428,28 @@ class PerkuliahanController extends Controller
         // dd($query);
 
         if ($searchValue) {
-            $query = $query->where('nim', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
+            $query = $query->where('nim', 'like', '%'.$searchValue.'%')
+                ->orWhere('nama_mahasiswa', 'like', '%'.$searchValue.'%');
         }
 
-        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
+        if ($request->has('id_prodi') && ! empty($request->id_prodi)) {
             $filter = $request->id_prodi;
             $query->whereIn('id_prodi', $filter);
         }
 
-        if ($request->has('semester') && !empty($request->semester)) {
+        if ($request->has('semester') && ! empty($request->semester)) {
             $filter = $request->semester;
             $query->whereIn('id_semester', $filter);
         } else {
             $query->where('id_semester', SemesterAktif::first()->id_semester);
         }
 
-        if ($request->has('angkatan') && !empty($request->angkatan)) {
+        if ($request->has('angkatan') && ! empty($request->angkatan)) {
             $filter = $request->angkatan;
             $query->whereIn('angkatan', $filter);
         }
 
-        if ($request->has('status_mahasiswa') && !empty($request->status_mahasiswa)) {
+        if ($request->has('status_mahasiswa') && ! empty($request->status_mahasiswa)) {
             $filter = $request->status_mahasiswa;
             $query->whereIn('id_status_mahasiswa', $filter);
         }
@@ -465,7 +465,7 @@ class PerkuliahanController extends Controller
             $orderDirection = $request->input('order.0.dir');
 
             // Define the column names that correspond to the DataTables column indices
-            $columns = ['nim','nama_mahasiswa', 'nama_program_studi', 'angkatan', 'nama_semester', 'nama_status_mahasiswa', 'ips', 'ipk', 'sks_semester', 'sks_total'];
+            $columns = ['nim', 'nama_mahasiswa', 'nama_program_studi', 'angkatan', 'nama_semester', 'nama_status_mahasiswa', 'ips', 'ipk', 'sks_semester', 'sks_total'];
 
             // if ($columns[$orderColumn] == 'prodi') {
             //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
@@ -473,7 +473,7 @@ class PerkuliahanController extends Controller
             //         ->orderBy('prodi.nama_program_studi', $orderDirection)
             //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
             // } else {
-                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
             // }
         }
 
@@ -520,11 +520,11 @@ class PerkuliahanController extends Controller
     public function hitung_ips_per_id(Request $request)
     {
 
-        if (!$request->has('id_reg') || empty($request->id_reg)) {
+        if (! $request->has('id_reg') || empty($request->id_reg)) {
             return response()->json(['status' => 'error', 'message' => 'ID Registrasi Mahasiswa Tidak Boleh Kosong!']);
         }
 
-        if (!$request->has('id_semester') || empty($request->id_semester)) {
+        if (! $request->has('id_semester') || empty($request->id_semester)) {
             return response()->json(['status' => 'error', 'message' => 'ID Semester Tidak Boleh Kosong!']);
         }
 
@@ -533,8 +533,7 @@ class PerkuliahanController extends Controller
 
         $data = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $id_semester)->first();
 
-        if(!$data)
-        {
+        if (! $data) {
             return response()->json(['status' => 'error', 'message' => 'Data Tidak Ditemukan']);
         }
 
@@ -543,34 +542,33 @@ class PerkuliahanController extends Controller
         $isMaba = $riwayat->id_periode_masuk == $id_semester ? 1 : 0;
 
         $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $id_semester)
-                ->whereNotNull('nilai_huruf')
-                ->get();
+            ->where('id_semester', $id_semester)
+            ->whereNotNull('nilai_huruf')
+            ->get();
 
         $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
-                    ->where('id_semester', $id_semester)
-                    ->where('ang.id_registrasi_mahasiswa', $id_reg)
-                    ->get();
+            ->where('id_semester', $id_semester)
+            ->where('ang.id_registrasi_mahasiswa', $id_reg)
+            ->get();
 
         $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
-                    ->where('id_semester', $id_semester)
-                    ->get();
+            ->where('id_semester', $id_semester)
+            ->get();
 
-        $total_sks_semester = !$isMaba ? $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah') : $khs->sum('sks_mata_kuliah') + $khs_konversi->sum('sks_mata_kuliah');
+        $total_sks_semester = ! $isMaba ? $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah') : $khs->sum('sks_mata_kuliah') + $khs_konversi->sum('sks_mata_kuliah');
 
         $bobot = 0;
 
-        $bobot_transfer= 0;
+        $bobot_transfer = 0;
 
-        $bobot_konversi= 0;
-
+        $bobot_konversi = 0;
 
         // dd($semester, $tahun_ajaran, $prodi);
         foreach ($khs as $t) {
             $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
         }
 
-        if (!$isMaba) {
+        if (! $isMaba) {
             foreach ($khs_transfer as $tf) {
                 $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
             }
@@ -580,20 +578,20 @@ class PerkuliahanController extends Controller
             $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
         }
 
-        $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
+        $total_bobot = $bobot + $bobot_transfer + $bobot_konversi;
 
         $ips = 0;
 
-        if($total_sks_semester > 0){
+        if ($total_sks_semester > 0) {
             $ips = $total_bobot / $total_sks_semester;
         }
 
         $transkrip = TranskripMahasiswa::select(
-                        'sks_mata_kuliah','nilai_indeks'
-                    )
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->whereNotIn('nilai_huruf', ['F', ''])
-                    ->get();
+            'sks_mata_kuliah', 'nilai_indeks'
+        )
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->whereNotIn('nilai_huruf', ['F', ''])
+            ->get();
 
         $total_sks_transkrip = $transkrip->sum('sks_mata_kuliah');
         $total_bobot_transkrip = 0;
@@ -604,22 +602,22 @@ class PerkuliahanController extends Controller
 
         $ipk = 0;
 
-        if($total_sks_transkrip > 0){
+        if ($total_sks_transkrip > 0) {
             $ipk = $total_bobot_transkrip / $total_sks_transkrip;
         }
 
         try {
             $data->update([
-                'feeder'=>0,
+                'feeder' => 0,
                 'sks_semester' => $total_sks_semester,
                 'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
                 'ipk' => round($ipk, 2), // Simpan dengan pembulatan 2 desimal
-                'sks_total' => $total_sks_transkrip
+                'sks_total' => $total_sks_transkrip,
             ]);
 
             return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! ']);
         }
 
@@ -627,44 +625,44 @@ class PerkuliahanController extends Controller
 
     public function hitung_sks_per_id(Request $request)
     {
-        if (!$request->has('id_reg') || empty($request->id_reg)) {
+        if (! $request->has('id_reg') || empty($request->id_reg)) {
             return response()->json(['status' => 'error', 'message' => 'ID Registrasi Mahasiswa Tidak Boleh Kosong!']);
         }
 
-        if (!$request->has('id_semester') || empty($request->id_semester)) {
+        if (! $request->has('id_semester') || empty($request->id_semester)) {
             return response()->json(['status' => 'error', 'message' => 'ID Semester Tidak Boleh Kosong!']);
         }
 
         $id_reg = $request->id_reg;
         $id_semester = $request->id_semester;
 
-        $db = new AktivitasKuliahMahasiswa();
+        $db = new AktivitasKuliahMahasiswa;
 
         $res = $db->hitung_sks_per_id($id_reg, $id_semester);
 
         return response()->json($res);
     }
 
-
     public function aktivitas_mahasiswa(Request $request)
     {
         $request->validate([
             'semester' => 'nullable',
-            'semester.*' => 'nullable|exists:semesters,id_semester'
+            'semester.*' => 'nullable|exists:semesters,id_semester',
         ]);
 
         $pilihan_semester = Semester::select('id_semester', 'nama_semester')->orderBy('id_semester', 'desc')->get();
 
-        $semester_view = $request->semester_view  ?? [SemesterAktif::select('id_semester')->first()->id_semester];
+        $semester_view = $request->semester_view ?? [SemesterAktif::select('id_semester')->first()->id_semester];
         $prodi = ProgramStudi::select('id_prodi', 'kode_program_studi', 'nama_program_studi', 'nama_jenjang_pendidikan')->where('status', 'A')->orderBy('kode_program_studi')->get();
         // $data = AktivitasMahasiswa::with(['prodi'])->whereIn('id_semester', $semester_view)->get();
         $jenis_aktivitas = JenisAktivitasMahasiswa::select('id_jenis_aktivitas_mahasiswa', 'nama_jenis_aktivitas_mahasiswa')->get();
+
         return view('universitas.perkuliahan.aktivitas-mahasiswa.index', [
             'pilihan_semester' => $pilihan_semester,
             'semester_view' => $semester_view,
             // 'data' => $data,
             'prodi' => $prodi,
-            'jenis_aktivitas' => $jenis_aktivitas
+            'jenis_aktivitas' => $jenis_aktivitas,
         ]);
     }
 
@@ -676,28 +674,28 @@ class PerkuliahanController extends Controller
 
         if ($searchValue) {
             $query = $query->where(function ($query) use ($searchValue) {
-                $query->where('judul', 'like', '%' . $searchValue . '%')
-                    ->orWhere('nama_jenis_aktivitas', 'like', '%' . $searchValue . '%')
+                $query->where('judul', 'like', '%'.$searchValue.'%')
+                    ->orWhere('nama_jenis_aktivitas', 'like', '%'.$searchValue.'%')
                     ->orWhereHas('anggota_aktivitas_personal', function ($query) use ($searchValue) {
-                        $query->where('nama_mahasiswa', 'like', '%' . $searchValue . '%')
-                            ->orWhere('nim', 'like', '%' . $searchValue . '%');
+                        $query->where('nama_mahasiswa', 'like', '%'.$searchValue.'%')
+                            ->orWhere('nim', 'like', '%'.$searchValue.'%');
                     });
             });
         }
 
-        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
+        if ($request->has('id_prodi') && ! empty($request->id_prodi)) {
             $filter = $request->id_prodi;
             $query->whereIn('aktivitas_mahasiswas.id_prodi', $filter);
         }
 
-        if ($request->has('semester') && !empty($request->semester)) {
+        if ($request->has('semester') && ! empty($request->semester)) {
             $filter = $request->semester;
             $query->whereIn('id_semester', $filter);
         } else {
             $query->where('id_semester', SemesterAktif::first()->id_semester);
         }
 
-        if($request->has('jenis') && !empty($request->jenis)){
+        if ($request->has('jenis') && ! empty($request->jenis)) {
             $filter = $request->jenis;
             $query->whereIn('id_jenis_aktivitas', $filter);
         }
@@ -731,7 +729,7 @@ class PerkuliahanController extends Controller
             //         ->orderBy('prodi.nama_program_studi', $orderDirection)
             //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
             // } else {
-                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
             // }
         }
 
@@ -776,7 +774,7 @@ class PerkuliahanController extends Controller
 
     public function sync_aktivitas_mahasiswa()
     {
-        if (ProgramStudi::count() == 0 || Semester::count() == 0 || JenisAktivitasMahasiswa::count() == 0){
+        if (ProgramStudi::count() == 0 || Semester::count() == 0 || JenisAktivitasMahasiswa::count() == 0) {
             return redirect()->back()->with('error', 'Harap Sinkronkan Terlebih dahulu data Referensi!');
         }
 
@@ -793,7 +791,7 @@ class PerkuliahanController extends Controller
         $model = \App\Models\Perkuliahan\AktivitasMahasiswa::class;
         $primary = 'id_aktivitas';
 
-        $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model,$primary);
+        $batch = $this->sync2($act, $limit, $offset, $order, $job, $name, $model, $primary);
 
         return redirect()->back()->with('success', 'Sinkronisasi Aktivitas Mahasiswa Berhasil!');
     }
@@ -814,7 +812,7 @@ class PerkuliahanController extends Controller
                 'model' => \App\Models\Perkuliahan\AnggotaAktivitasMahasiswa::class,
                 'primary' => 'id_anggota',
                 'reference' => \App\Models\Perkuliahan\AktivitasMahasiswa::class,
-                'id' => 'id_aktivitas'
+                'id' => 'id_aktivitas',
             ],
             [
                 'act' => 'GetListBimbingMahasiswa',
@@ -826,7 +824,7 @@ class PerkuliahanController extends Controller
                 'model' => \App\Models\Perkuliahan\BimbingMahasiswa::class,
                 'primary' => 'id_bimbing_mahasiswa',
                 'reference' => \App\Models\Perkuliahan\AktivitasMahasiswa::class,
-                'id' => 'id_aktivitas'
+                'id' => 'id_aktivitas',
             ],
             [
                 'act' => 'GetListUjiMahasiswa',
@@ -838,8 +836,8 @@ class PerkuliahanController extends Controller
                 'model' => \App\Models\Perkuliahan\UjiMahasiswa::class,
                 'primary' => 'id_uji',
                 'reference' => \App\Models\Perkuliahan\AktivitasMahasiswa::class,
-                'id' => 'id_aktivitas'
-            ]
+                'id' => 'id_aktivitas',
+            ],
         ];
 
         foreach ($data as $d) {
@@ -855,7 +853,7 @@ class PerkuliahanController extends Controller
         $reference = array_chunk($reference, 40);
 
         $filter = array_map(function ($value) use ($id) {
-            return "$id IN ('" . implode("','", $value) . "')";
+            return "$id IN ('".implode("','", $value)."')";
         }, $reference);
 
         $batch = Bus::batch([])->name($name)->dispatch();
@@ -872,6 +870,7 @@ class PerkuliahanController extends Controller
     {
         $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
         $semester = Semester::select('nama_semester', 'id_semester')->orderBy('id_semester', 'desc')->get();
+
         return view('universitas.perkuliahan.nilai-perkuliahan.index', compact('prodi', 'semester'));
 
     }
@@ -882,33 +881,33 @@ class PerkuliahanController extends Controller
         ini_set('memory_limit', '1G');
 
         $data = [
-                    'act' => 'GetDetailNilaiPerkuliahanKelas',
-                    'limit' => '',
-                    'offset' => '',
-                    'order' => '',
-                    'job' => \App\Jobs\SyncJob::class,
-                    'name' => 'nilai-perkuliahan',
-                    'model' => \App\Models\Perkuliahan\NilaiPerkuliahan::class,
-                    'primary' => ['id_kelas_kuliah', 'id_registrasi_mahasiswa'],
-                ];
+            'act' => 'GetDetailNilaiPerkuliahanKelas',
+            'limit' => '',
+            'offset' => '',
+            'order' => '',
+            'job' => \App\Jobs\SyncJob::class,
+            'name' => 'nilai-perkuliahan',
+            'model' => \App\Models\Perkuliahan\NilaiPerkuliahan::class,
+            'primary' => ['id_kelas_kuliah', 'id_registrasi_mahasiswa'],
+        ];
 
-            $prodi = ProgramStudi::pluck('id_prodi')->toArray();
-            $semester_aktif = SemesterAktif::first()->id_semester;
-            $semester = Semester::whereNot('id_semester', $semester_aktif)->pluck('id_semester')->toArray();
-            $semester = array_chunk($semester, 3);
-            $semester = array_map(function ($value) {
-                return "id_semester IN ('" . implode("','", $value) . "')";
-            }, $semester);
+        $prodi = ProgramStudi::pluck('id_prodi')->toArray();
+        $semester_aktif = SemesterAktif::first()->id_semester;
+        $semester = Semester::whereNot('id_semester', $semester_aktif)->pluck('id_semester')->toArray();
+        $semester = array_chunk($semester, 3);
+        $semester = array_map(function ($value) {
+            return "id_semester IN ('".implode("','", $value)."')";
+        }, $semester);
 
-            $batch = Bus::batch([])->name($data['name'])->dispatch();
+        $batch = Bus::batch([])->name($data['name'])->dispatch();
 
-            foreach ($prodi as $p) {
-                foreach ($semester as $s) {
-                    $filter = "id_prodi = '$p' AND $s";
-                    // dd($filter);
-                    $batch->add(new $data['job']($data['act'], $data['limit'], $data['offset'], $data['order'], $filter, $data['model'], $data['primary']));
-                }
+        foreach ($prodi as $p) {
+            foreach ($semester as $s) {
+                $filter = "id_prodi = '$p' AND $s";
+                // dd($filter);
+                $batch->add(new $data['job']($data['act'], $data['limit'], $data['offset'], $data['order'], $filter, $data['model'], $data['primary']));
             }
+        }
 
         return redirect()->back()->with('success', 'Sinkronisasi Nilai Perkuliahan Berhasil!');
     }
@@ -933,7 +932,7 @@ class PerkuliahanController extends Controller
         $batch = Bus::batch([])->name($name)->dispatch();
 
         for ($i = 0; $i < $count; $i += 500) {
-            $batch->add(new $job($act, $limit, $i, $order,'', \App\Models\Perkuliahan\KonversiAktivitas::class, 'id_konversi_aktivitas'));
+            $batch->add(new $job($act, $limit, $i, $order, '', \App\Models\Perkuliahan\KonversiAktivitas::class, 'id_konversi_aktivitas'));
         }
 
         return redirect()->back()->with('success', 'Sinkronisasi Konversi Aktivitas Berhasil!');
@@ -941,15 +940,15 @@ class PerkuliahanController extends Controller
 
     public function transkrip()
     {
-        $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
+        $jobData = DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
 
         $statusSync = $jobData ? 1 : 0;
 
         $id_batch = $jobData ? $jobData->id : null;
 
-        return view('universitas.perkuliahan.transkrip.index',[
+        return view('universitas.perkuliahan.transkrip.index', [
             'statusSync' => $statusSync,
-            'id_batch' => $id_batch
+            'id_batch' => $id_batch,
         ]);
     }
 
@@ -965,7 +964,7 @@ class PerkuliahanController extends Controller
         $matkul = MataKuliah::pluck('id_matkul')->toArray();
         $matkul = array_chunk($matkul, 12);
         $matkul = array_map(function ($value) {
-            return "id_matkul IN ('" . implode("','", $value) . "')";
+            return "id_matkul IN ('".implode("','", $value)."')";
         }, $matkul);
         $name = 'transkrip-mahasiswa';
         $job = \App\Jobs\SyncJob::class;
@@ -1002,7 +1001,7 @@ class PerkuliahanController extends Controller
         $kelas = KelasKuliah::where('id_semester', '>=', '20221')->pluck('id_kelas_kuliah')->toArray();
         $kelas = array_chunk($kelas, 15);
         $kelas = array_map(function ($value) {
-            return "id_kelas_kuliah IN ('" . implode("','", $value) . "')";
+            return "id_kelas_kuliah IN ('".implode("','", $value)."')";
         }, $kelas);
 
         $batch = Bus::batch([])->name($name)->dispatch();
@@ -1013,7 +1012,6 @@ class PerkuliahanController extends Controller
         }
 
         return redirect()->back()->with('success', 'Sinkronisasi Komponen Evaluasi Kelas Berhasil!');
-
 
     }
 
@@ -1034,7 +1032,7 @@ class PerkuliahanController extends Controller
         $data = KomponenEvaluasiKelas::pluck('id_komponen_evaluasi')->toArray();
         $data = array_chunk($data, 10);
         $data = array_map(function ($value) {
-            return "id_komponen_evaluasi IN ('" . implode("','", $value) . "')";
+            return "id_komponen_evaluasi IN ('".implode("','", $value)."')";
         }, $data);
 
         $batch = Bus::batch([])->name($name)->dispatch();
@@ -1051,9 +1049,9 @@ class PerkuliahanController extends Controller
     {
 
         $data = RiwayatPendidikan::select('id_registrasi_mahasiswa', 'nim', 'nama_mahasiswa', 'nama_program_studi')
-                ->where('nim', 'like', '%'.$request->q.'%')
-                ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
-                ->get();
+            ->where('nim', 'like', '%'.$request->q.'%')
+            ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
+            ->get();
 
         return response()->json($data);
     }
@@ -1066,26 +1064,24 @@ class PerkuliahanController extends Controller
 
         $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('id_registrasi_mahasiswa', $request->nim)->first();
 
-        if(!$riwayat) {
+        if (! $riwayat) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data Mahasiswa tidak ditemukan!!',
             ]);
         }
 
-
         $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                                        ->where('feeder', 1) // Untuk Dihapus saat selesai
-                                        ->get();
+            ->where('feeder', 1) // Untuk Dihapus saat selesai
+            ->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
         $total_indeks = $transkrip->sum('nilai_indeks');
 
         $ipk = 0;
-        if($total_sks > 0){
+        if ($total_sks > 0) {
             $ipk = ($total_sks * $total_indeks) / $total_sks;
         }
-
 
         $data = [
             'status' => 'success',
@@ -1105,12 +1101,11 @@ class PerkuliahanController extends Controller
             'id' => 'required',
         ]);
 
-        $db = new TranskripMahasiswa();
+        $db = new TranskripMahasiswa;
 
         $res = $db->delete_transkrip($data['id']);
 
         return response()->json($res);
 
     }
-
 }

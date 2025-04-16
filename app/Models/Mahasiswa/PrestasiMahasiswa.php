@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 class PrestasiMahasiswa extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function jenis_prestasi()

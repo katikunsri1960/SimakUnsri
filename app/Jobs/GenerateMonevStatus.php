@@ -20,7 +20,10 @@ class GenerateMonevStatus implements ShouldQueue
 
     public $prodi;
 
-    protected $semesters, $semester;
+    protected $semesters;
+
+    protected $semester;
+
     /**
      * Create a new job instance.
      */
@@ -31,8 +34,8 @@ class GenerateMonevStatus implements ShouldQueue
 
         $this->semester = SemesterAktif::first()->id_semester;
         $this->semesters = Semester::orderBy('id_semester', 'ASC')
-                        ->whereNot('semester', 3)
-                        ->get();
+            ->whereNot('semester', 3)
+            ->get();
     }
 
     /**

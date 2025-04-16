@@ -3,14 +3,13 @@
 namespace App\Models\Perkuliahan;
 
 use App\Models\ProgramStudi;
-use Illuminate\Support\Facades\DB;
-use App\Models\Perkuliahan\MataKuliah;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class MatkulMerdeka extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function matkul()

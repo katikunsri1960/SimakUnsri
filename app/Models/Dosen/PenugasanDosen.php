@@ -3,12 +3,13 @@
 namespace App\Models\Dosen;
 
 use App\Models\ProgramStudi;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PenugasanDosen extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function prodi()

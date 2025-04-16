@@ -4,15 +4,16 @@ namespace App\Models\Perkuliahan;
 
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\ProgramStudi;
-use App\Models\Semester;
-use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Referensi\AllPt;
+use App\Models\Referensi\JenisAktivitasMahasiswa;
+use App\Models\Semester;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class NilaiTransferPendidikan extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function riwayat_pendidikan()

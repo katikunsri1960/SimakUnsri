@@ -2,21 +2,18 @@
 
 namespace App\Imports;
 
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Semester;
 use App\Models\StatusMahasiswa;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-use App\Models\Mahasiswa\RiwayatPendidikan;
-use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
+use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
-class AktivitasKuliahImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
+class AktivitasKuliahImport implements SkipsEmptyRows, ToCollection, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
     public function collection(Collection $collection)
     {
         ini_set('max_execution_time', 300);
@@ -38,7 +35,7 @@ class AktivitasKuliahImport implements ToCollection, WithHeadingRow, SkipsEmptyR
                 // tanggal_pembayaran adalah date format di excel
                 // $row['tanggal_pembayaran'] = date('Y-m-d', strtotime($row['tanggal_pembayaran']));
 
-                if (!$mahasiswa) {
+                if (! $mahasiswa) {
                     return back()->withErrors(["Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!"]);
                 }
 

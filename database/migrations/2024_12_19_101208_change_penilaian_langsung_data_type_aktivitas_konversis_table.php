@@ -23,6 +23,6 @@ return new class extends Migration
     {
         Schema::table('aktivitas_konversi', function (Blueprint $table) {
             $table->boolean('penilaian_langsung')->default('0')->after('semester')->change();
-        });  
+        });
     }
 };

@@ -14,7 +14,7 @@ class RiwayatPenilaianController extends Controller
     public function index(Request $request)
     {
         $request->validate([
-            'semester_view' => 'nullable|exists:semesters,id_semester'
+            'semester_view' => 'nullable|exists:semesters,id_semester',
         ]);
 
         $semester_view = $request->semester_view ?? null;
@@ -24,7 +24,7 @@ class RiwayatPenilaianController extends Controller
 
         $semester_pilih = $semester_view == null ? $semester_aktif->id_semester : $semester_view;
 
-        $db = new BiodataDosen();
+        $db = new BiodataDosen;
         $data = $db->riwayat_kelas(auth()->user()->fk_id, $semester_pilih);
 
         // dd($data);
@@ -38,11 +38,11 @@ class RiwayatPenilaianController extends Controller
 
     public function detail(string $kelas)
     {
-        $db = new KelasKuliah();
+        $db = new KelasKuliah;
         $data = $db->detail_penilaian_perkuliahan($kelas);
 
         return view('dosen.penilaian.riwayat-penilaian.detail', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 }

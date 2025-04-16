@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Models\SyncError;
-use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\SyncError;
 use App\Services\Feeder\FeederAPI;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 
 class MahasiswaController extends Controller
@@ -18,7 +18,7 @@ class MahasiswaController extends Controller
 
     private function count_value($act)
     {
-        $data = new FeederAPI($act,0,0, '');
+        $data = new FeederAPI($act, 0, 0, '');
         $response = $data->runWS();
         $count = $response['data'];
 
@@ -30,7 +30,7 @@ class MahasiswaController extends Controller
         $data = [
             ['act' => 'GetBiodataMahasiswa', 'count' => 'GetCountBiodataMahasiswa', 'order' => 'id_mahasiswa', 'job' => \App\Jobs\Mahasiswa\BiodataJob::class],
             ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class],
-            ['act' => 'GetListMahasiswaLulusDO', 'count' => 'GetCountMahasiswaLulusDO', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\SyncJob::class]
+            ['act' => 'GetListMahasiswaLulusDO', 'count' => 'GetCountMahasiswaLulusDO', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\SyncJob::class],
         ];
 
         $batch = Bus::batch([])->dispatch();
@@ -45,18 +45,17 @@ class MahasiswaController extends Controller
 
             if ($d['act'] == 'GetListMahasiswaLulusDO') {
 
-                for ($i=0; $i < $count; $i+=$limit) {
+                for ($i = 0; $i < $count; $i += $limit) {
                     $job = new $d['job']($act, $limit, $i, $order, null, \App\Models\Mahasiswa\LulusDo::class, 'id_registrasi_mahasiswa');
                     $batch->add($job);
                 }
 
             } else {
-                for ($i=0; $i < $count; $i+=$limit) {
+                for ($i = 0; $i < $count; $i += $limit) {
                     $job = new $d['job']($act, $limit, $i, $order);
                     $batch->add($job);
                 }
             }
-
 
         }
 
@@ -71,11 +70,11 @@ class MahasiswaController extends Controller
         $query = RiwayatPendidikan::with('prodi', 'biodata');
 
         if ($searchValue) {
-            $query = $query->where('nim', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
+            $query = $query->where('nim', 'like', '%'.$searchValue.'%')
+                ->orWhere('nama_mahasiswa', 'like', '%'.$searchValue.'%');
         }
 
-        if ($request->has('prodi') && !empty($request->prodi)) {
+        if ($request->has('prodi') && ! empty($request->prodi)) {
             $filter = $request->prodi;
             $query->whereIn('id_prodi', $filter);
         }
@@ -99,7 +98,7 @@ class MahasiswaController extends Controller
             //         ->orderBy('prodi.nama_program_studi', $orderDirection)
             //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
             // } else {
-                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
             // }
         }
 
@@ -127,7 +126,6 @@ class MahasiswaController extends Controller
             ['act' => 'GetNilaiTransferPendidikanMahasiswa', 'count' => 'GetCountNilaiTransferPendidikanMahasiswa', 'order' => 'id_transfer', 'model' => \App\Models\Perkuliahan\NilaiTransferPendidikan::class],
         ];
 
-
         foreach ($data as $d) {
 
             $count = $this->count_value($d['count']);
@@ -136,7 +134,7 @@ class MahasiswaController extends Controller
             $act = $d['act'];
             $order = $d['order'];
 
-            for ($i=0; $i < $count; $i+=$limit) {
+            for ($i = 0; $i < $count; $i += $limit) {
 
                 $api = new FeederAPI($act, $i, $limit, $order);
                 $data = $api->runWS();
@@ -153,8 +151,9 @@ class MahasiswaController extends Controller
                         } catch (\Throwable $th) {
                             SyncError::create([
                                 'model' => $act,
-                                'message' => $th->getMessage()
+                                'message' => $th->getMessage(),
                             ]);
+
                             continue;
                         }
                     }

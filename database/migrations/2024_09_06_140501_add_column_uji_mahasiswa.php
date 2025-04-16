@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('uji_mahasiswas', function (Blueprint $table) {
             $table->string('status_uji_mahasiswa')->after('penguji_ke')->comment('0:Belum di Setujui, 1:Sudah di Setujui Prodi, 2:Sudah di Setujui Dosen Penguji, 3:Dibatalkan Oleh Dosen Penguji')->change();
-            
+
         });
 
         Schema::table('aktivitas_mahasiswas', function (Blueprint $table) {

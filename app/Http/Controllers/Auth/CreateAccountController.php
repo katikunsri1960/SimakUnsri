@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\User;
 use Illuminate\Http\Request;
-use App\Libraries\nusoap;
-use App\Models\Mahasiswa\LulusDo;
 
 class CreateAccountController extends Controller
 {
@@ -23,12 +22,12 @@ class CreateAccountController extends Controller
         if ($user) {
             return response()->json([
                 'status' => 'success',
-                'data' => $user
+                'data' => $user,
             ]);
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'NIM tidak ditemukan'
+                'message' => 'NIM tidak ditemukan',
             ]);
         }
 
@@ -44,14 +43,14 @@ class CreateAccountController extends Controller
         $check = LulusDo::where('nim', $data['nim'])->first();
 
         if ($check && $check->id_jenis_keluar == 1) {
-            return redirect()->back()->with('error', 'NIM ini Sudah dinyatakan '. $check->nama_jenis_keluar);
+            return redirect()->back()->with('error', 'NIM ini Sudah dinyatakan '.$check->nama_jenis_keluar);
         }
 
         $user = RiwayatPendidikan::where('nim', $data['nim'])->orderBy('id_periode_masuk', 'desc')->first();
         $data['username'] = $user->nim;
         $data['fk_id'] = $user->id_registrasi_mahasiswa;
         $data['name'] = $user->nama_mahasiswa;
-        $data['email'] = $user->nim."@student.unsri.ac.id";
+        $data['email'] = $user->nim.'@student.unsri.ac.id';
         $data['role'] = 'mahasiswa';
         $data['password'] = bcrypt($data['password']);
 

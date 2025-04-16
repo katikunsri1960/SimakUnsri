@@ -24,7 +24,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('kelas_kuliahs', function (Blueprint $table) {
-            
+
             $table->foreign('id_matkul')->references('id_matkul')->on('mata_kuliahs');
 
         });

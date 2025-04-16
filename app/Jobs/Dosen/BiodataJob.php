@@ -15,7 +15,14 @@ class BiodataJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $act, $limit, $offset, $order;
+    public $act;
+
+    public $limit;
+
+    public $offset;
+
+    public $order;
+
     /**
      * Create a new job instance.
      */
@@ -35,7 +42,7 @@ class BiodataJob implements ShouldQueue
         $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order);
         $response = $data->runWS();
 
-        if (isset($response['data']) && !empty($response['data'])) {
+        if (isset($response['data']) && ! empty($response['data'])) {
 
             // chunk data
             $chunks = array_chunk($response['data'], 500);
@@ -44,6 +51,7 @@ class BiodataJob implements ShouldQueue
 
                 $chunk = array_map(function ($value) {
                     $value['tanggal_lahir'] = empty($value['tanggal_lahir']) ? null : date('Y-m-d', strtotime($value['tanggal_lahir']));
+
                     return $value;
                 }, $chunk);
 

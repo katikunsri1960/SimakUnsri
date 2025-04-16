@@ -4,10 +4,10 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
-use App\Models\User;
 
 class LoginController extends Controller
 {
@@ -57,7 +57,7 @@ class LoginController extends Controller
         if (in_array($left2digit, $nim)) {
             $user = RiwayatPendidikan::where('nim', $username)->first();
             $akun = User::where('username', $username)->first();
-            if ($user && !$akun) {
+            if ($user && ! $akun) {
                 return redirect()->route('create-account-mahasiswa');
             }
         }
@@ -92,6 +92,4 @@ class LoginController extends Controller
         }
 
     }
-
-
 }

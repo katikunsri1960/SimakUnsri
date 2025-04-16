@@ -22,11 +22,11 @@ class MonitoringController extends Controller
     {
         $semesterAktif = SemesterAktif::first()->id_semester;
         $data = MonitoringIsiKrs::with(['prodi'])->join('program_studis', 'monitoring_isi_krs.id_prodi', 'program_studis.id_prodi')
-                ->join('fakultas', 'fakultas.id', 'program_studis.fakultas_id')
-                ->orderBy('program_studis.fakultas_id')
-                ->orderBy('program_studis.kode_program_studi')
-                ->where('monitoring_isi_krs.id_semester', $semesterAktif)
-                ->get();
+            ->join('fakultas', 'fakultas.id', 'program_studis.fakultas_id')
+            ->orderBy('program_studis.fakultas_id')
+            ->orderBy('program_studis.kode_program_studi')
+            ->where('monitoring_isi_krs.id_semester', $semesterAktif)
+            ->get();
 
         return view('bak.monitoring.pengisian-krs.index', [
             'data' => $data,
@@ -38,13 +38,13 @@ class MonitoringController extends Controller
         $id_prodi = $prodi->id_prodi;
 
         $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
-                ->orderBy('id_periode_masuk', 'ASC')
-                ->get();
+            ->whereNull('id_jenis_keluar')
+            ->orderBy('id_periode_masuk', 'ASC')
+            ->get();
 
         return view('bak.monitoring.pengisian-krs.detail-mahasiswa-aktif', [
             'prodi' => $prodi,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -56,14 +56,14 @@ class MonitoringController extends Controller
         $arrayTahun = range($angkatanAktif, date('Y'));
 
         $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
-                ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
-                ->orderBy('id_periode_masuk', 'ASC')
-                ->get();
+            ->whereNull('id_jenis_keluar')
+            ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
+            ->orderBy('id_periode_masuk', 'ASC')
+            ->get();
 
         return view('bak.monitoring.pengisian-krs.detail-aktif-min-tujuh', [
             'prodi' => $prodi,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -72,13 +72,13 @@ class MonitoringController extends Controller
         $id_prodi = $prodi->id_prodi;
         $semesterAktif = SemesterAktif::first()->id_semester;
 
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
 
         $data = $db->detail_isi_krs($id_prodi, $semesterAktif);
 
         return view('bak.monitoring.pengisian-krs.detail-isi-krs', [
             'prodi' => $prodi,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -86,13 +86,13 @@ class MonitoringController extends Controller
     {
         $id_prodi = $prodi->id_prodi;
         $semesterAktif = SemesterAktif::first()->id_semester;
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
 
         $data = $db->krs_data($id_prodi, $semesterAktif, 1);
 
         return view('bak.monitoring.pengisian-krs.approve-krs', [
             'prodi' => $prodi,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -100,12 +100,12 @@ class MonitoringController extends Controller
     {
         $id_prodi = $prodi->id_prodi;
         $semesterAktif = SemesterAktif::first()->id_semester;
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
         $data = $db->krs_data($id_prodi, $semesterAktif, 0);
 
         return view('bak.monitoring.pengisian-krs.not-approve-krs', [
             'prodi' => $prodi,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -115,12 +115,12 @@ class MonitoringController extends Controller
         $id_prodi = $prodi->id_prodi;
         $semesterAktif = SemesterAktif::first()->id_semester;
 
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
         $data = $db->tidak_isi_krs($id_prodi, $semesterAktif);
 
         return view('bak.monitoring.pengisian-krs.tidak-isi-krs', [
             'prodi' => $prodi,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -132,36 +132,36 @@ class MonitoringController extends Controller
         $arrayTahun = range($angkatanAktif, date('Y'));
 
         $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
-                ->whereNotIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
-                ->orderBy('id_periode_masuk', 'ASC')
-                ->get();
+            ->whereNull('id_jenis_keluar')
+            ->whereNotIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
+            ->orderBy('id_periode_masuk', 'ASC')
+            ->get();
 
         return view('bak.monitoring.pengisian-krs.mahasiswa-up-tujuh', [
             'prodi' => $prodi,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
     public function lulus_do(Request $request)
     {
-        $db = new LulusDo();
+        $db = new LulusDo;
         $jenis_keluar = $db->select('id_jenis_keluar', 'nama_jenis_keluar')->distinct()->get();
 
-        $jenis_keluar_counts = $db->select('id_jenis_keluar','nama_jenis_keluar', DB::raw('count(*) as total'))
-        ->groupBy('id_jenis_keluar','nama_jenis_keluar');
+        $jenis_keluar_counts = $db->select('id_jenis_keluar', 'nama_jenis_keluar', DB::raw('count(*) as total'))
+            ->groupBy('id_jenis_keluar', 'nama_jenis_keluar');
 
-        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
+        if ($request->has('id_prodi') && ! empty($request->id_prodi)) {
             $filter = $request->id_prodi;
             $jenis_keluar_counts->whereIn('id_prodi', $filter);
         }
 
-        if ($request->has('angkatan') && !empty($request->angkatan)) {
+        if ($request->has('angkatan') && ! empty($request->angkatan)) {
             $filter = $request->angkatan;
             $jenis_keluar_counts->whereIn('angkatan', $filter);
         }
 
-        if($request->has('jenis_keluar') && !empty($request->jenis_keluar)) {
+        if ($request->has('jenis_keluar') && ! empty($request->jenis_keluar)) {
             $filter = $request->jenis_keluar;
             $jenis_keluar_counts->whereIn('id_jenis_keluar', $filter);
         }
@@ -175,7 +175,7 @@ class MonitoringController extends Controller
             'jenis_keluar' => $jenis_keluar,
             'jenis_keluar_counts' => $jenis_keluar_counts,
             'prodi' => $prodi,
-            'angkatan' => $angkatan
+            'angkatan' => $angkatan,
         ]);
     }
 
@@ -186,22 +186,22 @@ class MonitoringController extends Controller
         $query = LulusDo::with('prodi', 'biodata');
 
         if ($searchValue) {
-            $query = $query->where('nim', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_program_studi', 'like', '%' . $searchValue . '%');
+            $query = $query->where('nim', 'like', '%'.$searchValue.'%')
+                ->orWhere('nama_mahasiswa', 'like', '%'.$searchValue.'%')
+                ->orWhere('nama_program_studi', 'like', '%'.$searchValue.'%');
         }
 
-        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
+        if ($request->has('id_prodi') && ! empty($request->id_prodi)) {
             $filter = $request->id_prodi;
             $query->whereIn('id_prodi', $filter);
         }
 
-        if ($request->has('angkatan') && !empty($request->angkatan)) {
+        if ($request->has('angkatan') && ! empty($request->angkatan)) {
             $filter = $request->angkatan;
             $query->whereIn('angkatan', $filter);
         }
 
-        if($request->has('jenis_keluar') && !empty($request->jenis_keluar)) {
+        if ($request->has('jenis_keluar') && ! empty($request->jenis_keluar)) {
             $filter = $request->jenis_keluar;
             $query->whereIn('id_jenis_keluar', $filter);
         }
@@ -217,7 +217,7 @@ class MonitoringController extends Controller
             $orderDirection = $request->input('order.0.dir');
 
             // Define the column names that correspond to the DataTables column indices
-            $columns = ['nim','nama_mahasiswa', 'nama_program_studi', 'angkatan', 'tanggal_keluar', 'nm_smt', 'keterangan'];
+            $columns = ['nim', 'nama_mahasiswa', 'nama_program_studi', 'angkatan', 'tanggal_keluar', 'nm_smt', 'keterangan'];
 
             // if ($columns[$orderColumn] == 'prodi') {
             //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
@@ -225,7 +225,7 @@ class MonitoringController extends Controller
             //         ->orderBy('prodi.nama_program_studi', $orderDirection)
             //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
             // } else {
-                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
             // }
         }
 
@@ -247,10 +247,10 @@ class MonitoringController extends Controller
     {
         $fakultas = Fakultas::select('id', 'nama_fakultas')->get();
         $prodi = ProgramStudi::where('status', 'A')
-                        ->select('id_prodi', 'nama_program_studi','kode_program_studi', 'nama_jenjang_pendidikan', 'fakultas_id', 'id')
-                        ->orderBy('id_jenjang_pendidikan', 'ASC')
-                        ->orderBy('nama_program_studi')
-                        ->get();
+            ->select('id_prodi', 'nama_program_studi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'fakultas_id', 'id')
+            ->orderBy('id_jenjang_pendidikan', 'ASC')
+            ->orderBy('nama_program_studi')
+            ->get();
 
         $semesterAktif = SemesterAktif::first()->id_semester;
         $semester = Semester::where('id_semester', '<=', $semesterAktif)->orderBy('id_semester', 'desc')->get();
@@ -259,7 +259,7 @@ class MonitoringController extends Controller
             'fakultas' => $fakultas,
             'prodi' => $prodi,
             'semester' => $semester,
-            'semesterAktif' => $semesterAktif
+            'semesterAktif' => $semesterAktif,
         ]);
     }
 
@@ -268,18 +268,18 @@ class MonitoringController extends Controller
         $semesterAktif = SemesterAktif::first()->id_semester;
         $id_prodi = ProgramStudi::find($prodi)->id_prodi;
         $biodataDosen = BiodataDosen::where('id_dosen', $dosen)
-                ->select('nidn', 'nama_dosen')
-                ->first();
+            ->select('nidn', 'nama_dosen')
+            ->first();
 
-        $db = new DosenPengajarKelasKuliah();
+        $db = new DosenPengajarKelasKuliah;
 
         $titles = [
-            1 => "Total Kelas Ajar",
-            2 => "Kelas Sudah Dinilai",
-            3 => "Kelas Belum Dinilai"
+            1 => 'Total Kelas Ajar',
+            2 => 'Kelas Sudah Dinilai',
+            3 => 'Kelas Belum Dinilai',
         ];
 
-        $title = $titles[$mode] ?? "Unknown Mode";
+        $title = $titles[$mode] ?? 'Unknown Mode';
 
         $query = $db->join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
             ->join('biodata_dosens as d', 'd.id_dosen', 'dosen_pengajar_kelas_kuliahs.id_dosen')
@@ -296,11 +296,11 @@ class MonitoringController extends Controller
         }
 
         $id_kelas = $query->select('k.id_kelas_kuliah')
-                    ->distinct()
-                    ->pluck('k.id_kelas_kuliah');
+            ->distinct()
+            ->pluck('k.id_kelas_kuliah');
 
         $data = KelasKuliah::whereIn('id_kelas_kuliah', $id_kelas)
-            ->with(['matkul', 'prodi', 'dosen_pengajar','peserta_kelas' => function ($query) {
+            ->with(['matkul', 'prodi', 'dosen_pengajar', 'peserta_kelas' => function ($query) {
                 $query->where('approved', 1);
             }])
             ->get();
@@ -320,7 +320,7 @@ class MonitoringController extends Controller
         $semesterAktif = SemesterAktif::first()->id_semester;
         $semester = $semesterAktif;
 
-        $db = new DosenPengajarKelasKuliah();
+        $db = new DosenPengajarKelasKuliah;
 
         // Query untuk mendapatkan data dosen dan jumlah kelas yang dinilai dan belum dinilai
         $data = $db->join('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
@@ -342,12 +342,13 @@ class MonitoringController extends Controller
         // Proses data untuk menghitung total kelas yang belum dinilai
         $dataAccumulation = $data->map(function ($item) {
             $item->total_kelas_belum_dinilai = $item->total_kelas - $item->total_kelas_dinilai;
+
             return $item;
         });
 
         $response = [
             'status' => 'success',
-            'data' => $dataAccumulation
+            'data' => $dataAccumulation,
         ];
 
         return response()->json($response);

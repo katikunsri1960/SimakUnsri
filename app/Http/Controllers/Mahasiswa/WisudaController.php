@@ -2,32 +2,25 @@
 
 namespace App\Http\Controllers\Mahasiswa;
 
-use Carbon\Carbon;
-use Ramsey\Uuid\Uuid;
-use App\Models\Wisuda;
-use App\Models\Wilayah;
-use Illuminate\Http\Request;
-use App\Models\PeriodeWisuda;
-use App\Models\SemesterAktif;
-use App\Models\AsistensiAkhir;
-use App\Models\ProfilPt;
-use App\Models\Connection\Usept;
-use Illuminate\Cache\Repository;
-use App\Models\BeasiswaMahasiswa;
-use App\Models\Connection\Tagihan;
-use Illuminate\Support\Facades\DB;
-use App\Models\Perpus\BebasPustaka;
 use App\Http\Controllers\Controller;
-use App\Models\Connection\Registrasi;
 use App\Models\Connection\CourseUsept;
+use App\Models\Connection\Registrasi;
+use App\Models\Connection\Usept;
 use App\Models\Mahasiswa\BiodataMahasiswa;
-use App\Models\Mahasiswa\PengajuanCuti;
-use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\BimbingMahasiswa;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\PeriodeWisuda;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Perpus\BebasPustaka;
+use App\Models\ProfilPt;
+use App\Models\SemesterAktif;
+use App\Models\Wilayah;
+use App\Models\Wisuda;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class WisudaController extends Controller
 {
@@ -38,15 +31,15 @@ class WisudaController extends Controller
         $semester_aktif = SemesterAktif::first();
 
         $riwayat_pendidikan = RiwayatPendidikan::with('prodi', 'prodi.fakultas', 'prodi.jurusan')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->first();
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->first();
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $semester_aktif->id_semester)
-                ->orderBy('id_semester', 'desc')
-                ->first();
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->orderBy('id_semester', 'desc')
+            ->first();
 
-        if (!$aktivitas_kuliah) {
+        if (! $aktivitas_kuliah) {
             $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
                 ->orderBy('id_semester', 'desc')
                 ->first();
@@ -56,7 +49,7 @@ class WisudaController extends Controller
 
         $kurikulum = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
 
-        if (!$kurikulum) {
+        if (! $kurikulum) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Kurikulum Anda tidak ditemukan, Silahkan hubungi Koor. Prodi!');
         }
 
@@ -65,24 +58,24 @@ class WisudaController extends Controller
         }
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
-                ->whereHas('bimbing_mahasiswa', function ($query) {
-                    $query->whereNotNull('id_bimbing_mahasiswa');
-                })
-                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                        ->where('nim', $riwayat_pendidikan->nim);
-                })
-                ->whereHas('nilai_konversi', function ($query) {
-                    $query->where('nilai_indeks', '>', 0.00);
-                })
+            ->whereHas('bimbing_mahasiswa', function ($query) {
+                $query->whereNotNull('id_bimbing_mahasiswa');
+            })
+            ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                    ->where('nim', $riwayat_pendidikan->nim);
+            })
+            ->whereHas('nilai_konversi', function ($query) {
+                $query->where('nilai_indeks', '>', 0.00);
+            })
                 // ->where('id_semester', $semester_aktif)
-                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
-                ->first();
+            ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+            ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+            ->first();
 
         // dd($aktivitas_kuliah);
 
-        if (!$aktivitas) {
+        if (! $aktivitas) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
         }
 
@@ -90,9 +83,9 @@ class WisudaController extends Controller
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        if(!$riwayat_pendidikan->id_kurikulum ) {
+        if (! $riwayat_pendidikan->id_kurikulum) {
             return redirect()->route('mahasiswa.wisuda.index')->with('error', 'Kurikulum Belum diatur, Silahkan hubungi Koor. Prodi!');
-        }else{
+        } else {
             $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
         }
 
@@ -112,7 +105,7 @@ class WisudaController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             $useptData = [
                 'score' => 0,
                 'class' => 'danger',
@@ -120,7 +113,7 @@ class WisudaController extends Controller
             ];
         }
 
-       // dd($useptData);
+        // dd($useptData);
 
         return view('mahasiswa.wisuda.index', [
             'aktivitas' => $aktivitas,
@@ -140,34 +133,34 @@ class WisudaController extends Controller
 
         $riwayat_pendidikan = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan', 'biodata.wilayah.kab_kota')->where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        $semester_aktif=SemesterAktif::with('semester')->first();
+        $semester_aktif = SemesterAktif::with('semester')->first();
 
         $kecamatan = Wilayah::with('level', 'kab_kota')->where('id_level_wilayah', 3)->get();
 
         $today = Carbon::now()->toDateString();
 
         $wisuda_ke = PeriodeWisuda::where('tanggal_mulai_daftar', '<=', $today)
-                    ->where('tanggal_akhir_daftar', '>=', $today)
-                    ->where('is_active', '1')
-                    ->first();
+            ->where('tanggal_akhir_daftar', '>=', $today)
+            ->where('is_active', '1')
+            ->first();
 
-                    // dd($wisuda_ke);
+        // dd($wisuda_ke);
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
-                ->whereHas('bimbing_mahasiswa', function ($query) {
-                    $query->whereNotNull('id_bimbing_mahasiswa');
-                })
-                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                        ->where('nim', $riwayat_pendidikan->nim);
-                })
-                ->whereHas('nilai_konversi', function ($query) {
-                    $query->where('nilai_indeks', '>', 0.00);
-                })
+            ->whereHas('bimbing_mahasiswa', function ($query) {
+                $query->whereNotNull('id_bimbing_mahasiswa');
+            })
+            ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                    ->where('nim', $riwayat_pendidikan->nim);
+            })
+            ->whereHas('nilai_konversi', function ($query) {
+                $query->where('nilai_indeks', '>', 0.00);
+            })
                 // ->where('id_semester', $semester_aktif)
-                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
-                ->first();
+            ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+            ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+            ->first();
 
         // dd($wisuda_ke);
 
@@ -178,12 +171,12 @@ class WisudaController extends Controller
             return redirect()->back()->with('error', 'Anda telah melakukan pendaftaran wisuda !!');
         }
 
-        if(!$riwayat_pendidikan->id_kurikulum ) {
+        if (! $riwayat_pendidikan->id_kurikulum) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Kurikulum Mahasiswa Belum Diatur!!',
             ]);
-        }else{
+        } else {
             $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
         }
 
@@ -203,7 +196,7 @@ class WisudaController extends Controller
             ];
 
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             $useptData = [
                 'score' => 0,
                 'class' => 'danger',
@@ -211,37 +204,37 @@ class WisudaController extends Controller
             ];
         }
 
-        if($useptData['class'] == 'danger') {
+        if ($useptData['class'] == 'danger') {
             return redirect()->back()->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
         }
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        if (!$bebas_pustaka) {
+        if (! $bebas_pustaka) {
             return redirect()->back()->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silahkan menghubungi Admin Perpustakaan !!');
         }
         // dd($useptData);
 
         $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
-                    ->select('reg_master.rm_pddk_sd_nama','reg_master.rm_pddk_sd_lokasi', 'reg_master.rm_pddk_sd_thn_lulus',
-                            'reg_master.rm_pddk_sltp_nama', 'reg_master.rm_pddk_sltp_lokasi', 'reg_master.rm_pddk_sltp_thn_lulus',
-                            'data_sekolah.nama_sekolah', 'reg_master.rm_pddk_slta_jurusan', 'reg_master.rm_pddk_slta_thn_lulus',
-                            'data_sekolah.nama_kabupaten', 'data_sekolah.nama_provinsi', 'data_sekolah.akreditasi_sekolah')
-                    ->where('rm_nim', $riwayat_pendidikan->nim)->first();
+            ->select('reg_master.rm_pddk_sd_nama', 'reg_master.rm_pddk_sd_lokasi', 'reg_master.rm_pddk_sd_thn_lulus',
+                'reg_master.rm_pddk_sltp_nama', 'reg_master.rm_pddk_sltp_lokasi', 'reg_master.rm_pddk_sltp_thn_lulus',
+                'data_sekolah.nama_sekolah', 'reg_master.rm_pddk_slta_jurusan', 'reg_master.rm_pddk_slta_thn_lulus',
+                'data_sekolah.nama_kabupaten', 'data_sekolah.nama_provinsi', 'data_sekolah.akreditasi_sekolah')
+            ->where('rm_nim', $riwayat_pendidikan->nim)->first();
         // dd($asal_sekolah);
 
-        return view('mahasiswa.wisuda.store', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 'kecamatan'=> $kecamatan,'wisuda_ke' => $wisuda_ke,
-                    'aktivitas' => $aktivitas, 'usept' => $useptData, 'bebas_pustaka' => $bebas_pustaka, 'asal_sekolah' => $asal_sekolah]);
+        return view('mahasiswa.wisuda.store', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 'kecamatan' => $kecamatan, 'wisuda_ke' => $wisuda_ke,
+            'aktivitas' => $aktivitas, 'usept' => $useptData, 'bebas_pustaka' => $bebas_pustaka, 'asal_sekolah' => $asal_sekolah]);
     }
 
     public function get_kecamatan(Request $request)
     {
-        $db = new Wilayah();
+        $db = new Wilayah;
 
         $data = $db->with('kab_kota')
-                    ->where('nama_wilayah', 'like', '%'.$request->q.'%')
-                    ->where('id_level_wilayah', 3)
-                    ->orderBy('id', 'desc')->get();
+            ->where('nama_wilayah', 'like', '%'.$request->q.'%')
+            ->where('id_level_wilayah', 3)
+            ->orderBy('id', 'desc')->get();
 
         return response()->json($data);
     }
@@ -268,43 +261,43 @@ class WisudaController extends Controller
         $semester_aktif = SemesterAktif::first();
 
         $riwayat_pendidikan = RiwayatPendidikan::with('biodata', 'biodata.wilayah.kab_kota')
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->first();
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->first();
 
-        if($request->id_wilayah) {
+        if ($request->id_wilayah) {
             $wilayah = Wilayah::where('id_wilayah', $request->id_wilayah)->first();
-        }else{
+        } else {
             $wilayah = Wilayah::where('id_wilayah', $riwayat_pendidikan->biodata->id_wilayah)->first();
         }
 
         // dd($wilayah);
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
-                ->orderBy('id_semester', 'desc')
-                ->first();
+            ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+            ->orderBy('id_semester', 'desc')
+            ->first();
 
-                // dd($akm);
+        // dd($akm);
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
-                ->whereHas('bimbing_mahasiswa', function ($query) {
-                    $query->whereNotNull('id_bimbing_mahasiswa');
-                })
-                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                        ->where('nim', $riwayat_pendidikan->nim);
-                })
-                ->whereHas('nilai_konversi', function ($query) {
-                    $query->where('nilai_indeks', '>', 0.00);
-                })
+            ->whereHas('bimbing_mahasiswa', function ($query) {
+                $query->whereNotNull('id_bimbing_mahasiswa');
+            })
+            ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                    ->where('nim', $riwayat_pendidikan->nim);
+            })
+            ->whereHas('nilai_konversi', function ($query) {
+                $query->where('nilai_indeks', '>', 0.00);
+            })
                 // ->where('id_semester', $semester_aktif)
-                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
-                ->first();
+            ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+            ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+            ->first();
         // dd($akm);
         $ipk = TranskripMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->whereNot('nilai_huruf', 'F')
-                ->get();
+            ->whereNot('nilai_huruf', 'F')
+            ->get();
 
         // dd($ipk, $riwayat_pendidikan);
 
@@ -320,7 +313,7 @@ class WisudaController extends Controller
 
         // dd($ipk, $ipk_total, $sks_total, $ipk);
 
-        if($request->wisuda_ke == '0') {
+        if ($request->wisuda_ke == '0') {
             return redirect()->back()->with('error',
                 'Tidak ada periode Wisuda yang tersedia !!');
         }
@@ -328,23 +321,23 @@ class WisudaController extends Controller
         // dd($request->wisuda_ke);
 
         // Generate file name
-        $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('pas_foto')->getClientOriginalExtension();
-        $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
+        $pasFotoName = 'pas_foto_'.str_replace(' ', '_', $riwayat_pendidikan->nim).'.'.$request->file('pas_foto')->getClientOriginalExtension();
+        $abstrakName = 'abstrak_'.str_replace(' ', '_', $riwayat_pendidikan->nim).'.'.$request->file('abstrak_file')->getClientOriginalExtension();
 
         // Simpan file ke folder public/storage/wisuda/abstrak dan wisuda/pas_foto
         $pasFotoPath = $request->file('pas_foto')->storeAs('wisuda/pas_foto', $pasFotoName, 'public');
         $abstrakPath = $request->file('abstrak_file')->storeAs('wisuda/abstrak', $abstrakName, 'public');
 
         // Simpan path ke database
-        $pas_foto = 'storage/' . $pasFotoPath;
-        $abstrak_file = 'storage/' . $abstrakPath;
+        $pas_foto = 'storage/'.$pasFotoPath;
+        $abstrak_file = 'storage/'.$abstrakPath;
 
         // Cek apakah file berhasil diupload
-        if (!$pasFotoPath) {
+        if (! $pasFotoPath) {
             return redirect()->back()->with('error', 'Pas foto gagal diunggah. Silakan coba lagi.');
         }
 
-        if (!$abstrakPath) {
+        if (! $abstrakPath) {
             return redirect()->back()->with('error', 'File abstrak gagal diunggah. Silakan coba lagi.');
         }
 
@@ -354,44 +347,44 @@ class WisudaController extends Controller
             DB::beginTransaction();
 
             Wisuda::create([
-            'id_perguruan_tinggi' => $perguruan_tinggi->id_perguruan_tinggi,
-            'id_registrasi_mahasiswa' => $id_reg,
-            'id_prodi' => $riwayat_pendidikan->id_prodi,
-            'tgl_masuk' => $riwayat_pendidikan->tanggal_daftar,
-            'wisuda_ke' => $request->wisuda_ke,
-            'sks_diakui' => $akm->sks_total,
-            'ipk' => $ipk,
-            'id_aktivitas' => $aktivitas->id_aktivitas,
-            'angkatan' => $akm->angkatan,
-            'nim' => $riwayat_pendidikan->nim,
-            'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-            'alamat_orang_tua' => $request->alamat_orang_tua,
-            'kosentrasi' => $request->kosentrasi,
-            'tgl_sk_pembimbing' => $request->tgl_sk_pembimbing,
-            'no_sk_pembimbing' => $request->no_sk_pembimbing,
-            'pas_foto' => $pas_foto,
-            'lokasi_kuliah' => $request->lokasi_kuliah,
-            'abstrak_ta' => $request->abstrak_ta,
-            'abstrak_file' => $abstrak_file,
-            'approved' => 0,
+                'id_perguruan_tinggi' => $perguruan_tinggi->id_perguruan_tinggi,
+                'id_registrasi_mahasiswa' => $id_reg,
+                'id_prodi' => $riwayat_pendidikan->id_prodi,
+                'tgl_masuk' => $riwayat_pendidikan->tanggal_daftar,
+                'wisuda_ke' => $request->wisuda_ke,
+                'sks_diakui' => $akm->sks_total,
+                'ipk' => $ipk,
+                'id_aktivitas' => $aktivitas->id_aktivitas,
+                'angkatan' => $akm->angkatan,
+                'nim' => $riwayat_pendidikan->nim,
+                'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                'alamat_orang_tua' => $request->alamat_orang_tua,
+                'kosentrasi' => $request->kosentrasi,
+                'tgl_sk_pembimbing' => $request->tgl_sk_pembimbing,
+                'no_sk_pembimbing' => $request->no_sk_pembimbing,
+                'pas_foto' => $pas_foto,
+                'lokasi_kuliah' => $request->lokasi_kuliah,
+                'abstrak_ta' => $request->abstrak_ta,
+                'abstrak_file' => $abstrak_file,
+                'approved' => 0,
             ]);
 
             // Update biodata_mahasiswas table
             BiodataMahasiswa::where('id_mahasiswa', $riwayat_pendidikan->id_mahasiswa)
                 ->update([
-                'feeder' => 0,
-                'nik' => $request->nik,
-                'jalan' => $request->jalan,
-                'dusun' => $request->dusun,
-                'rt' => $request->rt,
-                'rw' => $request->rw,
-                'kelurahan' => $request->kelurahan,
-                'kode_pos' => $request->kode_pos,
-                'id_wilayah' => $wilayah->id_wilayah,
-                'nama_wilayah' => $wilayah->nama_wilayah,
-                'handphone' => $request->handphone,
-                'email' => $request->email,
-            ]);
+                    'feeder' => 0,
+                    'nik' => $request->nik,
+                    'jalan' => $request->jalan,
+                    'dusun' => $request->dusun,
+                    'rt' => $request->rt,
+                    'rw' => $request->rw,
+                    'kelurahan' => $request->kelurahan,
+                    'kode_pos' => $request->kode_pos,
+                    'id_wilayah' => $wilayah->id_wilayah,
+                    'nama_wilayah' => $wilayah->nama_wilayah,
+                    'handphone' => $request->handphone,
+                    'email' => $request->email,
+                ]);
 
             DB::commit();
 
@@ -399,6 +392,7 @@ class WisudaController extends Controller
             return redirect()->route('mahasiswa.wisuda.index')->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
+
             // Handle exception
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }

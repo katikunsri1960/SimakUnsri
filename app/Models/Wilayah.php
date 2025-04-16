@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Wilayah extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function level()
@@ -24,5 +25,4 @@ class Wilayah extends Model
     {
         return $this->belongsTo(Wilayah::class, 'id_induk_wilayah', 'id_wilayah')->whereNotNull('id_induk_wilayah');
     }
-
 }

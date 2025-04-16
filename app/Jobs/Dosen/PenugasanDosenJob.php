@@ -15,7 +15,14 @@ class PenugasanDosenJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $act, $limit, $offset, $order;
+    public $act;
+
+    public $limit;
+
+    public $offset;
+
+    public $order;
+
     /**
      * Create a new job instance.
      */
@@ -35,7 +42,7 @@ class PenugasanDosenJob implements ShouldQueue
         $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order);
         $response = $data->runWS();
 
-        if (isset($response['data']) && !empty($response['data'])) {
+        if (isset($response['data']) && ! empty($response['data'])) {
 
             $data = $response['data'];
 

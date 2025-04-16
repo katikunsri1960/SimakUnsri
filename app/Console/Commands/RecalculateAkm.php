@@ -6,7 +6,6 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\SemesterAktif;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\DB;
 
 class RecalculateAkm extends Command
 {
@@ -41,19 +40,17 @@ class RecalculateAkm extends Command
         // progress bar
         $bar = $this->output->createProgressBar($totalData);
 
-        foreach ($data as $d)
-        {
+        foreach ($data as $d) {
             $transkrip = TranskripMahasiswa::select(
-                'id_matkul', 'kode_mata_kuliah', 'nama_mata_kuliah','sks_mata_kuliah', 'nilai_angka', 'nilai_huruf','nilai_indeks'
+                'id_matkul', 'kode_mata_kuliah', 'nama_mata_kuliah', 'sks_mata_kuliah', 'nilai_angka', 'nilai_huruf', 'nilai_indeks'
             )
-            ->where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
-            ->whereNotIn('nilai_huruf', ['F', ''])
-            ->get();
+                ->where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+                ->whereNotIn('nilai_huruf', ['F', ''])
+                ->get();
 
             $totalSksTranskrip = $transkrip->sum('sks_mata_kuliah');
 
-            $krs = 
-
+            $krs =
 
             $this->info($totalSksTranskrip);
 
@@ -62,8 +59,7 @@ class RecalculateAkm extends Command
             $ipk = 0;
             $total_sks = 0;
             // $this->info($d->id_registrasi_mahasiswa);
-            if($transkrip)
-            {
+            if ($transkrip) {
                 $ipk = $transkrip->ipk;
                 $total_sks = $transkrip->total_sks;
             }

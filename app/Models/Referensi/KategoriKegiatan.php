@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class KategoriKegiatan extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 }

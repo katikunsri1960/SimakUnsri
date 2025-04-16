@@ -2,14 +2,15 @@
 
 namespace App\Models\Connection;
 
-use App\Models\Semester;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Tagihan extends Model
 {
     use HasFactory;
+
     protected $connection = 'keu_con'; // Koneksi keuangan
+
     protected $table = 'tagihan';
 
     public function pembayaran()
@@ -45,6 +46,7 @@ class Tagihan extends Model
         }
 
         $next_year = $year + 1;
+
         return "{$year}/{$next_year} {$semester}";
     }
 }

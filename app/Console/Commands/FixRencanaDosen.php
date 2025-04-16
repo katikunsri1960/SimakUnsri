@@ -31,10 +31,10 @@ class FixRencanaDosen extends Command
 
         // Fetch the data
         $data = DosenPengajarKelasKuliah::leftJoin('kelas_kuliahs as k', 'k.id_kelas_kuliah', 'dosen_pengajar_kelas_kuliahs.id_kelas_kuliah')
-                ->join('mata_kuliahs as m', 'm.id_matkul', 'k.id_matkul')
-                ->where('dosen_pengajar_kelas_kuliahs.id_semester', $semester)
-                ->select('dosen_pengajar_kelas_kuliahs.*', 'm.sks_mata_kuliah as total_sks', 'm.kode_mata_kuliah as kode_mk')
-                ->get();
+            ->join('mata_kuliahs as m', 'm.id_matkul', 'k.id_matkul')
+            ->where('dosen_pengajar_kelas_kuliahs.id_semester', $semester)
+            ->select('dosen_pengajar_kelas_kuliahs.*', 'm.sks_mata_kuliah as total_sks', 'm.kode_mata_kuliah as kode_mk')
+            ->get();
 
         $groupedData = $data->groupBy('id_kelas_kuliah');
         $this->info($groupedData->count());
@@ -55,12 +55,11 @@ class FixRencanaDosen extends Command
             if ($jumlahPertemuan > 16 && $count > 1) {
                 $jumlahKelas++;
                 $dbKelas = KelasKuliah::where('id_kelas_kuliah', $id_kelas_kuliah)
-                ->leftJoin('program_studis as prodi', 'prodi.id_prodi', 'kelas_kuliahs.id_prodi')
-                ->select('kelas_kuliahs.nama_kelas_kuliah', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi')->first();
+                    ->leftJoin('program_studis as prodi', 'prodi.id_prodi', 'kelas_kuliahs.id_prodi')
+                    ->select('kelas_kuliahs.nama_kelas_kuliah', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi')->first();
                 // tulis data ke dalam file txt di folder public
 
                 fputcsv($file, [$group->first()->kode_mk, $dbKelas->nama_kelas_kuliah, $dbKelas->nama_jenjang_pendidikan, $dbKelas->nama_program_studi]);
-
 
                 // $this->info("ID Kelas: {$id_kelas_kuliah}");
                 foreach ($group as $g) {
@@ -91,7 +90,7 @@ class FixRencanaDosen extends Command
                     DosenPengajarKelasKuliah::where('id_aktivitas_mengajar', $d['id_aktivitas_mengajar'])
                         ->update([
                             'feeder' => 0,
-                            'rencana_minggu_pertemuan' => $d['rencana_minggu_pertemuan']
+                            'rencana_minggu_pertemuan' => $d['rencana_minggu_pertemuan'],
                         ]);
                 }
             }

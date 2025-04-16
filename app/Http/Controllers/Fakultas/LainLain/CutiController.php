@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers\Fakultas\LainLain;
 
-use Ramsey\Uuid\Uuid;
-use App\Models\Semester;
-use App\Models\ProgramStudi;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\PengajuanCuti;
-use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\ProgramStudi;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Illuminate\Http\Request;
 
 class CutiController extends Controller
 {
@@ -28,14 +26,14 @@ class CutiController extends Controller
         $fak_id = auth()->user()->fk_id;
 
         $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                    ->orderBy('id_jenjang_pendidikan')
-                    ->orderBy('nama_program_studi')
-                    ->pluck('id_prodi');
-        
+            ->orderBy('id_jenjang_pendidikan')
+            ->orderBy('nama_program_studi')
+            ->pluck('id_prodi');
+
         $data = PengajuanCuti::with(['prodi', 'riwayat'])
-                    ->whereIn('id_prodi', $id_prodi_fak)
-                    ->where('id_semester', $semester_view)
-                    ->get();
+            ->whereIn('id_prodi', $id_prodi_fak)
+            ->where('id_semester', $semester_view)
+            ->get();
         // dd($data);
 
         return view('fakultas.lain-lain.pengajuan-cuti.index', [
@@ -50,7 +48,7 @@ class CutiController extends Controller
         // dd($cuti);
         $store = $cuti->update([
             'approved' => 1,
-            'alasan_pembatalan' => NULL
+            'alasan_pembatalan' => null,
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan Cuti berhasil disimpan');
@@ -58,9 +56,9 @@ class CutiController extends Controller
 
     public function pembatalan_cuti(Request $request, $cuti)
     {
-        PengajuanCuti::where('id_cuti',$cuti)->update([
+        PengajuanCuti::where('id_cuti', $cuti)->update([
             'approved' => 3,
-            'alasan_pembatalan' => $request->alasan_pembatalan
+            'alasan_pembatalan' => $request->alasan_pembatalan,
         ]);
 
         return redirect()->back()->with('success', 'Pengajuan Cuti berhasil dibatalkan');

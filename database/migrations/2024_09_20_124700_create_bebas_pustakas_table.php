@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('bebas_pustakas', function (Blueprint $table) {
             $table->id();
-            $table->string("id_registrasi_mahasiswa")->nullable();
+            $table->string('id_registrasi_mahasiswa')->nullable();
             $table->foreign('id_registrasi_mahasiswa')->references('id_registrasi_mahasiswa')->on('riwayat_pendidikans')->onDelete('set null');
             $table->text('file_bebas_pustaka');
             $table->text('link_repo');

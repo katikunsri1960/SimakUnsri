@@ -4,11 +4,11 @@ namespace App\Http\Controllers\Prodi\Report;
 
 use App\Http\Controllers\Controller;
 use App\Models\CutiManual;
+use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\PenundaanBayar;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Mahasiswa\PrestasiMahasiswa;
 use Illuminate\Http\Request;
 
 class ReportController extends Controller
@@ -21,11 +21,11 @@ class ReportController extends Controller
 
         $semester_aktif = SemesterAktif::first()->id_semester;
         $semester = Semester::select('id_semester', 'nama_semester')
-                    ->where('id_semester', '<=', $semester_aktif)
-                    ->whereNot('semester', 3)
-                    ->orderBy('id_semester', 'desc')->get();
+            ->where('id_semester', '<=', $semester_aktif)
+            ->whereNot('semester', 3)
+            ->orderBy('id_semester', 'desc')->get();
 
-        $db = new CutiManual();
+        $db = new CutiManual;
 
         $data = $db->with(['riwayat'])->filter($request)->where('id_prodi', auth()->user()->fk_id)->get();
 
@@ -52,16 +52,16 @@ class ReportController extends Controller
     {
         $semester_aktif = SemesterAktif::first()->id_semester;
         $semester = Semester::select('id_semester', 'nama_semester')
-                    ->where('id_semester', '<=', $semester_aktif)
-                    ->whereNot('semester', 3)
-                    ->orderBy('id_semester', 'desc')->get();
+            ->where('id_semester', '<=', $semester_aktif)
+            ->whereNot('semester', 3)
+            ->orderBy('id_semester', 'desc')->get();
 
-        $db = new PenundaanBayar();
+        $db = new PenundaanBayar;
 
         $data = $db->with(['riwayat'])->filter($request)
-                ->whereHas('riwayat', function($q) {
-                    $q->where('id_prodi', auth()->user()->fk_id);
-                })->get();
+            ->whereHas('riwayat', function ($q) {
+                $q->where('id_prodi', auth()->user()->fk_id);
+            })->get();
 
         $status = PenundaanBayar::STATUS;
         $total = $data->count();
@@ -85,7 +85,7 @@ class ReportController extends Controller
     public function aktivitas_penelitian()
     {
         $id_prodi = auth()->user()->fk_id;
-        $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id_prodi', $id_prodi)->whereIn('id_jenis_aktivitas', ['15','23'])->get();
+        $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id_prodi', $id_prodi)->whereIn('id_jenis_aktivitas', ['15', '23'])->get();
 
         return view('prodi.report.penelitian-mahasiswa.index', ['data' => $data]);
     }
@@ -97,12 +97,12 @@ class ReportController extends Controller
             'biodata_mahasiswa',
             'biodata_mahasiswa.riwayat_pendidikan' => function ($query) use ($id_prodi) {
                 $query->where('id_prodi', $id_prodi);
-            }
+            },
         ])
-        ->whereHas('biodata_mahasiswa.riwayat_pendidikan', function ($query) use ($id_prodi) {
-            $query->where('id_prodi', $id_prodi);
-        })
-        ->get();    
+            ->whereHas('biodata_mahasiswa.riwayat_pendidikan', function ($query) use ($id_prodi) {
+                $query->where('id_prodi', $id_prodi);
+            })
+            ->get();
 
         // dd($data);
         return view('prodi.report.prestasi-mahasiswa.index', ['data' => $data]);

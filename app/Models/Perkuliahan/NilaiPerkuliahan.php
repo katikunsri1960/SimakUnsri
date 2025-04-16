@@ -2,14 +2,15 @@
 
 namespace App\Models\Perkuliahan;
 
-use App\Models\Semester;
 use App\Models\ProgramStudi;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\Semester;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class NilaiPerkuliahan extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function prodi()

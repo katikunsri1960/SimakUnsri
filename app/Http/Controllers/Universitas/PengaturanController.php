@@ -2,19 +2,19 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Models\SemesterAktif;
-use App\Models\Referensi\PeriodePerkuliahan;
 use App\Http\Controllers\Controller;
 use App\Imports\PeriodeImport;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Fakultas;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\ProgramStudi;
+use App\Models\Referensi\PeriodePerkuliahan;
 use App\Models\Semester;
+use App\Models\SemesterAktif;
 use App\Models\SkalaNilai;
 use App\Models\User;
-use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -38,20 +38,20 @@ class PengaturanController extends Controller
         return view('universitas.pengaturan.periode-perkuliahan.index', [
             'data' => $data,
             'semester' => $semester,
-            'prodi' => $prodi
+            'prodi' => $prodi,
         ]);
     }
 
     public function periode_perkuliahan_upload(Request $request)
     {
         $data = $request->validate([
-            'file' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-        $import = Excel::import(new PeriodeImport(), $file);
+        $import = Excel::import(new PeriodeImport, $file);
 
-        return redirect()->back()->with('success', "Data successfully imported!");
+        return redirect()->back()->with('success', 'Data successfully imported!');
     }
 
     public function sync_periode_perkuliahan()
@@ -75,6 +75,7 @@ class PengaturanController extends Controller
             $data = array_map(function ($value) {
                 $value['tanggal_awal_perkuliahan'] = empty($value['tanggal_awal_perkuliahan']) ? null : date('Y-m-d', strtotime($value['tanggal_awal_perkuliahan']));
                 $value['tanggal_akhir_perkuliahan'] = empty($value['tanggal_akhir_perkuliahan']) ? null : date('Y-m-d', strtotime($value['tanggal_akhir_perkuliahan']));
+
                 return $value;
             }, $data);
 
@@ -89,9 +90,10 @@ class PengaturanController extends Controller
     {
         $semester = Semester::orderBy('id_semester', 'desc')->get();
         $data = SemesterAktif::where('id', 1)->first();
+
         return view('universitas.pengaturan.semester-aktif', [
             'semester' => $semester,
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -108,14 +110,13 @@ class PengaturanController extends Controller
             'tanggal_akhir_kprs' => 'required',
             'batas_bayar_ukt' => 'required',
             'tgl_mulai_pengajuan_cuti' => 'required',
-            'tgl_selesai_pengajuan_cuti' => 'required'
+            'tgl_selesai_pengajuan_cuti' => 'required',
         ]);
         // dd($data);
         $data['id'] = 1;
 
-
-
         SemesterAktif::updateOrCreate(['id' => 1], $data);
+
         // dd($data);
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
@@ -123,8 +124,9 @@ class PengaturanController extends Controller
     public function skala_nilai()
     {
         $data = SkalaNilai::with('prodi')->get();
+
         return view('universitas.pengaturan.skala-nilai.index', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -149,6 +151,7 @@ class PengaturanController extends Controller
             $data = array_map(function ($value) {
                 $value['tanggal_mulai_efektif'] = empty($value['tanggal_mulai_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_mulai_efektif']));
                 $value['tanggal_akhir_efektif'] = empty($value['tanggal_akhir_efektif']) ? null : date('Y-m-d', strtotime($value['tanggal_akhir_efektif']));
+
                 return $value;
             }, $data);
 
@@ -176,10 +179,9 @@ class PengaturanController extends Controller
         $query = User::query();
 
         if ($searchValue) {
-            $query = $query->where('username', 'like', '%' . $searchValue . '%')
-                ->orWhere('name', 'like', '%' . $searchValue . '%');
+            $query = $query->where('username', 'like', '%'.$searchValue.'%')
+                ->orWhere('name', 'like', '%'.$searchValue.'%');
         }
-
 
         $recordsFiltered = $query->count();
 
@@ -200,7 +202,7 @@ class PengaturanController extends Controller
             //         ->orderBy('prodi.nama_program_studi', $orderDirection)
             //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
             // } else {
-                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            $query = $query->orderBy($columns[$orderColumn], $orderDirection);
             // }
         }
 
@@ -239,16 +241,17 @@ class PengaturanController extends Controller
     public function akun_destroy(User $user)
     {
         $user->delete();
+
         return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
 
     public function get_dosen(Request $request)
     {
-        $db = new BiodataDosen();
+        $db = new BiodataDosen;
 
         $data = $db->where('id_jenis_sdm', 12)
-                    ->where('nama_dosen', 'like', '%'.$request->q.'%')
-                    ->orWhere('nidn', 'like', '%'.$request->q.'%')->get();
+            ->where('nama_dosen', 'like', '%'.$request->q.'%')
+            ->orWhere('nidn', 'like', '%'.$request->q.'%')->get();
 
         return response()->json($data);
 
@@ -256,18 +259,18 @@ class PengaturanController extends Controller
 
     public function get_mahasiswa(Request $request)
     {
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
 
         $data = $db->where('nim', 'like', '%'.$request->q.'%')
-                    ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
-                    ->orderBy('id_periode_masuk', 'desc')->get();
+            ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
+            ->orderBy('id_periode_masuk', 'desc')->get();
 
         return response()->json($data);
     }
 
     public function get_fakultas(Request $request)
     {
-        $db = new Fakultas();
+        $db = new Fakultas;
 
         $data = $db->where('nama_fakultas', 'like', '%'.$request->q.'%')->get();
 
@@ -294,11 +297,11 @@ class PengaturanController extends Controller
 
             DB::commit();
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             DB::rollback();
+
             return redirect()->back()->with('error', 'Data gagal disimpan. ');
         }
-
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
@@ -333,13 +336,13 @@ class PengaturanController extends Controller
             'password' => 'required|confirmed',
         ]);
 
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
         $mhs = $db->where('id_registrasi_mahasiswa', $data['fk_id'])->first();
 
         $data['password'] = bcrypt($data['password']);
         $data['name'] = $mhs->nama_mahasiswa;
         $data['username'] = $mhs->nim;
-        $data['email'] = $mhs->nim."@student.unsri.ac.id";
+        $data['email'] = $mhs->nim.'@student.unsri.ac.id';
         $data['role'] = 'mahasiswa';
 
         try {
@@ -348,6 +351,7 @@ class PengaturanController extends Controller
             DB::commit();
         } catch (\Throwable $th) {
             DB::rollback();
+
             return redirect()->back()->with('error', 'Data gagal disimpan. ');
         }
 

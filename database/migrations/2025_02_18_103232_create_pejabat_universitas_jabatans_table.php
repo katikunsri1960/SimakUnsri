@@ -25,10 +25,9 @@ return new class extends Migration
             'Wakil Rektor Bidang Perencanaan dan Kerjasama',
         ];
 
-        foreach($data as $d)
-        {
+        foreach ($data as $d) {
             \App\Models\Referensi\PejabatUniversitasJabatan::create([
-                'nama' => $d
+                'nama' => $d,
             ]);
         }
     }

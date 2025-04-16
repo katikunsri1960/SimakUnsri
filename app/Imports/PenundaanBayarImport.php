@@ -10,11 +10,8 @@ use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class PenundaanBayarImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
+class PenundaanBayarImport implements SkipsEmptyRows, ToCollection, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
     public function collection(Collection $collection)
     {
         ini_set('max_execution_time', 300);
@@ -27,7 +24,7 @@ class PenundaanBayarImport implements ToCollection, WithHeadingRow, SkipsEmptyRo
                 // dd($row);
                 $mahasiswa = RiwayatPendidikan::where('nim', $row['nim'])->orderBy('id_periode_masuk', 'desc')->first();
 
-                if (!$mahasiswa) {
+                if (! $mahasiswa) {
                     dd("Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!");
                 }
 

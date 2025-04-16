@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Usept extends Model
 {
     use HasFactory;
+
     protected $connection = 'usept_con'; // Koneksi USEPT
+
     protected $table = 'toefl_result';
 }

@@ -2,15 +2,16 @@
 
 namespace App\Models\Perkuliahan;
 
-use App\Models\Semester;
-use App\Models\ProgramStudi;
 use App\Models\Dosen\BiodataDosen as Dosen;
+use App\Models\ProgramStudi;
+use App\Models\Semester;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class DosenPengajarKelasKuliah extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function dosen()
@@ -32,7 +33,7 @@ class DosenPengajarKelasKuliah extends Model
     {
         return $this->belongsTo(Semester::class, 'id_semester', 'id_semester');
     }
-    
+
     public function peserta_kelas()
     {
         return $this->hasManyThrough(PesertaKelasKuliah::class, KelasKuliah::class, 'id_kelas_kuliah', 'id_kelas_kuliah', 'id_kelas_kuliah', 'id_kelas_kuliah');

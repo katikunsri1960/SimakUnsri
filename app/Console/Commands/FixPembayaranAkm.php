@@ -9,7 +9,6 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\PembayaranManualMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\SemesterAktif;
-use Carbon\Carbon;
 use Illuminate\Console\Command;
 
 class FixPembayaranAkm extends Command
@@ -38,12 +37,12 @@ class FixPembayaranAkm extends Command
         $semester_aktif = SemesterAktif::first();
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::where('feeder', 0)
-                            ->where('id_semester', $semester_aktif->id_semester)->whereNull('id_pembiayaan')->get();
+            ->where('id_semester', $semester_aktif->id_semester)->whereNull('id_pembiayaan')->get();
 
         foreach ($aktivitas_kuliah as $akm) {
             $req = $this->checkPembayaran($akm->id_registrasi_mahasiswa, $semester_aktif->id_semester);
 
-            $this->info($req['status']. ' - '. $req['message']. ' - '. $req['data']);
+            $this->info($req['status'].' - '.$req['message'].' - '.$req['data']);
         }
 
     }
@@ -51,16 +50,16 @@ class FixPembayaranAkm extends Command
     private function checkPembayaran($id_reg, $semester_aktif)
     {
         $nim = RiwayatPendidikan::with('pembimbing_akademik')
-                ->select('riwayat_pendidikans.*')
-                ->where('id_registrasi_mahasiswa', $id_reg)
-                ->first();
+            ->select('riwayat_pendidikans.*')
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->first();
 
         // dd($id_test);
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
         // dd($beasiswa);
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif)->where('feeder', 0)->first();
 
-        if($beasiswa){
+        if ($beasiswa) {
 
             $akm->update([
                 'id_pembiayaan' => 3,
@@ -70,7 +69,7 @@ class FixPembayaranAkm extends Command
             return [
                 'status' => 'success',
                 'message' => 'Beasiswa',
-                'data' => $nim->nim.' - '.$nim->nama_mahasiswa
+                'data' => $nim->nim.' - '.$nim->nama_mahasiswa,
             ];
         }
 
@@ -85,16 +84,16 @@ class FixPembayaranAkm extends Command
             return [
                 'status' => 'success',
                 'message' => 'Manual Pembayaran',
-                'data' => $nim->nim.' - '.$nim->nama_mahasiswa
+                'data' => $nim->nim.' - '.$nim->nama_mahasiswa,
             ];
         }
 
         $id_test = Registrasi::where('rm_nim', $nim->nim)->pluck('rm_no_test')->first();
 
         $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim->nim])
-                    ->where('tagihan.kode_periode', $semester_aktif)
-                    ->first();
+            ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim->nim])
+            ->where('tagihan.kode_periode', $semester_aktif)
+            ->first();
 
         if ($tagihan) {
             $akm->update([
@@ -105,14 +104,14 @@ class FixPembayaranAkm extends Command
             return [
                 'status' => 'success',
                 'message' => 'Tagihan',
-                'data' => $nim->nim.' - '.$nim->nama_mahasiswa
+                'data' => $nim->nim.' - '.$nim->nama_mahasiswa,
             ];
         }
 
         return [
             'status' => 'error',
             'message' => 'Tidak ada pembayaran',
-            'data' => $nim->nim.' - '.$nim->nama_mahasiswa
+            'data' => $nim->nim.' - '.$nim->nama_mahasiswa,
         ];
 
     }

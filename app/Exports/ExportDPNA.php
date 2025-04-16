@@ -5,23 +5,23 @@ namespace App\Exports;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\SkalaNilai;
+use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\FromCollection;
-use Maatwebsite\Excel\Concerns\WithHeadings;
+use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 use Maatwebsite\Excel\Concerns\WithEvents;
+use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithMapping;
 use Maatwebsite\Excel\Events\AfterSheet;
-use Maatwebsite\Excel\Concerns\RegistersEventListeners;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
-use PhpOffice\PhpSpreadsheet\Style\Protection;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\NumberFormat;
-use Illuminate\Support\Facades\DB;
+use PhpOffice\PhpSpreadsheet\Style\Protection;
 
-class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMapping
+class ExportDPNA implements FromCollection, WithEvents, WithHeadings, WithMapping
 {
     use RegistersEventListeners;
-    
+
     public function __construct(string $kelas, string $prodi)
     {
         $this->kelas = $kelas;
@@ -30,100 +30,100 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         $this->bobot_participatory = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
             ->where('id_jenis_evaluasi', 2)
             ->first()->bobot_evaluasi;
-        
+
         $this->bobot_project = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
             ->where('id_jenis_evaluasi', 3)
             ->first()->bobot_evaluasi;
-        
+
         $this->bobot_assignment = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
             ->where('id_jenis_evaluasi', 4)
             ->where('nomor_urut', 3)
             ->first()->bobot_evaluasi;
-        
+
         $this->bobot_quiz = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
             ->where('id_jenis_evaluasi', 4)
             ->where('nomor_urut', 4)
             ->first()->bobot_evaluasi;
-        
+
         $this->bobot_midterm = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
             ->where('id_jenis_evaluasi', 4)
             ->where('nomor_urut', 5)
             ->first()->bobot_evaluasi;
-        
+
         $this->bobot_finalterm = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)
             ->where('id_jenis_evaluasi', 4)
             ->where('nomor_urut', 6)
             ->first()->bobot_evaluasi;
 
-        //Get Skala Nilai Prodi
+        // Get Skala Nilai Prodi
         $this->batas_min_A = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'A')
             ->first()->bobot_minimum;
-        
+
         $this->batas_max_A = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'A')
             ->first()->bobot_maksimum;
-        
+
         $this->batas_min_B = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'B')
             ->first()->bobot_minimum;
-        
+
         $this->batas_max_B = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'B')
             ->first()->bobot_maksimum;
-        
+
         $this->batas_min_C = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'C')
             ->first()->bobot_minimum;
-        
+
         $this->batas_max_C = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'C')
             ->first()->bobot_maksimum;
-        
+
         $this->batas_min_D = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'D')
             ->first()->bobot_minimum;
-        
+
         $this->batas_max_D = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'D')
             ->first()->bobot_maksimum;
-        
+
         $this->batas_min_E = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'E')
             ->first()->bobot_minimum;
-        
+
         $this->batas_max_E = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'E')
             ->first()->bobot_maksimum;
 
-        //Skala Nilai Statik
+        // Skala Nilai Statik
         // $this->batas_min_A = 86.00;
-        
+
         // $this->batas_max_A = 100.00;
-        
+
         // $this->batas_min_B = 71.00;
-        
+
         // $this->batas_max_B = 85.99;
-        
+
         // $this->batas_min_C = 56.00;
-        
+
         // $this->batas_max_C = 70.99;
-        
+
         // $this->batas_min_D = 41.00;
-        
+
         // $this->batas_max_D = 55.99;
-        
+
         // $this->batas_min_E = 00.00;
-        
+
         // $this->batas_max_E = 40.99;
-    }  
+    }
 
     /**
-    * @return \Illuminate\Support\Collection
-    */
+     * @return \Illuminate\Support\Collection
+     */
     public function collection()
     {
-        //Get kelas information (kelas, peserta kelas, nilai komponen evaluasi)
+        // Get kelas information (kelas, peserta kelas, nilai komponen evaluasi)
         $data_kelas = KelasKuliah::select([
             'mata_kuliahs.kode_mata_kuliah',
             'mata_kuliahs.nama_mata_kuliah',
@@ -165,19 +165,17 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
                         AND nilai_komponen_evaluasis.id_jns_eval = '4' 
                         AND nilai_komponen_evaluasis.urutan = '6') AS nilai_uas"),
         ])
-        ->LeftJoin('peserta_kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
-        ->LeftJoin('mata_kuliahs', 'kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
-        ->where('kelas_kuliahs.id_kelas_kuliah', $this->kelas)
-        ->orderBy('peserta_kelas_kuliahs.nim', 'ASC')
-        ->get();
-        
+            ->LeftJoin('peserta_kelas_kuliahs', 'kelas_kuliahs.id_kelas_kuliah', '=', 'peserta_kelas_kuliahs.id_kelas_kuliah')
+            ->LeftJoin('mata_kuliahs', 'kelas_kuliahs.id_matkul', '=', 'mata_kuliahs.id_matkul')
+            ->where('kelas_kuliahs.id_kelas_kuliah', $this->kelas)
+            ->orderBy('peserta_kelas_kuliahs.nim', 'ASC')
+            ->get();
+
         return $data_kelas;
     }
 
     /**
      * Define the headings for the Excel file.
-     *
-     * @return array
      */
     public function headings(): array
     {
@@ -195,13 +193,12 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             'Nilai UAS',
             'Nilai Angka',
             'Nilai Indeks',
-            'Nilai Huruf'
+            'Nilai Huruf',
         ];
     }
 
     /**
      * Map data for each row.
-     * @return array
      */
     public function map($data_kelas): array
     {
@@ -223,7 +220,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
     public function registerEvents(): array
     {
         return [
-            AfterSheet::class => function(AfterSheet $event) {
+            AfterSheet::class => function (AfterSheet $event) {
                 $this->afterSheet($event);
             },
         ];
@@ -277,7 +274,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         ]);
 
         // Apply borders and alignment to all data cells
-        $sheet->getStyle('A2:N' . $highestRow)->applyFromArray([
+        $sheet->getStyle('A2:N'.$highestRow)->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_LEFT,
                 'vertical' => Alignment::VERTICAL_CENTER,
@@ -292,7 +289,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
 
         // Add formula in the column (L) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
-            $cell = 'L' . $row;
+            $cell = 'L'.$row;
             $formula = "=F{$row}*{$this->bobot_participatory} + G{$row}*{$this->bobot_project} + H{$row}*{$this->bobot_assignment} + I{$row}*{$this->bobot_quiz} + J{$row}*{$this->bobot_midterm} + K{$row}*{$this->bobot_finalterm}";
 
             $sheet->setCellValue($cell, $formula);
@@ -300,24 +297,24 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
 
         // Add formula in the column (M) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
-            $cell = 'M' . $row;
+            $cell = 'M'.$row;
             $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))";
-            
+
             $sheet->setCellValue($cell, $formula);
         }
 
         // Add formula in the column (N) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
-            $cell = 'N' . $row;
+            $cell = 'N'.$row;
             $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Perbaiki Skala Nilai Feeder\"))))))";
-            
+
             $sheet->setCellValue($cell, $formula);
         }
 
         // Set number format for columns L and M
-        $sheet->getStyle('F2:M' . $highestRow)
-              ->getNumberFormat()
-              ->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
+        $sheet->getStyle('F2:M'.$highestRow)
+            ->getNumberFormat()
+            ->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
 
         // $sheet->getStyle('M2:M' . $highestRow)
         //       ->getNumberFormat()
@@ -326,15 +323,15 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         // Lock specific columns
         $columnsToLock = ['A', 'B', 'C', 'D', 'E', 'L', 'M', 'N'];
         foreach ($columnsToLock as $column) {
-            $sheet->getStyle($column . '1:' . $column . $highestRow)
+            $sheet->getStyle($column.'1:'.$column.$highestRow)
                 ->getProtection()
                 ->setLocked(Protection::PROTECTION_PROTECTED);
         }
 
         // Ensure other cells are unlocked before applying sheet protection
         $sheet->getStyle('F2:K'.$highestRow)
-              ->getProtection()
-              ->setLocked(Protection::PROTECTION_UNPROTECTED);
+            ->getProtection()
+            ->setLocked(Protection::PROTECTION_UNPROTECTED);
 
         // Enable sheet protection but allow other cells to be editable
         $pwd = bin2hex(openssl_random_pseudo_bytes(4));

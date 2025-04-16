@@ -19,14 +19,14 @@ return new class extends Migration
 
                 // Tambahkan foreign key baru dengan opsi onUpdate('cascade')
                 $table->foreign('id_kelas_kuliah')
-                      ->references('id_kelas_kuliah')
-                      ->on('kelas_kuliahs')
-                      ->onUpdate('cascade'); // Tambahkan opsi onUpdate cascade
+                    ->references('id_kelas_kuliah')
+                    ->on('kelas_kuliahs')
+                    ->onUpdate('cascade'); // Tambahkan opsi onUpdate cascade
 
                 $table->foreign('id_jenis_evaluasi')
-                      ->references('id_jenis_evaluasi')
-                      ->on('jenis_evaluasis')
-                      ->onUpdate('cascade'); // Tambahkan opsi onUpdate cascade
+                    ->references('id_jenis_evaluasi')
+                    ->on('jenis_evaluasis')
+                    ->onUpdate('cascade'); // Tambahkan opsi onUpdate cascade
             });
         });
     }
@@ -42,12 +42,12 @@ return new class extends Migration
 
             // Tambahkan foreign key lama tanpa opsi onUpdate cascade
             $table->foreign('id_kelas_kuliah')
-                  ->references('id_kelas_kuliah')
-                  ->on('kelas_kuliahs');
+                ->references('id_kelas_kuliah')
+                ->on('kelas_kuliahs');
 
             $table->foreign('id_jenis_evaluasi')
-                  ->references('id_jenis_evaluasi')
-                  ->on('jenis_evaluasis');
+                ->references('id_jenis_evaluasi')
+                ->on('jenis_evaluasis');
         });
     }
 };

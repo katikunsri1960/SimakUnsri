@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ikatan_kerjas', function (Blueprint $table) {
             $table->id();
-            $table->string("id_ikatan_kerja")->nullable()->unique();
+            $table->string('id_ikatan_kerja')->nullable()->unique();
             $table->index('id_ikatan_kerja', 'idx_ikatan_kerja');
             $table->string('nama_ikatan_kerja')->nullable();
             $table->timestamps();

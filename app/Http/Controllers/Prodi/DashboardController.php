@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Prodi;
 
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use Illuminate\Http\Request;
 
 class DashboardController extends Controller
 {
@@ -14,7 +13,7 @@ class DashboardController extends Controller
         // distinct('keterangan_keluar') from riwayat_pendidikan
 
         $riwayat = RiwayatPendidikan::select('keterangan_keluar')->distinct()->get();
-        
+
         // $status = RiwayatPendidikan::distinct('keterangan_keluar')->get();
         // dd($status);
         return view('prodi.dashboard');

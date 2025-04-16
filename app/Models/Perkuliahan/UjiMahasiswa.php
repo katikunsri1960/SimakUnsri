@@ -3,14 +3,15 @@
 namespace App\Models\Perkuliahan;
 
 use App\Models\Dosen\BiodataDosen;
+use App\Models\Referensi\KategoriKegiatan;
 use App\Models\SemesterAktif;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\Referensi\KategoriKegiatan;
 
 class UjiMahasiswa extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function aktivitas_mahasiswa()
@@ -35,12 +36,12 @@ class UjiMahasiswa extends Model
 
     public function uji_dosen_semester($id_dosen)
     {
-        $id_semester = SemesterAktif::where('id',1)->pluck('id_semester')->first() ?? (date('m') >= 8 ? (date('Y').'1') : (date('Y')-1).'2');
+        $id_semester = SemesterAktif::where('id', 1)->pluck('id_semester')->first() ?? (date('m') >= 8 ? (date('Y').'1') : (date('Y') - 1).'2');
 
         return $this->with('aktivitas_mahasiswa')
-                    ->where('id_dosen', $id_dosen)
-                    ->whereHas('aktivitas_mahasiswa', function ($query) use ($id_semester) {
-                        $query->where('id_semester', $id_semester);
-                    })->get();
+            ->where('id_dosen', $id_dosen)
+            ->whereHas('aktivitas_mahasiswa', function ($query) use ($id_semester) {
+                $query->where('id_semester', $id_semester);
+            })->get();
     }
 }

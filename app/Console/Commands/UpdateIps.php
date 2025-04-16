@@ -49,17 +49,18 @@ class UpdateIps extends Command
                 ->get();
 
             $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
-                        ->where('id_semester', $semester)
-                        ->where('ang.id_registrasi_mahasiswa', $akm->id_registrasi_mahasiswa)
-                        ->get();
+                ->where('id_semester', $semester)
+                ->where('ang.id_registrasi_mahasiswa', $akm->id_registrasi_mahasiswa)
+                ->get();
 
             $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $akm->id_registrasi_mahasiswa)
-                        ->where('id_semester', $semester)
-                        ->get();
+                ->where('id_semester', $semester)
+                ->get();
 
             $total_sks_semester = $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah');
-            $bobot = 0; $bobot_transfer= 0; $bobot_konversi= 0;
-
+            $bobot = 0;
+            $bobot_transfer = 0;
+            $bobot_konversi = 0;
 
             // dd($semester, $tahun_ajaran, $prodi);
             foreach ($khs as $t) {
@@ -74,16 +75,16 @@ class UpdateIps extends Command
                 $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
             }
 
-            $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
+            $total_bobot = $bobot + $bobot_transfer + $bobot_konversi;
 
             $ips = 0;
-            if($total_sks_semester > 0){
+            if ($total_sks_semester > 0) {
                 $ips = $total_bobot / $total_sks_semester;
             }
 
             $transkrip = TranskripMahasiswa::select(
-                    'sks_mata_kuliah','nilai_indeks'
-                )
+                'sks_mata_kuliah', 'nilai_indeks'
+            )
                 ->where('id_registrasi_mahasiswa', $akm->id_registrasi_mahasiswa)
                 ->whereNotIn('nilai_huruf', ['F', ''])
                 ->get();
@@ -97,17 +98,17 @@ class UpdateIps extends Command
 
             $ipk = 0;
 
-            if($total_sks_transkrip > 0){
+            if ($total_sks_transkrip > 0) {
                 $ipk = $total_bobot_transkrip / $total_sks_transkrip;
             }
 
             // Update nilai IPS pada tabel
             $akm->update([
-                'feeder'=>0,
+                'feeder' => 0,
                 'sks_semester' => $total_sks_semester,
                 'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
                 'ipk' => round($ipk, 2), // Simpan dengan pembulatan 2 desimal
-                'sks_total' => $total_sks_transkrip
+                'sks_total' => $total_sks_transkrip,
             ]);
 
             $bar->advance();

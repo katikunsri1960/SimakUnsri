@@ -12,8 +12,9 @@ class GelarLulusanController extends Controller
     public function index()
     {
         $data = ProgramStudi::with(['gelar_lulusan', 'fakultas'])->where('status', 'A')->orderBy('kode_program_studi')->get();
+
         return view('bak.gelar-lulusan.index', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -25,7 +26,7 @@ class GelarLulusanController extends Controller
 
         return view('bak.gelar-lulusan.edit', [
             'prodi' => $prodi,
-            'gelar' => $gelar
+            'gelar' => $gelar,
         ]);
     }
 

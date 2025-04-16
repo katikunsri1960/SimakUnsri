@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SubstansiKuliah extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 }

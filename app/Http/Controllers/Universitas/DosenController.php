@@ -6,16 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
-use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\Bus;
 
 class DosenController extends Controller
 {
-
     private function count_value($act)
     {
-        $data = new FeederAPI($act,0,0, '');
+        $data = new FeederAPI($act, 0, 0, '');
         $response = $data->runWS();
         $count = $response['data'];
 
@@ -24,8 +22,9 @@ class DosenController extends Controller
 
     public function dosen()
     {
-        $db = new BiodataDosen();
+        $db = new BiodataDosen;
         $data = $db->list_dosen();
+
         // dd($data);
         return view('universitas.dosen.index', [
             'data' => $data,
@@ -35,7 +34,7 @@ class DosenController extends Controller
     public function sync_dosen()
     {
         $data = [
-            ['act' => 'DetailBiodataDosen', 'count' => 'GetCountDosen', 'primary' => 'id_dosen', 'job' => \App\Jobs\Dosen\BiodataJob::class]
+            ['act' => 'DetailBiodataDosen', 'count' => 'GetCountDosen', 'primary' => 'id_dosen', 'job' => \App\Jobs\Dosen\BiodataJob::class],
         ];
 
         $batch = Bus::batch([])->dispatch();
@@ -48,7 +47,7 @@ class DosenController extends Controller
             $act = $d['act'];
             $order = $d['primary'];
 
-            for ($i=0; $i < $count; $i+=$limit) {
+            for ($i = 0; $i < $count; $i += $limit) {
                 $job = new $d['job']($act, $limit, $i, $order);
                 $batch->add($job);
             }
@@ -77,7 +76,7 @@ class DosenController extends Controller
 
         $batch = Bus::batch([])->dispatch();
 
-        for($i=0; $i < $count; $i+=$limit) {
+        for ($i = 0; $i < $count; $i += $limit) {
             $job = new \App\Jobs\Dosen\PenugasanDosenJob($act, $limit, $i, $order);
             $batch->add($job);
         }
@@ -110,13 +109,13 @@ class DosenController extends Controller
                 'name' => 'fungsional-dosen',
                 'model' => \App\Models\Dosen\RiwayatFungsionalDosen::class,
                 'primary' => ['id_dosen', 'id_jabatan_fungsional'],
-            ]
+            ],
         ];
 
         $dosen = BiodataDosen::pluck('id_dosen')->toArray();
         $dosen = array_chunk($dosen, 10);
         $dosen = array_map(function ($value) {
-            return "id_dosen IN ('" . implode("','", $value) . "')";
+            return "id_dosen IN ('".implode("','", $value)."')";
         }, $dosen);
 
         $batch = Bus::batch([])->name('riwayat-dosen')->dispatch();
@@ -128,7 +127,6 @@ class DosenController extends Controller
                 $batch->add(new $data['job']($data['act'], $data['limit'], $data['offset'], $data['order'], $filter, $data['model'], $data['primary']));
             }
         }
-
 
         return redirect()->back()->with('success', 'Sinkronisasi Nilai Perkuliahan Berhasil!');
     }

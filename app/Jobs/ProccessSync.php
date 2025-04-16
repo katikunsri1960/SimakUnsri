@@ -2,20 +2,30 @@
 
 namespace App\Jobs;
 
+use App\Services\Feeder\FeederAPI;
+use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Bus\Batchable;
-use App\Services\Feeder\FeederAPI;
 
 class ProccessSync implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    private $model, $act, $limit, $offset, $order, $filter;
+    private $model;
+
+    private $act;
+
+    private $limit;
+
+    private $offset;
+
+    private $order;
+
+    private $filter;
+
     /**
      * Create a new job instance.
      */
@@ -37,7 +47,6 @@ class ProccessSync implements ShouldQueue
         $api = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
 
         $result = $api->runWS();
-
 
         foreach ($result['data'] as $d) {
 

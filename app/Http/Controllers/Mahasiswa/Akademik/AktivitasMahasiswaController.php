@@ -2,27 +2,25 @@
 
 namespace App\Http\Controllers\Mahasiswa\Akademik;
 
-use Carbon\Carbon;
-use Ramsey\Uuid\Uuid;
-use App\Models\Semester;
-use App\Models\ProgramStudi;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\Dosen\BiodataDosen;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\AsistensiAkhir;
+use App\Models\Dosen\BiodataDosen;
 use App\Models\Dosen\PenugasanDosen;
+use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
+use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\Konversi;
 use App\Models\Perkuliahan\MataKuliah;
-use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\BimbingMahasiswa;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
-
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Ramsey\Uuid\Uuid;
 
 class AktivitasMahasiswaController extends Controller
 {
@@ -31,19 +29,19 @@ class AktivitasMahasiswaController extends Controller
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
-        ->where('id_registrasi_mahasiswa', $id_reg)
-        ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
-        ->first();
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+            ->first();
 
         $prodi_id = $riwayat_pendidikan->id_prodi;
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->whereNotIn('id_status_mahasiswa', ['N'])
-                    ->orderBy('id_semester', 'DESC')
-                    ->first();
+            ->whereNotIn('id_status_mahasiswa', ['N'])
+            ->orderBy('id_semester', 'DESC')
+            ->first();
 
-        $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
-                    ->first();
+        $semester_aktif = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')
+            ->first();
 
         $krs_akt = AnggotaAktivitasMahasiswa::select(
             'anggota_aktivitas_mahasiswas.*', 'aktivitas_mahasiswas.*', 'bimbing_mahasiswas.*'
@@ -67,11 +65,11 @@ class AktivitasMahasiswaController extends Controller
         $id_reg = auth()->user()->fk_id;
 
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
-        ->where('id_registrasi_mahasiswa', $id_reg)
-        ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
-        ->first();
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+            ->first();
 
-        $mk_konversi=Konversi::where('id_matkul', $id_matkul)->first();
+        $mk_konversi = Konversi::where('id_matkul', $id_matkul)->first();
         // dd($aktivitas_mk);
 
         // $prodi_id = $riwayat_pendidikan->id_prodi;
@@ -79,25 +77,24 @@ class AktivitasMahasiswaController extends Controller
             DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
             // DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ips'),
             DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
-            )
+        )
             ->where('id_registrasi_mahasiswa', $id_reg)
             ->whereNotIn('nilai_huruf', ['F', ''])
             // ->groupBy('id_registrasi_mahasiswa')
             ->first();
-
 
         // $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
         //             ->whereNotIn('id_status_mahasiswa', ['N'])
         //             ->orderBy('id_semester', 'DESC')
         //             ->first();
 
-        $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
-                    ->first();
+        $semester_aktif = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')
+            ->first();
 
         $akm = Semester::orderBy('id_semester', 'ASC')
-                    ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
-                    ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
-                    ->pluck('id_semester');
+            ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+            ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+            ->pluck('id_semester');
 
         // Dapatkan indeks dari semester terakhir dalam koleksi
         $index_semester_terakhir = $akm->search($akm->last());
@@ -114,37 +111,35 @@ class AktivitasMahasiswaController extends Controller
         // dd($akm_sebelum);
 
         $semester_ke = Semester::orderBy('id_semester', 'ASC')
-                    ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
-                    ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
-                    ->count();
-
-
+            ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+            ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+            ->count();
 
         $ips = AktivitasKuliahMahasiswa::select('ips')
-                ->where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $akm_sebelum)
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->where('id_semester', $akm_sebelum)
                 // ->where('id_status_mahasiswa', ['O'])
-                ->orderBy('id_semester', 'DESC')
+            ->orderBy('id_semester', 'DESC')
                 // ->pluck('ips')
-                ->first();
+            ->first();
 
         // dd($mk_konversi->id_matkul);
 
         $riwayat_aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa', 'konversi'])
-                    ->whereHas('bimbing_mahasiswa', function ($query) {
-                        $query->whereNotNull('id_bimbing_mahasiswa');
-                    })
-                    ->whereHas('anggota_aktivitas', function ($query) use ($riwayat_pendidikan) {
-                        $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                            ->where('nim', $riwayat_pendidikan->nim);
-                    })
-                    ->where('mk_konversi', $mk_konversi->id_matkul)
-                    ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                    ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
-                    ->first();
+            ->whereHas('bimbing_mahasiswa', function ($query) {
+                $query->whereNotNull('id_bimbing_mahasiswa');
+            })
+            ->whereHas('anggota_aktivitas', function ($query) use ($riwayat_pendidikan) {
+                $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                    ->where('nim', $riwayat_pendidikan->nim);
+            })
+            ->where('mk_konversi', $mk_konversi->id_matkul)
+            ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+            ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
+            ->first();
 
         // Pastikan untuk mengambil nilai ips
-        $ips = $ips ?  $ips->ips : null;
+        $ips = $ips ? $ips->ips : null;
 
         // dd($riwayat_aktivitas);
 
@@ -175,35 +170,34 @@ class AktivitasMahasiswaController extends Controller
         $dosen_pembimbing = BiodataDosen::select('biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen', 'biodata_dosens.nidn')
                 // ->leftJoin()
                 // ->where('id_prodi', $prodi_id)
-                ->get();
+            ->get();
 
         return view('mahasiswa.perkuliahan.krs.krs-regular.aktivitas-mahasiswa.ambil-aktivitas-mahasiswa',
-        [
-            'id_matkul' => $id_matkul,
-            'transkrip' => $transkrip,
-            'riwayat_pendidikan' => $riwayat_pendidikan,
-            'akm'=>$akm_sebelum,
-            'sks_max'=>$sks_max,
-            'mk_konversi'=>$mk_konversi,
-            'dosen_bimbing_aktivitas'=>$dosen_pembimbing,
-            'riwayat_aktivitas' => $riwayat_aktivitas
-        ]);
+            [
+                'id_matkul' => $id_matkul,
+                'transkrip' => $transkrip,
+                'riwayat_pendidikan' => $riwayat_pendidikan,
+                'akm' => $akm_sebelum,
+                'sks_max' => $sks_max,
+                'mk_konversi' => $mk_konversi,
+                'dosen_bimbing_aktivitas' => $dosen_pembimbing,
+                'riwayat_aktivitas' => $riwayat_aktivitas,
+            ]);
     }
 
     public function get_dosen(Request $request)
     {
         $search = $request->get('q');
 
-
-        $tahun_ajaran = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
-                        ->first();
+        $tahun_ajaran = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')
+            ->first();
 
         $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran)
-                                ->orderby('nama_dosen', 'asc');
+            ->orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
-                  ->orWhere('nama_program_studi', 'like', "%{$search}%")
-                  ->where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran);
+                ->orWhere('nama_program_studi', 'like', "%{$search}%")
+                ->where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran);
         }
 
         $data = $query->get();
@@ -211,7 +205,6 @@ class AktivitasMahasiswaController extends Controller
 
         return response()->json($data);
     }
-
 
     public function simpanAktivitas(Request $request)
     {
@@ -254,18 +247,18 @@ class AktivitasMahasiswaController extends Controller
         // dd($mk_konversi);
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-        ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
-            $query->where('id_registrasi_mahasiswa', $id_reg);
-        })
+            ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                $query->where('id_registrasi_mahasiswa', $id_reg);
+            })
             // ->where('approve_krs', 1)
             ->where('id_semester', $semester_aktif->id_semester)
             ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
             ->get();
 
-        $db = new MataKuliah();
-        $db_akt = new AktivitasMahasiswa();
+        $db = new MataKuliah;
+        $db_akt = new AktivitasMahasiswa;
 
-        list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
+        [$krs_akt, $data_akt_ids] = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
@@ -280,9 +273,9 @@ class AktivitasMahasiswaController extends Controller
 
         // Pengecekan apakah KRS sudah diApprove
         $approved_krs = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
-        ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
-            $query->where('id_semester', $semester_aktif->id_semester);
-        })
+            ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
+                $query->where('id_semester', $semester_aktif->id_semester);
+            })
             ->where('id_registrasi_mahasiswa', $id_reg)
             ->where('nama_kelas_kuliah', 'LIKE', '241%')
             ->where('approved', 1)
@@ -290,9 +283,9 @@ class AktivitasMahasiswaController extends Controller
         // dd($approved);
 
         $approved_akt = AktivitasMahasiswa::with(['anggota_aktivitas'])
-        ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
-            $query->where('id_registrasi_mahasiswa', $id_reg);
-        })
+            ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                $query->where('id_registrasi_mahasiswa', $id_reg);
+            })
             ->where('id_semester', $semester_aktif->id_semester)
             ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
             ->where('approve_krs', 1)
@@ -300,7 +293,7 @@ class AktivitasMahasiswaController extends Controller
         // dd($approved);
 
         $approved_mbkm = $krs_aktivitas_mbkm->where('approve_krs', 1)
-        ->count();
+            ->count();
 
         // dd($approved_mbkm);
         if ($approved_krs > 0 || $approved_akt > 0 || $approved_mbkm > 0) {
@@ -310,7 +303,7 @@ class AktivitasMahasiswaController extends Controller
 
         // dd($total_sks);
         // Periksa jumlah dosen pembimbing yang dipilih
-        if (count((array)$request->dosen_bimbing_aktivitas) == 0) {
+        if (count((array) $request->dosen_bimbing_aktivitas) == 0) {
             return redirect()->back()->with('error', 'Harap pilih minimal satu dosen pembimbing.');
         }
 
@@ -321,7 +314,7 @@ class AktivitasMahasiswaController extends Controller
         }
 
         if (($total_sks + $mk_konversi->sks_mata_kuliah) > $sks_max) {
-            return redirect()->back()->with('error', 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah mengambil ' . $total_sks . ' SKS.');
+            return redirect()->back()->with('error', 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah mengambil '.$total_sks.' SKS.');
             // return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS', 'sks_max' => $sks_max], 400);
         }
 
@@ -351,7 +344,6 @@ class AktivitasMahasiswaController extends Controller
         //     $tanggal_mulai = $now;
         // }
 
-
         try {
             // Gunakan transaksi untuk memastikan semua operasi database berhasil
             DB::beginTransaction();
@@ -364,9 +356,9 @@ class AktivitasMahasiswaController extends Controller
                 'submitted' => 0,
                 'id_aktivitas' => $id_aktivitas,
                 'program_mbkm' => 0,
-                'nama_program_mbkm' => 'Mandiri', //tanyakan dirapat
+                'nama_program_mbkm' => 'Mandiri', // tanyakan dirapat
                 'jenis_anggota' => 0,
-                'nama_jenis_anggota' => 'Personal', //tanyakan dirapat
+                'nama_jenis_anggota' => 'Personal', // tanyakan dirapat
                 'id_jenis_aktivitas' => $mk_konversi->id_jenis_aktivitas,
                 'nama_jenis_aktivitas' => $mk_konversi->nama_jenis_aktivitas,
                 'id_prodi' => $riwayat_pendidikan->id_prodi,
@@ -376,12 +368,12 @@ class AktivitasMahasiswaController extends Controller
                 'judul' => $judul,
                 'keterangan' => $keterangan,
                 'lokasi' => $lokasi,
-                'sk_tugas' => Null,
+                'sk_tugas' => null,
                 'sumber_data' => 1,
-                'tanggal_sk_tugas' => Null,
+                'tanggal_sk_tugas' => null,
                 'tanggal_mulai' => $tanggal_mulai,
-                //tambahkan kondisi jika aktivitas melanjutkan semester
-                'tanggal_selesai' => Null,
+                // tambahkan kondisi jika aktivitas melanjutkan semester
+                'tanggal_selesai' => null,
                 'untuk_kampus_merdeka' => 1,
                 'asal_data' => 9,
                 'nm_asaldata' => '',
@@ -411,10 +403,10 @@ class AktivitasMahasiswaController extends Controller
             $prodi = $riwayat_pendidikan->prodi;
 
             for ($i = 0; $i < $jumlah_dosen; $i++) {
-                //Generate id aktivitas mengajar
+                // Generate id aktivitas mengajar
                 $id_bimbing_mahasiswa = Uuid::uuid4()->toString();
 
-                //KONDISI JENIS AKTIVITAS KKN DAN KP
+                // KONDISI JENIS AKTIVITAS KKN DAN KP
                 if ($mk_konversi->id_jenis_aktivitas == 5 || $mk_konversi->id_jenis_aktivitas == 6) {
                     $id_kategori_kegiatan = 110300;
                     $nama_kategori_kegiatan = 'Membimbing Kuliah Kerja Nyata, Praktek Kerja Nyata, Praktek Kerja Lapangan, termasuk membimbing pelatihan militer mahasiswa, pertukaran mahasiswa,  Magang, kuliah berbasis penelitian, wirausaha, dan bentuk lain pengabdian kepada masyarakat, dan sejenisnya';
@@ -424,7 +416,7 @@ class AktivitasMahasiswaController extends Controller
                     $mk_konversi->id_jenis_aktivitas == 7
                     || $mk_konversi->id_jenis_aktivitas == 22
                 ) {
-                    //KONDISI JENJANG PENDIDIKAN KKN DAN KP
+                    // KONDISI JENJANG PENDIDIKAN KKN DAN KP
                     if ($prodi->nama_jenjang_pendidikan == 'S1') {
                         if ($i == 0) {
                             $id_kategori_kegiatan = 110403;
@@ -460,11 +452,10 @@ class AktivitasMahasiswaController extends Controller
                     }
                 }
 
-
                 $dosen_pembimbing = BiodataDosen::where('id_dosen', $request->dosen_bimbing_aktivitas[$i])->first();
                 // dd($dosen_pembimbing);
 
-                //DOSEN PEMBIMBING AKTIVITAS LANJUT SKRIPSI
+                // DOSEN PEMBIMBING AKTIVITAS LANJUT SKRIPSI
                 $approved_dosen_aktivitas = BimbingMahasiswa::where('id_aktivitas', $request->id_aktivitas)->where('id_dosen', $dosen_pembimbing->id_dosen)->get();
 
                 if ($approved_dosen_aktivitas->isEmpty()) {
@@ -492,7 +483,7 @@ class AktivitasMahasiswaController extends Controller
                     'pembimbing_ke' => $i + 1,
                     'status_sync' => 'belum sync',
                 ]);
-                //QUERY AMBIL DATA LAMA
+                // QUERY AMBIL DATA LAMA
             }
 
             if ($request->id_aktivitas) {
@@ -511,7 +502,7 @@ class AktivitasMahasiswaController extends Controller
                         // Kolom lainnya sesuai dengan tabel `asistensi_akhirs`
                     ]);
                 }
-            };
+            }
 
             DB::commit();
 
@@ -519,16 +510,16 @@ class AktivitasMahasiswaController extends Controller
             return redirect()->route('mahasiswa.krs.index')->with('success', 'Data aktivitas mahasiswa berhasil disimpan');
         } catch (\Exception $e) {
             DB::rollback();
+
             // Jika terjadi kesalahan, kembalikan respons dengan pesan kesalahan
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
         }
     }
 
-
     public function hapusAktivitas($id)
     {
-        $aktivitas=AktivitasMahasiswa::with(['bimbing_mahasiswa'])->where('id', $id)->first();
-        $id_aktivitas=$aktivitas->where('id', $id)->pluck('id_aktivitas');
+        $aktivitas = AktivitasMahasiswa::with(['bimbing_mahasiswa'])->where('id', $id)->first();
+        $id_aktivitas = $aktivitas->where('id', $id)->pluck('id_aktivitas');
 
         // dd($aktivitas->bimbing_mahasiswa);
 
@@ -536,15 +527,16 @@ class AktivitasMahasiswaController extends Controller
 
         try {
 
-            if ($aktivitas->approve_krs ==1) {
+            if ($aktivitas->approve_krs == 1) {
                 if ($aktivitas->bimbing_mahasiswa->first()->approved == 1) {
                     return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas ini, Aktivitas telah disetujui oleh KoProdi');
                 }
+
                 return redirect()->back()->with('error', 'Anda tidak dapat menghapus Aktivitas ini, Aktivitas telah disetujui Dosen Pembimbing Akademik');
             }
 
             // Menghapus bimbingan mahasiswa
-           $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
+            $bimbing = BimbingMahasiswa::where('id_aktivitas', $id_aktivitas);
             if ($bimbing) {
                 $bimbing->delete();
             }
@@ -574,5 +566,4 @@ class AktivitasMahasiswaController extends Controller
             return redirect()->route('mahasiswa.krs.index')->with('error', 'Terjadi kesalahan saat menghapus aktivitas.');
         }
     }
-
 }

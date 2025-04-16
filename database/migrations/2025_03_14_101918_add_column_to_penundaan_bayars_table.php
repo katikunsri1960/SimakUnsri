@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('penundaan_bayars', function (Blueprint $table) {
             $table->string('file_pendukung')->nullable()->after('keterangan');
             $table->string('alasan_pembatalan')->nullable()->after('status');
-            
+
         });
     }
 

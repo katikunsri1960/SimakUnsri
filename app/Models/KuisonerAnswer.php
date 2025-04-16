@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class KuisonerAnswer extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function kuisoner_question()

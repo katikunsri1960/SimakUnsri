@@ -4,18 +4,14 @@ namespace App\Imports;
 
 use App\Models\BatasIsiKRSManual;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\PembayaranManualMahasiswa;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Concerns\SkipsEmptyRows;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class BatasIsiKRSImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
+class BatasIsiKRSImport implements SkipsEmptyRows, ToCollection, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
     public function collection(Collection $collection)
     {
         ini_set('max_execution_time', 300);
@@ -34,7 +30,7 @@ class BatasIsiKRSImport implements ToCollection, WithHeadingRow, SkipsEmptyRows
                 // tanggal_pembayaran adalah date format di excel
                 $row['batas_isi_krs'] = date('Y-m-d', strtotime($row['batas_isi_krs']));
 
-                if (!$mahasiswa) {
+                if (! $mahasiswa) {
                     return back()->withErrors(["Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!"]);
                 }
 

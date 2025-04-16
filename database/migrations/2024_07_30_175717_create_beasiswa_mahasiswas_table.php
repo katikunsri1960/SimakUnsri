@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('tanggal_mulai_beasiswa')->default('1970-01-01');
             $table->date('tanggal_akhir_beasiswa')->default('1970-01-01');
             $table->string('status_beasiswa')->nullable();
-            $table->timestamps(); 
+            $table->timestamps();
         });
     }
 

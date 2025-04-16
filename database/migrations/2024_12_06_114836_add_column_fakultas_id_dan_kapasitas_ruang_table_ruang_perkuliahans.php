@@ -17,7 +17,7 @@ return new class extends Migration
                 ->after('id_prodi')
                 ->constrained('fakultas') // Mengacu pada tabel fakultas
                 ->onDelete('set null');
-            
+
             $table->integer('kapasitas_ruang')->after('fakultas_id')->default('0');
         });
     }

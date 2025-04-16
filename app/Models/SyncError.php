@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class SyncError extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 }

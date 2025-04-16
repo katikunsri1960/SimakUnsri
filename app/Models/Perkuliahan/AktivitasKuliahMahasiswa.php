@@ -2,11 +2,11 @@
 
 namespace App\Models\Perkuliahan;
 
-use App\Models\Referensi\Pembiayaan;
-use App\Models\StatusMahasiswa;
-use App\Models\Semester;
-use App\Models\ProgramStudi;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\ProgramStudi;
+use App\Models\Referensi\Pembiayaan;
+use App\Models\Semester;
+use App\Models\StatusMahasiswa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\DB;
 class AktivitasKuliahMahasiswa extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function riwayat_pendidikan()
@@ -53,7 +54,7 @@ class AktivitasKuliahMahasiswa extends Model
             ->where('id_semester', $id_semester)
             ->first();
 
-        if (!$akm) {
+        if (! $akm) {
             return ['status' => 'error', 'message' => 'Data tidak ditemukan'];
         }
 
@@ -83,9 +84,11 @@ class AktivitasKuliahMahasiswa extends Model
             ]);
 
             DB::commit();
+
             return ['status' => 'success', 'message' => 'Data berhasil diupdate'];
         } catch (\Throwable $th) {
             DB::rollBack();
+
             return ['status' => 'error', 'message' => 'Data Gagal Diupdate! '];
         }
     }
@@ -121,5 +124,4 @@ class AktivitasKuliahMahasiswa extends Model
         // Total SKS semester
         return $sks_kelas + $sks_aktivitas + $sks_mbkm;
     }
-
 }

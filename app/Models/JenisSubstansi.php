@@ -8,5 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class JenisSubstansi extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 }

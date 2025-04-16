@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class ListKurikulum extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function matkul_kurikulum()
@@ -32,5 +33,4 @@ class ListKurikulum extends Model
             'id_matkul' // Local key on MatkulKurikulum table...
         );
     }
-
 }

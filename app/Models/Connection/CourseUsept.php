@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Model;
 class CourseUsept extends Model
 {
     use HasFactory;
-    protected $connection = 'usept_con'; // Koneksi USEPT
-    protected $table = 'course_result';
-    protected $appends = 'konversi';
 
+    protected $connection = 'usept_con'; // Koneksi USEPT
+
+    protected $table = 'course_result';
+
+    protected $appends = 'konversi';
 
     public function getKonversiAttribute()
     {
@@ -33,23 +35,21 @@ class CourseUsept extends Model
         $nilai_angka = $this->total_score;
         $nilai_huruf = $this->grade;
 
-        $nilai_angka = str_replace(",",".",$nilai_angka);
-        
+        $nilai_angka = str_replace(',', '.', $nilai_angka);
+
         // dd($nilai_angka);
-        if($nilai_huruf == 'A'){
-            $nilai_hasil_course = ((525-500)/(100-86)) * ($nilai_angka - 86) + 500;
-        }
-        else if($nilai_huruf == 'B'){
-            $nilai_hasil_course = ((499-450)/(85.99-71)) * ($nilai_angka - 71) + 450;
-        }
-        else{
+        if ($nilai_huruf == 'A') {
+            $nilai_hasil_course = ((525 - 500) / (100 - 86)) * ($nilai_angka - 86) + 500;
+        } elseif ($nilai_huruf == 'B') {
+            $nilai_hasil_course = ((499 - 450) / (85.99 - 71)) * ($nilai_angka - 71) + 450;
+        } else {
             $nilai_hasil_course = 300;
         }
 
-        return round($nilai_hasil_course,0);
+        return round($nilai_hasil_course, 0);
     }
 
-    public function KonversiNilaiUsept($nilai_huruf,$nilai_angka)
+    public function KonversiNilaiUsept($nilai_huruf, $nilai_angka)
     {
         // dd($nilai_angka);
         // if($nilai_huruf == 'A'){
@@ -66,18 +66,16 @@ class CourseUsept extends Model
 
         // dd($nilai_angka);
 
-        $nilai_angka = str_replace(",",".",$nilai_angka);
+        $nilai_angka = str_replace(',', '.', $nilai_angka);
 
-        if($nilai_huruf == 'A'){
-            $nilai_hasil_course = ((525-500)/(100-86)) * ($nilai_angka - 86) + 500;
-        }
-        else if($nilai_huruf == 'B'){
-            $nilai_hasil_course = ((499-450)/(85.99-71)) * ($nilai_angka - 71) + 450;
-        }
-        else{
+        if ($nilai_huruf == 'A') {
+            $nilai_hasil_course = ((525 - 500) / (100 - 86)) * ($nilai_angka - 86) + 500;
+        } elseif ($nilai_huruf == 'B') {
+            $nilai_hasil_course = ((499 - 450) / (85.99 - 71)) * ($nilai_angka - 71) + 450;
+        } else {
             $nilai_hasil_course = 300;
         }
 
-        return round($nilai_hasil_course,0);
+        return round($nilai_hasil_course, 0);
     }
 }

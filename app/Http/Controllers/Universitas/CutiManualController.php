@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use Ramsey\Uuid\Uuid;
-use App\Models\Semester;
-use App\Models\CutiManual;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\BeasiswaMahasiswa;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Perkuliahan\MataKuliah;
+use App\Models\BeasiswaMahasiswa;
+use App\Models\CutiManual;
 use App\Models\Mahasiswa\PengajuanCuti;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Ramsey\Uuid\Uuid;
 
 class CutiManualController extends Controller
 {
@@ -34,7 +34,7 @@ class CutiManualController extends Controller
         $semester_view = $request->semester_view ?? SemesterAktif::select('id_semester')->first()->id_semester;
 
         $data = $data->where('id_semester', $semester_view)
-                ->get();
+            ->get();
 
         // dd($data);
         return view('universitas.cuti-manual.index', [
@@ -46,16 +46,16 @@ class CutiManualController extends Controller
 
     public function get_mahasiswa(Request $request)
     {
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
 
         $data = $db->with('biodata', 'prodi')
-                    ->where('nim', 'like', '%'.$request->q.'%')
-                    ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
-                    ->orderBy('id_periode_masuk', 'desc')->get();
+            ->where('nim', 'like', '%'.$request->q.'%')
+            ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
+            ->orderBy('id_periode_masuk', 'desc')->get();
 
-       // Menambahkan semester aktif ke dalam data response
+        // Menambahkan semester aktif ke dalam data response
         return response()->json([
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -71,7 +71,7 @@ class CutiManualController extends Controller
         // Mengirim data mahasiswa dan semester aktif
         return response()->json([
             'data' => $mahasiswa,
-            'semester_aktif' => $semester_aktif
+            'semester_aktif' => $semester_aktif,
         ]);
     }
 
@@ -81,7 +81,7 @@ class CutiManualController extends Controller
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'tanggal_sk' => 'nullable|date',
             'alasan_cuti' => 'required|string|max:255',
-            'no_sk' => 'nullable|string|max:50'
+            'no_sk' => 'nullable|string|max:50',
         ]);
 
         try {
@@ -91,16 +91,16 @@ class CutiManualController extends Controller
 
             // Define variable
             $id_reg = $request->id_registrasi_mahasiswa;
-            $semester_aktif=SemesterAktif::with('semester')->first();
+            $semester_aktif = SemesterAktif::with('semester')->first();
 
             $riwayat_pendidikan = RiwayatPendidikan::with('biodata')
-                        ->where('id_registrasi_mahasiswa', $id_reg)
-                        ->first();
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->first();
             // dd($semester_aktif);
             // Cek apakah sudah ada pengajuan cuti yang sedang diproses
             $existingCuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)
-                        ->where('id_semester', $semester_aktif->id_semester)
-                        ->first();
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->first();
 
             // Jika sudah ada pengajuan cuti yang sedang diproses, tampilkan pesan error
             if ($existingCuti) {
@@ -113,15 +113,15 @@ class CutiManualController extends Controller
 
             $id_cuti = Uuid::uuid4()->toString();
 
-            $alamat = $riwayat_pendidikan->biodata->jalan . ', ' . $riwayat_pendidikan->biodata->dusun . ', RT-' . $riwayat_pendidikan->biodata->rt . '/RW-' . $riwayat_pendidikan->biodata->rw
-            . ', ' . $riwayat_pendidikan->biodata->kelurahan . ', ' . $riwayat_pendidikan->biodata->nama_wilayah;
+            $alamat = $riwayat_pendidikan->biodata->jalan.', '.$riwayat_pendidikan->biodata->dusun.', RT-'.$riwayat_pendidikan->biodata->rt.'/RW-'.$riwayat_pendidikan->biodata->rw
+            .', '.$riwayat_pendidikan->biodata->kelurahan.', '.$riwayat_pendidikan->biodata->nama_wilayah;
 
             $alamat = str_replace(', ,', ',', $alamat);
 
             // dd($alamat);
-            $alasan= $request->alasan_cuti;
+            $alasan = $request->alasan_cuti;
 
-            if (!$alasan) {
+            if (! $alasan) {
                 $alasan = 'Alasan tidak diisi';
             }
 
@@ -130,7 +130,7 @@ class CutiManualController extends Controller
             // Cek apakah ada file yang diunggah
             if ($request->hasFile('file_pendukung')) {
                 // Generate file name
-                $fileName = 'file_pendukung_' . str_replace(' ', '_', $riwayat_pendidikan->nama_mahasiswa) . '_' . time() . '.' . $request->file('file_pendukung')->getClientOriginalExtension();
+                $fileName = 'file_pendukung_'.str_replace(' ', '_', $riwayat_pendidikan->nama_mahasiswa).'_'.time().'.'.$request->file('file_pendukung')->getClientOriginalExtension();
                 // Simpan file ke folder public/pdf dengan nama kustom
                 $filePath = $request->file('file_pendukung')->storeAs('pdf', $fileName, 'public');
             } else {
@@ -139,7 +139,7 @@ class CutiManualController extends Controller
             }
 
             // Cek apakah file berhasil diupload
-            if (!$filePath) {
+            if (! $filePath) {
                 return redirect()->back()->with('error', 'File pendukung gagal diunggah. Silakan coba lagi.');
             }
 
@@ -147,13 +147,13 @@ class CutiManualController extends Controller
                 'id_cuti' => $id_cuti,
                 'id_registrasi_mahasiswa' => $id_reg,
                 'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                'nim'=>$riwayat_pendidikan->nim,
+                'nim' => $riwayat_pendidikan->nim,
                 'id_semester' => $semester_aktif->id_semester,
-                'nama_semester'=> $semester_aktif->semester->nama_semester,
-                'id_prodi'=>$riwayat_pendidikan->id_prodi,
-                'alamat'=> $alamat,
-                'tanggal_sk'=>$request->tanggal_sk,
-                'no_sk'=>$request->no_sk,
+                'nama_semester' => $semester_aktif->semester->nama_semester,
+                'id_prodi' => $riwayat_pendidikan->id_prodi,
+                'alamat' => $alamat,
+                'tanggal_sk' => $request->tanggal_sk,
+                'no_sk' => $request->no_sk,
                 'handphone' => $riwayat_pendidikan->biodata->handphone,
                 'alasan_cuti' => $alasan,
                 'file_pendukung' => $filePath,
@@ -175,24 +175,24 @@ class CutiManualController extends Controller
                     return redirect()->back()->withErrors('Mahasiswa adalah penerima Beasiswa, Tidak bisa mengajukan cuti untuk!');
                 }
 
-                $db = new MataKuliah();
-                $db_akt = new AktivitasMahasiswa();
+                $db = new MataKuliah;
+                $db_akt = new AktivitasMahasiswa;
 
                 $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
-                        ->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
-                        ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
-                        ->first();
+                    ->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
+                    ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+                    ->first();
 
                 $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-                            ->whereHas('anggota_aktivitas' , function($query) use ($validatedData) {
-                                    $query->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa']);
-                            })
+                    ->whereHas('anggota_aktivitas', function ($query) use ($validatedData) {
+                        $query->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa']);
+                    })
                             // ->where('approve_krs', 1)
-                            ->where('id_semester', $semester_aktif->id_semester)
-                            ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
-                            ->get();
+                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
+                    ->get();
 
-                list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($validatedData['id_registrasi_mahasiswa'], $semester_aktif->id_semester);
+                [$krs_akt, $data_akt_ids] = $db_akt->getKrsAkt($validatedData['id_registrasi_mahasiswa'], $semester_aktif->id_semester);
 
                 $sks_max = $db->getSksMax($validatedData['id_registrasi_mahasiswa'], $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
@@ -208,17 +208,17 @@ class CutiManualController extends Controller
                 $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
 
                 if ($total_sks > 0) {
-                    return redirect()->back()->with('error','Pengajuan Cuti Tidak Diizinkan, Mahasiswa Telah Melakukan Pengisian KRS!');
+                    return redirect()->back()->with('error', 'Pengajuan Cuti Tidak Diizinkan, Mahasiswa Telah Melakukan Pengisian KRS!');
                 }
 
                 $transkrip = TranskripMahasiswa::select(
-                                DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
-                                DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
-                            )
-                            ->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
-                            ->whereNotIn('nilai_huruf', ['F', ''])
-                            ->groupBy('id_registrasi_mahasiswa')
-                            ->first();
+                    DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
+                    DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
+                )
+                    ->where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])
+                    ->whereNotIn('nilai_huruf', ['F', ''])
+                    ->groupBy('id_registrasi_mahasiswa')
+                    ->first();
 
                 $akm = AktivitasKuliahMahasiswa::create([
                     'feeder' => 0,
@@ -248,6 +248,7 @@ class CutiManualController extends Controller
             }
 
             DB::commit(); // Commit jika semua berhasil
+
             // Redirect kembali ke halaman index dengan pesan sukses
             return redirect()->route('univ.cuti-manual')->with('success', 'Data Berhasil di Tambahkan');
 
@@ -264,18 +265,18 @@ class CutiManualController extends Controller
 
             // Cek apakah approved = 3
             if ($cuti->approved == 2) {
-                return redirect()->back()->with('error','Data tidak dapat dihapus karena sudah disetujui!');
+                return redirect()->back()->with('error', 'Data tidak dapat dihapus karena sudah disetujui!');
             }
 
             // Temukan pengajuan cuti berdasarkan ID
 
             // dd($cuti);
             $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $cuti->id_registrasi_mahasiswa)
-                                ->where('id_semester', $cuti->id_semester)
-                                ->first();
+                ->where('id_semester', $cuti->id_semester)
+                ->first();
 
             // Jika pengajuan cuti tidak ditemukan, lemparkan pesan error
-            if (!$cuti) {
+            if (! $cuti) {
                 return redirect()->route('univ.cuti-manual')->with('error', 'Pengajuan cuti tidak ditemukan.');
             }
 
@@ -296,5 +297,4 @@ class CutiManualController extends Controller
             return redirect()->route('univ.cuti-manual')->with('error', 'Terjadi kesalahan saat menghapus pengajuan cuti.');
         }
     }
-
 }

@@ -2,24 +2,21 @@
 
 namespace App\Http\Controllers\Fakultas\Master;
 
-use App\Models\Semester;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\PejabatFakultas;
-use App\Models\Mahasiswa\LulusDo;
-use App\Models\Dosen\BiodataDosen;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Fakultas;
-use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PejabatFakultas;
+use App\Models\SemesterAktif;
+use Illuminate\Http\Request;
 
 class PejabatFakultasController extends Controller
 {
-    //PEJABAT KULIAH
+    // PEJABAT KULIAH
     public function pejabat_fakultas(Request $request)
     {
         return view('fakultas.data-master.pejabat-fakultas.devop');
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -44,7 +41,7 @@ class PejabatFakultasController extends Controller
             'tgl_mulai_jabatan' => 'required|date',
             'tgl_selesai_jabatan' => 'required|date',
             'gelar_depan' => 'nullable|string',
-            'gelar_belakang' => 'nullable|string' ,
+            'gelar_belakang' => 'nullable|string',
         ]);
 
         $semester_aktif = SemesterAktif::first();
@@ -52,11 +49,11 @@ class PejabatFakultasController extends Controller
         $tahun_ajaran = substr($semester_aktif->id_semester, 0, 4);
 
         try {
-            $dosen = PenugasanDosen::with(['prodi', 'prodi.fakultas', 'biodata' ])->where('id_tahun_ajaran', $tahun_ajaran-1)
-                    ->where('id_dosen', $request->id_dosen)
-                    ->firstOrFail();
+            $dosen = PenugasanDosen::with(['prodi', 'prodi.fakultas', 'biodata'])->where('id_tahun_ajaran', $tahun_ajaran - 1)
+                ->where('id_dosen', $request->id_dosen)
+                ->firstOrFail();
 
-            $fakultas= Fakultas::where('id', $fakultas_id)->first();
+            $fakultas = Fakultas::where('id', $fakultas_id)->first();
 
             if ($request->id_jabatan == 0) {
                 $nama_jabatan = 'Dekan Fakultas';
@@ -66,7 +63,7 @@ class PejabatFakultasController extends Controller
                 $nama_jabatan = 'Wakil Dekan Bidang Umum, Keuangan & Kepegawaian';
             } elseif ($request->id_jabatan == 3) {
                 $nama_jabatan = 'Wakil Dekan Bidang Kemahasiswaan dan Alumni';
-            } else{
+            } else {
                 $nama_jabatan = 'Tidak Diisi';
             }
 
@@ -93,25 +90,23 @@ class PejabatFakultasController extends Controller
 
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi masalah saat menyimpan data.' );
+            return redirect()->back()->with('error', 'Terjadi masalah saat menyimpan data.');
         }
     }
-
 
     public function get_dosen(Request $request)
     {
         $search = $request->get('q');
 
+        $tahun_ajaran = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')
+            ->first();
 
-        $tahun_ajaran = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
-                        ->first();
-
-        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran-1)
-                                ->orderby('nama_dosen', 'asc');
+        $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran - 1)
+            ->orderby('nama_dosen', 'asc');
         if ($search) {
             $query->where('nama_dosen', 'like', "%{$search}%")
-                  ->orWhere('nama_program_studi', 'like', "%{$search}%")
-                  ->where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran);
+                ->orWhere('nama_program_studi', 'like', "%{$search}%")
+                ->where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran);
         }
 
         $data = $query->get();
@@ -154,7 +149,6 @@ class PejabatFakultasController extends Controller
             return redirect()->back()->with('error', 'Terjadi masalah saat menyimpan data. Silakan coba lagi.');
         }
     }
-
 
     public function destroy(PejabatFakultas $id_pejabat)
     {

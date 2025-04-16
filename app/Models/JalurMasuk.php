@@ -8,8 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class JalurMasuk extends Model
 {
     use HasFactory;
-    protected $guarded = [];
 
+    protected $guarded = [];
 
     public function missingJalurMasuk()
     {

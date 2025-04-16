@@ -33,18 +33,18 @@ class FixSkalaNilai extends Command
         foreach ($dataSkala as $d) {
             $id_bobot = $d->id_bobot_nilai;
             $filter = "id_bobot_nilai = '$id_bobot'";
-            $req = new FeederAPI('GetListSkalaNilaiProdi', 0, 1,NULL, $filter);
-            $result =  $req->runWS();
+            $req = new FeederAPI('GetListSkalaNilaiProdi', 0, 1, null, $filter);
+            $result = $req->runWS();
 
             if (isset($result['error_code']) && empty($result['data'])) {
                 $this->info(json_encode($result));
-                $this->info('ID Bobot Nilai: ' . $id_bobot);
+                $this->info('ID Bobot Nilai: '.$id_bobot);
 
                 SkalaNilai::where('id_bobot_nilai', $id_bobot)->delete();
                 $count++;
             }
 
         }
-        $this->info('Total data yang dihapus: ' . $count);
+        $this->info('Total data yang dihapus: '.$count);
     }
 }

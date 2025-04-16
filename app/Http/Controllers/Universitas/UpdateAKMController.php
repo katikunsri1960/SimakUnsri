@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Universitas;
 
-use App\Models\Semester;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use Illuminate\Support\Facades\Bus;
-use App\Jobs\HitungIpsJob;
 use App\Http\Controllers\Controller;
+use App\Jobs\HitungIpsJob;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Semester;
+use App\Models\SemesterAktif;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Bus;
 
 class UpdateAKMController extends Controller
 {
@@ -29,18 +29,18 @@ class UpdateAKMController extends Controller
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2G');
 
-
         $semester = $request->semester;
 
         // Ambil data dari database
         $akm = AktivitasKuliahMahasiswa::where('id_semester', $semester)->get();
-        
+
         // Cek jika data kosong
         if ($akm->isEmpty()) {
             $response = [
                 'status' => 'error',
                 'message' => 'Data AKM pada Semester yang dipilih tidak ditemukan!',
             ];
+
             return response()->json($response);
         }
 
@@ -62,10 +62,10 @@ class UpdateAKMController extends Controller
 
         $semester = $request->semester;
 
-        if (!$semester) {
+        if (! $semester) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Tahun akademik harus diisi.'
+                'message' => 'Tahun akademik harus diisi.',
             ], 400);
         }
 
@@ -88,8 +88,7 @@ class UpdateAKMController extends Controller
 
         return response()->json([
             'status' => 'success',
-            'message' => 'Proses perhitungan IPS sedang berjalan di latar belakang.'
+            'message' => 'Proses perhitungan IPS sedang berjalan di latar belakang.',
         ]);
     }
-
 }

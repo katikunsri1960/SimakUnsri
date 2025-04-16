@@ -21,7 +21,7 @@ return new class extends Migration
             $table->date('tanggal_batas_revisi');
             $table->text('uraian');
             $table->timestamps();
-        }); 
+        });
     }
 
     /**

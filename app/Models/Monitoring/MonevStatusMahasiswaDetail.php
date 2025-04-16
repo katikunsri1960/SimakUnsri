@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class MonevStatusMahasiswaDetail extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     public function status()

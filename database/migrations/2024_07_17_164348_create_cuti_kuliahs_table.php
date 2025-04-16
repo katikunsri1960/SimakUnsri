@@ -13,17 +13,17 @@ return new class extends Migration
     {
         Schema::create('cuti_kuliahs', function (Blueprint $table) {
             $table->id();
-            $table->string("id_cuti")->unique();
-            $table->string("id_registrasi_mahasiswa");
+            $table->string('id_cuti')->unique();
+            $table->string('id_registrasi_mahasiswa');
             $table->foreign('id_registrasi_mahasiswa')->references('id_registrasi_mahasiswa')->on('riwayat_pendidikans');
-            $table->string("nama_mahasiswa")->nullable();
-            $table->string("id_semester")->nullable();
+            $table->string('nama_mahasiswa')->nullable();
+            $table->string('id_semester')->nullable();
             $table->foreign('id_semester')->references('id_semester')->on('semesters')->onDelete('cascade');
-            $table->string("nama_semester")->nullable();
-            $table->string("alasan_cuti");
-            $table->string("file_pendukung");
+            $table->string('nama_semester')->nullable();
+            $table->string('alasan_cuti');
+            $table->string('file_pendukung');
             $table->boolean('approved')->default(0);
-            $table->string("status_sync")->nullable();
+            $table->string('status_sync')->nullable();
             $table->timestamps();
         });
     }

@@ -5,11 +5,9 @@ namespace App\Http\Controllers\Prodi\Akademik;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
-use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -20,7 +18,8 @@ class KHSController extends Controller
     {
         $semesters = Semester::orderBy('id_semester', 'desc')->get();
         $semesterAktif = SemesterAktif::with('semester')->first();
-        return view('prodi.data-akademik.khs.index',[
+
+        return view('prodi.data-akademik.khs.index', [
             'semesters' => $semesters,
             'semesterAktif' => $semesterAktif,
         ]);
@@ -33,7 +32,7 @@ class KHSController extends Controller
 
         $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')->where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
         // dd($riwayat);
-        if (!$riwayat || $riwayat->id_prodi != auth()->user()->fk_id) {
+        if (! $riwayat || $riwayat->id_prodi != auth()->user()->fk_id) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data mahasiswa tidak ditemukan',
@@ -42,26 +41,27 @@ class KHSController extends Controller
 
         $nilai = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 // ->where('id_semester', $semester)
-                ->orderBy('id_semester')
-                ->get();
+            ->orderBy('id_semester')
+            ->get();
 
         $konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
                     // ->where('id_semester', $semester)
-                    ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                    ->get();
+            ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+            ->get();
 
         $transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                    ->get();
+            ->get();
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                ->orderBy('id_semester', 'desc')
-                ->get();
+            ->orderBy('id_semester', 'desc')
+            ->get();
 
-        if($nilai->isEmpty() && $konversi->isEmpty() && $transfer->isEmpty()) {
+        if ($nilai->isEmpty() && $konversi->isEmpty() && $transfer->isEmpty()) {
             $response = [
                 'status' => 'error',
                 'message' => 'Data KHS tidak ditemukan!',
             ];
+
             return response()->json($response);
         }
 
@@ -74,7 +74,6 @@ class KHSController extends Controller
             'riwayat' => $riwayat,
             'akm' => $akm,
         ];
-
 
         return response()->json($response);
     }

@@ -3,14 +3,15 @@
 namespace App\Models\Mahasiswa;
 
 use App\Models\ProgramStudi;
-use Illuminate\Database\Eloquent\Model;
-use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class PengajuanCuti extends Model
 {
     use HasFactory;
+
     protected $table = 'cuti_kuliahs';
+
     protected $guarded = [];
 
     public function riwayat()

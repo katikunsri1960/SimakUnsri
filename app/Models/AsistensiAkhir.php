@@ -4,13 +4,14 @@ namespace App\Models;
 
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class AsistensiAkhir extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     protected $appends = ['id_tanggal'];
@@ -30,5 +31,4 @@ class AsistensiAkhir extends Model
         // change tanggal from database with format Y-m-d to d-m-Y
         return Carbon::parse($this->tanggal)->format('d-m-Y');
     }
-    
 }

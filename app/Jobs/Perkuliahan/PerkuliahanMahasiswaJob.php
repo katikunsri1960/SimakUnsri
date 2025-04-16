@@ -15,7 +15,16 @@ class PerkuliahanMahasiswaJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $act, $limit, $offset, $order, $filter;
+    public $act;
+
+    public $limit;
+
+    public $offset;
+
+    public $order;
+
+    public $filter;
+
     /**
      * Create a new job instance.
      */
@@ -36,7 +45,7 @@ class PerkuliahanMahasiswaJob implements ShouldQueue
         $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
         $response = $data->runWS();
 
-        if (!empty($response['data'])) {
+        if (! empty($response['data'])) {
 
             $result = $response['data'];
 

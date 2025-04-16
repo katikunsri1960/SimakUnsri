@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class RencanaPembelajaran extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
 
     public function mata_kuliah()

@@ -15,7 +15,6 @@ use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class FixAkm extends Command
 {
@@ -43,7 +42,7 @@ class FixAkm extends Command
 
         $semesterAktif = SemesterAktif::first()->id_semester;
 
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
 
         $p = ProgramStudi::where('status', 'A')->get();
 
@@ -58,12 +57,12 @@ class FixAkm extends Command
             $data = $db->detail_isi_krs($id_prodi, $semesterAktif);
 
             foreach ($data as $item) {
-                if (!isset($allData[$item->id_registrasi_mahasiswa])) {
+                if (! isset($allData[$item->id_registrasi_mahasiswa])) {
                     $req = $this->approve($item->id_registrasi_mahasiswa);
                     if ($req['status'] == 'No Transkrip!') {
-                        fwrite($file, $req['nim'] . ' - ' . $req['nama_mahasiswa'] . "\n");
+                        fwrite($file, $req['nim'].' - '.$req['nama_mahasiswa']."\n");
                     }
-                    $this->info($req['status'] . ' - ' . $req['nim'] . ' - ' . $req['nama_mahasiswa']);
+                    $this->info($req['status'].' - '.$req['nim'].' - '.$req['nama_mahasiswa']);
                 }
             }
         }
@@ -76,29 +75,28 @@ class FixAkm extends Command
     {
         $semester_aktif = SemesterAktif::first();
         $data = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
-                ->whereHas('kelas_kuliah', function($query) use ($semester_aktif) {
-                    $query->where('id_semester', $semester_aktif->id_semester);
-                })
-                ->where('id_registrasi_mahasiswa', $id_reg)
-                ->orderBy('kode_mata_kuliah')
-                ->get();
+            ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
+                $query->where('id_semester', $semester_aktif->id_semester);
+            })
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->orderBy('kode_mata_kuliah')
+            ->get();
 
-        $db = new MataKuliah();
-        $db_akt = new AktivitasMahasiswa();
+        $db = new MataKuliah;
+        $db_akt = new AktivitasMahasiswa;
 
-        $akm_aktif= AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                ->where('id_semester', $semester_aktif->id_semester)
-                ->first();
+        $akm_aktif = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->first();
 
-
-                // dd($akm_aktif);
+        // dd($akm_aktif);
 
         $riwayat_pendidikan = RiwayatPendidikan::select('riwayat_pendidikans.*', 'biodata_dosens.id_dosen', 'biodata_dosens.nama_dosen')
-                ->where('id_registrasi_mahasiswa', $id_reg)
-                ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
-                ->first();
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
+            ->first();
 
-        if($akm_aktif){
+        if ($akm_aktif) {
             return [
                 'status' => 'AKM sudah ada!',
                 'nim' => $riwayat_pendidikan->nim,
@@ -107,15 +105,15 @@ class FixAkm extends Command
         }
 
         $transkrip = TranskripMahasiswa::select(
-                        DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
-                        DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
-                    )
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->whereNotIn('nilai_huruf', ['F', ''])
-                    ->groupBy('id_registrasi_mahasiswa')
-                    ->first();
+            DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
+            DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
+        )
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->whereNotIn('nilai_huruf', ['F', ''])
+            ->groupBy('id_registrasi_mahasiswa')
+            ->first();
 
-        if ((!$transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester) {
+        if ((! $transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester) {
             return [
                 'status' => 'No Transkrip!',
                 'nim' => $riwayat_pendidikan->nim,
@@ -125,23 +123,23 @@ class FixAkm extends Command
         }
 
         $data_mbkm = PesertaKelasKuliah::with(['kelas_kuliah', 'kelas_kuliah.matkul'])
-                    ->whereHas('kelas_kuliah', function($query) use ($semester_aktif,$riwayat_pendidikan) {
-                        $query->where('id_semester', $semester_aktif->id_semester)->whereNot('id_prodi', $riwayat_pendidikan->id_prodi);
-                    })
-                    ->where('id_registrasi_mahasiswa', $id_reg)
-                    ->orderBy('kode_mata_kuliah')
-                    ->count();
+            ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif, $riwayat_pendidikan) {
+                $query->where('id_semester', $semester_aktif->id_semester)->whereNot('id_prodi', $riwayat_pendidikan->id_prodi);
+            })
+            ->where('id_registrasi_mahasiswa', $id_reg)
+            ->orderBy('kode_mata_kuliah')
+            ->count();
 
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
         $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester)
-                    ->first();
+            ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+            ->where('kode_periode', $semester_aktif->id_semester)
+            ->first();
 
-        list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
+        [$krs_akt, $data_akt_ids] = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
@@ -155,23 +153,20 @@ class FixAkm extends Command
 
         $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt;
 
-
-
         $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
-                    ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
-                        $query->where('id_registrasi_mahasiswa', $id_reg);
-                    })
-                    ->where('id_semester', $semester_aktif->id_semester)
-                    ->get();
-
+            ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_reg) {
+                $query->where('id_registrasi_mahasiswa', $id_reg);
+            })
+            ->where('id_semester', $semester_aktif->id_semester)
+            ->get();
 
         try {
 
             DB::beginTransaction();
 
-            if($akm_aktif){
+            if ($akm_aktif) {
 
-                if($akm_aktif->feeder == '1'){
+                if ($akm_aktif->feeder == '1') {
                     $result = [
                         'status' => 'error',
                         'message' => 'Data sudah di sinkronisasi ke feeder!',
@@ -191,16 +186,16 @@ class FixAkm extends Command
                     if ($item->tanggal_approve == null) {
                         $item->update([
                             // 'approved' => '1',
-                            'tanggal_approve' => $tgl_approve
+                            'tanggal_approve' => $tgl_approve,
                         ]);
                     }
 
                 }
 
-                if($data_mbkm > 0){
-                    if($beasiswa){
-                        if($beasiswa->id_pembiayaan == '3'){
-                            $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                if ($data_mbkm > 0) {
+                    if ($beasiswa) {
+                        if ($beasiswa->id_pembiayaan == '3') {
+                            $peserta = AktivitasKuliahMahasiswa::where('id', $akm_aktif->id)->update([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
                                 'nim' => $riwayat_pendidikan->nim,
@@ -208,21 +203,21 @@ class FixAkm extends Command
                                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                                'id_semester'=> $semester_aktif->id_semester,
-                                'nama_semester'=> $semester_aktif->semester->nama_semester,
+                                'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                                'id_semester' => $semester_aktif->id_semester,
+                                'nama_semester' => $semester_aktif->semester->nama_semester,
                                 'id_status_mahasiswa' => 'M',
                                 'nama_status_mahasiswa' => 'Kampus Merdeka',
-                                'ips'=> '0.00',
-                                'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                                'sks_semester'=> $total_sks,
-                                'sks_total'=> $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'ips' => '0.00',
+                                'ipk' => $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'sks_semester' => $total_sks,
+                                'sks_total' => $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => 0,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
-                        }else if($beasiswa->id_pembiayaan == '2' && $tagihan){
-                            $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                        } elseif ($beasiswa->id_pembiayaan == '2' && $tagihan) {
+                            $peserta = AktivitasKuliahMahasiswa::where('id', $akm_aktif->id)->update([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
                                 'nim' => $riwayat_pendidikan->nim,
@@ -230,22 +225,22 @@ class FixAkm extends Command
                                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                                'id_semester'=> $semester_aktif->id_semester,
-                                'nama_semester'=> $semester_aktif->semester->nama_semester,
+                                'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                                'id_semester' => $semester_aktif->id_semester,
+                                'nama_semester' => $semester_aktif->semester->nama_semester,
                                 'id_status_mahasiswa' => 'M',
                                 'nama_status_mahasiswa' => 'Kampus Merdeka',
-                                'ips'=> '0.00',
-                                'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                                'sks_semester'=> $total_sks,
-                                'sks_total'=> $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'ips' => '0.00',
+                                'ipk' => $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'sks_semester' => $total_sks,
+                                'sks_total' => $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                                 'id_pembiayaan' => 2,
                                 'status_sync' => 'belum sync',
                             ]);
                         }
-                    }else if($tagihan){
-                        $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                    } elseif ($tagihan) {
+                        $peserta = AktivitasKuliahMahasiswa::where('id', $akm_aktif->id)->update([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
                             'nim' => $riwayat_pendidikan->nim,
@@ -253,21 +248,21 @@ class FixAkm extends Command
                             'id_prodi' => $riwayat_pendidikan->id_prodi,
                             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester' => $semester_aktif->id_semester,
+                            'nama_semester' => $semester_aktif->semester->nama_semester,
                             'id_status_mahasiswa' => 'M',
                             'nama_status_mahasiswa' => 'Kampus Merdeka',
-                            'ips'=> '0.00',
-                            'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'ips' => '0.00',
+                            'ipk' => $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester' => $total_sks,
+                            'sks_total' => $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
                         ]);
-                    }else{
-                        $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                    } else {
+                        $peserta = AktivitasKuliahMahasiswa::where('id', $akm_aktif->id)->update([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
                             'nim' => $riwayat_pendidikan->nim,
@@ -275,24 +270,24 @@ class FixAkm extends Command
                             'id_prodi' => $riwayat_pendidikan->id_prodi,
                             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester' => $semester_aktif->id_semester,
+                            'nama_semester' => $semester_aktif->semester->nama_semester,
                             'id_status_mahasiswa' => 'M',
                             'nama_status_mahasiswa' => 'Kampus Merdeka',
-                            'ips'=> '0.00',
-                            'ipk'=> $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'ips' => '0.00',
+                            'ipk' => $transkrip->ipk == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester' => $total_sks,
+                            'sks_total' => $transkrip->total_sks == null && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => 0,
-                            'id_pembiayaan' => NULL,
+                            'id_pembiayaan' => null,
                             'status_sync' => 'belum sync',
                         ]);
                     }
-                }else{
-                    if($beasiswa){
-                        if($beasiswa->id_pembiayaan == '3'){
-                            $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                } else {
+                    if ($beasiswa) {
+                        if ($beasiswa->id_pembiayaan == '3') {
+                            $peserta = AktivitasKuliahMahasiswa::where('id', $akm_aktif->id)->update([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
                                 'nim' => $riwayat_pendidikan->nim,
@@ -300,21 +295,21 @@ class FixAkm extends Command
                                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                                'id_semester'=> $semester_aktif->id_semester,
-                                'nama_semester'=> $semester_aktif->semester->nama_semester,
+                                'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                                'id_semester' => $semester_aktif->id_semester,
+                                'nama_semester' => $semester_aktif->semester->nama_semester,
                                 'id_status_mahasiswa' => 'A',
                                 'nama_status_mahasiswa' => 'Aktif',
-                                'ips'=> '0.00',
-                                'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                                'sks_semester'=> $total_sks,
-                                'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'ips' => '0.00',
+                                'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'sks_semester' => $total_sks,
+                                'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => 0,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
-                        }else if($beasiswa->id_pembiayaan == '2' && $tagihan){
-                            $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                        } elseif ($beasiswa->id_pembiayaan == '2' && $tagihan) {
+                            $peserta = AktivitasKuliahMahasiswa::where('id', $akm_aktif->id)->update([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
                                 'nim' => $riwayat_pendidikan->nim,
@@ -322,22 +317,22 @@ class FixAkm extends Command
                                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                                'id_semester'=> $semester_aktif->id_semester,
-                                'nama_semester'=> $semester_aktif->semester->nama_semester,
+                                'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                                'id_semester' => $semester_aktif->id_semester,
+                                'nama_semester' => $semester_aktif->semester->nama_semester,
                                 'id_status_mahasiswa' => 'A',
                                 'nama_status_mahasiswa' => 'Aktif',
-                                'ips'=> '0.00',
-                                'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                                'sks_semester'=> $total_sks,
-                                'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'ips' => '0.00',
+                                'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'sks_semester' => $total_sks,
+                                'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                                 'id_pembiayaan' => 2,
                                 'status_sync' => 'belum sync',
                             ]);
                         }
-                    }else if($tagihan){
-                        $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                    } elseif ($tagihan) {
+                        $peserta = AktivitasKuliahMahasiswa::where('id', $akm_aktif->id)->update([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
                             'nim' => $riwayat_pendidikan->nim,
@@ -345,21 +340,21 @@ class FixAkm extends Command
                             'id_prodi' => $riwayat_pendidikan->id_prodi,
                             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester' => $semester_aktif->id_semester,
+                            'nama_semester' => $semester_aktif->semester->nama_semester,
                             'id_status_mahasiswa' => 'A',
                             'nama_status_mahasiswa' => 'Aktif',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'ips' => '0.00',
+                            'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester' => $total_sks,
+                            'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
                         ]);
-                    }else{
-                        $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
+                    } else {
+                        $peserta = AktivitasKuliahMahasiswa::where('id', $akm_aktif->id)->update([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
                             'nim' => $riwayat_pendidikan->nim,
@@ -367,23 +362,23 @@ class FixAkm extends Command
                             'id_prodi' => $riwayat_pendidikan->id_prodi,
                             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester' => $semester_aktif->id_semester,
+                            'nama_semester' => $semester_aktif->semester->nama_semester,
                             'id_status_mahasiswa' => 'A',
                             'nama_status_mahasiswa' => 'Aktif',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'ips' => '0.00',
+                            'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester' => $total_sks,
+                            'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => 0,
-                            'id_pembiayaan' => NULL,
+                            'id_pembiayaan' => null,
                             'status_sync' => 'belum sync',
                         ]);
                     }
                 }
 
-            }else{
+            } else {
 
                 // foreach ($aktivitas as $item) {
                 //     $item->update([
@@ -396,13 +391,13 @@ class FixAkm extends Command
                     if ($item->tanggal_approve == null) {
                         $item->update([
                             // 'approved' => '1',
-                            'tanggal_approve' => $tgl_approve
+                            'tanggal_approve' => $tgl_approve,
                         ]);
                     }
                 }
-                if($data_mbkm > 0){
-                    if($beasiswa){
-                        if($beasiswa->id_pembiayaan == '3'){
+                if ($data_mbkm > 0) {
+                    if ($beasiswa) {
+                        if ($beasiswa->id_pembiayaan == '3') {
                             $peserta = AktivitasKuliahMahasiswa::create([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
@@ -411,20 +406,20 @@ class FixAkm extends Command
                                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                                'id_semester'=> $semester_aktif->id_semester,
-                                'nama_semester'=> $semester_aktif->semester->nama_semester,
+                                'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                                'id_semester' => $semester_aktif->id_semester,
+                                'nama_semester' => $semester_aktif->semester->nama_semester,
                                 'id_status_mahasiswa' => 'M',
                                 'nama_status_mahasiswa' => 'Kampus Merdeka',
-                                'ips'=> '0.00',
-                                'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                                'sks_semester'=> $total_sks,
-                                'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'ips' => '0.00',
+                                'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'sks_semester' => $total_sks,
+                                'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => 0,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
-                        }else if($beasiswa->id_pembiayaan == '2' && $tagihan){
+                        } elseif ($beasiswa->id_pembiayaan == '2' && $tagihan) {
                             $peserta = AktivitasKuliahMahasiswa::create([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
@@ -433,21 +428,21 @@ class FixAkm extends Command
                                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                                'id_semester'=> $semester_aktif->id_semester,
-                                'nama_semester'=> $semester_aktif->semester->nama_semester,
+                                'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                                'id_semester' => $semester_aktif->id_semester,
+                                'nama_semester' => $semester_aktif->semester->nama_semester,
                                 'id_status_mahasiswa' => 'M',
                                 'nama_status_mahasiswa' => 'Kampus Merdeka',
-                                'ips'=> '0.00',
-                                'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                                'sks_semester'=> $total_sks,
-                                'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'ips' => '0.00',
+                                'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'sks_semester' => $total_sks,
+                                'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                                 'id_pembiayaan' => 2,
                                 'status_sync' => 'belum sync',
                             ]);
                         }
-                    }else if($tagihan){
+                    } elseif ($tagihan) {
                         $peserta = AktivitasKuliahMahasiswa::create([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
@@ -456,20 +451,20 @@ class FixAkm extends Command
                             'id_prodi' => $riwayat_pendidikan->id_prodi,
                             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester' => $semester_aktif->id_semester,
+                            'nama_semester' => $semester_aktif->semester->nama_semester,
                             'id_status_mahasiswa' => 'M',
                             'nama_status_mahasiswa' => 'Kampus Merdeka',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'ips' => '0.00',
+                            'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester' => $total_sks,
+                            'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
                         ]);
-                    }else{
+                    } else {
                         $peserta = AktivitasKuliahMahasiswa::create([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
@@ -478,23 +473,23 @@ class FixAkm extends Command
                             'id_prodi' => $riwayat_pendidikan->id_prodi,
                             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester' => $semester_aktif->id_semester,
+                            'nama_semester' => $semester_aktif->semester->nama_semester,
                             'id_status_mahasiswa' => 'M',
                             'nama_status_mahasiswa' => 'Kampus Merdeka',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'ips' => '0.00',
+                            'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester' => $total_sks,
+                            'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => 0,
-                            'id_pembiayaan' => NULL,
+                            'id_pembiayaan' => null,
                             'status_sync' => 'belum sync',
                         ]);
                     }
-                }else{
-                    if($beasiswa){
-                        if($beasiswa->id_pembiayaan == '3'){
+                } else {
+                    if ($beasiswa) {
+                        if ($beasiswa->id_pembiayaan == '3') {
                             $peserta = AktivitasKuliahMahasiswa::create([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
@@ -503,20 +498,20 @@ class FixAkm extends Command
                                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                                'id_semester'=> $semester_aktif->id_semester,
-                                'nama_semester'=> $semester_aktif->semester->nama_semester,
+                                'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                                'id_semester' => $semester_aktif->id_semester,
+                                'nama_semester' => $semester_aktif->semester->nama_semester,
                                 'id_status_mahasiswa' => 'A',
                                 'nama_status_mahasiswa' => 'Aktif',
-                                'ips'=> '0.00',
-                                'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                                'sks_semester'=> $total_sks,
-                                'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'ips' => '0.00',
+                                'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'sks_semester' => $total_sks,
+                                'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => 0,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
-                        }else if($beasiswa->id_pembiayaan == '2' && $tagihan){
+                        } elseif ($beasiswa->id_pembiayaan == '2' && $tagihan) {
                             $peserta = AktivitasKuliahMahasiswa::create([
                                 'feeder' => 0,
                                 'id_registrasi_mahasiswa' => $id_reg,
@@ -525,21 +520,21 @@ class FixAkm extends Command
                                 'id_prodi' => $riwayat_pendidikan->id_prodi,
                                 'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                                 'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                                'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                                'id_semester'=> $semester_aktif->id_semester,
-                                'nama_semester'=> $semester_aktif->semester->nama_semester,
+                                'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                                'id_semester' => $semester_aktif->id_semester,
+                                'nama_semester' => $semester_aktif->semester->nama_semester,
                                 'id_status_mahasiswa' => 'A',
                                 'nama_status_mahasiswa' => 'Aktif',
-                                'ips'=> '0.00',
-                                'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                                'sks_semester'=> $total_sks,
-                                'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                                'ips' => '0.00',
+                                'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                                'sks_semester' => $total_sks,
+                                'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                                 'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                                 'id_pembiayaan' => 2,
                                 'status_sync' => 'belum sync',
                             ]);
                         }
-                    }else if($tagihan){
+                    } elseif ($tagihan) {
                         $peserta = AktivitasKuliahMahasiswa::create([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
@@ -548,20 +543,20 @@ class FixAkm extends Command
                             'id_prodi' => $riwayat_pendidikan->id_prodi,
                             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester' => $semester_aktif->id_semester,
+                            'nama_semester' => $semester_aktif->semester->nama_semester,
                             'id_status_mahasiswa' => 'A',
                             'nama_status_mahasiswa' => 'Aktif',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'ips' => '0.00',
+                            'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester' => $total_sks,
+                            'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => $tagihan->total_nilai_tagihan,
                             'id_pembiayaan' => 1,
                             'status_sync' => 'belum sync',
                         ]);
-                    }else{
+                    } else {
                         $peserta = AktivitasKuliahMahasiswa::create([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
@@ -570,17 +565,17 @@ class FixAkm extends Command
                             'id_prodi' => $riwayat_pendidikan->id_prodi,
                             'nama_program_studi' => $riwayat_pendidikan->nama_program_studi,
                             'angkatan' => $riwayat_pendidikan->periode_masuk->id_tahun_ajaran,
-                            'id_periode_masuk'=> $riwayat_pendidikan->periode_masuk->id_semester,
-                            'id_semester'=> $semester_aktif->id_semester,
-                            'nama_semester'=> $semester_aktif->semester->nama_semester,
+                            'id_periode_masuk' => $riwayat_pendidikan->periode_masuk->id_semester,
+                            'id_semester' => $semester_aktif->id_semester,
+                            'nama_semester' => $semester_aktif->semester->nama_semester,
                             'id_status_mahasiswa' => 'A',
                             'nama_status_mahasiswa' => 'Aktif',
-                            'ips'=> '0.00',
-                            'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
-                            'sks_semester'=> $total_sks,
-                            'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
+                            'ips' => '0.00',
+                            'ipk' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
+                            'sks_semester' => $total_sks,
+                            'sks_total' => ! $transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
                             'biaya_kuliah_smt' => 0,
-                            'id_pembiayaan' => NULL,
+                            'id_pembiayaan' => null,
                             'status_sync' => 'belum sync',
                         ]);
                     }
@@ -606,7 +601,6 @@ class FixAkm extends Command
             ];
 
             return $result;
-
 
         }
 

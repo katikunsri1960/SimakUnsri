@@ -2,18 +2,15 @@
 
 namespace App\Http\Controllers\Fakultas\Akademik;
 
-use Exception;
-use App\Models\cr;
+use App\Http\Controllers\Controller;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\Konversi;
+use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Perkuliahan\MatkulKurikulum;
 use App\Models\ProgramStudi;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Controllers\Controller;
-use App\Models\Perkuliahan\Konversi;
-use App\Models\Perkuliahan\MataKuliah;
-use App\Models\Perkuliahan\MatkulKurikulum;
-use App\Models\Perkuliahan\ListKurikulum;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
 
 class AktivitasMahasiswaKonversiController extends Controller
 {
@@ -23,7 +20,7 @@ class AktivitasMahasiswaKonversiController extends Controller
     public function index()
     {
         $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                        ->pluck('id_prodi');
+            ->pluck('id_prodi');
 
         $data = Konversi::where('id_prodi', $id_prodi_fak)->get();
         // dd($data);
@@ -31,21 +28,20 @@ class AktivitasMahasiswaKonversiController extends Controller
         return view('fakultas.data-aktivitas.aktivitas-mahasiswa.index', compact('data'));
     }
 
-
     public function create(Request $request)
     {
         $prodi_id = auth()->user()->fk_id;
 
         $kurikulum_aktif = ListKurikulum::where('id_prodi', $prodi_id)
-                    ->where('is_active', 1)
-                    ->orderBy('id_semester')
-                    ->get();
+            ->where('is_active', 1)
+            ->orderBy('id_semester')
+            ->get();
 
-        $jenis_aktivitas=AktivitasMahasiswa::select('id_jenis_aktivitas', 'nama_jenis_aktivitas')
-                    ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
-                    ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4', '5','6', '22'])
-                    ->orderBy('nama_jenis_aktivitas')
-                    ->get();
+        $jenis_aktivitas = AktivitasMahasiswa::select('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+            ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+            ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '22'])
+            ->orderBy('nama_jenis_aktivitas')
+            ->get();
 
         return view('fakultas.data-aktivitas.aktivitas-mahasiswa.store', compact('kurikulum_aktif', 'jenis_aktivitas'));
     }
@@ -56,8 +52,8 @@ class AktivitasMahasiswaKonversiController extends Controller
         $kurikulum_id = $request->input('kurikulum_id');
 
         $id_matkul = Konversi::where('id_prodi', $prodi_id)
-                ->where('id_kurikulum', $kurikulum_id)
-                ->pluck('id_matkul');
+            ->where('id_kurikulum', $kurikulum_id)
+            ->pluck('id_matkul');
 
         $search = $request->input('q');
 
@@ -68,12 +64,11 @@ class AktivitasMahasiswaKonversiController extends Controller
             ->orWhere('kode_mata_kuliah', 'like', "%{$search}%")
             ->get();
 
-            // dd($mk_konversi);
+        // dd($mk_konversi);
 
         return response()->json($mk_konversi);
         // return view('fakultas.data-aktivitas.aktivitas-mahasiswa.store', compact('mk_konversi'));
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -81,7 +76,7 @@ class AktivitasMahasiswaKonversiController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'kurikulum' =>'required',
+            'kurikulum' => 'required',
             'jenis_aktivitas' => 'required',
             'mk_konversi' => 'required',
         ]);
@@ -89,36 +84,36 @@ class AktivitasMahasiswaKonversiController extends Controller
         try {
             // Gunakan transaksi untuk memastikan semua operasi database berhasil
             DB::transaction(function () use ($request) {
-            $prodi_id = auth()->user()->fk_id;
+                $prodi_id = auth()->user()->fk_id;
 
-            $kurikulum = ListKurikulum::select('id_kurikulum','nama_kurikulum', 'id_prodi', 'nama_program_studi')
-                            ->where('id_prodi', $prodi_id)
-                            ->where('id_kurikulum', $request->kurikulum)
-                            ->first();
+                $kurikulum = ListKurikulum::select('id_kurikulum', 'nama_kurikulum', 'id_prodi', 'nama_program_studi')
+                    ->where('id_prodi', $prodi_id)
+                    ->where('id_kurikulum', $request->kurikulum)
+                    ->first();
 
-            $jenis_aktivitas = AktivitasMahasiswa::select('id_jenis_aktivitas','nama_jenis_aktivitas')
-                            ->where('id_jenis_aktivitas', $request->jenis_aktivitas)
-                            ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
-                            ->first();
+                $jenis_aktivitas = AktivitasMahasiswa::select('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+                    ->where('id_jenis_aktivitas', $request->jenis_aktivitas)
+                    ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+                    ->first();
 
-            $mk_konversi = MatkulKurikulum::where('id_prodi', $prodi_id)
-                            ->where('id_matkul', $request->mk_konversi)
-                            ->first();
-                            // dd($mk_konversi);
+                $mk_konversi = MatkulKurikulum::where('id_prodi', $prodi_id)
+                    ->where('id_matkul', $request->mk_konversi)
+                    ->first();
+                // dd($mk_konversi);
 
-            // Simpan data ke tabel aktivitas_mahasiswas
-                $koversi=Konversi::create([
-                    'id_kurikulum' =>$kurikulum->id_kurikulum,
-                    'nama_kurikulum' =>$kurikulum->nama_kurikulum,
-                    'id_prodi' =>$kurikulum->id_prodi,
-                    'nama_program_studi' =>$kurikulum->nama_program_studi,
-                    'id_jenis_aktivitas'=>$jenis_aktivitas->id_jenis_aktivitas,
-                    'nama_jenis_aktivitas'=>$jenis_aktivitas->nama_jenis_aktivitas,
-                    'id_matkul' =>$mk_konversi->id_matkul,
-                    'kode_mata_kuliah' =>$mk_konversi->kode_mata_kuliah,
-                    'nama_mata_kuliah' =>$mk_konversi->nama_mata_kuliah,
-                    'sks_mata_kuliah' =>$mk_konversi->sks_mata_kuliah,
-                    'semester' =>$mk_konversi->semester,
+                // Simpan data ke tabel aktivitas_mahasiswas
+                $koversi = Konversi::create([
+                    'id_kurikulum' => $kurikulum->id_kurikulum,
+                    'nama_kurikulum' => $kurikulum->nama_kurikulum,
+                    'id_prodi' => $kurikulum->id_prodi,
+                    'nama_program_studi' => $kurikulum->nama_program_studi,
+                    'id_jenis_aktivitas' => $jenis_aktivitas->id_jenis_aktivitas,
+                    'nama_jenis_aktivitas' => $jenis_aktivitas->nama_jenis_aktivitas,
+                    'id_matkul' => $mk_konversi->id_matkul,
+                    'kode_mata_kuliah' => $mk_konversi->kode_mata_kuliah,
+                    'nama_mata_kuliah' => $mk_konversi->nama_mata_kuliah,
+                    'sks_mata_kuliah' => $mk_konversi->sks_mata_kuliah,
+                    'semester' => $mk_konversi->semester,
                 ]);
                 // dd($koversi);
             });
@@ -151,15 +146,15 @@ class AktivitasMahasiswaKonversiController extends Controller
         $prodi_id = auth()->user()->fk_id;
 
         $kurikulum_aktif = ListKurikulum::where('id_prodi', $prodi_id)
-                    ->where('is_active', 1)
-                    ->orderBy('id_semester')
-                    ->get();
+            ->where('is_active', 1)
+            ->orderBy('id_semester')
+            ->get();
 
-        $jenis_aktivitas=AktivitasMahasiswa::select('id_jenis_aktivitas', 'nama_jenis_aktivitas')
-                    ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
-                    ->whereNotIn('id_jenis_aktivitas', ['13','14','15','16','17','18','19','20'])
-                    ->orderBy('nama_jenis_aktivitas')
-                    ->get();
+        $jenis_aktivitas = AktivitasMahasiswa::select('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+            ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+            ->whereNotIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20'])
+            ->orderBy('nama_jenis_aktivitas')
+            ->get();
         $mk_konversi = Konversi::where('id', $id)->first();
         // dd($mk_konversi);
 
@@ -172,46 +167,46 @@ class AktivitasMahasiswaKonversiController extends Controller
     public function update(Request $request, string $id)
     {
         $validated = $request->validate([
-            'kurikulum' =>'required',
+            'kurikulum' => 'required',
             'jenis_aktivitas' => 'required',
             'mk_konversi' => 'required',
         ]);
 
         // try {
-            // Gunakan transaksi untuk memastikan semua operasi database berhasil
-            $prodi_id = auth()->user()->fk_id;
+        // Gunakan transaksi untuk memastikan semua operasi database berhasil
+        $prodi_id = auth()->user()->fk_id;
 
-            $kurikulum = ListKurikulum::select('id_kurikulum','nama_kurikulum', 'id_prodi', 'nama_program_studi')
-                            ->where('id_prodi', $prodi_id)
-                            ->where('id_kurikulum', $request->kurikulum)
-                            ->first();
+        $kurikulum = ListKurikulum::select('id_kurikulum', 'nama_kurikulum', 'id_prodi', 'nama_program_studi')
+            ->where('id_prodi', $prodi_id)
+            ->where('id_kurikulum', $request->kurikulum)
+            ->first();
 
-            $jenis_aktivitas = AktivitasMahasiswa::select('id_jenis_aktivitas','nama_jenis_aktivitas')
-                            ->where('id_jenis_aktivitas', $request->jenis_aktivitas)
-                            ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
-                            ->first();
+        $jenis_aktivitas = AktivitasMahasiswa::select('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+            ->where('id_jenis_aktivitas', $request->jenis_aktivitas)
+            ->groupBy('id_jenis_aktivitas', 'nama_jenis_aktivitas')
+            ->first();
 
-            $mk_konversi = MatkulKurikulum::where('id_prodi', $prodi_id)
-                            ->where('id_matkul', $request->mk_konversi)
-                            ->first();
-                            // dd($mk_konversi);
+        $mk_konversi = MatkulKurikulum::where('id_prodi', $prodi_id)
+            ->where('id_matkul', $request->mk_konversi)
+            ->first();
+        // dd($mk_konversi);
 
-            // Simpan data ke tabel aktivitas_mahasiswas
-            Konversi::where('id', $id)
-                ->update([
-                    'id_kurikulum' =>$kurikulum->id_kurikulum,
-                    'nama_kurikulum' =>$kurikulum->nama_kurikulum,
-                    'id_prodi' =>$kurikulum->id_prodi,
-                    'nama_program_studi' =>$kurikulum->nama_program_studi,
-                    'id_jenis_aktivitas'=>$jenis_aktivitas->id_jenis_aktivitas,
-                    'nama_jenis_aktivitas'=>$jenis_aktivitas->nama_jenis_aktivitas,
-                    'id_matkul' =>$mk_konversi->id_matkul,
-                    'kode_mata_kuliah' =>$mk_konversi->kode_mata_kuliah,
-                    'nama_mata_kuliah' =>$mk_konversi->nama_mata_kuliah,
-                    'sks_mata_kuliah' =>$mk_konversi->sks_mata_kuliah,
-                    'semester' =>$mk_konversi->semester,
-                ]);
-                // dd($koversi);
+        // Simpan data ke tabel aktivitas_mahasiswas
+        Konversi::where('id', $id)
+            ->update([
+                'id_kurikulum' => $kurikulum->id_kurikulum,
+                'nama_kurikulum' => $kurikulum->nama_kurikulum,
+                'id_prodi' => $kurikulum->id_prodi,
+                'nama_program_studi' => $kurikulum->nama_program_studi,
+                'id_jenis_aktivitas' => $jenis_aktivitas->id_jenis_aktivitas,
+                'nama_jenis_aktivitas' => $jenis_aktivitas->nama_jenis_aktivitas,
+                'id_matkul' => $mk_konversi->id_matkul,
+                'kode_mata_kuliah' => $mk_konversi->kode_mata_kuliah,
+                'nama_mata_kuliah' => $mk_konversi->nama_mata_kuliah,
+                'sks_mata_kuliah' => $mk_konversi->sks_mata_kuliah,
+                'semester' => $mk_konversi->semester,
+            ]);
+        // dd($koversi);
 
         return redirect()->route('fakultas.data-aktivitas.aktivitas-mahasiswa.index')->with('success', 'Data Berhasil Diubah');
     }
@@ -226,10 +221,10 @@ class AktivitasMahasiswaKonversiController extends Controller
             $aktivitas->delete();
 
             return redirect()->route('fakultas.data-aktivitas.aktivitas-mahasiswa.index')
-                             ->with('success', 'Data berhasil dihapus');
+                ->with('success', 'Data berhasil dihapus');
         } catch (Exception $e) {
             return redirect()->route('fakultas.data-aktivitas.aktivitas-mahasiswa.index')
-                             ->with('error', 'Terjadi masalah saat menghapus data. ');
+                ->with('error', 'Terjadi masalah saat menghapus data. ');
         }
     }
 }

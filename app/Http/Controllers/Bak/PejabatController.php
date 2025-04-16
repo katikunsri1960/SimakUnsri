@@ -15,7 +15,7 @@ class PejabatController extends Controller
         $data = PejabatFakultas::all();
 
         return view('bak.pejabat.fakultas.index', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -25,7 +25,7 @@ class PejabatController extends Controller
         $jabatan = PejabatUniversitasJabatan::with('pejabat')->get();
 
         return view('bak.pejabat.universitas.index', [
-            'jabatan' => $jabatan
+            'jabatan' => $jabatan,
         ]);
     }
 
@@ -38,7 +38,6 @@ class PejabatController extends Controller
             'nama' => 'required',
             'gelar_belakang' => 'nullable',
         ]);
-
 
         try {
             PejabatUniversitas::updateOrCreate(['jabatan_id' => $data['jabatan_id']], [

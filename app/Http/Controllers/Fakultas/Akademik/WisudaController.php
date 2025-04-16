@@ -2,27 +2,16 @@
 
 namespace App\Http\Controllers\Fakultas\Akademik;
 
-use Carbon\Carbon;
-use Ramsey\Uuid\Uuid;
-use App\Models\Wisuda;
-use Illuminate\Http\Request;
-use App\Models\SemesterAktif;
-use App\Models\AsistensiAkhir;
-use App\Models\Referensi\AllPt;
-use App\Models\Connection\Usept;
-use Illuminate\Cache\Repository;
-use App\Models\BeasiswaMahasiswa;
-use App\Models\Connection\Tagihan;
-use App\Models\Perpus\BebasPustaka;
 use App\Http\Controllers\Controller;
-use App\Models\Connection\Registrasi;
 use App\Models\Connection\CourseUsept;
-use App\Models\Mahasiswa\PengajuanCuti;
-use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Connection\Usept;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\BimbingMahasiswa;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Perpus\BebasPustaka;
+use App\Models\SemesterAktif;
+use App\Models\Wisuda;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
 
 class WisudaController extends Controller
 {
@@ -33,22 +22,22 @@ class WisudaController extends Controller
         $semester_aktif = SemesterAktif::first();
 
         $data = Wisuda::with('prodi', 'prodi.fakultas', 'prodi.jurusan', 'riwayat_pendidikan')
-                ->whereHas('prodi', function ($query) use ($id_fak) {
-                    $query->where('fakultas_id', $id_fak);
-                })
-                ->get();
+            ->whereHas('prodi', function ($query) use ($id_fak) {
+                $query->where('fakultas_id', $id_fak);
+            })
+            ->get();
 
         foreach ($data as $d) {
             $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)->first();
 
             $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)->first();
 
-            if(!$d->riwayat_pendidikan->id_kurikulum ) {
+            if (! $d->riwayat_pendidikan->id_kurikulum) {
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Kurikulum Mahasiswa Belum Diatur!!',
                 ]);
-            }else{
+            } else {
                 $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $d->riwayat_pendidikan->id_kurikulum)->first();
             }
 
@@ -65,7 +54,7 @@ class WisudaController extends Controller
                     'score' => $usept,
                     'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
                     'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
-            ];
+                ];
 
             } catch (\Throwable) {
                 $useptData = [
@@ -91,12 +80,12 @@ class WisudaController extends Controller
     {
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->first();
 
-        if(!$wisuda->riwayat_pendidikan->id_kurikulum ) {
+        if (! $wisuda->riwayat_pendidikan->id_kurikulum) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Kurikulum Mahasiswa Belum Diatur!!',
             ]);
-        }else{
+        } else {
             $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $wisuda->riwayat_pendidikan->id_kurikulum)->first();
         }
 
@@ -126,7 +115,7 @@ class WisudaController extends Controller
 
         // dd($bebas_pustaka, $useptData);
 
-        if (!$bebas_pustaka || $useptData['status'] == 'Tidak memenuhi Syarat') {
+        if (! $bebas_pustaka || $useptData['status'] == 'Tidak memenuhi Syarat') {
             return redirect()->back()->with('error', 'Mahasiswa belum memenuhi syarat bebas pustaka atau USEPT.');
         }
 
@@ -134,13 +123,13 @@ class WisudaController extends Controller
         // dd($lama_studi, $wisuda);
 
         $wisuda->update([
-            'lama_studi'=> $lama_studi,
+            'lama_studi' => $lama_studi,
             'approved' => 2,
             'tgl_keluar' => $request->tgl_sk_yudisium,
             'no_sk_yudisium' => $request->no_sk_yudisium,
             'tgl_sk_yudisium' => $request->tgl_sk_yudisium,
         ]);
-        
+
         return redirect()->back()->with('success', 'Pendaftaran Wisuda berhasil disetujui.');
     }
 
@@ -155,5 +144,4 @@ class WisudaController extends Controller
 
         return redirect()->back()->with('success', 'Pendaftaran Wisuda berhasil dibatalkan.');
     }
-
 }

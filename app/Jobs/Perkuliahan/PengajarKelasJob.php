@@ -2,8 +2,8 @@
 
 namespace App\Jobs\Perkuliahan;
 
-use App\Services\Feeder\FeederAPI;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Services\Feeder\FeederAPI;
 use Illuminate\Bus\Batchable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -15,7 +15,16 @@ class PengajarKelasJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $act, $limit, $offset, $order, $filter;
+    public $act;
+
+    public $limit;
+
+    public $offset;
+
+    public $order;
+
+    public $filter;
+
     /**
      * Create a new job instance.
      */
@@ -27,6 +36,7 @@ class PengajarKelasJob implements ShouldQueue
         $this->order = $order;
         $this->filter = $filter;
     }
+
     /**
      * Execute the job.
      */
@@ -35,7 +45,7 @@ class PengajarKelasJob implements ShouldQueue
         $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
         $response = $data->runWS();
 
-        if (!empty($response['data'])) {
+        if (! empty($response['data'])) {
 
             $result = $response['data'];
 

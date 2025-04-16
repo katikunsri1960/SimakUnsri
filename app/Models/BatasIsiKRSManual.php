@@ -2,14 +2,16 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class BatasIsiKRSManual extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
+
     protected $table = 'batas_isi_krs_manual';
 
     protected $appends = ['status_text', 'terakhir_update'];
@@ -38,7 +40,7 @@ class BatasIsiKRSManual extends Model
 
     public function scopeFilter($query, $request)
     {
-        if($request->has('id_semester') && $request->id_semester != '') {
+        if ($request->has('id_semester') && $request->id_semester != '') {
             $query->where('id_semester', $request->id_semester);
         } else {
             $semester_aktif = SemesterAktif::first()->id_semester;

@@ -9,6 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class PenundaanBayar extends Model
 {
     use HasFactory;
+
     protected $guarded = ['id'];
 
     protected $appends = ['status_text', 'terakhir_update'];
@@ -58,7 +59,7 @@ class PenundaanBayar extends Model
 
     public function scopeFilter($query, $request)
     {
-        if($request->has('id_semester') && $request->id_semester != '') {
+        if ($request->has('id_semester') && $request->id_semester != '') {
             $query->where('id_semester', $request->id_semester);
         } else {
             $semester_aktif = SemesterAktif::first()->id_semester;

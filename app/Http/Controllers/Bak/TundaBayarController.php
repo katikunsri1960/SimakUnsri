@@ -14,11 +14,11 @@ class TundaBayarController extends Controller
     {
         $semester_aktif = SemesterAktif::first()->id_semester;
         $semester = Semester::select('id_semester', 'nama_semester')
-                    ->where('id_semester', '<=', $semester_aktif)
-                    ->whereNot('semester', 3)
-                    ->orderBy('id_semester', 'desc')->get();
+            ->where('id_semester', '<=', $semester_aktif)
+            ->whereNot('semester', 3)
+            ->orderBy('id_semester', 'desc')->get();
 
-        $db = new PenundaanBayar();
+        $db = new PenundaanBayar;
 
         $data = $db->with(['riwayat.prodi'])->filter($request)->get();
 
@@ -64,7 +64,7 @@ class TundaBayarController extends Controller
 
         $tunda_bayar->update([
             'alasan_pembatalan' => $data['alasan_pembatalan'],
-            'status' => 5
+            'status' => 5,
         ]);
 
         return redirect()->back()->with('success', 'Data berhasil ditolak');

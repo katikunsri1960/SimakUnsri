@@ -15,7 +15,16 @@ class PesertaKelasJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $act, $limit, $offset, $order, $filter;
+    public $act;
+
+    public $limit;
+
+    public $offset;
+
+    public $order;
+
+    public $filter;
+
     /**
      * Create a new job instance.
      */
@@ -36,13 +45,12 @@ class PesertaKelasJob implements ShouldQueue
         $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
         $response = $data->runWS();
 
-        if (!empty($response['data'])) {
+        if (! empty($response['data'])) {
 
             $result = $response['data'];
             $result = array_chunk($result, 1000);
 
-            foreach($result as $r)
-            {
+            foreach ($result as $r) {
                 PesertaKelasKuliah::upsert($r, ['id_kelas_kuliah', 'id_registrasi_mahasiswa']);
             }
 

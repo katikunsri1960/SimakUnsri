@@ -12,6 +12,7 @@ class BiodataMahasiswa extends Model
     use HasFactory;
 
     protected $guarded = [];
+
     protected $appends = ['id_tanggal_lahir'];
 
     public function riwayat_pendidikan()
@@ -21,17 +22,12 @@ class BiodataMahasiswa extends Model
 
     public function getJenisKelaminAttribute($value)
     {
-        if ($value==="L")
-        {
-            return "Laki-laki";
-        }
-        elseif ($value==="P")
-        {
-            return "Perempuan";
-        }
-        else
-        {
-            return "Lainnya";
+        if ($value === 'L') {
+            return 'Laki-laki';
+        } elseif ($value === 'P') {
+            return 'Perempuan';
+        } else {
+            return 'Lainnya';
         }
     }
 
@@ -44,6 +40,7 @@ class BiodataMahasiswa extends Model
     {
         // buat date dari d-m-Y menjadi d F Y bahasa indonesia
         Carbon::setLocale('id');
+
         return Carbon::createFromFormat('d-m-Y', $this->tanggal_lahir)->translatedFormat('d F Y');
     }
 

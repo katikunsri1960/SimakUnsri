@@ -3,18 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\NilaiPerkuliahan;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\NilaiTransferPendidikan;
-use App\Jobs\HitungIpsJob;
 use Illuminate\Bus\Batch;
-use Illuminate\Support\Facades\Bus;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Bus\Queueable;
-use Illuminate\Queue\SerializesModels;
-use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 
 class HitungIpsBatchJob implements ShouldQueue
 {
@@ -25,7 +21,7 @@ class HitungIpsBatchJob implements ShouldQueue
     /**
      * Create a new job instance.
      *
-     * @param int $semester
+     * @param  int  $semester
      */
     public function __construct($semester)
     {
@@ -63,7 +59,7 @@ class HitungIpsBatchJob implements ShouldQueue
                 ->dispatch();
 
         } catch (\Exception $e) {
-            Log::error('Error dalam HitungIpsBatchJob: ' . $e->getMessage());
+            Log::error('Error dalam HitungIpsBatchJob: '.$e->getMessage());
         }
     }
 }

@@ -2,20 +2,20 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Models\ProgramStudi;
-use App\Models\Perkuliahan\AktivitasMahasiswa;
-use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Wisuda extends Model
 {
     use HasFactory;
+
     protected $table = 'data_wisuda';
+
     protected $appends = ['id_tanggal_sk_yudisium', 'approved_text'];
 
     // App\Models\Wisuda.php
@@ -82,7 +82,8 @@ class Wisuda extends Model
     public function getIdTanggalSkYudisiumAttribute()
     {
         Carbon::setLocale('id');
-        return $this->tanggal_sk_yudisium ?  Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium)->translatedFormat('d F Y') : '-';
+
+        return $this->tanggal_sk_yudisium ? Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium)->translatedFormat('d F Y') : '-';
     }
 
     public function getApprovedTextAttribute()
@@ -108,7 +109,8 @@ class Wisuda extends Model
         $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
         $tahun = floor($masa_studi / 12);
         $bulan = $masa_studi % 12;
-        return $tahun . ' tahun, ' . $bulan . ' bulan';
+
+        return $tahun.' tahun, '.$bulan.' bulan';
     }
 
     public function getStatusAttribute()
@@ -123,5 +125,4 @@ class Wisuda extends Model
             '99' => 'Ditolak BAK',
         ];
     }
-
 }

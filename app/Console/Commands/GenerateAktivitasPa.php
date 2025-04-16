@@ -40,15 +40,16 @@ class GenerateAktivitasPa extends Command
 
         $semester_aktif = SemesterAktif::first();
 
-        if (!$semester_aktif) {
+        if (! $semester_aktif) {
             $this->info('Semester aktif tidak ditemukan');
+
             return;
         }
 
         $id_semester = $semester_aktif->id_semester;
-        $year_part = substr($id_semester, 0,4);
+        $year_part = substr($id_semester, 0, 4);
 
-        $next_year = (int)$year_part + 1;
+        $next_year = (int) $year_part + 1;
 
         if (substr($id_semester, -1) == '1') {
             $tanggal_mulai = "$year_part-08-01";
@@ -75,11 +76,11 @@ class GenerateAktivitasPa extends Command
     private function proses_pa($prodi, $semester, $tanggal_mulai, $tanggal_akhir)
     {
 
-        $judul = "Pembimbing Akademik "; // + nama dosen
+        $judul = 'Pembimbing Akademik '; // + nama dosen
         $id_jenis_aktivitas = 7;
-        $nama_jenis_aktivitas = "Bimbingan akademis";
+        $nama_jenis_aktivitas = 'Bimbingan akademis';
         $jenis_anggota = 1;
-        $nama_jenis_anggota = "Kelompok";
+        $nama_jenis_anggota = 'Kelompok';
 
         $dosen_pa = RiwayatPendidikan::whereNull('id_jenis_keluar')
             ->whereNotNull('dosen_pa')
@@ -96,18 +97,17 @@ class GenerateAktivitasPa extends Command
 
         foreach ($dosen_pa as $d) {
             $bimbing = BimbingMahasiswa::join('aktivitas_mahasiswas as am', 'am.id_aktivitas', 'bimbing_mahasiswas.id_aktivitas')
-                            ->where('bimbing_mahasiswas.id_dosen', $d->dosen_pa)
-                            ->where('am.id_semester', $semester)
-                            ->where('am.id_prodi', $prodi)
-                            ->where('am.id_jenis_aktivitas', $id_jenis_aktivitas)
-                            ->first();
+                ->where('bimbing_mahasiswas.id_dosen', $d->dosen_pa)
+                ->where('am.id_semester', $semester)
+                ->where('am.id_prodi', $prodi)
+                ->where('am.id_jenis_aktivitas', $id_jenis_aktivitas)
+                ->first();
 
             DB::beginTransaction();
 
-            if(!$bimbing)
-            {
+            if (! $bimbing) {
                 $uuid = Uuid::uuid4()->toString();
-                $dosen = BiodataDosen::where('id_dosen', $d->dosen_pa)->select('nama_dosen', 'id_dosen','nidn', 'nama_dosen')->first();
+                $dosen = BiodataDosen::where('id_dosen', $d->dosen_pa)->select('nama_dosen', 'id_dosen', 'nidn', 'nama_dosen')->first();
                 $nama_dosen = $dosen->nama_dosen;
 
                 $aktivitas = AktivitasMahasiswa::create([
@@ -148,23 +148,21 @@ class GenerateAktivitasPa extends Command
 
                 $aktivitas_proses++;
 
-
             } else {
                 $aktivitas = AktivitasMahasiswa::where('id_aktivitas', $bimbing->id_aktivitas)->first();
             }
 
             $mahasiswa = RiwayatPendidikan::where('dosen_pa', $d->dosen_pa)
-                            ->whereNull('id_jenis_keluar')
-                            ->where('id_prodi', $prodi)
-                            ->get();
+                ->whereNull('id_jenis_keluar')
+                ->where('id_prodi', $prodi)
+                ->get();
 
-            foreach ($mahasiswa as $m)
-            {
+            foreach ($mahasiswa as $m) {
                 $check = AnggotaAktivitasMahasiswa::where('id_registrasi_mahasiswa', $m->id_registrasi_mahasiswa)
-                            ->where('id_aktivitas', $aktivitas->id_aktivitas)
-                            ->first();
+                    ->where('id_aktivitas', $aktivitas->id_aktivitas)
+                    ->first();
 
-                if(!$check) {
+                if (! $check) {
                     $uuidAnggota = Uuid::uuid4()->toString();
                     $anggota = AnggotaAktivitasMahasiswa::create([
                         'feeder' => 0,
@@ -185,12 +183,11 @@ class GenerateAktivitasPa extends Command
 
             DB::commit();
 
-
         }
 
         return [
             'aktivitas' => $aktivitas_proses,
-            'anggota' => $anggota_proses
+            'anggota' => $anggota_proses,
         ];
 
     }

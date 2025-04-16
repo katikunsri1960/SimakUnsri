@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers\Universitas;
 
+use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\MataKuliah;
-use App\Services\Feeder\FeederAPI;
-use App\Http\Controllers\Controller;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
+use App\Services\Feeder\FeederAPI;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
 
@@ -20,7 +20,7 @@ class KurikulumController extends Controller
         if ($request->has('id_prodi')) {
             $validated = $request->validate([
                 'id_prodi' => 'array',
-                'id_prodi.*' => 'exists:program_studis,id_prodi'
+                'id_prodi.*' => 'exists:program_studis,id_prodi',
             ]);
 
             $query->whereIn('id_prodi', $validated['id_prodi']);
@@ -29,6 +29,7 @@ class KurikulumController extends Controller
         $data = $query->get();
 
         $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
+
         return view('universitas.kurikulum.list-kurikulum', [
             'data' => $data,
             'prodi' => $prodi,
@@ -50,7 +51,7 @@ class KurikulumController extends Controller
         $semester = Semester::pluck('id_semester')->toArray();
         $semester = array_chunk($semester, 4);
         $semester = array_map(function ($value) {
-            return "id_semester IN ('" . implode("','", $value) . "')";
+            return "id_semester IN ('".implode("','", $value)."')";
         }, $semester);
 
         $batch = Bus::batch([])->name($name)->dispatch();
@@ -72,7 +73,7 @@ class KurikulumController extends Controller
         $reference = array_chunk($reference, 40);
 
         $filter = array_map(function ($value) use ($id) {
-            return "$id IN ('" . implode("','", $value) . "')";
+            return "$id IN ('".implode("','", $value)."')";
         }, $reference);
 
         $batch = Bus::batch([])->name($name)->dispatch();
@@ -97,11 +98,11 @@ class KurikulumController extends Controller
         $query = MataKuliah::with('prodi');
 
         if ($searchValue) {
-            $query = $query->where('kode_mata_kuliah', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mata_kuliah', 'like', '%' . $searchValue . '%');
+            $query = $query->where('kode_mata_kuliah', 'like', '%'.$searchValue.'%')
+                ->orWhere('nama_mata_kuliah', 'like', '%'.$searchValue.'%');
         }
 
-        if ($request->has('prodi') && !empty($request->prodi)) {
+        if ($request->has('prodi') && ! empty($request->prodi)) {
             $filter = $request->prodi;
             $query->whereIn('id_prodi', $filter);
         }
@@ -153,21 +154,21 @@ class KurikulumController extends Controller
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1G');
 
-        $act = "GetListKurikulum";
-        $count = "GetCountKurikulum";
+        $act = 'GetListKurikulum';
+        $count = 'GetCountKurikulum';
         $limit = 1000;
         $offset = 0;
-        $order = "";
+        $order = '';
         $model = \App\Models\Perkuliahan\ListKurikulum::class;
 
-        $api = new FeederAPI($count,$offset, $limit, $order);
+        $api = new FeederAPI($count, $offset, $limit, $order);
 
         $result = $api->runWS();
         // dd($result['data']);
         $total = $result['data'];
 
-        for($i = 0; $i < $total; $i += $limit) {
-            $api = new FeederAPI($act,$i, $limit, $order);
+        for ($i = 0; $i < $total; $i += $limit) {
+            $api = new FeederAPI($act, $i, $limit, $order);
             $result = $api->runWS();
 
             $chunk = array_chunk($result['data'], 100);
@@ -184,23 +185,20 @@ class KurikulumController extends Controller
 
     }
 
-    public function push_data_kurikulum()
-    {
-
-    }
+    public function push_data_kurikulum() {}
 
     public function sync_mata_kuliah()
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1G');
 
-        $act = "GetDetailMataKuliah";
-        $count = "GetCountMataKuliah";
+        $act = 'GetDetailMataKuliah';
+        $count = 'GetCountMataKuliah';
         $limit = 1000;
         $offset = 0;
         $order = '';
 
-        $api = new FeederAPI($count,$offset, $limit, $order);
+        $api = new FeederAPI($count, $offset, $limit, $order);
 
         $result = $api->runWS();
         $total = $result['data'];
@@ -213,7 +211,7 @@ class KurikulumController extends Controller
         $primary = 'id_matkul';
 
         for ($i = 0; $i < $total; $i += $limit) {
-            $batch->add(new $job($act, $limit, $i, $order, $filter,$model, $primary));
+            $batch->add(new $job($act, $limit, $i, $order, $filter, $model, $primary));
         }
 
         return redirect()->route('univ.mata-kuliah')->with('success', 'Data mata kuliah berhasil disinkronisasi');
@@ -235,7 +233,7 @@ class KurikulumController extends Controller
                 'model' => \App\Models\Perkuliahan\RencanaPembelajaran::class,
                 'primary' => 'id_rencana_ajar',
                 'reference' => \App\Models\Perkuliahan\MataKuliah::class,
-                'id' => 'id_matkul'
+                'id' => 'id_matkul',
             ],
             [
                 'act' => 'GetListRencanaEvaluasi',
@@ -247,7 +245,7 @@ class KurikulumController extends Controller
                 'model' => \App\Models\Perkuliahan\RencanaEvaluasi::class,
                 'primary' => 'id_rencana_ajar',
                 'reference' => \App\Models\Perkuliahan\MataKuliah::class,
-                'id' => 'id_matkul'
+                'id' => 'id_matkul',
             ],
         ];
 
@@ -260,7 +258,7 @@ class KurikulumController extends Controller
 
     public function is_active(ListKurikulum $kurikulum)
     {
-        $kurikulum->is_active = !$kurikulum->is_active;
+        $kurikulum->is_active = ! $kurikulum->is_active;
         $kurikulum->save();
 
         return redirect()->back()->with('success', 'Status Kurikulum Berhasil Diubah');

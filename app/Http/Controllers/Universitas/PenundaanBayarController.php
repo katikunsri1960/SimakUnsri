@@ -25,13 +25,13 @@ class PenundaanBayarController extends Controller
     public function upload(Request $request)
     {
         $data = $request->validate([
-            'file' => 'required|mimes:xls,xlsx'
+            'file' => 'required|mimes:xls,xlsx',
         ]);
 
         $file = $request->file('file');
-        $import = Excel::import(new PenundaanBayarImport(), $file);
+        $import = Excel::import(new PenundaanBayarImport, $file);
 
-        return redirect()->back()->with('success', "Data successfully imported!");
+        return redirect()->back()->with('success', 'Data successfully imported!');
     }
 
     public function store(Request $request)

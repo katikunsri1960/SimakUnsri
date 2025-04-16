@@ -11,7 +11,9 @@ use Illuminate\Database\Eloquent\Model;
 class BeasiswaMahasiswa extends Model
 {
     use HasFactory;
+
     protected $guarded = [];
+
     protected $appends = ['id_tanggal_mulai_beasiswa', 'id_tanggal_akhir_beasiswa'];
 
     public function jenis_beasiswa()

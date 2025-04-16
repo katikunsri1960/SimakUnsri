@@ -3,11 +3,10 @@
 namespace App\Http\Controllers\Mahasiswa\Akademik;
 
 use App\Http\Controllers\Controller;
+use App\Models\Connection\CourseUsept;
+use App\Models\Connection\Usept;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\ListKurikulum;
-use App\Models\Connection\Usept;
-use App\Models\Connection\CourseUsept;
-use Illuminate\Http\Request;
 
 class NilaiUseptController extends Controller
 {

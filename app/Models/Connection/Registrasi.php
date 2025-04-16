@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class Registrasi extends Model
 {
     use HasFactory;
+
     protected $connection = 'reg_con'; // Koneksi Laman Reg
+
     protected $table = 'reg_master';
 }

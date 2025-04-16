@@ -13,15 +13,23 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     public const ADMINISTRATOR = 'admin';
+
     public const ADMIN_UNIVERSITAS = 'univ';
+
     public const ADMIN_FAKULTAS = 'fakultas';
+
     public const ADMIN_PRODI = 'prodi';
+
     public const DOSEN = 'dosen';
+
     public const MAHASISWA = 'mahasiswa';
+
     public const BAAK = 'bak';
+
     public const PERPUS = 'perpus';
 
     const ROLE_PRODI = 'prodi';
+
     const ROLE_FAKULTAS = 'fakultas';
 
     /**
@@ -69,6 +77,4 @@ class User extends Authenticatable
                 return null;
         }
     }
-
-
 }

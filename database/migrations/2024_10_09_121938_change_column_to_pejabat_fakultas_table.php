@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::table('pejabat_fakultas', function (Blueprint $table) {
             // Hapus unique constraint lama (hanya pada 'id_jabatan')
             $table->dropUnique(['id_jabatan']);
-            
+
             // Tambahkan unique constraint baru pada kombinasi 'id_jabatan' dan 'id_fakultas'
             $table->unique(['id_jabatan', 'id_fakultas'], 'unique_jabatan_fakultas');
         });

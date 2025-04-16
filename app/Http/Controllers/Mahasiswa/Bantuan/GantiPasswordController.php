@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Mahasiswa\Bantuan;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class GantiPasswordController extends Controller
@@ -14,18 +14,19 @@ class GantiPasswordController extends Controller
         return view('mahasiswa.bantuan.ganti-password');
     }
 
-    public function proses_ganti_password(Request $request) {
+    public function proses_ganti_password(Request $request)
+    {
         // dd($request->all());
-		if ($request->new_password == $request->confirm_password) {
-			
+        if ($request->new_password == $request->confirm_password) {
+
             User::whereId(auth()->user()->id)->update([
-                'password' => Hash::make($request->new_password)
+                'password' => Hash::make($request->new_password),
             ]);
-            
+
             return redirect()->route('mahasiswa.bantuan.ganti-password')->with('success', 'Perubahan Password Berhasil !!!');
 
-		} else {
-			return redirect()->route('mahasiswa.bantuan.ganti-password')->with('error', 'Perubahan Password Gagal !!!');
-		}
-	}
+        } else {
+            return redirect()->route('mahasiswa.bantuan.ganti-password')->with('error', 'Perubahan Password Gagal !!!');
+        }
+    }
 }

@@ -4,18 +4,30 @@ namespace App\Services\Feeder;
 
 use GuzzleHttp\Client;
 
-class FeederAPI {
+class FeederAPI
+{
     // url Feeder Dikti
     private $url;
+
     // Username Feeder Dikti
     private $username;
+
     // Password
     private $password;
-    //data
-    private $act, $offset, $limit, $order, $filter;
 
+    // data
+    private $act;
 
-    function __construct($act, $offset, $limit, $order, $filter = null) {
+    private $offset;
+
+    private $limit;
+
+    private $order;
+
+    private $filter;
+
+    public function __construct($act, $offset, $limit, $order, $filter = null)
+    {
 
         $this->url = env('FEEDER_URL');
         $this->username = env('FEEDER_USERNAME');
@@ -31,46 +43,46 @@ class FeederAPI {
     public function runWS()
     {
         // dd($this->url);
-        $client = new Client();
+        $client = new Client;
         $params = [
-            "act" => "GetToken",
-            "username" => $this->username,
-            "password" => $this->password,
+            'act' => 'GetToken',
+            'username' => $this->username,
+            'password' => $this->password,
         ];
 
-        $req = $client->post( $this->url, [
+        $req = $client->post($this->url, [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ],
-            'body' => json_encode($params)
+            'body' => json_encode($params),
         ]);
 
         $response = $req->getBody();
-        $result = json_decode($response,true);
+        $result = json_decode($response, true);
 
-        if($result['error_code'] == 0) {
+        if ($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
-                "token" => $token,
-                "act"   => $this->act,
-                "offset" => $this->offset,
-                "order" => $this->order,
-                "limit" => $this->limit,
-                "filter" => $this->filter,
+                'token' => $token,
+                'act' => $this->act,
+                'offset' => $this->offset,
+                'order' => $this->order,
+                'limit' => $this->limit,
+                'filter' => $this->filter,
             ];
 
-            $req = $client->post( $this->url, [
+            $req = $client->post($this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params),
             ]);
 
             $response = $req->getBody();
 
-            $result = json_decode($response,true);
+            $result = json_decode($response, true);
 
         }
 

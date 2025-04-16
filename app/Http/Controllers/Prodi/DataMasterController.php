@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Prodi;
 
 use App\Http\Controllers\Controller;
+use App\Models\Connection\CourseUsept;
+use App\Models\Connection\Usept;
 use App\Models\Dosen\BiodataDosen;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\ListKurikulum;
@@ -10,24 +12,22 @@ use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Perkuliahan\PrasyaratMatkul;
 use App\Models\Perkuliahan\RencanaPembelajaran;
-use App\Models\Connection\Usept;
-use App\Models\Connection\CourseUsept;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use App\Models\RuangPerkuliahan;
 use App\Models\ProgramStudi;
+use App\Models\RuangPerkuliahan;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\Rule;
 
 class DataMasterController extends Controller
 {
     public function dosen()
     {
-        $db = new BiodataDosen();
+        $db = new BiodataDosen;
         $data = $db->get();
 
         return view('prodi.data-master.dosen.index', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -40,13 +40,13 @@ class DataMasterController extends Controller
             ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
 
         if ($searchValue) {
-            $query = $query->where(function($q) use ($searchValue) {
-                $q->where('nim', 'like', '%' . $searchValue . '%')
-                ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%');
+            $query = $query->where(function ($q) use ($searchValue) {
+                $q->where('nim', 'like', '%'.$searchValue.'%')
+                    ->orWhere('nama_mahasiswa', 'like', '%'.$searchValue.'%');
             });
         }
 
-        if ($request->has('angkatan') && !empty($request->angkatan)) {
+        if ($request->has('angkatan') && ! empty($request->angkatan)) {
             $filter = $request->angkatan;
             $query->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $filter);
         }
@@ -75,11 +75,11 @@ class DataMasterController extends Controller
 
             if ($columns[$orderColumn] == 'angkatan') {
                 if ($orderDirection == 'asc') {
-                    $data = $data->sortBy(function($item) {
+                    $data = $data->sortBy(function ($item) {
                         return substr($item->id_periode_masuk, 0, 4);
                     })->values();
                 } else {
-                    $data = $data->sortByDesc(function($item) {
+                    $data = $data->sortByDesc(function ($item) {
                         return substr($item->id_periode_masuk, 0, 4);
                     })->values();
                 }
@@ -112,10 +112,10 @@ class DataMasterController extends Controller
     {
 
         $angkatan = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)
-                    ->select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
-                    ->distinct()
-                    ->orderBy('angkatan_raw', 'desc')
-                    ->get();
+            ->select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
+            ->distinct()
+            ->orderBy('angkatan_raw', 'desc')
+            ->get();
 
         // dd($angkatan);
 
@@ -133,14 +133,14 @@ class DataMasterController extends Controller
             ['id' => 'Z', 'nama' => 'Lainnya'],
         ];
 
-        $dosDb = new BiodataDosen();
+        $dosDb = new BiodataDosen;
         $dosen = $dosDb->get();
 
         return view('prodi.data-master.mahasiswa.index', [
             'angkatan' => $angkatan,
             'kurikulum' => $kurikulum,
             'dosen' => $dosen,
-            'status' => $status
+            'status' => $status,
         ]);
     }
 
@@ -151,32 +151,32 @@ class DataMasterController extends Controller
         ]);
 
         $mahasiswa->update([
-            'dosen_pa' => $data['id_dosen']
+            'dosen_pa' => $data['id_dosen'],
         ]);
 
-        return redirect()->back()->with('success', "Data Berhasil di tambahkan");
+        return redirect()->back()->with('success', 'Data Berhasil di tambahkan');
     }
 
     public function set_kurikulum(RiwayatPendidikan $mahasiswa, Request $request)
     {
         $validatedData = $request->validate([
-            'id_kurikulum' => 'required' // Added exists rule for better validation
+            'id_kurikulum' => 'required', // Added exists rule for better validation
         ]);
 
         try {
             $mahasiswa->update([
-                'id_kurikulum' => $validatedData['id_kurikulum']
+                'id_kurikulum' => $validatedData['id_kurikulum'],
             ]);
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Data Berhasil di tambahkan'
+                'message' => 'Data Berhasil di tambahkan',
             ], 200); // Added HTTP status code
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
                 'message' => 'Data Gagal di tambahkan',
-                'error' => 'Terjadi kesalahan.'
+                'error' => 'Terjadi kesalahan.',
             ], 500); // Added error handling and HTTP status code
         }
     }
@@ -189,7 +189,7 @@ class DataMasterController extends Controller
         ]);
 
         $prodi = auth()->user()->fk_id;
-        $db = new RiwayatPendidikan();
+        $db = new RiwayatPendidikan;
 
         $store = $db->set_kurikulum_angkatan($data['tahun_angkatan'], $data['id_kurikulum'], $prodi);
 
@@ -200,10 +200,11 @@ class DataMasterController extends Controller
     public function matkul()
     {
         $data = ListKurikulum::with(['mata_kuliah', 'mata_kuliah.prasyarat_matkul', 'mata_kuliah.prasyarat_matkul.matkul_prasyarat'])
-                            ->where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
-            // dd($data);
+            ->where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+
+        // dd($data);
         return view('prodi.data-master.mata-kuliah.index', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -211,10 +212,11 @@ class DataMasterController extends Controller
     {
         $data_matkul = MataKuliah::where('id_matkul', $matkul)->first();
         $data = RencanaPembelajaran::where('id_matkul', $matkul)->get();
-            // dd($data);
+
+        // dd($data);
         return view('prodi.data-master.mata-kuliah.lihat-rps', [
             'data' => $data,
-            'matkul' => $data_matkul
+            'matkul' => $data_matkul,
         ]);
     }
 
@@ -223,7 +225,8 @@ class DataMasterController extends Controller
         $rps->where('id_matkul', $matkul)->update([
             'approved' => 1,
         ]);
-            // dd($data);
+
+        // dd($data);
         return redirect()->back()->with('success', 'Data berhasil disimpan');
     }
 
@@ -237,9 +240,9 @@ class DataMasterController extends Controller
 
         $idMatkulArray = $data->pluck('id_matkul')->toArray();
         // dd($idMatkulArray);
-        $matkul = ListKurikulum::with(['mata_kuliah' => function($query) use ($idMatkulArray) {
-                $query->whereNotIn('mata_kuliahs.id_matkul', $idMatkulArray);
-            }])
+        $matkul = ListKurikulum::with(['mata_kuliah' => function ($query) use ($idMatkulArray) {
+            $query->whereNotIn('mata_kuliahs.id_matkul', $idMatkulArray);
+        }])
             ->where('id_prodi', $id_prodi)
             ->where('is_active', 1)
             ->get();
@@ -266,8 +269,8 @@ class DataMasterController extends Controller
     {
 
         $data = $request->validate([
-                    'id_matkul' => 'required',
-                ]);
+            'id_matkul' => 'required',
+        ]);
 
         $data['id_prodi'] = auth()->user()->fk_id;
 
@@ -287,12 +290,12 @@ class DataMasterController extends Controller
     {
         $prodi_id = auth()->user()->fk_id;
         $data_prodi = ProgramStudi::where('id_prodi', $prodi_id)->first();
-        $data = RuangPerkuliahan::where('fakultas_id',$data_prodi->fakultas_id)->get();
+        $data = RuangPerkuliahan::where('fakultas_id', $data_prodi->fakultas_id)->get();
 
         // dd($data_prodi);
 
         return view('prodi.data-master.ruang-perkuliahan.index', [
-            'data' => $data
+            'data' => $data,
         ]);
     }
 
@@ -303,15 +306,15 @@ class DataMasterController extends Controller
             'nama_ruang' => 'required',
             'lokasi' => [
                 'required',
-                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$prodi_id) {
+                Rule::unique('ruang_perkuliahans')->where(function ($query) use ($request, $prodi_id) {
                     return $query->where('nama_ruang', $request->nama_ruang)
-                    ->where('lokasi', $request->lokasi)
-                    ->where('id_prodi', $prodi_id);
+                        ->where('lokasi', $request->lokasi)
+                        ->where('id_prodi', $prodi_id);
                 }),
             ],
         ]);
 
-        RuangPerkuliahan::create(['nama_ruang'=> $request->nama_ruang, 'lokasi'=> $request->lokasi, 'id_prodi'=> $prodi_id]);
+        RuangPerkuliahan::create(['nama_ruang' => $request->nama_ruang, 'lokasi' => $request->lokasi, 'id_prodi' => $prodi_id]);
 
         return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
@@ -323,11 +326,11 @@ class DataMasterController extends Controller
             'nama_ruang' => 'required',
             'lokasi' => [
                 'required',
-                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$prodi_id,$ruang_perkuliahan) {
+                Rule::unique('ruang_perkuliahans')->where(function ($query) use ($request, $prodi_id, $ruang_perkuliahan) {
                     return $query->where('nama_ruang', $request->nama_ruang)
-                    ->where('lokasi', $request->lokasi)
-                    ->where('id_prodi', $prodi_id)
-                    ->whereNotIn('id', [$ruang_perkuliahan->id]);
+                        ->where('lokasi', $request->lokasi)
+                        ->where('id_prodi', $prodi_id)
+                        ->whereNotIn('id', [$ruang_perkuliahan->id]);
                 }),
             ],
         ]);
@@ -347,10 +350,11 @@ class DataMasterController extends Controller
     public function kurikulum()
     {
         $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+
         return view('prodi.data-master.kurikulum.index',
-        [
-            'data' => $data
-        ]);
+            [
+                'data' => $data,
+            ]);
     }
 
     public function detail_kurikulum(ListKurikulum $kurikulum)
@@ -370,17 +374,18 @@ class DataMasterController extends Controller
     {
         $id_prodi = auth()->user()->fk_id;
 
-        $db = new MataKuliah();
+        $db = new MataKuliah;
         // $prasyarat = $db->matkul_prodi($id_prodi);
         $prasyarat = ListKurikulum::with('mata_kuliah')
-                    ->whereHas('mata_kuliah', function($query) use ($matkul) {
-                        $query->where('mata_kuliahs.id_matkul', $matkul->id_matkul);
-                    })
-                    ->where('id_prodi', $id_prodi)->where('id_kurikulum', $kurikulum->id_kurikulum)->first();
+            ->whereHas('mata_kuliah', function ($query) use ($matkul) {
+                $query->where('mata_kuliahs.id_matkul', $matkul->id_matkul);
+            })
+            ->where('id_prodi', $id_prodi)->where('id_kurikulum', $kurikulum->id_kurikulum)->first();
+
         // dd($prasyarat);
         return view('prodi.data-master.mata-kuliah.tambah-prasyarat', [
             'matkul' => $matkul,
-            'prasyarat' => $prasyarat
+            'prasyarat' => $prasyarat,
         ]);
     }
 
@@ -388,9 +393,9 @@ class DataMasterController extends Controller
     {
         $data = $request->validate([
             'prasyarat' => 'required',
-            'prasyarat.*' => 'required|exists:mata_kuliahs,id_matkul'
+            'prasyarat.*' => 'required|exists:mata_kuliahs,id_matkul',
         ]);
-        $db = new PrasyaratMatkul();
+        $db = new PrasyaratMatkul;
 
         $store = $db->prasyarat_store($matkul->id_matkul, $data['prasyarat']);
 
@@ -399,7 +404,7 @@ class DataMasterController extends Controller
 
     public function hapus_prasyarat(MataKuliah $matkul)
     {
-        $db = new PrasyaratMatkul();
+        $db = new PrasyaratMatkul;
 
         $data = $db->prasyarat_destroy($matkul->id_matkul);
 
@@ -409,16 +414,15 @@ class DataMasterController extends Controller
     public function kurikulum_angkatan()
     {
         $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)
-                    ->where('is_active', 1)->get();
+            ->where('is_active', 1)->get();
 
-        return view('prodi.data-master.kurikulum-angkatan.index',);
+        return view('prodi.data-master.kurikulum-angkatan.index');
     }
 
     public function histori_nilai_usept($mahasiswa)
     {
         $data_mahasiswa = RiwayatPendidikan::with('biodata')->where('id_registrasi_mahasiswa', $mahasiswa)->first();
         $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data_mahasiswa->id_kurikulum)->first();
-
 
         try {
             // Set the time limit to 30 seconds (adjust as needed)
@@ -429,7 +433,7 @@ class DataMasterController extends Controller
             $nilai_course = $db_course_usept->whereIn('nim', [$data_mahasiswa->nim, $data_mahasiswa->biodata->nik])->get();
 
         } catch (\Throwable $th) {
-            //throw $th;
+            // throw $th;
             $nilai_usept_mhs = 0;
             $nilai_course = 0;
             Log::error($th->getMessage());
