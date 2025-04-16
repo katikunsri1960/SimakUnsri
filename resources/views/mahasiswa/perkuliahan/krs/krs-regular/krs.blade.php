@@ -221,7 +221,7 @@
                                                                 </td>
                                                                 <td class="text-start align-middle" style="white-space: nowrap; width:20%">
                                                                     @if($data->bimbing_mahasiswa->isEmpty())
-                                                                        <div class="text-danger">Tidak ada dosen pembimbing</div>
+                                                                        <span class="badge badge-xl badge-danger-light">Tidak ada dosen pembimbing</span>
                                                                     @else
                                                                         @foreach($data->bimbing_mahasiswa as $dosen_bimbing)
                                                                             <ul>
