@@ -1112,7 +1112,7 @@ class FeederUpload {
 
         curl_setopt($ch, CURLOPT_POST, 1);
 
-        $headers = array();
+        $headers = [];
         // $headers[] = 'Authorization: Bearer '.$this->get_token();
         $headers[] = 'Content-Type: application/json';
 

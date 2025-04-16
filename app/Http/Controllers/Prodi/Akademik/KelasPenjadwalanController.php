@@ -107,58 +107,58 @@ class KelasPenjadwalanController extends Controller
         }, 'dosen_pengajar.dosen', 'ruang_perkuliahan', 'semester', 'matkul', 'prodi'])->where('id', $id_kelas)->first();
 
         $phpWord = new \PhpOffice\PhpWord\PhpWord();
-        $sectionStyle = array(
+        $sectionStyle = [
             'orientation' => 'landscape',
             'marginLeft' => 600,
             'marginRight' => 600,
             'marginTop' => 600,
             'marginBottom' => 600
-        );
+        ];
 
         // dd($data);
         // Add section with the defined properties
         $section = $phpWord->addSection($sectionStyle);
 
-        $section->addText('DAFTAR HADIR', array('name' => 'Arial', 'size' => 14, 'bold' => true), array('align' => 'center'));
+        $section->addText('DAFTAR HADIR', ['name' => 'Arial', 'size' => 14, 'bold' => true], ['align' => 'center']);
 
-        $tableStyle = array('alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER);
+        $tableStyle = ['alignment' => \PhpOffice\PhpWord\SimpleType\JcTable::CENTER];
         $table = $section->addTable($tableStyle);
 
         // Add rows and cells for each piece of text
         $table->addRow();
-        $table->addCell(2000)->addText('Program Studi', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->prodi->nama_jenjang_pendidikan. " ".$data->prodi->nama_program_studi." (".$data->prodi->kode_program_studi.")", array('name' => 'Arial', 'size' => 10));
+        $table->addCell(2000)->addText('Program Studi', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(500)->addText(':', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(5000)->addText($data->prodi->nama_jenjang_pendidikan. " ".$data->prodi->nama_program_studi." (".$data->prodi->kode_program_studi.")", ['name' => 'Arial', 'size' => 10]);
 
         $table->addRow();
-        $table->addCell(2000)->addText('Tahun Akademik', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->semester->nama_semester, array('name' => 'Arial', 'size' => 10));
+        $table->addCell(2000)->addText('Tahun Akademik', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(500)->addText(':', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(5000)->addText($data->semester->nama_semester, ['name' => 'Arial', 'size' => 10]);
 
         $table->addRow();
-        $table->addCell(2000)->addText('Mata Kuliah', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->matkul->kode_mata_kuliah.' - '.$data->matkul->nama_mata_kuliah, array('name' => 'Arial', 'size' => 10));
+        $table->addCell(2000)->addText('Mata Kuliah', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(500)->addText(':', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(5000)->addText($data->matkul->kode_mata_kuliah.' - '.$data->matkul->nama_mata_kuliah, ['name' => 'Arial', 'size' => 10]);
 
         $table->addRow();
-        $table->addCell(2000)->addText('Kelas', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->nama_kelas_kuliah, array('name' => 'Arial', 'size' => 10));
+        $table->addCell(2000)->addText('Kelas', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(500)->addText(':', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(5000)->addText($data->nama_kelas_kuliah, ['name' => 'Arial', 'size' => 10]);
 
         $table->addRow();
-        $table->addCell(2000)->addText('Ruang', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->ruang_perkuliahan->nama_ruang." (".$data->ruang_perkuliahan->lokasi.")", array('name' => 'Arial', 'size' => 10));
+        $table->addCell(2000)->addText('Ruang', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(500)->addText(':', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(5000)->addText($data->ruang_perkuliahan->nama_ruang." (".$data->ruang_perkuliahan->lokasi.")", ['name' => 'Arial', 'size' => 10]);
 
         $table->addRow();
-        $table->addCell(2000)->addText('Dosen', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
+        $table->addCell(2000)->addText('Dosen', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(500)->addText(':', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
         $cell = $table->addCell(5000);
 
-        $listStyle = array(
+        $listStyle = [
             'listType' => \PhpOffice\PhpWord\Style\ListItem::TYPE_BULLET_FILLED,
-            'inde' => array('left' => 0, 'hanging' => 0) // Adjust the negative value as needed
-        );
+            'inde' => ['left' => 0, 'hanging' => 0] // Adjust the negative value as needed
+        ];
 
         // Iterate over the dosen_pengajar array and add each dosen name as a bullet point with the custom list style
         // foreach ($data->dosen_pengajar as $dosenPengajar) {
@@ -176,33 +176,33 @@ class KelasPenjadwalanController extends Controller
         }
 
         $table->addRow();
-        $table->addCell(2000)->addText('Jadwal Hari', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->jadwal_hari, array('name' => 'Arial', 'size' => 10));
+        $table->addCell(2000)->addText('Jadwal Hari', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(500)->addText(':', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(5000)->addText($data->jadwal_hari, ['name' => 'Arial', 'size' => 10]);
 
         $table->addRow();
-        $table->addCell(2000)->addText('Jadwal Jam', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(500)->addText(':', array('name' => 'Arial', 'size' => 10, 'bold' => true));
-        $table->addCell(5000)->addText($data->jadwal_jam_mulai.' - '.$data->jadwal_jam_selesai. " WIB", array('name' => 'Arial', 'size' => 10));
+        $table->addCell(2000)->addText('Jadwal Jam', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(500)->addText(':', ['name' => 'Arial', 'size' => 10, 'bold' => true]);
+        $table->addCell(5000)->addText($data->jadwal_jam_mulai.' - '.$data->jadwal_jam_selesai. " WIB", ['name' => 'Arial', 'size' => 10]);
 
 
         $section->addTextBreak(1);
 
-         $tableStyle = array(
+         $tableStyle = [
             'borderSize' => 6,
             'borderColor' => '000000',
             'cellMargin' => 50
-        );
-        $firstRowStyle = array('bgColor' => 'ffffff');
+        ];
+        $firstRowStyle = ['bgColor' => 'ffffff'];
         $phpWord->addTableStyle('Fancy Table', $tableStyle, $firstRowStyle);
         $pertemuan = 16;
         // Add table with the defined style
         $table = $section->addTable('Fancy Table');
         $table->addRow();
-        $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'restart'])->addText('NO', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'center', 'valign' => 'center']);
-        $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'vMerge' => 'restart'])->addText('NIM', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'center', 'valign' => 'center']);
-        $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'vMerge' => 'restart'])->addText('NAMA', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'center', 'valign' => 'center']);
-        $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'gridSpan' => $pertemuan])->addText('TANDA TANGAN', array('name' => 'Arial', 'size' => 9, 'bold' => true), ['align' => 'center', 'valign' => 'center']);
+        $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'restart'])->addText('NO', ['name' => 'Arial', 'size' => 9, 'bold' => true], ['align' => 'center', 'valign' => 'center']);
+        $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'vMerge' => 'restart'])->addText('NIM', ['name' => 'Arial', 'size' => 9, 'bold' => true], ['align' => 'center', 'valign' => 'center']);
+        $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'vMerge' => 'restart'])->addText('NAMA', ['name' => 'Arial', 'size' => 9, 'bold' => true], ['align' => 'center', 'valign' => 'center']);
+        $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER,'gridSpan' => $pertemuan])->addText('TANDA TANGAN', ['name' => 'Arial', 'size' => 9, 'bold' => true], ['align' => 'center', 'valign' => 'center']);
 
         // Second row
         $table->addRow();
@@ -210,7 +210,7 @@ class KelasPenjadwalanController extends Controller
         $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'continue']);
         $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER, 'vMerge' => 'continue']);
         for ($i = 1; $i <= $pertemuan; $i++) {
-            $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText('tgl', array('name' => 'Arial', 'size' => 9, 'bold' => true, 'italic' => true), ['align' => 'center', 'valign' => 'center']);
+            $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText('tgl', ['name' => 'Arial', 'size' => 9, 'bold' => true, 'italic' => true], ['align' => 'center', 'valign' => 'center']);
         }
 
 
@@ -218,9 +218,9 @@ class KelasPenjadwalanController extends Controller
             $no = 1;
             foreach ($data->peserta_kelas as $peserta) {
                 $table->addRow();
-                $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($no++, array('name' => 'Arial', 'size' => 9), ['align' => 'center', 'valign' => 'center']);
-                $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nim, array('name' => 'Arial', 'size' => 9),['align' => 'center']);
-                $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nama_mahasiswa, array('name' => 'Arial', 'size' => 9),['valign' => 'center']);
+                $table->addCell(500, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($no++, ['name' => 'Arial', 'size' => 9], ['align' => 'center', 'valign' => 'center']);
+                $table->addCell(2400, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nim, ['name' => 'Arial', 'size' => 9],['align' => 'center']);
+                $table->addCell(4000, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER])->addText($peserta->mahasiswa->nama_mahasiswa, ['name' => 'Arial', 'size' => 9],['valign' => 'center']);
                 for ($i=1; $i <= $pertemuan; $i++) {
                     $table->addCell(800, ['valign' => \PhpOffice\PhpWord\SimpleType\VerticalJc::CENTER]);
                 }
