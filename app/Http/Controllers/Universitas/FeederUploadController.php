@@ -1863,7 +1863,7 @@ class FeederUploadController extends Controller
 
     //   $string = preg_replace("/[().,-]/", " ", $string);
 
-      $string = preg_replace(array('/\s{2,}/', '/[\t\n]/'), ' ', $string);
+      $string = preg_replace(['/\s{2,}/', '/[\t\n]/'], ' ', $string);
 
       $string = preg_replace( '/[^[:print:]]/', '',$string);
       $string = trim($string);
