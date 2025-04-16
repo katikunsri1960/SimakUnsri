@@ -122,9 +122,9 @@ class KrsController extends Controller
 
             // Ambil aktivitas mahasiswa
             $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas', 'bimbing_mahasiswa', 'konversi'])
-                ->whereHas('bimbing_mahasiswa', function ($query) {
-                    $query->whereNotNull('id_bimbing_mahasiswa');
-                })
+                // ->whereHas('bimbing_mahasiswa', function ($query) {
+                //     $query->whereNotNull('id_bimbing_mahasiswa');
+                // })
                 ->whereHas('anggota_aktivitas', function ($query) use ($riwayat_pendidikan) {
                     $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
                         ->where('nim', $riwayat_pendidikan->nim);
