@@ -408,6 +408,33 @@ class FeederUpload {
         }
     }
 
+    public function uploadKrs()
+    {
+        $token = $this->get_token();
+        $paramsGet = [
+            "token" => $token,
+            "act"   => $this->actGet,
+            "filter" => $this->recordGet
+        ];
+
+        $result = $this->service_native($paramsGet, $this->url);
+
+        if ($result['error_code'] == 0 && count($result['data']) > 0) {
+            return $result;
+        }
+
+        $params = [
+            "token" => $token,
+            "act"   => $this->act,
+            "record" => $this->record
+        ];
+
+        $result = $this->service_native($params, $this->url);
+
+        return $result;
+
+    }
+
     public function uploadAktivitas()
     {
 

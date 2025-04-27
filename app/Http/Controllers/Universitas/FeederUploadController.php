@@ -438,10 +438,10 @@ class FeederUploadController extends Controller
                     "id_kelas_kuliah" => $d->id_kelas_kuliah,
                 ];
 
-                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."' AND id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'";
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
-                $result = $req->uploadGeneral();
+                $result = $req->uploadKrs();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
