@@ -5,13 +5,10 @@ namespace App\Http\Controllers\Fakultas\Akademik;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
 use App\Models\Connection\Usept;
-use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Connection\CourseUsept;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Perkuliahan\TranskripMahasiswa;
-use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
 class NilaiUSEPTController extends Controller
 {
@@ -22,7 +19,7 @@ class NilaiUSEPTController extends Controller
 
     public function data(Request $request)
     {
-        
+
         $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
                     ->pluck('id_prodi');
 
@@ -36,7 +33,7 @@ class NilaiUSEPTController extends Controller
         if (!$riwayat) {
             return back()->with('error', 'Data Mahasiswa tidak ditemukan!');
         }
-                    
+
         $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
 
         $test_usept = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get();
