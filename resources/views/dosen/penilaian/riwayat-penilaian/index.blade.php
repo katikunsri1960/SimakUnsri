@@ -91,8 +91,8 @@ Riwayat Penilaian Perkuliahan Mahasiswa
                                             <td class="text-start align-middle">
                                                 {{$d->kelas_kuliah ? $d->kelas_kuliah->prodi->nama_jenjang_pendidikan : '-'}} - {{$d->kelas_kuliah ? $d->kelas_kuliah->prodi->nama_program_studi : '-'}}
                                             </td>
-                                            <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
-                                            <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
+                                            <td class="text-center align-middle">{{$d->kelas_kuliah ? $d->kelas_kuliah->matkul->kode_mata_kuliah :'-'}}</td>
+                                            <td class="text-start align-middle">{{$d->kelas_kuliah ? $d->kelas_kuliah->matkul->nama_mata_kuliah :'-'}}</td>
                                             <td class="text-center align-middle">
                                                 @if(count($d->kelas_kuliah->peserta_kelas_approved) > 0)
                                                     <a class="btn btn-sm btn-rounded btn-info-light" href="{{route('dosen.penilaian.riwayat-penilaian.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
