@@ -42,9 +42,9 @@ Penilaian Perkuliahan Mahasiswa
                             <div class="col-xl-12 col-lg-12">
                                 {{-- <h3 class="fw-500 text-dark mt-0">{{$data[0]->kelas_kuliah->nama_semester}}</h3> --}}
                                 <p class="mb-0 text-fade fs-18">
-                                    Periode Pengisian Nilai, 
+                                    Periode Pengisian Nilai,
                                     {{ $semester_aktif ? \Carbon\Carbon::parse($semester_aktif['mulai_isi_nilai'])->locale('id')->translatedFormat('d M Y') . ' - ' . \Carbon\Carbon::parse($semester_aktif['batas_isi_nilai'])->locale('id')->translatedFormat('d M Y') : 'Data Belum Terisi' }}
-                                </p>                                
+                                </p>
                             </div>
                         </div><hr>
                         <div class="row">
@@ -64,36 +64,47 @@ Penilaian Perkuliahan Mahasiswa
                                     </thead>
                                     <tbody>
                                         @foreach ($data as $d)
-                                        <tr class="{{ $d->kelas_kuliah && $d->kelas_kuliah->nilai_perkuliahan && 
+                                        <tr class="{{ $d->kelas_kuliah && $d->kelas_kuliah->nilai_perkuliahan &&
                                                         $d->kelas_kuliah->nilai_perkuliahan->filter(function($item) {
                                                             return isset($item->nilai_huruf) && !empty($item->nilai_huruf);
-                                                        })->isNotEmpty() ? 'table-success' : '' 
+                                                        })->isNotEmpty() ? 'table-success' : ''
                                                     }}">
-                                                    
+
                                             <td class="text-center align-middle">{{$loop->iteration}}</td>
                                             <td class="text-start align-middle">
-                                                {{$d->kelas_kuliah->prodi->nama_jenjang_pendidikan}} - {{$d->kelas_kuliah->prodi->nama_program_studi}}
+                                                {{$d->kelas_kuliah ? $d->kelas_kuliah->prodi->nama_jenjang_pendidikan : ''}} - {{$d->kelas_kuliah ? $d->kelas_kuliah->prodi->nama_program_studi : ''}}
                                             </td>
-                                            <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
-                                            <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
+                                            <td class="text-center align-middle">{{$d->kelas_kuliah ? $d->kelas_kuliah->matkul->kode_mata_kuliah : ''}}</td>
+                                            <td class="text-start align-middle">{{$d->kelas_kuliah ? $d->kelas_kuliah->matkul->nama_mata_kuliah : ''}}</td>
                                             <td class="text-center align-middle">
+                                                @if ($d->kelas_kuliah)
+
                                                 @if(count($d->kelas_kuliah->peserta_kelas_approved) > 0)
                                                     <a class="btn btn-sm btn-rounded btn-info-light" href="{{route('dosen.penilaian.penilaian-perkuliahan.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
                                                 @else
                                                     <button class="btn btn-sm btn-rounded btn-info-light" disabled><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</button>
                                                 @endif
+
+                                                @endif
+
                                             </td>
                                             <td class="text-start align-middle">
-                                                @if ($d->kelas_kuliah->dosen_pengajar)
-                                                    <ul>
-                                                        @foreach ($d->kelas_kuliah->dosen_pengajar as $p)
-                                                            <li>{{$p->dosen->nama_dosen}}</li>
-                                                        @endforeach
-                                                    </ul>
+                                                @if ($d->kelas_kuliah)
+                                                    @if ($d->kelas_kuliah->dosen_pengajar)
+                                                        <ul>
+                                                            @foreach ($d->kelas_kuliah->dosen_pengajar as $p)
+                                                                <li>{{$p->dosen->nama_dosen}}</li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @endif
                                                 @endif
+
                                             </td>
                                             <td class="text-center align-middle">
+                                                @if ($d->kelas_kuliah)
                                                 {{count($d->kelas_kuliah->peserta_kelas_approved)}}
+                                                @endif
+
                                             </td>
                                             <td class="text-center align-middle">
                                                 <div class="row" style="white-space:nowrap;">
@@ -109,7 +120,7 @@ Penilaian Perkuliahan Mahasiswa
                                                         </div>
                                                     @endif
                                                 </div>
-                                                <div class="row" style="white-space:nowrap;"> 
+                                                <div class="row" style="white-space:nowrap;">
                                                     @if($d->urutan == 1)
                                                         @if(date("Y-m-d") > $semester_aktif->batas_isi_nilai && !in_array($d->kelas_kuliah->prodi->kode_program_studi, $prodi_bebas_jadwal))
                                                             <div class="col-md-6 mb-2">
@@ -124,15 +135,15 @@ Penilaian Perkuliahan Mahasiswa
                                                             </div>
                                                         @else
                                                             <div class="col-md-6 mb-2">
-                                                                <a class="btn btn-sm btn-rounded bg-success-light" 
-                                                                href="{{ route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi]) }}" 
+                                                                <a class="btn btn-sm btn-rounded bg-success-light"
+                                                                href="{{ route('dosen.penilaian.penilaian-perkuliahan.download-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah, 'prodi' => $d->kelas_kuliah->id_prodi]) }}"
                                                                 title="Download DPNA">
                                                                     <i class="fa fa-download"></i> Download
                                                                 </a>
                                                             </div>
                                                             <div class="col-md-6 mb-2">
-                                                                <a class="btn btn-sm btn-rounded bg-primary-light" 
-                                                                href="{{ route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah]) }}" 
+                                                                <a class="btn btn-sm btn-rounded bg-primary-light"
+                                                                href="{{ route('dosen.penilaian.penilaian-perkuliahan.upload-dpna', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah]) }}"
                                                                 title="Upload DPNA">
                                                                     <i class="fa fa-upload"></i> Upload
                                                                 </a>
