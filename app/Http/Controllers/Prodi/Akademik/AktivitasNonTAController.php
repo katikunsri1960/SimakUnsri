@@ -124,7 +124,7 @@ class AktivitasNonTAController extends Controller
     {
         $search = $request->get('q');
 
-        $data_kurikulum = RiwayatPendidikan::where('nim', $nim)->first();
+        $data_kurikulum = RiwayatPendidikan::where('nim', $nim)->whereNotNull('id_kurikulum')->first();
 
         $query = MatkulKurikulum::where('id_kurikulum', $data_kurikulum->id_kurikulum)
                                 ->orderby('nama_mata_kuliah', 'asc');
