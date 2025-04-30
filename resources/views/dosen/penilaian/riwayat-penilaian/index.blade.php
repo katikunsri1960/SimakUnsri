@@ -94,11 +94,14 @@ Riwayat Penilaian Perkuliahan Mahasiswa
                                             <td class="text-center align-middle">{{$d->kelas_kuliah ? $d->kelas_kuliah->matkul->kode_mata_kuliah :'-'}}</td>
                                             <td class="text-start align-middle">{{$d->kelas_kuliah ? $d->kelas_kuliah->matkul->nama_mata_kuliah :'-'}}</td>
                                             <td class="text-center align-middle">
-                                                @if(count($d->kelas_kuliah->peserta_kelas_approved) > 0)
-                                                    <a class="btn btn-sm btn-rounded btn-info-light" href="{{route('dosen.penilaian.riwayat-penilaian.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
-                                                @else
-                                                    <button class="btn btn-sm btn-rounded btn-info-light" disabled><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</button>
+                                                @if ($d->kelas_kuliah)
+                                                    @if(count($d->kelas_kuliah->peserta_kelas_approved) > 0)
+                                                        <a class="btn btn-sm btn-rounded btn-info-light" href="{{route('dosen.penilaian.riwayat-penilaian.detail', ['kelas' => $d->kelas_kuliah->id_kelas_kuliah])}}" title="Detail Peserta Kelas"><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</a>
+                                                    @else
+                                                        <button class="btn btn-sm btn-rounded btn-info-light" disabled><i class="fa fa-search"></i> {{$d->kelas_kuliah->nama_kelas_kuliah}}</button>
+                                                    @endif
                                                 @endif
+
                                             </td>
                                             <td class="text-start align-middle">
                                                 @if ($d->kelas_kuliah->dosen_pengajar)
