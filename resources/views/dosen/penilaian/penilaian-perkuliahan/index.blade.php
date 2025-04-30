@@ -107,6 +107,7 @@ Penilaian Perkuliahan Mahasiswa
 
                                             </td>
                                             <td class="text-center align-middle">
+                                                @if ($d->kelas_kuliah)
                                                 <div class="row" style="white-space:nowrap;">
                                                     @if(date("Y-m-d") > $semester_aktif->batas_isi_nilai && !in_array($d->kelas_kuliah->prodi->kode_program_studi, $prodi_bebas_jadwal))
                                                         <div class="col-md-12 mb-2">
@@ -151,6 +152,8 @@ Penilaian Perkuliahan Mahasiswa
                                                         @endif
                                                     @endif
                                                 </div>
+                                                @endif
+
                                             </td>
                                         </tr>
                                         @endforeach
