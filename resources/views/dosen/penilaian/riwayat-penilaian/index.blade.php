@@ -89,7 +89,7 @@ Riwayat Penilaian Perkuliahan Mahasiswa
 
                                             <td class="text-center align-middle">{{$loop->iteration}}</td>
                                             <td class="text-start align-middle">
-                                                {{$d->kelas_kuliah->prodi ? $d->kelas_kuliah->prodi->nama_jenjang_pendidikan : '-'}} - {{$d->kelas_kuliah->prodi ? $d->kelas_kuliah->prodi->nama_program_studi : '-'}}
+                                                {{$d->kelas_kuliah ? $d->kelas_kuliah->prodi->nama_jenjang_pendidikan : '-'}} - {{$d->kelas_kuliah ? $d->kelas_kuliah->prodi->nama_program_studi : '-'}}
                                             </td>
                                             <td class="text-center align-middle">{{$d->kelas_kuliah->matkul->kode_mata_kuliah}}</td>
                                             <td class="text-start align-middle">{{$d->kelas_kuliah->matkul->nama_mata_kuliah}}</td>
