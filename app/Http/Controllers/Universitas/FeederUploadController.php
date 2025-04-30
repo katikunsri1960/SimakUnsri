@@ -667,11 +667,11 @@ class FeederUploadController extends Controller
                     'bobot_evaluasi' => intval($d->bobot_evaluasi * 100),
                 ];
 
-                $recordGet = "id_kelas_kuliah = '".$d->id_kelas_kuliah."'" ;
+                $recordGet = "id_komponen_evaluasi = '".$d->id_komponen_evaluasi."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
 
-                $result = $req->uploadKomponen();
+                $result = $req->uploadKomponenNew();
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
