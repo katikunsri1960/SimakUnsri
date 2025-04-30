@@ -104,7 +104,7 @@ Riwayat Penilaian Perkuliahan Mahasiswa
 
                                             </td>
                                             <td class="text-start align-middle">
-                                                @if ($d->kelas_kuliah->dosen_pengajar)
+                                                @if ($d->kelas_kuliah && $d->kelas_kuliah->dosen_pengajar)
                                                     <ul>
                                                         @foreach ($d->kelas_kuliah->dosen_pengajar as $p)
                                                             <li>{{$p->dosen->nama_dosen}}</li>
@@ -113,7 +113,10 @@ Riwayat Penilaian Perkuliahan Mahasiswa
                                                 @endif
                                             </td>
                                             <td class="text-center align-middle">
+                                                @if ($d->kelas_kuliah)
                                                 {{count($d->kelas_kuliah->peserta_kelas_approved)}}
+                                                @endif
+
                                             </td>
                                             {{-- <td class="text-center align-middle">
                                                 <div class="row" style="white-space:nowrap;">
