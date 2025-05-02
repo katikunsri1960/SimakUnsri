@@ -55,6 +55,9 @@ Monev Status Mahasiswa
 
                             </thead>
                             <tbody>
+                                @php
+                                    $total_lewat_10 = 0;
+                                @endphp
                                 @foreach ($data as $item)
                                 <tr>
                                     <td class="text-end align-middle">
@@ -74,6 +77,9 @@ Monev Status Mahasiswa
                                         <a
                                             href="{{route('univ.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
                                             {{$item->mahasiswa_lewat_semester}}
+                                            @php
+                                                $total_lewat_10 += $item->mahasiswa_lewat_semester;
+                                            @endphp
                                         </a>
                                         @else
                                         -
@@ -100,7 +106,10 @@ Monev Status Mahasiswa
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="5">Total</td>
+                                    <td colspan="4">Total</td>
+                                    <td class="text-center align-middle">
+                                        {{$total_lewat_10}}
+                                    </td>
                                     <td class="text-center">
                                         @if ($data->sum('mahasiswa_lewat_semester') > 0)
                                         <a
