@@ -73,12 +73,12 @@ Monev Status Mahasiswa
                                         {{$item->prodi->nama_jenjang_pendidikan}} - {{$item->prodi->nama_program_studi}}
                                     </td>
                                     <td class="text-center align-middle">
-                                        @if ($item->prodi->nama_jenjang_pendidikan == 'S1' && $item->mahasiswa_lewat_semester > 0)
+                                        @if ($item->prodi->nama_jenjang_pendidikan == 'S1' && $item->lewat_10_semester > 0)
                                         <a
-                                            href="{{route('univ.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
-                                            {{$item->mahasiswa_lewat_semester}}
+                                            href="{{route('univ.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'lewat_10_semester'])}}">
+                                            {{$item->lewat_10_semester}}
                                             @php
-                                                $total_lewat_10 += $item->mahasiswa_lewat_semester;
+                                                $total_lewat_10 += $item->lewat_10_semester;
                                             @endphp
                                         </a>
                                         @else

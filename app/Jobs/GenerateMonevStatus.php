@@ -59,7 +59,7 @@ class GenerateMonevStatus implements ShouldQueue
 
         $jenjang = [
             22 => ['nama' => 'D3', 'max_semester' => 10, 'min_semester_down' => 2, 'min_sks_down' => 27, 'min_semester_up' => 8, 'min_sks_up' => 108, 'min_ipk' => 2],
-            30 => ['nama' => 'S1', 'max_semester' => 10, 'min_semester_down' => 4, 'min_sks_down' => 52, 'min_semester_up' => 10, 'min_sks_up' => 108, 'min_ipk' => 2],
+            30 => ['nama' => 'S1', 'max_semester' => 14, 'min_semester_down' => 4, 'min_sks_down' => 52, 'min_semester_up' => 10, 'min_sks_up' => 108, 'min_ipk' => 2],
             35 => ['nama' => 'S2', 'max_semester' => 8, 'min_semester_down' => 2, 'min_sks_down' => 18],
             40 => ['nama' => 'S3', 'max_semester' => 14],
             31 => ['nama' => 'Profesi', 'max_semester' => 10],
@@ -85,12 +85,14 @@ class GenerateMonevStatus implements ShouldQueue
         ]);
 
         $removeDetail = MonevStatusMahasiswaDetail::where('monev_status_mahasiswa_id', $monev->id)
-            ->where('status', 'mahasiswa_lewat_semester')
+            // ->where('status', 'mahasiswa_lewat_semester')
             ->delete();
 
         $monevDetail = [];
 
         $countLewatSemester = 0;
+
+        $countLewat10Semester = 0;
 
         foreach ($riwayat as $r) {
             $semester_masuk = $r->id_periode_masuk;
@@ -113,11 +115,24 @@ class GenerateMonevStatus implements ShouldQueue
 
                     $countLewatSemester++;
                 }
+
+
+                if ($total_semester > 10 && $id_jenjang == 30) {
+                    $monevDetail[] = [
+                        'monev_status_mahasiswa_id' => $monev->id,
+                        'status' => 'lewat_10_semester',
+                        'id_registrasi_mahasiswa' => $r->id_registrasi_mahasiswa,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
+                    $countLewat10Semester++;
+                }
             }
         }
 
         $monev->update([
             'mahasiswa_lewat_semester' => $countLewatSemester,
+            'lewat_10_semester' => $countLewat10Semester,
             'updated_at' => now(),
             'created_at' => now(),
         ]);
