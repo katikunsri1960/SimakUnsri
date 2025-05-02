@@ -567,7 +567,7 @@ class PembimbingMahasiswaController extends Controller
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Throwable $th) {
             DB::rollback();
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. Terjadi Masalah saat menyimpan data.');
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. Terjadi Masalah saat menyimpan data. ' . $th->getMessage());
         }
     }
 
