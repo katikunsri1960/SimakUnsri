@@ -34,11 +34,11 @@ Monev Status Mahasiswa
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100 table-sm">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">-</th>
-                                    <th class="text-center align-middle">Fakultas</th>
+                                    {{-- <th class="text-center align-middle">-</th>
+                                    <th class="text-center align-middle">Fakultas</th> --}}
                                     <th class="text-center align-middle">Kode Prodi</th>
                                     <th class="text-center align-middle" >Prodi</th>
-                                    <th class="text-center align-middle" >Lewat Masa Studi (10 Semester)</th>
+                                    <th class="text-center align-middle" >Lewat Masa Studi <br> (10 Semester)</th>
                                     <th class="text-center align-middle" >Lewat Masa Studi</th>
                                     <th class="text-center align-middle" >Terakhir Update</th>
                                     <th class="text-center align-middle" >ACT</th>
@@ -51,12 +51,12 @@ Monev Status Mahasiswa
                                 @endphp
                                 @foreach ($data as $item)
                                 <tr>
-                                    <td class="text-end align-middle">
+                                    {{-- <td class="text-end align-middle">
                                         {{$item->prodi->fakultas->id}}
                                     </td>
                                     <td class="text-start align-middle">
                                         {{$item->prodi->fakultas->nama_fakultas}}
-                                    </td>
+                                    </td> --}}
                                     <td class="text-center align-middle">
                                         {{$item->prodi->kode_program_studi}}
                                     </td>
@@ -97,7 +97,7 @@ Monev Status Mahasiswa
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="4">Total</td>
+                                    <td colspan="2">Total</td>
                                     <td class="text-center align-middle">
                                         @if ($total_lewat_10 > 0)
                                         <a
