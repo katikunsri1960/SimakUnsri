@@ -119,6 +119,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'lulus_do'])->name('bak.monitoring.lulus-do');
                     Route::get('/data', [App\Http\Controllers\Bak\MonitoringController::class, 'lulus_do_data'])->name('bak.monitoring.lulus-do.data');
                 });
+
+                Route::prefix('status-mahasiswa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'status_mahasiswa'])->name('bak.monitoring.status-mahasiswa');
+                    Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('bak.monitoring.status-mahasiswa.detail-total');
+                    Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('bak.monitoring.status-mahasiswa.detail-prodi');
+                });
             });
 
             Route::prefix('usept-prodi')->group(function(){

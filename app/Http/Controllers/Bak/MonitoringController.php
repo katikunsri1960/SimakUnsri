@@ -7,12 +7,15 @@ use App\Models\Dosen\BiodataDosen;
 use App\Models\Fakultas;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Monitoring\MonevStatusMahasiswa;
+use App\Models\Monitoring\MonevStatusMahasiswaDetail;
 use App\Models\MonitoringIsiKrs;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\ProgramStudi;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -351,5 +354,51 @@ class MonitoringController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+    public function status_mahasiswa()
+    {
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
+        $semesterAktif = SemesterAktif::first()->id_semester;
+
+        $db = new MonevStatusMahasiswa();
+
+        $data = $db->with(['prodi.fakultas', 'details', 'semester'])->where('id_semester', $semesterAktif)->get();
+
+        return view('bak.monitoring.status-mahasiswa.index', [
+            'data' => $data,
+            'prodi' => $prodi
+        ]);
+    }
+
+    public function detail_total_status_mahasiswa($semester, $status)
+    {
+
+        $data = MonevStatusMahasiswaDetail::whereHas('monevStatusMahasiswa', function ($query) use ($semester) {
+            $query->where('id_semester', $semester);
+        })->where('status', $status)->get();
+
+
+        return view('bak.monitoring.status-mahasiswa.detail-total', [
+            'data' => $data,
+            'status' => $status
+        ]);
+    }
+
+    public function detail_prodi_status_mahasiswa(int $id, string $status)
+    {
+        $data = MonevStatusMahasiswaDetail::where('monev_status_mahasiswa_id', $id)
+                ->where('status', $status)
+                ->with(['riwayat.prodi', 'riwayat.periode_masuk'])
+                ->with(['riwayat.transkrip_mahasiswa' => function ($query) {
+                    $query->whereNotIn('nilai_huruf', ['F', '']);
+                }])
+                ->get();
+
+
+        return view('bak.monitoring.status-mahasiswa.detail-prodi', [
+            'data' => $data,
+            'status' => $status
+        ]);
     }
 }
