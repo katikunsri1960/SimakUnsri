@@ -119,6 +119,7 @@ class GenerateMonevStatus implements ShouldQueue
         $monev->update([
             'mahasiswa_lewat_semester' => $countLewatSemester,
             'updated_at' => now(),
+            'created_at' => now(),
         ]);
 
         if (count($monevDetail) > 0) {

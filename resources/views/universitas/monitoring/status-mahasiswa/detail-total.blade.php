@@ -47,6 +47,9 @@ LIST {{ strtoupper(str_replace('_', ' ', $status)) }}
                                     <th class="text-center align-middle">Angkatan</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama</th>
+                                    <th class="text-center align-middle">SKS Terkumpul</th>
+                                    <th class="text-center align-middle">IPK</th>
+                                    <th class="text-center align-middle">Masa Studi (Bulan)</th>
                                     <th class="text-center align-middle">ACT</th>
                                 </tr>
                             </thead>
@@ -67,6 +70,15 @@ LIST {{ strtoupper(str_replace('_', ' ', $status)) }}
                                     </td>
                                     <td class="text-start align-middle">
                                         {{$item->riwayat->nama_mahasiswa}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$item->total_sks}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$item->ipk}}
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        {{$item->masa_studi}}
                                     </td>
                                     <td class="text-start align-middle">
 

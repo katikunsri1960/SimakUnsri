@@ -623,7 +623,68 @@ class MonitoringController extends Controller
 
         $data = MonevStatusMahasiswaDetail::whereHas('monevStatusMahasiswa', function ($query) use ($semester) {
             $query->where('id_semester', $semester);
-        })->where('status', $status)->with(['riwayat.prodi'])->get();
+        })->where('status', $status) ->with(['riwayat.transkrip_mahasiswa' => function ($query) {
+            $query->whereNotIn('nilai_huruf', ['F', '']);
+        }])->get();
+
+
+        foreach ($data as $d) {
+            $total_sks = 0;
+            $ipk = 0;
+            $masa_studi = 0;
+
+
+            if ($d->riwayat->transkrip_mahasiswa->count() > 0) {
+
+                $total_sks = $d->riwayat->transkrip_mahasiswa->sum('sks_mata_kuliah');
+
+                $total_bobot_transkrip = 0;
+
+                foreach ($d->riwayat->transkrip_mahasiswa as $t) {
+                    $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
+                }
+
+                if($total_sks > 0){
+                    $ipk = $total_bobot_transkrip / $total_sks;
+                }
+
+                $d->total_sks = $total_sks;
+                $d->ipk = number_format($ipk, 2);
+
+            } else {
+                $d->total_sks = 'Tidak Ada Transkrip';
+                $d->ipk = 'Tidak Ada Transkrip';
+            }
+
+            $now = $d->created_at;
+
+            // Validasi data sebelum perhitungan
+            if (!isset($d->riwayat->periode_masuk->semester) || !isset($d->riwayat->periode_masuk->id_tahun_ajaran)) {
+                $masa_studi = 'Data Tidak Valid';
+            } else {
+                // Konstanta untuk tanggal default
+                $SEMESTER_1_START = '-08-01';
+                $SEMESTER_2_START = '-01-01';
+
+                // Hitung tanggal masuk berdasarkan semester
+                if ($d->riwayat->periode_masuk->semester == 2) {
+                    $tanggal_masuk = Carbon::parse($d->riwayat->periode_masuk->id_tahun_ajaran + 1 . $SEMESTER_2_START);
+                } elseif ($d->riwayat->periode_masuk->semester == 1) {
+                    $tanggal_masuk = Carbon::parse($d->riwayat->periode_masuk->id_tahun_ajaran . $SEMESTER_1_START);
+                } else {
+                    $masa_studi = 'Data Tidak Valid';
+                }
+
+                // Hitung masa studi jika tanggal masuk valid
+                if (isset($tanggal_masuk)) {
+                    $masa_studi = floor($tanggal_masuk->diffInMonths($now));
+                }
+            }
+
+            // Tetapkan masa studi ke objek
+            $d->masa_studi = $masa_studi;
+
+        }
 
         return view('universitas.monitoring.status-mahasiswa.detail-total', [
             'data' => $data,
