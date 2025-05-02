@@ -153,6 +153,9 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('prodi.monitoring.status-mahasiswa') || request()->routeIs('prodi.monitoring.status-mahasiswa.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.monitoring.status-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status Mahasiswa</a>
+                            </li>
                             <li class="{{request()->routeIs('prodi.monitoring.entry-nilai') || request()->routeIs('prodi.monitoring.entry-nilai.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.monitoring.entry-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Entry Nilai Dosen</a>
                             </li>

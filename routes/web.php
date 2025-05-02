@@ -903,6 +903,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'lulus_do'])->name('prodi.monitoring.lulus-do');
                     Route::get('/data', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'lulus_do_data'])->name('prodi.monitoring.lulus-do.data');
                 });
+
+                Route::prefix('status-mahasiswa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'status_mahasiswa'])->name('prodi.monitoring.status-mahasiswa');
+                    Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'detail_prodi_status_mahasiswa'])->name('prodi.monitoring.status-mahasiswa.detail-prodi');
+                });
             });
 
             //Route Bantuan
