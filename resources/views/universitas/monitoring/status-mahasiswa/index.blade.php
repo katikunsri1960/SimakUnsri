@@ -47,8 +47,8 @@ Monev Status Mahasiswa
                                     <th class="text-center align-middle">Fakultas</th>
                                     <th class="text-center align-middle">Kode Prodi</th>
                                     <th class="text-center align-middle" >Prodi</th>
-                                    <th class="text-center align-middle" >Lewat Masa Studi</th>
                                     <th class="text-center align-middle" >Lewat Masa Studi (10 Semester)</th>
+                                    <th class="text-center align-middle" >Lewat Masa Studi</th>
                                     <th class="text-center align-middle" >Terakhir Update</th>
                                     <th class="text-center align-middle" >ACT</th>
                                 </tr>
@@ -70,6 +70,16 @@ Monev Status Mahasiswa
                                         {{$item->prodi->nama_jenjang_pendidikan}} - {{$item->prodi->nama_program_studi}}
                                     </td>
                                     <td class="text-center align-middle">
+                                        @if ($item->prodi->nama_jenjang_pendidikan == 'S1' && $item->mahasiswa_lewat_semester > 0)
+                                        <a
+                                            href="{{route('univ.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
+                                            {{$item->mahasiswa_lewat_semester}}
+                                        </a>
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle">
                                         @if ($item->mahasiswa_lewat_semester > 0)
                                         <a
                                             href="{{route('univ.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
@@ -78,15 +88,6 @@ Monev Status Mahasiswa
                                         @else
                                         {{$item->mahasiswa_lewat_semester}}
                                         @endif
-
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        @if ($item->prodi->nama_jenjang_pendidikan > 'S1')
-                                        {{$item->mahasiswa_lewat_semester}}
-                                        @else
-                                        -
-                                        @endif
-
                                     </td>
                                     <td class="text-center align-middle">
                                         {{$item->updated_at}}
