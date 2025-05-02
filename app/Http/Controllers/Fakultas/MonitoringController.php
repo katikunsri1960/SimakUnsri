@@ -385,14 +385,16 @@ class MonitoringController extends Controller
                             ->where('status', 'A')
                             ->orderBy('id_jenjang_pendidikan', 'ASC')
                             ->orderBy('nama_program_studi')
-                            ->get();
-
-        // $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
+                            ->pluck('id_prodi');
+        
         $semesterAktif = SemesterAktif::first()->id_semester;
 
         $db = new MonevStatusMahasiswa();
 
-        $data = $db->with(['prodi.fakultas', 'details', 'semester'])->where('id_semester', $semesterAktif)->get();
+        $data = $db->with(['prodi.fakultas', 'details', 'semester'])
+               ->where('id_semester', $semesterAktif)
+               ->whereIn('id_prodi', $prodi)
+               ->get();
 
         return view('fakultas.monitoring.status-mahasiswa.index', [
             'data' => $data,
@@ -407,6 +409,7 @@ class MonitoringController extends Controller
             $query->where('id_semester', $semester);
         })->where('status', $status)->get();
 
+        // dd($data);
 
         return view('fakultas.monitoring.status-mahasiswa.detail-total', [
             'data' => $data,
