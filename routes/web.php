@@ -317,6 +317,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/detail/{mode}/{dosen}/{prodi}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_nilai_detail'])->name('fakultas.monitoring.pengisian-nilai.detail');
                     Route::get('/get-data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'pengisian_nilai_data'])->name('fakultas.monitoring.pengisian-nilai.data');
                 });
+
+                Route::prefix('status-mahasiswa')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'status_mahasiswa'])->name('fakultas.monitoring.status-mahasiswa');
+                    Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('fakultas.monitoring.status-mahasiswa.detail-total');
+                    Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('fakultas.monitoring.status-mahasiswa.detail-prodi');
+                });
             });
 
             //ROUTE LAIN-LAIN

@@ -141,9 +141,10 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            {{-- <li class="{{request()->routeIs('fakultas.monitoring.pengajaran-dosen') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.monitoring.pengajaran-dosen')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengajaran Dosen</a>
-                            </li> --}}
+                            <li class="{{request()->routeIs('fakultas.monitoring.status-mahasiswa') || 
+                                        request()->routeIs('fakultas.monitoring.status-mahasiswa.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.monitoring.status-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status Mahasiswa</a>
+                            </li>
                             <li class="{{request()->routeIs('fakultas.monitoring.pengisian-krs') ||
                                         request()->routeIs('fakultas.monitoring.pengisian-krs.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Fakultas;
 
+use Carbon\Carbon;
 use App\Models\Semester;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
@@ -13,7 +14,9 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Monitoring\MonevStatusMahasiswa;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Monitoring\MonevStatusMahasiswaDetail;
 
 class MonitoringController extends Controller
 {
@@ -373,5 +376,126 @@ class MonitoringController extends Controller
         ];
 
         return response()->json($response);
+    }
+
+
+    public function status_mahasiswa()
+    {
+        $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                            ->where('status', 'A')
+                            ->orderBy('id_jenjang_pendidikan', 'ASC')
+                            ->orderBy('nama_program_studi')
+                            ->pluck('id_prodi');
+        
+        $semesterAktif = SemesterAktif::first()->id_semester;
+
+        $db = new MonevStatusMahasiswa();
+
+        $data = $db->with(['prodi.fakultas', 'details', 'semester'])
+               ->where('id_semester', $semesterAktif)
+               ->whereIn('id_prodi', $prodi)
+               ->get();
+
+        return view('fakultas.monitoring.status-mahasiswa.index', [
+            'data' => $data,
+            'prodi' => $prodi
+        ]);
+    }
+
+    public function detail_total_status_mahasiswa($semester, $status)
+    {
+
+        $data = MonevStatusMahasiswaDetail::whereHas('monevStatusMahasiswa', function ($query) use ($semester) {
+            $query->where('id_semester', $semester);
+        })->where('status', $status)->get();
+
+        // dd($data);
+
+        return view('fakultas.monitoring.status-mahasiswa.detail-total', [
+            'data' => $data,
+            'status' => $status
+        ]);
+    }
+
+    public function detail_prodi_status_mahasiswa(int $id, string $status)
+    {
+        $data = MonevStatusMahasiswaDetail::where('monev_status_mahasiswa_id', $id)
+                ->where('status', $status)
+                ->with(['riwayat.prodi', 'riwayat.periode_masuk'])
+                ->with(['riwayat.transkrip_mahasiswa' => function ($query) {
+                    $query->whereNotIn('nilai_huruf', ['F', '']);
+                }])
+                ->get();
+
+                $data = MonevStatusMahasiswaDetail::where('monev_status_mahasiswa_id', $id)
+                ->where('status', $status)
+                ->with(['riwayat.prodi', 'riwayat.periode_masuk'])
+                ->with(['riwayat.transkrip_mahasiswa' => function ($query) {
+                    $query->whereNotIn('nilai_huruf', ['F', '']);
+                }])
+                ->get();
+
+        foreach ($data as $d) {
+            $total_sks = 0;
+            $ipk = 0;
+            $masa_studi = 0;
+
+
+            if ($d->riwayat->transkrip_mahasiswa->count() > 0) {
+
+                $total_sks = $d->riwayat->transkrip_mahasiswa->sum('sks_mata_kuliah');
+
+                $total_bobot_transkrip = 0;
+
+                foreach ($d->riwayat->transkrip_mahasiswa as $t) {
+                    $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
+                }
+
+                if($total_sks > 0){
+                    $ipk = $total_bobot_transkrip / $total_sks;
+                }
+
+                $d->total_sks = $total_sks;
+                $d->ipk = number_format($ipk, 2);
+
+            } else {
+                $d->total_sks = 'Tidak Ada Transkrip';
+                $d->ipk = 'Tidak Ada Transkrip';
+            }
+
+            $now = $d->created_at;
+
+            // Validasi data sebelum perhitungan
+            if (!isset($d->riwayat->periode_masuk->semester) || !isset($d->riwayat->periode_masuk->id_tahun_ajaran)) {
+                $masa_studi = 'Data Tidak Valid';
+            } else {
+                // Konstanta untuk tanggal default
+                $SEMESTER_1_START = '-08-01';
+                $SEMESTER_2_START = '-01-01';
+
+                // Hitung tanggal masuk berdasarkan semester
+                if ($d->riwayat->periode_masuk->semester == 2) {
+                    $tanggal_masuk = Carbon::parse($d->riwayat->periode_masuk->id_tahun_ajaran + 1 . $SEMESTER_2_START);
+                } elseif ($d->riwayat->periode_masuk->semester == 1) {
+                    $tanggal_masuk = Carbon::parse($d->riwayat->periode_masuk->id_tahun_ajaran . $SEMESTER_1_START);
+                } else {
+                    $masa_studi = 'Data Tidak Valid';
+                }
+
+                // Hitung masa studi jika tanggal masuk valid
+                if (isset($tanggal_masuk)) {
+                    $masa_studi = floor($tanggal_masuk->diffInMonths($now));
+                }
+            }
+
+            // Tetapkan masa studi ke objek
+            $d->masa_studi = $masa_studi;
+
+        }
+
+        return view('fakultas.monitoring.status-mahasiswa.detail-prodi', [
+            'data' => $data,
+            'status' => $status
+        ]);
     }
 }
