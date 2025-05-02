@@ -69,7 +69,7 @@ class CourseUsept extends Model
         //     $nilai_hasil_course = 300;
         // }
 
-        $nilai_angka = $this->convertToFloat($this->total_score);
+        $nilai_angka = $this->convertToFloat($nilai_angka);
 
         if ($nilai_angka >= 86 && $nilai_angka <= 100) {
             $nilai_hasil_course = round((((525 - 500) / (100 - 86)) * ($nilai_angka - 86) + 500), 0);
