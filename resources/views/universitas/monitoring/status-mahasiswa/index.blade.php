@@ -48,6 +48,7 @@ Monev Status Mahasiswa
                                     <th class="text-center align-middle">Kode Prodi</th>
                                     <th class="text-center align-middle" >Prodi</th>
                                     <th class="text-center align-middle" >Lewat Masa Studi</th>
+                                    <th class="text-center align-middle" >Lewat Masa Studi (10 Semester)</th>
                                     <th class="text-center align-middle" >Terakhir Update</th>
                                     <th class="text-center align-middle" >ACT</th>
                                 </tr>
@@ -68,7 +69,6 @@ Monev Status Mahasiswa
                                     <td class="text-start align-middle">
                                         {{$item->prodi->nama_jenjang_pendidikan}} - {{$item->prodi->nama_program_studi}}
                                     </td>
-
                                     <td class="text-center align-middle">
                                         @if ($item->mahasiswa_lewat_semester > 0)
                                         <a
@@ -77,6 +77,14 @@ Monev Status Mahasiswa
                                         </a>
                                         @else
                                         {{$item->mahasiswa_lewat_semester}}
+                                        @endif
+
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if ($item->prodi->nama_jenjang_pendidikan > 'S1')
+                                        {{$item->mahasiswa_lewat_semester}}
+                                        @else
+                                        -
                                         @endif
 
                                     </td>
@@ -91,7 +99,7 @@ Monev Status Mahasiswa
                             </tbody>
                             <tfoot>
                                 <tr>
-                                    <td colspan="4">Total</td>
+                                    <td colspan="5">Total</td>
                                     <td class="text-center">
                                         @if ($data->sum('mahasiswa_lewat_semester') > 0)
                                         <a
