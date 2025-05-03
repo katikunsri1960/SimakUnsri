@@ -143,7 +143,7 @@ Monitoring Pengisian KRS
                     text: '<i class="fa fa-file-excel-o"></i> Download Excel', // Add Excel icon
                     className: 'btn btn-success', // Optional: Add custom styling
                     exportOptions: {
-                        columns: [1, 2, 3, 4, 5,6,7,8,9,10] // Tentukan kolom yang ingin diekspor
+                        columns: [0,1, 2, 3, 4, 5,6,7,8,9,10] // Tentukan kolom yang ingin diekspor
                     },
                 }
             ],
