@@ -131,7 +131,23 @@ Monitoring Pengisian KRS
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
     $(document).ready(function(){
-        $('#data').DataTable();
+        $('#data').DataTable({
+            "paging": false,
+            "scrollX": true,
+            "scrollY": "45vh",
+            "dom": 'Bfrtip', // Add buttons for export
+            "buttons": [
+                {
+                    extend: 'excelHtml5',
+                    title: 'Monev Pengisian KRS',
+                    text: '<i class="fa fa-file-excel-o"></i> Download Excel', // Add Excel icon
+                    className: 'btn btn-success', // Optional: Add custom styling
+                    exportOptions: {
+                        columns: [1, 2, 3, 4, 5,6,7,8,9,10] // Tentukan kolom yang ingin diekspor
+                    },
+                }
+            ],
+        });
     });
 
 </script>
