@@ -38,7 +38,7 @@ Monitoring Pengisian KRS
                                     </th>
                                     <th class="text-center align-middle">Jumlah Mahasiswa Sudah di Setujui</th>
                                     <th class="text-center align-middle">Jumlah Mahasiswa Belum di Setujui</th>
-                                    <th class="text-center align-middle">Persentase Approval</th>
+                                    <th class="text-center align-middle">Persentase Pengisian KRS</th>
                                 </tr>
                             </thead>
                             <tbody id="data-table">
@@ -107,7 +107,7 @@ Monitoring Pengisian KRS
                 if (data.isi_krs == 0) {
                     $('#approve_percentage').text('0%');
                 } else {
-                    $('#approve_percentage').text((data.approve / data.isi_krs * 100).toFixed(2) + '%');
+                    $('#approve_percentage').text((data.isi_krs / data.jumlah_mahasiswa * 100).toFixed(2) + '%');
                 }
             },
             error: function() {
