@@ -699,6 +699,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::delete('/{matkul}/delete-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'hapus_prasyarat'])->name('prodi.data-master.mata-kuliah.delete-prasyarat');
                     Route::get('/{matkul}/lihat-rps', [App\Http\Controllers\Prodi\DataMasterController::class, 'lihat_rps'])->name('prodi.data-master.mata-kuliah.lihat-rps');
                     Route::post('/{matkul}/approved-all', [App\Http\Controllers\Prodi\DataMasterController::class, 'approved_rps'])->name('prodi.data-master.mata-kuliah.approved-all');
+
+                    Route::post('/edit-nama/{matkul}', [App\Http\Controllers\Prodi\DataMasterController::class, 'edit_nama_english_store'])->name('prodi.data-master.mata-kuliah.edit-nama');
                 });
 
                 Route::prefix('matkul-merdeka')->group(function(){
