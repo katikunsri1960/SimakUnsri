@@ -37,7 +37,7 @@ class ProgramStudi extends Model
 
     public function gelar_lulusan()
     {
-        return $this->hasMany(GelarLulusan::class, 'id_prodi', 'id_prodi');
+        return $this->hasOne(GelarLulusan::class, 'id_prodi', 'id_prodi');
     }
 
     public function aktivitas_kuliah()
