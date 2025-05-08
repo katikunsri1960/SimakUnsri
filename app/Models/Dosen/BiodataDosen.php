@@ -74,6 +74,7 @@ class BiodataDosen extends Model
 
         return $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
                                 ->where('p.id_tahun_ajaran', $tahun_ajaran)
+                                ->where('p.a_sp_homebase', 1)
                                 ->where('biodata_dosens.id_dosen', $id_dosen)->first();
 
     }
