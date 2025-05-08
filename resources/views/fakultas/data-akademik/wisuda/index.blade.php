@@ -43,7 +43,8 @@ Pendaftaran Wisuda Fakultas
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">Pas Foto</th>
+                                    <th class="text-center align-middle">Periode</th>
+                                    <th class="text-center align-middle">Foto</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama Mahasiswa</th>
                                     <th class="text-center align-middle">Program Studi</th>
@@ -63,6 +64,7 @@ Pendaftaran Wisuda Fakultas
                                 @include('fakultas.data-akademik.wisuda.decline-wisuda')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
+                                        <td class="text-center align-middle">{{$d->wisuda_ke}}</td>
                                         <td class="text-center align-middle text-nowrap">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal{{$d->id}}">
                                                 <img src="{{ asset($d->pas_foto) }}" alt="Pas Foto" style="width: 150px;" title="Lihat Foto">
@@ -72,11 +74,11 @@ Pendaftaran Wisuda Fakultas
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content rounded-3">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="fotoModalLabel{{$d->id}}">PAS FOTO {{$d->nama_mahasiswa}}</h5>
+                                                            <h5 class="modal-title" id="fotoModalLabel{{$d->id}}">FOTO {{$d->nama_mahasiswa}}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body text-center m-20">
-                                                            <img src="{{ asset($d->pas_foto) }}" alt="Pas Foto" style="width: 100%; max-width: 500px;" class="rounded-3">
+                                                            <img src="{{ asset($d->pas_foto) }}" alt="Foto" style="width: 100%; max-width: 500px;" class="rounded-3">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -120,7 +122,7 @@ Pendaftaran Wisuda Fakultas
                                         </td> 
                                         <td class="text-center align-middle text-nowrap">
                                             @if ($d->no_sk_yudisium && $d->tgl_sk_yudisium)
-                                                {{$d->no_sk_yudisium}}<br>( {{$d->tgl_sk_yudisium}} )
+                                                {{$d->no_sk_yudisium}}<br>( {{ \Carbon\Carbon::parse($d->tgl_sk_yudisium)->translatedFormat('d F Y') }} )
                                             @else
                                                 -
                                             @endif

@@ -8,7 +8,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('fakultas.wisuda.decline', $d->id)}}" method="post" id="decline-class-{{$d->id}}">
+            <form action="{{route('bak.wisuda.decline', $d->id)}}" method="post" id="decline-class-{{$d->id}}">
                 @csrf
                 <div class="modal-body">
                     <div class="row">

@@ -169,7 +169,7 @@ class WisudaController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
-        // dd($wisuda_ke);
+        // dd($riwayat_pendidikan);
 
         $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -250,6 +250,9 @@ class WisudaController extends Controller
     {
         // Validate request data
         $request->validate([
+            'no_hp_ayah' => 'required|regex:/^[0-9]+$/',
+            'no_hp_ibu' => 'required|regex:/^[0-9]+$/',
+            'nama_ayah' => 'required|regex:/^[a-zA-Z\s]+$/',
             'nik' => 'required',
             'lokasi_kuliah' => 'required',
             'wisuda_ke' => 'required',
@@ -257,8 +260,12 @@ class WisudaController extends Controller
             'abstrak_ta' => 'required|max:500',
             'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500',
             'abstrak_file' => 'required|file|mimes:pdf|max:1024',
+            'abstrak_file_eng' => 'required|file|mimes:pdf|max:1024',
+            'ijazah_terakhir_file' => 'required|file|mimes:pdf|max:1024',
             'alamat_orang_tua' => 'required',
         ]);
+
+        // dd($request->all());
 
         $perguruan_tinggi = ProfilPt::where('kode_perguruan_tinggi', '001009')->first();
 
@@ -330,14 +337,20 @@ class WisudaController extends Controller
         // Generate file name
         $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('pas_foto')->getClientOriginalExtension();
         $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
+        $abstrakEngName = 'abstrak_eng_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('abstrak_file_eng')->getClientOriginalExtension();
+        $ijazahName = 'ijazah_terakhir_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('ijazah_terakhir_file')->getClientOriginalExtension();
 
-        // Simpan file ke folder public/storage/wisuda/abstrak dan wisuda/pas_foto
+        // Simpan file ke folder public/storage/wisuda/abstrak, wisuda/pas_foto, dan wisuda/ijazah
         $pasFotoPath = $request->file('pas_foto')->storeAs('wisuda/pas_foto', $pasFotoName, 'public');
         $abstrakPath = $request->file('abstrak_file')->storeAs('wisuda/abstrak', $abstrakName, 'public');
+        $abstrakEngPath = $request->file('abstrak_file_eng')->storeAs('wisuda/abstrak', $abstrakEngName, 'public');
+        $ijazahPath = $request->file('ijazah_terakhir_file')->storeAs('wisuda/ijazah', $ijazahName, 'public');
 
         // Simpan path ke database
         $pas_foto = 'storage/' . $pasFotoPath;
         $abstrak_file = 'storage/' . $abstrakPath;
+        $abstrak_file_eng = 'storage/' . $abstrakEngPath;
+        $ijazah_terakhir_file = 'storage/' . $ijazahPath;
 
         // Cek apakah file berhasil diupload
         if (!$pasFotoPath) {
@@ -346,6 +359,14 @@ class WisudaController extends Controller
 
         if (!$abstrakPath) {
             return redirect()->back()->with('error', 'File abstrak gagal diunggah. Silakan coba lagi.');
+        }
+
+        if (!$abstrakEngPath) {
+            return redirect()->back()->with('error', 'File abstrak (English) gagal diunggah. Silakan coba lagi.');
+        }
+
+        if (!$ijazahPath) {
+            return redirect()->back()->with('error', 'File ijazah terakhir gagal diunggah. Silakan coba lagi.');
         }
 
         // dd($abstrakPath, $abstrak_file);
@@ -371,8 +392,11 @@ class WisudaController extends Controller
             'no_sk_pembimbing' => $request->no_sk_pembimbing,
             'pas_foto' => $pas_foto,
             'lokasi_kuliah' => $request->lokasi_kuliah,
+            'judul_eng' => $request->judul_eng,
             'abstrak_ta' => $request->abstrak_ta,
             'abstrak_file' => $abstrak_file,
+            'abstrak_file_eng' => $abstrak_file_eng,
+            'ijazah_terakhir_file' => $ijazah_terakhir_file,
             'approved' => 0,
             ]);
 
@@ -391,16 +415,22 @@ class WisudaController extends Controller
                 'nama_wilayah' => $wilayah->nama_wilayah,
                 'handphone' => $request->handphone,
                 'email' => $request->email,
+                'nama_ayah' => $request->nama_ayah,
+                'no_hp_ayah' => $request->no_hp_ayah,
+                'no_hp_ibu' => $request->no_hp_ibu,
+                
             ]);
 
             DB::commit();
+
+            // dd($request->all());
 
             // Redirect kembali ke halaman index dengan pesan sukses
             return redirect()->route('mahasiswa.wisuda.index')->with('success', 'Data Berhasil di Tambahkan');
         } catch (\Exception $e) {
             DB::rollBack();
             // Handle exception
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data.');
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
         }
     }
 }

@@ -27,7 +27,7 @@
                         Tutup
                     </button>
                     <button type="submit" class="btn btn-danger">
-                        Simpan
+                        Setuju
                     </button>
                 </div>
             </form>
@@ -39,7 +39,7 @@
     $('#approve-class-{{$d->id}}').submit(function(e){
         e.preventDefault();
         swal({
-            title: 'Melakukan persetujuan pendaftaran wisuda',
+            title: 'Persetujuan Pendaftaran Wisuda',
             text: "Apakah anda yakin ingin?",
             type: 'warning',
             showCancelButton: true,
