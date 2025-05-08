@@ -721,6 +721,25 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'kurikulum'])->name('prodi.data-master.kurikulum');
                     Route::get('/detail/{kurikulum}', [App\Http\Controllers\Prodi\DataMasterController::class, 'detail_kurikulum'])->name('prodi.data-master.kurikulum.detail');
                 });
+
+                Route::prefix('detail-prodi')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'detail_prodi'])->name('prodi.data-master.detail-prodi');
+
+                    //Data Nama Bahasa Inggris Prodi
+                    Route::get('/tambah-prodi-inggris', [App\Http\Controllers\Prodi\DataMasterController::class, 'tambah_prodi_inggris'])->name('prodi.data-master.detail-prodi.tambah-prodi-inggris');
+                    Route::get('/tambah-prodi-inggris/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'store_prodi_inggris'])->name('prodi.data-master.detail-prodi.store-prodi-inggris');
+                    Route::get('/ubah-prodi-inggris/{id}', [App\Http\Controllers\Prodi\DataMasterController::class, 'edit_prodi_inggris'])->name('prodi.data-master.detail-prodi.ubah-prodi-inggris');
+                    Route::post('/ubah-prodi-inggris/update/{id}', [App\Http\Controllers\Prodi\DataMasterController::class, 'update_prodi_inggris'])->name('prodi.data-master.detail-prodi.update-prodi-inggris');
+                    Route::delete('/delete-prodi-inggris/{id}', [App\Http\Controllers\Prodi\DataMasterController::class, 'delete_prodi_inggris'])->name('prodi.data-master.detail-prodi.delete-prodi-inggris');
+                    
+
+                    //Data BKU Program Studi
+                    Route::get('/tambah-bku', [App\Http\Controllers\Prodi\DataMasterController::class, 'tambah_bku'])->name('prodi.data-master.detail-prodi.tambah-bku');
+                    Route::get('/tambah-bku/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'store_bku'])->name('prodi.data-master.detail-prodi.store-bku');
+                    Route::get('/ubah-bku/{id}', [App\Http\Controllers\Prodi\DataMasterController::class, 'edit_bku'])->name('prodi.data-master.detail-prodi.ubah-bku');
+                    Route::post('/ubah-bku/update/{id}', [App\Http\Controllers\Prodi\DataMasterController::class, 'update_bku'])->name('prodi.data-master.detail-prodi.update-bku');
+                    Route::delete('/delete-bku/{id}', [App\Http\Controllers\Prodi\DataMasterController::class, 'delete_bku'])->name('prodi.data-master.detail-prodi.delete-bku');
+                });
             });
 
             //Route for Data Akademik

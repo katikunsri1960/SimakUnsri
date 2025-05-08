@@ -64,12 +64,36 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             ->where('nilai_huruf', 'A')
             ->first()->bobot_maksimum;
         
+            $this->batas_min_A_minus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'A-')
+            ->first()->bobot_minimum;
+        
+        $this->batas_max_A_minus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'A-')
+            ->first()->bobot_maksimum;
+        
+        $this->batas_min_B_plus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'B+')
+            ->first()->bobot_minimum;
+        
+        $this->batas_max_B_plus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'B+')
+            ->first()->bobot_maksimum;
+        
         $this->batas_min_B = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'B')
             ->first()->bobot_minimum;
         
         $this->batas_max_B = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'B')
+            ->first()->bobot_maksimum;
+
+        $this->batas_min_B_minus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'B-')
+            ->first()->bobot_minimum;
+        
+        $this->batas_max_B_minus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'B-')
             ->first()->bobot_maksimum;
         
         $this->batas_min_C = SkalaNilai::where('id_prodi', $prodi)
@@ -301,7 +325,8 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         // Add formula in the column (M) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'M' . $row;
-            $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))";
+            // $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))";
+            $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"A-\", 3.70, IF(N{$row}=\"B+\", 3.30, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"B-\", 2.70, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\"))))))))";
             
             $sheet->setCellValue($cell, $formula);
         }
@@ -309,7 +334,18 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         // Add formula in the column (N) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'N' . $row;
-            $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Perbaiki Skala Nilai Feeder\"))))))";
+            // $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Perbaiki Skala Nilai Feeder\"))))))";
+
+            $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", 
+            IF(AND(L{$row}>={$this->batas_min_A_minus}, L{$row}<={$this->batas_max_A_minus}), \"A-\", 
+            IF(AND(L{$row}>={$this->batas_min_B_plus}, L{$row}<={$this->batas_max_B_plus}), \"B+\", 
+            IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", 
+            IF(AND(L{$row}>={$this->batas_min_B_minus}, L{$row}<={$this->batas_max_B_minus}), \"B-\", 
+            IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", 
+            IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", 
+            IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", 
+            IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", 
+            \"Perbaiki Skala Nilai Feeder\")))))))))";
             
             $sheet->setCellValue($cell, $formula);
         }
