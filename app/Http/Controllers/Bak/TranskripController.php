@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Bak;
 
+use App\Http\Traits\Terbilang;
 use App\Http\Controllers\Controller;
 use App\Models\Connection\CourseUsept;
 use App\Models\Connection\Registrasi;
@@ -15,12 +16,16 @@ use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perpus\BebasPustaka;
+use App\Models\Referensi\PejabatUniversitas;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class TranskripController extends Controller
 {
+    use Terbilang;
+
     public function index()
     {
         // check job batch queue with name transkrip-mahasiswa
@@ -88,7 +93,7 @@ class TranskripController extends Controller
             ];
         }
 
-        $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
+        $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->whereNotIn('nilai_huruf', ['F', ''])->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
         $total_indeks = $transkrip->sum('nilai_indeks');
@@ -147,7 +152,7 @@ class TranskripController extends Controller
             'nim' => 'required',
         ]);
 
-        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('nim', $request->nim)->orderBy('id_periode_masuk', 'desc')->first();
+        $riwayat = RiwayatPendidikan::with(['prodi', 'biodata'])->where('nim', $request->nim)->orderBy('id_periode_masuk', 'desc')->first();
 
         if(!$riwayat) {
             return response()->json([
@@ -156,7 +161,7 @@ class TranskripController extends Controller
             ]);
         }
 
-        $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
+        $transkrip = TranskripMahasiswa::whereNotIn('nilai_huruf', ['F', ''])->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->get();
 
         $total_sks = $transkrip->sum('sks_mata_kuliah');
         $bobot = 0;
@@ -167,17 +172,26 @@ class TranskripController extends Controller
 
         $ipk = number_format($bobot / $total_sks, 2);
 
+        $ipk_terbilang = strtoupper($this->pembilang($ipk));
+
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
                 ->orderBy('id_semester', 'desc')
                 ->get();
 
+        $today = Carbon::now();
+
+        $pejabat = PejabatUniversitas::where('jabatan_id', 2)->first();
+
 
         $pdf = PDF::loadview('bak.transkrip.pdf', [
+            'today' => $today,
             'transkrip' => $transkrip,
             'riwayat' => $riwayat,
             'akm' => $akm,
             'total_sks' => $total_sks,
             'ipk' => $ipk,
+            'ipk_terbilang' => $ipk_terbilang,
+            'pejabat' => $pejabat,
             'bebas_pustaka' => BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first(),
          ])
          ->setPaper('a4', 'portrait');

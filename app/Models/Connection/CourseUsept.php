@@ -40,7 +40,7 @@ class CourseUsept extends Model
         } elseif ($nilai_angka >= 71 && $nilai_angka < 86) {
             $nilai_hasil_course = round((((500 - 450) / (85.99 - 71)) * ($nilai_angka - 71) + 450), 0);
         } else {
-            $nilai_hasil_course = 'Tidak Lulus'; // Default nilai untuk di bawah 71
+            $nilai_hasil_course = 300; // Default nilai untuk di bawah 71
         }
 
         return $nilai_hasil_course;
@@ -76,7 +76,7 @@ class CourseUsept extends Model
         } elseif ($nilai_angka >= 71 && $nilai_angka < 86) {
             $nilai_hasil_course = round((((500 - 450) / (85.99 - 71)) * ($nilai_angka - 71) + 450), 0);
         } else {
-            $nilai_hasil_course = 'Tidak Lulus'; // Default nilai untuk di bawah 71
+            $nilai_hasil_course = 300; // Default nilai untuk di bawah 71
         }
 
         return round($nilai_hasil_course,0);

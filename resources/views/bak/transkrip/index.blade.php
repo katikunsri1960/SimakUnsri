@@ -163,14 +163,15 @@ Transkrip Nilai
                                     <table class="table table-bordered mt-4" id="krs-regular">
                                         <thead>
                                             <tr>
-                                                <th class="text-center align-middle">No</th>
-                                                <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                <th class="text-center align-middle">Nama Mata Kuliah</th>
+                                                <th class="text-center align-middle">NO.</th>
+                                                <th class="text-center align-middle">KODE</th>
+                                                <th class="text-center align-middle">MATA KULIAH</th>
+                                                <th class="text-center align-middle">HURUF<br>MUTU</th>
+                                                <th class="text-center align-middle">ANGKA<br>MUTU</th>
+                                                <th class="text-center align-middle">KREDIT</th>
+                                                <th class="text-center align-middle">MUTU</th>
 
-                                                <th class="text-center align-middle">SKS</th>
-                                                <th class="text-center align-middle">Nilai Angka</th>
-                                                <th class="text-center align-middle">Nilai Index</th>
-                                                <th class="text-center align-middle">Nilai Huruf</th>
+
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -179,15 +180,15 @@ Transkrip Nilai
                                         <tfoot>
                                             <tr>
                                                 <th colspan="3" class="text-center align-middle">Total SKS</th>
-                                                <th class="text-center align-middle" id="totalSks"></th>
                                                 <th></th>
+                                                <th class="text-center align-middle" id="totalSks"></th>
                                                 <th></th>
                                                 <th></th>
                                             </tr>
                                             <tr>
                                                 <th colspan="3" class="text-center align-middle">IPK</th>
-                                                <th class="text-center align-middle" id="ipk"></th>
                                                 <th></th>
+                                                <th class="text-center align-middle" id="ipk"></th>
                                                 <th></th>
                                                 <th></th>
                                             </tr>
@@ -202,10 +203,11 @@ Transkrip Nilai
                                                     <th class="text-center align-middle">No</th>
                                                     <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                     <th class="text-start align-middle">Nama Mata Kuliah</th>
+                                                    <th class="text-center align-middle">Nilai Huruf Diakui</th>
                                                     <th class="text-center align-middle">Semester</th>
                                                     <th class="text-center align-middle">SKS Diakui</th>
                                                     <th class="text-center align-middle">Nilai Index Diakui</th>
-                                                    <th class="text-center align-middle">Nilai Huruf Diakui</th>
+
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -420,14 +422,20 @@ Transkrip Nilai
                                 if (krs.nilai_huruf == 'F' || krs.nilai_huruf == null) {
                                     trClass = 'bg-danger';
                                 }
+                                var mutu = 0;
+
+                                mutu = krs.nilai_indeks*krs.sks_mata_kuliah
                                 table.row.add([
+
                                     `<td class="text-center align-middle"></td>`,
                                     `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
                                     `<td class="text-start align-middle" style="text-align:left !important;">${krs.nama_mata_kuliah}</td>`,
-                                    `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
-                                    `<td class="text-center align-middle">${krs.nilai_angka ?? '-'}</td>`,
+                                    `<td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>`,
                                     `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
-                                    `<td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>`
+                                    `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
+                                    `<td class="text-center align-middle">${mutu ?? '-'}</td>`,
+
+
                                 ]).node().className = trClass;
 
                                 var nilai_bobot_temp = parseInt(krs.sks_mata_kuliah) * parseFloat(krs.nilai_indeks);
