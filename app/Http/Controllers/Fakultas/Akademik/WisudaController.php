@@ -89,6 +89,15 @@ class WisudaController extends Controller
 
     public function approve(Request $request, Wisuda $wisuda)
     {
+        // dd($request->all());
+        $request->validate([
+            'tgl_sk_yudisium' => 'required|date',
+            'no_sk_yudisium' => 'required|string|max:255',
+            'sk_yudisium_file' => 'required|file|mimes:pdf|max:1024',
+        ]);
+
+        // dd($request->all());
+
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->first();
 
         if(!$wisuda->riwayat_pendidikan->id_kurikulum ) {
@@ -99,6 +108,14 @@ class WisudaController extends Controller
         }else{
             $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $wisuda->riwayat_pendidikan->id_kurikulum)->first();
         }
+
+        $skYudisiumName = 'sk_yudisium_' . str_replace(' ', '_', $wisuda->wisuda_ke) . '.' . $request->file('sk_yudisium_file')->getClientOriginalExtension();
+        $skYudisiumPath = $request->file('sk_yudisium_file')->storeAs('wisuda/sk_yudisium', $skYudisiumName, 'public');
+        $sk_yudisium_file = 'storage/' . $skYudisiumPath;
+        if (!$skYudisiumPath) {
+            return redirect()->back()->with('error', 'File ijazah terakhir gagal diunggah. Silakan coba lagi.');
+        }
+
 
         try {
             set_time_limit(10);
@@ -139,6 +156,7 @@ class WisudaController extends Controller
             'tgl_keluar' => $request->tgl_sk_yudisium,
             'no_sk_yudisium' => $request->no_sk_yudisium,
             'tgl_sk_yudisium' => $request->tgl_sk_yudisium,
+            'sk_yudisium_file' => $sk_yudisium_file,
         ]);
         
         return redirect()->back()->with('success', 'Pendaftaran Wisuda berhasil disetujui.');

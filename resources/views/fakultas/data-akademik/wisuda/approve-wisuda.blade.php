@@ -8,7 +8,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('fakultas.wisuda.approve', $d->id)}}" method="post" id="approve-class-{{$d->id}}">
+            <form action="{{route('fakultas.wisuda.approve', $d->id)}}" method="post" id="approve-class-{{$d->id}}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
                     <div class="row">
@@ -20,6 +20,11 @@
                             <label for="tgl_sk_yudisium" class="form-label">Tanggal Yudisium</label>
                             <input type="date" class="form-control" name="tgl_sk_yudisium" required>
                         </div>
+                        <div class="col-md-12 mb-3">
+                            <label for="sk_yudisium_file" class="form-label">File SK Yudisium(.pdf)</label>
+                            <input type="file" class="form-control" name="sk_yudisium_file" id="sk_yudisium_file"
+                                aria-describedby="fileHelpId" accept=".pdf" required />
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -27,7 +32,7 @@
                         Tutup
                     </button>
                     <button type="submit" class="btn btn-danger">
-                        Simpan
+                        Setuju
                     </button>
                 </div>
             </form>
@@ -39,7 +44,7 @@
     $('#approve-class-{{$d->id}}').submit(function(e){
         e.preventDefault();
         swal({
-            title: 'Melakukan persetujuan pendaftaran wisuda',
+            title: 'Persetujuan Pendaftaran Wisuda',
             text: "Apakah anda yakin ingin?",
             type: 'warning',
             showCancelButton: true,

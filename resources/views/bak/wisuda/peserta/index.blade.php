@@ -99,6 +99,7 @@ Daftar Peserta Wisuda
                                     <th class="text-center align-middle">MASA STUDI</th>
                                     <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
                                     <th class="text-center align-middle">SCOR USEPT</th>
+                                    <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -147,18 +148,69 @@ function getData()
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
+                    console.log(item.id);
                     var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
-                    var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
+
+                    
+                    var url_ijazah = '{{ asset('') }}' + item.ijazah_terakhir_file;
+                    var ijazahButton = item.ijazah_terakhir_file ? 
+                        '<a class="btn btn-sm btn-info" href="' + url_ijazah + '" target="_blank"><i class="fa fa-file me-2"></i>Lihat Ijazah</a>' : 
+                        '<span class="text-danger">Tidak Tersedia</span>';
+
+                    var spanStatus = '';
+                        if (item.approved === 0 || item.approved > 3) {
+                            spanStatus = '<span class="badge badge-danger">' + item.approved_text + '</span>';
+                        } else if (item.approved > 0 && item.approved < 3) {
+                            spanStatus = '<span class="badge badge-primary">' + item.approved_text + '</span>';
+                        } else {
+                            spanStatus = '<span class="badge badge-success">' + item.approved_text + '</span>';
+                        };
+
                     var namaOrtu = item.nama_ayah ? item.nama_ayah : '' + (item.nama_ibu_kandung ? ' & ' + item.nama_ibu_kandung : '');
                     var alamat = 'RT ' + item.rt + ' RW ' + item.rw + ', ' + item.dusun + ', ' + item.kelurahan + ', ' + item.jalan + ', ' + item.nama_wilayah;
-                    var foto = item.pas_foto ? '<img src="{{ asset('' ) }}' + item.pas_foto + '" class="img-fluid" style="max-width: 300px; max-height: 500px;">' : '';
+                    var foto = item.pas_foto ? `
+                        <td class="text-center align-middle text-nowrap">
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal${item.id}">
+                                <img src="{{ asset('') }}${item.pas_foto}" alt="Pas Foto" style="width: 150px;" title="Lihat Foto">
+                            </a>
+                            <!-- Modal -->
+                            <div class="modal fade" id="fotoModal${item.id}" tabindex="-1" aria-labelledby="fotoModalLabel${item.id}" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content rounded-3">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="fotoModalLabel${item.id}">FOTO ${item.nama_mahasiswa}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body text-center m-20">
+                                            <img src="{{ asset('') }}${item.pas_foto}" alt="Foto" style="width: 100%; max-width: 500px;" class="rounded-3">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    ` : '';
+
+                    var aksi = 
+                        `<td class="text-center align-middle text-nowrap">
+                            <div class="row">
+                                ${item.approved == 2 ? `
+                                    <button onclick="approvePeserta(${item.id})" class="btn btn-success btn-sm my-2" title="Setujui Pengajuan">
+                                        <i class="fa fa-check"> </i> Approve
+                                    </button>` : ''}
+                                ${(item.approved == 2 || item.approved == 3) ? `
+                                    <button onclick="declinePeserta(${item.id})" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan">
+                                        <i class="fa fa-ban"> </i> Decline
+                                    </button>` : ''}
+                            </div>
+                        </td>`;
+
                     table.row.add([
                         index + 1,
                         item.wisuda_ke,
                         spanStatus,
-                        item.ijazah_terakhir ?? '-',
+                        ijazahButton,
                         berkasButton,
                         item.nomor_registrasi ?? '-',
                         foto,
@@ -179,10 +231,12 @@ function getData()
                         namaOrtu,
                         item.alamat_orang_tua ?? '-',
                         item.tanggal_daftar,
-                        item.tanggal_sk_yudisium ?? spanStatus,
-                        item.masa_studi ?? spanStatus,
+                        item.tgl_sk_yudisium ?? spanStatus,
+                        item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
-                        item.scor_usept ?? '-'
+                        item.scor_usept ?? '-',
+                        aksi,
+                        
                     ]).draw(false);
                 });
 
@@ -222,6 +276,82 @@ function filterProdi()
         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
     });
 
+}
+
+function approvePeserta(id) {
+    swal({
+        title: "Apakah Anda yakin?",
+        text: `Peserta dengan ID ${id} akan disetujui.`,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Lanjutkan',
+        cancelButtonText: 'Batal',
+    }, function(isConfirmed) {
+        if (isConfirmed) {
+            $.ajax({
+                url: `{{route('bak.wisuda.peserta.approve', ['id' => 'ID'])}}`.replace('ID', id),
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: 1
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // console.log('Approval successful:', response.data);
+                        swal('Berhasil', response.message, 'success');
+                        getData();
+                    } else {
+                        // console.log('Approval failed:', response.data);
+                        swal('Gagal', response.message, 'error');
+                    }
+                },
+                error: function(xhr) {
+                    // console.log('Approval failed:', response.data);
+                    swal('Gagal', 'Terjadi kesalahan saat menyetujui peserta.', 'error');
+                }
+            });
+        }
+    })
+}
+
+function declinePeserta(id) {
+    swal({
+        title: "Apakah Anda yakin?",
+        text: `Peserta dengan ID ${id} akan ditolak.`,
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Lanjutkan',
+        cancelButtonText: 'Batal',
+    }, function(isConfirmed) {
+        if (isConfirmed) {
+            $.ajax({
+                url: `{{route('bak.wisuda.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: 0
+                },
+                success: function(response) {
+                    if (response.status === 'success') {
+                        // console.log('Decline successful:', response.data);
+                        swal('Berhasil', response.message, 'success');
+                        getData();
+                    } else {
+                        // console.log('Decline failed:', response.data);
+                        swal('Gagal', response.message, 'error');
+                    }
+                },
+                error: function(xhr) {
+                    // console.log('Decline failed:', response.data);
+                    swal('Gagal', 'Terjadi kesalahan saat menolak peserta.', 'error');
+                }
+            });
+        }
+    })
 }
 
 $(function () {
