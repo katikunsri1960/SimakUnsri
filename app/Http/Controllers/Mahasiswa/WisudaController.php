@@ -86,7 +86,7 @@ class WisudaController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
         }
 
-        $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
+        $wisuda = Wisuda::with('aktivitas_mahasiswa')->where('id_registrasi_mahasiswa', $id_reg)->first();
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -386,7 +386,6 @@ class WisudaController extends Controller
             'angkatan' => $akm->angkatan,
             'nim' => $riwayat_pendidikan->nim,
             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-            'alamat_orang_tua' => $request->alamat_orang_tua,
             'kosentrasi' => $request->kosentrasi,
             'tgl_sk_pembimbing' => $request->tgl_sk_pembimbing,
             'no_sk_pembimbing' => $request->no_sk_pembimbing,
@@ -415,9 +414,10 @@ class WisudaController extends Controller
                 'nama_wilayah' => $wilayah->nama_wilayah,
                 'handphone' => $request->handphone,
                 'email' => $request->email,
-                'nama_ayah' => $request->nama_ayah,
+                'nama_ayah' => strtoupper($request->nama_ayah),
                 'no_hp_ayah' => $request->no_hp_ayah,
                 'no_hp_ibu' => $request->no_hp_ibu,
+                'alamat_orang_tua' => $request->alamat_orang_tua,
                 
             ]);
 

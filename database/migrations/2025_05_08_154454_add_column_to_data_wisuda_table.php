@@ -15,6 +15,8 @@ return new class extends Migration
             $table->text('judul_eng')->nullable()->after('lokasi_kuliah'); // Judul dalam bahasa Inggris
             $table->string('abstrak_file_eng')->nullable()->after('abstrak_file'); // Path ke file abstrak bahasa inggris
             $table->string('ijazah_terakhir_file')->nullable()->after('abstrak_file_eng'); // Path ke file ijazah terakhir
+            
+            $table->dropColumn('alamat_orang_tua'); // Menghapus kolom alamat_orang_tua jika ada
         });
     }
 
