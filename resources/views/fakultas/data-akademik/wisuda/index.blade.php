@@ -42,20 +42,22 @@ Pendaftaran Wisuda Fakultas
                         <table id="data" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">Periode</th>
-                                    <th class="text-center align-middle">Foto</th>
+                                    <th class="text-center align-middle">NO</th>
+                                    <th class="text-center align-middle">PERIODE</th>
+                                    <th class="text-center align-middle">STATUS</th>
+                                    <th class="text-center align-middle">IJAZAH TERAKHIR</th>
+                                    <th class="text-center align-middle">SK YUDISIUM</th>
+                                    <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">NIM</th>
-                                    <th class="text-center align-middle">Nama Mahasiswa</th>
-                                    <th class="text-center align-middle">Program Studi</th>
-                                    <th class="text-center align-middle">Bebas Pustaka</th>
-                                    <th class="text-center align-middle">Repository</th>
-                                    <th class="text-center align-middle">Nilai USEPT</th>
-                                    <th class="text-center align-middle">File Abstrak</th>
-                                    <th class="text-center align-middle text-nowrap">SK Yudisium<br>(Tgl Yudisium)</th>
-                                    <th class="text-center align-middle">Lama Studi</th>
-                                    <th class="text-center align-middle">Status Pendaftaran Wisuda</th>
-                                    <th class="text-center align-middle">Action</th>
+                                    <th class="text-center align-middle">NAMA</th>
+                                    <th class="text-center align-middle">PROGRAM STUDI</th>
+                                    <th class="text-center align-middle">BEBAS PUSTAKA</th>
+                                    <th class="text-center align-middle">REPOSITORY</th>
+                                    <th class="text-center align-middle">SKOR USEPT</th>
+                                    <th class="text-center align-middle">ABSTRAK</th>
+                                    <th class="text-center align-middle text-nowrap">SK YUDISIUM<br>(TGL YUDISIUM)</th>
+                                    <th class="text-center align-middle">LAMA STUDI</th>
+                                    <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -65,6 +67,39 @@ Pendaftaran Wisuda Fakultas
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-center align-middle">{{$d->wisuda_ke}}</td>
+                                        <td class="text-center align-middle" style="width:10%">
+                                            @if($d->approved == 0)
+                                                <span class="badge rounded badge-warning" style="padding: 8px">Belum Disetujui Koor. Prodi</span>
+                                            @elseif($d->approved == 1)
+                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Koor. Prodi</span>
+                                            @elseif($d->approved == 2)
+                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Fakultas</span>
+                                            @elseif($d->approved == 3)
+                                                <span class="badge rounded badge-success" style="padding: 8px">Disetujui BAK</span>
+                                            @elseif($d->approved == 97)
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Koor. Prodi</span>
+                                            @elseif($d->approved == 98)
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Fakultas</span>
+                                            @elseif($d->approved == 99)
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak BAK</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <a href="{{ $d->ijazah_terakhir_file? asset($d->ijazah_terakhir_file) : '#' }}" 
+                                               target="{{ $d->ijazah_terakhir_file? '_blank' : '_self' }}" 
+                                               class="btn btn-sm {{ $d->ijazah_terakhir_file? 'btn-primary' : 'btn-warning' }} my-2">
+                                                <i class="fa {{ $d->ijazah_terakhir_file? 'fa-file-pdf-o' : 'fa-exclamation-circle' }}"></i> 
+                                                {{ $d->ijazah_terakhir_file? 'Lihat Ijazah' : 'Belum Upload Ijazah' }}
+                                            </a>
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <a href="{{ $d->sk_yudisium_file ? asset($d->sk_yudisium_file) : '#' }}" 
+                                               target="{{ $d->sk_yudisium_file ? '_blank' : '_self' }}" 
+                                               class="btn btn-sm {{ $d->sk_yudisium_file ? 'btn-primary' : 'btn-warning' }} my-2">
+                                                <i class="fa {{ $d->sk_yudisium_file ? 'fa-file-pdf-o' : 'fa-exclamation-circle' }}"></i> 
+                                                {{ $d->sk_yudisium_file ? 'Lihat SK Yudisium' : 'Belum Upload SK Yudisium' }}
+                                            </a>
+                                        </td>
                                         <td class="text-center align-middle text-nowrap">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal{{$d->id}}">
                                                 <img src="{{ asset($d->pas_foto) }}" alt="Pas Foto" style="width: 150px;" title="Lihat Foto">
@@ -121,7 +156,7 @@ Pendaftaran Wisuda Fakultas
                                             @endif
                                         </td> 
                                         <td class="text-center align-middle text-nowrap">
-                                            @if ($d->no_sk_yudisium && $d->tgl_sk_yudisium)
+                                            @if ($d->no_sk_yudisium_file && $d->tgl_sk_yudisium)
                                                 {{$d->no_sk_yudisium}}<br>( {{ \Carbon\Carbon::parse($d->tgl_sk_yudisium)->translatedFormat('d F Y') }} )
                                             @else
                                                 -
@@ -138,26 +173,6 @@ Pendaftaran Wisuda Fakultas
                                                 <span class="badge rounded bg-danger" style="padding: 8px">Tanggal SK Yudisium Belum Diisi</span>
                                             @endif
                                             
-                                        </td>
-
-                                        
-                                        
-                                        <td class="text-center align-middle" style="width:10%">
-                                            @if($d->approved == 0)
-                                                <span class="badge rounded badge-warning" style="padding: 8px">Belum Disetujui Koor. Prodi</span>
-                                            @elseif($d->approved == 1)
-                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Koor. Prodi</span>
-                                            @elseif($d->approved == 2)
-                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Fakultas</span>
-                                            @elseif($d->approved == 3)
-                                                <span class="badge rounded badge-success" style="padding: 8px">Disetujui BAK</span>
-                                            @elseif($d->approved == 97)
-                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Koor. Prodi</span>
-                                            @elseif($d->approved == 98)
-                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Fakultas</span>
-                                            @elseif($d->approved == 99)
-                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak BAK</span>
-                                            @endif
                                         </td>
                                         <td class="text-center align-middle text-nowrap">
                                             <div class="row">

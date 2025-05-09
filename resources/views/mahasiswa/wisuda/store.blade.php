@@ -125,7 +125,7 @@ Pendaftaran Wisuda Mahasiswa
                         
                             <div class=" col-lg-12 mb-3">
                                 <label for="alamat_orang_tua" class="form-label">ALAMAT ORANG TUA</label>
-                                <textarea placeholder="MASUKKAN ALAMAT ORANG TUA" class="form-control" name="alamat_orang_tua" id="alamat_orang_tua" aria-describedby="helpId" required>{{strtoupper($data_wisuda->alamat_orang_tua ?? '')}}</textarea>
+                                <textarea placeholder="MASUKKAN ALAMAT ORANG TUA" class="form-control" name="alamat_orang_tua" id="alamat_orang_tua" aria-describedby="helpId" required>{{strtoupper($riwayat_pendidikan->biodata->alamat_orang_tua ?? '')}}</textarea>
                             </div>
                         </div>
 
@@ -283,10 +283,15 @@ Pendaftaran Wisuda Mahasiswa
                                 {{-- <div class="data-wisuda-field row">Data Wisuda Mahasiswa</h4> --}}
                                 <div class="data-wisuda-field row">
                                     <div class=" col-lg-12 mb-3">
-                                        <label for="judul_ta" class="form-label">Judul {{$aktivitas->nama_jenis_aktivitas}}</label>
+                                        <label for="judul_ta" class="form-label">Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Indonesia</label>
                                         <textarea type="text" class="form-control" name="judul_ta" id="judul_ta" aria-describedby="helpId"
                                             disabled required>{{$aktivitas->judul}}
                                         </textarea>
+                                    </div>
+                                    <div class="col-lg-12 mb-3">
+                                        <label for="judul_eng" class="form-label">Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris</label>
+                                        <textarea type="text" class="form-control" name="judul_eng" id="judul_eng" aria-describedby="helpId"
+                                            placeholder="Masukkan Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris" required></textarea>
                                     </div>
                                     <div class=" col-lg-12 mb-3">
                                         <label for="kosentrasi" class="form-label">Bidang Kajian Utama (BKU) / Kosentrasi</label>
@@ -300,24 +305,22 @@ Pendaftaran Wisuda Mahasiswa
                                         <label for="no_sk_pembimbing" class="form-label">Nomor SK Pembimbing</label>
                                         <input type="text" class="form-control" name="no_sk_pembimbing" id="no_sk_pembimbing" aria-describedby="helpId" required />
                                     </div>
-                                    <div class="col-lg-12 mb-3">
-                                        <label for="judul_eng" class="form-label">Judul Tugas Akhir dalam Bahasa Inggris</label>
-                                        <textarea type="text" class="form-control" name="judul_eng" id="judul_eng" aria-describedby="helpId"
-                                            placeholder="Masukkan Judul Tugas Akhir dalam Bahasa Inggris" required></textarea>
-                                    </div>
                                     <div class=" col-lg-12 mb-3">
-                                        <label for="abstrak_ta" class="form-label">Abstrak</label>
+                                        <label for="abstrak_ta" class="form-label">Abstrak {{$aktivitas->nama_jenis_aktivitas}}</label>
                                         <textarea type="text" class="form-control" name="abstrak_ta" id="abstrak_ta" aria-describedby="helpId"
-                                        placeholder="Masukkan Abstrak Tugas Akhir" required></textarea>
+                                        placeholder="Masukkan Abstrak {{$aktivitas->nama_jenis_aktivitas}}" required></textarea>
                                     </div>
-                                    <div class="col-lg-12 mb-3">
+                                </div>
+                                <h4 class="text-info mb-10 mt-10">File Abstrak {{$aktivitas->nama_jenis_aktivitas}}</h4>
+                                <div class="data-wisuda-field row">
+                                    {{-- <div class="col-lg-12 mb-3"> --}}
                                         <div class="col-md-6 mb-3">
-                                            <label for="abstrak_file" class="form-label">File Abstak dalam Bahasa Indonesia(.pdf)</label>
+                                            <label for="abstrak_file" class="form-label">Bahasa Indonesia(.pdf)</label>
                                             <input type="file" class="form-control" name="abstrak_file" id="abstrak_file"
                                                 aria-describedby="fileHelpId" accept=".pdf" required />
                                         </div>
                                         <div class="col-md-6 mb-3">
-                                            <label for="abstrak_file_eng" class="form-label">File Abstak dalam Bahasa Inggris(.pdf)</label>
+                                            <label for="abstrak_file_eng" class="form-label">Bahasa Inggris(.pdf)</label>
                                             <input type="file" class="form-control" name="abstrak_file_eng" id="abstrak_file_eng"
                                                 aria-describedby="fileHelpId" accept=".pdf" required />
                                         </div>

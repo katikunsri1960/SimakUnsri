@@ -352,6 +352,8 @@ class WisudaController extends Controller
         $abstrak_file_eng = 'storage/' . $abstrakEngPath;
         $ijazah_terakhir_file = 'storage/' . $ijazahPath;
 
+        // dd($pas_foto, $abstrak_file, $abstrak_file_eng, $ijazah_terakhir_file);
+
         // Cek apakah file berhasil diupload
         if (!$pasFotoPath) {
             return redirect()->back()->with('error', 'Pas foto gagal diunggah. Silakan coba lagi.');
@@ -391,7 +393,7 @@ class WisudaController extends Controller
             'no_sk_pembimbing' => $request->no_sk_pembimbing,
             'pas_foto' => $pas_foto,
             'lokasi_kuliah' => $request->lokasi_kuliah,
-            'judul_eng' => $request->judul_eng,
+            'judul_eng' => strtoupper($request->judul_eng),
             'abstrak_ta' => $request->abstrak_ta,
             'abstrak_file' => $abstrak_file,
             'abstrak_file_eng' => $abstrak_file_eng,
