@@ -43,7 +43,7 @@ Monitoring Pengisian KRS
                                 <th class="text-center align-middle">Jumlah Mahasiswa (Yang melakukan pengisian KRS)</th>
                                 <th class="text-center align-middle">Jumlah Mahasiswa Sudah di Setujui</th>
                                 <th class="text-center align-middle">Jumlah Mahasiswa Belum di Setujui</th>
-                                <th class="text-center align-middle">Persentase Approval</th>
+                                <th class="text-center align-middle">Persentase Pengisian KRS</th>
                              </tr>
                           </thead>
                           <tbody>
@@ -51,7 +51,7 @@ Monitoring Pengisian KRS
                             @php
                                 $persentase_approval = 0;
                                 if($d->isi_krs > 0) {
-                                    $persentase_approval = ($d->krs_approved / $d->isi_krs) * 100;
+                                    $persentase_approval = ($d->isi_krs / $d->mahasiswa_aktif) * 100;
                                 }
                             @endphp
                                 <tr class="@if ($persentase_approval < 50) table-danger @endif">

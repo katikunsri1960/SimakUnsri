@@ -439,4 +439,19 @@ class DataMasterController extends Controller
         // dd($nilai_hasil_course);
         return view('prodi.data-master.mahasiswa.nilai-usept', ['data' => $nilai_usept_mhs, 'usept_prodi' => $nilai_usept_prodi, 'course_data' => $nilai_course, 'mahasiswa' => $data_mahasiswa]);
     }
+
+    public function edit_nama_english_store(Request $request, MataKuliah $matkul)
+    {
+        $data = $request->validate([
+            'nama_mata_kuliah_english' => 'required',
+        ]);
+
+        $data['nama_mata_kuliah_english'] = strtoupper($data['nama_mata_kuliah_english']);
+
+        $matkul->update([
+            'nama_mata_kuliah_english' => $data['nama_mata_kuliah_english']
+        ]);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Rubah');
+    }
 }

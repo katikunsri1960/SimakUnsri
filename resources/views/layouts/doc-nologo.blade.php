@@ -17,6 +17,20 @@
             height: 50px;
             text-align: right;
         }
+        .header img {
+            position: absolute;
+            left: 0;
+            top: 0;
+            /* height: 80px; */
+            width: 130px
+        }
+        .header h1, .header p {
+            margin: 0;
+        }
+        .header-div {
+            margin-left: 130px;
+            margin-right: 100px;
+        }
         .text-upper
         {
             text-transform: uppercase;
@@ -104,6 +118,9 @@
     </style>
 </head>
 <body>
+    <div class="header">
+        @stack('header')
+    </div>
     <br>
 <div class="container-fluid">@yield('content')</div>
 </body>

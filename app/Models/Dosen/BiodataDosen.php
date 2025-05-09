@@ -74,7 +74,9 @@ class BiodataDosen extends Model
 
         return $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
                                 ->where('p.id_tahun_ajaran', $tahun_ajaran)
-                                ->where('biodata_dosens.id_dosen', $id_dosen)->first();
+                                ->where('biodata_dosens.id_dosen', $id_dosen)
+                                ->orderByRaw("STR_TO_DATE(p.mulai_surat_tugas, '%d-%m-%Y') DESC")
+                                ->first();
 
     }
 

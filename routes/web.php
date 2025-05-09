@@ -54,6 +54,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::get('/check-sync', [App\Http\Controllers\Bak\DashboardController::class, 'check_sync'])->name('bak.check-sync');
 
+            Route::prefix('data-master')->group(function(){
+                Route::prefix('predikat')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat'])->name('bak.data-master.predikat');
+                    Route::post('/', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_store'])->name('bak.data-master.predikat.store');
+                    Route::patch('/{predikat}', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_update'])->name('bak.data-master.predikat.update');
+                    Route::delete('/{predikat}', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_delete'])->name('bak.data-master.predikat.delete');
+                });
+            });
             Route::prefix('tunda-bayar')->group(function() {
                 Route::get('/', [App\Http\Controllers\Bak\TundaBayarController::class, 'index'])->name('bak.tunda-bayar');
                 Route::post('/approve/{tunda_bayar}', [App\Http\Controllers\Bak\TundaBayarController::class, 'approve'])->name('bak.tunda-bayar.approve');
@@ -703,6 +711,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::delete('/{matkul}/delete-prasyarat', [App\Http\Controllers\Prodi\DataMasterController::class, 'hapus_prasyarat'])->name('prodi.data-master.mata-kuliah.delete-prasyarat');
                     Route::get('/{matkul}/lihat-rps', [App\Http\Controllers\Prodi\DataMasterController::class, 'lihat_rps'])->name('prodi.data-master.mata-kuliah.lihat-rps');
                     Route::post('/{matkul}/approved-all', [App\Http\Controllers\Prodi\DataMasterController::class, 'approved_rps'])->name('prodi.data-master.mata-kuliah.approved-all');
+
+                    Route::post('/edit-nama/{matkul}', [App\Http\Controllers\Prodi\DataMasterController::class, 'edit_nama_english_store'])->name('prodi.data-master.mata-kuliah.edit-nama');
                 });
 
                 Route::prefix('matkul-merdeka')->group(function(){

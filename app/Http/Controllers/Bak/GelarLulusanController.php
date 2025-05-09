@@ -19,7 +19,7 @@ class GelarLulusanController extends Controller
 
     public function edit(ProgramStudi $prodi)
     {
-        dd($prodi);
+        // dd($prodi);
 
         $gelar = GelarLulusan::where('id_prodi', $prodi->id_prodi)->get();
 

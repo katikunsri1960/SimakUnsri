@@ -38,7 +38,7 @@ Monitoring Pengisian KRS
                                 <th class="text-center align-middle">Mahasiswa (Tidak isi KRS)</th>
                                 <th class="text-center align-middle">Mahasiswa Sudah di Setujui</th>
                                 <th class="text-center align-middle">Mahasiswa Belum di Setujui</th>
-                                <th class="text-center align-middle">Persentase Approval</th>
+                                <th class="text-center align-middle">Persentase Pengisian KRS</th>
                              </tr>
                           </thead>
                           <tbody>
@@ -46,7 +46,7 @@ Monitoring Pengisian KRS
                             @php
                                 $persentase_approval = 0;
                                 if($d->isi_krs > 0) {
-                                    $persentase_approval = ($d->krs_approved / $d->isi_krs) * 100;
+                                    $persentase_approval = ($d->isi_krs / $d->mahasiswa_aktif) * 100;
                                 }
                             @endphp
                                 <tr class="@if ($persentase_approval < 50) table-danger @endif">
@@ -131,7 +131,23 @@ Monitoring Pengisian KRS
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
     $(document).ready(function(){
-        $('#data').DataTable();
+        $('#data').DataTable({
+            "paging": false,
+            "scrollX": true,
+            "scrollY": "45vh",
+            "dom": 'Bfrtip', // Add buttons for export
+            "buttons": [
+                {
+                    extend: 'excelHtml5',
+                    title: 'Monev Pengisian KRS',
+                    text: '<i class="fa fa-file-excel-o"></i> Download Excel', // Add Excel icon
+                    className: 'btn btn-success', // Optional: Add custom styling
+                    exportOptions: {
+                        columns: [0,1, 2, 3, 4, 5,6,7,8,9,10] // Tentukan kolom yang ingin diekspor
+                    },
+                }
+            ],
+        });
     });
 
 </script>

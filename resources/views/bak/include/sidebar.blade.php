@@ -13,42 +13,57 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="treeview {{request()->routeIs('bak.pejabat.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('bak.pejabat.*') || request()->routeIs('bak.gelar-lulusan') || request()->routeIs('bak.gelar-lulusan.*') || request()->routeIs('bak.usept-prodi') || request()->routeIs('bak.usept-prodi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i span class="fa fa-sitemap"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Pejabat</span>
+                            <i span class="fa fa-database"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Data Master</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('bak.pejabat.fakultas') || request()->routeIs('bak.pejabat.fakultas.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.pejabat.fakultas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Fakultas</a>
+                            <li class="treeview {{request()->routeIs('bak.pejabat.*') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i span class="fa fa-sitemap"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Pejabat</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('bak.pejabat.fakultas') || request()->routeIs('bak.pejabat.fakultas.*') ? 'active' : ''}}">
+                                        <a href="{{route('bak.pejabat.fakultas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Fakultas</a>
+                                    </li>
+                                    <li class="{{request()->routeIs('bak.pejabat.universitas') || request()->routeIs('bak.pejabat.universitas.*') ? 'active' : ''}}">
+                                        <a href="{{route('bak.pejabat.universitas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Universitas</a>
+                                    </li>
+                                </ul>
                             </li>
-                            <li class="{{request()->routeIs('bak.pejabat.universitas') || request()->routeIs('bak.pejabat.universitas.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.pejabat.universitas')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Universitas</a>
+                            <li class="{{request()->routeIs('bak.gelar-lulusan') || request()->routeIs('bak.gelar-lulusan.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.gelar-lulusan')}}">
+                                    <i class="fa fa-graduation-cap"><span class="path1"></span><span
+                                            class="path2"></span></i>
+                                    <span>Gelar Lulusan</span>
+
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.usept-prodi') || request()->routeIs('bak.usept-prodi.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.usept-prodi')}}">
+                                    <i class="fa fa-pen-square"><span class="path1"></span><span
+                                            class="path2"></span></i>
+                                    <span>USEPT Prodi</span>
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.data-master.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.data-master.predikat')}}">
+                                    <i class="fa fa-graduation-cap"><span class="path1"></span><span
+                                            class="path2"></span></i>
+                                    <span>Predikat Lulusan</span>
+
+                                </a>
                             </li>
                         </ul>
-                    </li>
-                    <li class="{{request()->routeIs('bak.gelar-lulusan') || request()->routeIs('bak.gelar-lulusan.*') ? 'active' : ''}}">
-                        <a href="{{route('bak.gelar-lulusan')}}">
-                            <i class="fa fa-graduation-cap"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Gelar Lulusan</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                    </li>
-                    <li class="{{request()->routeIs('bak.usept-prodi') || request()->routeIs('bak.usept-prodi.*') ? 'active' : ''}}">
-                        <a href="{{route('bak.usept-prodi')}}">
-                            <i class="fa fa-pen-square"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>USEPT Prodi</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
                     </li>
                     <li class="{{request()->routeIs('bak.transkrip-nilai') || request()->routeIs('bak.transkrip-nilai.*') ? 'active' : ''}}">
                         <a href="{{route('bak.transkrip-nilai')}}">

@@ -3,6 +3,7 @@
 Mata Kuliah
 @endsection
 @section('content')
+@include('prodi.data-master.mata-kuliah.edit-nama')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
@@ -38,7 +39,7 @@ Mata Kuliah
                                     <th class="text-center align-middle">Kurikulum</th>
                                     <th class="text-center align-middle">KODE MK</th>
                                     <th class="text-center align-middle">NAMA MK</th>
-                                    {{-- <th class="text-center align-middle">NAMA MK (ENGLISH)</th> --}}
+                                    <th class="text-center align-middle">NAMA MK (ENGLISH)</th>
                                     <th class="text-center align-middle">SKS</th>
                                     <th class="text-center align-middle">PRASYARAT</th>
                                     <th class="text-center align-middle" style="width: 10%">AKSI</th>
@@ -56,7 +57,18 @@ Mata Kuliah
                                     <td class="text-start align-middle" style="width: 15%">{{$a->nama_kurikulum}}</td>
                                     <td class="text-center align-middle">{{$d->kode_mata_kuliah}}</td>
                                     <td class="text-start align-middle">{{$d->nama_mata_kuliah}}</td>
-                                    {{-- <td class="text-center align-middle">{{$d->nama_mata_kuliah_english}}</td> --}}
+                                    <td class="text-center align-middle">
+                                        @if ($d->nama_mata_kuliah_english == null)
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#modalEditNama" onclick="editNama({{$d}})">
+                                            <i class="fa fa-plus me-1"></i> Tambah Nama MK (EN)
+                                        </button>
+                                        @else
+                                        <a href="#" data-bs-toggle="modal" data-bs-target="#modalEditNama" onclick="editNama({{$d}})" title="Click to update">
+                                            {{$d->nama_mata_kuliah_english}}  <i class="fa fa-pencil ms-1"></i>
+                                        </a>
+                                        @endif
+                                    </td>
                                     <td class="text-center align-middle">{{$d->sks_mata_kuliah}}</td>
                                     <td class="text-start align-middle">
                                         @if ($d->prasyarat_matkul)
@@ -99,6 +111,7 @@ Mata Kuliah
                                         </div>
                                     </td>
                                 </tr>
+                                @if ($d->prasyarat_matkul->count() > 0)
                                 <script>
                                     $('#delete-prasyarat-{{$d->id}}').submit(function(e){
                                         e.preventDefault();
@@ -118,6 +131,7 @@ Mata Kuliah
                                         });
                                     });
                                 </script>
+                                @endif
                                 @endforeach
                                 @endif
                                 @endforeach
@@ -136,7 +150,39 @@ Mata Kuliah
     $(function() {
         "use strict";
 
-        $('#data').DataTable();
+        $('#data').DataTable({
+            "stateSave": true,
+        });
     });
+
+    function editNama(data) {
+
+        document.getElementById('formEditNama').reset();
+        document.getElementById('kode_mk').value = data.kode_mata_kuliah;
+        document.getElementById('nama_mk_id').value = data.nama_mata_kuliah;
+        document.getElementById('nama_mata_kuliah_english').value = data.nama_mata_kuliah_english ?? '';
+
+        document.getElementById('formEditNama').action = "{{route('prodi.data-master.mata-kuliah.edit-nama', ['matkul' => ':id'])}}".replace(':id', data.id);
+
+    }
+
+    $('#formEditNama').submit(function(e) {
+            e.preventDefault();
+            swal({
+                title: 'Simpan Data',
+                text: "Apakah anda yakin ingin menyimpan data?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm) {
+                if (isConfirm) {
+                    $('#spinner').show();
+                    $('#formEditNama').unbind('submit').submit();
+                }
+            });
+        });
 </script>
 @endpush
