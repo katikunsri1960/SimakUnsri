@@ -23,6 +23,10 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('prodi.data-master.detail-prodi') || request()->routeIs('prodi.data-master.detail-prodi.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.detail-prodi')}}"><i class="icon-Commit"><span
+                                            class="path1"></span><span class="path2"></span></i>Detail Prodi</a>
+                            </li>
                             <li class="{{request()->routeIs('prodi.data-master.dosen') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.dosen')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Dosen</a>

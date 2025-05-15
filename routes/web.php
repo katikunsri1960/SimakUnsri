@@ -729,6 +729,19 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'kurikulum'])->name('prodi.data-master.kurikulum');
                     Route::get('/detail/{kurikulum}', [App\Http\Controllers\Prodi\DataMasterController::class, 'detail_kurikulum'])->name('prodi.data-master.kurikulum.detail');
                 });
+
+                Route::prefix('detail-prodi')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'detail_prodi'])->name('prodi.data-master.detail-prodi');
+
+                    //Data Nama Bahasa Inggris Prodi
+                    Route::post('/prodi-inggris/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'prodi_inggris_store'])->name('prodi.data-master.detail-prodi.prodi-inggris.store');
+                    
+
+                    //Data BKU Program Studi
+                    Route::post('/tambah-bku/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'store_bku'])->name('prodi.data-master.detail-prodi.store-bku');
+                    Route::delete('/delete-bku/{bku_prodi}', [App\Http\Controllers\Prodi\DataMasterController::class, 'destroy_bku'])->name('prodi.data-master.detail-prodi.delete-bku');
+                    Route::post('/setting-bku', [App\Http\Controllers\Prodi\DataMasterController::class, 'setting_bku'])->name('prodi.data-master.detail-prodi.setting-bku');
+                });
             });
 
             //Route for Data Akademik
