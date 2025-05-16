@@ -75,6 +75,7 @@ Daftar Peserta Wisuda
                                     <th class="text-center align-middle">PERIODE</th>
                                     <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
+                                    <th class="text-center align-middle">SK YUDISIUM</th>
                                     <th class="text-center align-middle">BERKAS REGISTRASI WISUDA</th>
                                     <th class="text-center align-middle">NOMOR REGISTRASI</th>
                                     <th class="text-center align-middle">FOTO</th>
@@ -151,13 +152,17 @@ function getData()
                     console.log(item.id);
                     var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
-                    var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
-
+                    var berkasButton = '<a class="btn btn-sm btn-success" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     
-                    var url_ijazah = '{{ asset('') }}' + item.ijazah_terakhir_file;
+                    var url_ijazah = item.ijazah_terakhir_file ? '{{ asset('') }}' + item.ijazah_terakhir_file : NULL;
                     var ijazahButton = item.ijazah_terakhir_file ? 
-                        '<a class="btn btn-sm btn-info" href="' + url_ijazah + '" target="_blank"><i class="fa fa-file me-2"></i>Lihat Ijazah</a>' : 
-                        '<span class="text-danger">Tidak Tersedia</span>';
+                        '<a class="btn btn-sm btn-success" href="' + url_ijazah + '" target="_blank"><i class="fa fa-file me-2"></i>Lihat Ijazah</a>' : 
+                        '<span class="badge badge-warning text-center"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload SK Yudisium</span>';
+
+                    var url_sk_yudisium = item.sk_yudisium_file ? '{{ asset('') }}' + item.sk_yudisium_file : null;
+                    var skYudisiumButton = url_sk_yudisium ? 
+                        '<a class="btn btn-sm btn-success" href="' + url_sk_yudisium + '" target="_blank"><i class="fa fa-file me-2"></i>Lihat SK Yudisium</a>' : 
+                        '<span class="badge badge-warning text-center"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload<br>SK Yudisium</span>';
 
                     var spanStatus = '';
                         if (item.approved === 0 || item.approved > 3) {
@@ -168,7 +173,14 @@ function getData()
                             spanStatus = '<span class="badge badge-success">' + item.approved_text + '</span>';
                         };
 
-                    var namaOrtu = item.nama_ayah ? item.nama_ayah : '' + (item.nama_ibu_kandung ? ' & ' + item.nama_ibu_kandung : '');
+                    var namaOrtu = '';
+                                if (item.nama_ayah && item.nama_ibu_kandung) {
+                                    namaOrtu = item.nama_ayah + ' & ' + item.nama_ibu_kandung;
+                                } else if (item.nama_ayah) {
+                                    namaOrtu = item.nama_ayah;
+                                } else if (item.nama_ibu_kandung) {
+                                    namaOrtu = item.nama_ibu_kandung;
+                                }
                     var alamat = 'RT ' + item.rt + ' RW ' + item.rw + ', ' + item.dusun + ', ' + item.kelurahan + ', ' + item.jalan + ', ' + item.nama_wilayah;
                     var foto = item.pas_foto ? `
                         <td class="text-center align-middle text-nowrap">
@@ -211,6 +223,7 @@ function getData()
                         item.wisuda_ke,
                         spanStatus,
                         ijazahButton,
+                        skYudisiumButton,
                         berkasButton,
                         item.nomor_registrasi ?? '-',
                         foto,

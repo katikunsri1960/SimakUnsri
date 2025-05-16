@@ -46,7 +46,6 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">PERIODE</th>
                                     <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
-                                    <th class="text-center align-middle">SK YUDISIUM</th>
                                     <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
@@ -57,6 +56,7 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">ABSTRAK</th>
                                     <th class="text-center align-middle text-nowrap">SK YUDISIUM<br>(TGL YUDISIUM)</th>
                                     <th class="text-center align-middle">LAMA STUDI</th>
+                                    <th class="text-center align-middle">SK YUDISIUM</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -87,17 +87,9 @@ Pendaftaran Wisuda Fakultas
                                         <td class="text-center align-middle">
                                             <a href="{{ $d->ijazah_terakhir_file? asset($d->ijazah_terakhir_file) : '#' }}" 
                                                target="{{ $d->ijazah_terakhir_file? '_blank' : '_self' }}" 
-                                               class="btn btn-sm {{ $d->ijazah_terakhir_file? 'btn-primary' : 'btn-warning' }} my-2">
-                                                <i class="fa {{ $d->ijazah_terakhir_file? 'fa-file-pdf-o' : 'fa-exclamation-circle' }}"></i> 
+                                               class="btn btn-sm {{ $d->ijazah_terakhir_file? 'btn-success' : 'btn-warning' }} my-2">
+                                                <i class="fa {{ $d->ijazah_terakhir_file? 'fa-file me-2' : 'fa-exclamation-circle' }}"></i> 
                                                 {{ $d->ijazah_terakhir_file? 'Lihat Ijazah' : 'Belum Upload Ijazah' }}
-                                            </a>
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <a href="{{ $d->sk_yudisium_file ? asset($d->sk_yudisium_file) : '#' }}" 
-                                               target="{{ $d->sk_yudisium_file ? '_blank' : '_self' }}" 
-                                               class="btn btn-sm {{ $d->sk_yudisium_file ? 'btn-primary' : 'btn-warning' }} my-2">
-                                                <i class="fa {{ $d->sk_yudisium_file ? 'fa-file-pdf-o' : 'fa-exclamation-circle' }}"></i> 
-                                                {{ $d->sk_yudisium_file ? 'Lihat SK Yudisium' : 'Belum Upload SK Yudisium' }}
                                             </a>
                                         </td>
                                         <td class="text-center align-middle text-nowrap">
@@ -148,10 +140,10 @@ Pendaftaran Wisuda Fakultas
                                         </td> 
                                         <td class="text-center align-middle text-nowrap">
                                             @if(!$d->abstrak_file)
-                                                <span class="badge rounded bg-warning" style="padding: 8px">File tidak diupload</span>
+                                                <span class="badge rounded bg-warning" style="padding: 8px"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload Abstak</span>
                                             @else
-                                                <a href="{{ asset($d->abstrak_file) }}" target="_blank" class="btn btn-sm btn-primary my-2">
-                                                    <i class="fa fa-file-pdf-o"></i> Lihat File
+                                                <a href="{{ asset($d->abstrak_file) }}" target="_blank" class="btn btn-sm btn-success my-2">
+                                                    <i class="fa fa-file me-2"></i> Lihat Abstrak
                                                 </a>
                                             @endif
                                         </td> 
@@ -172,7 +164,14 @@ Pendaftaran Wisuda Fakultas
                                             @else
                                                 <span class="badge rounded bg-danger" style="padding: 8px">Tanggal SK Yudisium Belum Diisi</span>
                                             @endif
-                                            
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <a href="{{ $d->sk_yudisium_file ? asset($d->sk_yudisium_file) : '#' }}" 
+                                               target="{{ $d->sk_yudisium_file ? '_blank' : '_self' }}" 
+                                               class="btn btn-sm {{ $d->sk_yudisium_file ? 'btn-success' : 'btn-warning' }} my-2">
+                                                <i class="fa {{ $d->sk_yudisium_file ? 'fa-file me-2' : 'fa-exclamation-circle' }}"></i> 
+                                                {{ $d->sk_yudisium_file ? 'Lihat SK Yudisium' : 'Belum Upload SK Yudisium' }}
+                                            </a>
                                         </td>
                                         <td class="text-center align-middle text-nowrap">
                                             <div class="row">
