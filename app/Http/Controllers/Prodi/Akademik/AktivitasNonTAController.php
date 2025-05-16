@@ -543,8 +543,17 @@ class AktivitasNonTAController extends Controller
                 if($request->nilai_huruf_transfer[$i] == 'A'){
                     $nilai_indeks = '4.00';
                 }
+                else if($request->nilai_huruf_transfer[$i] == 'A-'){
+                    $nilai_indeks = '3.70';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'B+'){
+                    $nilai_indeks = '3.30';
+                }
                 else if($request->nilai_huruf_transfer[$i] == 'B'){
                     $nilai_indeks = '3.00';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'B-'){
+                    $nilai_indeks = '2.70';
                 }
                 else if($request->nilai_huruf_transfer[$i] == 'C'){
                     $nilai_indeks = '2.00';
