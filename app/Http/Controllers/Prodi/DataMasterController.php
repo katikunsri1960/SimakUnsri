@@ -16,6 +16,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
 use App\Models\ProgramStudi;
+use App\Models\Wisuda;
 use App\Models\BkuProgramStudi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -508,10 +509,31 @@ class DataMasterController extends Controller
         return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
 
+    public function update_bku(Request $request, BkuProgramStudi $bku_prodi)
+    {
+        $data = $request->validate([
+            'bku_prodi_id' => 'required',
+            'bku_prodi_en' => 'required',
+        ]);
+
+        $bku_prodi->update($data);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Update');
+    }
+
     public function destroy_bku(BkuProgramStudi $bku_prodi)
     {
-        $bku_prodi->delete();
+        $data_bku = Wisuda::where('id_bku_prodi', $bku_prodi->id)->first();
 
-        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+        if(!$data_bku){
+
+            $bku_prodi->delete();
+            return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+
+        }else{
+
+            return redirect()->back()->with('error', 'Data BKU Sudah di Gunakan');
+
+        }
     }
 }

@@ -70,11 +70,11 @@ Ajuan Wisuda Mahasiswa
                                                 @elseif($d->approved == 3)
                                                     <span class="badge badge-lg badge-success mb-5">Disetujui BAK</span>
                                                 @elseif($d->approved == 97)
-                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi</span>
+                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
                                                 @elseif($d->approved == 98)
-                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas</span>
+                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
                                                 @elseif($d->approved == 99)
-                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak BAK</span>
+                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak BAK <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
                                                 @endif
                                             </div>
                                         </td>
