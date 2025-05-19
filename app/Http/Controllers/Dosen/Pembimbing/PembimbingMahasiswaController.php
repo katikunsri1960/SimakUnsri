@@ -807,13 +807,25 @@ class PembimbingMahasiswaController extends Controller
             $nilai_langsung = 100;
         }
 
-        if($nilai_langsung >= 86 && $nilai_langsung <=100){
+        if($nilai_langsung >= 93 && $nilai_langsung <=100){
             $nilai_indeks = '4.00';
             $nilai_huruf = 'A';
         }
-        else if($nilai_langsung >= 71 && $nilai_langsung < 86){
+        else if($nilai_langsung >= 86 && $nilai_langsung < 93){
+            $nilai_indeks = '3.70';
+            $nilai_huruf = 'A-';
+        }
+        else if($nilai_langsung >= 81 && $nilai_langsung < 86){
+            $nilai_indeks = '3.30';
+            $nilai_huruf = 'B+';
+        }
+        else if($nilai_langsung >= 76 && $nilai_langsung < 81){
             $nilai_indeks = '3.00';
             $nilai_huruf = 'B';
+        }
+        else if($nilai_langsung >= 71 && $nilai_langsung < 76){
+            $nilai_indeks = '2.70';
+            $nilai_huruf = 'B-';
         }
         else if($nilai_langsung >= 56 && $nilai_langsung < 71){
             $nilai_indeks = '2.00';
