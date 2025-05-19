@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Prodi\Lulusan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Wisuda;
+use App\Models\BkuProgramStudi;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Referensi\PredikatKelulusan;
 use App\Models\Connection\Usept;
 use App\Models\Connection\CourseUsept;
 use App\Models\Perkuliahan\ListKurikulum;
@@ -123,7 +125,7 @@ class MahasiswaEligibleController extends Controller
     }
 
     public function detail_mahasiswa($id)
-    {
+    { 
         $prodi_id = auth()->user()->fk_id;
 
         // Define required SKS for each "jenjang_pendidikan"
@@ -164,6 +166,8 @@ class MahasiswaEligibleController extends Controller
                 'transkrip_mahasiswa',
                 'aktivitas_kuliah',
                 'aktivitas_mahasiswa',
+                'predikat_kelulusan',
+                'bku_prodi',
                 'prodi', // Assuming 'prodi' contains 'jenjang_pendidikan'
                 'riwayat_pendidikan.biodata',
                 'aktivitas_mahasiswa.nilai_konversi',
@@ -262,9 +266,41 @@ class MahasiswaEligibleController extends Controller
 
         $data->status_semester_pendek = $akm_semester_pendek <= 9 ? '1' : '0';
 
+        $predikat_kelulusan = PredikatKelulusan::orderBy('id')->get();
+        $bku = BkuProgramStudi::orderBy('id')->where('id_prodi', $prodi_id)->get();
+
         // dd($akm_semester_pendek);
 
-        return view('prodi.data-lulusan.detail-mahasiswa', ['data' => $data, 'nilai_usept' => $nilai_usept]);
+        return view('prodi.data-lulusan.detail-mahasiswa', ['data' => $data, 'bku' => $bku, 'predikat_kelulusan' => $predikat_kelulusan, 'nilai_usept' => $nilai_usept]);
+    }
+
+    public function update_detail_mahasiswa(Request $request, $id)
+    {
+        $data = $request->validate([
+            'judul_en' => 'required',
+            'predikat_mhs' => 'required',
+            'bku_mhs' => 'nullable'
+        ]);
+
+        // dd($data);
+        try {
+            DB::beginTransaction();
+
+                //Update detail ajuan wisuda by prodi
+                if($request->predikat_mhs == '0'){
+                    Wisuda::where('id', $id)->update(['judul_en' => $request->judul_en, 'id_predikat_kelulusan' => null, 'id_bku_prodi' => $request->bku_mhs]);
+                }else{
+                    Wisuda::where('id', $id)->update(['judul_en' => $request->judul_en, 'id_predikat_kelulusan' => $request->predikat_mhs, 'id_bku_prodi' => $request->bku_mhs]);
+                }
+
+            DB::commit();
+
+            return redirect()->route('prodi.data-lulusan.detail', $id)->with('success', 'Data Berhasil di Setujui');
+
+        } catch (\Throwable $th) {
+            DB::rollback();
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan. Error: ' . $th->getMessage());
+        }
     }
 
     public function approved_ajuan(Request $request, $id)

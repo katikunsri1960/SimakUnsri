@@ -107,11 +107,13 @@ Aktivitas Mahasiswa
                                 @endphp
 
                                 @foreach ($data_bku as $db)
+                                    @include('prodi.data-master.detail-prodi.edit-bku')
                                     <tr>
                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                         <td class="text-center align-middle">{{ $db->bku_prodi_id }}</td>
                                         <td class="text-center align-middle">{{ $db->bku_prodi_en }}</td>
                                         <td class="text-center align-middle" style="width:3%">
+                                            <a class="btn btn-warning waves-effect waves-light mb-2" data-bs-toggle="modal" data-bs-target="#EditBKU{{$db->id}}"><i class="fa fa-edit"></i></a>
                                             <form action="{{ route('prodi.data-master.detail-prodi.delete-bku', $db->id) }}" method="POST" class="delete-form">
                                                 @csrf
                                                 @method('DELETE')
