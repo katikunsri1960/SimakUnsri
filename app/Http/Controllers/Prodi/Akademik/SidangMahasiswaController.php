@@ -443,7 +443,7 @@ class SidangMahasiswaController extends Controller
 
     private function skala_nilai($nilai){
         switch (true) {
-            case ($nilai >= 93.0 && $nilai <= 100.0):
+            case ($nilai >= 86.0 && $nilai <= 100.0):
 
                 $nilai_indeks = '4.00';
                 $nilai_huruf = 'A';
@@ -453,27 +453,8 @@ class SidangMahasiswaController extends Controller
                     'nilai_indeks' => $nilai_indeks,
                     'nilai_huruf' => $nilai_huruf
                 ];
-            case ($nilai >= 86.0 && $nilai < 93.0):
 
-                $nilai_indeks = '3.70';
-                $nilai_huruf = 'A-';
-
-                // Return the values as an associative array
-                return [
-                    'nilai_indeks' => $nilai_indeks,
-                    'nilai_huruf' => $nilai_huruf
-                ];
-            case ($nilai >= 81.0 && $nilai < 86.0):
-
-                $nilai_indeks = '3.30';
-                $nilai_huruf = 'B+';
-
-                // Return the values as an associative array
-                return [
-                    'nilai_indeks' => $nilai_indeks,
-                    'nilai_huruf' => $nilai_huruf
-                ];
-            case ($nilai >= 76.0 && $nilai < 81.0):
+            case ($nilai >= 71.0 && $nilai < 86.0):
 
                 $nilai_indeks = '3.00';
                 $nilai_huruf = 'B';
@@ -483,16 +464,7 @@ class SidangMahasiswaController extends Controller
                     'nilai_indeks' => $nilai_indeks,
                     'nilai_huruf' => $nilai_huruf
                 ];
-            case ($nilai >= 71.0 && $nilai < 76.0):
 
-                $nilai_indeks = '2.70';
-                $nilai_huruf = 'B-';
-
-                // Return the values as an associative array
-                return [
-                    'nilai_indeks' => $nilai_indeks,
-                    'nilai_huruf' => $nilai_huruf
-                ];
             case ($nilai >= 56.0 && $nilai < 71.0):
 
                 $nilai_indeks = '2.00';

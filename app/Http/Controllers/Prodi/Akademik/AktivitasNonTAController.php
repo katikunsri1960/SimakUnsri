@@ -384,25 +384,13 @@ class AktivitasNonTAController extends Controller
                     $nilai_akhir_sidang = 100;
                 }
 
-                if($request->nilai_angka[$i] >= 93 && $request->nilai_angka[$i] <=100){
+                if($request->nilai_angka[$i] >= 86 && $request->nilai_angka[$i] <=100){
                     $nilai_indeks = '4.00';
                     $nilai_huruf = 'A';
                 }
-                else if($request->nilai_angka[$i] >= 86 && $request->nilai_angka[$i] < 93){
-                    $nilai_indeks = '3.70';
-                    $nilai_huruf = 'A-';
-                }
-                else if($request->nilai_angka[$i] >= 81 && $request->nilai_angka[$i] < 86){
-                    $nilai_indeks = '3.30';
-                    $nilai_huruf = 'B+';
-                }
-                else if($request->nilai_angka[$i] >= 71 && $request->nilai_angka[$i] < 81){
+                else if($request->nilai_angka[$i] >= 71 && $request->nilai_angka[$i] < 86){
                     $nilai_indeks = '3.00';
                     $nilai_huruf = 'B';
-                }
-                else if($request->nilai_angka[$i] >= 71 && $request->nilai_angka[$i] < 76){
-                    $nilai_indeks = '2.70';
-                    $nilai_huruf = 'B-';
                 }
                 else if($request->nilai_angka[$i] >= 56 && $request->nilai_angka[$i] < 71){
                     $nilai_indeks = '2.00';
@@ -543,17 +531,8 @@ class AktivitasNonTAController extends Controller
                 if($request->nilai_huruf_transfer[$i] == 'A'){
                     $nilai_indeks = '4.00';
                 }
-                else if($request->nilai_huruf_transfer[$i] == 'A-'){
-                    $nilai_indeks = '3.70';
-                }
-                else if($request->nilai_huruf_transfer[$i] == 'B+'){
-                    $nilai_indeks = '3.30';
-                }
                 else if($request->nilai_huruf_transfer[$i] == 'B'){
                     $nilai_indeks = '3.00';
-                }
-                else if($request->nilai_huruf_transfer[$i] == 'B-'){
-                    $nilai_indeks = '2.70';
                 }
                 else if($request->nilai_huruf_transfer[$i] == 'C'){
                     $nilai_indeks = '2.00';
