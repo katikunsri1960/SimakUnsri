@@ -287,11 +287,7 @@ class MahasiswaEligibleController extends Controller
             DB::beginTransaction();
 
                 //Update detail ajuan wisuda by prodi
-                if($request->predikat_mhs == '0'){
-                    Wisuda::where('id', $id)->update(['judul_en' => $request->judul_en, 'id_predikat_kelulusan' => null, 'id_bku_prodi' => $request->bku_mhs]);
-                }else{
-                    Wisuda::where('id', $id)->update(['judul_en' => $request->judul_en, 'id_predikat_kelulusan' => $request->predikat_mhs, 'id_bku_prodi' => $request->bku_mhs]);
-                }
+                Wisuda::where('id', $id)->update(['judul_en' => $request->judul_en, 'id_predikat_kelulusan' => $request->predikat_mhs == 0 ? null : $request->predikat_mhs, 'id_bku_prodi' => $request->bku_mhs]);
 
             DB::commit();
 
