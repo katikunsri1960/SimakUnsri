@@ -314,7 +314,7 @@ Dashboard
                         <a type="button" href="{{route('prodi.data-lulusan.index')}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
-                        @if ($data->ipk_transkrip_akm != 1 || $data->status_ipk != 1 || $data->jumlah_sks != 1 || $data->sks_transkrip_akm != 1)
+                        @if ($data->ipk_transkrip_akm != 1 || $data->status_ipk != 1 || $data->jumlah_sks != 1 || $data->sks_transkrip_akm != 1 || $data->approved == 1 || $data->approved == 2 || $data->approved == 3)
                             <button type="submit" class="btn btn-primary waves-effect waves-light" disabled>Approve Ajuan</button>
                         @else
                             <button type="submit" class="btn btn-primary waves-effect waves-light">Approve Ajuan</button>
