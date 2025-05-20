@@ -29,8 +29,11 @@ Auth::routes([
 ]);
 
 Route::group(['middleware' => ['auth', 'auth.session']], function() {
-    // Route Perpustakaan
 
+    // Universal Routing untuk semua role
+    Route::get('/get-prodi-by-fakultas', [App\Http\Controllers\UniversalController::class, 'get_prodi_by_fakultas'])->name('get-prodi-by-fakultas');
+
+    // Route Perpustakaan
     Route::group(['middleware' => ['role:perpus']], function(){
         Route::prefix('perpus')->group(function(){
             Route::get('/', [App\Http\Controllers\Perpus\DashboardController::class, 'index'])->name('perpus');
@@ -161,6 +164,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::prefix('ijazah')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah'])->name('bak.wisuda.ijazah.index');
+                    Route::get('/download-pdf', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah_download_pdf'])->name('bak.wisuda.ijazah.download-pdf');
                 });
 
                 Route::prefix('transkrip')->group(function(){
@@ -735,7 +739,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                     //Data Nama Bahasa Inggris Prodi
                     Route::post('/prodi-inggris/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'prodi_inggris_store'])->name('prodi.data-master.detail-prodi.prodi-inggris.store');
-                    
+
 
                     //Data BKU Program Studi
                     Route::post('/tambah-bku/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'store_bku'])->name('prodi.data-master.detail-prodi.store-bku');
@@ -1257,13 +1261,15 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_konversi_aktivitas'])->name('univ.perkuliahan.konversi-aktivitas.sync');
                 });
 
+                // Routing Transkrip Perkuliahan UNIV
                 Route::prefix('transkrip')->group(function(){
                     Route::get('/', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'transkrip'])->name('univ.perkuliahan.transkrip');
+
                     Route::get('/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_transkrip'])->name('univ.perkuliahan.transkrip.sync');
 
                     Route::get('/search', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'search_transkrip'])->name('univ.perkuliahan.transkrip.search');
                     Route::get('/get-data', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'get_transkrip'])->name('univ.perkuliahan.transkrip.get');
-                    Route::get('/delete-transkrip', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'delete_transkrip'])->name('univ.perkuliahan.transkrip.delete');
+                    Route::get('/delete', [App\Http\Controllers\Universitas\PerkuliahanController::class,'transkrip_delete'])->name('univ.perkuliahan.transkrip.delete');
                 });
 
 

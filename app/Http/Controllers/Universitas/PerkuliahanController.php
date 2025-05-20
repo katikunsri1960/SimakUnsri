@@ -953,6 +953,8 @@ class PerkuliahanController extends Controller
         ]);
     }
 
+
+
     public function sync_transkrip()
     {
         ini_set('max_execution_time', 0);
@@ -1099,18 +1101,19 @@ class PerkuliahanController extends Controller
 
     }
 
-    public function delete_transkrip(Request $request)
+    public function transkrip_delete(Request $request)
     {
-        $data = $request->validate([
-            'id' => 'required',
-        ]);
+        $id = $request->id;
 
-        $db = new TranskripMahasiswa();
+        if(empty($id)){
+            return response()->json(['status' => 0, 'message' => 'ID Matkul atau ID Registrasi Mahasiswa tidak boleh kosong!']);
+        }
 
-        $res = $db->delete_transkrip($data['id']);
+        $db = new TranskripMahasiswa;
+
+        $res = $db->delete_transkrip($id);
 
         return response()->json($res);
-
     }
 
 }

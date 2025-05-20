@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Fakultas;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\PeriodeWisuda;
+use App\Models\ProfilPt;
 use App\Models\ProgramStudi;
 use App\Models\Referensi\AllPt;
 use App\Models\Wisuda;
@@ -215,7 +216,72 @@ class WisudaController extends Controller
 
     public function ijazah(Request $request)
     {
-        return view('bak.wisuda.ijazah.index');
+
+        $fakultas = Fakultas::select('id', 'nama_fakultas')->get();
+        $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
+        $prodi = ProgramStudi::where('status', 'A')->select('id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'nama_program_studi', 'fakultas_id')
+                    ->orderBy('kode_program_studi')->get();
+
+        return view('bak.wisuda.ijazah.index', [
+            'fakultas' => $fakultas,
+            'periode' => $periode,
+            'prodi' => $prodi,
+        ]);
+    }
+
+    public function ijazah_download_pdf(Request $request)
+    {
+        $fakultas = $request->input('fakultas');
+
+        if ($fakultas == null) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Fakultas tidak boleh kosong',
+            ]);
+        }
+
+        $periode = $request->input('periode');
+        dd($periode);
+        if ($periode == null) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Periode tidak boleh kosong',
+            ]);
+        }
+
+        $prodi = $request->input('prodi');
+
+        if($prodi == '*')
+        {
+            $prodi = null;
+        }
+
+        $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
+                ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
+                ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
+                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_jenjang_pendidikan as jenjang')
+                ->where('data_wisuda.periode_wisuda', $periode)
+                ->where('f.id', $fakultas);
+        if ($prodi != null) {
+            $data->where('r.id_prodi', $prodi);
+        }
+        $data = $data->get();
+
+        if ($data->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan',
+            ]);
+        }
+
+        $pdf = PDF::loadview('bak.wisuda.ijazah.pdf', [
+            'data' => $data,
+        ])
+        ->setPaper('legal', 'landscape');
+
+        return $pdf->stream('Ijazah-'.$data[0]->periode_wisuda.'.pdf');
+
+
     }
 
     public function transkrip(Request $request)

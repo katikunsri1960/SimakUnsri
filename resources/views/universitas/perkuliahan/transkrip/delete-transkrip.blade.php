@@ -118,6 +118,7 @@
     });
 
 function showSwal(title, text, type, callback) {
+    console.log("Masuk");
     swal({
         title: title,
         text: text,
@@ -135,7 +136,9 @@ function showSwal(title, text, type, callback) {
 }
 
 function deleteTranskrip(id) {
+    console.log(id);
     showSwal('Hapus Data Transkrip', 'Apakah anda yakin ingin menghapus data ini?', 'warning', function() {
+        console.log("Masuk ke callback");
         $.ajax({
             url: '{{route('univ.perkuliahan.transkrip.delete')}}',
             type: 'GET',
@@ -143,11 +146,11 @@ function deleteTranskrip(id) {
                 id: id
             },
             success: function(response) {
-                console.log(response.status);
-                if (response.status === 1) {
-                    showSwal('Peringatan!', response.message, 'warning');
+
+                if (response.status === 0) {
+                    alert(response.message);
                 } else {
-                    showSwal('Berhasil!', 'Data berhasil dihapus.', 'success');
+                    alert(response.message);
                     $('#btnCari').click();
                 }
             },
