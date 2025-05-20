@@ -9,14 +9,18 @@ Dashboard
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
-                    <form class="form" action="#" id="update-detail-sidang" method="POST">
-                        <a href="{{route('prodi.data-lulusan.index')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+                    <form class="form" action="{{route('prodi.data-lulusan.detail.update', $data->id)}}" id="update-detail-wisuda" method="POST">
+                        @csrf
+                        <div class="d-flex justify-content-between">
+                            <a href="{{route('prodi.data-lulusan.index')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+                            <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light"><i class="fa fa-edit"></i> Update Detail Ajuan</button>
+                        </div>
                         <h3 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Detail Ajuan Wisuda Mahasiswa</h3>
                         <hr class="my-15">
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <div class="mb-4">
+                                    <div class="mb-2">
                                         <label for="nim" class="form-label">NIM</label>
                                         <input
                                             type="text"
@@ -32,7 +36,7 @@ Dashboard
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <div class="mb-4">
+                                    <div class="mb-2">
                                         <label for="nama_mahasiswa" class="form-label">Nama Mahasiswa</label>
                                         <input
                                             type="text"
@@ -50,7 +54,7 @@ Dashboard
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <div class="mb-4">
+                                    <div class="mb-2">
                                         <label for="semester" class="form-label">Angkatan</label>
                                         <input
                                             type="text"
@@ -66,7 +70,7 @@ Dashboard
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <div class="mb-4">
+                                    <div class="mb-2">
                                         <label for="semester" class="form-label">Tanggal Daftar</label>
                                         <input
                                             type="text"
@@ -83,7 +87,7 @@ Dashboard
                         </div>
                         <div class="row">
                             <div class="form-group">
-                                <div class="mb-4">
+                                <div class="mb-2">
                                     <label for="nilai_usept" class="form-label">Nilai Usept</label>
                                     <input
                                         type="text"
@@ -97,8 +101,8 @@ Dashboard
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="mb-4">
-                                    <label for="judul" class="form-label">Judul</label>
+                                <div class="mb-2">
+                                    <label for="judul" class="form-label">Judul (Indonesia)</label>
                                     <input
                                         type="text"
                                         class="form-control"
@@ -111,7 +115,20 @@ Dashboard
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="mb-4">
+                                <div class="mb-2">
+                                    <label for="judul_en" class="form-label">Judul (Inggris)</label>
+                                    <input
+                                        type="text"
+                                        class="form-control"
+                                        name="judul_en"
+                                        id="judul_en"
+                                        aria-describedby="helpId"
+                                        value="{{$data->judul_en}}"
+                                    />
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="mb-2">
                                     <label for="jenis_aktivitas" class="form-label">Jadwal Sidang</label>
                                     <input
                                         type="text"
@@ -128,7 +145,7 @@ Dashboard
                         <div class="row">
                              <div class="col-lg-12">
                                 <div class="form-group">
-                                    <div class="mb-4">
+                                    <div class="mb-2">
                                         <label for="abstrak" class="form-label">Abstrak</label>
                                         <textarea
                                             class="form-control"
@@ -140,6 +157,41 @@ Dashboard
                                 </div>
                             </div>
                         </div>
+                        <div class="row">
+                             <div class="col-lg-12">
+                                <div class="form-group">
+                                    <div class="mb-2">
+                                        <label for="predikat_mhs" class="form-label">Predikat Kelulusan Mahasiswa</label>
+                                        <select class="form-select" name="predikat_mhs" id="predikat_mhs">
+                                            <option value="0" {{ $data->id_predikat_kelulusan == 0 ? 'selected' : '' }}>Tidak Ada Predikat</option>
+                                            @foreach($predikat_kelulusan as $p)
+                                                <option value="{{ $p->id }}" {{ $data->id_predikat_kelulusan == $p->id ? 'selected' : '' }}>
+                                                    {{ $p->indonesia }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @if($data->prodi->bku_pada_ijazah == 1)
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <div class="mb-2">
+                                            <label for="bku_mhs" class="form-label">Bidang Kajian Umum</label>
+                                            <select class="form-select" name="bku_mhs" id="bku_mhs">
+                                                @foreach($bku as $b)
+                                                    <option value="{{ $b->id }}" {{ $data->id_bku_prodi == $b->id ? 'selected' : '' }}>
+                                                        {{ $b->bku_prodi_id }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </form>
                     <hr class="my-15">
                     <h4>
@@ -262,7 +314,7 @@ Dashboard
                         <a type="button" href="{{route('prodi.data-lulusan.index')}}" class="btn btn-danger waves-effect waves-light">
                             Batal
                         </a>
-                        @if ($data->ipk_transkrip_akm != 1 || $data->status_ipk != 1 || $data->jumlah_sks != 1 || $data->sks_transkrip_akm != 1)
+                        @if ($data->ipk_transkrip_akm != 1 || $data->status_ipk != 1 || $data->jumlah_sks != 1 || $data->sks_transkrip_akm != 1 || $data->approved == 1 || $data->approved == 2 || $data->approved == 3)
                             <button type="submit" class="btn btn-primary waves-effect waves-light" disabled>Approve Ajuan</button>
                         @else
                             <button type="submit" class="btn btn-primary waves-effect waves-light">Approve Ajuan</button>
@@ -307,6 +359,27 @@ Dashboard
             }, function (isConfirmed) {
                 if (isConfirmed) {
                     $('#approve-ajuan-wisuda').off('submit').submit();
+                    $('#spinner').show(); // Show spinner (if applicable)
+                }
+            });
+        });
+
+        $('#update-detail-wisuda').submit(function (e) {
+            e.preventDefault(); // Prevent form submission
+
+            swal({
+                title: 'Perubahan Data Detail Ajuan Wisuda Mahasiswa',
+                text: "Apakah anda yakin ingin melanjutkan?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Lanjutkan',
+                cancelButtonText: 'Batal',
+                closeOnConfirm: false
+            }, function (isConfirmed) {
+                if (isConfirmed) {
+                    $('#update-detail-wisuda').off('submit').submit();
                     $('#spinner').show(); // Show spinner (if applicable)
                 }
             });

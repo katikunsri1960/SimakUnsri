@@ -743,6 +743,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                     //Data BKU Program Studi
                     Route::post('/tambah-bku/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'store_bku'])->name('prodi.data-master.detail-prodi.store-bku');
+                    Route::post('/update-bku/{bku_prodi}', [App\Http\Controllers\Prodi\DataMasterController::class, 'update_bku'])->name('prodi.data-master.detail-prodi.update-bku');
                     Route::delete('/delete-bku/{bku_prodi}', [App\Http\Controllers\Prodi\DataMasterController::class, 'destroy_bku'])->name('prodi.data-master.detail-prodi.delete-bku');
                     Route::post('/setting-bku', [App\Http\Controllers\Prodi\DataMasterController::class, 'setting_bku'])->name('prodi.data-master.detail-prodi.setting-bku');
                 });
@@ -898,6 +899,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('data-lulusan')->group(function(){
                 Route::get('/', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'index'])->name('prodi.data-lulusan.index');
                 Route::get('/detail/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'detail_mahasiswa'])->name('prodi.data-lulusan.detail');
+                Route::post('/update/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'update_detail_mahasiswa'])->name('prodi.data-lulusan.detail.update');
                 Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
                 Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
             });
