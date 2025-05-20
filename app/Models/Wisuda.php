@@ -23,6 +23,7 @@ class Wisuda extends Model
         'id_perguruan_tinggi',
         'id_registrasi_mahasiswa',
         'id_prodi',
+        'id_file_fakultas',
         'tgl_masuk',
         'tgl_keluar',
         'lama_studi',
@@ -57,6 +58,11 @@ class Wisuda extends Model
         'useptData',
 
     ];
+
+    public function file_fakultas()
+    {
+        return $this->belongsTo(FileFakultas::class, 'id_file_fakultas', 'id');
+    }
 
     public function prodi()
     {

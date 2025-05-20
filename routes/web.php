@@ -355,13 +355,26 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\LainLain\PenundaanBayarController::class, 'decline'])->name('fakultas.penundaan-bayar.decline');
             });
 
+            
+
             Route::prefix('pendaftaran-wisuda')->group(function () {
                 Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
                 Route::post('/approve/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'approve'])->name('fakultas.wisuda.approve');
                 Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
                 Route::get('/tambah', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
                 Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
-                Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'delete'])->name('fakultas.wisuda.delete');
+                
+                Route::get('/search', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'search'])->name('fakultas.wisuda.search-sk-yudisium');
+                Route::post('/upload-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'uploadSkYudisium'])->name('fakultas.wisuda.upload-sk-yudisium');
+                Route::patch('/edit-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'editSkYudisium'])->name('fakultas.wisuda.edit-sk-yudisium');
+                Route::delete('/hapus-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'deleteSkYudisium'])->name('fakultas.wisuda.hapus-sk-yudisium');
+
+                Route::prefix('sk-yudisium')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
+                    Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.wisuda.sk-yudisium.store');
+                    Route::patch('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.wisuda.sk-yudisium.update');
+                    Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.wisuda.sk-yudisium.delete');
+                });
             });
 
             //ROUTE BANTUAN

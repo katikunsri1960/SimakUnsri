@@ -62,7 +62,8 @@ Pendaftaran Wisuda Fakultas
                             </thead>
                             <tbody>
                                 @foreach($data as $d)
-                                @include('fakultas.data-akademik.wisuda.approve-wisuda')
+                                @include('fakultas.data-akademik.wisuda.upload-sk')
+                                @include('fakultas.data-akademik.wisuda.edit-sk')
                                 @include('fakultas.data-akademik.wisuda.decline-wisuda')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
@@ -148,7 +149,7 @@ Pendaftaran Wisuda Fakultas
                                             @endif
                                         </td> 
                                         <td class="text-center align-middle text-nowrap">
-                                            @if ($d->no_sk_yudisium_file && $d->tgl_sk_yudisium)
+                                            @if ($d->no_sk_yudisium && $d->tgl_sk_yudisium)
                                                 {{$d->no_sk_yudisium}}<br>( {{ \Carbon\Carbon::parse($d->tgl_sk_yudisium)->translatedFormat('d F Y') }} )
                                             @else
                                                 -
@@ -165,22 +166,50 @@ Pendaftaran Wisuda Fakultas
                                                 <span class="badge rounded bg-danger" style="padding: 8px">Tanggal SK Yudisium Belum Diisi</span>
                                             @endif
                                         </td>
-                                        <td class="text-center align-middle">
+                                        {{-- <td class="text-center align-middle">
                                             <a href="{{ $d->sk_yudisium_file ? asset($d->sk_yudisium_file) : '#' }}" 
                                                target="{{ $d->sk_yudisium_file ? '_blank' : '_self' }}" 
                                                class="btn btn-sm {{ $d->sk_yudisium_file ? 'btn-success' : 'btn-warning' }} my-2">
                                                 <i class="fa {{ $d->sk_yudisium_file ? 'fa-file me-2' : 'fa-exclamation-circle' }}"></i> 
                                                 {{ $d->sk_yudisium_file ? 'Lihat SK Yudisium' : 'Belum Upload SK Yudisium' }}
                                             </a>
+                                        </td> --}}
+                                        <td class="text-center align-middle">
+                                            @if (is_null($d->sk_yudisium_file))
+                                                <a href="#" class="btn btn-warning btn-sm my-2 
+                                                " title="Upload SK Yudisium" data-bs-toggle="modal" data-bs-target="#uploadModal{{$d->id}}">
+                                                    <i class="fa fa-upload"></i> Pilih SK Yudisium
+                                                </a>
+                                            @else
+                                                <a href="{{ asset($d->sk_yudisium_file) }}" target="_blank" class="btn btn-success btn-sm my-2">
+                                                    <i class="fa fa-file"></i> Lihat
+                                                </a>
+
+                                                <a href="#" class="btn btn-warning btn-sm my-2" data-bs-toggle="modal" data-bs-target="#editModal{{$d->id}}">
+                                                    <i class="fa fa-edit"></i> Ubah
+                                                </a>
+
+                                                <button type="button" class="btn btn-danger btn-sm my-2 btn-hapus-sk" data-id="{{ $d->id }}">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                                <form id="form-hapus-sk-{{ $d->id }}" action="{{ route('fakultas.wisuda.hapus-sk-yudisium', $d->id) }}" method="POST" style="display:none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
+                                            @endif
                                         </td>
                                         <td class="text-center align-middle text-nowrap">
                                             <div class="row">
                                                 @if($d->approved == 1)
-                                                    <a href="#" class="btn btn-success btn-sm my-2 
-                                                    {{-- @if($d->approved != 1) disabled @endif --}}
-                                                    " title="Setujui Pangajuan" data-bs-toggle="modal" data-bs-target="#approveModal{{$d->id}}">
-                                                        <i class="fa fa-check"> </i> Approve
-                                                    </a>
+                                                    {{-- <form action="{{ route('fakultas.wisuda.approve', $d->id) }}" method="POST" style="display:inline;" class="form-approve-wisuda"> --}}
+                                                    <form action="{{route('fakultas.wisuda.approve', $d)}}" method="post" id="approveForm{{$d->id}}" class="approve-class" data-id='{{$d->id}}'>
+                                                         @csrf
+                                                        <div class="row  mb-5">
+                                                            <button 
+                                                            type="submit" 
+                                                            class="btn btn-sm btn-success" title="Setujui Pendaftaran Wisuda"><i class="fa fa-check"></i> Approve</button>
+                                                        </div>
+                                                    </form>
                                                 @endif
                                                 @if($d->approved == 1 || $d->approved == 2)
                                                     <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Pangajuan" data-bs-toggle="modal" data-bs-target="#declineModal{{$d->id}}"><i class="fa fa-ban"> </i>  Decline</a>
@@ -200,6 +229,8 @@ Pendaftaran Wisuda Fakultas
 @endsection
 @push('js')
 
+<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+
 <script>
     $(function () {
         $('#data').DataTable({
@@ -210,6 +241,44 @@ Pendaftaran Wisuda Fakultas
             "info": true,
             "autoWidth": true,
             // "responsive": true,
+        });
+
+        $('.approve-class').submit(function(e){
+            e.preventDefault();
+            var form = this;
+            swal({
+                title: 'Setujui Pendaftaran Wisuda?',
+                text: "Anda akan menyetujui Pendaftaran Wisuda?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    form.submit();
+                }
+            });
+        });
+
+        $('.btn-hapus-sk').click(function(e){
+            e.preventDefault();
+            var id = $(this).data('id');
+            swal({
+                title: 'Hapus SK Yudisium?',
+                text: "Anda yakin ingin menghapus SK Yudisium ini?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#form-hapus-sk-' + id).submit();
+                }
+            });
         });
     });
 </script>
