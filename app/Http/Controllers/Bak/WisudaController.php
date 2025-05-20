@@ -260,7 +260,7 @@ class WisudaController extends Controller
                 'tgl_keluar' => $wisuda->tgl_sk_yudisium,
                 'skhun' => NULL,
                 'no_peserta_ujian' => NULL,
-                'no_seri_ijazah' => $riwayatPendidikan->prodi->id_jenjang_pendidikan === '31' ? NULL : '-', // Conditional logic
+                'no_seri_ijazah' => in_array($riwayatPendidikan->prodi->id_jenjang_pendidikan, ['31', '32', '37']) ? NULL : '-', // Conditional logic
                 'tgl_create' => now(),
                 'sks_diakui' => $wisuda->sks_diakui ?? null,
                 'jalur_skripsi' => NULL,

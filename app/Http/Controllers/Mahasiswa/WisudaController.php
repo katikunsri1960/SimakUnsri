@@ -267,7 +267,7 @@ class WisudaController extends Controller
 
         // dd($request->all());
 
-        $perguruan_tinggi = ProfilPt::where('kode_perguruan_tinggi', '001009')->first();
+        $perguruan_tinggi = ProfilPt::first();
 
         // Define variable
         $id_reg = auth()->user()->fk_id;
