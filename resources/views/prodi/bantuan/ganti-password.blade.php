@@ -17,11 +17,7 @@ Perubahan Password Akun
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 text-center">
                             <h3 class="fw-500 text-dark mt-0">Perubahan Password Akun SIMAK Universitas Sriwijaya</h3>
-<<<<<<< HEAD
-                        </div>
-=======
-                        </div>                             
->>>>>>> 5f623886 (Perbaikan halaman nilai perkuliahan mahasiswa)
+                        </div>                            
                     </div>
                 </div>
                 <!-- /.box-header -->

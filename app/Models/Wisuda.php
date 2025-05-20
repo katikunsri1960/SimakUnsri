@@ -6,9 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\ProgramStudi;
+use App\Models\BkuProgramStudi;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Referensi\PredikatKelulusan;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -87,6 +89,16 @@ class Wisuda extends Model
     public function transkrip_mahasiswa()
     {
         return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function predikat_kelulusan()
+    {
+        return $this->belongsTo(PredikatKelulusan::class, 'id_predikat_kelulusan', 'id');
+    }
+
+    public function bku_prodi()
+    {
+        return $this->belongsTo(BkuProgramStudi::class, 'id_bku_prodi', 'id');
     }
 
     public function getIdTanggalSkYudisiumAttribute()

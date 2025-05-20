@@ -16,6 +16,8 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\RuangPerkuliahan;
 use App\Models\ProgramStudi;
+use App\Models\Wisuda;
+use App\Models\BkuProgramStudi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -453,5 +455,85 @@ class DataMasterController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Data Berhasil di Rubah');
+    }
+
+    public function detail_prodi()
+    {
+        $prodi_id = auth()->user()->fk_id;
+        $data = ProgramStudi::with('jurusan','fakultas')->where('id_prodi', $prodi_id)->first();
+        $data_bku = BkuProgramStudi::where('id_prodi', $prodi_id)->get();
+
+        // dd($data_prodi);
+
+        return view('prodi.data-master.detail-prodi.index', [
+            'data' => $data,
+            'data_bku' => $data_bku
+        ]);
+    }
+
+    public function prodi_inggris_store(Request $request)
+    {
+        $prodi_id = auth()->user()->fk_id;
+        $data = $request->validate([
+            'nama_prodi' => 'required',
+        ]);
+
+        ProgramStudi::where('id_prodi', $prodi_id)->update(['nama_program_studi_en'=> $request->nama_prodi]);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+    public function setting_bku(Request $request)
+    {
+        $prodi_id = auth()->user()->fk_id;
+        $data = $request->validate([
+            'bku_pada_ijazah' => 'required',
+        ]);
+
+        ProgramStudi::where('id_prodi', $prodi_id)->update(['bku_pada_ijazah'=> $request->bku_pada_ijazah]);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+    public function store_bku(Request $request, BkuProgramStudi $bku_prodi)
+    {
+        $data = $request->validate([
+            'bku_prodi_id' => 'required',
+            'bku_prodi_en' => 'required',
+        ]);
+
+        $data['id_prodi'] = auth()->user()->fk_id;
+
+        $bku_prodi->create($data);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+    public function update_bku(Request $request, BkuProgramStudi $bku_prodi)
+    {
+        $data = $request->validate([
+            'bku_prodi_id' => 'required',
+            'bku_prodi_en' => 'required',
+        ]);
+
+        $bku_prodi->update($data);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Update');
+    }
+
+    public function destroy_bku(BkuProgramStudi $bku_prodi)
+    {
+        $data_bku = Wisuda::where('id_bku_prodi', $bku_prodi->id)->first();
+
+        if(!$data_bku){
+
+            $bku_prodi->delete();
+            return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+
+        }else{
+
+            return redirect()->back()->with('error', 'Data BKU Sudah di Gunakan');
+
+        }
     }
 }
