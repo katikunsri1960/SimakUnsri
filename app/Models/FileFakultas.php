@@ -9,7 +9,6 @@ class FileFakultas extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
     protected $table = 'file_fakultas';
     protected $fillable = [
         'fakultas_id',

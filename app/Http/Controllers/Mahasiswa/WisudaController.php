@@ -341,6 +341,22 @@ class WisudaController extends Controller
         $ijazahName = 'ijazah_terakhir_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('ijazah_terakhir_file')->getClientOriginalExtension();
 
         // Simpan file ke folder public/storage/wisuda/abstrak, wisuda/pas_foto, dan wisuda/ijazah
+
+        // Pastikan folder tujuan ada, jika belum maka buat foldernya
+        $pasFotoDir = storage_path('app/public/wisuda/pas_foto');
+        $abstrakDir = storage_path('app/public/wisuda/abstrak');
+        $ijazahDir = storage_path('app/public/wisuda/ijazah');
+
+        if (!file_exists($pasFotoDir)) {
+            mkdir($pasFotoDir, 0777, true);
+        }
+        if (!file_exists($abstrakDir)) {
+            mkdir($abstrakDir, 0777, true);
+        }
+        if (!file_exists($ijazahDir)) {
+            mkdir($ijazahDir, 0777, true);
+        }
+
         $pasFotoPath = $request->file('pas_foto')->storeAs('wisuda/pas_foto', $pasFotoName, 'public');
         $abstrakPath = $request->file('abstrak_file')->storeAs('wisuda/abstrak', $abstrakName, 'public');
         $abstrakEngPath = $request->file('abstrak_file_eng')->storeAs('wisuda/abstrak', $abstrakEngName, 'public');
@@ -429,10 +445,10 @@ class WisudaController extends Controller
 
             // Redirect kembali ke halaman index dengan pesan sukses
             return redirect()->route('mahasiswa.wisuda.index')->with('success', 'Data Berhasil di Tambahkan');
-        } catch (\Exception $e) {
+        } catch (\Exception) {
             DB::rollBack();
             // Handle exception
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data!');
         }
     }
 }

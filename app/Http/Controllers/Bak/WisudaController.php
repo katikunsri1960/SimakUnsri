@@ -4,14 +4,11 @@ namespace App\Http\Controllers\Bak;
 
 use Carbon\Carbon;
 use App\Models\Wisuda;
-// use Barryvdh\DomPDF\PDF;
 use App\Models\Fakultas;
-use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\PeriodeWisuda;
 use App\Models\ProfilPt;
 use App\Models\ProgramStudi;
 use Illuminate\Http\Request;
-use App\Models\PeriodeWisuda;
 use App\Models\Referensi\AllPt;
 use App\Models\WisudaChecklist;
 use App\Models\WisudaSyaratAdm;
@@ -311,7 +308,7 @@ class WisudaController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan saat menyetujui pendaftaran wisuda: ' . $e->getMessage(),
+                'message' => 'Terjadi kesalahan saat menyetujui pendaftaran wisuda!',
             ]);
         }
     }
@@ -377,22 +374,32 @@ class WisudaController extends Controller
     
     public function decline(Request $request, $id)
     {
+        // dd($request->all());
         try {
+            $request->validate([
+                'alasan' => 'required|string',
+            ]);
+
+            DB::beginTransaction();
+
             $wisuda = Wisuda::findOrFail($id);
 
             $wisuda->update([
-                'approved' => 99,
-                'alasan_pembatalan' => $request->alasan_pembatalan ?? null,
+            'approved' => 99,
+            'alasan_pembatalan' => $request->input('alasan'),
             ]);
 
+            DB::commit();
+
             return response()->json([
-                'status' => 'success',
-                'message' => 'Pendaftaran Wisuda berhasil dibatalkan.',
+            'status' => 'success',
+            'message' => 'Pendaftaran Wisuda berhasil ditolak.',
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan saat membatalkan pendaftaran wisuda: ' . $e->getMessage(),
+            'status' => 'error',
+            'message' => 'Terjadi kesalahan saat membatalkan pendaftaran wisuda! ' . $e->getMessage(),
             ]);
         }
     }

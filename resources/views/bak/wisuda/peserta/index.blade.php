@@ -145,11 +145,11 @@ function getData()
         success: function (response) {
 
             if (response.status === 'success') {
-                console.log(response.data);
+                // console.log(response.data);
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
-                    console.log(item.id);
+                    // console.log(item.id);
                     var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-success" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
@@ -212,9 +212,30 @@ function getData()
                                         <i class="fa fa-check"> </i> Approve
                                     </button>` : ''}
                                 ${(item.approved == 2 || item.approved == 3) ? `
-                                    <button onclick="declinePeserta(${item.id})" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan">
+                                    <button onclick="showDeclineModal(${item.id})" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan">
                                         <i class="fa fa-ban"> </i> Decline
-                                    </button>` : ''}
+                                    </button>
+                                    <div class="modal fade" id="declineModal${item.id}" tabindex="-1" aria-labelledby="declineModalLabel${item.id}" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="declineModalLabel${item.id}">Alasan Penolakan</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="col-md-12 mb-3">
+                                                        <label for="alasan_pembatalan${item.id}" class="form-label">Alasan Penolakan</label>
+                                                        <input class="form-control" name="alasan_pembatalan" id="alasan_pembatalan${item.id}" rows="3" placeholder="Masukkan alasan penolakan"></input>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                    <button type="button" class="btn btn-danger" onclick="submitDecline(${item.id})">Tolak</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ` : ''}
                             </div>
                         </td>`;
 
@@ -329,42 +350,54 @@ function approvePeserta(id) {
     })
 }
 
-function declinePeserta(id) {
+// Tambahkan fungsi berikut agar tombol Decline berfungsi
+function showDeclineModal(id) {
+    $('#declineModal' + id).modal('show');
+}
+
+function submitDecline(id) {
+    var alasan = $('#alasan_pembatalan' + id).val();
+    if (!alasan) {
+        swal('Peringatan', 'Silakan masukkan alasan penolakan.', 'warning');
+        return;
+    }
     swal({
-        title: "Apakah Anda yakin?",
-        text: `Peserta dengan ID ${id} akan ditolak.`,
+        title: "Konfirmasi Penolakan",
+        text: "Apakah Anda yakin ingin menolak peserta ini?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Lanjutkan',
+        confirmButtonText: 'Ya, Tolak',
         cancelButtonText: 'Batal',
     }, function(isConfirmed) {
         if (isConfirmed) {
+            // console.log('alasan_pembatalan:', alasan);
             $.ajax({
                 url: `{{route('bak.wisuda.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
-                    status: 0
+                    status: 0,
+                    alasan: alasan
                 },
                 success: function(response) {
                     if (response.status === 'success') {
-                        // console.log('Decline successful:', response.data);
                         swal('Berhasil', response.message, 'success');
+                        $('#declineModal' + id).modal('hide');
                         getData();
                     } else {
-                        // console.log('Decline failed:', response.data);
+                        console.log('Decline failed:', response);
                         swal('Gagal', response.message, 'error');
                     }
                 },
                 error: function(xhr) {
-                    // console.log('Decline failed:', response.data);
+                    console.log('Decline error:', xhr.responseText);
                     swal('Gagal', 'Terjadi kesalahan saat menolak peserta.', 'error');
                 }
             });
         }
-    })
+    });
 }
 
 $(function () {

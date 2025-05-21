@@ -249,7 +249,7 @@ class WisudaController extends Controller
             return redirect()->back()->with('success', 'SK Yudisium berhasil diupload.');
         } catch (\Throwable $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal upload SK Yudisium: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal upload SK Yudisium!');
         }
     }
 
@@ -267,21 +267,23 @@ class WisudaController extends Controller
             'tgl_sk_yudisium' => 'required|date',
             'tgl_yudisium' => 'required|date',
             'no_sk_yudisium' => 'required|string|max:255',
-            // id boleh null, jika null pakai data yang ada
             ]);
+
+            // Cari file_fakultas berdasarkan id, jika tidak ada pakai dari Wisuda
+            $file_fakultas = null;
             if ($request->filled('id')) {
-                $file_fakultas = FileFakultas::findOrFail($request->id);
-                $request->merge(['sk_yudisium_file' => $file_fakultas->dir_file]);
-            } else {
-            // Ambil data file_fakultas dari Wisuda yang sedang diedit
-                $wisuda = Wisuda::findOrFail($id);
-                $file_fakultas = FileFakultas::find($wisuda->id_file_fakultas);
-                if ($file_fakultas) {
-                    $request->merge([
-                        'sk_yudisium_file' => $file_fakultas->dir_file,
-                        'id' => $file_fakultas->id,
-                    ]);
-                }
+                $file_fakultas = FileFakultas::find($request->id);
+            }
+
+            if (!$file_fakultas) {
+                $file_fakultas = FileFakultas::find(optional(Wisuda::find($id))->id_file_fakultas);
+            }
+
+            if ($file_fakultas) {
+                $request->merge([
+                    'sk_yudisium_file' => $file_fakultas->dir_file,
+                    'id' => $file_fakultas->id,
+                ]);
             }
         }
 
@@ -331,7 +333,7 @@ class WisudaController extends Controller
             return redirect()->back()->with('success', 'SK Yudisium berhasil diedit.');
         } catch (\Throwable $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal edit SK Yudisium: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal edit SK Yudisium!');
         }
     }
 
@@ -356,7 +358,7 @@ class WisudaController extends Controller
             return redirect()->back()->with('success', 'SK Yudisium berhasil dihapus.');
         } catch (\Throwable $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal hapus SK Yudisium: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Gagal hapus SK Yudisium!');
         }
     }
 
