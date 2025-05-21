@@ -399,7 +399,7 @@ class WisudaController extends Controller
             DB::rollBack();
             return response()->json([
             'status' => 'error',
-            'message' => 'Terjadi kesalahan saat membatalkan pendaftaran wisuda! ' . $e->getMessage(),
+            'message' => 'Terjadi kesalahan saat membatalkan pendaftaran wisuda!',
             ]);
         }
     }
