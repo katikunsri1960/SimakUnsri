@@ -42,27 +42,57 @@ Pendaftaran Wisuda Fakultas
                         <table id="data" class="table table-bordered table-striped text-center">
                             <thead>
                                 <tr>
-                                    <th class="text-center align-middle">No</th>
-                                    <th class="text-center align-middle">Pas Foto</th>
+                                    <th class="text-center align-middle">NO</th>
+                                    <th class="text-center align-middle">PERIODE</th>
+                                    <th class="text-center align-middle">STATUS</th>
+                                    <th class="text-center align-middle">IJAZAH TERAKHIR</th>
+                                    <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">NIM</th>
-                                    <th class="text-center align-middle">Nama Mahasiswa</th>
-                                    <th class="text-center align-middle">Program Studi</th>
-                                    <th class="text-center align-middle">Bebas Pustaka</th>
-                                    <th class="text-center align-middle">Repository</th>
-                                    <th class="text-center align-middle">Nilai USEPT</th>
-                                    <th class="text-center align-middle">File Abstrak</th>
-                                    <th class="text-center align-middle text-nowrap">SK Yudisium<br>(Tgl Yudisium)</th>
-                                    <th class="text-center align-middle">Lama Studi</th>
-                                    <th class="text-center align-middle">Status Pendaftaran Wisuda</th>
-                                    <th class="text-center align-middle">Action</th>
+                                    <th class="text-center align-middle">NAMA</th>
+                                    <th class="text-center align-middle">PROGRAM STUDI</th>
+                                    <th class="text-center align-middle">BEBAS PUSTAKA</th>
+                                    <th class="text-center align-middle">REPOSITORY</th>
+                                    <th class="text-center align-middle">SKOR USEPT</th>
+                                    <th class="text-center align-middle">ABSTRAK</th>
+                                    <th class="text-center align-middle text-nowrap">SK YUDISIUM<br>(TGL YUDISIUM)</th>
+                                    <th class="text-center align-middle">LAMA STUDI</th>
+                                    <th class="text-center align-middle">SK YUDISIUM</th>
+                                    <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($data as $d)
-                                @include('fakultas.data-akademik.wisuda.approve-wisuda')
+                                @include('fakultas.data-akademik.wisuda.upload-sk')
+                                @include('fakultas.data-akademik.wisuda.edit-sk')
                                 @include('fakultas.data-akademik.wisuda.decline-wisuda')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
+                                        <td class="text-center align-middle">{{$d->wisuda_ke}}</td>
+                                        <td class="text-center align-middle" style="width:10%">
+                                            @if($d->approved == 0)
+                                                <span class="badge rounded badge-warning" style="padding: 8px">Belum Disetujui Koor. Prodi</span>
+                                            @elseif($d->approved == 1)
+                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Koor. Prodi</span>
+                                            @elseif($d->approved == 2)
+                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Fakultas</span>
+                                            @elseif($d->approved == 3)
+                                                <span class="badge rounded badge-success" style="padding: 8px">Disetujui BAK</span>
+                                            @elseif($d->approved == 97)
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Koor. Prodi</span>
+                                            @elseif($d->approved == 98)
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Fakultas</span>
+                                            @elseif($d->approved == 99)
+                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak BAK</span>
+                                            @endif
+                                        </td>
+                                        <td class="text-center align-middle">
+                                            <a href="{{ $d->ijazah_terakhir_file? asset($d->ijazah_terakhir_file) : '#' }}" 
+                                               target="{{ $d->ijazah_terakhir_file? '_blank' : '_self' }}" 
+                                               class="btn btn-sm {{ $d->ijazah_terakhir_file? 'btn-success' : 'btn-warning' }} my-2">
+                                                <i class="fa {{ $d->ijazah_terakhir_file? 'fa-file me-2' : 'fa-exclamation-circle' }}"></i> 
+                                                {{ $d->ijazah_terakhir_file? 'Lihat Ijazah' : 'Belum Upload Ijazah' }}
+                                            </a>
+                                        </td>
                                         <td class="text-center align-middle text-nowrap">
                                             <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal{{$d->id}}">
                                                 <img src="{{ asset($d->pas_foto) }}" alt="Pas Foto" style="width: 150px;" title="Lihat Foto">
@@ -72,11 +102,11 @@ Pendaftaran Wisuda Fakultas
                                                 <div class="modal-dialog modal-dialog-centered">
                                                     <div class="modal-content rounded-3">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="fotoModalLabel{{$d->id}}">PAS FOTO {{$d->nama_mahasiswa}}</h5>
+                                                            <h5 class="modal-title" id="fotoModalLabel{{$d->id}}">FOTO {{$d->nama_mahasiswa}}</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body text-center m-20">
-                                                            <img src="{{ asset($d->pas_foto) }}" alt="Pas Foto" style="width: 100%; max-width: 500px;" class="rounded-3">
+                                                            <img src="{{ asset($d->pas_foto) }}" alt="Foto" style="width: 100%; max-width: 500px;" class="rounded-3">
                                                         </div>
                                                     </div>
                                                 </div>
@@ -111,16 +141,16 @@ Pendaftaran Wisuda Fakultas
                                         </td> 
                                         <td class="text-center align-middle text-nowrap">
                                             @if(!$d->abstrak_file)
-                                                <span class="badge rounded bg-warning" style="padding: 8px">File tidak diupload</span>
+                                                <span class="badge rounded bg-warning" style="padding: 8px"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload Abstak</span>
                                             @else
-                                                <a href="{{ asset($d->abstrak_file) }}" target="_blank" class="btn btn-sm btn-primary my-2">
-                                                    <i class="fa fa-file-pdf-o"></i> Lihat File
+                                                <a href="{{ asset($d->abstrak_file) }}" target="_blank" class="btn btn-sm btn-success my-2">
+                                                    <i class="fa fa-file me-2"></i> Lihat Abstrak
                                                 </a>
                                             @endif
                                         </td> 
                                         <td class="text-center align-middle text-nowrap">
                                             @if ($d->no_sk_yudisium && $d->tgl_sk_yudisium)
-                                                {{$d->no_sk_yudisium}}<br>( {{$d->tgl_sk_yudisium}} )
+                                                {{$d->no_sk_yudisium}}<br>( {{ \Carbon\Carbon::parse($d->tgl_sk_yudisium)->translatedFormat('d F Y') }} )
                                             @else
                                                 -
                                             @endif
@@ -135,36 +165,51 @@ Pendaftaran Wisuda Fakultas
                                             @else
                                                 <span class="badge rounded bg-danger" style="padding: 8px">Tanggal SK Yudisium Belum Diisi</span>
                                             @endif
-                                            
                                         </td>
+                                        {{-- <td class="text-center align-middle">
+                                            <a href="{{ $d->sk_yudisium_file ? asset($d->sk_yudisium_file) : '#' }}" 
+                                               target="{{ $d->sk_yudisium_file ? '_blank' : '_self' }}" 
+                                               class="btn btn-sm {{ $d->sk_yudisium_file ? 'btn-success' : 'btn-warning' }} my-2">
+                                                <i class="fa {{ $d->sk_yudisium_file ? 'fa-file me-2' : 'fa-exclamation-circle' }}"></i> 
+                                                {{ $d->sk_yudisium_file ? 'Lihat SK Yudisium' : 'Belum Upload SK Yudisium' }}
+                                            </a>
+                                        </td> --}}
+                                        <td class="text-center align-middle">
+                                            @if (is_null($d->sk_yudisium_file))
+                                                <a href="#" class="btn btn-warning btn-sm my-2 
+                                                " title="Upload SK Yudisium" data-bs-toggle="modal" data-bs-target="#uploadModal{{$d->id}}">
+                                                    <i class="fa fa-upload"></i> Pilih SK Yudisium
+                                                </a>
+                                            @else
+                                                <a href="{{ asset($d->sk_yudisium_file) }}" target="_blank" class="btn btn-success btn-sm my-2">
+                                                    <i class="fa fa-file"></i> Lihat
+                                                </a>
 
-                                        
-                                        
-                                        <td class="text-center align-middle" style="width:10%">
-                                            @if($d->approved == 0)
-                                                <span class="badge rounded badge-warning" style="padding: 8px">Belum Disetujui Koor. Prodi</span>
-                                            @elseif($d->approved == 1)
-                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Koor. Prodi</span>
-                                            @elseif($d->approved == 2)
-                                                <span class="badge rounded badge-primary" style="padding: 8px">Disetujui Fakultas</span>
-                                            @elseif($d->approved == 3)
-                                                <span class="badge rounded badge-success" style="padding: 8px">Disetujui BAK</span>
-                                            @elseif($d->approved == 97)
-                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Koor. Prodi</span>
-                                            @elseif($d->approved == 98)
-                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak Fakultas</span>
-                                            @elseif($d->approved == 99)
-                                                <span class="badge rounded badge-danger" style="padding: 8px">Ditolak BAK</span>
+                                                <a href="#" class="btn btn-warning btn-sm my-2" data-bs-toggle="modal" data-bs-target="#editModal{{$d->id}}">
+                                                    <i class="fa fa-edit"></i> Ubah
+                                                </a>
+
+                                                <button type="button" class="btn btn-danger btn-sm my-2 btn-hapus-sk" data-id="{{ $d->id }}">
+                                                    <i class="fa fa-trash"></i> Hapus
+                                                </button>
+                                                <form id="form-hapus-sk-{{ $d->id }}" action="{{ route('fakultas.wisuda.hapus-sk-yudisium', $d->id) }}" method="POST" style="display:none;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                </form>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle text-nowrap">
                                             <div class="row">
                                                 @if($d->approved == 1)
-                                                    <a href="#" class="btn btn-success btn-sm my-2 
-                                                    {{-- @if($d->approved != 1) disabled @endif --}}
-                                                    " title="Setujui Pangajuan" data-bs-toggle="modal" data-bs-target="#approveModal{{$d->id}}">
-                                                        <i class="fa fa-check"> </i> Approve
-                                                    </a>
+                                                    {{-- <form action="{{ route('fakultas.wisuda.approve', $d->id) }}" method="POST" style="display:inline;" class="form-approve-wisuda"> --}}
+                                                    <form action="{{route('fakultas.wisuda.approve', $d)}}" method="post" id="approveForm{{$d->id}}" class="approve-class" data-id='{{$d->id}}'>
+                                                         @csrf
+                                                        <div class="row  mb-5">
+                                                            <button 
+                                                            type="submit" 
+                                                            class="btn btn-sm btn-success" title="Setujui Pendaftaran Wisuda"><i class="fa fa-check"></i> Approve</button>
+                                                        </div>
+                                                    </form>
                                                 @endif
                                                 @if($d->approved == 1 || $d->approved == 2)
                                                     <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Pangajuan" data-bs-toggle="modal" data-bs-target="#declineModal{{$d->id}}"><i class="fa fa-ban"> </i>  Decline</a>
@@ -184,6 +229,8 @@ Pendaftaran Wisuda Fakultas
 @endsection
 @push('js')
 
+<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+
 <script>
     $(function () {
         $('#data').DataTable({
@@ -194,6 +241,44 @@ Pendaftaran Wisuda Fakultas
             "info": true,
             "autoWidth": true,
             // "responsive": true,
+        });
+
+        $('.approve-class').submit(function(e){
+            e.preventDefault();
+            var form = this;
+            swal({
+                title: 'Setujui Pendaftaran Wisuda?',
+                text: "Anda akan menyetujui Pendaftaran Wisuda?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya, Setujui!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    form.submit();
+                }
+            });
+        });
+
+        $('.btn-hapus-sk').click(function(e){
+            e.preventDefault();
+            var id = $(this).data('id');
+            swal({
+                title: 'Hapus SK Yudisium?',
+                text: "Anda yakin ingin menghapus SK Yudisium ini?",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Ya, Hapus!',
+                cancelButtonText: 'Batal'
+            }, function(isConfirm){
+                if (isConfirm) {
+                    $('#form-hapus-sk-' + id).submit();
+                }
+            });
         });
     });
 </script>

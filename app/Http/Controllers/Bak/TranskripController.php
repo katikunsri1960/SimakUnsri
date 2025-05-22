@@ -44,7 +44,6 @@ class TranskripController extends Controller
 
     public function search(Request $request)
     {
-
         $data = RiwayatPendidikan::select('id_registrasi_mahasiswa', 'nim', 'nama_mahasiswa', 'nama_program_studi')
                 ->where('nim', 'like', '%'.$request->q.'%')
                 ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
