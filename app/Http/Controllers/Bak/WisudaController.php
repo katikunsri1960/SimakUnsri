@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Bak;
 use App\Http\Controllers\Controller;
 use App\Models\Fakultas;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\PejabatFakultas;
 use App\Models\PeriodeWisuda;
 use App\Models\ProfilPt;
 use App\Models\ProgramStudi;
 use App\Models\Referensi\AllPt;
+use App\Models\Referensi\PejabatUniversitas;
 use App\Models\Wisuda;
 use App\Models\WisudaChecklist;
 use App\Models\WisudaSyaratAdm;
@@ -232,7 +234,7 @@ class WisudaController extends Controller
     public function ijazah_download_pdf(Request $request)
     {
         $fakultas = $request->input('fakultas');
-
+        $fakultas_id = $request->input('fakultas');
         if ($fakultas == null) {
             return response()->json([
                 'status' => 'error',
@@ -259,10 +261,11 @@ class WisudaController extends Controller
 
         $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
+                ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
                 ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
-                        'b.tempat_lahir', 'b.tanggal_lahir')
+                        'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas);
         if ($prodi != null) {
@@ -284,10 +287,17 @@ class WisudaController extends Controller
 
         $fakultas = str_replace('Fakultas ', '', $fakultas);
 
+        $rektor = PejabatUniversitas::join('pejabat_universitas_jabatans as j', 'j.id', 'pejabat_universitas.jabatan_id')->where('j.id', 1)
+                                    ->select('pejabat_universitas.nama as nama', 'pejabat_universitas.gelar_depan as gelar_depan',
+                                    'pejabat_universitas.gelar_belakang as gelar_belakang', 'pejabat_universitas.nip as nip')->first();
+        $dekan = PejabatFakultas::where('id_jabatan', 0)->where('id_fakultas', $fakultas_id)->select('nip', 'gelar_depan', 'gelar_belakang', 'nama_dosen as nama')->first();
+
         $pdf = PDF::loadview('bak.wisuda.ijazah.pdf', [
             'data' => $data,
             'kode_univ' => $kode_univ,
             'fakultas' => $fakultas,
+            'rektor' => $rektor,
+            'dekan' => $dekan,
         ])
         ->setPaper($paper_size, 'landscape');
 

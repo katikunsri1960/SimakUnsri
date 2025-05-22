@@ -15,10 +15,14 @@
 
     .data-diri {
         width: 100%;
-        margin-top: 32px;
+        margin-top: 28px;
         text-align: left;
         font-weight: bold;
-        font-size: 12pt;
+        font-size: 13pt;
+    }
+
+    .data-diri td {
+        vertical-align:top;
     }
 
     .mid-word {
@@ -35,6 +39,12 @@
         text-align: center;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .ttd {
+        font-weight: bold;
+        font-size: 13pt;
+        margin-top: 43px;
     }
 
 
@@ -68,16 +78,16 @@
             <tr>
                 <td style="width:70px">Nama</td>
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                <td style="width: 330px; margin-right:30px">{{$d->nama_mahasiswa}}</td>
-                <td style="width: 20%">No. Induk Mahasiswa</td>
+                <td style="width: 330px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                <td style="width: 235px">No. Induk Mahasiswa</td>
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                 <td>{{$d->nim}}</td>
             </tr>
             <tr>
                 <td style="width:70px">Lahir di</td>
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                <td style="width: 330px; margin-right:30px">{{$d->tempat_lahir}}</td>
-                <td style="width: 20%">Tanggal Lulus</td>
+                <td style="width: 330px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                <td style="width: 235px">Tanggal Lulus</td>
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                 <td>
                      {{ \Carbon\Carbon::parse($d->tanggal_keluar)->locale('id')->translatedFormat('d F Y') }}
@@ -89,7 +99,7 @@
                 <td style="width: 330px; margin-right:30px">
                     {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
                 </td>
-                <td style="width: 240px">Fakultas</td>
+                <td style="width: 235px">Fakultas</td>
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                 <td>{{$fakultas}}</td>
             </tr>
@@ -98,18 +108,21 @@
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px"></td>
                 <td style="width: 330px; margin-right:30px">
                 </td>
-                <td style="width: 240px">Program Studi/Kode Prodi</td>
+                <td style="width: 235px;">Program Studi/Kode Prodi</td>
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                     <td>{{$d->nama_prodi}}/{{$d->kode_prodi}}</td>
             </tr>
-             <tr>
+            @if ($d->is_bku)
+            <tr>
                 <td style="width:70px"></td>
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px"></td>
                 <td style="width: 330px; margin-right:30px"></td>
-                <td style="width: 20%">Bidang Kajian Utama</td>
+                <td style="width: 235px">Bidang Kajian Utama</td>
                 <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                <td>Contoh BKU</td>
+                <td>{{Str::title($d->bku_prodi_id)}}</td>
             </tr>
+            @endif
+
             {{-- <tr>
                 <td style="width:60px">Lahir di</td>
                 <td style="max-width: 3%">:</td>
@@ -123,9 +136,26 @@
     <div class="mid-word">
         <center>Telah memenuhi semua persyaratan pendidikan yang ditentukan. Kepadanya diberikan ijazah dan sebutan</center>
         <div class="gelar">
-            Sarjana Teknik (S.T.)
+            Sarjana Teknik (S.T.) (Ganti dengan gelar database)
         </div>
         <center>beserta segala hak dan kewajiban yang melekat pada sebutan tersebut</center>
+    </div>
+    <div class="ttd">
+        <table style="width: 100%">
+            <tr>
+                <td style="width: 66%"></td>
+                <td>Indralaya, Tanggal Wisuda</td>
+            </tr>
+            <tr>
+                <td style="width: 66%">Dekan,</td>
+                <td>Rektor,</td>
+            </tr>
+            <tr style="">
+                <td style="width: 66%;padding-top: 65px">{{$dekan && $dekan->gelar_depan ? $dekan->gelar_depan.' ' : ''}}{{$dekan ? Str::title($dekan->nama) : 'Belum Diisi'}}, {{$dekan && $dekan->gelar_belakang ? $dekan->gelar_belakang : ''}}
+                                            <br>NIP {{$dekan && $dekan->nip ? $dekan->nip : 'Belum Diisi'}}</td>
+                <td style="padding-top: 65px">{{$rektor->gelar_depan." " ?? ''}}{{Str::title($rektor->nama)}}, {{$rektor->gelar_belakang}} <br> NIP {{$rektor->nip}}</td>
+            </tr>
+        </table>
     </div>
 @endforeach
 
