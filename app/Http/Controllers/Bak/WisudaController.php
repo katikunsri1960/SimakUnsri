@@ -240,8 +240,9 @@ class WisudaController extends Controller
             ]);
         }
 
+
         $periode = $request->input('periode');
-        dd($periode);
+        // dd($periode);
         if ($periode == null) {
             return response()->json([
                 'status' => 'error',
@@ -259,8 +260,10 @@ class WisudaController extends Controller
         $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
-                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_jenjang_pendidikan as jenjang')
-                ->where('data_wisuda.periode_wisuda', $periode)
+                ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
+                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
+                        'b.tempat_lahir', 'b.tanggal_lahir')
+                ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas);
         if ($prodi != null) {
             $data->where('r.id_prodi', $prodi);
@@ -274,10 +277,19 @@ class WisudaController extends Controller
             ]);
         }
 
+        $kode_univ = ProfilPt::select('kode_perguruan_tinggi')->first()->kode_perguruan_tinggi ?? "Data Kosong";
+
+        $paper_size = [0,0, 609.45, 779.53];
+        $fakultas = Fakultas::select('id', 'nama_fakultas')->where('id', $fakultas)->first()->nama_fakultas;
+
+        $fakultas = str_replace('Fakultas ', '', $fakultas);
+
         $pdf = PDF::loadview('bak.wisuda.ijazah.pdf', [
             'data' => $data,
+            'kode_univ' => $kode_univ,
+            'fakultas' => $fakultas,
         ])
-        ->setPaper('legal', 'landscape');
+        ->setPaper($paper_size, 'landscape');
 
         return $pdf->stream('Ijazah-'.$data[0]->periode_wisuda.'.pdf');
 
