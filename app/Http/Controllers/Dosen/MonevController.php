@@ -9,6 +9,7 @@ use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
 use Illuminate\Http\Request;
@@ -209,6 +210,140 @@ class MonevController extends Controller
 
     public function penguji_sidang()
     {
+        $id_dosen = auth()->user()->fk_id;
+        $semester = SemesterAktif::join('semesters', 'semester_aktifs.id_semester', 'semesters.id_semester')
+                                ->select('semesters.id_tahun_ajaran as id_tahun_ajaran', 'semester_aktifs.id_semester as id_semester')->first();
 
+        $id_jenis_aktivitas = [1,3,4,22];
+
+        $id_prodi_penugasan = UjiMahasiswa::join('aktivitas_mahasiswas as am', 'uji_mahasiswas.id_aktivitas', 'am.id_aktivitas')
+                                            ->whereIn('am.id_jenis_aktivitas', $id_jenis_aktivitas)
+                                            ->where('uji_mahasiswas.id_dosen', $id_dosen)
+                                            ->where('am.id_semester', $semester->id_semester)
+                                            ->select('am.id_prodi as id_prodi')
+                                            ->distinct('am.id_prodi')
+                                            ->pluck('id_prodi');
+
+        $prodi = ProgramStudi::whereIn('id_prodi', $id_prodi_penugasan)
+                            ->select('id_prodi', 'nama_jenjang_pendidikan', 'nama_program_studi')->get();
+        // dd($prodi);
+
+        return view('dosen.monev.penguji-sidang.index', [
+            'prodi' => $prodi,
+            'semester' => $semester
+        ]);
+    }
+
+    public function penguji_sidang_data(Request $request)
+    {
+        $id_prodi = $request->id_prodi;
+        $semester = SemesterAktif::first()->id_semester;
+        $db = new UjiMahasiswa();
+        $id_jenis_aktivitas = [1,3,4,22];
+        $rawJenis_aktivitas = '1,3,4,22';
+        $kategori_ketua_peguji = '110501';
+        $kategori_anggota_penguji = '110502';
+
+        $dosen = $db->join('aktivitas_mahasiswas as am', 'uji_mahasiswas.id_aktivitas', 'am.id_aktivitas')
+                        ->whereIn('am.id_jenis_aktivitas', $id_jenis_aktivitas)
+                        ->where('am.id_semester', $semester)
+                        ->where('am.id_prodi', $id_prodi)
+                        ->select('uji_mahasiswas.id_dosen')
+                        ->distinct('uji_mahasiswas.id_dosen')
+                        ->pluck('uji_mahasiswas.id_dosen');
+
+        $rawPembimbingUtama = '(SELECT COUNT(*) from uji_mahasiswas as bm
+                                JOIN aktivitas_mahasiswas as am on bm.id_aktivitas = am.id_aktivitas
+                                WHERE id_dosen = biodata_dosens.id_dosen AND am.id_semester = '.$semester.'
+                                AND am.id_jenis_aktivitas IN ('.$rawJenis_aktivitas.')
+                                AND bm.id_kategori_kegiatan IN ('.$kategori_ketua_peguji.')) as ketua_penguji';
+
+        $rawPembimbingPendamping = '(SELECT COUNT(*) from uji_mahasiswas as bm
+                                JOIN aktivitas_mahasiswas as am on bm.id_aktivitas = am.id_aktivitas
+                                WHERE id_dosen = biodata_dosens.id_dosen AND am.id_semester = '.$semester.'
+                                AND am.id_jenis_aktivitas IN ('.$rawJenis_aktivitas.')
+                                AND bm.id_kategori_kegiatan IN ('.$kategori_anggota_penguji.')) as anggota_penguji';
+
+        $data = BiodataDosen::whereIn('id_dosen', $dosen)
+                            ->select('nidn', 'nama_dosen', 'id_dosen',
+                                    DB::raw($rawPembimbingUtama), DB::raw($rawPembimbingPendamping))->get();
+
+        return response()->json([
+            'status' => $data->isEmpty() ? 0 : 1,
+            'message' => $data->isEmpty() ? 'Data tidak ditemukan' : 'Data berhasil diambil',
+            'data' => $data->isEmpty() ? [] : $data
+        ]);
+    }
+
+    public function penguji_sidang_ketua($dosen)
+    {
+        $semester = SemesterAktif::first()->id_semester;
+        $id_jenis_aktivitas = [1,3,4,22];
+        // $rawJenis_aktivitas = '1,2,3,4,22';
+        $kategori_ketua_peguji = [110501];
+
+        $aktivitas = UjiMahasiswa::join('aktivitas_mahasiswas as am', 'uji_mahasiswas.id_aktivitas', 'am.id_aktivitas')
+                                ->where('uji_mahasiswas.id_dosen', $dosen)
+                                // ->whereIn('am.id_jenis_aktivitas', $id_jenis_aktivitas)
+                                ->where('am.id_semester', $semester)
+                                ->whereIn('uji_mahasiswas.id_kategori_kegiatan', $kategori_ketua_peguji)
+                                ->whereIn('am.id_jenis_aktivitas', $id_jenis_aktivitas)
+                                ->select('am.id_aktivitas')
+                                ->distinct('am.id_aktivitas')
+                                ->pluck('am.id_aktivitas');
+
+        $data = AnggotaAktivitasMahasiswa::join('riwayat_pendidikans as rp', 'rp.id_registrasi_mahasiswa', 'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa')
+                                ->join('aktivitas_mahasiswas as am', 'anggota_aktivitas_mahasiswas.id_aktivitas', 'am.id_aktivitas')
+                                ->join('program_studis as prodi', 'prodi.id_prodi', 'rp.id_prodi')
+                                ->leftJoin('mata_kuliahs as mk', 'am.mk_konversi', 'mk.id_matkul')
+                                ->whereIn('anggota_aktivitas_mahasiswas.id_aktivitas', $aktivitas)
+                                ->select('rp.nim', 'rp.nama_mahasiswa', DB::raw('LEFT(rp.id_periode_masuk, 4) as angkatan'), 'prodi.nama_program_studi', 'prodi.nama_jenjang_pendidikan',
+                                        'am.judul', 'mk.nama_mata_kuliah', 'am.nama_jenis_aktivitas')
+                                ->orderBy('rp.id_prodi')
+                                ->get();
+
+        $data_dosen = BiodataDosen::where('id_dosen', $dosen)->select('nama_dosen')->first();
+
+        $sebagai = 'Ketua Penguji';
+
+        return view('dosen.monev.penguji-sidang.detail', [
+            'data' => $data,
+            'dosen' => $data_dosen,
+            'sebagai' => $sebagai
+        ]);
+    }
+
+    public function penguji_sidang_anggota($dosen)
+    {
+        $semester = SemesterAktif::first()->id_semester;
+        $id_jenis_aktivitas = [1,3,4,22];
+        $kategori_anggota_penguji = [110502];
+
+        $aktivitas = UjiMahasiswa::join('aktivitas_mahasiswas as am', 'uji_mahasiswas.id_aktivitas', 'am.id_aktivitas')
+                                ->where('uji_mahasiswas.id_dosen', $dosen)
+                                ->whereIn('am.id_jenis_aktivitas', $id_jenis_aktivitas)
+                                ->where('am.id_semester', $semester)
+                                ->whereIn('uji_mahasiswas.id_kategori_kegiatan', $kategori_anggota_penguji)
+                                ->select('am.id_aktivitas')
+                                ->distinct('am.id_aktivitas')
+                                ->pluck('am.id_aktivitas');
+
+        $data = AnggotaAktivitasMahasiswa::join('riwayat_pendidikans as rp', 'rp.id_registrasi_mahasiswa', 'anggota_aktivitas_mahasiswas.id_registrasi_mahasiswa')
+                                ->join('aktivitas_mahasiswas as am', 'anggota_aktivitas_mahasiswas.id_aktivitas', 'am.id_aktivitas')
+                                ->join('program_studis as prodi', 'prodi.id_prodi', 'rp.id_prodi')
+                                ->leftJoin('mata_kuliahs as mk', 'am.mk_konversi', 'mk.id_matkul')
+                                ->whereIn('anggota_aktivitas_mahasiswas.id_aktivitas', $aktivitas)
+                                ->select('rp.nim', 'rp.nama_mahasiswa', DB::raw('LEFT(rp.id_periode_masuk, 4) as angkatan'), 'prodi.nama_program_studi', 'prodi.nama_jenjang_pendidikan',
+                                        'am.judul', 'mk.nama_mata_kuliah', 'am.nama_jenis_aktivitas')
+                                ->orderBy('rp.id_prodi')
+                                ->get();
+
+        $data_dosen = BiodataDosen::where('id_dosen', $dosen)->select('nama_dosen')->first();
+        $sebagai = 'Anggota Penguji';
+        return view('dosen.monev.penguji-sidang.detail', [
+            'data' => $data,
+            'dosen' => $data_dosen,
+            'sebagai' => $sebagai
+        ]);
     }
 }

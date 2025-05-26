@@ -524,6 +524,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::prefix('penguji-sidang')->group(function(){
                     Route::get('/', [App\Http\Controllers\Dosen\MonevController::class, 'penguji_sidang'])->name('dosen.monev.penguji-sidang');
+                    Route::get('/data', [App\Http\Controllers\Dosen\MonevController::class, 'penguji_sidang_data'])->name('dosen.monev.penguji-sidang.data');
+                    Route::get('/ketua-penguji/{dosen}', [App\Http\Controllers\Dosen\MonevController::class, 'penguji_sidang_ketua'])->name('dosen.monev.penguji-sidang.ketua');
+                    Route::get('/anggota-penguji/{dosen}', [App\Http\Controllers\Dosen\MonevController::class, 'penguji_sidang_anggota'])->name('dosen.monev.penguji-sidang.anggota');
                 });
 
             });

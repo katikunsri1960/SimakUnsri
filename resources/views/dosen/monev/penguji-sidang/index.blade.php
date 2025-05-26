@@ -1,6 +1,6 @@
 @extends('layouts.dosen')
 @section('title')
-Monev Pembimbing Karya Ilmiah
+Monev Penguji Sidang
 @endsection
 @section('content')
 <section class="content bg-white">
@@ -13,7 +13,7 @@ Monev Pembimbing Karya Ilmiah
                             <img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}"
                                 class="img-fluid max-w-250" alt="" />
                             <div class="ms-30">
-                                <h2 class="mb-10">Monev Pembimbing Karya Ilmiah</h2>
+                                <h2 class="mb-10">Monev Penguji Sidang</h2>
                                 <p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
                             </div>
                         </div>
@@ -59,7 +59,7 @@ Monev Pembimbing Karya Ilmiah
     function getMonev() {
         var id_prodi = $('#id_prodi').val();
         $.ajax({
-            url: "{{route('dosen.monev.karya-ilmiah.get-data')}}",
+            url: "{{route('dosen.monev.penguji-sidang.data')}}",
             type: "GET",
             data: {
                 id_prodi: id_prodi
@@ -88,16 +88,16 @@ Monev Pembimbing Karya Ilmiah
                                         <th class="text-center align-middle">No</th>
                                         <th class="text-center align-middle">NIDN</th>
                                         <th class="text-center align-middle">Dosen</th>
-                                        <th class="text-center align-middle">Jumlah<br>Pembimbing Utama</th>
-                                        <th class="text-center align-middle">Jumlah<br>Pembimbing Pendamping</th>
+                                        <th class="text-center align-middle">Jumlah Sbg<br>Ketua Penguji</th>
+                                        <th class="text-center align-middle">Jumlah Sbg<br>Anggota Penguji</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                     `;
-                    var baseUrl = "{{ route('dosen.monev.karya-ilmiah.pembimbing-utama', ':id_dosen') }}";
+                    var baseUrl = "{{ route('dosen.monev.penguji-sidang.ketua', ':id_dosen') }}";
                     baseUrl = baseUrl.replace(':id_dosen', '');
 
-                    var baseUrlPendamping = " {{ route('dosen.monev.karya-ilmiah.pembimbing-pendamping', ':id_dosen') }}";
+                    var baseUrlPendamping = " {{ route('dosen.monev.penguji-sidang.anggota', ':id_dosen') }}";
                     baseUrlPendamping = baseUrlPendamping.replace(':id_dosen', '');
 
                     data.data.forEach((d, i) => {
@@ -109,12 +109,12 @@ Monev Pembimbing Karya Ilmiah
                                     <td class="text-start align-middle">${d.nama_dosen}</td>
                                     <td class="text-center align-middle">
                                        <a href="${baseUrl}${d.id_dosen}">
-                                            ${d.pembimbing_utama}
+                                            ${d.ketua_penguji}
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
                                          <a href="${baseUrlPendamping}${d.id_dosen}">
-                                        ${d.pembimbing_pendamping}
+                                        ${d.anggota_penguji}
                                     </td>
                                 </tr>
                             `;
