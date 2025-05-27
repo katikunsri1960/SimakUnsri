@@ -57,6 +57,8 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
 
                     $nilai_field = $this->getNilaiField($komponen['nomor_urut']);
 
+                    $nilai_exact = $row[$nilai_field] != null ? floatval(str_replace(',','.', trim($row[$nilai_field]))) : 0;
+
                     NilaiKomponenEvaluasi::updateOrCreate(
                         ['id_komponen_evaluasi' => $komponen['id_komponen_evaluasi'], 'id_kelas' => $this->kelas, 'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa, 'urutan' => $komponen['nomor_urut']],
                         [
@@ -77,7 +79,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'bobot' => $komponen['bobot_evaluasi'],
                             'angkatan' => $mahasiswa_kelas->angkatan,
                             'status_sync' => 'belum sync',
-                            'nilai_komp_eval' => $row[$nilai_field] ?? 0,
+                            'nilai_komp_eval' => $nilai_exact,
                         ]
                     );
 
