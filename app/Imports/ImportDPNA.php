@@ -152,8 +152,8 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                 // }
 
                 $nilai_perkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)->first();
-                $nilai_angka_ = str_replace(',','.', trim($row['nilai_angka']));
-                $nilai_indeks = str_replace(',','.', trim($row['nilai_indeks']));
+                $nilai_angka_ = trim($row['nilai_angka']);
+                $nilai_indeks = trim($row['nilai_indeks']);
 
                 if ($nilai_perkuliahan) {
                     NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)
