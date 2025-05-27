@@ -152,8 +152,8 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                 // }
 
                 $nilai_perkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)->first();
-                $nilai_angka_ = trim($row['nilai_angka']);
-                $nilai_indeks = trim($row['nilai_indeks']);
+                $nilai_angka_ = $this->parseNilai($row['nilai_angka']);
+                // $nilai_indeks = trim($row['nilai_indeks']);
 
                 if ($nilai_perkuliahan) {
                     NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)
@@ -161,7 +161,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         ->update([
                             'feeder' => 0,
                             'nilai_angka' => $nilai_angka_,
-                            'nilai_indeks' => $nilai_indeks,
+                            'nilai_indeks' => $row['nilai_indeks'],
                             'nilai_huruf' => $row['nilai_huruf'],
                         ]);
                 } else {
@@ -184,7 +184,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         'jurusan' => $mahasiswa_kelas->nama_program_studi,
                         'angkatan' => $mahasiswa_kelas->angkatan,
                         'nilai_angka' => $nilai_angka_,
-                        'nilai_indeks' => $nilai_indeks,
+                        'nilai_indeks' => $row['nilai_indeks'],
                         'nilai_huruf' => $row['nilai_huruf'],
                     ]);
                 }
@@ -210,5 +210,23 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
         ];
 
         return $fields[$nomor_urut] ?? null;
+    }
+
+    private function parseNilai($input)
+    {
+        $input = trim($input);
+
+        // Jika mengandung koma dan titik, anggap format Eropa
+        if (strpos($input, ',') !== false && strpos($input, '.') !== false) {
+            $input = str_replace('.', '', $input);       // hapus pemisah ribuan
+            $input = str_replace(',', '.', $input);      // ubah koma jadi titik
+        } elseif (strpos($input, ',') !== false) {
+            // Kalau cuma ada koma, anggap koma sebagai desimal
+            $input = str_replace(',', '.', $input);
+        } elseif (strpos($input, '.') !== false) {
+            // Kalau cuma titik, biarkan
+        }
+
+        return floatval($input);
     }
 }
