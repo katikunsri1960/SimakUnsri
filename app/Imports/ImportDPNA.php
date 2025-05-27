@@ -152,6 +152,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                 // }
 
                 $nilai_perkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)->first();
+                $nilai_huruf__ = floatval(str_replace(',','.', trim($row('nilai_indeks'))));
 
                 if ($nilai_perkuliahan) {
                     NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)
@@ -159,7 +160,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         ->update([
                             'feeder' => 0,
                             'nilai_angka' => number_format($row['nilai_angka'], 2),
-                            'nilai_indeks' => number_format($row['nilai_indeks'], 2),
+                            'nilai_indeks' => $nilai_huruf__,
                             'nilai_huruf' => $row['nilai_huruf'],
                         ]);
                 } else {
@@ -182,7 +183,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                         'jurusan' => $mahasiswa_kelas->nama_program_studi,
                         'angkatan' => $mahasiswa_kelas->angkatan,
                         'nilai_angka' => number_format($row['nilai_angka'], 2),
-                        'nilai_indeks' => number_format($row['nilai_indeks'], 2),
+                        'nilai_indeks' => $nilai_huruf__,
                         'nilai_huruf' => $row['nilai_huruf'],
                     ]);
                 }
