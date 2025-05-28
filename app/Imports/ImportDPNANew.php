@@ -2,19 +2,20 @@
 
 namespace App\Imports;
 
-use Maatwebsite\Excel\Concerns\ToCollection;
-use Illuminate\Support\Collection;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Perkuliahan\MataKuliah;
-use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\NilaiKomponenEvaluasi;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
-use Maatwebsite\Excel\Concerns\WithHeadingRow;
-use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Concerns\ToCollection;
+use Maatwebsite\Excel\Concerns\WithCalculatedFormulas;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithPreCalculateFormulas;
 
-class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
+class ImportDPNANew implements ToCollection, WithHeadingRow, WithCalculatedFormulas
 {
     protected $kelas;
     protected $matkul, $sks_matkul, $semester_kelas, $nama_semester_kelas;
@@ -29,6 +30,10 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
         $this->nama_semester_kelas = $dbKelas->nama_semester;
     }
 
+
+    /**
+    * @param Collection $collection
+    */
     public function collection(Collection $rows)
     {
         ini_set('max_execution_time', 0);
@@ -39,7 +44,11 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
         // $nilai_perkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)->get();
 
         foreach ($rows as $index => $row) {
-            // dd($row);
+            $row['nilai_aktivitas_partisipatif'] = $row['nilai_aktivitas_partisipatif'] != null
+                ? floatval(str_replace(',', '.', trim($row['nilai_aktivitas_partisipatif'])))
+                : 0.0;
+
+
 
             try {
                 $mahasiswa_kelas = PesertaKelasKuliah::where('nim', $row['nim'])->where('id_kelas_kuliah', $this->kelas)->first();
@@ -52,11 +61,13 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                 $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $this->kelas)->where('id_registrasi_mahasiswa', $mahasiswa_kelas->id_registrasi_mahasiswa)->get();
 
                 $komponen_evaluasi = KomponenEvaluasiKelas::where('id_kelas_kuliah', $this->kelas)->orderBy('nomor_urut')->get();
-
+                $test = [];
                 foreach ($komponen_evaluasi as $komponen) {
 
                     $nilai_field = $this->getNilaiField($komponen['nomor_urut']);
 
+                    $nilai_exact = $row[$nilai_field] != null ? str_replace(',','.', trim($row[$nilai_field])) : 0;
+                    $test[$nilai_field] = $nilai_exact;
                     NilaiKomponenEvaluasi::updateOrCreate(
                         ['id_komponen_evaluasi' => $komponen['id_komponen_evaluasi'], 'id_kelas' => $this->kelas, 'id_registrasi_mahasiswa' => $mahasiswa_kelas->id_registrasi_mahasiswa, 'urutan' => $komponen['nomor_urut']],
                         [
@@ -68,7 +79,6 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'nama_mata_kuliah' => $mahasiswa_kelas->nama_mata_kuliah,
                             'nama_kelas_kuliah' => $row['nama_kelas_kuliah'],
                             'sks_mata_kuliah' => $this->sks_matkul,
-                            'nama_mahasiswa' => $row['nama_mahasiswa'],
                             'nim' => $row['nim'],
                             'nama_mahasiswa' => $row['nama_mahasiswa'],
                             'id_jns_eval' => $komponen['id_jenis_evaluasi'],
@@ -77,11 +87,13 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
                             'bobot' => $komponen['bobot_evaluasi'],
                             'angkatan' => $mahasiswa_kelas->angkatan,
                             'status_sync' => 'belum sync',
-                            'nilai_komp_eval' => $row[$nilai_field] ?? 0,
+                            'nilai_komp_eval' => $nilai_exact,
                         ]
                     );
 
                 }
+
+                dd($test, $row);
                 // if ($nilai_komponen->count() == 0) {
                 //     $komponen_evaluasi = KomponenEvaluasiKelas::where('id_kelas_kuliah', $this->kelas)->orderBy('nomor_urut')->get();
 
@@ -191,7 +203,6 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
             }
         }
 
-        // Log::info('Finished import process');
     }
 
     private function getNilaiField($nomor_urut)
