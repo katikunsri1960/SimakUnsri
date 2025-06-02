@@ -165,13 +165,14 @@ function getData()
                         '<span class="badge badge-warning text-center"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload<br>SK Yudisium</span>';
 
                     var spanStatus = '';
-                        if (item.approved === 0 || item.approved > 3) {
-                            spanStatus = '<span class="badge badge-danger">' + item.approved_text + '</span>';
-                        } else if (item.approved > 0 && item.approved < 3) {
-                            spanStatus = '<span class="badge badge-primary">' + item.approved_text + '</span>';
-                        } else {
-                            spanStatus = '<span class="badge badge-success">' + item.approved_text + '</span>';
-                        };
+                    if (item.approved === 0 || item.approved > 3) {
+                        let alasan = item.alasan_pembatalan ? '<span class="badge badge-danger mt-2">Alasan ditolak :<br>' + item.alasan_pembatalan + '</span>' : '';
+                        spanStatus = '<span class="badge badge-danger text-center d-block">' + item.approved_text + '</span>' + alasan;
+                    } else if (item.approved > 0 && item.approved < 3) {
+                        spanStatus = '<span class="badge badge-primary text-center d-block">' + item.approved_text + '</span>';
+                    } else {
+                        spanStatus = '<span class="badge badge-success text-center d-block">' + item.approved_text + '</span>';
+                    };
 
                     var namaOrtu = '';
                                 if (item.nama_ayah && item.nama_ibu_kandung) {
@@ -358,7 +359,7 @@ function showDeclineModal(id) {
 function submitDecline(id) {
     var alasan = $('#alasan_pembatalan' + id).val();
     if (!alasan) {
-        swal('Peringatan', 'Silakan masukkan alasan penolakan.', 'warning');
+        swal('Peringatan', 'Silakan isikan alasan penolakan.', 'warning');
         return;
     }
     swal({

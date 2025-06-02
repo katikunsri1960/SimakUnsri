@@ -120,29 +120,10 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="treeview {{request()->routeIs
-                    // ('fakultas.monitoring.*')
-                     ? 'active menu-open' : ''}}">
-                        <a href="#">
-                            <i span class="fa fa-user-graduate"><span class="path1"></span><span
-                                    class="path2"></span></i>
+                    <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
+                        <a href="{{route('fakultas.wisuda.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><spanclass="path2"></spanclass=></i>
                             <span>Wisuda</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
                         </a>
-                        <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('fakultas.wisuda.sk-yudisium.index') | request()->routeIs('fakultas.wisuda.sk-yudisiun.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.wisuda.sk-yudisium.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><spanclass="path2"></spanclass=></i>
-                                    <span>SK Yudisum</span>
-                                </a>
-                            </li>
-                            <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.wisuda.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><spanclass="path2"></spanclass=></i>
-                                    <span>Wisuda</span>
-                                </a>
-                            </li>
-                        </ul>
                     </li>
                     
 

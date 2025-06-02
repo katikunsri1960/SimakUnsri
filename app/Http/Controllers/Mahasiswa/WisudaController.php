@@ -348,13 +348,13 @@ class WisudaController extends Controller
         $ijazahDir = storage_path('app/public/wisuda/ijazah');
 
         if (!file_exists($pasFotoDir)) {
-            mkdir($pasFotoDir, 0777, true);
+            mkdir($pasFotoDir, 0775, true);
         }
         if (!file_exists($abstrakDir)) {
-            mkdir($abstrakDir, 0777, true);
+            mkdir($abstrakDir, 0775, true);
         }
         if (!file_exists($ijazahDir)) {
-            mkdir($ijazahDir, 0777, true);
+            mkdir($ijazahDir, 0775, true);
         }
 
         $pasFotoPath = $request->file('pas_foto')->storeAs('wisuda/pas_foto', $pasFotoName, 'public');

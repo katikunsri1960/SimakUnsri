@@ -223,11 +223,12 @@ class WisudaController extends Controller
         return response()->json($response);
     }
 
-    public function simpleApprove(Request $request, $id)
+    public function approve(Request $request, $id)
     {
         try {
+            DB::beginTransaction();
+
             $wisuda = Wisuda::findOrFail($id);
-           
 
             $riwayatPendidikan = RiwayatPendidikan::with('prodi', 'prodi.jurusan')
                         ->where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->first();
@@ -236,9 +237,10 @@ class WisudaController extends Controller
                         ->where('id_aktivitas', $wisuda->id_aktivitas)->first();
 
             $semester_aktif = SemesterAktif::first();
-            // dd($semester_aktif);
+
             // Validate required data
             if (!$riwayatPendidikan || !$aktivitasMahasiswa || !$semester_aktif) {
+                DB::rollBack();
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Data yang diperlukan tidak lengkap.',
@@ -301,11 +303,14 @@ class WisudaController extends Controller
                 'status_sync' => 'belum sync',
             ]);
 
+            DB::commit();
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Pendaftaran Wisuda berhasil disetujui.',
             ]);
         } catch (\Exception $e) {
+            DB::rollBack();
             return response()->json([
                 'status' => 'error',
                 'message' => 'Terjadi kesalahan saat menyetujui pendaftaran wisuda!',
@@ -313,93 +318,33 @@ class WisudaController extends Controller
         }
     }
 
-    public function approve(Request $request, Wisuda $wisuda)
-    {
-        $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->first();
-
-        if (!$wisuda->riwayat_pendidikan->id_kurikulum) {
-            return response()->json([
-            'status' => 'error',
-            'message' => 'Kurikulum Mahasiswa Belum Diatur!!',
-            ]);
-        } else {
-            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $wisuda->riwayat_pendidikan->id_kurikulum)->first();
-        }
-
-        try {
-            set_time_limit(10);
-
-            $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->first();
-            $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->pluck('score');
-            $nilai_course = CourseUsept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->get()->pluck('konversi');
-
-            $all_scores = $nilai_usept_mhs->merge($nilai_course);
-            $usept = $all_scores->max();
-
-            $useptData = [
-            'score' => $usept,
-            'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
-            'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
-            ];
-
-        } catch (\Throwable) {
-            $useptData = [
-            'score' => 0,
-            'class' => 'danger',
-            'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
-            ];
-        }
-
-        if (!$bebas_pustaka || $useptData['status'] == 'Tidak memenuhi Syarat') {
-            return response()->json([
-            'status' => 'error',
-            'message' => 'Mahasiswa belum memenuhi syarat bebas pustaka atau USEPT.',
-            ]);
-        }
-
-        $lama_studi = Carbon::parse($wisuda->tgl_keluar)->diffInMonths(Carbon::parse($wisuda->tgl_masuk));
-
-        $wisuda->update([
-            'approved' => 3,
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Pendaftaran Wisuda berhasil disetujui.',
-        ]);
-        
-        return redirect()->back()->with('success', 'Pendaftaran Wisuda berhasil disetujui.');
-    }
-
     
     public function decline(Request $request, $id)
     {
-        // dd($request->all());
+        $request->validate([
+            'alasan' => 'required|string',
+        ]);
+
+        DB::beginTransaction();
         try {
-            $request->validate([
-                'alasan' => 'required|string',
-            ]);
-
-            DB::beginTransaction();
-
             $wisuda = Wisuda::findOrFail($id);
 
             $wisuda->update([
-            'approved' => 99,
-            'alasan_pembatalan' => $request->input('alasan'),
+                'approved' => 99,
+                'alasan_pembatalan' => $request->input('alasan'),
             ]);
 
             DB::commit();
 
             return response()->json([
-            'status' => 'success',
-            'message' => 'Pendaftaran Wisuda berhasil ditolak.',
+                'status' => 'success',
+                'message' => 'Pendaftaran Wisuda berhasil ditolak.',
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
-            'status' => 'error',
-            'message' => 'Terjadi kesalahan saat membatalkan pendaftaran wisuda!',
+                'status' => 'error',
+                'message' => 'Terjadi kesalahan saat membatalkan pendaftaran wisuda!',
             ]);
         }
     }
@@ -438,7 +383,7 @@ class WisudaController extends Controller
         }
 
         $periode = $request->input('periode');
-        dd($periode);
+        // dd($periode);
         if ($periode == null) {
             return response()->json([
                 'status' => 'error',
@@ -477,8 +422,6 @@ class WisudaController extends Controller
         ->setPaper('legal', 'landscape');
 
         return $pdf->stream('Ijazah-'.$data[0]->periode_wisuda.'.pdf');
-
-
     }
 
     public function transkrip(Request $request)

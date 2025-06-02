@@ -192,7 +192,7 @@ class KrsController extends Controller
         ->where('id_registrasi_mahasiswa', $id_reg)
             ->first();
 
-        // dd($riwayat_pendidikan->sks_maks_pmm);
+        // dd($riwayat_pendidikan);
         // if ( !$riwayat_pendidikan -> sks_maks_pmm) {
         //     // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
         //     return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
@@ -252,19 +252,75 @@ class KrsController extends Controller
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
-        try {
-            // dd($id_test, $riwayat_pendidikan->nim);
-            $tagihan = Tagihan::with('pembayaran')
-            // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-            // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
-            ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-            // ->whereNotIn('nomor_pembayaran', '08051182126003')
-            ->where('kode_periode', $semester_aktif->id_semester)
-            // -1
-            ->first();
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+        // dd($semester_aktif->id_semester-1);
+        // Jika 1 angka terakhir dari semester_select tidak sama dengan 3
+        if (substr($semester_select, -1) == 3) {
+            $krs_akt_genap = AktivitasMahasiswa::with(['anggota_aktivitas','bimbing_mahasiswa', 'konversi'])
+                            // ->whereHas('bimbing_mahasiswa' , function($query) {
+                            //     $query->whereNot('id_bimbing_mahasiswa', NUll);
+                            // })
+                            ->whereHas('anggota_aktivitas' , function($query) use ( $id_reg){
+                                $query->where('id_registrasi_mahasiswa', $id_reg);
+                            })
+                            ->where('id_semester', $semester_select-1)
+                            ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                            ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','5','6', '22'])
+                            ->get();
+            
+            $krs_regular_genap = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select-1, $data_akt_ids);
+
+            $krs_merdeka_genap = $db->getKrsMerdeka($id_reg, $semester_select-1, $riwayat_pendidikan->id_prodi);
+
+            $krs_aktivitas_mbkm_genap = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                    $query->where('id_registrasi_mahasiswa', $id_reg);
+                })
+                // ->where('approve_krs', 1)
+                ->where('id_semester', $semester_aktif->id_semester-1)
+                ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
+                ->get();
+
+            $total_sks_akt_genap = $krs_akt_genap->sum('konversi.sks_mata_kuliah');
+            $total_sks_merdeka_genap = $krs_merdeka_genap->sum('sks_mata_kuliah');
+            $total_sks_regular_genap = $krs_regular_genap->sum('sks_mata_kuliah');
+            $total_sks_mbkm_genap = $krs_aktivitas_mbkm_genap->sum('sks_aktivitas');
+
+            $total_sks_genap = $total_sks_regular_genap + $total_sks_merdeka_genap + $total_sks_akt_genap + $total_sks_mbkm_genap;
+
+            // dd($total_sks_genap,$krs_akt_genap,
+            //     $krs_merdeka_genap,
+            //     $krs_regular_genap,
+            //     $krs_aktivitas_mbkm_genap );
+
+            try {
+                // dd($id_test, $riwayat_pendidikan->nim);
+                $tagihan = Tagihan::with('pembayaran')
+                // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
+                // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+                ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                // ->whereNotIn('nomor_pembayaran', '08051182126003')
+                ->where('kode_periode', $semester_aktif->id_semester-1)
+                // -1
+                ->first();
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+            }
+        }else{
+            try {
+                // dd($id_test, $riwayat_pendidikan->nim);
+                $tagihan = Tagihan::with('pembayaran')
+                // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
+                // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
+                ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                // ->whereNotIn('nomor_pembayaran', '08051182126003')
+                ->where('kode_periode', $semester_aktif->id_semester)
+                // -1
+                ->first();
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+            }
         }
+        
 
         // dd($beasiswa, $tagihan);
 
@@ -281,9 +337,9 @@ class KrsController extends Controller
             ->first();
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
-        ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
-            $query->where('id_registrasi_mahasiswa', $id_reg);
-        })
+            ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                $query->where('id_registrasi_mahasiswa', $id_reg);
+            })
             // ->where('approve_krs', 1)
             ->where('id_semester', $semester_aktif->id_semester)
             ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
@@ -295,7 +351,22 @@ class KrsController extends Controller
         $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
         $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
+        $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm + $total_sks_genap;
+        // dd($total_sks_genap);
+        // dd($total_sks, $total_sks_regular , $total_sks_merdeka , $total_sks_akt , $total_sks_mbkm , $total_sks_genap);
+        if (substr($semester_select, -1) == 3) {
+            if ($total_sks_genap == 24) {
+                $sks_max = 0;
+            } elseif($total_sks_genap > 15 && $total_sks_genap < 24) {
+                $sks_max = $sks_max - $total_sks_genap-3;
+            }else{
+                $sks_max = 9;
+            }
+        } else {
+            $sks_max = $sks_max;
+        }
+
+        // dd($sks_max);
 
         // Fungsi cek batas isi KRS mulai
         $today = Carbon::now()->toDateString();
@@ -597,13 +668,61 @@ class KrsController extends Controller
             $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
             $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_prodi);
 
+            if (substr($semester_aktif->id_semester, -1) == 3) {
+                $krs_akt_genap = AktivitasMahasiswa::with(['anggota_aktivitas','bimbing_mahasiswa', 'konversi'])
+                                // ->whereHas('bimbing_mahasiswa' , function($query) {
+                                //     $query->whereNot('id_bimbing_mahasiswa', NUll);
+                                // })
+                                ->whereHas('anggota_aktivitas' , function($query) use ( $id_reg){
+                                    $query->where('id_registrasi_mahasiswa', $id_reg);
+                                })
+                                ->where('id_semester', $semester_aktif->id_semester-1)
+                                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                                ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','5','6', '22'])
+                                ->get();
+                
+                $krs_regular_genap = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester-1, $data_akt_ids);
+
+                $krs_merdeka_genap = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester-1, $riwayat_pendidikan->id_prodi);
+
+                $krs_aktivitas_mbkm_genap = AktivitasMahasiswa::with(['anggota_aktivitas'])
+                    ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
+                        $query->where('id_registrasi_mahasiswa', $id_reg);
+                    })
+                    // ->where('approve_krs', 1)
+                    ->where('id_semester', $semester_aktif->id_semester-1)
+                    ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
+                    ->get();
+
+                $total_sks_akt_genap = $krs_akt_genap->sum('konversi.sks_mata_kuliah');
+                $total_sks_merdeka_genap = $krs_merdeka_genap->sum('sks_mata_kuliah');
+                $total_sks_regular_genap = $krs_regular_genap->sum('sks_mata_kuliah');
+                $total_sks_mbkm_genap = $krs_aktivitas_mbkm_genap->sum('sks_aktivitas');
+
+                $total_sks_genap = $total_sks_regular_genap + $total_sks_merdeka_genap + $total_sks_akt_genap + $total_sks_mbkm_genap;
+
+                    
+                if ($total_sks_genap == 24) {
+                    $sks_max = 0;
+                } elseif($total_sks_genap > 15 && $total_sks_genap < 24) {
+                    $sks_max = $sks_max - $total_sks_genap-3;
+                }else{
+                    $sks_max = 9;
+                }
+        
+            }else{
+                $total_sks_genap = 0;
+                $sks_max = $sks_max;
+            }
+            
             $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
             $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm ;
-
+            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm + $total_sks_genap;;
+            // dd($sks_max, $total_sks);
+            
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
                     ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
                     ->where('id_kelas_kuliah', $idKelasKuliah)
@@ -620,9 +739,16 @@ class KrsController extends Controller
                 return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
             }
 
-            if (($total_sks + $sks_mk) > $sks_max) {
-                return response()->json(['message' => 'Total SKS tidak boleh melebihi SKS maksimum. Anda sudah Mengambil'.' '.$total_sks.' SKS', 'sks_max' => $sks_max], 400);
+            if(substr($semester_aktif->id_semester, -1) == 3){
+                if (($total_sks + $sks_mk) > $sks_max) {
+                    return response()->json(['message' => 'Total SKS Semester Genap dan Semester Antara tidak boleh melebihi 24 SKS!! Anda telah Mengambil'.' '.$total_sks.' SKS', 'sks_max' => $sks_max], 400);
+                }
+            }else{
+                if (($total_sks + $sks_mk) > $sks_max) {
+                    return response()->json(['message' => 'Total SKS Semester tidak boleh melebihi sks maksimum!<br/>Anda telah Mengambil ' . $total_sks . ' SKS', 'sks_max' => $sks_max], 400);
+                }
             }
+            
 
 
 

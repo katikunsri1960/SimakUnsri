@@ -155,7 +155,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('peserta')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'peserta'])->name('bak.wisuda.peserta');
                     // Route::post('/approve/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'approve'])->name('bak.wisuda.peserta.approve');
-                    Route::post('/approve/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'simpleApprove'])->name('bak.wisuda.peserta.approve');
+                    Route::post('/approve/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'approve'])->name('bak.wisuda.peserta.approve');
                     Route::post('/decline/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'decline'])->name('bak.wisuda.peserta.decline');
                     Route::get('/data', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data'])->name('bak.wisuda.peserta.data');
                     Route::get('/formulir/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_formulir'])->name('bak.wisuda.peserta.formulir');
@@ -362,9 +362,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             
 
             Route::prefix('pendaftaran-wisuda')->group(function () {
+                // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
                 Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
-                Route::post('/approve/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'approve'])->name('fakultas.wisuda.approve');
-                Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
+                Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'peserta_data'])->name('fakultas.wisuda.peserta.data');
+                Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'approve'])->name('fakultas.wisuda.peserta.approve');
+                // Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
+                Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.peserta.decline');
                 Route::get('/tambah', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
                 Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
                 

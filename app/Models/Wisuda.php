@@ -26,6 +26,7 @@ class Wisuda extends Model
         'id_registrasi_mahasiswa',
         'id_prodi',
         'id_file_fakultas',
+        'id_gelar_lulusan',
         'tgl_masuk',
         'tgl_keluar',
         'lama_studi',

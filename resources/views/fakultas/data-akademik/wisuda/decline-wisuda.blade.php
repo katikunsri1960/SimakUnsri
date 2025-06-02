@@ -1,54 +1,21 @@
-<div class="modal fade" id="declineModal{{$d->id}}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
-    aria-labelledby="modalLabel" aria-hidden="true">
+<div class="modal fade" id="declineModal{{ $item->id }}" tabindex="-1" aria-labelledby="declineModalLabel{{ $item->id }}" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="modalLabel">
-                    Pembatalan Pendaftaran Wisuda
-                </h5>
+                <h5 class="modal-title" id="declineModalLabel{{ $item->id }}">Alasan Penolakan</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('fakultas.wisuda.decline', $d->id)}}" method="post" id="decline-class-{{$d->id}}">
-                @csrf
+            <form id="declineForm{{ $item->id }}">
                 <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-12 mb-3">
-                            <label for="alasan_pembatalan" class="form-label">Alasan Pembatalan</label>
-                            <textarea class="form-control form-group" name="alasan_pembatalan" rows="3" required></textarea>
-                        </div>
+                    <div class="col-md-12 mb-3 text-left">
+                        <textarea class="form-control" name="alasan_pembatalan" id="alasan_pembatalan{{ $item->id }}" rows="3" placeholder="Silahkan isikan alasan penolakan"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                        Tutup
-                    </button>
-                    <button type="submit" class="btn btn-danger">
-                        Batalkan
-                    </button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-danger" onclick="submitDecline({{ $item->id }})">Tolak</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-@push('js')
-<script>
-    $('#decline-class-{{$d->id}}').submit(function(e){
-        e.preventDefault();
-        swal({
-            title: 'Pembatalan Pendaftaran Wisuda',
-            text: "Apakah anda yakin ingin?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#decline-class-{{$d->id}}').unbind('submit').submit();
-                $('#spinner').show();
-            }
-        });
-    });
-</script>
-@endpush
