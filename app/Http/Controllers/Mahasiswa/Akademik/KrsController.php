@@ -720,7 +720,8 @@ class KrsController extends Controller
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
             $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm + $total_sks_genap;;
+            $total_sks_regular = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
+            $total_sks = $total_sks_regular + $total_sks_genap;
             // dd($sks_max, $total_sks);
             
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
@@ -741,11 +742,17 @@ class KrsController extends Controller
 
             if(substr($semester_aktif->id_semester, -1) == 3){
                 if (($total_sks + $sks_mk) > $sks_max) {
-                    return response()->json(['message' => 'Total SKS Semester Genap dan Semester Antara tidak boleh melebihi 24 SKS!! Anda telah Mengambil'.' '.$total_sks.' SKS', 'sks_max' => $sks_max], 400);
+                    return response()->json([
+                        'message' => "Total SKS Semester Genap dan Semester Antara tidak boleh melebihi 24 SKS!!\nAnda telah mengambil $total_sks_genap sks pada Semester Genap dan $total_sks_regular sks pada Semester Antara ",
+                        'sks_max' => $sks_max
+                    ], 400);
                 }
             }else{
                 if (($total_sks + $sks_mk) > $sks_max) {
-                    return response()->json(['message' => 'Total SKS Semester tidak boleh melebihi sks maksimum!<br/>Anda telah Mengambil ' . $total_sks . ' SKS', 'sks_max' => $sks_max], 400);
+                    return response()->json([
+                        'message' => "Total SKS Semester tidak boleh melebihi sks maksimum!!\nAnda telah Mengambil $total_sks SKS",
+                        'sks_max' => $sks_max
+                    ], 400);
                 }
             }
             
