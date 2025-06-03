@@ -256,76 +256,36 @@ class KrsController extends Controller
 
         // dd($semester_select);
         // Jika 1 angka terakhir dari semester_select tidak sama dengan 3
-        if (substr($semester_select, -1) == 3) {
-            // $krs_akt_genap = AktivitasMahasiswa::with(['anggota_aktivitas','bimbing_mahasiswa', 'konversi'])
-            //                 // ->whereHas('bimbing_mahasiswa' , function($query) {
-            //                 //     $query->whereNot('id_bimbing_mahasiswa', NUll);
-            //                 // })
-            //                 ->whereHas('anggota_aktivitas' , function($query) use ( $id_reg){
-            //                     $query->where('id_registrasi_mahasiswa', $id_reg);
-            //                 })
-            //                 ->where('id_semester', $semester_select-1)
-            //                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-            //                 ->whereIn('id_jenis_aktivitas', ['1','2', '3', '4','5','6', '22'])
-            //                 ->get();
-            
-            // $krs_regular_genap = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select-1, $data_akt_ids);
-
-            // $krs_merdeka_genap = $db->getKrsMerdeka($id_reg, $semester_select-1, $riwayat_pendidikan->id_prodi);
-
-            // $krs_aktivitas_mbkm_genap = AktivitasMahasiswa::with(['anggota_aktivitas'])
-            //     ->whereHas('anggota_aktivitas', function ($query) use ($id_reg) {
-            //         $query->where('id_registrasi_mahasiswa', $id_reg);
-            //     })
-            //     // ->where('approve_krs', 1)
-            //     ->where('id_semester', $semester_aktif->id_semester-1)
-            //     ->whereIn('id_jenis_aktivitas', ['13', '14', '15', '16', '17', '18', '19', '20', '21'])
-            //     ->get();
-
-            $total_sks_genap = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
-                    ->where('id_semester', $semester_select-1)
-                    ->orderBy('id_semester', 'DESC')
-                    ->pluck('sks_semester')
-                    ->first();
-
-            // dd($total_sks_genap);
-            //     $krs_merdeka_genap,
-            //     $krs_regular_genap,
-            //     $krs_aktivitas_mbkm_genap );
-
-            try {
-                // dd($id_test, $riwayat_pendidikan->nim);
-                $tagihan = Tagihan::with('pembayaran')
-                // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-                // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
-                ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                // ->whereNotIn('nomor_pembayaran', '08051182126003')
-                ->where('kode_periode', $semester_aktif->id_semester-1)
-                // -1
+        if (substr($semester_select, -1) == 3 ) {
+            $akm_genap = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $semester_select - 1)
+                ->orderBy('id_semester', 'DESC')
                 ->first();
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
-            }
-        }else{
-            $total_sks_genap = 0;
 
-            try {
-                // dd($id_test, $riwayat_pendidikan->nim);
-                $tagihan = Tagihan::with('pembayaran')
-                // ->leftJoin('pembayaran', 'tagihan.id_record_tagihan', '=', 'pembayaran.id_record_tagihan')
-                // ->where('tagihan.nomor_pembayaran', $riwayat_pendidikan->nim)
-                ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                // ->whereNotIn('nomor_pembayaran', '08051182126003')
-                ->where('kode_periode', $semester_aktif->id_semester)
-                // -1
-                ->first();
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+                // dd($akm_genap);
+            if(!$akm_genap){
+                return redirect()->back()->with('error', "Aktivitas Kuliah anda pada semester genap tidak ditemukan!! Silahkan Hubungi Koor. Program Studi!");
             }
         }
-        
 
-        // dd($beasiswa, $tagihan);
+        $total_sks_genap = (substr($semester_select, -1) == 3)
+            ? $akm_genap->sks_semester
+            : 0;
+
+            // dd($semester_aktif->id_semester);
+            // $semester_select=20241;
+
+            try {
+                $tagihan = Tagihan::with('pembayaran')
+                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                    ->where('kode_periode', (substr($semester_select, -1) == 3)
+                        ? $semester_select-1
+                        : $semester_select
+                    )
+                    ->first();
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+            }
 
         $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
         // dd($cuti);
