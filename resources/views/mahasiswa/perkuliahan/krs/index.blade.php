@@ -41,14 +41,17 @@ Kartu Rencana Studi
                   {{-- <h6 class="user-info mt-0 mb-10 text-fade">Designer</h6> --}}
                   <div class="text-fade w-p85 mx-auto">
                     <li>KRS Regular</li>
+                    @if(isset($semester_aktif) && substr($semester_aktif, -1) != '3')
                     <li>KRS Kampus Merdeka</li>
                     <li>Aktivitas Regular</li>
+                    @endif
                   </div>
                 </div>
             </div>
           </div>
         </div>
-        @if($riwayat_pendidikan->id_jenis_daftar != 14 && ($riwayat_pendidikan->prodi->id_jenjang_pendidikan == 30 || $riwayat_pendidikan->prodi->id_jenjang_pendidikan == 22 ))
+        @if($riwayat_pendidikan->id_jenis_daftar != 14 && ($riwayat_pendidikan->prodi->id_jenjang_pendidikan == 30 || $riwayat_pendidikan->prodi->id_jenjang_pendidikan == 22))
+        @if(isset($semester_aktif) && substr($semester_aktif, -1) != '3')
           <div class="col-12 col-lg-6 px-50">
             <div class="box ribbon-box">
               <div class="ribbon-two ribbon-two-danger"><span>MBKM</span></div>
@@ -70,6 +73,7 @@ Kartu Rencana Studi
               </div>
             </div>
           </div>
+          @endif
         @endif
       </div>
     </div>

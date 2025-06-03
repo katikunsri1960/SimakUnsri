@@ -46,9 +46,11 @@ class KrsController extends Controller
 
         // Ambil data riwayat pendidikan mahasiswa
         $riwayat_pendidikan = RiwayatPendidikan::with('prodi')->where('id_registrasi_mahasiswa', $id_reg)->first();
-    // dd($riwayat_pendidikan);
+        // dd($riwayat_pendidikan);
 
-        return view('mahasiswa.perkuliahan.krs.index', ['riwayat_pendidikan' => $riwayat_pendidikan]);
+        $semester_aktif = SemesterAktif::first()->id_semester;
+
+        return view('mahasiswa.perkuliahan.krs.index', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif]);
     }
 
     public function show($id)
