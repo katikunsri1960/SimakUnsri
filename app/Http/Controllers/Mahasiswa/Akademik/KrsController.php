@@ -252,7 +252,7 @@ class KrsController extends Controller
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
-        // dd($semester_aktif->id_semester-1);
+        // dd($semester_select);
         // Jika 1 angka terakhir dari semester_select tidak sama dengan 3
         if (substr($semester_select, -1) == 3) {
             $krs_akt_genap = AktivitasMahasiswa::with(['anggota_aktivitas','bimbing_mahasiswa', 'konversi'])
@@ -306,6 +306,8 @@ class KrsController extends Controller
                 return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
             }
         }else{
+            $total_sks_genap = 0;
+
             try {
                 // dd($id_test, $riwayat_pendidikan->nim);
                 $tagihan = Tagihan::with('pembayaran')
