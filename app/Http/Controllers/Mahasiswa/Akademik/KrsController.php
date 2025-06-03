@@ -360,7 +360,7 @@ class KrsController extends Controller
             if ($total_sks_genap == 24) {
                 $sks_max = 0;
             } elseif($total_sks_genap > 15 && $total_sks_genap < 24) {
-                $sks_max = $sks_max - $total_sks_genap-3;
+                $sks_max = $sks_max - $total_sks_genap;
             }else{
                 $sks_max = 9;
             }
@@ -707,7 +707,7 @@ class KrsController extends Controller
                 if ($total_sks_genap == 24) {
                     $sks_max = 0;
                 } elseif($total_sks_genap > 15 && $total_sks_genap < 24) {
-                    $sks_max = $sks_max - $total_sks_genap-3;
+                    $sks_max = $sks_max - $total_sks_genap;
                 }else{
                     $sks_max = 9;
                 }
