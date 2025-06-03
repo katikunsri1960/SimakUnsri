@@ -263,7 +263,7 @@ class KrsController extends Controller
                 ->first();
 
                 // dd($akm_genap);
-            if(!$akm_genap){
+            if($akm_genap){
                 return redirect()->back()->with('error', "Aktivitas Kuliah anda pada semester genap tidak ditemukan!! Silahkan Hubungi Koor. Program Studi!");
             }
         }
@@ -273,28 +273,25 @@ class KrsController extends Controller
             : 0;
 
             // dd($semester_aktif->id_semester);
-            // $semester_select=20241;
-
-            try {
-                $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                    ->where('kode_periode', (substr($semester_select, -1) == 3)
-                        ? $semester_select-1
-                        : $semester_select
-                    )
-                    ->first();
-            } catch (\Exception $e) {
-                return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
-            }
+        try {
+            $tagihan = Tagihan::with('pembayaran')
+                ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                ->where('kode_periode', (substr($semester_select, -1) == 3)
+                    ? $semester_select-1
+                    : $semester_select
+                )
+                ->first();
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+        }
 
         $cuti = PengajuanCuti::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
         // dd($cuti);
 
         $transkrip = TranskripMahasiswa::select(
-            DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
-            // DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ips'),
-            DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
-        )
+                DB::raw('SUM(CAST(sks_mata_kuliah AS UNSIGNED)) as total_sks'), // Mengambil total SKS tanpa nilai desimal
+                DB::raw('ROUND(SUM(nilai_indeks * sks_mata_kuliah) / SUM(sks_mata_kuliah), 2) as ipk') // Mengambil IPK dengan 2 angka di belakang koma
+            )
             ->where('id_registrasi_mahasiswa', $id_reg)
             ->whereNotIn('nilai_huruf', ['F', ''])
             ->first();
