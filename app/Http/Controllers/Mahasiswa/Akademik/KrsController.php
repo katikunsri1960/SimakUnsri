@@ -679,7 +679,7 @@ class KrsController extends Controller
             if(substr($semester_aktif->id_semester, -1) == 3){
                 if (($total_sks + $sks_mk) > $sks_max) {
                     return response()->json([
-                        'message' => "Total SKS Semester Genap dan Semester Antara tidak boleh melebihi 24 SKS!!\nAnda telah mengambil $total_sks_genap sks pada Semester Genap dan $total_sks_regular sks pada Semester Antara ",
+                        'message' => "Total SKS Semester Genap dan Semester Antara tidak boleh melebihi 24 SKS!!\nAnda telah mengambil $total_sks_genap sks pada Semester Genap dan $total_sks_regular sks pada Semester Antara!!",
                         'sks_max' => $sks_max
                     ], 400);
                 }
