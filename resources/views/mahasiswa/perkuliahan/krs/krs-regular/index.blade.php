@@ -508,7 +508,7 @@ Kartu Rencana Studi
             }
         });
     });
-    
+
 
     // HAPUS MK KRS
     document.addEventListener('DOMContentLoaded', function () {
@@ -718,7 +718,7 @@ Kartu Rencana Studi
 
 
     // MENAMPILKAN DATA RPS
-    function displayData(data, resultContainerIdModal) {
+    function displayDataRPS(data, resultContainerIdModal) {
         $(resultContainerIdModal).empty();
 
         $.each(data, function(index, rps) {
