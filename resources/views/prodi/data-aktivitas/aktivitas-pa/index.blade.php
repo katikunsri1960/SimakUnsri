@@ -65,7 +65,7 @@ Aktivitas Pembimbingan Akademik
 
                                 <td class="text-center align-middle">
                                     <button class="btn btn-warning btn-sm" title="Edit"
-                                            onclick="edit({{$d->id}}, '{{$d->nidn}}', '{{$d->nama_dosen}}', '{{$d->sk_tugas}}', '{{$d->tanggal_sk_tugas}}')"
+                                            onclick="edit({{$d}})"
                                             data-bs-toggle="modal" data-bs-target="#modalEdit">
                                         <i class="fa fa-pencil"></i>
                                     </button>
@@ -117,15 +117,16 @@ Aktivitas Pembimbingan Akademik
         });
     });
 
-    function edit(id, nidn, nama_dosen, sk_tugas, tanggal_sk_tugas)
+    function edit(data)
     {
+        // reset form
+        document.getElementById('formEdit').reset();
+        document.getElementById('formEdit').action = '/prodi/data-aktivitas/aktivitas-pa/update/' + data.id;
 
-        document.getElementById('formEdit').action = '/prodi/data-aktivitas/aktivitas-pa/update/' + id;
-
-        $('#nidn').val(nidn);
-        $('#nama_dosen').val(nama_dosen);
-        $('#sk_tugas').val(sk_tugas);
-        $('#tanggal_sk_tugas').val(tanggal_sk_tugas);
+        $('#nidn').val(data.nidn);
+        $('#nama_dosen').val(data.nama_dosen);
+        $('#sk_tugas').val(data.sk_tugas);
+        $('#tanggal_sk_tugas').val(data.tanggal_sk_tugas);
     }
 
 

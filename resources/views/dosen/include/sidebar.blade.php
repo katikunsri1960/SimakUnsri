@@ -65,8 +65,8 @@
                                 <a href="{{route('dosen.monev.karya-ilmiah')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing K. Ilmiah</a>
                             </li>
                             {{-- <li class="{{request()->routeIs('dosen.monev.pa-prodi') || request()->routeIs('dosen.monev.pa-prodi.*') ? 'active' : ''}}"> --}}
-                            <li>
-                                <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Penguji Sidang</a>
+                            <li class="{{request()->routeIs('dosen.monev.penguji-sidang') || request()->routeIs('dosen.monev.penguji-sidang.*') ? 'active' : ''}}">
+                                <a href="{{route('dosen.monev.penguji-sidang')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Penguji Sidang</a>
                             </li>
                             <li class="{{request()->routeIs('dosen.monev.pa-prodi') || request()->routeIs('dosen.monev.pa-prodi.*') ? 'active' : ''}}">
                                 <a href="{{route('dosen.monev.pa-prodi')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembimbing Akademik</a>
