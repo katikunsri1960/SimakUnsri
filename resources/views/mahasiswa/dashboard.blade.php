@@ -214,16 +214,15 @@ Dashboard
 @endsection
 @push('css')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="css/skin_color.css">
 @endpush
 @push('js')
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/chartist-js-develop/chartist.js')}}"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="{{asset('assets/js/pages/widget-chartist.js')}}"></script>
-<script src="{{asset('assets/js/pages/echart-bar.js')}}"></script>
+{{-- <script src="{{asset('assets/js/pages/widget-chartist.js')}}"></script> --}}
+{{-- <script src="{{asset('assets/js/pages/echart-bar.js')}}"></script> --}}
+<script src="{{asset('assets/js/pages/chartjs-int.js')}}"></script>
 <script>
     $(document).ready(function() {
         // Data Grafik SKS
