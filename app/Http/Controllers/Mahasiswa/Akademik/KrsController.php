@@ -639,10 +639,9 @@ class KrsController extends Controller
                     $sks_max = 0;
                 } elseif($total_sks_genap > 15 && $total_sks_genap < 24) {
                     $sks_max = $sks_max - $total_sks_genap;
-                }else{
+                }elseif($total_sks_genap >= 0 && $total_sks_genap < 15) {
                     $sks_max = 9;
                 }
-        
             }else{
                 $total_sks_genap = 0;
                 $sks_max = $sks_max;
@@ -653,8 +652,8 @@ class KrsController extends Controller
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
             $total_sks_mbkm = $krs_aktivitas_mbkm->sum('sks_aktivitas');
 
-            $total_sks_regular = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
-            $total_sks = $total_sks_regular + $total_sks_genap;
+            $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
+            // $total_sks = $total_sks_regular;
             // dd($sks_max, $total_sks);
             
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
@@ -673,11 +672,14 @@ class KrsController extends Controller
                 return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
             }
 
+            $sisa_sks = $sks_max-$total_sks;
+            
             if(substr($semester_aktif->id_semester, -1) == 3){
                 if (($total_sks + $sks_mk) > $sks_max) {
                     return response()->json([
-                        'message' => "Total SKS Semester Genap dan Semester Antara tidak boleh melebihi 24 SKS!!\nAnda telah mengambil $total_sks_genap sks pada Semester Genap dan $total_sks_regular sks pada Semester Antara!!",
+                        'message' => "Total SKS Semester Genap dan Semester Antara tidak boleh melebihi 24 SKS!!\nAnda hanya bisa ambil Mata Kuliah dengan bobot $sisa_sks sks",
                         'sks_max' => $sks_max
+                        // Anda telah mengambil $total_sks_genap sks pada Semester Genap dan $total_sks sks pada Semester Antara!!\n
                     ], 400);
                 }
             }else{
