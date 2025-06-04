@@ -166,7 +166,7 @@
     <script src="{{asset('assets/js/template.js')}}"></script>
     <script src="{{asset('assets/js/pages/data-table.js')}}"></script>
     {{-- <script src="{{asset('assets/js/pages/chart-widgets.js')}}"></script> --}}
-    <script src="{{asset('assets/js/pages/chartjs-int.js')}}"></script>
+    {{-- <script src="{{asset('assets/js/pages/chartjs-int.js')}}"></script> --}}
 
     @stack('js')
 
