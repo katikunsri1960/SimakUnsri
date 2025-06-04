@@ -148,7 +148,7 @@ function getData()
                     table.row.add([
                         index + 1,
                         foto,
-                        item.nomor_registrasi ?? '-',
+                        item.no_ijazah ?? '-',
                         item.wisuda_ke,
                         item.nim,
                         item.nama_mahasiswa,
