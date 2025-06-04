@@ -413,14 +413,11 @@ Kartu Rencana Studi
                                         _token: csrfToken  // Sertakan CSRF token di sini
                                     },
                                     success: function(response) {
-                                        console.log(response);
-                                        swal({
-                                            title: 'Berhasil!',
-                                            text: response.message,
-                                            type: 'success',
-                                            button: 'OK'
-                                        }, function() {
+                                        alert('Berhasil!\n' + response.message);
+                                        // Reload after user closes the alert
+                                        window.addEventListener('focus', function reloadOnce() {
                                             location.reload();
+                                            window.removeEventListener('focus', reloadOnce);
                                         });
                                     },
                                     error: function(response) {
