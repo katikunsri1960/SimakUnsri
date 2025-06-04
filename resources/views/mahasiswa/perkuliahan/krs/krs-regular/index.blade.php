@@ -413,7 +413,6 @@ Kartu Rencana Studi
                                         _token: csrfToken  // Sertakan CSRF token di sini
                                     },
                                     success: function(response) {
-                                        console.log(response)
                                         swal({
                                             title: 'Berhasil!',
                                             text: response.message,
@@ -424,7 +423,6 @@ Kartu Rencana Studi
                                         });
                                     },
                                     error: function(response) {
-                                        console.log(response)
                                         var errorMessage = response.responseJSON.message;
                                         swal({
                                             title: 'Gagal!',
