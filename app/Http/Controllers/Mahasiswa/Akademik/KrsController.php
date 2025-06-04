@@ -263,7 +263,7 @@ class KrsController extends Controller
                 ->first();
 
                 // dd($akm_genap);
-            if($akm_genap){
+            if(!$akm_genap){
                 return redirect()->back()->with('error', "Aktivitas Kuliah anda pada semester genap tidak ditemukan!! Silahkan Hubungi Koor. Program Studi!");
             }
         }
