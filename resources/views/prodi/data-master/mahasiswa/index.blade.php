@@ -202,6 +202,7 @@ Mahasiswa Prodi
 
     function setDosenPa(data, id) {
         data = data.replace(/&#39;/g, "'");
+        console.log(id);
         // console.log('setDosenPa called with data:', data, 'and id:', id);
         $('#edit_id_dosen').val(data.dosen_pa).trigger('change');
         // Populate other fields...

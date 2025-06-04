@@ -7,8 +7,9 @@
             </div>
             <form id="declineForm{{ $item->id }}">
                 <div class="modal-body">
-                    <div class="col-md-12 mb-3 text-left">
-                        <textarea class="form-control" name="alasan_pembatalan" id="alasan_pembatalan{{ $item->id }}" rows="3" placeholder="Silahkan isikan alasan penolakan"></textarea>
+                    <div class="col-md-12 mb-3">
+                        <label for="alasan_pembatalan{{ $item->id }}" class="form-label">Alasan Penolakan</label>
+                        <textarea class="form-control" name="alasan_pembatalan" id="alasan_pembatalan{{ $item->id }}" rows="3" placeholder="Masukkan alasan penolakan"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer">

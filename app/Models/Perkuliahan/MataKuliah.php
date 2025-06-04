@@ -82,6 +82,7 @@ class MataKuliah extends Model
 
     public function getSksMax($id_reg, $id_semester, $id_periode_masuk)
     {
+        // dd ($id_semester);
         $riwayat_pendidikan = RiwayatPendidikan::with('prodi')
                             ->where('id_registrasi_mahasiswa', $id_reg)
                             ->first();
@@ -182,50 +183,56 @@ class MataKuliah extends Model
         //  dd($non_gelar);
 
 
-        if (isset($riwayat_pendidikan->id_prodi) &&
-            (in_array($riwayat_pendidikan->id_prodi, $prodi_fk, true) ||
-            in_array($riwayat_pendidikan->id_prodi, $prodi_profesi, true))) {
+        if (substr($id_semester, -1) == 3) {
             $sks_max = 24;
-        } elseif ($riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14'){
-            $sks_max = $riwayat_pendidikan->sks_maks_pmm;
-        } elseif ($jenjang_pendidikan->id_jenjang_pendidikan == '35' ||
-            $jenjang_pendidikan->id_jenjang_pendidikan == '40' ||
-            $jenjang_pendidikan->id_jenjang_pendidikan == '37'
-        ) {
-            $sks_max = 18;
-        }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
-            // dd($ips_value);
-            $sks_max = 0;
-            if ($ips_value !== null) {
-                if ($ips_value > 2.49) {
-                $sks_max = 20;
-                }elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
+        }else{
+            if (isset($riwayat_pendidikan->id_prodi) &&
+                (in_array($riwayat_pendidikan->id_prodi, $prodi_fk, true) ||
+                in_array($riwayat_pendidikan->id_prodi, $prodi_profesi, true))) {
+                $sks_max = 24;
+            } elseif ($riwayat_pendidikan->sks_maks_pmm && $riwayat_pendidikan->id_jenis_daftar === '14'){
+                $sks_max = $riwayat_pendidikan->sks_maks_pmm;
+            } elseif ($jenjang_pendidikan->id_jenjang_pendidikan == '35' ||
+                $jenjang_pendidikan->id_jenjang_pendidikan == '40' ||
+                $jenjang_pendidikan->id_jenjang_pendidikan == '37'
+            ) {
                 $sks_max = 18;
-                } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
-                $sks_max = 15;
-                } else {
-                $sks_max = 12;
-                }
-            }
-        } else {
-            if ($ips_value !== null) {
-                if ($ips_value >= 3.00) {
-                    $sks_max = 24;
-                } elseif ($ips_value >= 2.50 && $ips_value <= 2.99) {
-                    $sks_max = 21;
-                } elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
+            }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
+                // dd($ips_value);
+                $sks_max = 0;
+                if ($ips_value !== null) {
+                    if ($ips_value > 2.49) {
+                    $sks_max = 20;
+                    }elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
                     $sks_max = 18;
-                } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
+                    } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
                     $sks_max = 15;
-                } elseif ($ips_value < 1.50 ) {
+                    } else {
                     $sks_max = 12;
+                    }
+                }
+            } else {
+                if ($ips_value !== null) {
+                    if ($ips_value >= 3.00) {
+                        $sks_max = 24;
+                    } elseif ($ips_value >= 2.50 && $ips_value <= 2.99) {
+                        $sks_max = 21;
+                    } elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
+                        $sks_max = 18;
+                    } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {
+                        $sks_max = 15;
+                    } elseif ($ips_value < 1.50 ) {
+                        $sks_max = 12;
+                    } else {
+                        $sks_max = 0;
+                    }
                 } else {
                     $sks_max = 0;
                 }
-            } else {
-                $sks_max = 0;
             }
+            
         }
+
     // dd($sks_max); 
         return $sks_max;
 

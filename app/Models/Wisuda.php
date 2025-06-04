@@ -25,6 +25,8 @@ class Wisuda extends Model
         'id_perguruan_tinggi',
         'id_registrasi_mahasiswa',
         'id_prodi',
+        'id_file_fakultas',
+        'id_gelar_lulusan',
         'tgl_masuk',
         'tgl_keluar',
         'lama_studi',
@@ -35,6 +37,7 @@ class Wisuda extends Model
         'wisuda_ke',
         'no_sk_yudisium',
         'tgl_sk_yudisium',
+        'sk_yudisium_file',
         'id_aktivitas',
         'keterangan',
         'angkatan',
@@ -46,8 +49,11 @@ class Wisuda extends Model
         'lokasi_kuliah',
         'tanggal_sk_pembimbing',
         'no_sk_pembimbing',
+        'judul_eng',
         'abstrak_ta',
         'abstrak_file',
+        'abstrak_file_eng',
+        'ijazah_terakhir_file',
         'approved',
         'alasan_pembatalan',
         // KOLOM SEMENTARA
@@ -55,6 +61,11 @@ class Wisuda extends Model
         'useptData',
 
     ];
+
+    public function file_fakultas()
+    {
+        return $this->belongsTo(FileFakultas::class, 'id_file_fakultas', 'id');
+    }
 
     public function prodi()
     {

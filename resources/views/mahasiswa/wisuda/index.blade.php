@@ -152,50 +152,72 @@ Pendaftaran Wisuda Mahasiswa
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <tr>
-                                                <td class="text-left">Wisuda Ke-</td>
-                                                <td class="text-center">:</td>
-                                                <td class="text-left" style="text-align: justify">{{$wisuda->wisuda_ke}}</td>
+                                                <td class="text-left" style="width: 30%;">Judul {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->aktivitas_mahasiswa->judul}}</td>
                                             </tr>
                                             <tr>
-                                                <td class="text-left">Bidang Kajian Utama (BKU) / Kosentrasi</td>
-                                                <td class="text-center">:</td>
-                                                <td class="text-left" style="text-align: justify">{{$wisuda->kosentrasi}}</td>
+                                                <td class="text-left" style="width: 30%;">Wisuda Ke-</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->wisuda_ke}}</td>
                                             </tr>
                                             <tr>
-                                                <td class="text-left">Abstrak Tugas Akhir</td>
-                                                <td class="text-center">:</td>
-                                                <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_ta}}</td>
+                                                <td class="text-left" style="width: 30%;">Bidang Kajian Utama (BKU) / Kosentrasi</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->kosentrasi}}</td>
                                             </tr>
                                             <tr>
-                                                <td class="text-left">File Abstak Tugas Akhir</td>
-                                                <td class="text-center">:</td>
+                                                <td class="text-left" style="width: 30%;">Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->abstrak_ta}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">File Abstak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
                                                 {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
-                                                <td class="text-left" style="text-align: justify">
-                                                    @if(!$wisuda)
-                                                        <span class="badge bg-danger rounded" style="padding: 8px">Belum Bebas Pustaka</span>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">
+                                                    @if($wisuda->abstrak_file)
+                                                        <a class="btn btn-sm btn-success my-5" href="{{ asset($wisuda->abstrak_file) }}" type="button" target="_blank">Lihat Abstrak Indonesia</a>
                                                     @else
-                                                        <a class="btn btn-sm btn-success" href="{{ asset($wisuda->abstrak_file) }}" type="button" target="_blank">Lihat File Abstak</a>
+                                                        <span class="badge badge-lg bg-danger mb-5">Abstrak Indonesia Tidak Diupload</span>
+                                                    @endif
+                                                    @if($wisuda->abstrak_file_eng)
+                                                        <a class="btn btn-sm btn-success  my-5" href="{{ asset($wisuda->abstrak_file_eng) }}" type="button" target="_blank">Lihat Abstrak Inggris</a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger mb-5">Abstrak Inggris Tidak Diupload</span>
                                                     @endif
                                                 </td>
                                             </tr>
                                             <tr>
-                                                <td class="text-left">Status Pendaftaran Wisuda</td>
-                                                <td class="text-center">:</td>
+                                                <td class="text-left" style="width: 30%;">File Ijazah Terakhir</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
+                                                <td class="text-left" style="width: 65%; text-align: justify;">
+                                                    @if($wisuda->abstrak_file)
+                                                        <a class="btn btn-sm btn-success" href="{{ asset($wisuda->ijazah_terakhir_file) }}" type="button" target="_blank">Lihat Ijazah Terakhir</a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger">Ijazah Terakhir Tidak Diupload</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Status Pendaftaran Wisuda</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
                                                 <td class="text-left align-middle" style="width:10%">
                                                     @if($wisuda->approved == 0)
-                                                        <span class="badge badge-lg badge-warning mb-5">Belum Disetujui Koor. Prodi</span>
+                                                        <span class="badge badge-lg badge-warning mb-5 rounded">Belum Disetujui Koor. Prodi</span>
                                                     @elseif($wisuda->approved == 1)
-                                                        <span class="badge badge-lg badge-primary mb-5">Disetujui Koor. Prodi</span>
+                                                        <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Koor. Prodi</span>
                                                     @elseif($wisuda->approved == 2)
-                                                        <span class="badge badge-lg badge-primary mb-5">Disetujui Fakultas</span>
+                                                        <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Fakultas</span>
                                                     @elseif($wisuda->approved == 3)
-                                                        <span class="badge badge-lg badge-success mb-5">Disetujui BAK</span>
+                                                        <span class="badge badge-lg badge-success mb-5 rounded">Disetujui BAK</span>
                                                     @elseif($wisuda->approved == 97)
-                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi</span>
+                                                        <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Koor. Prodi</span>
                                                     @elseif($wisuda->approved == 98)
-                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas</span>
+                                                        <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Fakultas</span>
                                                     @elseif($wisuda->approved == 99)
-                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak BAK</span>
+                                                        <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak BAK</span>
                                                     @endif
                                                 </td>
                                             </tr>

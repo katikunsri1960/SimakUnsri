@@ -102,7 +102,8 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- @if ($data_status_mahasiswa == "M" ) --}}
+
+                            @if (substr($semester_select, -1) != '3')
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -178,7 +179,9 @@
                                     </div>
                                 </div>
                             </div>
-                            {{-- @endif --}}
+                            @endif
+
+                            @if (substr($semester_select, -1) != '3')
                             <div class="row mb-5">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -212,8 +215,12 @@
                                                             <tr>
                                                                 <td class="text-center align-middle" style="width:2%">{{ $no++ }}</td>
                                                                 <td class="text-center align-middle" style="width:10%; white-space: nowrap;">{{ mb_strtoupper($data->nama_jenis_aktivitas) }}</td>
-                                                                <td class="text-start align-middle" style="white-space: nowrap;">{{ $data->konversi->nama_mata_kuliah }}</td>
-                                                                <td class="text-center align-middle" style="white-space: nowrap; width:10%">{{ $data->konversi->kode_mata_kuliah }}</td>
+                                                                <td class="text-start align-middle" style="white-space: nowrap;">
+                                                                    {{ $data->konversi == null ? 'Tidak Diisi' : $data->konversi->nama_mata_kuliah }}
+                                                                </td>
+                                                                <td class="text-start align-middle" style="white-space: nowrap;">
+                                                                    {{ $data->konversi == null ? 'Tidak Diisi' : $data->konversi->kode_mata_kuliah }}
+                                                                </td>
                                                                 <td class="text-center align-middle" style="width:5%">
                                                                     <div>
                                                                         {{ $data->konversi == NULL ? 'Tidak Diisi' : $data->konversi->sks_mata_kuliah }}
@@ -282,6 +289,7 @@
                                     </div>
                                 </div>
                             </div>
+                            @endif
                         @else
                             <div class="row mb-5">
                                 <div class="col-xxl-12">

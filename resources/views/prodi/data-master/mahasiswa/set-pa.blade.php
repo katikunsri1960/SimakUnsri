@@ -46,7 +46,6 @@
                 width: '100%',
                 dropdownParent: $('#assignDosenPa')
             });
-            
             confirmSubmit('editForm');
         });
     </script>

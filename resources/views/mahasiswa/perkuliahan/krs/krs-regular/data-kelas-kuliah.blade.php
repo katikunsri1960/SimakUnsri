@@ -147,6 +147,7 @@
                                     </div>
                                 </div>
                                 {{-- @if ($data_status_mahasiswa == "M" ) --}}
+                                @if (substr($semester_select, -1) != 3)
                                     <div class="row mb-20">
                                         <div class="col-xxl-12">
                                             <div class="box box-body mb-0 bg-white">
@@ -197,9 +198,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                {{-- @endif --}}
+                                @endif
 
                                 {{-- DATA AKTIVITAS KULIAH --}}
+                                @if (substr($semester_select, -1) != 3)
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">
                                         <div class="box box-body mb-0 bg-white">
@@ -255,6 +257,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                @endif
                             @else
                                 <div class="row mb-5">
                                     <div class="col-xxl-12">

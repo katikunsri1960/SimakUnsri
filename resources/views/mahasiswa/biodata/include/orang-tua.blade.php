@@ -15,14 +15,14 @@
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata ? $data->biodata->nama_ayah : '' }}">
+                                        value="{{ $data->biodata ? strtoupper($data->biodata->nama_ayah) : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label>No. HP</label>
                                     <input type="name" class="form-control" disabled
-                                        value="">
+                                        value="{{ $data->biodata ? $data->biodata->no_hp_ayah : '' }}">
                                 </div>
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Email</label>
                                     <input type="email" class="form-control" disabled
                                         value="">
@@ -36,7 +36,7 @@
                                     <label>Tanggal Lahir</label>
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->tanggal_lahir_ayah : '' }}">
-                                </div>
+                                </div> --}}
                                 {{-- <div class="form-group">
                                     <label>Status Hidup</label>
                                     <select class="form-select" disabled aria-label="Default select example">
@@ -88,14 +88,14 @@
                                 <div class="form-group">
                                     <label>Nama Lengkap</label>
                                     <input type="name" class="form-control" disabled
-                                        value="{{ $data->biodata ? $data->biodata->nama_ibu_kandung : '' }}">
+                                        value="{{ $data->biodata ? strtoupper($data->biodata->nama_ibu_kandung) : '' }}">
                                 </div>
                                 <div class="form-group">
                                     <label>No. HP</label>
                                     <input type="name" class="form-control" disabled
-                                        value="">
+                                        value="{{ $data->biodata ? $data->biodata->no_hp_ibu : '' }}">
                                 </div>
-                                <div class="form-group">
+                                {{-- <div class="form-group">
                                     <label>Email</label>
                                     <input type="email" class="form-control" disabled
                                         value="">
@@ -109,7 +109,7 @@
                                     <label>Tanggal Lahir</label>
                                     <input type="name" class="form-control" disabled
                                         value="{{ $data->biodata ? $data->biodata->tanggal_lahir_ibu : '' }}">
-                                </div>
+                                </div> --}}
                                 {{-- <div class="form-group">
                                     <label>Status Hidup</label>
                                     <select class="form-select" disabled aria-label="Default select example">
@@ -154,6 +154,13 @@
                                         value="{{ $data->biodata ? $data->biodata->kode_pos : '' }}">
                                 </div> --}}
                                 <!-- </div> -->
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label>Alamat</label>
+                                    <input type="name" class="form-control" disabled
+                                        value="{{$data->biodata->alamat_orang_tua ? strtoupper($data->biodata->alamat_orang_tua) : 'Belum Diisi' }} ">
+                                </div>
                             </div>
                         </div>
                     </div>

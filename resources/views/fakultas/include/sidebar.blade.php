@@ -121,12 +121,11 @@
                         </ul>
                     </li>
                     <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
-                        <a href="{{route('fakultas.wisuda.index')}}">
-                            <i class="fa fa-user-graduate"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Ajuan Wisuda</span>
+                        <a href="{{route('fakultas.wisuda.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><spanclass="path2"></spanclass=></i>
+                            <span>Wisuda</span>
                         </a>
                     </li>
+                    
 
                     <li class="header">Monitoring</li>
                     <li class="treeview {{request()->routeIs
