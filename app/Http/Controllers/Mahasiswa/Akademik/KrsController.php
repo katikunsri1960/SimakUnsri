@@ -745,11 +745,27 @@ class KrsController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk' => $sks_mk, 'peserta' => $peserta, 'jumlah_peserta' => $jumlah_peserta], 200);
+            // Jika ingin mengembalikan tampilan (view), bisa seperti ini:
+            return view('mahasiswa.perkuliahan.krs.index', [
+                'peserta' => $peserta,
+                'sks_max' => $sks_max,
+                'sks_mk' => $sks_mk,
+                'jumlah_peserta' => $jumlah_peserta,
+                'riwayat_pendidikan' =>  $riwayat_pendidikan,
+                'message' => 'Data berhasil disimpan'
+            ]);
+
+            // Namun, pada konteks ini (AJAX/JSON), biasanya tetap menggunakan response()->json.
+            // Jika tetap ingin pakai view, pastikan permintaan dari frontend memang mengharapkan HTML, bukan JSON.
+
+            // return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk' => $sks_mk, 'peserta' => $peserta, 'jumlah_peserta' => $jumlah_peserta], 200);
         } catch (\Exception $e) {
             DB::rollback();
 
-            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data. '], 500);
+            // Jika ingin mengembalikan tampilan error:
+            return view('mahasiswa.perkuliahan.krs.index', ['error' => 'Terjadi kesalahan saat menyimpan data.']);
+
+            // return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data. '], 500);
         }
     }
 
