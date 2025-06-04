@@ -699,7 +699,7 @@ Kartu Rencana Studi
                     });
 
                 } else {
-                    displayData(data, resultContainerId);
+                    displayDataRPS(data, resultContainerId);
                     $('#rpsModal').modal('show'); // Tampilkan modal setelah data dimuat
                 }
             },
