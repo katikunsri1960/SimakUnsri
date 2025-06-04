@@ -413,17 +413,16 @@ Kartu Rencana Studi
                                         _token: csrfToken  // Sertakan CSRF token di sini
                                     },
                                     success: function(response) {
-                                        swal({
-                                            title: 'Berhasil!',
-                                            text: response.message,
-                                            type: 'success',
-                                            button: 'OK'
-                                        }, function() {
+                                        alert('Berhasil!\n' + response.message);
+                                        // Reload after user closes the alert
+                                        window.addEventListener('focus', function reloadOnce() {
                                             location.reload();
+                                            window.removeEventListener('focus', reloadOnce);
                                         });
                                     },
                                     error: function(response) {
                                         var errorMessage = response.responseJSON.message;
+                                        console.log(errorMessage, response);
                                         swal({
                                             title: 'Gagal!',
                                             text: errorMessage,
@@ -508,7 +507,7 @@ Kartu Rencana Studi
             }
         });
     });
-    
+
 
     // HAPUS MK KRS
     document.addEventListener('DOMContentLoaded', function () {
@@ -718,7 +717,7 @@ Kartu Rencana Studi
 
 
     // MENAMPILKAN DATA RPS
-    function displayData(data, resultContainerIdModal) {
+    function displayDataRPS(data, resultContainerIdModal) {
         $(resultContainerIdModal).empty();
 
         $.each(data, function(index, rps) {

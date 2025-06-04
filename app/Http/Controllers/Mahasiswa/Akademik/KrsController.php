@@ -634,7 +634,7 @@ class KrsController extends Controller
                     ->orderBy('id_semester', 'DESC')
                     ->pluck('sks_semester')
                     ->first();
-                    
+
                 if ($total_sks_genap == 24) {
                     $sks_max = 0;
                 } elseif($total_sks_genap > 15 && $total_sks_genap < 24) {
@@ -646,7 +646,7 @@ class KrsController extends Controller
                 $total_sks_genap = 0;
                 $sks_max = $sks_max;
             }
-            
+
             $total_sks_akt = $krs_akt->sum('konversi.sks_mata_kuliah');
             $total_sks_merdeka = $krs_merdeka->sum('sks_mata_kuliah');
             $total_sks_regular = $krs_regular->sum('sks_mata_kuliah');
@@ -655,7 +655,7 @@ class KrsController extends Controller
             $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
             // $total_sks = $total_sks_regular;
             // dd($sks_max, $total_sks);
-            
+
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
                     ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')
                     ->where('id_kelas_kuliah', $idKelasKuliah)
@@ -673,7 +673,7 @@ class KrsController extends Controller
             }
 
             $sisa_sks = $sks_max-$total_sks;
-            
+
             if(substr($semester_aktif->id_semester, -1) == 3){
                 if (($total_sks + $sks_mk) > $sks_max) {
                     return response()->json([
@@ -690,7 +690,7 @@ class KrsController extends Controller
                     ], 400);
                 }
             }
-            
+
 
 
 
@@ -746,26 +746,26 @@ class KrsController extends Controller
             DB::commit();
 
             // Jika ingin mengembalikan tampilan (view), bisa seperti ini:
-            return view('mahasiswa.perkuliahan.krs.index', [
-                'peserta' => $peserta,
-                'sks_max' => $sks_max,
-                'sks_mk' => $sks_mk,
-                'jumlah_peserta' => $jumlah_peserta,
-                'riwayat_pendidikan' =>  $riwayat_pendidikan,
-                'message' => 'Data berhasil disimpan'
-            ]);
+            // return view('mahasiswa.perkuliahan.krs.index', [
+            //     'peserta' => $peserta,
+            //     'sks_max' => $sks_max,
+            //     'sks_mk' => $sks_mk,
+            //     'jumlah_peserta' => $jumlah_peserta,
+            //     'riwayat_pendidikan' =>  $riwayat_pendidikan,
+            //     'message' => 'Data berhasil disimpan'
+            // ]);
 
             // Namun, pada konteks ini (AJAX/JSON), biasanya tetap menggunakan response()->json.
             // Jika tetap ingin pakai view, pastikan permintaan dari frontend memang mengharapkan HTML, bukan JSON.
 
-            // return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk' => $sks_mk, 'peserta' => $peserta, 'jumlah_peserta' => $jumlah_peserta], 200);
+            return response()->json(['message' => 'Data berhasil disimpan', 'sks_max' => $sks_max, 'sks_mk' => $sks_mk, 'peserta' => $peserta, 'jumlah_peserta' => $jumlah_peserta], 200);
         } catch (\Exception $e) {
             DB::rollback();
 
             // Jika ingin mengembalikan tampilan error:
-            return view('mahasiswa.perkuliahan.krs.index', ['error' => 'Terjadi kesalahan saat menyimpan data.']);
+            // return view('mahasiswa.perkuliahan.krs.index', ['error' => 'Terjadi kesalahan saat menyimpan data.']);
 
-            // return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data. '], 500);
+            return response()->json(['message' => 'Terjadi kesalahan saat menyimpan data. '], 500);
         }
     }
 
