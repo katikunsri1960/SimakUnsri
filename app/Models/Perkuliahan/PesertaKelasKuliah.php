@@ -181,12 +181,20 @@ class PesertaKelasKuliah extends Model
 
         try{
 
-            $tagihan = Tagihan::with('pembayaran')
+            if(substr($semester_aktif->id_semester,-1) == 3){
+                $tagihan = Tagihan::with('pembayaran')
+                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                    ->where('kode_periode', $semester_aktif->id_semester-1)
+                    ->first();
+            }else{
+                $tagihan = Tagihan::with('pembayaran')
                     ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
                     ->where('kode_periode', $semester_aktif->id_semester
                     // -1
                     )
                     ->first();
+            }
+            
 
             // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
             $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
@@ -917,12 +925,19 @@ class PesertaKelasKuliah extends Model
 
         try{
 
-            $tagihan = Tagihan::with('pembayaran')
+            if(substr($semester_aktif->id_semester,-1) == 3){
+                $tagihan = Tagihan::with('pembayaran')
+                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                    ->where('kode_periode', $semester_aktif->id_semester-1)
+                    ->first();
+            }else{
+                $tagihan = Tagihan::with('pembayaran')
                     ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
                     ->where('kode_periode', $semester_aktif->id_semester
                     // -1
                     )
                     ->first();
+            }
 
             // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
             $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
