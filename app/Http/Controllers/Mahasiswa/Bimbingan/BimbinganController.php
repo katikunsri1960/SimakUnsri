@@ -31,7 +31,7 @@ class BimbinganController extends Controller
 
         $semester = Semester::orderBy('id_semester', 'DESC')
                     ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
-                    // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
+                    ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                     ->get();
 
         if ($request->has('semester') && $request->semester != '') {
@@ -39,6 +39,15 @@ class BimbinganController extends Controller
         } else {
             $semester_select = SemesterAktif::first()->id_semester;
         }
+
+        if(substr($semester_aktif->id_semester, -1) == 3){
+            $semester_select = $semester_select - 1;
+        }else{
+            $semester_select = $semester_select;
+        }
+
+        // dd($semester_select);
+
 
         // Query untuk mendapatkan data
         $data = AktivitasMahasiswa::with('anggota_aktivitas', 'jenis_aktivitas_mahasiswa', 'bimbing_mahasiswa', 'uji_mahasiswa')
@@ -54,9 +63,9 @@ class BimbinganController extends Controller
                     ->get();
 
         // Pengecekan apakah $data kosong atau tidak
-        if ($data->isEmpty()) {
-            return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
-        }
+        // if ($data->isEmpty()) {
+        //     return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
+        // }
 
 
         // PENGECEKAN STATUS PEMBAYARAN
