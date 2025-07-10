@@ -101,6 +101,7 @@ Dashboard
                                                     <tr>
                                                         <th class="text-center align-middle">Kode Mata Kuliah</th>
                                                         <th class="text-center align-middle">Nama Mata Kuliah </th>
+                                                        <th class="text-center align-middle">SKS Mata Kuliah </th>
                                                         <th class="text-center align-middle">Nilai Angka</th>
                                                         <th class="text-center align-middle">Nilai Indeks</th>
                                                         <th class="text-center align-middle">Nilai Huruf</th>
@@ -113,6 +114,8 @@ Dashboard
                                                         <td class="text-center align-middle">{{$d->kode_mata_kuliah}} {{$d->kuisoner_count}}
                                                         </td>
                                                         <td class="text-start align-middle">{{$d->nama_mata_kuliah}}
+                                                        </td>
+                                                        <td class="text-center align-middle">{{$d->sks_mata_kuliah}}
                                                         </td>
                                                         @if ($d->kelas_kuliah->q_count_c < $count_kuisoner)
                                                         <td colspan="3" class="text-center align-middle bg-secondary">
