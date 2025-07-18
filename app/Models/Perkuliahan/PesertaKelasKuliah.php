@@ -504,7 +504,8 @@ class PesertaKelasKuliah extends Model
 
                 foreach ($aktivitas as $item) {
                     $item->update([
-                        'approve_krs' => '1'
+                        'approve_krs' => '1',
+                        'tanggal_approve' => date('Y-m-d')
                     ]);
                 }
 

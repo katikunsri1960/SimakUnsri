@@ -46,6 +46,7 @@ Pembimbingan Karya Ilmiah Mahasiswa
                         <table id="dt" class="table table-bordered table-striped" style="font-size: 11px">
                             <thead>
                                 <tr>
+                                    <th class="text-center align-middle">NO</th>
                                     <th class="text-center align-middle">PRODI</th>
                                     <th class="text-center align-middle">MAHASISWA</th>
                                     <th class="text-center align-middle">NAMA AKTIVITAS<br>(MK Konversi)</th>
@@ -59,7 +60,7 @@ Pembimbingan Karya Ilmiah Mahasiswa
                                 @foreach ($data as $d)
                                 @include('dosen.pembimbing.tugas-akhir.pembatalan-bimbingan')
                                 <tr>
-
+                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle" style="width: 10%">{{$d->nama_prodi}}</td>
                                     <td class="text-center align-middle" style="width: 15%">{{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nim : '-'}}<br>{{$d->anggota_aktivitas_personal ? $d->anggota_aktivitas_personal->nama_mahasiswa : '-'}}</td>
                                     <td class="text-center align-middle">
