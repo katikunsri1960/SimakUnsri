@@ -126,6 +126,8 @@ Dashboard
                                                             </div>
                                                         </td>
                                                         @else
+                                                        <td class="text-center align-middle">{{empty($d->sks_mata_kuliah) ?
+                                                            '-' : $d->sks_mata_kuliah}}</td>
                                                         <td class="text-center align-middle">{{empty($d->nilai_angka) ?
                                                             '-' : $d->nilai_angka}}</td>
                                                         <td class="text-center align-middle">{{$d->nilai_indeks=NULL ?
@@ -152,6 +154,7 @@ Dashboard
                                                                 {{-- <td class="text-center align-middle">{{$no++}}</td> --}}
                                                                 <td class="text-center align-middle">{{$n->kode_mata_kuliah}}</td>
                                                                 <td class="text-start align-middle">{{$n->nama_mata_kuliah}}</td>
+                                                                <td class="text-start align-middle">{{$n->sks_mata_kuliah}}</td>
                                                                 <td class="text-center align-middle">{{empty($n->nilai_angka) ? 'Nilai Belum Diisi' : $n->nilai_angka}}</td>
                                                                 <td class="text-center align-middle">{{$n->nilai_indeks=NULL ? 'Nilai Belum Diisi' : $n->nilai_indeks}}</td>
                                                                 <td class="text-center align-middle">{{empty($n->nilai_huruf) ? 'Nilai Belum Diisi' : $n->nilai_huruf}}</td>
@@ -181,7 +184,8 @@ Dashboard
                                                         @foreach($nilai_transfer as $nt)
                                                             <tr>
                                                                 <td class="text-center align-middle">{{$nt->kode_matkul_diakui}}</td>
-                                                                <td>{{$nt->nama_mata_kuliah_diakui}}</td>
+                                                                <td class="text-center align-middle">{{$nt->nama_mata_kuliah_diakui}}</td>
+                                                                <td class="text-center align-middle">{{$nt->sks_mata_kuliah_diakui}}</td>
                                                                 <td class="text-center align-middle">{{empty($nt->nilai_angka) ? '-' : $nt->nilai_angka}}</td>
                                                                 <td class="text-center align-middle">{{empty($nt->nilai_huruf_diakui) ? 'Nilai Belum Diisi' : $nt->nilai_huruf_diakui}}</td>
                                                                 <td class="text-center align-middle">{{$nt->nilai_angka_diakui=NULL ? 'Nilai Belum Diisi' : $nt->nilai_angka_diakui}}</td>
