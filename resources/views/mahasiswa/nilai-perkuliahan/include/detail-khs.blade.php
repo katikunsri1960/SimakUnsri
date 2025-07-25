@@ -126,6 +126,8 @@ Dashboard
                                                             </div>
                                                         </td>
                                                         @else
+                                                        <td class="text-center align-middle">{{empty($d->sks_mata_kuliah) ?
+                                                            '-' : $d->sks_mata_kuliah}}</td>
                                                         <td class="text-center align-middle">{{empty($d->nilai_angka) ?
                                                             '-' : $d->nilai_angka}}</td>
                                                         <td class="text-center align-middle">{{$d->nilai_indeks=NULL ?
