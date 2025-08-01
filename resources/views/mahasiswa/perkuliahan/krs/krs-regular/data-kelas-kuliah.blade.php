@@ -48,7 +48,7 @@
                             // $today = \Carbon\Carbon::now();
                             // $deadline = \Carbon\Carbon::parse($semester_aktif->krs_selesai);
                         @endphp
-                        @if ($today>$batas_isi_krs || $semester_aktif->id_semester > $semester_select)
+                        @if ($today < $mulai_isi_krs || $today > $batas_isi_krs || $semester_aktif->id_semester > $semester_select)
                             <div class="row mb-20">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">
@@ -66,7 +66,7 @@
                                                         </div>
                                                         <div class="col-lg-10 text-left text-danger">
                                                             <label>
-                                                                Periode Pengisian KRS pada semester yang Anda pilih Telah Berakhir!
+                                                                Periode Pengisian KRS pada semester yang Anda pilih belum dimulai / telah berakhir!
                                                             </label>
                                                         </div>
                                                     </div>
@@ -76,7 +76,7 @@
                                     </div>
                                 </div>
                             </div>
-                        @elseif($today <= $batas_isi_krs)
+                        @elseif($today >= $mulai_isi_krs && $today <= $batas_isi_krs)
                             @if(!empty($beasiswa)||$pembayaran_manual > 0 || $non_gelar > 0|| $penundaan_pembayaran > 0 || !empty($tagihan->pembayaran->status_pembayaran))
                                 <div class="row mb-20">
                                     <div class="col-xxl-12">

@@ -331,10 +331,14 @@ class KrsController extends Controller
         // Fungsi cek batas isi KRS mulai
         $today = Carbon::now()->toDateString();
         $batas_isi_krs = Carbon::parse($semester_aktif->krs_selesai)->toDateString();
+        $mulai_isi_krs = Carbon::parse($semester_aktif->krs_mulai)->toDateString();
 
         if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
+            $mulai_isi_krs = Carbon::parse($semester_aktif->krs_mulai)->toDateString();
         }
+
+        // dd($batas_isi_krs, $mulai_isi_krs, $today, $semester_aktif->tanggal_mulai_kprs, $semester_aktif->tanggal_akhir_kprs);
 
         $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
 
@@ -400,6 +404,7 @@ class KrsController extends Controller
                 'transkrip',
                 'batas_pembayaran',
                 'batas_isi_krs',
+                'mulai_isi_krs',
                 'today',
                 'masa_tenggang',
                 'penundaan_pembayaran',
@@ -441,6 +446,7 @@ class KrsController extends Controller
                 'transkrip',
                 'batas_pembayaran',
                 'batas_isi_krs',
+                'mulai_isi_krs',
                 'today',
                 'masa_tenggang',
                 'penundaan_pembayaran',
