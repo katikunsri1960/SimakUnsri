@@ -10,25 +10,27 @@
                                 <div class="col-xl-12">
                                     <div class="box box-body mb-0 bg-white">
                                         {{-- @if($krs_regular->isNotEmpty() || $krs_merdeka->isNotEmpty() || $krs_akt->isNotEmpty()) --}}
-                                        @if($total_krs_submitted > 0 && $semester_select == $semester_aktif->id_semester)
-                                        <div class="row mb-10">
-                                            <span class="text-danger text-center">*Silahkan klik tombol "Ajukan KRS" agar pengajuan KRS dapat disetujui Dosen PA!</span>
-                                        </div>
-                                        <div class="box-header d-flex justify-content-center py-0 px-15 mt-10" style="border-bottom: 0px">
-                                            <div class="row d-flex justify-content-end">
-                                                <h4 class="mb-5">
-                                                    <form action="{{ route('mahasiswa.krs.submit') }}" method="POST">
-                                                        @csrf
-                                                        <input type="hidden" name="id_reg" value="{{ $riwayat_pendidikan->id_registrasi_mahasiswa }}">
-                                                    
-                                                        <div class="row">
-                                                            <button type="submit" class="btn btn-success">Ajukan KRS</button>
-                                                        </div>
-                                                    </form>
-                                                </h4>
+                                        @if ($today >= $mulai_isi_krs && $today <= $batas_isi_krs)
+                                            @if($total_krs_submitted > 0 && $semester_select == $semester_aktif->id_semester)
+                                            <div class="row mb-10">
+                                                <span class="text-danger text-center">*Silahkan klik tombol "Ajukan KRS" agar pengajuan KRS dapat disetujui Dosen PA!</span>
                                             </div>
-                                        </div>
-                                        <hr class="my-15">
+                                            <div class="box-header d-flex justify-content-center py-0 px-15 mt-10" style="border-bottom: 0px">
+                                                <div class="row d-flex justify-content-end">
+                                                    <h4 class="mb-5">
+                                                        <form action="{{ route('mahasiswa.krs.submit') }}" method="POST">
+                                                            @csrf
+                                                            <input type="hidden" name="id_reg" value="{{ $riwayat_pendidikan->id_registrasi_mahasiswa }}">
+                                                        
+                                                            <div class="row">
+                                                                <button type="submit" class="btn btn-success">Ajukan KRS</button>
+                                                            </div>
+                                                        </form>
+                                                    </h4>
+                                                </div>
+                                            </div>
+                                            <hr class="my-15">
+                                            @endif
                                         @endif
                                         <div class="row">
                                             <div class="col-xl-12 col-lg-12">
