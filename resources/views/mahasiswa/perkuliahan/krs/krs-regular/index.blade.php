@@ -78,7 +78,7 @@ Kartu Rencana Studi
                     </div>
                     <div class="col-md-6 text-end mt-3">
                         @if ($today<=$batas_isi_krs)
-                            <span class="badge badge-warning-light my-10">Periode pengisian KRS hingga tanggal <strong style="color: red">{{ date('d M Y', strtotime($batas_isi_krs)) }}</strong></span>
+                            <span class="badge badge-warning-light my-10">Periode pengisian KRS (<strong style="color: red">{{ date('d M Y', strtotime($mulai_isi_krs)) }} - {{ date('d M Y', strtotime($batas_isi_krs)) }}</strong>)</span>
                         @endif
                     </div>
                 </div>
