@@ -57,7 +57,7 @@ class RiwayatPendidikan extends Model
 
     public function lulus_do()
     {
-        return $this->belongsTo(LulusD0::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+        return $this->belongsTo(LulusDo::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function pembimbing_akademik()
