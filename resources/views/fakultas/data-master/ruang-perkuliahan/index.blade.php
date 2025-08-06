@@ -86,10 +86,12 @@ Ruang Perkuliahan
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script>
-     $(function() {
+    $(function() {
         "use strict";
 
-        $('#data').DataTable();
+        $('#data').DataTable({
+            stateSave: true
+        });
     });
 
     function editRuang(data, id) {

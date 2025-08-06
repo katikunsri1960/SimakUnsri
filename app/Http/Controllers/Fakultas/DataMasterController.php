@@ -17,6 +17,7 @@ use App\Models\Perkuliahan\MataKuliah;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\PrasyaratMatkul;
 use App\Models\Perkuliahan\RencanaPembelajaran;
 
@@ -315,27 +316,48 @@ class DataMasterController extends Controller
             'kapasitas_ruang' => 'required',
             'lokasi' => [
                 'required',
-                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request,$fakultas_id,$ruang_perkuliahan) {
+                Rule::unique('ruang_perkuliahans')->where(function ($query) use($request, $fakultas_id, $ruang_perkuliahan) {
                     return $query->where('nama_ruang', $request->nama_ruang)
-                    ->where('lokasi', $request->lokasi)
-                    ->where('fakultas_id', $fakultas_id)
-                    ->whereNotIn('id', [$ruang_perkuliahan->id]);
+                        ->where('lokasi', $request->lokasi)
+                        ->where('fakultas_id', $fakultas_id)
+                        ->whereNotIn('id', [$ruang_perkuliahan->id]);
                 }),
             ],
-        ],
-        [
+        ], [
             'lokasi.unique' => 'Ruang dengan nama dan lokasi ini sudah ada di fakultas Anda. Silahkan melakukan lakukan pengecekan kembali.',
         ]);
 
-        $ruang_perkuliahan->update($data);
+        try {
+            // Cek relasi kelas_kuliah
+            $kelasExists = KelasKuliah::where('ruang_perkuliahan_id', $ruang_perkuliahan->id)->exists();
 
-        return redirect()->back()->with('success', 'Data Berhasil di Rubah');
+            // Jika ada kelas, lokasi tidak boleh diubah
+            if ($kelasExists && $ruang_perkuliahan->lokasi !== $request->lokasi) {
+            return redirect()->back()->with('error', 'Lokasi tidak dapat diubah karena ruang sudah digunakan pada kelas perkuliahan.');
+            }
+
+            $ruang_perkuliahan->update($data);
+
+            return redirect()->back()->with('success', 'Data Berhasil di Rubah');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 
     public function ruang_perkuliahan_destroy(RuangPerkuliahan $ruang_perkuliahan)
     {
-        $ruang_perkuliahan->delete();
+        try {
+            // Optimalkan dengan menggunakan exists() untuk cek relasi
+            $kelasExists = KelasKuliah::where('ruang_perkuliahan_id', $ruang_perkuliahan->id)->exists();
 
-        return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+            if (!$kelasExists) {
+                $ruang_perkuliahan->delete();
+                return redirect()->back()->with('success', 'Data Berhasil di Hapus');
+            } else {
+                return redirect()->back()->with('error', 'Ruang tidak dapat dihapus karena masih digunakan pada kelas perkuliahan.');
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
+        }
     }
 }
