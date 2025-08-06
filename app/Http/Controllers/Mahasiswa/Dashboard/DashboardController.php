@@ -37,23 +37,17 @@ class DashboardController extends Controller
                             ->first();
                             // dd($riwayat_pendidikan);
 
-        if (empty($riwayat_pendidikan->id_jenis_keluar)) {
-            $status_aktif = $status_keluar ? $status_keluar->nama_jenis_keluar : 'Aktif';
-        } 
-
-        // dd($status_aktif );
-
+        $status_aktif = $status_keluar ? $status_keluar->nama_jenis_keluar : 'Aktif';
+        
         $prodi_id = $riwayat_pendidikan->id_prodi;
         
+        
         if($status_aktif == 'Aktif'){
-            $semester_terakhir = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
-                        ->first();
+            $semester_terakhir = SemesterAktif::pluck('id_semester')->first();
         }else{
             $semester_terakhir = $status_keluar->id_periode_keluar;
         }
-        // dd($semester_terakhir);
         
-
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
                         ->whereRaw("RIGHT(id_semester, 1) != 3")
                         ->orderBy('id_semester', 'DESC')
