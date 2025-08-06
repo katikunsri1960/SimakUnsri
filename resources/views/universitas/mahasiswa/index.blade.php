@@ -117,7 +117,16 @@ Mahasiswa
                 }},
                 {data: 'biodata.tanggal_lahir', name: 'biodata.tanggal_lahir', class: 'text-center', sortable:false, searchable: false},
                 {data: 'nama_program_studi', name: 'nama_program_studi', searchable: true, orderData: [2]},
-                {data: 'keterangan_keluar', name: 'keterangan_keluar', searchable: true, class:"text-center align-middle", sortable:false},
+                {
+                    data: null,
+                    name: 'keterangan_keluar',
+                    searchable: true,
+                    sortable: false,
+                    class: "text-center align-middle",
+                    render: function(data, type, row, meta) {
+                        return row.lulus_do?.nama_jenis_keluar || row.keterangan_keluar;
+                    }
+                },
                 {data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [3]},
             ],
         });

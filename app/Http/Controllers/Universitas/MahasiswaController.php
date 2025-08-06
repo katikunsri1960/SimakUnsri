@@ -68,7 +68,7 @@ class MahasiswaController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = RiwayatPendidikan::with('prodi', 'biodata');
+        $query = RiwayatPendidikan::with('prodi', 'biodata', 'lulus_do');
 
         if ($searchValue) {
             $query = $query->where('nim', 'like', '%' . $searchValue . '%')

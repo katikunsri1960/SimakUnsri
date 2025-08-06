@@ -15,6 +15,7 @@ use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Mahasiswa\LulusDo;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
 use Carbon\Carbon;
@@ -52,6 +53,11 @@ class RiwayatPendidikan extends Model
     public function peserta_kelas()
     {
         return $this->hasMany(PesertaKelasKuliah::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function lulus_do()
+    {
+        return $this->belongsTo(LulusD0::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function pembimbing_akademik()
