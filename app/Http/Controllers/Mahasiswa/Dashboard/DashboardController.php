@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Bus;
 use App\Http\Controllers\Controller;
 use App\Models\Connection\Registrasi;
 use App\Models\Connection\CourseUsept;
+use App\Models\Mahasiswa\LulusDo;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
@@ -28,13 +29,30 @@ class DashboardController extends Controller
     {
         $user = auth()->user();
 
+        $status_keluar = LulusDo::where('id_registrasi_mahasiswa', $user->fk_id)
+                ->select('id_jenis_keluar', 'nama_jenis_keluar', 'id_periode_keluar')
+                ->first();
+
         $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $user->fk_id)
                             ->first();
                             // dd($riwayat_pendidikan);
+
+        if (empty($riwayat_pendidikan->id_jenis_keluar)) {
+            $status_aktif = $status_keluar ? $status_keluar->nama_jenis_keluar : 'Aktif';
+        } 
+
+        // dd($status_aktif );
+
         $prodi_id = $riwayat_pendidikan->id_prodi;
         
-        $semester_aktif = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
+        if($status_aktif == 'Aktif'){
+            $semester_terakhir = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                         ->first();
+        }else{
+            $semester_terakhir = $status_keluar->id_periode_keluar;
+        }
+        // dd($semester_terakhir);
+        
 
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
                         ->whereRaw("RIGHT(id_semester, 1) != 3")
@@ -49,7 +67,7 @@ class DashboardController extends Controller
                         ->get();
         
         $semester = Semester::orderBy('id_semester', 'ASC')
-                        ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+                        ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_terakhir])
                         ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
                         ->get();
 
@@ -102,9 +120,8 @@ class DashboardController extends Controller
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)->first();
         // dd($bebas_pustaka, $usept_data);
         return view('mahasiswa.dashboard', compact(
-            'riwayat_pendidikan', 'semester_aktif',
-            'semester_ke', 'akm','transkrip','ips_sks_ipk', 
-            'usept_data', 'bebas_pustaka'
+            'riwayat_pendidikan', 'semester_ke', 'akm','transkrip','ips_sks_ipk', 
+            'usept_data', 'bebas_pustaka', 'status_aktif'
         ));
     }
 

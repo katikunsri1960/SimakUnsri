@@ -108,12 +108,12 @@ Dashboard
                             </div>
                             <div class="d-flex flex-column font-weight-500" style="margin-left: 20px">
                                 <a class="text-dark hover-primary mb-1 font-size-16"><strong>Status Aktif</strong></a>
-                                @if ($riwayat_pendidikan->keterangan_keluar == NULL)
-                                    <a class="badge bg-primary badge-lg">Aktif</a>
-                                @elseif($riwayat_pendidikan->id_jenis_keluar == 1)
-                                    <a class="badge bg-success badge-lg">Lulus</a>
+                                @if ($status_aktif == 'Aktif')
+                                    <a class="badge bg-primary badge-lg">{{$status_aktif}}</a>
+                                @elseif($status_aktif == 'Lulus')
+                                    <a class="badge bg-success badge-lg">{{$status_aktif}}</a>
                                 @else
-                                    <a class="badge bg-warning">{{$riwayat_pendidikan->keterangan_keluar}}</a>                               
+                                    <a class="badge bg-warning">{{$status_aktif}}</a>                               
                                 @endif
                             </div>
                         </div>
