@@ -56,7 +56,6 @@ class UpdateAKMController extends Controller
 
     public function hitungIps(Request $request)
     {
-        // Tingkatkan batas memori dan waktu eksekusi
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2G');
 
@@ -69,21 +68,20 @@ class UpdateAKMController extends Controller
             ], 400);
         }
 
-        // Batasi ukuran chunk
-        $chunkSize = 500; // Sesuaikan ukuran chunk sesuai kebutuhan
-
-        // Ambil data AKM dalam chunk
+        $chunkSize = 500;
         AktivitasKuliahMahasiswa::where('id_semester', $semester)
+            ->select('id_registrasi_mahasiswa')
             ->chunk($chunkSize, function ($akmData) use ($semester) {
                 $jobs = [];
-
-                // Siapkan job untuk setiap data dalam chunk
                 foreach ($akmData as $akm) {
                     $jobs[] = new HitungIpsJob($semester, $akm->id_registrasi_mahasiswa);
                 }
-
-                // Tambahkan job ke batch
-                Bus::batch($jobs)->dispatch();
+                if (count($jobs) > 0) {
+                    $batchName = 'Hitung IPS Semester ' . $semester;
+                    Bus::batch($jobs)
+                        ->name($batchName)
+                        ->dispatch();
+                }
             });
 
         return response()->json([
@@ -91,5 +89,6 @@ class UpdateAKMController extends Controller
             'message' => 'Proses perhitungan IPS sedang berjalan di latar belakang.'
         ]);
     }
+
 
 }

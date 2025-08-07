@@ -64,27 +64,7 @@ Update IPS
                     <div class="table-responsive">
                         <div id="khsDiv" hidden>
                             <h3 class="text-center">Data AKM </h3>
-                            <div class="d-flex justify-content-end align-middle">
 
-                            </div>
-                            <div class="row mt-5" id="transferDiv" hidden>
-                                <h3>Nilai Transfer</h3>
-                                <table class="table table-bordered table-hover mt-2" id="transferTable">
-                                    <thead>
-                                        <tr>
-                                            <th class="text-center align-middle">No</th>
-                                            <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                            <th class="text-center align-middle">Nama Mata Kuliah</th>
-                                            <th class="text-center align-middle">Semester</th>
-                                            <th class="text-center align-middle">SKS Diakui</th>
-                                            <th class="text-center align-middle">Nilai Index Diakui</th>
-                                            <th class="text-center align-middle">Nilai Huruf Diakui</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-                                    </tbody>
-                                </table>
                             </div>
                             
                         </div>
@@ -228,7 +208,7 @@ function getKrs() {
 
                 // Inisialisasi DataTables
                 $('#akmTable').DataTable({
-                    responsive: true,
+                    // responsive: true,
                     pageLength: 10,
                 });
             } else {
