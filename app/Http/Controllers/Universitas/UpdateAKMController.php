@@ -3,11 +3,12 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Models\Semester;
+use App\Jobs\HitungIpsJob;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use Illuminate\Support\Facades\Bus;
-use App\Jobs\HitungIpsJob;
 use App\Http\Controllers\Controller;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
 class UpdateAKMController extends Controller
@@ -83,10 +84,11 @@ class UpdateAKMController extends Controller
                         ->dispatch();
                 }
             });
-
+            
         return response()->json([
             'status' => 'success',
-            'message' => 'Proses perhitungan IPS sedang berjalan di latar belakang.'
+            'message' => 'Proses perhitungan IPS sedang berjalan di latar belakang.',
+            // 'sks_total' => [$sks_total],
         ]);
     }
 
