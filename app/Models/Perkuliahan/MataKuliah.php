@@ -93,9 +93,9 @@ class MataKuliah extends Model
                     '98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Profesi Dokter
                     'efd6f97f-d7fc-42c1-bea0-2e5837e569d6', //S1 Kedokteran Gigi
                     '7c569912-fa48-4b93-8c16-1fc78969c337', //S1 Pendidikan Dokter
-                    '857cd112-bb6c-4ea9-9fe7-6782290c61e0', //S1 Ilmu Keperawatan
-                    'a8d4f70f-406c-43f6-95ee-15f8ad836db3', //S1 Psikologi
-                    '33a06776-e6aa-41e0-be5b-593d52ddff7f', //S1 Ilmu Biomedik
+                    //'857cd112-bb6c-4ea9-9fe7-6782290c61e0', //S1 Ilmu Keperawatan
+                    //'a8d4f70f-406c-43f6-95ee-15f8ad836db3', //S1 Psikologi
+                    //'33a06776-e6aa-41e0-be5b-593d52ddff7f', //S1 Ilmu Biomedik
                     '9965f1cf-563f-4671-9dca-4874e8c5d075', //Sp-1 Ilmu Penyakit THT
                     'a77fda16-ec5a-4d73-b076-51bac9b88ae4', //Sp-1 Ilmu Bedah
                     '947760c7-8b9b-40d2-af81-cdd141fddadb', //Sp-1 Anestesiologi Dan Reanimasi
