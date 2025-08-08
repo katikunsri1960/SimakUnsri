@@ -14,6 +14,7 @@ use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 
 class HitungIpsJob implements ShouldQueue
 {
@@ -91,11 +92,17 @@ class HitungIpsJob implements ShouldQueue
             // Hitung IPS
             $ips = $totalSksSemester > 0 ? round($totalBobot / $totalSksSemester, 2) : 0;
 
+
+            //HITUNG SKS TOTAL
+            $sks_total = TranskripMahasiswa::where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
+                        ->sum('sks_mata_kuliah');
+                        
             // Update nilai IPS pada tabel
             AktivitasKuliahMahasiswa::where('id_semester', $semester)->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
             ->update([
                 'feeder' => 0,
-                'ips' => number_format($ips, 2, '.', '') // Simpan dengan 2 digit di belakang koma
+                'ips' => number_format($ips, 2, '.', ''), // Simpan dengan 2 digit di belakang koma
+                'sks_total' => $sks_total,
             ]);  
 
         } catch (\Exception $e) {

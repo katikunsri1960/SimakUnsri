@@ -46,7 +46,7 @@ Update IPS
                             <button class="btn btn-primary btn-md mt-30" id="basic-addon1"
                                 onclick="getKrs()"><i class="fa fa-search"></i> Tampilkan Data</button>
                             
-                            <button id="btnHitungIPS" class="btn btn-success btn-md mt-30 mx-10">Hitung & Update IPS</button>
+                            <button id="btnHitungIPS" class="btn btn-success btn-md mt-30 mx-10">Hitung IPS & SKS Total</button>
                         </div>
                     </div>
                                       
@@ -282,6 +282,7 @@ function getKrs() {
                     clearInterval(progressInterval); // Hentikan progress bar
                     progressBar.css('width', '100%'); // Pastikan progress mencapai 100%
                     percentageText.text('100%');
+                    //console.log(response);
                     
                     if (response.status === 'success') {
                         swal({
@@ -293,8 +294,6 @@ function getKrs() {
                                     className: 'btn btn-success'
                                 }
                             }
-                        }).then(function() {
-                            location.reload(); // Reload halaman setelah konfirmasi
                         });
                     } else {
                         swal({
