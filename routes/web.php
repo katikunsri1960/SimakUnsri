@@ -1265,7 +1265,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/upload', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_upload'])->name('univ.perkuliahan.aktivitas-kuliah.upload');
                     Route::patch('/{id}/update', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_update'])->name('univ.perkuliahan.aktivitas-kuliah.update');
                     Route::get('/{id}/edit', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'aktivitas_kuliah_edit'])->name('univ.perkuliahan.aktivitas-kuliah.edit');
-                    Route::post('/hitung-ips', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'hitung_ips_per_id'])->name('univ.perkuliahan.aktivitas-kuliah.hitung-ips');
+                    Route::post('/hitung-akm', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'hitung_akm_per_id'])->name('univ.perkuliahan.aktivitas-kuliah.hitung-akm');
 
                     Route::post('/hitung-sks', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'hitung_sks_per_id'])->name('univ.perkuliahan.aktivitas-kuliah.hitung-sks');
                     Route::get('/sync', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'sync_aktivitas_kuliah'])->name('univ.perkuliahan.aktivitas-kuliah.sync');

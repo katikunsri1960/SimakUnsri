@@ -219,13 +219,13 @@ Aktivitas Kuliah Mahasiswa
                 {data: 'nama_pembiayaan', name: 'nama_pembiayaan', class: "text-center align-middle", searchable: false},
                 {data: null, searchable: false, class: "text-center align-middle ", sortable: false, render: function(data, type, row) {
                     var button = `
+                                <button class="btn btn-primary btn-sm hitung-akm m-2 p-2 text-nowrap" data-id-reg="${data.id_registrasi_mahasiswa}" data-id-semester="${data.id_semester}">
+                                    <i class="fa fa-retweet"></i> Update AKM
+                                </button>
                                 <button class="btn btn-success btn-sm hitung-sks m-2 p-2 text-nowrap" data-id-reg="${data.id_registrasi_mahasiswa}" data-id-semester="${data.id_semester}">
                                     <i class="fa fa-retweet"></i> Hitung SKS
                                 </button>
-                                <button class="btn btn-secondary btn-sm hitung-ips m-2 p-2 text-nowrap" data-id-reg="${data.id_registrasi_mahasiswa}" data-id-semester="${data.id_semester}">
-                                    <i class="fa fa-retweet"></i> Hitung IPS
-                                </button>
-                                <button class="btn btn-primary btn-sm btn-edit m-2 p-2 text-nowrap" data-bs-toggle="modal" data-bs-target="#editModal" data-id="${data.id}">
+                                <button class="btn btn-warning btn-sm btn-edit m-2 p-2 text-nowrap" data-bs-toggle="modal" data-bs-target="#editModal" data-id="${data.id}">
                                     <i class="fa fa-edit"></i> Edit
                                 </button>
                             `;
@@ -237,7 +237,7 @@ Aktivitas Kuliah Mahasiswa
 
 
         // Event listener untuk tombol hitung IPS
-        $('#data').on('click', '.hitung-ips', function() {
+        $('#data').on('click', '.hitung-akm', function() {
             var idReg = $(this).data('id-reg');
             var idSemester = $(this).data('id-semester');
 
@@ -255,7 +255,7 @@ Aktivitas Kuliah Mahasiswa
                     $('#spinner').show();
                     console.log('masuk 1');
                     $.ajax({
-                        url: '{{ route("univ.perkuliahan.aktivitas-kuliah.hitung-ips") }}',
+                        url: '{{ route("univ.perkuliahan.aktivitas-kuliah.hitung-akm") }}',
                         type: 'POST',
                         data: {
                             id_reg: idReg,

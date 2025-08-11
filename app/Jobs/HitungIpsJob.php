@@ -3,18 +3,19 @@
 namespace App\Jobs;
 
 // use Log;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Bus\Queueable;
 use Illuminate\Bus\Batchable;
+use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\TranskripMahasiswa;
 
 class HitungIpsJob implements ShouldQueue
 {
@@ -50,6 +51,9 @@ class HitungIpsJob implements ShouldQueue
             $semester = $this->semester;
             $id_registrasi_mahasiswa = $this->id_registrasi_mahasiswa;
 
+            $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)->first();
+
+            $isMaba = $riwayat->id_periode_masuk == $semester ? 1 : 0;
             
             // Ambil semua data KHS, KHS Konversi, dan KHS Transfer secara efisien
             $khsData = NilaiPerkuliahan::where('id_semester', $semester)
@@ -69,10 +73,8 @@ class HitungIpsJob implements ShouldQueue
                 ->where('nilai_huruf_diakui', '!=', 'F')
                 ->get();
                 
-            // Hitung total SKS semester
-            $totalSksSemester = $khsData->sum('sks_mata_kuliah')
-                + $khsKonversiData->sum('sks_mata_kuliah')
-                + $khsTransferData->sum('sks_mata_kuliah_diakui');
+            //SKS SEMESTER
+            $totalSksSemester = !$isMaba ? $khsData->sum('sks_mata_kuliah')+ $khsKonversiData->sum('sks_mata_kuliah')+ $khsTransferData->sum('sks_mata_kuliah_diakui') : $khsData->sum('sks_mata_kuliah')+ $khsKonversiData->sum('sks_mata_kuliah');
 
             // Hitung total bobot
             $bobot = $khsData->sum(function ($item) {
@@ -89,24 +91,49 @@ class HitungIpsJob implements ShouldQueue
 
             $totalBobot = $bobot + $bobotTransfer + $bobotKonversi;
 
+            
             // Hitung IPS
             $ips = $totalSksSemester > 0 ? round($totalBobot / $totalSksSemester, 2) : 0;
 
 
+
+            //TRANSKRIP
+            $transkrip = TranskripMahasiswa::select(
+                        'sks_mata_kuliah','nilai_indeks'
+                    )
+                    ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
+                    ->whereNotIn('nilai_huruf', ['F', ''])
+                    ->get();
+
             //HITUNG SKS TOTAL
-            $sks_total = TranskripMahasiswa::where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
-                        ->sum('sks_mata_kuliah');
+            $sks_total = $transkrip->sum('sks_mata_kuliah');
+
+            $total_bobot_transkrip = 0;
+            
+            foreach ($transkrip as $t) {
+                $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
+            }
+
+            $ipk = 0;
+
+            if($sks_total > 0){
+                $ipk = $total_bobot_transkrip / $sks_total;
+            }
                         
             // Update nilai IPS pada tabel
             AktivitasKuliahMahasiswa::where('id_semester', $semester)->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
             ->update([
                 'feeder' => 0,
+                'sks_semester' => $totalSksSemester,
                 'ips' => number_format($ips, 2, '.', ''), // Simpan dengan 2 digit di belakang koma
+                'ipk' => number_format($ipk, 2, '.', ''),
                 'sks_total' => $sks_total,
             ]);  
 
-        } catch (\Exception $e) {
-            Log::error('Error menghitung IPS: ' . $e->getMessage());
+            return response()->json(['status' => 'success', 'message' => 'Data Berhasil Diupdate!']);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json(['status' => 'error', 'message' => 'Data Gagal Diupdate! ']);
         }
     }
 }

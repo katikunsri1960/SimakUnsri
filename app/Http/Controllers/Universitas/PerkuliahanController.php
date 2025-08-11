@@ -517,7 +517,7 @@ class PerkuliahanController extends Controller
         return redirect()->back()->with('success', 'Sinkronisasi Kelas Kuliah Berhasil!');
     }
 
-    public function hitung_ips_per_id(Request $request)
+    public function hitung_akm_per_id(Request $request)
     {
 
         if (!$request->has('id_reg') || empty($request->id_reg)) {
@@ -612,8 +612,8 @@ class PerkuliahanController extends Controller
             $data->update([
                 'feeder'=>0,
                 'sks_semester' => $total_sks_semester,
-                'ips' => round($ips, 2), // Simpan dengan pembulatan 2 desimal
-                'ipk' => round($ipk, 2), // Simpan dengan pembulatan 2 desimal
+                'ips' => number_format($ips, 2, '.', ''), // Simpan dengan 2 digit di belakang koma
+                'ipk' => number_format($ipk, 2, '.', ''),
                 'sks_total' => $total_sks_transkrip
             ]);
 
