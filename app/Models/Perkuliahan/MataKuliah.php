@@ -202,7 +202,7 @@ class MataKuliah extends Model
                 $sks_max = 0;
                 if ($ips_value !== null) {
                     if ($ips_value > 2.49) {
-                    $sks_max = 21;
+                    $sks_max = 20;
                     }elseif ($ips_value >= 2.00 && $ips_value <= 2.49) {
                     $sks_max = 18;
                     } elseif ($ips_value >= 1.50 && $ips_value <= 1.99) {

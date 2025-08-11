@@ -46,10 +46,10 @@ Update IPS
                             <button class="btn btn-primary btn-md mt-30" id="basic-addon1"
                                 onclick="getKrs()"><i class="fa fa-search"></i> Tampilkan Data</button>
                             
-                            <button id="btnHitungIPS" class="btn btn-success btn-md mt-30 mx-10">Hitung IPS & SKS Total</button>
+                            <button id="btnHitungIPS" class="btn btn-success btn-md mt-30 mx-10">
+                                <i class="fa fa-retweet"></i> Update AKM</button>
                         </div>
-                    </div>
-                                      
+                    </div>   
                 </div>
                 {{-- <div id="loadingBar" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 4px; background: linear-gradient(to right, #4CAF50, #00BCD4); z-index: 9999;"></div> --}}
 
