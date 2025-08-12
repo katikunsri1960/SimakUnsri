@@ -48,24 +48,30 @@ class FeederAPI {
 
         $response = $req->getBody();
         $result = json_decode($response,true);
-
+        
         if($result['error_code'] == 0) {
             $token = $result['data']['token'];
             $params = [
                 "token" => $token,
                 "act"   => $this->act,
                 "offset" => $this->offset,
-                "order" => $this->order,
                 "limit" => $this->limit,
                 "filter" => $this->filter,
             ];
 
+            // only add 'order' if act is NOT one of the excluded types
+            $excludedActs = ['GetListRiwayatPendidikanMahasiswa'];
+            if (!in_array($this->act, $excludedActs)) {
+                $params['order'] = $this->order;
+            }
+
+            // dd(json_encode($params, JSON_UNESCAPED_SLASHES));
             $req = $client->post( $this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
                     'Accept' => 'application/json',
                 ],
-                'body' => json_encode($params)
+                'body' => json_encode($params, JSON_UNESCAPED_SLASHES)
             ]);
 
             $response = $req->getBody();
