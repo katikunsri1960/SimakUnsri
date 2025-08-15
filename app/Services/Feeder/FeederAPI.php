@@ -15,7 +15,7 @@ class FeederAPI {
     private $act, $offset, $limit, $order, $filter;
 
 
-    function __construct($act, $offset, $limit, $order, $filter) {
+    function __construct($act, $offset, $limit, $order, $filter = null) {
 
         $this->url = env('FEEDER_URL');
         $this->username = env('FEEDER_USERNAME');
