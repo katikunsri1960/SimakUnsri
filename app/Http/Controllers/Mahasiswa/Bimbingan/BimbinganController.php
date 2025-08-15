@@ -6,10 +6,12 @@ use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Models\AsistensiAkhir;
+use App\Models\PenundaanBayar;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
 use App\Http\Controllers\Controller;
 use App\Models\Connection\Registrasi;
+use App\Models\PembayaranManualMahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
@@ -71,6 +73,15 @@ class BimbinganController extends Controller
         // PENGECEKAN STATUS PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
 
+        $penundaan_pembayaran = PenundaanBayar::where('id_registrasi_mahasiswa', $user->fk_id)
+            ->where('id_semester', $semester_select)
+            ->count();
+
+        $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
+            ->where('id_registrasi_mahasiswa',  $user->fk_id)
+                ->where('id_semester', $semester_select)
+                ->count();
+
         try {
             $tagihan = Tagihan::with('pembayaran')
             ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
@@ -93,8 +104,9 @@ class BimbinganController extends Controller
         }
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if ($pembayaran == NULL && $beasiswa == 0) {
-            session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
+        if ($pembayaran == NULL && $beasiswa == 0 && $penundaan_pembayaran == 0 && $pembayaran_manual == 0) {
+            // 'error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
+            return redirect()->back()->with('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         }
 
         // dd($tagihan);
