@@ -18,7 +18,7 @@ class MahasiswaController extends Controller
 
     private function count_value($act)
     {
-        $data = new FeederAPI($act,0,0, '');
+        $data = new FeederAPI($act,0,0, '', '');
         $response = $data->runWS();
         $count = $response['data'];
 
@@ -29,7 +29,7 @@ class MahasiswaController extends Controller
     {
         $data = [
             ['act' => 'GetBiodataMahasiswa', 'count' => 'GetCountBiodataMahasiswa', 'order' => 'id_mahasiswa', 'job' => \App\Jobs\Mahasiswa\BiodataJob::class],
-            ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class],
+            ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'filter' => "id_periode_masuk = '20251'",'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class],
             ['act' => 'GetListMahasiswaLulusDO', 'count' => 'GetCountMahasiswaLulusDO', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\SyncJob::class]
         ];
 
@@ -41,18 +41,19 @@ class MahasiswaController extends Controller
 
             $limit = 1000;
             $act = $d['act'];
-            $order = $d['order'];
+            $order = $d['order'] ?? null;
+            $filter = $d['filter'] ?? null;
 
             if ($d['act'] == 'GetListMahasiswaLulusDO') {
 
                 for ($i=0; $i < $count; $i+=$limit) {
-                    $job = new $d['job']($act, $limit, $i, $order, null, \App\Models\Mahasiswa\LulusDo::class, 'id_registrasi_mahasiswa');
+                    $job = new $d['job']($act, $i, $limit, $order, null, \App\Models\Mahasiswa\LulusDo::class, 'id_registrasi_mahasiswa');
                     $batch->add($job);
                 }
 
             } else {
                 for ($i=0; $i < $count; $i+=$limit) {
-                    $job = new $d['job']($act, $limit, $i, $order);
+                    $job = new $d['job']($act, $i, $limit, $order, $filter);
                     $batch->add($job);
                 }
             }
