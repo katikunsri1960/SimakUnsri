@@ -15,16 +15,17 @@ class BiodataJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $act, $limit, $offset, $order;
+    public $act, $limit, $offset, $order, $filter;
     /**
      * Create a new job instance.
      */
-    public function __construct($act, $limit, $offset, $order)
+    public function __construct($act, $limit, $offset, $order, $filter = null)
     {
         $this->act = $act;
         $this->limit = $limit;
         $this->offset = $offset;
         $this->order = $order;
+        $this->filter = $filter;
     }
 
     /**
@@ -32,7 +33,7 @@ class BiodataJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order);
+        $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
         $response = $data->runWS();
 
         if (isset($response['data']) && !empty($response['data'])) {
