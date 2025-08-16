@@ -15,7 +15,7 @@ class FeederAPI {
     private $act, $offset, $limit, $order, $filter;
 
 
-    function __construct($act, $offset, $limit, $order, $filter = null) {
+    function __construct($act, $offset, $limit, $order, $filter) {
 
         $this->url = env('FEEDER_URL');
         $this->username = env('FEEDER_USERNAME');
@@ -55,17 +55,11 @@ class FeederAPI {
                 "token" => $token,
                 "act"   => $this->act,
                 "offset" => $this->offset,
+                "order" => $this->order,
                 "limit" => $this->limit,
                 "filter" => $this->filter,
             ];
-
-            // only add 'order' if act is NOT one of the excluded types
-            $excludedActs = ['GetListRiwayatPendidikanMahasiswa'];
-            if (!in_array($this->act, $excludedActs)) {
-                $params['order'] = $this->order;
-            }
-
-            // dd(json_encode($params, JSON_UNESCAPED_SLASHES));
+            
             $req = $client->post( $this->url, [
                 'headers' => [
                     'Content-Type' => 'application/json',
