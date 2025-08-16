@@ -181,6 +181,7 @@ class MataKuliah extends Model
         $non_gelar = $riwayat_pendidikan->id_jenis_daftar == '14' ? 1 : 0;
 
         //  dd($non_gelar);
+        // dd($semester_ke);
 
 
         if (substr($id_semester, -1) == 3) {
@@ -199,7 +200,7 @@ class MataKuliah extends Model
                 $sks_max = 18;
             }elseif ($semester_ke == 1 || $semester_ke == 2 || $non_gelar > 0) {
                 // dd($ips_value);
-                $sks_max = 0;
+                $sks_max = 20;
                 if ($ips_value !== null) {
                     if ($ips_value > 2.49) {
                     $sks_max = 20;
@@ -212,6 +213,7 @@ class MataKuliah extends Model
                     }
                 }
             } else {
+                // dd($ips_value);
                 if ($ips_value !== null) {
                     if ($ips_value >= 3.00) {
                         $sks_max = 24;
@@ -232,7 +234,6 @@ class MataKuliah extends Model
             }
             
         }
-
     // dd($sks_max); 
         return $sks_max;
 
