@@ -16,16 +16,23 @@ class RiwayatPendidikanJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    public $act, $limit, $offset, $order;
+    // public $act, $offset, $limit, $order, $filter;
+    public $act;
+    public $offset;
+    public $limit;
+    public $order;
+    public $filter;
     /**
      * Create a new job instance.
      */
-    public function __construct($act, $limit, $offset, $order)
+    public function __construct($act, $offset, $limit, $order, $filter)
     {
+        // dd($filter);
         $this->act = $act;
-        $this->limit = $limit;
         $this->offset = $offset;
+        $this->limit = $limit;
         $this->order = $order;
+        $this->filter = $filter;
     }
 
     /**
@@ -33,8 +40,9 @@ class RiwayatPendidikanJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order);
+        $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
         $response = $data->runWS();
+        // dd($response);
 
         if (isset($response['data']) && !empty($response['data'])) {
 
