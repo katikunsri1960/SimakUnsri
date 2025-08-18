@@ -335,15 +335,16 @@ class KrsController extends Controller
 
         if ($today >= $semester_aktif->tanggal_mulai_kprs && $today <= $semester_aktif->tanggal_akhir_kprs) {
             $batas_isi_krs =  Carbon::parse($semester_aktif->tanggal_akhir_kprs)->toDateString();
-            $mulai_isi_krs = Carbon::parse($semester_aktif->krs_mulai)->toDateString();
+            $mulai_isi_krs = Carbon::parse($semester_aktif->tanggal_mulai_kprs)->toDateString();
         }
 
         // dd($batas_isi_krs, $mulai_isi_krs, $today, $semester_aktif->tanggal_mulai_kprs, $semester_aktif->tanggal_akhir_kprs);
 
         $batas_isi_krs_manual = BatasIsiKRSManual::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
 
-        if($batas_isi_krs_manual && $today <= $batas_isi_krs_manual->batas_isi_krs){
+        if($today >= $batas_isi_krs_manual->mulai_isi_krs && $today <= $batas_isi_krs_manual->batas_isi_krs){
             $batas_isi_krs =  Carbon::parse($batas_isi_krs_manual->batas_isi_krs)->toDateString();
+            $mulai_isi_krs =  Carbon::parse($batas_isi_krs_manual->mulai_isi_krs)->toDateString();
         }
         // Fungsi cek batas isi KRS Selesai
 
@@ -356,7 +357,7 @@ class KrsController extends Controller
             ->count();
 
         $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])
-        ->where('id_registrasi_mahasiswa', $id_reg)
+            ->where('id_registrasi_mahasiswa', $id_reg)
             ->where('id_semester', $semester_aktif->id_semester)
             ->count();
 
