@@ -28,6 +28,12 @@
                         </select>
                     </div>
                     <div class="mb-3">
+                        <label for="mulai_isi_krs" class="form-label">Mulai Isi KRS </label>
+                        <div class="col-sm-10">
+                          <input class="form-control" type="date" name="mulai_isi_krs"  id="mulai_isi_krs" placeholder="-- Mulai Isi KRS --">
+                        </div>
+                    </div>
+                    <div class="mb-3">
                         <label for="batas_isi_krs" class="form-label">Batas Isi KRS </label>
                         <div class="col-sm-10">
                           <input class="form-control" type="date" name="batas_isi_krs"  id="batas_isi_krs" placeholder="-- Batas Isi KRS --">
