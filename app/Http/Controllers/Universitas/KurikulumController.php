@@ -160,14 +160,14 @@ class KurikulumController extends Controller
         $order = "";
         $model = \App\Models\Perkuliahan\ListKurikulum::class;
 
-        $api = new FeederAPI($count,$offset, $limit, $order);
+        $api = new FeederAPI($count,$offset, $limit, $order, $filter = null);
 
         $result = $api->runWS();
         // dd($result['data']);
         $total = $result['data'];
 
         for($i = 0; $i < $total; $i += $limit) {
-            $api = new FeederAPI($act,$i, $limit, $order);
+            $api = new FeederAPI($act,$i, $limit, $order, $filter = null);
             $result = $api->runWS();
 
             $chunk = array_chunk($result['data'], 100);
@@ -200,7 +200,7 @@ class KurikulumController extends Controller
         $offset = 0;
         $order = '';
 
-        $api = new FeederAPI($count,$offset, $limit, $order);
+        $api = new FeederAPI($count,$offset, $limit, $order, $filter = null);
 
         $result = $api->runWS();
         $total = $result['data'];
@@ -213,7 +213,7 @@ class KurikulumController extends Controller
         $primary = 'id_matkul';
 
         for ($i = 0; $i < $total; $i += $limit) {
-            $batch->add(new $job($act, $limit, $i, $order, $filter,$model, $primary));
+            $batch->add(new $job($act, $limit, $i, $order, $filter, $model, $primary));
         }
 
         return redirect()->route('univ.mata-kuliah')->with('success', 'Data mata kuliah berhasil disinkronisasi');
@@ -251,8 +251,10 @@ class KurikulumController extends Controller
             ],
         ];
 
+        $filter = null;
+
         foreach ($data as $d) {
-            $batch = $this->sync3($d['act'], $d['limit'], $d['offset'], $d['order'], $d['job'], $d['name'], $d['model'], $d['primary'], $d['reference'], $d['id']);
+            $batch = $this->sync3($d['act'], $d['limit'], $d['offset'], $d['order'], $filter, $d['job'], $d['name'], $d['model'], $d['primary'], $d['reference'], $d['id']);
         }
 
         return redirect()->back()->with('success', 'Sinkronisasi Aktivitas Mahasiswa Berhasil!');
