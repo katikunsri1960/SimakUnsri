@@ -183,6 +183,7 @@ Batas Isi KRS Manual
         document.getElementById('edit_nama_mahasiswa').value = data.nama_mahasiswa;
         document.getElementById('edit_id_registrasi_mahasiswa').value = data.id_registrasi_mahasiswa;
         document.getElementById('edit_status').value = data.status_bayar;
+        document.getElementById('edit_mulai_isi_krs').value = data.mulai_isi_krs;
         document.getElementById('edit_batas_isi_krs').value = data.batas_isi_krs;
         document.getElementById('edit_keterangan').value = data.keterangan;
         // Populate other fields...

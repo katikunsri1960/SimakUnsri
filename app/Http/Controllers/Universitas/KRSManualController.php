@@ -61,7 +61,9 @@ class KRSManualController extends Controller
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status_bayar' => 'required | in:0,1,2,3',
+            'mulai_isi_krs'=>'required | date',
             'batas_isi_krs'=>'required | date'
+
         ]);
 
         $semester_aktif= SemesterAktif::first();
@@ -94,6 +96,7 @@ class KRSManualController extends Controller
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status_bayar' => 'required|in:0,1,2,3',
+            'mulai_isi_krs' => 'required|date',
             'batas_isi_krs' => 'required|date',
             'keterangan' => 'nullable|string'
         ]);
@@ -113,6 +116,7 @@ class KRSManualController extends Controller
             'nim' => $riwayat_pendidikan->nim,
             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
             'status_bayar' => $data['status_bayar'],
+            'mulai_isi_krs' => $data['mulai_isi_krs'],
             'batas_isi_krs' => $data['batas_isi_krs'],
             'id_semester' => $semester_aktif->id_semester,
             'keterangan' => $data['keterangan'],
