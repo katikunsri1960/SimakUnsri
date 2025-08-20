@@ -10,7 +10,7 @@ use App\Models\Semester;
 use App\Models\SemesterAktif;
 use App\Models\Wilayah;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model; 
 
 class BiodataDosen extends Model
 {
@@ -70,13 +70,28 @@ class BiodataDosen extends Model
 
     public function data_dosen($id_dosen)
     {
-        $tahun_ajaran = SemesterAktif::join('semesters', 'semester_aktifs.id_semester', 'semesters.id_semester')->pluck('id_tahun_ajaran')->first() ?? (date('m') >= 8 ? date('Y') : date('Y') - 1);
+        $tahun_ajaran = SemesterAktif::join('semesters', 'semester_aktifs.id_semester', 'semesters.id_semester')
+            ->pluck('id_tahun_ajaran')
+            ->first();
 
-        return $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
-                                ->where('p.id_tahun_ajaran', $tahun_ajaran)
-                                ->where('biodata_dosens.id_dosen', $id_dosen)
-                                ->orderByRaw("STR_TO_DATE(p.mulai_surat_tugas, '%d-%m-%Y') DESC")
-                                ->first();
+        $query = $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
+            ->where('biodata_dosens.id_dosen', $id_dosen)
+            ->where('p.id_tahun_ajaran', $tahun_ajaran)
+            ->orderByRaw("STR_TO_DATE(p.mulai_surat_tugas, '%d-%m-%Y') DESC");
+
+        $result = $query->first();
+
+        if (!$result) {
+            // try previous tahun ajaran
+            $prev_tahun_ajaran = $tahun_ajaran - 1; // adjust based on your ID format
+            $result = $this->leftJoin('penugasan_dosens as p', 'biodata_dosens.id_dosen', 'p.id_dosen')
+                ->where('biodata_dosens.id_dosen', $id_dosen)
+                ->where('p.id_tahun_ajaran', $prev_tahun_ajaran)
+                ->orderByRaw("STR_TO_DATE(p.mulai_surat_tugas, '%d-%m-%Y') DESC")
+                ->first();
+        }
+
+        return $result;
 
     }
 
