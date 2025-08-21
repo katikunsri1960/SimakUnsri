@@ -51,14 +51,13 @@ Pembimbingan Akademik Dosen
                                     <td class="text-start align-middle">{{$d->nama_mahasiswa}}</td>
                                     <td class="text-center align-middle">{{$d->prodi->nama_jenjang_pendidikan}} {{$d->prodi->nama_program_studi}}</td>
                                     <td class="text-center align-middle">
-                                        @if (($d->peserta_kelas_count ?? 0) == 0 && ($d->aktivitas_mahasiswa_count ?? 0) == 0)
+                                         @if (($d->total_aktivitas_mahasiswa ?? 0) == 0 && ($d->total_peserta_kelas ?? 0) == 0)
                                             <span class="badge bg-danger">Tidak Ada KRS</span>
-                                        @elseif (($d->peserta_kelas_setujui_count ?? 0) == 0 || ($d->aktivitas_mahasiswa_setujui_count ?? 0) == 0)
+                                        @elseif (($d->belum_disetujui_peserta_kelas ?? 0) + ($d->belum_disetujui_aktivitas_mahasiswa ?? 0) > 0)
                                             <span class="badge bg-warning">Belum Disetujui</span>
                                         @else
                                             <span class="badge bg-success">Sudah Disetujui</span>
                                         @endif
-
                                     </td> 
                                     <td class="text-center align-middle">
                                         <a href="{{route('dosen.pembimbing.bimbingan-akademik.detail', ['riwayat' => $d])}}" class="btn btn-primary btn-rounded btn-sm">Proses KRS <i class="fa fa-file"></i></a>
