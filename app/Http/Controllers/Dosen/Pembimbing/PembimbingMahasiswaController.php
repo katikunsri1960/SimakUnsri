@@ -74,7 +74,7 @@ class PembimbingMahasiswaController extends Controller
                 ->get();
         // $dataAktivitas = AktivitasMahasiswa::where('')
 
-        dd($data);
+        // dd($data);
 
         return view('dosen.pembimbing.akademik.index', [
             'data' => $data,
