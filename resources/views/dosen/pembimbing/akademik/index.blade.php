@@ -53,7 +53,7 @@ Pembimbingan Akademik Dosen
                                     <td class="text-center align-middle">
                                         @if (($d->peserta_kelas_count ?? 0) == 0 && ($d->aktivitas_mahasiswa_count ?? 0) == 0)
                                             <span class="badge bg-danger">Tidak Ada KRS</span>
-                                        @elseif (($d->peserta_kelas_count ?? 0) == 0 || ($d->aktivitas_mahasiswa_count ?? 0) == 0)
+                                        @elseif (($d->peserta_kelas_setujui_count ?? 0) == 0 || ($d->aktivitas_mahasiswa_setujui_count ?? 0) == 0)
                                             <span class="badge bg-warning">Belum Disetujui</span>
                                         @else
                                             <span class="badge bg-success">Sudah Disetujui</span>
