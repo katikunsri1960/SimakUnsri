@@ -50,6 +50,7 @@ class PembimbingMahasiswaController extends Controller
                         });
                     }, 'aktivitas_mahasiswa' => function($query) use ($semester) {
                         $query->where('id_semester', $semester->id_semester)
+                            ->whereIn('id_jenis_aktivitas', ['1','2','3','4','5','6','13','14','15','16','17','18','19','20','21','22'])
                             ->where('approve_krs', 0);
                     }])
                     ->where(function($query) use ($semester) {
