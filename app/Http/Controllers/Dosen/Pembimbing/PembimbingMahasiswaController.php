@@ -71,6 +71,7 @@ class PembimbingMahasiswaController extends Controller
                         });
                     })
                     ->where('dosen_pa', auth()->user()->fk_id)
+                    ->whereNull('id_jenis_keluar')
                 ->get();
         // $dataAktivitas = AktivitasMahasiswa::where('')
 
