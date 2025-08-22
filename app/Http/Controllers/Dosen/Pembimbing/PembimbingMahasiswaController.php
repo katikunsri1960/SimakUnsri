@@ -43,13 +43,21 @@ class PembimbingMahasiswaController extends Controller
         $semester = SemesterAktif::with(['semester'])->first();
 
         $data = RiwayatPendidikan::with(['prodi', 'peserta_kelas', 'aktivitas_mahasiswa'])
-                    ->withCount(['peserta_kelas' => function($query) use ($semester) {
+                    ->withCount(['peserta_kelas as total_peserta_kelas' => function($query) use ($semester) {
+                        $query->whereHas('kelas_kuliah', function($query) use ($semester) {
+                            $query->where('id_semester', $semester->id_semester);
+                        });
+                    }, 'aktivitas_mahasiswa as total_aktivitas_mahasiswa' => function($query) use ($semester) {
+                        $query->where('id_semester', $semester->id_semester)
+                            ->whereIn('id_jenis_aktivitas', ['1','2','3','4','5','6','13','14','15','16','17','18','19','20','21','22']);
+                    },'peserta_kelas as belum_disetujui_peserta_kelas' => function($query) use ($semester) {
                         $query->whereHas('kelas_kuliah', function($query) use ($semester) {
                             $query->where('id_semester', $semester->id_semester)
                                 ->where('approved', 0);
                         });
-                    }, 'aktivitas_mahasiswa' => function($query) use ($semester) {
+                    }, 'aktivitas_mahasiswa as belum_disetujui_aktivitas_mahasiswa' => function($query) use ($semester) {
                         $query->where('id_semester', $semester->id_semester)
+                            ->whereIn('id_jenis_aktivitas', ['1','2','3','4','5','6','13','14','15','16','17','18','19','20','21','22'])
                             ->where('approve_krs', 0);
                     }])
                     ->where(function($query) use ($semester) {
@@ -63,8 +71,11 @@ class PembimbingMahasiswaController extends Controller
                         });
                     })
                     ->where('dosen_pa', auth()->user()->fk_id)
+                    ->whereNull('id_jenis_keluar')
                 ->get();
         // $dataAktivitas = AktivitasMahasiswa::where('')
+
+        // dd($data);
 
         return view('dosen.pembimbing.akademik.index', [
             'data' => $data,
