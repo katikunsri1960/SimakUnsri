@@ -579,14 +579,14 @@ class AktivitasMBKMController extends Controller
                 ->whereHas('anggota_aktivitas', function($query) use ($id_reg) {
                     $query ->where('id_registrasi_mahasiswa', $id_reg);
                 })
+                ->whereIn('id_jenis_aktivitas', ['1', '2', '3', '4', '5', '6', '13','14','15','16','17','18','19','20', '21', '22'])
                 ->where('id_semester', $semester_aktif->id_semester )
                 ->where('approve_krs', 1)
                 ->count();
                 // dd($approved);
 
         if ( $approved_krs > 0 || $approved_akt > 0) {
-        // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
-        return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
+            return redirect()->back()->with('error', 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.');
         }
 
         // dd($jumlah_aktivitas_mbkm);
