@@ -28,11 +28,11 @@ class KRSManualController extends Controller
 
         // $data = BatasIsiKRSManual::with(['riwayat'])->where('id_semester', $semester_pilih)->get();
 
-        $data = BatasIsiKRSManual::select('id', 'nim', 'id_semester', 'batas_isi_krs', 'status_bayar', 'terakhir_update')
-            ->with(['riwayat:id_registrasi_mahasiswa,nama_mahasiswa']) // batasi kolom relasi
+        $data = BatasIsiKRSManual::with(['riwayat:id_registrasi_mahasiswa,nama_mahasiswa']) // batasi kolom relasi
             ->where('id_semester', $semester_pilih)
             ->paginate(50);
 
+            // dd($data);
         return view('universitas.batas-isi-krs-manual.index', [
             'data' => $data,
             'semester' => $semester,
