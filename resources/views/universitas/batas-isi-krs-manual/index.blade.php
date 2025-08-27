@@ -90,8 +90,11 @@ Batas Isi KRS Manual
                                 <td class="text-center align-middle">{{$loop->iteration}}</td>
                                 {{-- <td class="text-center align-middle">{{$d->semester->nama_semester}}</td> --}}
                                 <td class="text-center align-middle">{{$d->nim}}</td>
-                                <td class="text-start align-middle">
-                                    {{ isset($d->riwayat) && isset($d->riwayat->nama_mahasiswa) ? $d->riwayat->nama_mahasiswa : 'Riwayat Pendidikan Tidak Ditemukan'}}
+                                <td class="text-start align-middle {{ empty($d->riwayat) || empty($d->riwayat->nama_mahasiswa) ? 'text-danger' : '' }}">
+                                    {{ isset($d->riwayat) && isset($d->riwayat->nama_mahasiswa) 
+                                        ? $d->riwayat->nama_mahasiswa 
+                                        : 'Riwayat Pendidikan Tidak Ditemukan' }}
+                                </td>
                                 <td class="text-center align-middle">{{date('d-m-Y', strtotime($d->batas_isi_krs))}}</td>
                                 <td class="text-center align-middle">
                                     @php
