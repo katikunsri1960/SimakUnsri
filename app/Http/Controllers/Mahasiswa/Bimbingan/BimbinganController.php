@@ -69,7 +69,6 @@ class BimbinganController extends Controller
         //     return redirect()->back()->withErrors('Data Aktivitas Mahasiswa tidak ditemukan, Silahkan ambil aktivitas mahasiswa di menu KRS!');
         // }
 
-
         // PENGECEKAN STATUS PEMBAYARAN
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)->count();
 
@@ -82,40 +81,42 @@ class BimbinganController extends Controller
                 ->where('id_semester', $semester_select)
                 ->count();
 
-        try {
-            $tagihan = Tagihan::with('pembayaran')
-            ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
-            ->where('kode_periode', $semester_select)
-            ->first();
+        // try {
+        //     $tagihan = Tagihan::with('pembayaran')
+        //     ->whereIn('tagihan.nomor_pembayaran', [$id_test, $nim])
+        //     ->where('kode_periode', $semester_select)
+        //     ->first();
 
-            if($tagihan){
-                if($tagihan->pembayaran){
-                    $pembayaran = $tagihan->pembayaran;
-                }
-                else{
-                    $pembayaran = NULL;
-                }
-            }else{
-                $pembayaran = NULL;
-            }
+        //     if($tagihan){
+        //         if($tagihan->pembayaran){
+        //             $pembayaran = $tagihan->pembayaran;
+        //         }
+        //         else{
+        //             $pembayaran = NULL;
+        //         }
+        //     }else{
+        //         $pembayaran = NULL;
+        //     }
 
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
-        }
+        // } catch (\Exception $e) {
+        //     return redirect()->back()->with('error', 'Terjadi kesalahan saat mengambil data tagihan');
+        // }
 
         // dd($pembayaran, $beasiswa, $penundaan_pembayaran, $pembayaran_manual);
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if (empty($pembayaran) && $beasiswa == 0 && $penundaan_pembayaran == 0 && $pembayaran_manual == 0) {
+        if (
+            // empty($pembayaran) && 
+            $beasiswa == 0 && $penundaan_pembayaran == 0 && $pembayaran_manual == 0) {
             session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         } 
 
-        dd($tagihan, $pembayaran);
+        // dd($tagihan, $pembayaran);
         return view('mahasiswa.bimbingan.tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
             'id_semester' => $semester_select,
-            'pembayaran'=> $pembayaran,
+            // 'pembayaran'=> $pembayaran,
             'beasiswa'=>$beasiswa
         ]);
     }
