@@ -106,11 +106,11 @@ class BimbinganController extends Controller
         // dd($pembayaran, $beasiswa, $penundaan_pembayaran, $pembayaran_manual);
 
         // Jika belum ada pembayaran dan tidak ada beasiswa
-        if ($pembayaran == null && $beasiswa == 0 && $penundaan_pembayaran == 0 && $pembayaran_manual == 0) {
+        if (is_null($pembayaran) && $beasiswa == 0 && $penundaan_pembayaran == 0 && $pembayaran_manual == 0) {
             session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         } 
 
-        // dd($tagihan);
+        // dd($pembayaran);
         return view('mahasiswa.bimbingan.tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
