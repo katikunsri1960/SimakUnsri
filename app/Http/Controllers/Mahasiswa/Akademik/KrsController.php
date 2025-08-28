@@ -12,6 +12,7 @@ use App\Models\PenundaanBayar;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\BatasIsiKRSManual;
 use App\Models\BeasiswaMahasiswa;
+use App\Models\Mahasiswa\LulusDo;
 use App\Models\Connection\Tagihan;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
@@ -28,14 +29,14 @@ use App\Models\Perkuliahan\MatkulMerdeka;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\PrasyaratMatkul;
 use App\Models\Perkuliahan\BimbingMahasiswa;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\RencanaPembelajaran;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
-use App\Models\Perkuliahan\KonversiAktivitas;
-use App\Models\Perkuliahan\NilaiPerkuliahan;
 
 class KrsController extends Controller
 {
@@ -47,6 +48,22 @@ class KrsController extends Controller
         // Ambil data riwayat pendidikan mahasiswa
         $riwayat_pendidikan = RiwayatPendidikan::with('prodi')->where('id_registrasi_mahasiswa', $id_reg)->first();
         // dd($riwayat_pendidikan);
+
+        $status_keluar = LulusDo::where('id_registrasi_mahasiswa', $id_reg)
+            ->select('id_jenis_keluar', 'nama_jenis_keluar', 'id_periode_keluar')
+            ->first();
+
+        if (!empty($riwayat_pendidikan->id_jenis_keluar)) {
+            return redirect()->back()->with(
+                'error',
+                'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $riwayat_pendidikan->keterangan_keluar.'!'
+            );
+        } elseif ($status_keluar) {
+            return redirect()->back()->with(
+                'error',
+                'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $status_keluar->nama_jenis_keluar.'!'
+            );
+        }
 
         $semester_aktif = SemesterAktif::first()->id_semester;
 
@@ -589,6 +606,22 @@ class KrsController extends Controller
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                     ->first();
+
+            $status_keluar = LulusDo::where('id_registrasi_mahasiswa', $id_reg)
+                ->select('id_jenis_keluar', 'nama_jenis_keluar', 'id_periode_keluar')
+                ->first();
+
+            if (!empty($riwayat_pendidikan->id_jenis_keluar)) {
+                return redirect()->back()->with(
+                    'error',
+                    'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $riwayat_pendidikan->keterangan_keluar.'!'
+                );
+            } elseif ($status_keluar) {
+                return redirect()->back()->with(
+                    'error',
+                    'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $status_keluar->nama_jenis_keluar.'!'
+                );
+            }
             // $prodi = $riwayat_pendidikan->id_prodi;
             // $kurikulum = $riwayat_pendidikan->id_kurikulum;
 

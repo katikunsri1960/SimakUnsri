@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use App\Models\BatasIsiKRSManual;
+use App\Models\Mahasiswa\LulusDo;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
@@ -221,6 +222,22 @@ class AktivitasMBKMController extends Controller
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                     ->first();
+
+        $status_keluar = LulusDo::where('id_registrasi_mahasiswa', $id_reg)
+            ->select('id_jenis_keluar', 'nama_jenis_keluar', 'id_periode_keluar')
+            ->first();
+
+        if (!empty($riwayat_pendidikan->id_jenis_keluar)) {
+            return redirect()->back()->with(
+                'error',
+                'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $riwayat_pendidikan->keterangan_keluar.'!'
+            );
+        } elseif ($status_keluar) {
+            return redirect()->back()->with(
+                'error',
+                'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $status_keluar->nama_jenis_keluar.'!'
+            );
+        }
 
         $db = new MataKuliah();
         $db_akt = new AktivitasMahasiswa();
@@ -628,6 +645,22 @@ class AktivitasMBKMController extends Controller
                     ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                     ->first();
 
+        $status_keluar = LulusDo::where('id_registrasi_mahasiswa', $id_reg)
+            ->select('id_jenis_keluar', 'nama_jenis_keluar', 'id_periode_keluar')
+            ->first();
+
+        if (!empty($riwayat_pendidikan->id_jenis_keluar)) {
+            return redirect()->back()->with(
+                'error',
+                'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $riwayat_pendidikan->keterangan_keluar.'!'
+            );
+        } elseif ($status_keluar) {
+            return redirect()->back()->with(
+                'error',
+                'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $status_keluar->nama_jenis_keluar.'!'
+            );
+        }
+        
         $db = new MataKuliah();
         $db_akt = new AktivitasMahasiswa();
 
