@@ -110,7 +110,7 @@ class BimbinganController extends Controller
             session()->flash('error', 'Anda belum menyelesaikan pembayaran untuk semester ini!');
         } 
 
-        dd($pembayaran);
+        dd($tagihan, $pembayaran);
         return view('mahasiswa.bimbingan.tugas-akhir.index', [
             'data' => $data,
             'semester' => $semester,
