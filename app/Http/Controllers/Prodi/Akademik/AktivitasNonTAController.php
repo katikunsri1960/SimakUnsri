@@ -8,6 +8,7 @@ use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\MatkulKurikulum;
 use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Dosen\PenugasanDosen;
@@ -434,9 +435,15 @@ class AktivitasNonTAController extends Controller
         try {
             DB::beginTransaction();
 
+            $data_trtanskrip = TranskripMahasiswa::where('id_konversi_aktivitas', $konversi)->first();
+            
+            if($data_trtanskrip){
+                TranskripMahasiswa::where('id_konversi_aktivitas', $konversi)->delete();
+            }
+
             KonversiAktivitas::where('id_konversi_aktivitas', $konversi)->delete();
 
-            DB::commit();
+            DB::commit(); 
 
             return redirect()->back()->with('success', 'Data Nilai Berhasil di Hapus!!');
         } catch (\Throwable $th) {
@@ -579,6 +586,12 @@ class AktivitasNonTAController extends Controller
 
         try {
             DB::beginTransaction();
+
+            $data_trtanskrip = TranskripMahasiswa::where('id_nilai_transfer', $transfer)->first();
+
+            if($data_trtanskrip){
+                TranskripMahasiswa::where('id_nilai_transfer', $transfer)->delete();
+            }
 
             NilaiTransferPendidikan::where('id_transfer', $transfer)->delete();
 
