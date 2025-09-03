@@ -15,7 +15,7 @@ class DosenController extends Controller
 
     private function count_value($act)
     {
-        $data = new FeederAPI($act,0,0, '');
+        $data = new FeederAPI($act,0,0, '', '');
         $response = $data->runWS();
         $count = $response['data'];
 
@@ -47,9 +47,10 @@ class DosenController extends Controller
             $limit = 1000;
             $act = $d['act'];
             $order = $d['primary'];
+            $filter = null;
 
             for ($i=0; $i < $count; $i+=$limit) {
-                $job = new $d['job']($act, $limit, $i, $order);
+                $job = new $d['job']($act, $limit, $i, $order, $filter);
                 $batch->add($job);
             }
 
@@ -72,13 +73,14 @@ class DosenController extends Controller
         $limit = 1000;
         $offset = 0;
         $order = 'id_registrasi_dosen';
+        $filter = null;
 
         $count = $this->count_value('GetCountPenugasanSemuaDosen');
 
         $batch = Bus::batch([])->dispatch();
 
         for($i=0; $i < $count; $i+=$limit) {
-            $job = new \App\Jobs\Dosen\PenugasanDosenJob($act, $limit, $i, $order);
+            $job = new \App\Jobs\Dosen\PenugasanDosenJob($act, $limit, $i, $order, $filter);
             $batch->add($job);
         }
 
