@@ -52,7 +52,7 @@ class PejabatFakultasController extends Controller
         $tahun_ajaran = substr($semester_aktif->id_semester, 0, 4);
 
         try {
-            $dosen = PenugasanDosen::with(['prodi', 'prodi.fakultas', 'biodata' ])->where('id_tahun_ajaran', $tahun_ajaran-1)
+            $dosen = PenugasanDosen::with(['prodi', 'prodi.fakultas', 'biodata' ])->where('id_tahun_ajaran', $tahun_ajaran)
                     ->where('id_dosen', $request->id_dosen)
                     ->firstOrFail();
 
