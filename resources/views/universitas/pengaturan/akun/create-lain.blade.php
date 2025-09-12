@@ -18,6 +18,7 @@
                                 <option value="" disabled selected>Select one</option>
                                 <option value="perpus">Perpustakaan</option>
                                 <option value="bak">Bak</option>
+                                <option value="dppm">Direktorat Penjamin Mutu</option>
                             </select>
                         </div>
 

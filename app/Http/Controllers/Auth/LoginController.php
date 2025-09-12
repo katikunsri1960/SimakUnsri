@@ -76,6 +76,7 @@ class LoginController extends Controller
             User::MAHASISWA => 'mahasiswa.dashboard',
             User::BAAK => 'bak',
             User::PERPUS => 'perpus',
+            User::DIREKTORAT_PPM => 'dppm.dashboard',
         ];
 
         if (auth()->attempt(['username' => $input['username'], 'password' => $input['password']])) {

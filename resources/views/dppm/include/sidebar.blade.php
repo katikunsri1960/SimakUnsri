@@ -23,20 +23,20 @@
                             </span>
                         </a>
                     </li> --}}
-                    <li class="treeview {{request()->routeIs('perpus.bebas-pustaka') || request()->routeIs('perpus.bebas-pustaka.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('dppm.kuisioner') || request()->routeIs('dppm.kuisioner.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-pen-square"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Bebas Pustaka</span>
+                            <span>Kuisioner</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('perpus.bebas-pustaka') ? 'active' : ''}}">
-                                <a href="{{route('perpus.bebas-pustaka')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Tambah Data</a>
-                            </li>
-                            <li class="{{request()->routeIs('perpus.bebas-pustaka.list') ? 'active' : ''}}">
-                                <a href="{{route('perpus.bebas-pustaka.list')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>List Bebas Pustaka</a>
+                            {{-- <li class="{{request()->routeIs('dppm.kuisioner.index') ? 'active' : ''}}">
+                                <a href="{{route('dppm.kuisioner.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>List Kuisioner</a>
+                            </li> --}}
+                            <li class="{{request()->routeIs('dppm.kuisioner') || request()->routeIs('dppm.kuisioner.*') ? 'active' : ''}}">
+                                <a href="{{route('dppm.kuisioner')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Kuisioner</a>
                             </li>
                         </ul>
                     </li>

@@ -9,7 +9,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('bak.beasiswa')}}" method="get">
+            <form action="{{route('perpus.bebas-pustaka.list')}}" method="get">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 mb-3">
@@ -23,17 +23,6 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- <div class="col-md-12 mb-3">
-                            <label for="jenis_beasiswa" class="form-label">Jenis Beasiswa</label>
-                            <select multiple class="form-select" name="jenis_beasiswa[]" id="jenis_beasiswa">
-                                @foreach ($jenisBeasiswa as $j)
-                                <option value="{{$j->id}}" {{ in_array($j->id, old('jenis_beasiswa',
-                                    request()->get('jenis_beasiswa', []))) ? 'selected' : '' }}>
-                                   {{$j->nama_jenis_beasiswa}}
-                                </option>
-                                @endforeach
-                            </select>
-                        </div> --}}
                     </div>
 
                 </div>
@@ -58,12 +47,12 @@
             dropdownParent: $('#filter-button')
         });
 
-        // $('#jenis_beasiswa').select2({
-        //     placeholder: '-- Pilih Jenis Beasiswa -- ',
-        //     allowClear: true,
-        //     width: '100%',
-        //     dropdownParent: $('#filter-button')
-        // });
+        $('#jenis_beasiswa').select2({
+            placeholder: '-- Pilih Jenis Beasiswa -- ',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#filter-button')
+        });
     });
 
 </script>
