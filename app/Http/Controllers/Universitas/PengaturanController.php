@@ -364,6 +364,8 @@ class PengaturanController extends Controller
             'role' => 'required',
         ]);
 
+        // dd($data);
+
         $data['password'] = bcrypt($data['password']);
 
         User::create($data);

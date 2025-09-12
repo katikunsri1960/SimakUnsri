@@ -20,6 +20,7 @@ class User extends Authenticatable
     public const MAHASISWA = 'mahasiswa';
     public const BAAK = 'bak';
     public const PERPUS = 'perpus';
+    public const DIREKTORAT_PPM = 'dppm';
 
     const ROLE_PRODI = 'prodi';
     const ROLE_FAKULTAS = 'fakultas';

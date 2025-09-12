@@ -1,0 +1,356 @@
+@extends('layouts.prodi')
+@section('title')
+Tambah Kelas Perkuliahan
+@endsection
+@section('content')
+@include('swal')
+<div class="content-header">
+    <div class="d-flex align-items-center">
+        <div class="me-auto">
+            <h3 class="page-title">Tambah Kelas Perkuliahan</h3>
+            <div class="d-inline-block align-items-center">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}">Kelas dan Penjadwalan</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Tambah Kelas Perkuliahan</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<section class="content">
+    <div class="row">
+        <div class="col-12">
+            <div class="box box-outline-success bs-3 border-success">
+                <form class="form" action="{{route('prodi.data-akademik.kelas-penjadwalan.store')}}" id="tambah-kelas" method="POST">
+                    @csrf
+                    <div class="box-body">
+                        <h4 class="text-info mb-0"><i class="fa fa-university"></i> Detail Kelas Kuliah</h4>
+                        <hr class="my-15">
+                        <div class="form-group">
+                            <div class=" col-lg-12 mb-3">
+                                <label for="nama_mata_kuliah" class="form-label">Nama Mata Kuliah</label>
+                                <select class="form-select" name="nama_mata_kuliah" id="mata_kuliah" required></select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="form-label">Tanggal Mulai Efektif</label>
+                                    <div class="row">
+                                        <div class="col-sm-4 mb-2">
+                                            <select class="form-select" name="tanggal_mulai" id="tanggal_mulai" required>
+                                                <option value="">Tanggal</option>
+                                                @for($i=1;$i <= 31;$i++)
+                                                    @php
+                                                        $based_num = 0;
+                                                        $num = $based_num.$i;
+                                                    @endphp
+                                                    <option value="{{$i < 10 ? $num : $i}}">{{$i < 10 ? $num : $i}}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 mb-2">
+                                            <select class="form-select" name="bulan_mulai" id="bulan_mulai" required>
+                                                <option value="">Bulan</option>
+                                                @for($i=1;$i <= 12;$i++)
+                                                    @php
+                                                        $based_num = 0;
+                                                        $num = $based_num.$i;
+                                                    @endphp
+                                                    <option value="{{$i < 10 ? $num : $i}}">{{$i < 10 ? $num : $i}}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 mb-2">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="tahun_mulai"
+                                                id="tahun_mulai"
+                                                aria-describedby="helpId"
+                                                placeholder="Tahun"
+                                                value="{{date('Y')}}"
+                                                disabled
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="form-label">Tanggal Akhir Efektif</label>
+                                    <div class="row">
+                                    <div class="col-sm-4 mb-2">
+                                            <select class="form-select" name="tanggal_akhir" id="tanggal_akhir" required>
+                                                <option value="">Tanggal</option>
+                                                @for($i=1;$i <= 31;$i++)
+                                                    @php
+                                                        $based_num = 0;
+                                                        $num = $based_num.$i;
+                                                    @endphp
+                                                    <option value="{{$i < 10 ? $num : $i}}">{{$i < 10 ? $num : $i}}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 mb-2">
+                                            <select class="form-select" name="bulan_akhir" id="bulan_akhir" required>
+                                                <option value="">Bulan</option>
+                                                @for($i=1;$i <= 12;$i++)
+                                                    @php
+                                                        $based_num = 0;
+                                                        $num = $based_num.$i;
+                                                    @endphp
+                                                    <option value="{{$i < 10 ? $num : $i}}">{{$i < 10 ? $num : $i}}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 mb-2">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="tahun_akhir"
+                                                id="tahun_akhir"
+                                                aria-describedby="helpId"
+                                                placeholder="Tahun"
+                                                value="{{date('Y')}}"
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mb-3">
+                                <label for="kapasitas_kelas" class="form-label">Kapasitas Kelas Kuliah</label>
+                                <input
+                                    type="number"
+                                    class="form-control"
+                                    name="kapasitas_kelas"
+                                    id="kapasitas_kelas"
+                                    aria-describedby="helpId"
+                                    placeholder="Masukkan Kapasitas Kelas Kuliah"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mb-3">
+                                <label for="ruang_kelas" class="form-label">Ruang Kelas Kuliah</label>
+                                <select class="form-select" name="ruang_kelas" id="ruang_kelas" required>
+                                    <option value="">-- Pilih Ruang Kelas --</option>
+                                    @foreach($ruang as $r)
+                                        <option value="{{$r->id}}">{{$r->nama_ruang}} - {{$r->lokasi}}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mb-3">
+                                <label for="mode_kelas" class="form-label">Mode Kelas Kuliah</label>
+                                <select class="form-select" name="mode_kelas" id="mode_kelas" required>
+                                    <option value="">-- Pilih Mode Kelas --</option>
+                                    <option value="O">Online</option>
+                                    <option value="F">Offline</option>
+                                    <option value="M">Campuran</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="mb-3">
+                                <label for="lingkup_kelas" class="form-label">Lingkup Kelas Kuliah</label>
+                                <select class="form-select" name="lingkup_kelas" id="lingkup_kelas" required>
+                                    <option value="">-- Pilih Lingkup Kelas --</option>
+                                    <option value="1">Internal</option>
+                                    <option value="2">External</option>
+                                    <option value="3">Campuran</option>
+                                </select>
+                            </div>
+                        </div>
+                        <h4 class="text-info mb-0"><i class="fa fa-calendar-o"></i> Jadwal Kelas Kuliah</h4>
+                        <hr class="my-15">
+                        <div class="form-group">
+                            <div class="mb-3">
+                                <label for="jadwal_hari" class="form-label">Jadwal Hari</label>
+                                <input
+                                    type="text"
+                                    class="form-control"
+                                    name="jadwal_hari"
+                                    id="jadwal_hari"
+                                    aria-describedby="helpId"
+                                    placeholder="Masukkan Jadwal Hari Kelas Kuliah"
+                                    onkeydown="upperCaseF(this)"
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="form-label">Jam Mulai Kelas</label>
+                                    <div class="row">
+                                        <div class="col-sm-4 mb-2">
+                                            <select class="form-select" name="jam_mulai" id="jam_mulai" required>
+                                                <option value="">Jam</option>
+                                                @for($i=0;$i < 24;$i++)
+                                                    @php
+                                                        $based_num = 0;
+                                                        $num = $based_num.$i;
+                                                    @endphp
+                                                    <option value="{{$i < 10 ? $num : $i}}">{{$i < 10 ? $num : $i}}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 mb-2">
+                                            <select class="form-select" name="menit_mulai" id="menit_mulai" required>
+                                                <option value="">Menit</option>
+                                                @for($i=0;$i < 60;$i++)
+                                                    @php
+                                                        $based_num = 0;
+                                                        $num = $based_num.$i;
+                                                    @endphp
+                                                    <option value="{{$i < 10 ? $num : $i}}">{{$i < 10 ? $num : $i}}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 mb-2">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="detik_mulai"
+                                                id="detik_mulai"
+                                                aria-describedby="helpId"
+                                                placeholder="Detik"
+                                                value="{{'00'}}"
+                                                disabled
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group">
+                                    <label class="form-label">Jam Selesai Kelas</label>
+                                    <div class="row">
+                                    <div class="col-sm-4 mb-2">
+                                            <select class="form-select" name="jam_selesai" id="jam_selesai" required>
+                                                <option value="">Jam</option>
+                                                @for($i=0;$i < 24;$i++)
+                                                    @php
+                                                        $based_num = 0;
+                                                        $num = $based_num.$i;
+                                                    @endphp
+                                                    <option value="{{$i < 10 ? $num : $i}}">{{$i < 10 ? $num : $i}}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 mb-2">
+                                            <select class="form-select" name="menit_selesai" id="menit_selesai" required>
+                                                <option value="">Menit</option>
+                                                @for($i=0;$i < 60;$i++)
+                                                    @php
+                                                        $based_num = 0;
+                                                        $num = $based_num.$i;
+                                                    @endphp
+                                                    <option value="{{$i < 10 ? $num : $i}}">{{$i < 10 ? $num : $i}}</option>
+                                                @endfor
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-4 mb-2">
+                                            <input
+                                                type="text"
+                                                class="form-control"
+                                                name="detik_selesai"
+                                                id="detik_selesai"
+                                                aria-describedby="helpId"
+                                                placeholder="Detik"
+                                                value="{{'00'}}"
+                                                disabled
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <a type="button" href="{{route('prodi.data-akademik.kelas-penjadwalan')}}" class="btn btn-danger waves-effect waves-light">
+                            Batal
+                        </a>
+                        <button type="submit" class="btn btn-primary waves-effect waves-light">Simpan</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+@endsection
+@push('js')
+<script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
+<script>
+    $(document).ready(function(){
+        $("#mata_kuliah").select2({
+            placeholder : '-- Pilih Mata Kuliah --',
+            minimumInputLength: 3,
+            ajax: { 
+                url: "{{route('prodi.data-akademik.kelas-penjadwalan.get-matkul')}}",
+                type: "GET",
+                dataType: 'json',
+                delay: 250,
+                data: function (params) {
+                    return {
+                        q: params.term // search term
+                    };
+                },
+                processResults: function (data) {
+                    // console.log(data);
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.kode_mata_kuliah + "-" + item.nama_mata_kuliah,
+                                id: item.id_matkul
+                            }
+                        })
+                    };
+                },
+            }
+        });
+    });
+
+    $('#tambah-kelas').submit(function(e){
+        e.preventDefault();
+        swal({
+            title: 'Pembuatan Kelas Kuliah',
+            text: "Apakah anda yakin ingin menambahkan kelas?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                $('#tambah-kelas').unbind('submit').submit();
+                $('#spinner').show();
+            }
+        });
+    });
+
+    function upperCaseF(a){
+        setTimeout(function(){
+            a.value = a.value.toUpperCase();
+        }, 1);
+    }
+    
+</script>
+@endpush

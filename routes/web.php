@@ -34,6 +34,28 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
     Route::get('/get-prodi-by-fakultas', [App\Http\Controllers\UniversalController::class, 'get_prodi_by_fakultas'])->name('get-prodi-by-fakultas');
 
     // Route Perpustakaan
+    Route::group(['middleware' => ['role:dppm']], function(){
+        Route::prefix('dppm')->group(function(){
+            Route::get('/', [App\Http\Controllers\DPPM\DashboardController::class, 'index'])->name('dppm.dashboard');
+
+            Route::prefix('kuisioner')->group(function(){
+                Route::get('/', [App\Http\Controllers\DPPM\KuisionerController::class, 'index'])->name('dppm.kuisioner');
+                Route::get('/{id_prodi}', [App\Http\Controllers\DPPM\KuisionerController::class, 'kelas_kuliah'])->name('dppm.kuisioner.kelas-kuliah');
+                Route::get('/prodi/{id_prodi}', [App\Http\Controllers\DPPM\KuisionerController::class, 'kelas_penjadwalan'])->name('dppm.kuisioner.kelas-penjadwalan');
+                Route::get('/{id_matkul}/{semester}', [App\Http\Controllers\DPPM\KuisionerController::class, 'kuisioner_matkul'])->name('dppm.kuisioner.kelas-penjadwalan.kuisioner-matkul');
+                Route::get('/{id_matkul}/{semester}/detail', [App\Http\Controllers\DPPM\KuisionerController::class, 'detail_kelas_penjadwalan'])->name('dppm.kuisioner.kelas-penjadwalan.detail');
+                // Route::get('/list', [App\Http\Controllers\DPPM\BebasPustakaController::class, 'list'])->name('perpus.bebas-pustaka.list');
+                // Route::get('/list-data', [App\Http\Controllers\DPPM\KuisionerController::class, 'listData'])->name('dppm.kuisioner.list-data');
+                // Route::post('/store', [App\Http\Controllers\DPPM\BebasPustakaController::class, 'store'])->name('perpus.bebas-pustaka.store');
+                // Route::get('/get-data', [App\Http\Controllers\DPPM\BebasPustakaController::class, 'getData'])->name('perpus.bebas-pustaka.get-data');
+
+                // Route::delete('/delete/{bebasPustaka}', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'delete'])->name('perpus.bebas-pustaka.delete');
+
+            });
+        });
+    });
+
+    // Route Perpustakaan
     Route::group(['middleware' => ['role:perpus']], function(){
         Route::prefix('perpus')->group(function(){
             Route::get('/', [App\Http\Controllers\Perpus\DashboardController::class, 'index'])->name('perpus');
