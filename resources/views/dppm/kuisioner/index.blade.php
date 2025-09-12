@@ -92,20 +92,20 @@ KUISIONER
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script src="{{asset('assets/js/flatpickr/flatpickr.js')}}"></script>
 <script>
-$(document).ready(function () {
-    $('#data').DataTable({
-        responsive: true,
-        autoWidth: false,
-        pageLength: 10,
-        ordering: true,
-        columnDefs: [
-            { orderable: false, targets: -1 }, // kolom aksi tidak bisa di-sort
-            { className: "text-center", targets: [0, -1] } // center untuk kolom No dan Aksi
-        ],
-        language: {
-            url: "{{ asset('assets/vendor_components/datatable/i18n/id.json') }}" // kalau mau bahasa Indonesia
-        }
+    $(document).ready(function () {
+        $('#data').DataTable({
+            responsive: true,
+            autoWidth: false,
+            pageLength: 10,
+            ordering: true,
+            columnDefs: [
+                { orderable: false, targets: -1 }, // kolom aksi tidak bisa di-sort
+                { className: "text-center", targets: [0, -1] } // center untuk kolom No dan Aksi
+            ],
+            language: {
+                url: "{{ asset('assets/vendor_components/datatable/i18n/id.json') }}" // kalau mau bahasa Indonesia
+            }
+        });
     });
-});
 </script>
 @endpush

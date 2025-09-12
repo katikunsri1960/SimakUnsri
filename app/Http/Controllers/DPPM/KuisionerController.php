@@ -159,7 +159,7 @@ class KuisionerController extends Controller
         ->where('is_active', 1)
         ->get();
         // dd($data);
-        return view('dppm.kuisioner.prodi.kelas-penjadwalan.index', ['prodi_id'=>$prodi_id, 'data' => $data, 'semester_aktif' => $semester_aktif, 'pilihan_semester'=>$pilihan_semester, 'semester_view'=>$semester_view, 'semester_pilih'=>$semester_pilih]);
+        return view('dppm.kuisioner.kelas-penjadwalan.index', ['prodi_id'=>$prodi_id, 'data' => $data, 'semester_aktif' => $semester_aktif, 'pilihan_semester'=>$pilihan_semester, 'semester_view'=>$semester_view, 'semester_pilih'=>$semester_pilih]);
     }
 
 
@@ -186,7 +186,7 @@ class KuisionerController extends Controller
                 }])
                 ->first();
 
-        return view('dppm.kuisioner.prodi.kelas-penjadwalan.kuisioner', [
+        return view('dppm.kuisioner.kelas-penjadwalan.kuisioner', [
                     'kuisioner' => $kuisioner,
                     'nilai_counts' => $nilai_counts,
                     'kelas' => $kelas
@@ -216,7 +216,7 @@ class KuisionerController extends Controller
                 ->groupBy('kuisoner_question_id');
         // dd($nilai_counts);
 
-        return view('dppm.kuisioner.prodi.kelas-penjadwalan.kuisioner-matkul.index', [
+        return view('dppm.kuisioner.kelas-penjadwalan.kuisioner-matkul.index', [
             'nilai_counts' => $nilai_counts,
             'kuisioner' => $kuisioner,
             'mata_kuliah' => $mata_kuliah,
