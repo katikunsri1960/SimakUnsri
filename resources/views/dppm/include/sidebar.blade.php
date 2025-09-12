@@ -23,7 +23,13 @@
                             </span>
                         </a>
                     </li> --}}
-                    <li class="treeview {{request()->routeIs('dppm.kuisioner') || request()->routeIs('dppm.kuisioner.*') ? 'active menu-open' : ''}}">
+                    <li class="{{request()->routeIs('dppm.kuisioner') || request()->routeIs('dppm.kuisioner.*') ? 'active' : ''}}">
+                        <a href="{{route('dppm.kuisioner')}}">
+                            <i span class="fa fa-pen-square"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Kuisioner</span>
+                        </a>
+                    </li>
+                    {{-- <li class="treeview {{request()->routeIs('dppm.kuisioner') || request()->routeIs('dppm.kuisioner.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-pen-square"><span class="path1"></span><span class="path2"></span></i>
                             <span>Kuisioner</span>
@@ -32,14 +38,11 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            {{-- <li class="{{request()->routeIs('dppm.kuisioner.index') ? 'active' : ''}}">
-                                <a href="{{route('dppm.kuisioner.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>List Kuisioner</a>
-                            </li> --}}
                             <li class="{{request()->routeIs('dppm.kuisioner') || request()->routeIs('dppm.kuisioner.*') ? 'active' : ''}}">
                                 <a href="{{route('dppm.kuisioner')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Kuisioner</a>
                             </li>
                         </ul>
-                    </li>
+                    </li> --}}
                     {{-- <li class="{{request()->routeIs('bak.transkrip-nilai') ? 'active' : ''}}">
                         <a href="{{route('bak.transkrip-nilai')}}">
                             <i class="fa fa-list-alt"><span class="path1"></span><span
@@ -87,6 +90,13 @@
                             </li>
                         </ul>
                     </li> --}}
+                    <li class="header">BANTUAN</li>
+                    <li class="{{request()->routeIs('dppm.bantuan.ganti-password') ? 'active' : ''}}">
+                        <a href="{{route('dppm.bantuan.ganti-password')}}">
+                            <i class="fa fa-key"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Ganti Password</span>
+                        </a>
+                    </li>
                 </ul>
             </div>
         </div>

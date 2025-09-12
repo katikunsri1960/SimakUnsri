@@ -52,6 +52,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 // Route::delete('/delete/{bebasPustaka}', [App\Http\Controllers\Perpus\BebasPustakaController::class, 'delete'])->name('perpus.bebas-pustaka.delete');
 
             });
+
+            //Route Bantuan
+            Route::prefix('bantuan')->group(function () {
+                Route::get('/ganti-password', [App\Http\Controllers\DPPM\GantiPasswordController::class, 'ganti_password'])->name('dppm.bantuan.ganti-password');
+                Route::post('/proses-ganti-password', [App\Http\Controllers\DPPM\GantiPasswordController::class, 'proses_ganti_password'])->name('dppm.bantuan.proses-ganti-password');
+            });
         });
     });
 
