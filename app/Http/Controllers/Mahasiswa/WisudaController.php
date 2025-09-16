@@ -37,9 +37,17 @@ class WisudaController extends Controller
 
         $semester_aktif = SemesterAktif::first();
 
-        $riwayat_pendidikan = RiwayatPendidikan::with('prodi', 'prodi.fakultas', 'prodi.jurusan')
+        $riwayat_pendidikan = RiwayatPendidikan::with('prodi', 'prodi.fakultas', 'prodi.jurusan', 'lulus_do')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
+
+        // $status_keluar = $riwayat_pendidikan->lulus_do->
+
+        // dd($riwayat_pendidikan->lulus_do);
+
+        if ($riwayat_pendidikan->lulus_do) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '.$riwayat_pendidikan->lulus_do->nama_jenis_keluar.'!');
+        }
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $semester_aktif->id_semester)
