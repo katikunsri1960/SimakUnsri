@@ -40,8 +40,12 @@ class MonitoringController extends Controller
     {
         $id_prodi = $prodi->id_prodi;
 
-        $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
+        $data = RiwayatPendidikan::with('lulus_do')
+                ->whereHas('lulus_do', function ($query) {
+                    $query->whereNull('id_registrasi_mahasiswa');
+                })
+                ->where('id_prodi', $id_prodi)
+                // ->whereNull('id_jenis_keluar')
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
 
@@ -58,8 +62,12 @@ class MonitoringController extends Controller
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
 
-        $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
+        $data = RiwayatPendidikan::with('lulus_do')
+                ->whereHas('lulus_do', function ($query) {
+                    $query->whereNull('id_registrasi_mahasiswa');
+                })
+                ->where('id_prodi', $id_prodi)
+                // ->whereNull('id_jenis_keluar')
                 ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
@@ -134,8 +142,12 @@ class MonitoringController extends Controller
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
 
-        $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
-                ->whereNull('id_jenis_keluar')
+        $data = RiwayatPendidikan::with('lulus_do')
+                ->whereHas('lulus_do', function ($query) {
+                    $query->whereNull('id_registrasi_mahasiswa');
+                })
+                ->where('id_prodi', $id_prodi)
+                // ->whereNull('id_jenis_keluar')
                 ->whereNotIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
@@ -461,10 +473,24 @@ class MonitoringController extends Controller
 
         }
 
-
         return view('bak.monitoring.status-mahasiswa.detail-prodi', [
             'data' => $data,
             'status' => $status
+        ]);
+    }
+
+    public function status_ukt()
+    {
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
+        $semesterAktif = SemesterAktif::first()->id_semester;
+
+        $db = new MonevStatusMahasiswa();
+
+        $data = $db->with(['prodi.fakultas', 'details', 'semester'])->where('id_semester', $semesterAktif)->get();
+
+        return view('bak.monitoring.status-ukt.index', [
+            'data' => $data,
+            'prodi' => $prodi
         ]);
     }
 }

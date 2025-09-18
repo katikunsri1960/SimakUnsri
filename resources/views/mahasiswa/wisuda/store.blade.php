@@ -99,35 +99,51 @@ Pendaftaran Wisuda Mahasiswa
                         </div>
                         
                         {{-- ORANG TUA --}}
-                        <h4 class="text-info mb-0" style="padding-top: 40px;"><i class="fa-solid fa-users"></i> Data Diri Orang Tua</h4>
+                        <h4 class="text-info mb-0" style="padding-top: 40px;">
+                            <i class="fa-solid fa-users"></i> Data Diri Orang Tua
+                        </h4>
                         <hr class="my-15">
                         <div class="data-wisuda-field row">
                             <div class=" col-lg-6 mb-3">
-                                <label for="nama_ayah" class="form-label">NAMA AYAH</label>
+                                <label for="nama_ayah" class="form-label">
+                                    NAMA AYAH <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" class="form-control" name="nama_ayah" id="nama_ayah" aria-describedby="helpId"
-                                    value="{{strtoupper($riwayat_pendidikan->biodata->nama_ayah)}}" required/>
+                                    value="{{ strtoupper($riwayat_pendidikan->biodata->nama_ayah) }}" required/>
                             </div>
+
                             <div class=" col-lg-6 mb-3">
-                                <label for="no_hp_ayah" class="form-label">Nomor Handphone Ayah</label>
+                                <label for="no_hp_ayah" class="form-label">
+                                    Nomor Handphone Ayah <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" class="form-control" name="no_hp_ayah" id="no_hp_ayah" aria-describedby="helpId"
-                                    value="{{$riwayat_pendidikan->biodata->no_hp_ayah}}" required/>
+                                    value="{{ $riwayat_pendidikan->biodata->no_hp_ayah }}" required/>
                             </div>
+
                             <div class=" col-lg-6 mb-3">
-                                <label for="nama_ibu" class="form-label">Nama Ibu Kandung</label>
+                                <label for="nama_ibu" class="form-label">
+                                    Nama Ibu Kandung <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" class="form-control" name="nama_ibu" id="nama_ibu" aria-describedby="helpId"
-                                    value="{{$riwayat_pendidikan->biodata->nama_ibu_kandung}}" disabled required/>
+                                    value="{{ $riwayat_pendidikan->biodata->nama_ibu_kandung }}" disabled required/>
                             </div>
+
                             <div class=" col-lg-6 mb-3">
-                                <label for="no_hp_ibu" class="form-label">Nomor Handphone Ibu</label>
+                                <label for="no_hp_ibu" class="form-label">
+                                    Nomor Handphone Ibu <span class="text-danger">*</span>
+                                </label>
                                 <input type="text" class="form-control" name="no_hp_ibu" id="no_hp_ibu" aria-describedby="helpId"
-                                    value="{{$riwayat_pendidikan->biodata->no_hp_ibu}}" required/>
+                                    value="{{ $riwayat_pendidikan->biodata->no_hp_ibu }}" required/>
                             </div>
-                        
+
                             <div class=" col-lg-12 mb-3">
-                                <label for="alamat_orang_tua" class="form-label">ALAMAT ORANG TUA</label>
-                                <textarea placeholder="MASUKKAN ALAMAT ORANG TUA" class="form-control" name="alamat_orang_tua" id="alamat_orang_tua" aria-describedby="helpId" required>{{strtoupper($riwayat_pendidikan->biodata->alamat_orang_tua ?? '')}}</textarea>
+                                <label for="alamat_orang_tua" class="form-label">
+                                    ALAMAT ORANG TUA <span class="text-danger">*</span>
+                                </label>
+                                <textarea placeholder="MASUKKAN ALAMAT ORANG TUA" class="form-control" name="alamat_orang_tua" id="alamat_orang_tua" aria-describedby="helpId" required>{{ strtoupper($riwayat_pendidikan->biodata->alamat_orang_tua ?? '') }}</textarea>
                             </div>
                         </div>
+
 
                         <h4 class="text-info mb-0" style="padding-top: 40px;"><i class="fa-solid fa-school"></i> Data Asal Sekolah Mahasiswa</h4>
                         <hr class="my-15">
