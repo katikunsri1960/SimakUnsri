@@ -138,7 +138,7 @@ class MonitoringController extends Controller
 
         $baseQuery = $db->with('lulus_do')
                 ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_jenis_keluar');
+                    $query->whereNull('id_registrasi_mahasiswa');
                 })
                 ->where('id_prodi', $p->id_prodi);
 
@@ -149,7 +149,7 @@ class MonitoringController extends Controller
 
         $isi_krs = $db->with('lulus_do')
                 ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_jenis_keluar');
+                    $query->whereNull('id_registrasi_mahasiswa');
                 })
                 ->where('id_prodi', $p->id_prodi)
                 ->where(function ($query) use ($semesterAktif) {
@@ -183,7 +183,7 @@ class MonitoringController extends Controller
 
         $approve = $db->with('lulus_do')
                 ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_jenis_keluar');
+                    $query->whereNull('id_registrasi_mahasiswa');
                 })
                 ->where('id_prodi', $p->id_prodi)
                 ->where(function ($query) use ($semesterAktif) {
@@ -220,7 +220,7 @@ class MonitoringController extends Controller
 
         $non_approve = $db->with('lulus_do')
             ->whereHas('lulus_do', function ($query) {
-                $query->whereNull('id_jenis_keluar');
+                $query->whereNull('id_registrasi_mahasiswa');
             })
             ->where('id_prodi', $p->id_prodi)
             ->where(function ($query) use ($semesterAktif) {
@@ -431,7 +431,7 @@ class MonitoringController extends Controller
 
         $data = RiwayatPendidikan::with('lulus_do')
                 ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_jenis_keluar');
+                    $query->whereNull('id_registrasi_mahasiswa');
                 })
                 // ->whereHas('lulus_do') // hanya ambil yang ada relasi lulus_do
                 ->where('id_prodi', $id_prodi)
@@ -454,7 +454,7 @@ class MonitoringController extends Controller
 
         $data = RiwayatPendidikan::with('lulus_do')
                 ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_jenis_keluar');
+                    $query->whereNull('id_registrasi_mahasiswa');
                 })
                 // ->whereHas('lulus_do')
                 ->where('id_prodi', $id_prodi)
@@ -618,7 +618,7 @@ class MonitoringController extends Controller
 
         $riwayat = RiwayatPendidikan::with(['prodi'])
             // ->whereHas('lulus_do', function ($query) {
-            //     $query->whereNull('id_jenis_keluar');
+            //     $query->whereNull('id_registrasi_mahasiswa');
             // })
             ->whereDoesntHave('lulus_do')
             ->where('id_prodi', '2282d1e5-9e12-4c79-a33f-5579763f7f94')
