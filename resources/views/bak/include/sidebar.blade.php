@@ -115,7 +115,10 @@
                         </a>
                         <ul class="treeview-menu">
                             <li class="{{request()->routeIs('bak.monitoring.status-mahasiswa') || request()->routeIs('bak.monitoring.status-mahasiswa.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.monitoring.status-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status Mahasiswa</a>
+                                <a href="{{route('bak.monitoring.status-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status Akd Mhs</a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.monitoring.status-ukt') || request()->routeIs('bak.monitoring.status-ukt.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.monitoring.status-ukt')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status UKT Mhs</a>
                             </li>
                             <li class="{{request()->routeIs('bak.monitoring.pengisian-krs') || request()->routeIs('bak.monitoring.pengisian-krs.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>
