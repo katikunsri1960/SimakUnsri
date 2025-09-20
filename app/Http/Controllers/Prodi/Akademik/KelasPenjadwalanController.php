@@ -49,15 +49,16 @@ class KelasPenjadwalanController extends Controller
 
         $semester_aktif = SemesterAktif::first();
 
-        if ($semester_view != null && !in_array($semester_view, $semester_aktif->semester_allow)) {
-            return redirect()->back()->with('error', "Semester Tidak dalam list yang di izinkan!");
-        }
+        // if ($semester_view != null && !in_array($semester_view, $semester_aktif->semester_allow)) {
+        //     return redirect()->back()->with('error', "Semester Tidak dalam list yang di izinkan!");
+        // }
 
         $semester_pilih = $semester_view == null ? $semester_aktif->id_semester : $semester_view;
         $dbSemester = Semester::select('id_semester', 'nama_semester');
 
-        $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
-        // dd($semester_aktif);
+        // $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        $pilihan_semester = $dbSemester->whereBetween('id_semester', ['20241',$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        // dd($pilihan_semester);
         $prodi_id = auth()->user()->fk_id;
 
         $data = ListKurikulum::with(['mata_kuliah' => function ($query) use ($prodi_id, $semester_pilih) {
