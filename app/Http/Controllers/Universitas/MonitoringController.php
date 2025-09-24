@@ -136,10 +136,7 @@ class MonitoringController extends Controller
         $index = 0;
 
 
-        $baseQuery = $db->with('lulus_do')
-                ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_registrasi_mahasiswa');
-                })
+        $baseQuery = $db->whereDoesntHave('lulus_do')
                 ->where('id_prodi', $p->id_prodi);
 
         $jumlah_mahasiswa = (clone $baseQuery)->count();
@@ -147,10 +144,7 @@ class MonitoringController extends Controller
                                 ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                                 ->count();
 
-        $isi_krs = $db->with('lulus_do')
-                ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_registrasi_mahasiswa');
-                })
+        $isi_krs = $db->whereDoesntHave('lulus_do')
                 ->where('id_prodi', $p->id_prodi)
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereExists(function ($subquery) use ($semesterAktif) {
@@ -181,10 +175,7 @@ class MonitoringController extends Controller
                 ->distinct()
                 ->count();
 
-        $approve = $db->with('lulus_do')
-                ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_registrasi_mahasiswa');
-                })
+        $approve = $db->whereDoesntHave('lulus_do')
                 ->where('id_prodi', $p->id_prodi)
                 ->where(function ($query) use ($semesterAktif) {
                 $query->whereExists(function ($subquery) use ($semesterAktif) {
@@ -218,10 +209,7 @@ class MonitoringController extends Controller
             ->distinct()
             ->count();
 
-        $non_approve = $db->with('lulus_do')
-            ->whereHas('lulus_do', function ($query) {
-                $query->whereNull('id_registrasi_mahasiswa');
-            })
+        $non_approve = $db->whereDoesntHave('lulus_do')
             ->where('id_prodi', $p->id_prodi)
             ->where(function ($query) use ($semesterAktif) {
                 $query->whereExists(function ($subquery) use ($semesterAktif) {
@@ -429,10 +417,7 @@ class MonitoringController extends Controller
     {
         $id_prodi = $prodi->id_prodi;
 
-        $data = RiwayatPendidikan::with('lulus_do')
-                ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_registrasi_mahasiswa');
-                })
+        $data = RiwayatPendidikan::whereDoesntHave('lulus_do')
                 // ->whereHas('lulus_do') // hanya ambil yang ada relasi lulus_do
                 ->where('id_prodi', $id_prodi)
                 ->orderBy('id_periode_masuk', 'ASC')
@@ -452,10 +437,7 @@ class MonitoringController extends Controller
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
 
-        $data = RiwayatPendidikan::with('lulus_do')
-                ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_registrasi_mahasiswa');
-                })
+        $data = RiwayatPendidikan::whereDoesntHave('lulus_do')
                 // ->whereHas('lulus_do')
                 ->where('id_prodi', $id_prodi)
                 // ->whereNull('id_jenis_keluar')
@@ -616,15 +598,14 @@ class MonitoringController extends Controller
         $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
         $semesterAktif = SemesterAktif::first()->id_semester;
 
-        $riwayat = RiwayatPendidikan::with(['prodi'])
-            // ->whereHas('lulus_do', function ($query) {
-            //     $query->whereNull('id_registrasi_mahasiswa');
-            // })
-            ->whereDoesntHave('lulus_do')
-            ->where('id_prodi', '2282d1e5-9e12-4c79-a33f-5579763f7f94')
-            ->whereIn('id_registrasi_mahasiswa', ['30a9d6c5-d5ba-478b-b448-efe9d8ef1bcb','1c5768b1-bd8a-4dd6-a3af-e74bb603130d'])
+            $riwayat = RiwayatPendidikan::
+            // whereNull('id_jenis_keluar')
+            // ->
+            where('id_prodi', '2282d1e5-9e12-4c79-a33f-5579763f7f94')
+            // ->whereIn('id_registrasi_mahasiswa', ['30a9d6c5-d5ba-478b-b448-efe9d8ef1bcb','1c5768b1-bd8a-4dd6-a3af-e74bb603130d'])
             ->select('id_registrasi_mahasiswa', 'id_prodi', 'id_periode_masuk')
-            // ->with('prodi')
+            ->with('prodi')
+            ->whereDoesntHave('lulus_do')
             ->withSum('transkrip_mahasiswa as total_sks', 'sks_mata_kuliah')
             ->get();
 
