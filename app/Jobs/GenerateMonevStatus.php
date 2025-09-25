@@ -75,11 +75,14 @@ class GenerateMonevStatus implements ShouldQueue
         $riwayat = RiwayatPendidikan::
             whereNull('id_jenis_keluar')
             ->where('id_prodi', $this->prodi)
+            // ->
+            // where('id_prodi', '2282d1e5-9e12-4c79-a33f-5579763f7f94')
             ->select('id_registrasi_mahasiswa', 'id_prodi', 'id_periode_masuk')
-            ->with('prodi','lulus_do')
-            ->whereHas('lulus_do', function ($query) {
-                $query->whereNull('id_registrasi_mahasiswa');
-            })
+            ->with('prodi')
+            ->whereDoesntHave('lulus_do')
+            // ->whereHas('lulus_do', function ($query) {
+            //     $query->whereNull('id_registrasi_mahasiswa');
+            // })
             ->withSum('transkrip_mahasiswa as total_sks', 'sks_mata_kuliah')
             ->get();
 
