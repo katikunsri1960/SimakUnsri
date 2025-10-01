@@ -39,7 +39,7 @@ class PerkuliahanController extends Controller
 
     private function count_value($act)
     {
-        $data = new FeederAPI($act,0,0, '');
+        $data = new FeederAPI($act,0,0, '', '');
         $response = $data->runWS();
         $count = $response['data'];
 
