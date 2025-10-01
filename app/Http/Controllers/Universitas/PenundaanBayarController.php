@@ -39,6 +39,7 @@ class PenundaanBayarController extends Controller
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'status' => 'required|in:0,2,3,4,5',
+            'batas_bayar' => 'required|date',
             'keterangan' => 'nullable',
         ]);
 

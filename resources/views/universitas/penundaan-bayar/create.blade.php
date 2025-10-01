@@ -31,6 +31,10 @@
                             </select>
                         </div>
                         <div class="col-md-12 mb-3">
+                            <label for="batas_bayar" class="form-label">Janji Bayar</label>
+                            <input type="date" name="batas_bayar" id="batas_bayar" required class="form-select">
+                        </div>
+                        <div class="col-md-12 mb-3">
                             <label for="keterangan" class="form-label">Keterangan</label>
                             <textarea class="form-control" name="keterangan" id="keterangan" rows="3"></textarea>
                         </div>

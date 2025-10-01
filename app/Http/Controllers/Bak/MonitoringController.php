@@ -40,10 +40,7 @@ class MonitoringController extends Controller
     {
         $id_prodi = $prodi->id_prodi;
 
-        $data = RiwayatPendidikan::with('lulus_do')
-                ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_registrasi_mahasiswa');
-                })
+        $data = RiwayatPendidikan::whereDoesntHave('lulus_do')
                 ->where('id_prodi', $id_prodi)
                 // ->whereNull('id_jenis_keluar')
                 ->orderBy('id_periode_masuk', 'ASC')
@@ -62,10 +59,7 @@ class MonitoringController extends Controller
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
 
-        $data = RiwayatPendidikan::with('lulus_do')
-                ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_registrasi_mahasiswa');
-                })
+        $data = RiwayatPendidikan::whereDoesntHave('lulus_do')
                 ->where('id_prodi', $id_prodi)
                 // ->whereNull('id_jenis_keluar')
                 ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
@@ -142,10 +136,7 @@ class MonitoringController extends Controller
         $angkatanAktif = date('Y') - 7;
         $arrayTahun = range($angkatanAktif, date('Y'));
 
-        $data = RiwayatPendidikan::with('lulus_do')
-                ->whereHas('lulus_do', function ($query) {
-                    $query->whereNull('id_registrasi_mahasiswa');
-                })
+        $data = RiwayatPendidikan::whereDoesntHave('lulus_do')
                 ->where('id_prodi', $id_prodi)
                 // ->whereNull('id_jenis_keluar')
                 ->whereNotIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)

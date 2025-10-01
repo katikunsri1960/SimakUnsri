@@ -50,6 +50,7 @@ class MonitoringController extends Controller
 
         $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
 
@@ -68,6 +69,7 @@ class MonitoringController extends Controller
 
         $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
@@ -144,6 +146,7 @@ class MonitoringController extends Controller
 
         $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->whereNotIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();

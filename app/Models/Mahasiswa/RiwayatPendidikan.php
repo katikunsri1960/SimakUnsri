@@ -151,6 +151,7 @@ class RiwayatPendidikan extends Model
     {
         $data = $this->with('pembimbing_akademik')->where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereExists(function ($subquery) use ($semesterAktif) {
                         $subquery->select(DB::raw(1))
@@ -187,6 +188,7 @@ class RiwayatPendidikan extends Model
     {
         $data = $this->with(['beasiswa'])->where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->where(function ($query) use ($semesterAktif, $isApproved) {
                     $query->whereExists(function ($subquery) use ($semesterAktif, $isApproved) {
                         $subquery->select(DB::raw(1))
@@ -256,6 +258,7 @@ class RiwayatPendidikan extends Model
 
         $data = $this->with(['pembimbing_akademik', 'beasiswa', ])->where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereNotExists(function ($subquery) use ($semesterAktif) {
@@ -304,6 +307,7 @@ class RiwayatPendidikan extends Model
         $data = $this->where('id_prodi', $id_prodi)
                     ->where('id_periode_masuk', $semester)
                     ->whereNull('id_jenis_keluar')
+                    ->whereDoesntHave('lulus_do')
                     ->whereIn('id_jenis_daftar', [2,16])
                     ->get();
 
