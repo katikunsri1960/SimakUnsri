@@ -74,6 +74,9 @@ Penundaan Bayar
                                 <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
                                 <td class="text-center align-middle">{{$d->nim}}</td>
                                 <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
+                                <td class="text-center align-middle text-nowrap">
+                                    {{ $d->batas_bayar ? \Carbon\Carbon::parse($d->batas_bayar)->format('d-m-Y') : '-' }}
+                                </td>
                                 <td class="text-start align-middle">{{$d->keterangan}}</td>
                                 <td class="text-center align-middle">
                                     @php

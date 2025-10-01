@@ -124,7 +124,8 @@ class MonitoringDosenController extends Controller
         $db = new RiwayatPendidikan();
 
         $baseQuery = $db->where('id_prodi', auth()->user()->fk_id)
-                ->whereNull('id_jenis_keluar');
+                ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do');
 
         // Get the total count of students
         $jumlah_mahasiswa = (clone $baseQuery)->count();
@@ -136,6 +137,7 @@ class MonitoringDosenController extends Controller
 
         $isi_krs = $db->where('id_prodi', auth()->user()->fk_id)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereExists(function ($subquery) use ($semesterAktif) {
                         $subquery->select(DB::raw(1))
@@ -167,6 +169,7 @@ class MonitoringDosenController extends Controller
 
             $approve = $db->where('id_prodi', auth()->user()->fk_id)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereExists(function ($subquery) use ($semesterAktif) {
                         $subquery->select(DB::raw(1))
@@ -202,6 +205,7 @@ class MonitoringDosenController extends Controller
 
             $non_approve = $db->where('id_prodi', auth()->user()->fk_id)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereExists(function ($subquery) use ($semesterAktif) {
                         $subquery->select(DB::raw(1))
@@ -251,6 +255,7 @@ class MonitoringDosenController extends Controller
 
         $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
 
@@ -270,6 +275,7 @@ class MonitoringDosenController extends Controller
 
         $data = RiwayatPendidikan::where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $arrayTahun)
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
@@ -288,6 +294,7 @@ class MonitoringDosenController extends Controller
 
         $data = RiwayatPendidikan::with('pembimbing_akademik')->where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereExists(function ($subquery) use ($semesterAktif) {
                         $subquery->select(DB::raw(1))
@@ -331,6 +338,7 @@ class MonitoringDosenController extends Controller
 
         $data = RiwayatPendidikan::with('pembimbing_akademik')->where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereExists(function ($subquery) use ($semesterAktif) {
                         $subquery->select(DB::raw(1))
@@ -377,6 +385,7 @@ class MonitoringDosenController extends Controller
 
         $data = RiwayatPendidikan::with('pembimbing_akademik')->where('id_prodi', $id_prodi)
                 ->whereNull('id_jenis_keluar')
+                ->whereDoesntHave('lulus_do')
                 ->where(function ($query) use ($semesterAktif) {
                     $query->whereExists(function ($subquery) use ($semesterAktif) {
                         $subquery->select(DB::raw(1))

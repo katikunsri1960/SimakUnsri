@@ -1013,6 +1013,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
     Route::group(['middleware' => ['role:univ']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
+        // routes/web.php
+        Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Universitas\MonitoringController::class, 'getProdi'])->name('univ.getProdi');
+
         Route::prefix('universitas')->group(function () {
 
             Route::get('/check-sync', [App\Http\Controllers\Universitas\DashboardController::class, 'check_sync'])->name('univ.check-sync');
@@ -1144,12 +1147,17 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.detail-prodi');
                 });
 
+                // Route::prefix('status-ukt')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_ukt'])->name('univ.monitoring.status-ukt');
+                //     // Route::post('/generate-data', [App\Http\Controllers\Universitas\MonitoringController::class, 'generate_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.generate-data');
+
+                //     // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.detail-total');
+                //     // Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.detail-prodi');
+                // });
+
                 Route::prefix('status-ukt')->group(function(){
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_ukt'])->name('univ.monitoring.status-ukt');
-                    // Route::post('/generate-data', [App\Http\Controllers\Universitas\MonitoringController::class, 'generate_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.generate-data');
-
-                    // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.detail-total');
-                    // Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Universitas\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('univ.monitoring.status-mahasiswa.detail-prodi');
+                    Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_ukt_data'])->name('univ.monitoring.status-ukt.data');
                 });
 
                 Route::prefix('pengisian-krs')->group(function () {
