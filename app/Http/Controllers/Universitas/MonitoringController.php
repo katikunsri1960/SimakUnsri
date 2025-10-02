@@ -837,7 +837,7 @@ class MonitoringController extends Controller
     //     return view('universitas.monitoring.status-ukt.index');
     // }
 
-   public function status_ukt(Request $request)
+    public function status_ukt(Request $request)
     {
         $fakultas = Fakultas::all();
 
@@ -887,14 +887,13 @@ class MonitoringController extends Controller
     {
         $semesterAktif = SemesterAktif::first()->id_semester;
 
-        $query = RiwayatPendidikan::with(['kurikulum', 'pembimbing_akademik', 'beasiswa', 'beasiswa.jenis_beasiswa'])
-            ->whereDoesntHave('lulus_do')
+        $query = RiwayatPendidikan::whereDoesntHave('lulus_do')
             ->orderBy('nama_program_studi', 'ASC')
             ->orderBy('id_periode_masuk', 'desc');
 
         // Filter
         if ($request->filled('prodi')) {
-            $query->whereIn('id_prodi', $request->get('prodi'));
+            $query->where('id_prodi', $request->get('prodi'));
         }
         if ($request->filled('angkatan')) {
             $query->whereIn(DB::raw('LEFT(id_periode_masuk, 4)'), $request->get('angkatan'));
@@ -944,8 +943,6 @@ class MonitoringController extends Controller
 
         return response()->json($data);
     }
-
-
 
     public function batch_job()
     {
