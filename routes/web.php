@@ -82,9 +82,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
     Route::group(['middleware' => ['role:bak']], function(){
         Route::prefix('bak')->group(function(){
             Route::get('/', [App\Http\Controllers\Bak\DashboardController::class, 'index'])->name('bak');
-
             Route::get('/check-sync', [App\Http\Controllers\Bak\DashboardController::class, 'check_sync'])->name('bak.check-sync');
-
+            
             Route::prefix('data-master')->group(function(){
                 Route::prefix('predikat')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat'])->name('bak.data-master.predikat');
@@ -169,6 +168,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'status_ukt'])->name('bak.monitoring.status-ukt');
                     // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('bak.monitoring.status-ukt.detail-total');
                     // Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('bak.monitoring.status-ukt.detail-prodi');
+                });
+
+                Route::prefix('status-ukt')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'status_ukt'])->name('bak.monitoring.status-ukt');
+                    Route::get('/data', [App\Http\Controllers\Bak\MonitoringController::class, 'status_ukt_data'])->name('bak.monitoring.status-ukt.data');
+                    Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Universitas\MonitoringController::class, 'getProdi'])->name('bak.monitoring.status-ukt.getProdi');
                 });
             });
 
@@ -372,6 +377,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'status_mahasiswa'])->name('fakultas.monitoring.status-mahasiswa');
                     Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('fakultas.monitoring.status-mahasiswa.detail-total');
                     Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('fakultas.monitoring.status-mahasiswa.detail-prodi');
+                });
+
+                Route::prefix('status-ukt')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Fakultas\MonitoringController::class, 'status_ukt'])->name('fakultas.monitoring.status-ukt');
+                    Route::get('/data', [App\Http\Controllers\Fakultas\MonitoringController::class, 'status_ukt_data'])->name('fakultas.monitoring.status-ukt.data');
+                    Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Fakultas\MonitoringController::class, 'getProdi'])->name('fakultas.monitoring.status-ukt.getProdi');
                 });
             });
 
@@ -988,7 +999,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/tidak-isi-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'tidak_isi_krs'])->name('prodi.monitoring.pengisian-krs.tidak-isi-krs');
                     Route::get('/approve-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'approve_krs'])->name('prodi.monitoring.pengisian-krs.approve-krs');
                     Route::get('/non-approve-krs', [App\Http\Controllers\Prodi\Monitoring\MonitoringDosenController::class, 'non_approve_krs'])->name('prodi.monitoring.pengisian-krs.non-approve-krs');
-
                 });
 
                 Route::prefix('lulus-do')->group(function(){
@@ -1013,9 +1023,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
     Route::group(['middleware' => ['role:univ']], function() {
         Route::get('/universitas', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ');
-        // routes/web.php
-        Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Universitas\MonitoringController::class, 'getProdi'])->name('univ.getProdi');
-
         Route::prefix('universitas')->group(function () {
 
             Route::get('/check-sync', [App\Http\Controllers\Universitas\DashboardController::class, 'check_sync'])->name('univ.check-sync');
@@ -1158,6 +1165,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('status-ukt')->group(function(){
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_ukt'])->name('univ.monitoring.status-ukt');
                     Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_ukt_data'])->name('univ.monitoring.status-ukt.data');
+                    Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Universitas\MonitoringController::class, 'getProdi'])->name('univ.monitoring.status-ukt.getProdi');
                 });
 
                 Route::prefix('pengisian-krs')->group(function () {

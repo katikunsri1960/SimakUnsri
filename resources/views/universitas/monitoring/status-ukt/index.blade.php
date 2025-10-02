@@ -45,7 +45,7 @@ UKT Mahasiswa
                         <div class="form-group row">
                             <label class="col-sm-2 col-form-label">Program Studi</label>
                             <div class="col-sm-10">
-                                <select multiple class="form-select" name="prodi[]" id="prodi">
+                                <select class="form-select" name="prodi" id="prodi">
                                     <!-- opsi prodi akan di-load otomatis -->
                                 </select>
                             </div>
@@ -154,121 +154,147 @@ UKT Mahasiswa
     }
 
     function getData(){
-    var prodi = $('#prodi').val();
-    var angkatan = $('#angkatan').val();
-    var status_bayar = $('#status_bayar').val();
+        var prodi = $('#prodi').val();
+        var angkatan = $('#angkatan').val();
+        var status_bayar = $('#status_bayar').val();
 
-    // kalau semester kosong → ambil angkatan terakhir
-    // if(!angkatan || angkatan.length === 0){
-    //     angkatan = [$('#angkatan option:first').val()];
-    // }
+        // kalau semester kosong → ambil angkatan terakhir
+        // if(!angkatan || angkatan.length === 0){
+        //     angkatan = [$('#angkatan option:first').val()];
+        // }
 
-    $('#loading').show();
-    $('#data tbody').hide().html('');
-    if ($.fn.DataTable.isDataTable('#data')) {
-        $('#data').DataTable().clear().destroy();
+        $('#loading').show();
+        $('#data tbody').hide().html('');
+        if ($.fn.DataTable.isDataTable('#data')) {
+            $('#data').DataTable().clear().destroy();
+        }
+
+        $.ajax({
+            url: "{{ route('univ.monitoring.status-ukt.data') }}",
+            type: 'GET',
+            data: { 
+                prodi: prodi, 
+                angkatan: angkatan, 
+                status_bayar: status_bayar 
+            },
+            success: function(response) {
+                var data = response;
+                var html = '';
+                var no = 1;
+                
+                $.each(data, function(i, item) {
+                    let batasBayar = item.batas_bayar ? new Date(item.batas_bayar).toLocaleDateString("id-ID") : "-";
+                    let statusBayar = "-";
+
+                    if (item.beasiswa) {
+                        statusBayar = `<h5><span class="badge bg-primary">Beasiswa<br>(${item.beasiswa.jenis_beasiswa.nama_jenis_beasiswa})</span></h5>`;
+                    } else if (item.tagihan) {
+                        if (item.tagihan.pembayaran) {
+                            if (item.penundaan_bayar == 1 && item.batas_bayar && item.tagihan.pembayaran.waktu_transaksi > item.batas_bayar) {
+                                statusBayar = `<h5 class="mb-0"><span class="badge bg-danger">Lunas<br>(Terlambat)</span></h5>`;
+                            } else {
+                                statusBayar = `<h5 class="mb-0"><span class="badge bg-success">Lunas</span></h5>`;
+                            }
+                        } else {
+                            statusBayar = item.penundaan_bayar == 1
+                                ? `<h5 class="mb-0"><span class="badge bg-warning">Penundaan Bayar</span></h5>`
+                                : `<h5 class="mb-0"><span class="badge bg-danger">Belum Bayar</span></h5>`;
+                        }
+                    }
+
+                    let waktuTransaksi = "-";
+                    if (item.tagihan && item.tagihan.pembayaran && item.tagihan.pembayaran.waktu_transaksi) {
+                        waktuTransaksi = new Date(item.tagihan.pembayaran.waktu_transaksi).toLocaleDateString("id-ID");
+                    }
+
+                    let totalBayar = "-";
+                    if (item.tagihan && item.tagihan.pembayaran && item.tagihan.pembayaran.total_nilai_pembayaran) {
+                        totalBayar = parseInt(item.tagihan.pembayaran.total_nilai_pembayaran).toLocaleString('id-ID', {
+                            style: 'currency',
+                            currency: 'IDR',
+                            minimumFractionDigits: 0
+                        }).replace('IDR', '').trim();
+                    }
+
+                    html += `
+                        <tr>
+                            <td class="text-center">${no}</td>
+                            <td>${item.nim}</td>
+                            <td>${item.nama_mahasiswa}</td>
+                            <td class="text-center">${item.angkatan}</td>
+                            <td>${item.nama_program_studi}</td>
+                            <td class="text-center">${item.keterangan_keluar ? item.keterangan_keluar : 'Aktif'}</td>
+                            <td class="text-center">${batasBayar}</td>
+                            <td class="text-center status-bayar" data-order="${statusBayarOrder(statusBayar)}">${statusBayar}</td>
+                            <td class="text-center">${waktuTransaksi}</td>
+                            <td class="text-start">${totalBayar}</td>
+                        </tr>`;
+                    no++;
+                });
+
+                $('#data tbody').html(html).show();
+                $('#data').DataTable({
+                    order: [[6, 'asc']]
+                });
+            },
+            complete: function(){
+                $('#loading').hide(); // hilangkan spinner
+            },
+            error: function(xhr, status, error) {
+                alert('Terjadi kesalahan: ' + error);
+            }
+        });
     }
 
-    $.ajax({
-        url: "{{ route('univ.monitoring.status-ukt.data') }}",
-        type: 'GET',
-        data: { 
-            prodi: prodi, 
-            angkatan: angkatan, 
-            status_bayar: status_bayar 
-        },
-        success: function(response) {
-            var data = response;
-            var html = '';
-            var no = 1;
-            
-            $.each(data, function(i, item) {
-                let batasBayar = item.batas_bayar ? new Date(item.batas_bayar).toLocaleDateString("id-ID") : "-";
-                let statusBayar = "-";
+    $(document).ready(function () {
+        function checkFilterValidity() {
+            let fakultas = $('#fakultas').val();
+            let prodi = $('#prodi').val();
+            // let statusBayar = $('#status_bayar').val();
 
-                if (item.beasiswa) {
-                    statusBayar = `<h5><span class="badge bg-primary">Beasiswa<br>(${item.beasiswa.jenis_beasiswa.nama_jenis_beasiswa})</span></h5>`;
-                } else if (item.tagihan) {
-                    if (item.tagihan.pembayaran) {
-                        if (item.penundaan_bayar == 1 && item.batas_bayar && item.tagihan.pembayaran.waktu_transaksi > item.batas_bayar) {
-                            statusBayar = `<h5 class="mb-0"><span class="badge bg-danger">Lunas<br>(Terlambat)</span></h5>`;
-                        } else {
-                            statusBayar = `<h5 class="mb-0"><span class="badge bg-success">Lunas</span></h5>`;
-                        }
-                    } else {
-                        statusBayar = item.penundaan_bayar == 1
-                            ? `<h5 class="mb-0"><span class="badge bg-warning">Penundaan Bayar</span></h5>`
-                            : `<h5 class="mb-0"><span class="badge bg-danger">Belum Bayar</span></h5>`;
-                    }
-                }
-
-                let waktuTransaksi = "-";
-                if (item.tagihan && item.tagihan.pembayaran && item.tagihan.pembayaran.waktu_transaksi) {
-                    waktuTransaksi = new Date(item.tagihan.pembayaran.waktu_transaksi).toLocaleDateString("id-ID");
-                }
-
-                let totalBayar = "-";
-                if (item.tagihan && item.tagihan.pembayaran && item.tagihan.pembayaran.total_nilai_pembayaran) {
-                    totalBayar = parseInt(item.tagihan.pembayaran.total_nilai_pembayaran).toLocaleString('id-ID', {
-                        style: 'currency',
-                        currency: 'IDR',
-                        minimumFractionDigits: 0
-                    }).replace('IDR', '').trim();
-                }
-
-                html += `
-                    <tr>
-                        <td class="text-center">${no}</td>
-                        <td>${item.nim}</td>
-                        <td>${item.nama_mahasiswa}</td>
-                        <td class="text-center">${item.angkatan}</td>
-                        <td>${item.nama_program_studi}</td>
-                        <td class="text-center">${item.keterangan_keluar ? item.keterangan_keluar : 'Aktif'}</td>
-                        <td class="text-center">${batasBayar}</td>
-                        <td class="text-center status-bayar" data-order="${statusBayarOrder(statusBayar)}">${statusBayar}</td>
-                        <td class="text-center">${waktuTransaksi}</td>
-                        <td class="text-start">${totalBayar}</td>
-                    </tr>`;
-                no++;
-            });
-
-            $('#data tbody').html(html).show();
-            $('#data').DataTable({
-                order: [[6, 'asc']]
-            });
-        },
-        complete: function(){
-            $('#loading').hide(); // hilangkan spinner
-        },
-        error: function(xhr, status, error) {
-            alert('Terjadi kesalahan: ' + error);
+            if (fakultas && prodi) {
+                $('button[onclick="getData()"]').prop('disabled', false);
+            } else {
+                $('button[onclick="getData()"]').prop('disabled', true);
+            }
         }
+
+        // Cek setiap kali ada perubahan
+        $('#fakultas, #prodi').on('change', function () {
+            checkFilterValidity();
+        });
+
+        // Trigger awal
+        checkFilterValidity();
+
+        // // Tambahkan event handler kalau tombol di klik saat disable
+        // $('button[onclick="getData()"]').on('click', function (e) {
+        //     if ($(this).prop('disabled')) {
+        //         e.preventDefault();
+        //         swal({
+        //             icon: 'warning',
+        //             title: 'Filter Belum Lengkap',
+        //             text: 'Harap isi filter fakultas, prodi, dan status bayar terlebih dahulu.',
+        //             confirmButtonText: 'OK'
+        //         });
+        //     }
+        // });
     });
-}
 
-$(document).ready(function () {
-    // disable tombol filter jika fakultas kosong
-    $('#fakultas').on('change', function(){
-        if ($(this).val()) {
-            $('button[onclick="getData()"]').prop('disabled', false);
-        } else {
-            $('button[onclick="getData()"]').prop('disabled', true);
-        }
-    }).trigger('change'); // trigger awal
-});
-
-
-     $(document).ready(function () {
+    $(document).ready(function () {
         $('#fakultas').on('change', function () {
             let fakultasId = $(this).val();
 
             if (fakultasId) {
                 $.ajax({
-                    url: '/get-prodi/' + fakultasId,
+                    url: "{{ route('univ.monitoring.status-ukt.getProdi', '') }}/" + fakultasId,
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
                         $('#prodi').empty(); // kosongkan dulu
+                        // tambahkan opsi default paling atas
+                        $('#prodi').append('<option value="">-- Pilih Program Studi --</option>');
+                        
                         $.each(data, function (key, value) {
                             $('#prodi').append('<option value="' + value.id_prodi + '">' +
                                 '(' + value.kode_program_studi + ') ' + value.nama_jenjang_pendidikan + ' - ' + value.nama_program_studi +
@@ -281,8 +307,6 @@ $(document).ready(function () {
             }
         });
     });
-
-
 
     $(function () {
         // "use strict";
