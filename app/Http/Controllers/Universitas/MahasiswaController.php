@@ -136,10 +136,11 @@ class MahasiswaController extends Controller
             $limit = 500;
             $act = $d['act'];
             $order = $d['order'];
+            $filter = $d['filter'] ?? null;
 
             for ($i=0; $i < $count; $i+=$limit) {
 
-                $api = new FeederAPI($act, $i, $limit, $order);
+                $api = new FeederAPI($act, $i, $limit, $order, $filter);
                 $data = $api->runWS();
 
                 try {
