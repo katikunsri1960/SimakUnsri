@@ -117,6 +117,7 @@ Dashboard
                                                                     {{ $k->question_english }}
                                                                 </p>
                                                             </td>
+                                                            @if($k->id < 9)
                                                             <td class="text-start align-middle text-nowrap">
                                                                 @for ($i = 1; $i <= 7; $i++)
                                                                 <div class="form-check form-check-inline">
@@ -125,6 +126,18 @@ Dashboard
                                                                 </div>
                                                                 @endfor
                                                             </td>
+                                                            @else
+                                                            <td class="text-start align-middle text-nowrap">
+                                                                <input 
+                                                                    class="form-control" 
+                                                                    type="number" 
+                                                                    id="nilai_workload_{{ $loop->iteration }}" 
+                                                                    name="nilai_workload[{{ $loop->iteration }}]" 
+                                                                    value="{{ $k->nilai }}"
+                                                                    required
+                                                                >
+                                                            </td>
+                                                            @endif
                                                         </tr>
                                                         @endforeach
                                                     </tbody>

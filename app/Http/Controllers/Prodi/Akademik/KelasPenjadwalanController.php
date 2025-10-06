@@ -49,6 +49,8 @@ class KelasPenjadwalanController extends Controller
 
         $semester_aktif = SemesterAktif::first();
 
+        // dd($semester_aktif);
+
         // if ($semester_view != null && !in_array($semester_view, $semester_aktif->semester_allow)) {
         //     return redirect()->back()->with('error', "Semester Tidak dalam list yang di izinkan!");
         // }
@@ -56,8 +58,8 @@ class KelasPenjadwalanController extends Controller
         $semester_pilih = $semester_view == null ? $semester_aktif->id_semester : $semester_view;
         $dbSemester = Semester::select('id_semester', 'nama_semester');
 
-        // $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
-        $pilihan_semester = $dbSemester->whereBetween('id_semester', ['20241',$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        // $pilihan_semester = $dbSemester->whereBetween('id_semester', ['20241',$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
         // dd($pilihan_semester);
         $prodi_id = auth()->user()->fk_id;
 
@@ -75,7 +77,7 @@ class KelasPenjadwalanController extends Controller
         ->where('id_prodi', $prodi_id)
         ->where('is_active', 1)
         ->get();
-        // dd($data);
+
         return view('prodi.data-akademik.kelas-penjadwalan.index', ['data' => $data, 'semester_aktif' => $semester_aktif, 'pilihan_semester'=>$pilihan_semester, 'semester_view'=>$semester_view, 'semester_pilih'=>$semester_pilih]);
     }
 
@@ -1145,7 +1147,7 @@ class KelasPenjadwalanController extends Controller
 
         $kelas = KelasKuliah::where('id_kelas_kuliah', $id_kelas)
                 ->with('matkul', 'dosen_pengajar.dosen', 'semester', 'peserta_kelas')
-                ->select('id_kelas_kuliah', 'id_matkul', 'nama_kelas_kuliah', 'id_semester')
+                ->select('id_kelas_kuliah', 'id_matkul', 'id_prodi', 'nama_kelas_kuliah', 'id_semester')
                 ->withCount(['peserta_kelas' => function ($query) {
                     $query->where('approved', 1);
                 }])
@@ -1160,6 +1162,7 @@ class KelasPenjadwalanController extends Controller
 
     public function kuisioner_matkul($id_matkul, $semester)
     {
+        $prodi_id = auth()->user()->fk_id;
         $kelas = KelasKuliah::where('id_matkul', $id_matkul)
                 ->where('id_semester', $semester)
                 ->select('id_kelas_kuliah')
@@ -1184,7 +1187,8 @@ class KelasPenjadwalanController extends Controller
             'nilai_counts' => $nilai_counts,
             'kuisioner' => $kuisioner,
             'mata_kuliah' => $mata_kuliah,
-            'semester' => $semester
+            'semester' => $semester,
+            'prodi_id' => $prodi_id
         ]);
     }
 }
