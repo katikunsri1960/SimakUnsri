@@ -121,8 +121,13 @@ class NilaiController extends Controller
 
     public function kuisioner(string $kelas)
     {
-        $data = KuisonerQuestion::all();
         $kelas = KelasKuliah::with(['matkul', 'semester'])->where('id_kelas_kuliah',$kelas)->first();
+
+        if($kelas->id_prodi == 'd6f315de-b934-4dfd-a5bc-49ca457a6674'){
+            $data = KuisonerQuestion::all();
+        }else{
+            $data = KuisonerQuestion::where('id', '<', 9)->get();
+        }
 
         return view('mahasiswa.nilai-perkuliahan.include.kuisoner', ['data' => $data, 'kelas' => $kelas]);
     }
@@ -147,6 +152,25 @@ class NilaiController extends Controller
                 'id_registrasi_mahasiswa' => $id_reg,
                 'nilai' => $nilai,
             ]);
+        }
+        
+        if(isset($data['nilai_workload'])){
+            $validator = Validator::make($data, [
+            'nilai_workload.*' => 'required', // Validasi nilai radio button harus 1, 2, 3, atau 4
+            ]);
+
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            foreach ($data['nilai_workload'] as $kuisoner_question_id => $nilai) {
+                KuisonerAnswer::create([
+                    'kuisoner_question_id' => $kuisoner_question_id,
+                    'id_kelas_kuliah' => $kelas,
+                    'id_registrasi_mahasiswa' => $id_reg,
+                    'nilai' => $nilai,
+                ]);
+            }
         }
         $semester = KelasKuliah::where('id_kelas_kuliah', $kelas)->first()->id_semester;
 

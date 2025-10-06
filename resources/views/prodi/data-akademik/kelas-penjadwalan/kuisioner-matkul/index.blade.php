@@ -51,15 +51,18 @@ Kuisioner Mata Kuliah
                         <label for="filterQuestions">Filter Pertanyaan:</label>
                         <select id="filterQuestions" class="form-control" multiple>
                             @foreach($kuisioner as $question_id => $answers)
-                                @php
-                                    $question = $answers->first()->kuisoner_question;
-                                @endphp
-                                <option value="{{ $question_id }}">{{ $question->question_indonesia }}</option>
+                                @if($answers->first()->kuisoner_question_id < 9)
+                                    @php
+                                        $question = $answers->first()->kuisoner_question;
+                                    @endphp
+                                    <option value="{{ $question_id }}">{{ $question->question_indonesia }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
                     <canvas id="kuisionerChart" width="400" height="200"></canvas>
                     <hr>
+                    <div id="kelas-export-container" class="mb-2"></div>
                     <table class="table table-bordered table-hover" id="data-kelas" style="font-size: 9pt">
                         <thead>
                             <tr>
@@ -112,6 +115,7 @@ Kuisioner Mata Kuliah
                                     $dataNilai6[] = $counts[6]->count ?? 0;
                                     $dataNilai7[] = $counts[7]->count ?? 0;
                                 @endphp
+                                @if($answers->first()->kuisoner_question_id < 9)
                                 <tr>
                                     <td class="text-center align-middle">{{ $loop->iteration }}</td>
                                     <td class="text-start align-middle">{{ $question->question_indonesia }}</td>
@@ -126,20 +130,59 @@ Kuisioner Mata Kuliah
                                     <td class="text-center align-middle">{{ $counts[7]->count ?? 0 }}</td>
                                     <td class="text-center align-middle">{{ $total_responden }}</td>
                                 </tr>
+                                @endif
                             @endforeach
                         </tbody>
-                        <tfoot>
-                            <tr>
-                                <th colspan="3">Rata-rata</th>
-                                <th class="text-center">
-                                    @if ($total_pertanyaan > 0)
-                                        {{ number_format($total_rata / $total_pertanyaan, 2) }}
-                                    @endif
-                                </th>
-                                <th class="text-center" colspan="8"></th>
-                            </tr>
-                        </tfoot>
                     </table>
+                    <hr>
+                    @if($prodi_id == 'd6f315de-b934-4dfd-a5bc-49ca457a6674')
+                    <div id="workload-export-container" class="mb-2"></div>
+                    <table class="table table-bordered table-hover" id="data-workload" style="font-size: 9pt">
+                        <thead>
+                            <tr>
+                                <th class="text-center align-middle">No</th>
+                                <th class="text-center align-middle">Pertanyaan (Indonesia)</th>
+                                <th class="text-center align-middle">Pertanyaan (English)</th>
+                                <th class="text-center align-middle">Rata-rata Nilai</th>
+                                <th class="text-center align-middle">Total Responden</th>
+                            </tr>
+                        </thead>
+                        @php
+                            $total_rata = 0;
+                            $total_pertanyaan = 0;
+                            $labels = [];
+                            $fullLabels = [];
+                            $dataRataRata = [];
+                            $dataNilai = [];
+                        @endphp
+                        <tbody>
+                            @foreach($kuisioner as $question_id => $answers)
+                                @php
+                                    $total_rata += $answers->avg('nilai');
+                                    $total_pertanyaan++;
+                                    $question = $answers->first()->kuisoner_question;
+                                    $average = $answers->avg('nilai');
+                                    $counts = $nilai_counts[$question_id]->keyBy('nilai');
+                                    $total_responden = $answers->count();
+
+                                    $fullLabels[] = $question->question_indonesia;
+                                    $labels[] = Str::words($question->question_indonesia, 2, '...');
+                                    $dataRataRata[] = $average;
+                                    $dataNilai[] = $counts[1]->count ?? 0;
+                                @endphp
+                                @if($answers->first()->kuisoner_question_id > 8)
+                                <tr>
+                                    <td class="text-center align-middle">{{ $loop->iteration }}</td>
+                                    <td class="text-start align-middle">{{ $question->question_indonesia }}</td>
+                                    <td class="text-start align-middle">{{ $question->question_english }}</td>
+                                    <td class="text-center align-middle">{{ number_format($average, 2) }}</td>
+                                    <td class="text-center align-middle">{{ $total_responden }}</td>
+                                </tr>
+                                @endif
+                            @endforeach
+                        </tbody>
+                    </table>
+                    @endif
                 </div>
             </div>
         </div>
@@ -162,7 +205,7 @@ Kuisioner Mata Kuliah
         var kuisionerChart = new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: @json($labels),
+                labels: @json($labels).slice(0,8),
                 datasets: [
                     // {
                     //     label: 'Rata-rata Nilai',
@@ -173,49 +216,49 @@ Kuisioner Mata Kuliah
                     // },
                     {
                         label: 'Nilai 1',
-                        data: @json($dataNilai1),
+                        data: @json($dataNilai1).slice(0,8),
                         backgroundColor: 'rgba(255, 99, 132, 0.5)',
                         borderColor: 'rgba(255, 99, 132, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 2',
-                        data: @json($dataNilai2),
+                        data: @json($dataNilai2).slice(0,8),
                         backgroundColor: 'rgba(54, 162, 235, 0.5)',
                         borderColor: 'rgba(54, 162, 235, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 3',
-                        data: @json($dataNilai3),
+                        data: @json($dataNilai3).slice(0,8),
                         backgroundColor: 'rgba(255, 206, 86, 0.5)',
                         borderColor: 'rgba(255, 206, 86, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 4',
-                        data: @json($dataNilai4),
+                        data: @json($dataNilai4).slice(0,8),
                         backgroundColor: 'rgba(75, 192, 192, 0.5)',
                         borderColor: 'rgba(75, 192, 192, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 5',
-                        data: @json($dataNilai5),
+                        data: @json($dataNilai5).slice(0,8),
                         backgroundColor: 'rgba(153, 102, 255, 0.5)',
                         borderColor: 'rgba(153, 102, 255, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 6',
-                        data: @json($dataNilai6),
+                        data: @json($dataNilai6).slice(0,8),
                         backgroundColor: 'rgba(255, 159, 64, 0.5)',
                         borderColor: 'rgba(255, 159, 64, 1)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 7',
-                        data: @json($dataNilai7),
+                        data: @json($dataNilai7).slice(0,8),
                         backgroundColor: 'rgba(199, 199, 199, 0.5)',
                         borderColor: 'rgba(199, 199, 199, 1)',
                         borderWidth: 1
@@ -280,31 +323,66 @@ Kuisioner Mata Kuliah
                 }
             @endforeach
 
-            kuisionerChart.data.labels = filteredLabels;
+            kuisionerChart.data.labels = filteredLabels.slice(0,8);
             // kuisionerChart.data.datasets[0].data = filteredDataRataRata;
-            kuisionerChart.data.datasets[0].data = filteredDataNilai1;
-            kuisionerChart.data.datasets[1].data = filteredDataNilai2;
-            kuisionerChart.data.datasets[2].data = filteredDataNilai3;
-            kuisionerChart.data.datasets[3].data = filteredDataNilai4;
-            kuisionerChart.data.datasets[4].data = filteredDataNilai5;
-            kuisionerChart.data.datasets[5].data = filteredDataNilai6;
-            kuisionerChart.data.datasets[6].data = filteredDataNilai7;
+            kuisionerChart.data.datasets[0].data = filteredDataNilai1.slice(0,8);
+            kuisionerChart.data.datasets[1].data = filteredDataNilai2.slice(0,8);
+            kuisionerChart.data.datasets[2].data = filteredDataNilai3.slice(0,8);
+            kuisionerChart.data.datasets[3].data = filteredDataNilai4.slice(0,8);
+            kuisionerChart.data.datasets[4].data = filteredDataNilai5.slice(0,8);
+            kuisionerChart.data.datasets[5].data = filteredDataNilai6.slice(0,8);
+            kuisionerChart.data.datasets[6].data = filteredDataNilai7.slice(0,8);
             kuisionerChart.update();
         });
     });
 
     $(function(){
         'use strict';
-        // $('#filterQuestions').select2();
-        $('#data-kelas').DataTable({
-            "paging": false,
-            "lengthChange": true,
-            "searching": false,
-            "ordering": true,
-            "info": true,
-            "autoWidth": true
-        });
 
+        // KELAS table (only init if element exists)
+        if ($('#data-kelas').length) {
+            var tableKelas = $('#data-kelas').DataTable({
+                paging: false,
+                lengthChange: true,
+                searching: false,
+                ordering: true,
+                info: true,
+                autoWidth: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Export Excel',
+                        title: 'Data Kuisioner Mata Kuliah',
+                        exportOptions: { modifier: { page: 'all' } } // export all rows
+                    }
+                ]
+            });
+            // place buttons into your container
+            tableKelas.buttons().container().appendTo('#kelas-export-container');
+        }
+
+        // WORKLOAD table (only init if element exists)
+        if ($('#data-workload').length) {
+            var tableWorkload = $('#data-workload').DataTable({
+                paging: false,
+                lengthChange: true,
+                searching: false,
+                ordering: true,
+                info: true,
+                autoWidth: true,
+                dom: 'Bfrtip',
+                buttons: [
+                    {
+                        extend: 'excelHtml5',
+                        text: 'Export Excel',
+                        title: 'Data Kuisioner Workload Mata Kuliah',
+                        exportOptions: { modifier: { page: 'all' } }
+                    }
+                ]
+            });
+            tableWorkload.buttons().container().appendTo('#workload-export-container');
+        }
     });
 
 
