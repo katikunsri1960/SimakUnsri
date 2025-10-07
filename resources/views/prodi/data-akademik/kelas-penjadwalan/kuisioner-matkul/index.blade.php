@@ -135,7 +135,11 @@ Kuisioner Mata Kuliah
                         </tbody>
                     </table>
                     <hr>
-                    @if($prodi_id == 'd6f315de-b934-4dfd-a5bc-49ca457a6674')
+                    @if(in_array($prodi_id, [
+                        'd6f315de-b934-4dfd-a5bc-49ca457a6674',
+                        '99ad4fc5-a08c-4a67-82ed-7843460d290e',
+                        'aabb694e-d7ad-4d3f-8db5-618ea60c0015'
+                    ]))
                     <div id="workload-export-container" class="mb-2"></div>
                     <table class="table table-bordered table-hover" id="data-workload" style="font-size: 9pt">
                         <thead>
