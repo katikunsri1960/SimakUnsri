@@ -123,7 +123,11 @@ class NilaiController extends Controller
     {
         $kelas = KelasKuliah::with(['matkul', 'semester'])->where('id_kelas_kuliah',$kelas)->first();
 
-        if($kelas->id_prodi == 'd6f315de-b934-4dfd-a5bc-49ca457a6674'){
+        if(in_array($kelas->id_prodi, [
+            'd6f315de-b934-4dfd-a5bc-49ca457a6674',
+            '99ad4fc5-a08c-4a67-82ed-7843460d290e',
+            'aabb694e-d7ad-4d3f-8db5-618ea60c0015'
+        ])){
             $data = KuisonerQuestion::all();
         }else{
             $data = KuisonerQuestion::where('id', '<', 9)->get();
