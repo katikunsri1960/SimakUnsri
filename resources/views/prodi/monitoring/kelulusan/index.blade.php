@@ -146,7 +146,18 @@ Mahasiswa Lulus DO
                 {data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [2]},
                 {data: 'nama_jenis_keluar', name: 'nama_jenis_keluar', class: "text-center align-middle", searchable: true, orderData: [3]},
                 {data: 'tanggal_keluar', name: 'tanggal_keluar', class: "text-center align-middle", searchable: true, orderData: [4]},
-                {data: 'nm_smt', name: 'nm_smt', class: "text-center align-middle", searchable: true, orderData: [5]},
+                {
+                    data: null,
+                    name: 'nama_semester',
+                    class: "text-center align-middle",
+                    searchable: true,
+                    orderData: [5],
+                    render: function (data, type, row) {
+                        return data.periode_keluar && data.periode_keluar.nama_semester
+                            ? data.periode_keluar.nama_semester
+                            : '-';
+                    }
+                },
                 {data: 'sk_yudisium', name: 'sk_yudisium', class: "text-start align-middle", searchable: true, orderData: [6]},
                 {data: 'tgl_sk_yudisium', name: 'tgl_sk_yudisium', class: "text-start align-middle", searchable: true, orderData: [7]},
                 {data: 'no_seri_ijazah', name: 'no_seri_ijazah', class: "text-start align-middle", searchable: true, orderData: [8]},
