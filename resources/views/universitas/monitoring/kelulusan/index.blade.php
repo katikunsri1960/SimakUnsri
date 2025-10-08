@@ -121,14 +121,10 @@ Mahasiswa Lulus DO
         });
 
         $('#data').DataTable({
-            // dom: 'Bfrtip',
-            // buttons: [
-            //     'copy', 'csv', 'excel', 'pdf', 'print'
-            // ],
             processing: true,
             serverSide: true,
             ajax: {
-                url: '{{route('univ.monitoring.lulus-do.data')}}',
+                url: '{{ route('univ.monitoring.lulus-do.data') }}',
                 type: 'GET',
                 data: function (d) {
                     d.id_prodi = $('#id_prodi').val();
@@ -145,26 +141,41 @@ Mahasiswa Lulus DO
                     searchable: false,
                     class: "text-center align-middle",
                     sortable: false,
-                    render: function(data, type, row, meta) {
+                    render: function (data, type, row, meta) {
                         return meta.row + meta.settings._iDisplayStart + 1;
-                }},
-                {data: 'nim', name: 'nim', class: 'text-center', searchable: true, orderData: [0]},
-                {data: 'nama_mahasiswa', name: 'nama_mahasiswa', class: 'text-start', searchable: true, orderData: [1]},
-                {data: null, name: 'nama_program_studi', class: "text-start align-middle", searchable: true, orderData: [2],
-                    render: function(data, type, row) {
-                        return data.prodi.nama_jenjang_pendidikan + ' ' + data.prodi.nama_program_studi;
                     }
                 },
-                {data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [3]},
-                {data: 'nama_jenis_keluar', name: 'nama_jenis_keluar', class: "text-center align-middle", searchable: true, orderData: [4]},
-                {data: 'tanggal_keluar', name: 'tanggal_keluar', class: "text-center align-middle", searchable: true, orderData: [5]},
-                {data: 'nm_smt', name: 'nm_smt', class: "text-center align-middle", searchable: true, orderData: [6]},
-                {data: 'keterangan', name: 'keterangan', class: "text-start align-middle", searchable: true, orderData: [7]},
+                { data: 'nim', name: 'nim', class: 'text-center', searchable: true, orderData: [0] },
+                { data: 'nama_mahasiswa', name: 'nama_mahasiswa', class: 'text-start', searchable: true, orderData: [1] },
+                {
+                    data: null, name: 'nama_program_studi', class: "text-start align-middle", searchable: true, orderData: [2],
+                    render: function (data, type, row) {
+                        return data.prodi
+                            ? data.prodi.nama_jenjang_pendidikan + ' ' + data.prodi.nama_program_studi
+                            : '-';
+                    }
+                },
+                { data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [3] },
+                { data: 'nama_jenis_keluar', name: 'nama_jenis_keluar', class: "text-center align-middle", searchable: true, orderData: [4] },
+                { data: 'tanggal_keluar', name: 'tanggal_keluar', class: "text-center align-middle", searchable: true, orderData: [5] },
+
+                // ✅ ubah bagian ini
+                {
+                    data: null,
+                    name: 'nama_semester',
+                    class: "text-center align-middle",
+                    searchable: true,
+                    orderData: [6],
+                    render: function (data, type, row) {
+                        return data.periode_keluar && data.periode_keluar.nama_semester
+                            ? data.periode_keluar.nama_semester
+                            : '-';
+                    }
+                },
+
+                { data: 'keterangan', name: 'keterangan', class: "text-start align-middle", searchable: true, orderData: [7] },
             ],
         });
-
-
-
     });
 </script>
 @endpush

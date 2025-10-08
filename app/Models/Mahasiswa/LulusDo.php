@@ -2,9 +2,10 @@
 
 namespace App\Models\Mahasiswa;
 
+use App\Models\Semester;
 use App\Models\ProgramStudi;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class LulusDo extends Model
 {
@@ -25,5 +26,12 @@ class LulusDo extends Model
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
+
+    public function periode_keluar()
+    {
+        return $this->belongsTo(Semester::class, 'id_periode_keluar', 'id_semester');
+    }
+
+
 
 }

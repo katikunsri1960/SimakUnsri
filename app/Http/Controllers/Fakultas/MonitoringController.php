@@ -216,7 +216,7 @@ class MonitoringController extends Controller
 
         $searchValue = $request->input('search.value');
 
-        $query = LulusDo::with('prodi', 'biodata')
+        $query = LulusDo::with('prodi', 'biodata', 'periode_keluar')
                 ->whereIn('id_prodi', $id_prodi_fak);
 
         if ($searchValue) {

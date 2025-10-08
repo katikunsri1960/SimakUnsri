@@ -474,7 +474,7 @@ class MonitoringDosenController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = LulusDo::with('prodi', 'biodata')->where('id_prodi', auth()->user()->fk_id);
+        $query = LulusDo::with('prodi', 'biodata', 'periode_keluar')->where('id_prodi', auth()->user()->fk_id);
 
         if ($searchValue) {
             $query = $query->where('nim', 'like', '%' . $searchValue . '%')

@@ -539,7 +539,7 @@ class MonitoringController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = LulusDo::with('prodi', 'biodata');
+        $query = LulusDo::with('prodi', 'biodata', 'periode_keluar');
 
         if ($searchValue) {
             $query = $query->where('nim', 'like', '%' . $searchValue . '%')
