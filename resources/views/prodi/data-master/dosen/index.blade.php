@@ -40,9 +40,9 @@ Dosen
                           <thead>
                              <tr>
                                 <th class="text-center align-middle">No</th>
-                                <th class="text-center align-middle">NIDK/NIDN</th>
-                                <th class="text-center align-middle">NIP</th>
                                 <th class="text-center align-middle">NAMA</th>
+                                <th class="text-center align-middle">NIDK/NIDN</th>
+                                <th class="text-center align-middle">NUPTK</th>
                                 <th class="text-center align-middle">E-MAIL</th>
                                 <th class="text-center align-middle">HOMEBASE</th>
                              </tr>
@@ -51,10 +51,10 @@ Dosen
                             @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-center align-middle">{{$d->nidn}}</td>
-                                    <td class="text-center align-middle">{{$d->nip}}</td>
                                     <td class="text-start align-middle">{{$d->nama_dosen}}</td>
-                                    <td class="text-start align-middle">{{$d->email}}</td>
+                                    <td class="text-center align-middle">{{$d->nidn ?? '-'}}</td>
+                                    <td class="text-center align-middle">{{$d->nuptk ?? '-'}}</td>
+                                    <td class="text-start align-middle">{{$d->email ?? '-'}}</td>
                                     <td class="text-center align-middle">
                                         @if($d->homebase == 1)
                                             <i class="fa-regular fa-circle-check "></i>

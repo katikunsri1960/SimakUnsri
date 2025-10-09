@@ -64,14 +64,19 @@ Biodata Dosen
                                                     <td>{{$data->nama_dosen}}</td>
                                                 </tr>
                                                 <tr>
+                                                    <th scope="row">NIDN</th>
+                                                    <td> : </td>
+                                                    <td>{{$data->nidn}}</td>
+                                                </tr>
+                                                <tr>
                                                     <th scope="row">NIP</th>
                                                     <td> : </td>
                                                     <td>{{$data->nip}}</td>
                                                 </tr>
                                                 <tr>
-                                                    <th scope="row">NIDN</th>
+                                                    <th scope="row">NUPTK</th>
                                                     <td> : </td>
-                                                    <td>{{$data->nidn}}</td>
+                                                    <td>{{$data->nuptk}}</td>
                                                 </tr>
                                             </tbody>
                                         </table>
