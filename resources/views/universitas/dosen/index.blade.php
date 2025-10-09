@@ -54,6 +54,7 @@ List Dosen
                                     <th class="text-center align-middle">Nama</th>
                                     <th class="text-center align-middle">Program Studi</th>
                                     <th class="text-center align-middle">NIDN</th>
+                                    <th class="text-center align-middle">NUPTK</th>
                                     <th class="text-center align-middle">Jenis Kelamin</th>
                                     <th class="text-center align-middle">Agama</th>
                                     <th class="text-center align-middle">Status</th>
@@ -68,6 +69,7 @@ List Dosen
                                     <td class="text-start align-middle">{{$d->nama_dosen}}</td>
                                     <td class="text-start align-middle">{{$d->prodi}}</td>
                                     <td class="text-center align-middle">{{$d->nidn}}</td>
+                                    <td class="text-center align-middle">{{$d->nuptk}}</td>
                                     <td class="text-center align-middle">{{$d->jenis_kelamin}}</td>
                                     <td class="text-center align-middle">{{$d->nama_agama}}</td>
                                     <td class="text-center align-middle">{{$d->nama_status_aktif}}</td>
