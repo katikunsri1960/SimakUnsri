@@ -61,12 +61,15 @@ class PenundaanBayarController extends Controller
         $data = $request->validate([
             'status' => 'required|in:0,2,3,4,5',
             'keterangan' => 'nullable',
+            'batas_bayar' => 'nullable|date',
         ]);
 
-        $restrict = ['4', '5'];
-        if (in_array($penundaan->status, $restrict)) {
-            return redirect()->back()->with('error', 'Data tidak bisa diubah');
-        }
+        // jika selesai edit janji bayar unkomen query ini
+        
+        // $restrict = ['4', '5'];
+        // if (in_array($penundaan->status, $restrict)) {
+        //     return redirect()->back()->with('error', 'Data tidak bisa diubah');
+        // }
 
         $penundaan->update($data);
 
