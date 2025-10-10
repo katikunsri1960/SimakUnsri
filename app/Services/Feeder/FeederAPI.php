@@ -31,7 +31,7 @@ class FeederAPI {
     public function runWS()
     {
         // dd($this->url);
-        $client = new Client();
+        $client = new Client(['timeout' => 120]);
         $params = [
             "act" => "GetToken",
             "username" => $this->username,
