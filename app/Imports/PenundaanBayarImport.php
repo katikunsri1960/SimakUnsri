@@ -34,6 +34,7 @@ class PenundaanBayarImport implements ToCollection, WithHeadingRow, SkipsEmptyRo
                 PenundaanBayar::updateOrCreate(['id_registrasi_mahasiswa' => $mahasiswa->id_registrasi_mahasiswa, 'id_semester' => $row['semester']], [
                     'status' => $row['status'],
                     'nim' => $mahasiswa->nim,
+                    'batas_bayar' => $row['batas_bayar'] ?? null,
                     'keterangan' => $row['keterangan'] ?? null,
                 ]);
 

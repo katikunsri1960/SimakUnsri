@@ -58,8 +58,8 @@ class KelasPenjadwalanController extends Controller
         $semester_pilih = $semester_view == null ? $semester_aktif->id_semester : $semester_view;
         $dbSemester = Semester::select('id_semester', 'nama_semester');
 
-        $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
-        // $pilihan_semester = $dbSemester->whereBetween('id_semester', ['20241',$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        // $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        $pilihan_semester = $dbSemester->whereBetween('id_semester', ['20241',$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
         // dd($pilihan_semester);
         $prodi_id = auth()->user()->fk_id;
 
