@@ -158,7 +158,7 @@ class PerkuliahanController extends Controller
 
         $kelasKuliahIds = MataKuliah::select('id_matkul')->get()->pluck('id_matkul')->toArray();
 
-        $chunks = array_chunk($kelasKuliahIds, 20);
+        $chunks = array_chunk($kelasKuliahIds, 5);
 
         foreach ($chunks as $chunk) {
             $filter = "id_matkul IN ('" . implode("','", $chunk) . "')";

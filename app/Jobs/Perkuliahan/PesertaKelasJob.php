@@ -15,10 +15,11 @@ class PesertaKelasJob implements ShouldQueue
 {
     use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
+    public $timeout = 300; // ⏱ allow up to 5 minutes
+    public $tries = 3;     // retry up to 3 times before failing
+
     public $act, $limit, $offset, $order, $filter;
-    /**
-     * Create a new job instance.
-     */
+
     public function __construct($act, $limit, $offset, $order, $filter)
     {
         $this->act = $act;
@@ -28,25 +29,26 @@ class PesertaKelasJob implements ShouldQueue
         $this->filter = $filter;
     }
 
-    /**
-     * Execute the job.
-     */
     public function handle(): void
     {
-        $data = new FeederAPI($this->act, $this->offset, $this->limit, $this->order, $this->filter);
+        $data = new FeederAPI(
+            $this->act,
+            $this->offset,
+            $this->limit,
+            $this->order,
+            $this->filter
+        );
+
         $response = $data->runWS();
 
         if (!empty($response['data'])) {
-
-            $result = $response['data'];
-            $result = array_chunk($result, 1000);
-
-            foreach($result as $r)
-            {
-                PesertaKelasKuliah::upsert($r, ['id_kelas_kuliah', 'id_registrasi_mahasiswa']);
+            foreach (array_chunk($response['data'], 1000) as $chunk) {
+                PesertaKelasKuliah::upsert($chunk, [
+                    'id_kelas_kuliah',
+                    'id_registrasi_mahasiswa'
+                ]);
             }
-
-            // PesertaKelasKuliah::upsert($result, ['id_kelas_kuliah', 'id_registrasi_mahasiswa']);
         }
     }
 }
+
