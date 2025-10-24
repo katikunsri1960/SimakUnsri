@@ -58,17 +58,32 @@ class PejabatFakultasController extends Controller
 
             $fakultas= Fakultas::where('id', $fakultas_id)->first();
 
-            if ($request->id_jabatan == 0) {
-                $nama_jabatan = 'Dekan Fakultas';
-            } elseif ($request->id_jabatan == 1) {
-                $nama_jabatan = 'Wakil Dekan Bidang Akademik, Kemahasiswaan, dan Penjaminan Mutu';
-            } elseif ($request->id_jabatan == 2) {
-                $nama_jabatan = 'Wakil Dekan Bidang Perencanaan, Keuangan, Sumber Daya, Pengadaan, dan Logistik';
-            } elseif ($request->id_jabatan == 3) {
-                $nama_jabatan = 'Wakil Dekan Bidang Penelitian, Pengabdian Kepada Masyarakat, Inovasi, Hilirisasi, Kerjasama, Internasionalisasi, dan Alumni';
-            } else{
-                $nama_jabatan = 'Tidak Diisi';
+            if($fakultas_id == '11'){
+                if ($request->id_jabatan == 0) {
+                    $nama_jabatan = 'Direktur';
+                } elseif ($request->id_jabatan == 1) {
+                    $nama_jabatan = 'Wakil Direktur Bidang Akademik, Penelitian, Inovasi, Hilirisasi, Pengabdian, dan Kemahasiswaan';
+                } elseif ($request->id_jabatan == 2) {
+                    $nama_jabatan = 'Wakil Direktur Bidang Perencanaan, Keuangan, Sumber Daya, Pengadaan, dan Logistik';
+                } elseif ($request->id_jabatan == 3) {
+                    $nama_jabatan = 'Wakil Direktur Bidang Pengabdian Kepada Masyarakat, Inovasi, Hilirisasi, Kerjasama, Internasionalisasi, dan Alumni';
+                } else{
+                    $nama_jabatan = 'Tidak Diisi';
+                }
+            }else{
+                if ($request->id_jabatan == 0) {
+                    $nama_jabatan = 'Dekan Fakultas';
+                } elseif ($request->id_jabatan == 1) {
+                    $nama_jabatan = 'Wakil Dekan Bidang Akademik, Kemahasiswaan, dan Penjaminan Mutu';
+                } elseif ($request->id_jabatan == 2) {
+                    $nama_jabatan = 'Wakil Dekan Bidang Perencanaan, Keuangan, Sumber Daya, Pengadaan, dan Logistik';
+                } elseif ($request->id_jabatan == 3) {
+                    $nama_jabatan = 'Wakil Dekan Bidang Penelitian, Pengabdian Kepada Masyarakat, Inovasi, Hilirisasi, Kerjasama, Internasionalisasi, dan Alumni';
+                } else{
+                    $nama_jabatan = 'Tidak Diisi';
+                }
             }
+            
 
             // dd($dosen);
 
