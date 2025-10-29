@@ -9,6 +9,7 @@ use App\Models\SemesterAktif;
 use App\Models\StatusMahasiswa;
 use App\Models\BeasiswaMahasiswa;
 use App\Models\Connection\Tagihan;
+use App\Models\Connection\Registrasi;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Bus;
@@ -285,12 +286,13 @@ class PerkuliahanController extends Controller
 
         //Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
+        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
         // dd($beasiswa);
         $pembayaran_manual=PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
 
         try {
-            $tagihan = Tagihan::with('pembayaran')
-                ->whereIn('nomor_pembayaran', [$riwayat->nim])
+            $tagihan = Tagihan::with('pembayaran') 
+                ->whereIn('nomor_pembayaran', [$riwayat->nim, $id_test])
                 ->where('kode_periode', $validatedData['id_semester'])
                 ->first();
 
