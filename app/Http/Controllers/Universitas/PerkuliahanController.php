@@ -286,7 +286,7 @@ class PerkuliahanController extends Controller
 
         //Kedepannya tambahkan pengecekan batas akhir beasiswa, jika data beasiswa tanggal akhirny sdah sesuai
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->first();
-        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
+        $id_test = Registrasi::where('rm_nim', $riwayat->nim)->pluck('rm_no_test')->first();
         // dd($beasiswa);
         $pembayaran_manual=PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $validatedData['id_registrasi_mahasiswa'])->where('id_semester', $validatedData['id_semester'])->first();
 
