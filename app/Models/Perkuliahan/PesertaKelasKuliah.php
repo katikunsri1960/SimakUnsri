@@ -920,6 +920,8 @@ class PesertaKelasKuliah extends Model
 
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
 
+        $pembayaran_manual = PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
+
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
         $total_nilai_tagihan = 0;
@@ -1100,7 +1102,7 @@ class PesertaKelasKuliah extends Model
                                 'status_sync' => 'belum sync',
                             ]);
                         }
-                    }else if($tagihan){
+                    }else if($tagihan || $pembayaran_manual){
                         $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
@@ -1153,7 +1155,7 @@ class PesertaKelasKuliah extends Model
                         return $result;
                     }
                 }else{
-                    if($beasiswa ){
+                    if($beasiswa){
                         if($beasiswa->id_pembiayaan == '3'){
                             $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
                                 'feeder' => 0,
@@ -1199,7 +1201,7 @@ class PesertaKelasKuliah extends Model
                                 'status_sync' => 'belum sync',
                             ]);
                         }
-                    }else if($tagihan){
+                    }else if($tagihan || $pembayaran_manual){
                         $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
@@ -1316,7 +1318,7 @@ class PesertaKelasKuliah extends Model
                                 'status_sync' => 'belum sync',
                             ]);
                         }
-                    }else if($tagihan){
+                    }else if($tagihan || $pembayaran_manual){
                         $peserta = AktivitasKuliahMahasiswa::create([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
@@ -1415,7 +1417,7 @@ class PesertaKelasKuliah extends Model
                                 'status_sync' => 'belum sync',
                             ]);
                         }
-                    }else if($tagihan){
+                    }else if($tagihan || $pembayaran_manual){
                         $peserta = AktivitasKuliahMahasiswa::create([
                             'feeder' => 0,
                             'id_registrasi_mahasiswa' => $id_reg,
