@@ -37,7 +37,7 @@ class DataMasterController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = RiwayatPendidikan::with('kurikulum', 'pembimbing_akademik')
+        $query = RiwayatPendidikan::with('kurikulum', 'pembimbing_akademik', 'lulus_do')
             ->where('id_prodi', auth()->user()->fk_id)
             ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
 
@@ -117,7 +117,7 @@ class DataMasterController extends Controller
                     ->select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
                     ->distinct()
                     ->orderBy('angkatan_raw', 'desc')
-                    ->get();
+                    ->get(); 
 
         // dd($angkatan);
 

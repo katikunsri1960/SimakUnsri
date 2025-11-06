@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Validator;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 
@@ -65,6 +66,8 @@ class NilaiController extends Controller
     {
         $id_reg_mhs = auth()->user()->fk_id;
 
+        $data_mahasiswa=RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg_mhs)->first();
+
         $aktivitas_kuliah=AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->where('id_semester', $id_semester)->get();
 
         $nilai_mahasiswa = NilaiPerkuliahan::with(['dosen_pengajar', 'dosen_pengajar.dosen', 'kelas_kuliah' => function($query) use ($id_reg_mhs) {
@@ -86,8 +89,17 @@ class NilaiController extends Controller
                         ->where('id_semester', $id_semester)
                         ->orderBy('id_semester','asc')
                         ->get();
-        // dd($nilai_konversi);
-        $kuisoner = KuisonerQuestion::all();
+        // dd($nilai_mahasiswa);
+        if(in_array($data_mahasiswa->id_prodi, [
+            'd6f315de-b934-4dfd-a5bc-49ca457a6674',
+            '99ad4fc5-a08c-4a67-82ed-7843460d290e',
+            'aabb694e-d7ad-4d3f-8db5-618ea60c0015'
+        ])){
+            $kuisoner = KuisonerQuestion::all();
+        }else{
+            $kuisoner = KuisonerQuestion::where('id', '<', 9)->get();
+        }
+
         $count_kuisoner = $kuisoner->count();
         $semester_aktif = SemesterAktif::first()->id_semester;
         // dd($transkrip_mahasiswa);

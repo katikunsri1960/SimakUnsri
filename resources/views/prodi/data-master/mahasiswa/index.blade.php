@@ -155,8 +155,14 @@ Mahasiswa Prodi
                     searchable: true,
                     class: "text-center align-middle",
                     sortable: false,
-                    render: function(data, type, row) {
-                        return data ? data : 'Aktif';
+                    render: function (data, type, row) {
+                        // if mahasiswa has lulus_do relationship, show its nama_jenis_keluar
+                        if (row.lulus_do && row.lulus_do.nama_jenis_keluar) {
+                            return row.lulus_do.nama_jenis_keluar;
+                        }
+
+                        // otherwise, mahasiswa is still active
+                        return 'Aktif';
                     }
                 },
                 {data: null, searchable: false, sortable:false, class:"text-center align-middle", render: function(data, type, row, meta) {
