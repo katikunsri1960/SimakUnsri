@@ -111,7 +111,9 @@
                         {{-- Catatan: --}}
                     </td>
                     <td width="40%" class="text-start text-10">
-                        {{ $riwayat->prodi->fakultas_id === 11 ? 'Wakil Direktur Bidang Akademik dan Kemahasiswaan,' : 'Wakil Dekan Bidang Akademik,' }}
+                        {{-- {{ $riwayat->prodi->fakultas_id === 11 ? 'Wakil Direktur Bidang Akademik dan Kemahasiswaan,' : 'Wakil Dekan Bidang Akademik,' }} --}}
+                        {{-- {{ $riwayat->prodi->fakultas_id === 11 ? 'Wakil Direktur Bidang Akademik dan Kemahasiswaan,' : 'Wakil Dekan Bidang Akademik,' }} --}}
+                        {{ $wd1 === NULL ? 'Tidak Diisi' : $wd1->nama_jabatan}}
                     </td>
                 </tr>
                 <tr>
