@@ -123,7 +123,7 @@ Dashboard
                                         name="judul_en"
                                         id="judul_en"
                                         aria-describedby="helpId"
-                                        value="{{$data->judul_en}}"
+                                        value="{{$data->judul_eng}}"
                                     />
                                 </div>
                             </div>
