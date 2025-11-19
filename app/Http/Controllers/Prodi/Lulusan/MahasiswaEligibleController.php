@@ -255,16 +255,21 @@ class MahasiswaEligibleController extends Controller
 
         $data->status_masa_studi = isset($requiredMasaStudi[$jenjang]) && $hitung_masa_studi <= $requiredMasaStudi[$jenjang] ? '1' : '0';
 
-        foreach($data->transkrip_mahasiswa as $dt){
-            $temp = $temp + ($dt->nilai_indeks * $dt->sks_mata_kuliah);
-            $data->ipk = $temp/$sks_transkrip;
-            $data->ipk_transkrip_akm = $temp/$sks_transkrip == $akm_terakhir->ipk ? '1' : '0';
+        foreach ($data->transkrip_mahasiswa as $dt) {
+            $temp += ($dt->nilai_indeks * $dt->sks_mata_kuliah);
+
+            $data->ipk = round($temp / $sks_transkrip, 2); // normalized to 2 decimals
+
+            // Exact comparison after rounding
+            $data->ipk_transkrip_akm = ($data->ipk === round($akm_terakhir->ipk, 2)) ? '1' : '0';
+
             $data->status_ipk = isset($requiredIPK[$jenjang]) && $akm_terakhir->ipk >= $requiredIPK[$jenjang] ? '1' : '0';
         }
 
+
         $akm_semester_pendek = AktivitasKuliahMahasiswa::whereRaw("RIGHT(id_semester, 1) = '3'")->where('id_registrasi_mahasiswa', $data->id_registrasi_mahasiswa)->sum('sks_semester');
 
-        $data->status_semester_pendek = $akm_semester_pendek <= 9 ? '1' : '0';
+        $data->status_semester_pendek = $akm_semester_pendek <= 9 ? '1' : '0'; 
 
         $predikat_kelulusan = PredikatKelulusan::orderBy('id')->get();
         $bku = BkuProgramStudi::orderBy('id')->where('id_prodi', $prodi_id)->get();
