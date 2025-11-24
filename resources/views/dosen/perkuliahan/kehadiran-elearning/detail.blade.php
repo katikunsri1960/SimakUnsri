@@ -28,7 +28,7 @@
                                         <li class="breadcrumb-item"><a href="{{ route('dosen') }}"><i
                                                     class="mdi mdi-home-outline"></i></a></li>
                                         <li class="breadcrumb-item" aria-current="page"><a
-                                                href="{{ route('dosen.perkuliahan.kehadiran-elearning.kehadiran-elearning') }}">Kehadiran
+                                                href="{{ route('dosen.kehadiran.kehadiran-elearning.kehadiran-elearning') }}">Kehadiran
                                                 Mahasiswa</a></li>
                                         <li class="breadcrumb-item active" aria-current="page">Detail Mahasiswa</li>
                                     </ol>

@@ -50,7 +50,7 @@
                         <div class="box box-body mb-0">
                             <div class="col-xl-4 col-lg-12 mb-3">
                                 <a class="btn btn-rounded bg-warning-light"
-                                    href="{{ route('dosen.perkuliahan.kehadiran-elearning.detail-dosen') }}">
+                                    href="{{ route('dosen.kehadiran.kehadiran-elearning.detail-dosen') }}">
                                     <i class="fa fa-chevron-left"></i> Kembali
                                 </a>
                             </div>
@@ -80,7 +80,7 @@
                                                     <td>{{ $row->nama_dosen }}</td>
                                                     <td>{{ $row->tanggal }}</td>
                                                     <td>
-                                                        <a href="{{ route('dosen.perkuliahan.kehadiran-elearning.detail', ['session_id' => $row->session_id]) }}"
+                                                        <a href="{{ route('dosen.kehadiran.kehadiran-elearning.detail', ['session_id' => $row->session_id]) }}"
                                                             title="Lihat peserta sesi"
                                                             style="
                                                                 display: inline-block;

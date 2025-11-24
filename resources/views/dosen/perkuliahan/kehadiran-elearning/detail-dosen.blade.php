@@ -63,7 +63,7 @@
                                                     <td>{{ $row['nama_kelas'] }}</td>
                                                     <td>{{ $row['dosen_pengajar'] }}</td>
                                                     <td>
-                                                        <a href="{{ route('dosen.perkuliahan.kehadiran-elearning.detail-pertemuan', [
+                                                        <a href="{{ route('dosen.kehadiran.kehadiran-elearning.detail-pertemuan', [
                                                             'kode_mk' => $row['kode_mata_kuliah'],
                                                             'nama_kelas' => $row['nama_kelas'],
                                                         ]) }}"

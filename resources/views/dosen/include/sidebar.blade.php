@@ -132,8 +132,8 @@
                         </a>
                     </li>
 
-                    <li class="{{request()->routeIs('dosen.perkuliahan.kehadiran-elearning.detail-dosen') || request()->routeIs('dosen.penilaian.kehadiran-elearning.kehadiran-elearning*') ? 'active' : ''}}">
-                        <a href="{{route('dosen.perkuliahan.kehadiran-elearning.detail-dosen')}}">
+                    <li class="{{request()->routeIs('dosen.kehadiran.kehadiran-elearning.detail-dosen') || request()->routeIs('dosen.penilaian.kehadiran-elearning.kehadiran-elearning*') ? 'active' : ''}}">
+                        <a href="{{route('dosen.kehadiran.kehadiran-elearning.detail-dosen')}}">
                             <i class="fa fa-calendar-check-o"><span class="path1"></span><span class="path2"></span></i>
                             <span>Daftar Hadir Dosen</span>
                         </a>
