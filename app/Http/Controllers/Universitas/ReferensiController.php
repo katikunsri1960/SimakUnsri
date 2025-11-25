@@ -22,9 +22,9 @@ class ReferensiController extends Controller
         ]);
     }
 
-    private function sync($act, $limit, $offset, $order)
+    private function sync($act, $limit, $offset, $order, $filter)
     {
-        $get = new FeederAPI($act, $offset, $limit, $order);
+        $get = new FeederAPI($act, $offset, $limit, $order, $filter);
 
         $data = $get->runWS();
 
@@ -37,8 +37,9 @@ class ReferensiController extends Controller
         $offset = 0;
         $limit = 0;
         $order = '';
+        $filter ='';
 
-        $prodi = new FeederAPI($act, $offset, $limit, $order);
+        $prodi = new FeederAPI($act, $offset, $limit, $order, $filter);
 
         $prodi = $prodi->runWS();
 
@@ -61,12 +62,13 @@ class ReferensiController extends Controller
         $offset = 0;
         $limit = 500;
         $order = 'id_perguruan_tinggi';
+        $filter ='';
         $countAct = "GetCountPerguruanTinggi";
 
-        $count = $this->sync($countAct, $limit, $offset, "");
+        $count = $this->sync($countAct, $limit, $offset, "", "");
         // dd($count);
         for ($i = 0; $i < $count['data']; $i += $limit) {
-            $req = $this->sync($act, $limit, $i, $order);
+            $req = $this->sync($act, $limit, $i, $order, $filter);
 
             if (isset($req['data']) && is_array($req['data'])) {
                 AllPt::upsert($req['data'], 'id_perguruan_tinggi');
@@ -111,8 +113,9 @@ class ReferensiController extends Controller
             $offset = 0;
             $limit = 0;
             $order = '';
+            $filter ='';
 
-            $data = $this->sync($act, $limit, $offset, $order);
+            $data = $this->sync($act, $limit, $offset, $order, $filter);
 
             if (isset($data['data']) && !empty($data['data'])) {
 
