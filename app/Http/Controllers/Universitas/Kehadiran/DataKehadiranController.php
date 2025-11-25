@@ -24,9 +24,8 @@ class DataKehadiranController extends Controller
     {
         return view('universitas.perkuliahan.kehadiran.kehadiran-mahasiswa');
     }
-    /**
-     * DataTables AJAX untuk kehadiran mahasiswa (dengan JOIN untuk hindari N+1 query).
-     */
+
+
     public function kehadiran_mahasiswa_ajax()
     {
         $data = DB::table('kehadiran_mahasiswa as km')
@@ -37,43 +36,51 @@ class DataKehadiranController extends Controller
             })
             ->leftJoin('riwayat_pendidikans as rp', 'rp.nim', '=', 'km.username')
             ->select([
-                'km.*',
+                'km.kode_mata_kuliah',
+                'km.nama_mk',
+                'km.nama_kelas',
+                'km.username',
+                'rp.nama_mahasiswa',
+                'km.session_id',
+                'km.session_date',
+                'km.status_mahasiswa',
                 'bd.nama_dosen',
-                'rp.nama_mahasiswa'
-            ]);
+                'km.deskripsi_sesi',
+            ])
+            ->get();
 
-        return DataTables::of($data)
-            ->addColumn('nama_dosen', function ($item) {
-                if (!$item->deskripsi_sesi) {
-                    return 'Deskripsi Tidak Ditulis';
-                }
-                return $item->nama_dosen ?? 'N/A';
-            })
-            ->addColumn('nama_mahasiswa', function ($item) {
-                if (!$item->username) {
-                    return 'Deskripsi Tidak Ditulis';
-                }
-                return $item->nama_mahasiswa ?? 'N/A';
-            })
-            ->editColumn('session_date', function ($item) {
-                return $item->session_date
-                    ? Carbon::createFromTimestamp($item->session_date)->format('d-m-Y')
-                    : 'Tanggal Tidak Tersedia';
-            })
-            ->addIndexColumn()
-            ->make(true);
+        // Format data
+        $data->transform(function ($item) {
+            $item->session_date = $item->session_date
+                ? \Carbon\Carbon::createFromTimestamp($item->session_date)->format('d-m-Y')
+                : 'Tanggal Tidak Tersedia';
+
+            $item->nama_dosen = $item->nama_dosen ?: 'N/A';
+            $item->nama_mahasiswa = $item->nama_mahasiswa ?: 'N/A';
+
+            return $item;
+        });
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
+
 
     /**
      * DataTables AJAX untuk mata kuliah e-learning (dioptimasi dengan select eksplisit).
      */
     public function mk_elearning_ajax()
     {
-        $data = mk_kelas::query()
-            ->select('*');  // Eksplisit select untuk efisiensi (hindari * implicit)
-        return DataTables::of($data)
-            ->addIndexColumn()
-            ->make(true);
+        $data = mk_kelas::select(
+            'kode_mata_kuliah',
+            'kelas_kuliah',
+            'id_kelas_kuliah'
+        )->get();
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
     /**
      * Menampilkan daftar kehadiran dosen (view blade kosong untuk DataTables).
@@ -87,64 +94,68 @@ class DataKehadiranController extends Controller
      */
     public function kehadiran_dosen_ajax()
     {
-        $data = DB::table('kehadiran_dosen as kd')  //
+        $data = DB::table('kehadiran_dosen as kd')
             ->leftJoin('biodata_dosens as bd', function ($join) {
                 $join->on('bd.nip', '=', 'kd.deskripsi_sesi')
                     ->orOn('bd.nuptk', '=', 'kd.deskripsi_sesi')
                     ->orOn('bd.nidn', '=', 'kd.deskripsi_sesi');
             })
             ->select([
-                'kd.*',  // Semua kolom kehadiran dosen
-                'bd.nama_dosen'
-            ]);
-        return DataTables::of($data)
-            ->addColumn('nama_dosen', function ($item) {
-                if (!$item->deskripsi_sesi) {
-                    return 'Deskripsi Tidak Ditulis';
-                }
-                return $item->nama_dosen ?? 'N/A';
-            })
-            ->editColumn('session_date', function ($item) {
-                return $item->session_date
-                    ? Carbon::createFromTimestamp($item->session_date)->format('d-m-Y')
-                    : 'Tanggal Tidak Tersedia';
-            })
-            ->addIndexColumn()
-            ->make(true);
+                'kd.kode_mata_kuliah',
+                'kd.nama_mk',
+                'kd.nama_kelas',
+                'kd.session_id',
+                'kd.session_date',
+                'bd.nama_dosen',
+                'kd.deskripsi_sesi',
+            ])
+            ->get();
+
+        // Format tanggal langsung di sini
+        $data = $data->map(function ($item) {
+            $item->session_date = $item->session_date
+                ? \Carbon\Carbon::createFromTimestamp($item->session_date)->format('d-m-Y')
+                : 'Tanggal Tidak Tersedia';
+
+            $item->nama_dosen = $item->nama_dosen ?: 'N/A';
+
+            return $item;
+        });
+
+        return response()->json([
+            'data' => $data
+        ]);
     }
+
+
     public function realisasi_pertemuan()
     {
         return view('universitas.perkuliahan.kehadiran.realisasi-pertemuan');
     }
 
 
-    // Menyediakan data JSON untuk DataTables (AJAX)
     public function realisasi_pertemuan_ajax()
     {
-        // Ambil semua ID kelas dari tabel kehadiran_dosen
         $kelas_ids = DB::table('kehadiran_dosen')
-            ->select('id_kelas_kuliah')
             ->distinct()
             ->pluck('id_kelas_kuliah');
 
-        // Ambil data dosen dan kelas yang cocok
         $data = DB::table('dosen_pengajar_kelas_kuliahs as dpk')
             ->join('kelas_kuliahs as kk', 'kk.id_kelas_kuliah', '=', 'dpk.id_kelas_kuliah')
             ->join('matkul_kurikulums as mk', 'kk.id_matkul', '=', 'mk.id_matkul')
-            ->join('biodata_dosens as dosen', 'dpk.id_dosen', '=', 'dosen.id_dosen') // << tambah join ini
+            ->join('biodata_dosens as dosen', 'dpk.id_dosen', '=', 'dosen.id_dosen')
             ->whereIn('dpk.id_kelas_kuliah', $kelas_ids)
             ->select(
                 'dosen.nama_dosen',
                 'dpk.id_kelas_kuliah',
-                'mk.nama_mata_kuliah as nama_mata_kuliah',
-                'kk.nama_kelas_kuliah as nama_kelas_kuliah',
+                'mk.nama_mata_kuliah',
+                'kk.nama_kelas_kuliah',
                 'dpk.rencana_minggu_pertemuan',
                 'dpk.realisasi_minggu_pertemuan'
             )
-            ->distinct();
+            ->distinct()
+            ->get();
 
-        return DataTables::of($data)
-            ->addIndexColumn()
-            ->make(true);
+        return response()->json(['data' => $data]);
     }
 }

@@ -88,64 +88,56 @@
         $(function() {
             $('#data').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false, 
                 ajax: "{{ route('universitas.perkuliahan.kehadiran.ajax') }}",
                 pageLength: 50,
                 lengthMenu: [50, 100],
                 columns: [{
-                        data: 'DT_RowIndex',
-                        name: 'DT_RowIndex',
-                        orderable: false,
-                        searchable: false,
-                        className: 'text-center align-middle'
+                        data: null,
+                        className: 'text-center align-middle',
+                        render: function(data, type, row, meta) {
+                            return meta.row + 1;
+                        }
                     },
                     {
                         data: 'kode_mata_kuliah',
-                        name: 'kode_mata_kuliah',
                         className: 'text-center align-middle'
                     },
                     {
                         data: 'nama_mk',
-                        name: 'nama_mk',
                         className: 'text-start align-middle'
                     },
                     {
                         data: 'nama_kelas',
-                        name: 'nama_kelas',
                         className: 'text-center align-middle'
                     },
                     {
                         data: 'username',
-                        name: 'username',
                         className: 'text-center align-middle'
                     },
                     {
                         data: 'nama_mahasiswa',
-                        name: 'nama_mahasiswa',
                         className: 'text-start align-middle'
                     },
                     {
                         data: 'session_id',
-                        name: 'session_id',
                         className: 'text-center align-middle'
                     },
                     {
                         data: 'session_date',
-                        name: 'session_date',
                         className: 'text-center align-middle'
                     },
                     {
                         data: 'status_mahasiswa',
-                        name: 'status_mahasiswa',
                         className: 'text-center align-middle'
                     },
                     {
                         data: 'nama_dosen',
-                        name: 'nama_dosen',
                         className: 'text-center align-middle'
                     }
                 ]
             });
+
         });
 
         document.addEventListener('DOMContentLoaded', function() {
