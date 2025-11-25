@@ -458,9 +458,10 @@ Transkrip Nilai
                                 $('#akmDiv').html(`
                                     <h3>Data Aktivitas Kuliah Mahasiswa</h3>
                                     <div class="m-3">
-                                         <table class="table table-bordered table-hover mt-2" id="akmTable">
+                                        <table class="table table-bordered table-hover mt-2" id="akmTable">
                                             <thead>
                                                 <tr>
+                                                    <th class="text-center align-middle">No</th>
                                                     <th class="text-center align-middle">Semester</th>
                                                     <th class="text-center align-middle">Status</th>
                                                     <th class="text-center align-middle">SKS Semester</th>
@@ -469,24 +470,25 @@ Transkrip Nilai
                                                     <th class="text-center align-middle">IPK</th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
-                                            </tbody>
-                                            <tfoot>
-                                            </tfoot>
+                                            <tbody></tbody>
+                                            <tfoot></tfoot>
                                         </table>
                                     </div>
-
                                 `);
 
                                 response.akm.forEach(function (akm, index) {
                                     var url = '{{ route("bak.transkrip-nilai.khs", ["id_reg" => ":id_reg", "semester" => ":semester"]) }}';
                                     url = url.replace(':id_reg', response.riwayat.id_registrasi_mahasiswa);
                                     url = url.replace(':semester', akm.id_semester);
+
                                     $('#akmTable tbody').append(`
                                         <tr>
+                                            <td class="text-center align-middle">${index + 1}</td>
                                             <td class="text-center align-middle">
-                                                 <a href="${url}" class="btn btn-primary btn-sm" target="_blank">${akm.nama_semester}</a>
-                                                </td>
+                                                <a href="${url}" class="btn btn-primary btn-sm" target="_blank">
+                                                    ${akm.nama_semester}
+                                                </a>
+                                            </td>
                                             <td class="text-center align-middle">${akm.nama_status_mahasiswa}</td>
                                             <td class="text-center align-middle">${akm.sks_semester}</td>
                                             <td class="text-center align-middle">${akm.sks_total}</td>
@@ -496,11 +498,9 @@ Transkrip Nilai
                                     `);
                                 });
 
-
                             } else {
                                 $('#akmDiv').attr('hidden', true);
                             }
-
 
                             if (response.pembayaran.status == '1') {
                                 console.log(response.pembayaran.data);
@@ -511,6 +511,7 @@ Transkrip Nilai
                                          <table class="table table-bordered table-hover mt-2" id="pembayaranTable">
                                             <thead>
                                                 <tr>
+                                                    <th class="text-center align-middle">No</th>
                                                     <th class="text-center align-middle">Semester</th>
                                                     <th class="text-center align-middle">Tagihan</th>
                                                     <th class="text-center align-middle">Status Pembayaran</th>
@@ -529,6 +530,7 @@ Transkrip Nilai
                                     var tanggalPembayaran = pembayaran.pembayaran && pembayaran.pembayaran.status_pembayaran == 1 ? pembayaran.pembayaran.waktu_transaksi : '-';
                                     $('#pembayaranTable tbody').append(`
                                         <tr>
+                                            <td class="text-center align-middle">${index + 1}</td>
                                             <td class="text-center align-middle">${pembayaran.kode_periode}</td>
                                             <td class="text-center align-middle">${pembayaran.total_nilai_tagihan.toLocaleString('id-ID')}</td>
                                             <td class="text-center align-middle">${statusPembayaran}</td>
