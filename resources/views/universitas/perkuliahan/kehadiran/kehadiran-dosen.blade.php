@@ -85,20 +85,34 @@
         $(function() {
             $('#data').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false, // MATIKAN SERVER SIDE
                 ajax: "{{ route('universitas.perkuliahan.kehadiran-dosen.ajax') }}",
-                pageLength: 50,
-                lengthMenu: [50, 100],
-                columns: [
-                    { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center align-middle' },
-                    { data: 'kode_mata_kuliah', name: 'kode_mata_kuliah', className: 'text-center align-middle' },
-                    { data: 'nama_mk', name: 'nama_mk', className: 'text-start align-middle' },
-                    { data: 'nama_kelas', name: 'nama_kelas', className: 'text-center align-middle' },
-                    { data: 'session_id', name: 'session_id', className: 'text-center align-middle' },
-                    { data: 'session_date', name: 'session_date', className: 'text-center align-middle' },
-                    { data: 'nama_dosen', name: 'nama_dosen', className: 'text-center align-middle' }
+                columns: [{
+                        data: null,
+                        render: (d, t, r, m) => m.row + 1,
+                        className: "text-center"
+                    },
+                    {
+                        data: 'kode_mata_kuliah'
+                    },
+                    {
+                        data: 'nama_mk'
+                    },
+                    {
+                        data: 'nama_kelas'
+                    },
+                    {
+                        data: 'session_id'
+                    },
+                    {
+                        data: 'session_date'
+                    },
+                    {
+                        data: 'nama_dosen'
+                    }
                 ]
             });
+
         });
 
         document.addEventListener('DOMContentLoaded', function() {
@@ -138,16 +152,20 @@
                                 }
                             },
                             error: function(xhr) {
-                                let message = 'Gagal memulai sinkronisasi (server tidak merespons)';
+                                let message =
+                                    'Gagal memulai sinkronisasi (server tidak merespons)';
 
                                 if (xhr.status === 0) {
-                                    message = 'Tidak dapat terhubung ke server. Periksa koneksi internet atau alamat server.';
-                                } else if (xhr.responseJSON && xhr.responseJSON.message) {
+                                    message =
+                                        'Tidak dapat terhubung ke server. Periksa koneksi internet atau alamat server.';
+                                } else if (xhr.responseJSON && xhr.responseJSON
+                                    .message) {
                                     message = xhr.responseJSON.message;
                                 } else if (xhr.responseText) {
                                     try {
                                         let json = JSON.parse(xhr.responseText);
-                                        message = json.message || xhr.responseText.substring(0, 200);
+                                        message = json.message || xhr.responseText
+                                            .substring(0, 200);
                                     } catch (e) {
                                         message = xhr.responseText.substring(0, 200);
                                     }
@@ -172,7 +190,9 @@
             $.ajax({
                 url: '{{ route('universitas.perkuliahan.update-kehadiran.cek-progres') }}',
                 type: 'GET',
-                data: { id_batch: id_batch },
+                data: {
+                    id_batch: id_batch
+                },
                 success: function(response) {
                     var progressBar = document.getElementById('sync-progress-bar');
                     progressBar.style.width = response.progress + '%';

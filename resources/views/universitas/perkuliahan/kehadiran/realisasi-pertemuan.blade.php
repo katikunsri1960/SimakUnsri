@@ -77,20 +77,40 @@
             // === DataTables ===
             var table = $('#data').DataTable({
                 processing: true,
-                serverSide: true,
+                serverSide: false, // WAJIB kalau tanpa yajra
                 ajax: '{{ route('universitas.perkuliahan.realisasi-pertemuan.ajax') }}',
-                pageLength: 50,
-                lengthMenu: [50, 100],
-                columns: [
-                    { data: 'DT_RowIndex', orderable: false, searchable: false, className: 'text-center' },
-                    { data: 'nama_dosen', name: 'nama_dosen', className: 'text-left' },
-                    { data: 'id_kelas_kuliah', name: 'id_kelas_kuliah', className: 'text-center' },
-                    { data: 'nama_mata_kuliah', name: 'kk.nama_mata_kuliah', className: 'text-left' },
-                    { data: 'nama_kelas_kuliah', name: 'nama_kelas_kuliah', className: 'text-center' },
-                    { data: 'rencana_minggu_pertemuan', name: 'rencana_minggu_pertemuan', className: 'text-center' },
-                    { data: 'realisasi_minggu_pertemuan', name: 'realisasi_minggu_pertemuan', className: 'text-center' }
+                columns: [{
+                        data: null,
+                        render: (d, t, r, m) => m.row + 1,
+                        className: "text-center"
+                    },
+                    {
+                        data: 'nama_dosen',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'id_kelas_kuliah',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'nama_mata_kuliah',
+                        className: 'text-left'
+                    },
+                    {
+                        data: 'nama_kelas_kuliah',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'rencana_minggu_pertemuan',
+                        className: 'text-center'
+                    },
+                    {
+                        data: 'realisasi_minggu_pertemuan',
+                        className: 'text-center'
+                    }
                 ]
             });
+
 
             var statusSync = @json($statusSync);
             var idBatch = @json($id_batch);
@@ -122,18 +142,22 @@
                         $.ajax({
                             url: '{{ route('universitas.perkuliahan.update-realisasi') }}',
                             type: 'POST',
-                            data: { _token: '{{ csrf_token() }}' },
+                            data: {
+                                _token: '{{ csrf_token() }}'
+                            },
                             success: function(res) {
                                 if (res.success) {
                                     checkSync(res.batch_id);
                                 } else {
-                                    Swal.fire('Error', res.message || 'Terjadi kesalahan', 'error');
+                                    Swal.fire('Error', res.message ||
+                                        'Terjadi kesalahan', 'error');
                                     $('#start-sync').prop('disabled', false);
                                     $('#progress-container').hide();
                                 }
                             },
                             error: function(xhr) {
-                                Swal.fire('Error', xhr.responseJSON?.message || 'Gagal memulai sinkronisasi', 'error');
+                                Swal.fire('Error', xhr.responseJSON?.message ||
+                                    'Gagal memulai sinkronisasi', 'error');
                                 $('#start-sync').prop('disabled', false);
                                 $('#progress-container').hide();
                             }
@@ -149,7 +173,9 @@
                 $.ajax({
                     url: '{{ route('universitas.perkuliahan.update-realisasi.check-sync') }}',
                     type: 'GET',
-                    data: { id_batch: id_batch },
+                    data: {
+                        id_batch: id_batch
+                    },
                     success: function(response) {
                         var progressBar = document.getElementById('sync-progress-bar');
                         var percent = response.progress ?? 0;
@@ -157,7 +183,9 @@
                         progressBar.innerHTML = percent + '%';
 
                         if (percent < 100) {
-                            setTimeout(function() { checkSync(id_batch); }, 3000);
+                            setTimeout(function() {
+                                checkSync(id_batch);
+                            }, 3000);
                         } else if (!syncCompleted) {
                             syncCompleted = true;
                             Swal.fire({
@@ -170,7 +198,8 @@
                     error: function(xhr) {
                         $('#progress-container').hide();
                         $('#start-sync').prop('disabled', false);
-                        Swal.fire('Error', xhr.responseJSON?.message || 'Gagal memeriksa progres sinkronisasi', 'error');
+                        Swal.fire('Error', xhr.responseJSON?.message ||
+                            'Gagal memeriksa progres sinkronisasi', 'error');
                     }
                 });
             }
