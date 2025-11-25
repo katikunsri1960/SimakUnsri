@@ -31,4 +31,9 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    'moodle' => [
+    'ws_url' => env('MOODLE_WS_URL'),
+    'ws_token' => env('MOODLE_WS_TOKEN'),
+],
+
 ];

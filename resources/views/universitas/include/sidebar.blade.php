@@ -84,6 +84,42 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="treeview {{ request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : '' }}">
+                        <a href="#">
+                            <i span class="fa fa-calendar-check-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Kehadiran</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li
+                                class="{{ request()->routeIs('universitas.perkuliahan.mk-elearning') ? 'active' : '' }}">
+                                <a href="{{ route('universitas.perkuliahan.mk-elearning') }}"><i
+                                        class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Mata Kuliah Elearning</a>
+                            </li>
+                            <li
+                                class="{{ request()->routeIs('universitas.perkuliahan.kehadiran-dosen') ? 'active' : '' }}">
+                                <a href="{{ route('universitas.perkuliahan.kehadiran-dosen') }}"><i
+                                        class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Daftar Hadir Dosen</a>
+                            </li>
+                            <li
+                                class="{{ request()->routeIs('universitas.perkuliahan.kehadiran-mahasiswa') ? 'active' : '' }}">
+                                <a href="{{ route('universitas.perkuliahan.kehadiran-mahasiswa') }}"><i
+                                        class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Daftar Hadir Mahasiswa</a>
+                            </li>
+                            <li
+                                class="{{ request()->routeIs('universitas.perkuliahan.realisasi-pertemuan') ? 'active' : '' }}">
+                                <a href="{{ route('universitas.perkuliahan.realisasi-pertemuan') }}"><i
+                                        class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Realisasi Pertemuan</a>
+                            </li>
+                        </ul>
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-asterisk"><span class="path1"></span><span class="path2"></span></i>

@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Cache;
 
@@ -753,6 +754,15 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/ganti-password', [App\Http\Controllers\Dosen\Bantuan\GantiPasswordController::class, 'ganti_password'])->name('dosen.bantuan.ganti-password');
                 Route::post('/proses-ganti-password', [App\Http\Controllers\Dosen\Bantuan\GantiPasswordController::class, 'proses_ganti_password'])->name('dosen.bantuan.proses-ganti-password');
             });
+
+            //Route Kehadiran
+            Route::prefix('kehadiran')->group(function () {
+                Route::get('/detail-kehadiran-dosen', [App\Http\Controllers\Dosen\Perkuliahan\KehadiranElearningController::class, 'detail_kehadiran_dosen'])->name('dosen.kehadiran.kehadiran-elearning.kehadiran-elearning');
+                Route::get('/kehadiran-elearning/detail/{session_id}', [App\Http\Controllers\Dosen\Perkuliahan\KehadiranElearningController::class, 'detail_mahasiswa'])->name('dosen.kehadiran.kehadiran-elearning.detail');
+                Route::get('kehadiran-dosen/ajax', [App\Http\Controllers\Dosen\Perkuliahan\KehadiranElearningController::class, 'detail_kehadiran_dosen_Ajax'])->name('dosen.kehadiran.ajax');
+                Route::get('/kehadiran-dosen', [App\Http\Controllers\Dosen\Perkuliahan\KehadiranElearningController::class, 'kehadiran_dosen'])->name('dosen.kehadiran.kehadiran-elearning.detail-dosen');
+                Route::get('/detail-pertemuan-dosen', [App\Http\Controllers\Dosen\Perkuliahan\KehadiranElearningController::class, 'detail_pertemuan_dosen'])->name('dosen.kehadiran.kehadiran-elearning.detail-pertemuan');
+            });
         });
     });
 
@@ -1354,7 +1364,42 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/get-data', [App\Http\Controllers\Universitas\PerkuliahanController::class, 'get_transkrip'])->name('univ.perkuliahan.transkrip.get');
                     Route::get('/delete', [App\Http\Controllers\Universitas\PerkuliahanController::class,'transkrip_delete'])->name('univ.perkuliahan.transkrip.delete');
                 });
+                
+                Route::prefix('kehadiran')->group(function () {
 
+                    Route::get('/semester-aktif', [App\Http\Controllers\Universitas\Kehadiran\NamaMataKuliahController::class, 'semester_aktif'])->name('universitas.perkuliahan.mk-elearning.sync');
+                    Route::get('/mk-semester-aktif', [App\Http\Controllers\Universitas\Kehadiran\NamaMataKuliahController::class, 'proses_ambil_mk'])->name('universitas.perkuliahan.mk-elearning');
+                    Route::get('/mk-elearning/ajax', [App\Http\Controllers\Universitas\Kehadiran\DataKehadiranController::class, 'mk_elearning_ajax'])->name('universitas.perkuliahan.mk-elearning.ajax');
+                    Route::get('/cek-progres-ambil-mk', [App\Http\Controllers\Universitas\Kehadiran\NamaMataKuliahController::class, 'cek_progres_ambil_mk'])->name('universitas.perkuliahan.cek-progres-ambil-mk');
+
+
+                    //KEHADIRAN MAHASISWA//
+                    Route::get('/sinkronisasi-kehadiran-mahasiswa', [App\Http\Controllers\Universitas\Kehadiran\KehadiranMahasiswaController::class, 'kehadiran_mahasiswa'])->name('universitas.perkuliahan.kehadiran.sync');
+                    Route::get('/kehadiran-mahasiswa', [App\Http\Controllers\Universitas\Kehadiran\KehadiranMahasiswaController::class, 'proses_update_kehadiran_mahasiswa'])->name('universitas.perkuliahan.kehadiran-mahasiswa');
+                    Route::get('/cek-progres-sinkronisasi-mahasiswa', [App\Http\Controllers\Universitas\Kehadiran\KehadiranMahasiswaController::class, 'cek_sinkronisasi_mahasiswa'])->name('universitas.perkuliahan.progres-update-mahasiswa');
+                    Route::get('/kehadiran-mahasiswa/ajax', [App\Http\Controllers\Universitas\Kehadiran\DataKehadiranController::class, 'kehadiran_mahasiswa_ajax'])->name('universitas.perkuliahan.kehadiran.ajax');                    
+                    
+                    
+                    //KEHADIRAN DOSEN//
+                    Route::get('/kehadiran-dosen', [App\Http\Controllers\Universitas\Kehadiran\KehadiranDosenController::class, 'proses_update'])
+                        ->name('universitas.perkuliahan.kehadiran-dosen');
+                    Route::get('/kehadiran-dosen/ajax', [App\Http\Controllers\Universitas\Kehadiran\DataKehadiranController::class, 'kehadiran_dosen_ajax'])
+                        ->name('universitas.perkuliahan.kehadiran-dosen.ajax');
+                    Route::get('/sync-kehadiran-dosen', [App\Http\Controllers\Universitas\Kehadiran\KehadiranDosenController::class, 'kehadiran_dosen'])
+                        ->name('universitas.perkuliahan.kehadiran-dosen.sync');
+                    Route::get('/cek-progres-kehadiran', [App\Http\Controllers\Universitas\Kehadiran\KehadiranDosenController::class, 'cek_progres'])
+                        ->name('universitas.perkuliahan.update-kehadiran.cek-progres');
+
+                    //REALISASI PERTEMUAN//
+                    Route::get('/realisasi-pertemuan', [\App\Http\Controllers\Universitas\RealisasiPertemuanController::class, 'proses_update_realisasi'])
+                        ->name('universitas.perkuliahan.realisasi-pertemuan');
+                    Route::post('/update-realisasi-pertemuan', [\App\Http\Controllers\Universitas\RealisasiPertemuanController::class, 'update_realisasi_pertemuan'])
+                        ->name('universitas.perkuliahan.update-realisasi');
+                    Route::get('/cek-progress-realisasi', [\App\Http\Controllers\Universitas\RealisasiPertemuanController::class, 'cek_progres_update_realisasi'])
+                        ->name('universitas.perkuliahan.update-realisasi.check-sync');
+                    Route::get('/realisasi-pertemuan/data', [\App\Http\Controllers\Universitas\Kehadiran\DataKehadiranController::class, 'realisasi_pertemuan_ajax'])
+                        ->name('universitas.perkuliahan.realisasi-pertemuan.ajax');
+                });
 
             });
 

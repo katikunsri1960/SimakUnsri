@@ -2,25 +2,46 @@
 
 namespace App\Providers;
 
-// use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Route;
+use Laravel\Passport\Http\Controllers\AccessTokenController;
+use Laravel\Passport\Http\Controllers\AuthorizationController;
+use Laravel\Passport\Http\Controllers\TransientTokenController;
 
 class AuthServiceProvider extends ServiceProvider
 {
-    /**
-     * The model to policy mappings for the application.
-     *
-     * @var array<class-string, class-string>
-     */
-    protected $policies = [
-        //
-    ];
+    protected $policies = [];
 
-    /**
-     * Register any authentication / authorization services.
-     */
     public function boot(): void
     {
-        //
+        $this->registerPolicies();
+        
+        // Manual route registration untuk Passport
+        $this->registerPassportRoutes();
+    }
+
+    protected function registerPassportRoutes(): void
+    {
+        Route::group([
+            'as' => 'passport.',
+            'prefix' => 'oauth',
+            'middleware' => ['web', 'auth']
+        ], function () {
+            // Authorization routes
+            Route::get('/authorize', [AuthorizationController::class, 'authorize'])
+                ->name('authorizations.authorize');
+            Route::post('/authorize', [AuthorizationController::class, 'approve'])
+                ->name('authorizations.approve');
+            Route::delete('/authorize', [AuthorizationController::class, 'deny'])
+                ->name('authorizations.deny');
+
+            // Token routes
+            Route::post('/token', [AccessTokenController::class, 'issueToken'])
+                ->name('token');
+            Route::get('/tokens', [TransientTokenController::class, 'index'])
+                ->name('tokens.index');
+            Route::delete('/tokens/{token_id}', [TransientTokenController::class, 'destroy'])
+                ->name('tokens.destroy');
+        });
     }
 }

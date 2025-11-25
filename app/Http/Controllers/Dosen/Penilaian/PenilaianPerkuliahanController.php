@@ -17,6 +17,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Http\Request;
+use App\Models\kehadiran;
 
 class PenilaianPerkuliahanController extends Controller
 {

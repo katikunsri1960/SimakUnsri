@@ -2,6 +2,13 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ApiKehadiranDosen;
+use App\Http\Controllers\API\ApiKehadiranMahasiswa;
+
+
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +21,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/kehadiran-dosen', [ApiKehadiranDosen::class, 'kehadiran_dosen']);
+    Route::get('/kehadiran-mahasiswa', [ApiKehadiranMahasiswa::class, 'kehadiran_mahasiswa']);
+    Route::post('/logout', [AuthController::class, 'logout']);
 });
+
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
