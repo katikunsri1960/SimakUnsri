@@ -84,7 +84,7 @@
                             </li>
                         </ul>
                     </li>
-                    <!-- <li class="treeview {{ request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : '' }}">
+                     <li class="treeview {{ request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : '' }}">
                         <a href="#">
                             <i span class="fa fa-calendar-check-o"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -119,7 +119,7 @@
                                             class="path2"></span></i>Realisasi Pertemuan</a>
                             </li>
                         </ul>
-                    </li> -->
+                    </li> 
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-asterisk"><span class="path1"></span><span class="path2"></span></i>
