@@ -52,21 +52,21 @@
                             <span>Nilai USEPT</span>
                         </a>
                     </li>
-                    {{-- <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
+                    <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
                         <a href="#">
                             <i class="fa fa-user-graduate"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Wisuda</span>
                         </a>
-                    </li> --}}
+                    </li>
                     
-                    <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
+                    {{-- <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.wisuda.index')}}">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Wisuda</span>
                         </a>
-                    </li>
+                    </li> --}}
                     
                     <li class="header">Bimbingan</li>
                     <li class="{{request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir') | request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi') ? 'active' : ''}}">
