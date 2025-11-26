@@ -292,12 +292,12 @@ class KelasPenjadwalanController extends Controller
         // dd($id_matkul);
         $semester_aktif = SemesterAktif::first();
 
-        $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-        ->orderBy('id_jenjang_pendidikan')
-        ->orderBy('nama_program_studi')
-        ->get();
+        // $prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+        // ->orderBy('id_jenjang_pendidikan')
+        // ->orderBy('nama_program_studi')
+        // ->get();
 
-        $id_prodi_fak=$prodi_fak->pluck('id_prodi');
+        // $id_prodi_fak=$prodi_fak->pluck('id_prodi');
 
         $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
         $kelas = KelasKuliah::leftJoin('ruang_perkuliahans', 'ruang_perkuliahans.id', 'kelas_kuliahs.ruang_perkuliahan_id')
@@ -308,7 +308,7 @@ class KelasPenjadwalanController extends Controller
 
         // dd($kelas);
 
-        $ruang = RuangPerkuliahan::whereIn('id_prodi', $id_prodi_fak)
+        $ruang = RuangPerkuliahan::whereIn('fakultas_id', $auth()->user()->fk_id)
                                     // ->where('lokasi', $kelas->lokasi)
                                     ->get();
 
