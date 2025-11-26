@@ -119,7 +119,7 @@
                                             class="path2"></span></i>Realisasi Pertemuan</a>
                             </li>
                         </ul>
-                    </li> 
+                    </li>
                     <li class="treeview {{request()->routeIs('univ.referensi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-asterisk"><span class="path1"></span><span class="path2"></span></i>
