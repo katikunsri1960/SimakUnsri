@@ -50,7 +50,7 @@ class KehadiranDosenJob implements ShouldQueue
             return;
         }
 
-        Log::info('Memulai job kehadiran dosen (anti-hang)', [
+        Log::info('Memulai job kehadiran dosen ', [
             'batch_id' => $this->batchId,
             'idnumbers_count' => count($this->idnumbers),
         ]);
@@ -232,7 +232,7 @@ class KehadiranDosenJob implements ShouldQueue
 
             if (!$kelas || !$this->isValidSession($session)) continue;
 
-            // ✅ Skip kalau attendance_log kosong
+            //  Skip kalau attendance_log kosong
             if (empty($session['attendance_log'] ?? [])) {
                 Log::info('Lewati session tanpa attendance_log', [
                     'idnumber' => $idnumber,
