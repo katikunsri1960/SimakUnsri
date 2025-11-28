@@ -22,7 +22,7 @@ Pendaftaran Wisuda Fakultas
 			</div>							
 		</div>
     </div>
-    {{-- @include('fakultas.data-akademik.wisuda.upload-sk') --}}
+    @include('fakultas.data-akademik.wisuda.upload-sk')
     @include('fakultas.data-akademik.wisuda.edit-sk')
     <div class="row">
         <div class="col-12">
@@ -64,13 +64,17 @@ Pendaftaran Wisuda Fakultas
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">NO</th>
+                                    <th class="text-center align-middle">AKSI</th>
                                     <th class="text-center align-middle">PERIODE</th>
+                                    <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
+                                    <th class="text-center align-middle">SK YUDISIUM</th>
+                                    <!-- <th class="text-center align-middle">BERKAS REGISTRASI WISUDA</th> -->
                                     <th class="text-center align-middle">NOMOR REGISTRASI</th>
                                     <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">JENJANG</th>
                                     <th class="text-center align-middle">PROGRAM STUDI</th>
-                                    <th class="text-center align-middle">GELAR LULUSAN</th>
+                                    <th class="text-center align-middle">GELAR</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">NIK</th>
@@ -85,13 +89,11 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">NAMA ORANG TUA</th>
                                     <th class="text-center align-middle">ALAMAT ORANG TUA</th>
                                     <th class="text-center align-middle">TANGGAL MASUK</th>
-                                    <th class="text-center align-middle">TANGGAL YUDISIUM</th>
+                                    <th class="text-center align-middle">TGL SK YUDISIUM</th>
+                                    <th class="text-center align-middle">TGL YUDISIUM</th>
                                     <th class="text-center align-middle">MASA STUDI</th>
                                     <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
                                     <th class="text-center align-middle">SCOR USEPT</th>
-                                    <th class="text-center align-middle">STATUS</th>
-                                    <th class="text-center align-middle text-nowrap">SK YUDISIUM<br>(TGL YUDISIUM)</th>
-                                    <th class="text-center align-middle">SK YUDISIUM</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -146,9 +148,9 @@ function getData()
                         '<a class="btn btn-sm btn-success" href="' + url_ijazah + '" target="_blank"><i class="fa fa-file me-2"></i>Lihat Ijazah</a>' : 
                         '<span class="badge badge-warning text-center"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload SK Yudisium</span>';
 
-                    var skYudisium = (item.no_sk_yudisium && item.tgl_sk_yudisium)
-                        ? item.no_sk_yudisium + '<br>( ' + moment(item.tgl_sk_yudisium).format('D MMMM YYYY') + ' )'
-                        : '-';
+                    // var skYudisium = (item.no_sk_yudisium && item.tgl_sk_yudisium)
+                    //     ? item.no_sk_yudisium + '<br>( ' + moment(item.tgl_sk_yudisium).format('D MMMM YYYY') + ' )'
+                    //     : '-';
 
                     var jsonData = encodeURIComponent(JSON.stringify(response.data).replace(/'/g, '&#39;'));
                     var url_sk_yudisium = item.sk_yudisium_file ? '{{ asset('') }}' + item.sk_yudisium_file : null;
@@ -156,12 +158,9 @@ function getData()
                     if (!item.sk_yudisium_file) {
                         skYudisiumButton = `
                             <td class="text-center align-middle">
-                                <a href="#" class="btn btn-warning btn-sm my-2"
-                                    title="Upload SK Yudisium"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#uploadModal${item.id}">
+                                <button class="btn btn-warning btn-sm pilihSkBtn" data-id="${item.id}">
                                     <i class="fa fa-upload"></i> Pilih SK Yudisium
-                                </a>
+                                </button>
                             </td>
                         `;
                     } else {
@@ -170,12 +169,17 @@ function getData()
                                 <a href="{{ asset('') }}${item.sk_yudisium_file}" target="_blank" class="btn btn-success btn-sm my-2">
                                     <i class="fa fa-file"></i> Lihat
                                 </a>
-                                <button type="button" class="btn btn-primary btn-sm my-2" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#editModal"
-                                    onclick="setDosenPa(decodeURIComponent('${jsonData}'), ${item.id})">
+                                <button type="button" 
+                                    class="btn btn-primary btn-sm my-2 btn-edit-sk"
+                                    data-id="${item.id}"
+                                    data-nosk="${item.sk_nama_file ?? 'Belum Diisi'}"
+                                    data-tglsk="${item.sk_tgl_surat ?? 'Belum Diisi'}"
+                                    data-tglyudisium="${item.sk_tgl_kegiatan ?? 'Belum Diisi'}"
+                                    data-file="{{ asset('') }}${item.sk_yudisium_file}"
+                                >
                                     <i class="fa fa-edit"></i> Edit
                                 </button>
+
                                 
                                 <button type="button" class="btn btn-danger btn-sm my-2 btn-hapus-sk" data-id="${item.id}">
                                     <i class="fa fa-trash"></i> Hapus
@@ -232,24 +236,35 @@ function getData()
                     var aksi = 
                         `<td class="align-middle text-nowrap">
                             <div class="row">
+
                                 ${item.approved == 1 ? `
                                     <button onclick="showApproveModal(${item.id})" class="btn btn-success btn-sm my-2" title="Setujui Pengajuan">
                                         <i class="fa fa-check"> </i> Approve
                                     </button>
+
                                     <div class="modal fade" id="approveModal${item.id}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
                                         aria-labelledby="modalLabel${item.id}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
                                             <div class="modal-content">
+
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="modalLabel${item.id}">
-                                                        Approve & Input Gelar Peserta Wisuda
+                                                        Approve & Input Gelar + Predikat Lulusan
                                                     </h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-                                                <form action="{{route('fakultas.wisuda.peserta.approve', '')}}/${item.id}" method="post" id="upload-class-${item.id}" enctype="multipart/form-data">
+
+                                                <form action="{{route('fakultas.wisuda.peserta.approve', '')}}/${item.id}" 
+                                                    method="post" 
+                                                    id="upload-class-${item.id}" 
+                                                    enctype="multipart/form-data">
+
                                                     @csrf
+
                                                     <div class="modal-body">
                                                         <div class="row">
+
+                                                            <!-- Gelar Lulusan -->
                                                             <div class="col-md-12 mb-3">
                                                                 <label for="gelar_${item.id}" class="form-label">Gelar Lulusan</label>
                                                                 <select class="form-select" name="gelar" id="gelar_${item.id}" required>
@@ -259,8 +274,21 @@ function getData()
                                                                     @endforeach
                                                                 </select>
                                                             </div>
+
+                                                            <!-- Predikat Lulusan -->
+                                                            <div class="col-md-12 mb-3">
+                                                                <label for="predikat_${item.id}" class="form-label">Predikat Lulusan</label>
+                                                                <select class="form-select" name="predikat" id="predikat_${item.id}" required>
+                                                                    <option value="">-- Pilih Predikat Lulusan --</option>
+                                                                    @foreach($predikat as $p)
+                                                                        <option value="{{ $p->id }}">{{ $p->indonesia }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
                                                         </div>
                                                     </div>
+
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
                                                             Tutup
@@ -269,52 +297,61 @@ function getData()
                                                             Setuju
                                                         </button>
                                                     </div>
+
                                                 </form>
+
                                             </div>
                                         </div>
                                     </div>
                                 ` : ''}
+
                                 ${(item.approved == 1 || item.approved == 2) ? `
                                     <button onclick="showDeclineModal(${item.id})" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan">
                                         <i class="fa fa-ban"> </i> Decline
                                     </button>
+
                                     <div class="modal fade" id="declineModal${item.id}" tabindex="-1" aria-labelledby="declineModalLabel${item.id}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
                                             <div class="modal-content">
+
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="declineModalLabel${item.id}">Alasan Penolakan</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
+
                                                 <div class="modal-body">
                                                     <div class="col-md-12 mb-3">
-                                                        <label for="alasan_pembatalan${item.id}" class="form-label text-left">Alasan Penolakan</label>
-                                                        <input class="form-control" name="alasan_pembatalan" id="alasan_pembatalan${item.id}" rows="3" placeholder="Masukkan alasan penolakan"></input>
+                                                        <label for="alasan_pembatalan${item.id}" class="form-label">Alasan Penolakan</label>
+                                                        <input class="form-control" name="alasan_pembatalan" id="alasan_pembatalan${item.id}" placeholder="Masukkan alasan penolakan">
                                                     </div>
                                                 </div>
+
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                                     <button type="button" class="btn btn-danger" onclick="submitDecline(${item.id})">Tolak</button>
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 ` : ''}
+
                             </div>
                         </td>`;
 
                     table.row.add([
                         index + 1,
-                        spanStatus,
-                        skYudisium,
-                        skYudisiumButton,
                         aksi,
                         item.wisuda_ke,
+                        spanStatus,
                         ijazahButton,
+                        skYudisiumButton, 
+                        // skYudisium,
                         item.nomor_registrasi ?? '-',
                         foto,
                         item.jenjang,
                         item.nama_prodi,
-                        item.gelar,
+                        item.gelar ?? '-',
                         item.nim,
                         item.nama_mahasiswa,
                         item.nik,
@@ -330,9 +367,11 @@ function getData()
                         item.alamat_orang_tua ?? '-',
                         item.tanggal_daftar,
                         item.tgl_sk_yudisium ?? spanStatus,
+                        item.sk_tgl_kegiatan ?? spanStatus,
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
                         item.scor_usept ?? '-',
+                        aksi,
 
                         
                     ]).draw(false);
@@ -441,10 +480,17 @@ function showApproveModal(id) {
 
 function submitApprove(id) {
     var gelar = $('#gelar_' + id).val();
+    var predikat = $('#predikat_' + id).val();
+
     if (!gelar) {
         swal('Peringatan', 'Silakan pilih gelar lulusan.', 'warning');
         return;
     }
+    if (!predikat) {
+        swal('Peringatan', 'Silakan pilih predikat lulusan.', 'warning');
+        return;
+    }
+
     swal({
         title: "Konfirmasi Persetujuan",
         text: "Apakah Anda yakin ingin menyetujui peserta ini?",
@@ -462,7 +508,8 @@ function submitApprove(id) {
                 data: {
                     _token: '{{ csrf_token() }}',
                     status: 1,
-                    gelar: gelar
+                    gelar: gelar,
+                    predikat: predikat   // ✅ WAJIB TAMBAHKAN INI
                 },
                 success: function(response) {
                     if (response.status === 'success') {
@@ -482,6 +529,7 @@ function submitApprove(id) {
         }
     });
 }
+
 
 
 
@@ -534,6 +582,7 @@ function submitDecline(id) {
         }
     });
 }
+
 </script>
 
 @endpush
