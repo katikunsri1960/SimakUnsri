@@ -217,6 +217,8 @@ class WisudaController extends Controller
 
     public function approve(Request $request, $id)
     {
+        // dd($request->all(), $id);
+
         DB::beginTransaction();
 
         try {
@@ -243,67 +245,11 @@ class WisudaController extends Controller
                 ]);
             }
 
-            // CEK BEBAS PUSTAKA
-            $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', 
-                    $wisuda->id_registrasi_mahasiswa)->first();
-
-            if (!$bebas_pustaka) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Mahasiswa belum memenuhi syarat bebas pustaka.',
-                ]);
-            }
-
-            // CEK KURIKULUM
-            if (!$wisuda->riwayat_pendidikan->id_kurikulum) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Kurikulum Mahasiswa Belum Diatur!',
-                ]);
-            }
-
-            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum',
-                    $wisuda->riwayat_pendidikan->id_kurikulum)->first();
-
-            // HITUNG USEPT
-            try {
-                set_time_limit(10);
-
-                $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', 
-                        $wisuda->id_registrasi_mahasiswa)->first();
-
-                $nilai_usept_mhs = Usept::whereIn('nim', [
-                    $riwayat_pendidikan->nim,
-                    $riwayat_pendidikan->biodata->nik
-                ])->pluck('score');
-
-                $nilai_course = CourseUsept::whereIn('nim', [
-                    $riwayat_pendidikan->nim,
-                    $riwayat_pendidikan->biodata->nik
-                ])->pluck('konversi');
-
-                $all_scores = $nilai_usept_mhs->merge($nilai_course);
-                $usept = $all_scores->max();
-
-            } catch (\Throwable $e) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Database USEPT tidak bisa diakses.',
-                ]);
-            }
-
-            if ($usept < $nilai_usept_prodi->nilai_usept) {
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Mahasiswa tidak memenuhi syarat USEPT.',
-                ]);
-            }
-
             // UPDATE DATA
             $wisuda->update([
                 'approved' => 2,
                 'id_gelar_lulusan' => $request->gelar,
-                'id_predikat_lulusan' => $request->predikat,
+                'id_predikat_kelulusan' => $request->predikat,
             ]);
 
             DB::commit();
@@ -311,7 +257,8 @@ class WisudaController extends Controller
             return response()->json([
                 'status' => 'success',
                 'message' => 'Pendaftaran Wisuda berhasil disetujui.',
-            ]);
+            ], 200);
+
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -347,6 +294,7 @@ class WisudaController extends Controller
                 'status' => 'success',
                 'message' => 'Pendaftaran Wisuda berhasil ditolak.',
             ]);
+            // return redirect()->back()->with('success', 'SK Yudisium berhasil diupload.');
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([

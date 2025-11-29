@@ -470,10 +470,7 @@ function setDosenPa(data, id) {
     // document.getElementById('editForm').action = '/fakultas/pendaftaran-wisuda/' + id;
 }
 
-function showApproveModal(id) {
-    $('#uploadModal' + id).modal('show');
-}
-
+//TOMBOL APPROVE
 function showApproveModal(id) {
     $('#approveModal' + id).modal('show');
 }
@@ -505,22 +502,44 @@ function submitApprove(id) {
             $.ajax({
                 url: `{{route('fakultas.wisuda.peserta.approve', ['id' => 'ID'])}}`.replace('ID', id),
                 type: 'POST',
+                dataType: 'json',
                 data: {
                     _token: '{{ csrf_token() }}',
                     status: 1,
                     gelar: gelar,
-                    predikat: predikat   // ✅ WAJIB TAMBAHKAN INI
+                    predikat: predikat
                 },
                 success: function(response) {
                     if (response.status === 'success') {
-                        swal('Berhasil', response.message, 'success');
+
+                        // 0. Hilangkan fokus dari tombol modal (FIX untuk warning aria-hidden)
+                        $('body').focus();
+
+                        // 1. Tutup modal
                         $('#approveModal' + id).modal('hide');
-                        getData();
+
+                        // 2. Tunggu modal selesai menutup
+                        setTimeout(function() {
+
+                            // Hapus backdrop kalau masih tersisa
+                            $('.modal-backdrop').remove();
+
+                            // 3. Tampilkan swal
+                            swal({
+                                title: "Berhasil",
+                                text: response.message,
+                                type: "success"
+                            }, function() {
+                                getData();
+                            });
+
+                        }, 350);
+
                     } else {
-                        console.log('Approve failed:', response.message);
                         swal('Gagal', response.message, 'error');
                     }
                 },
+
                 error: function(xhr) {
                     console.log('Approve error:', xhr.responseText);
                     swal('Gagal', 'Terjadi kesalahan saat menyetujui peserta.', 'error');
@@ -533,17 +552,22 @@ function submitApprove(id) {
 
 
 
+
 // Tambahkan fungsi berikut agar tombol Decline berfungsi
+// Tampilkan Modal Decline
 function showDeclineModal(id) {
     $('#declineModal' + id).modal('show');
 }
 
+// Submit Penolakan
 function submitDecline(id) {
     var alasan = $('#alasan_pembatalan' + id).val();
+
     if (!alasan) {
         swal('Peringatan', 'Silakan isikan alasan penolakan.', 'warning');
         return;
     }
+
     swal({
         title: "Konfirmasi Penolakan",
         text: "Apakah Anda yakin ingin menolak peserta ini?",
@@ -552,36 +576,62 @@ function submitDecline(id) {
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Ya, Tolak',
-        cancelButtonText: 'Batal',
+        cancelButtonText: 'Batal'
     }, function(isConfirmed) {
+
         if (isConfirmed) {
-            // console.log('alasan_pembatalan:', alasan);
             $.ajax({
-                url: `{{route('fakultas.wisuda.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
+                url: `{{ route('fakultas.wisuda.peserta.decline', ['id' => 'ID']) }}`.replace('ID', id),
                 type: 'POST',
+                dataType: 'json',
                 data: {
                     _token: '{{ csrf_token() }}',
                     status: 0,
                     alasan: alasan
                 },
+
                 success: function(response) {
                     if (response.status === 'success') {
-                        swal('Berhasil', response.message, 'success');
+
+                        // 🟢 FIX: Hilangkan fokus sebelum modal ditutup
+                        $('body').focus();
+
+                        // Tutup modal
                         $('#declineModal' + id).modal('hide');
-                        getData();
+
+                        // Tunggu modal selesai ditutup (300–350ms)
+                        setTimeout(function() {
+
+                            // FIX: Hapus backdrop jika masih tersisa
+                            $('.modal-backdrop').remove();
+
+                            // Tampilkan swal success
+                            swal({
+                                title: "Berhasil",
+                                text: response.message,
+                                type: "success"
+                            }, function() {
+                                getData(); // refresh data tabel
+                            });
+
+                        }, 350);
+
                     } else {
                         console.log('Decline failed:', response);
                         swal('Gagal', response.message, 'error');
                     }
                 },
+
                 error: function(xhr) {
                     console.log('Decline error:', xhr.responseText);
                     swal('Gagal', 'Terjadi kesalahan saat menolak peserta.', 'error');
                 }
             });
         }
+
     });
 }
+
 
 </script>
 
