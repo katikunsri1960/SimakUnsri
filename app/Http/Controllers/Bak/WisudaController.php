@@ -25,6 +25,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\SemesterAktif;
+use App\Models\PejabatFakultas;
 
 class WisudaController extends Controller
 {
@@ -403,16 +404,19 @@ class WisudaController extends Controller
         $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
+                ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
                 ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
-                        'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id')
+                        'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas);
         if ($prodi != null) {
             $data->where('r.id_prodi', $prodi);
         }
         $data = $data->get();
+
+        // dd($data);
 
         if ($data->isEmpty()) {
             return response()->json([
@@ -428,10 +432,17 @@ class WisudaController extends Controller
 
         $fakultas = str_replace('Fakultas ', '', $fakultas);
 
-        $rektor = PejabatUniversitas::join('pejabat_universitas_jabatans as j', 'j.id', 'pejabat_universitas.jabatan_id')->where('j.id', 1)
+        $rektor = PejabatUniversitas::join('pejabat_universitas_jabatans as j', 'j.id', 'pejabat_universitas.jabatan_id')
+                                    ->where('j.id', 1)
                                     ->select('pejabat_universitas.nama as nama', 'pejabat_universitas.gelar_depan as gelar_depan',
-                                    'pejabat_universitas.gelar_belakang as gelar_belakang', 'pejabat_universitas.nip as nip')->first();
-        $dekan = PejabatFakultas::where('id_jabatan', 0)->where('id_fakultas', $fakultas_id)->select('nip', 'gelar_depan', 'gelar_belakang', 'nama_dosen as nama')->first();
+                                    'pejabat_universitas.gelar_belakang as gelar_belakang', 'pejabat_universitas.nip as nip')
+                                    ->first();
+        
+        $dekan = PejabatFakultas::where('id_jabatan', 0)
+                                ->where('id_fakultas', $fakultas_id)
+                                ->select('nip', 'gelar_depan', 'gelar_belakang', 'nama_dosen as nama')
+                                ->first();
+                                // dd($dekan);
 
         $pdf = PDF::loadview('bak.wisuda.ijazah.pdf', [
             'data' => $data,

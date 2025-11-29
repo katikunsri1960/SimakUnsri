@@ -3,11 +3,22 @@
 @push('styles')
 <style>
     /* for id no_sertificat. make it position in the right */
+    .judul {
+        font-weight: bold;
+        font-size: 40pt;
+        margin-top: 2px;
+        margin-bottom:5px;
+        text-align: center;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
     #no_sertifikat {
         display: flex;
         justify-content: flex-end;
+        font-weight: bold;
         width: 100%;
-        margin-top: 70px;
+        margin-top:30px;
         margin-left: 54%;
         font-size: 10pt;
     }
@@ -52,10 +63,14 @@
 @endpush
 @foreach ($data as $d)
     @push('header')
-    <center>
-    @if (file_exists(public_path('images/unsri.png')))
-    <img src="{{ public_path('images/unsri.png') }}" alt="Logo" style="width: 70px">
-    @endif
+    <center style="margin-top: 5px;">
+        @if (file_exists(public_path('images/unsri.png')))
+            <img src="{{ public_path('images/unsri.png') }}" alt="Logo" style="width: 70px">
+            <div class="judul">
+                UNIVERSITAS SRIWIJAYA
+            </div>
+            
+        @endif
     </center>
     @endpush
     <div id="no_sertifikat">
@@ -136,7 +151,7 @@
     <div class="mid-word">
         <center>Telah memenuhi semua persyaratan pendidikan yang ditentukan. Kepadanya diberikan ijazah dan sebutan</center>
         <div class="gelar">
-            Sarjana Teknik (S.T.) (Ganti dengan gelar database)
+            {{ $d->gelar_panjang}} ({{ $d->gelar}})         
         </div>
         <center>beserta segala hak dan kewajiban yang melekat pada sebutan tersebut</center>
     </div>

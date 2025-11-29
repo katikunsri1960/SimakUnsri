@@ -54,6 +54,8 @@ class Wisuda extends Model
         'abstrak_file',
         'abstrak_file_eng',
         'ijazah_terakhir_file',
+        'id_bku_prodi',
+        'id_predikat_kelulusan',
         'approved',
         'alasan_pembatalan',
         // KOLOM SEMENTARA
