@@ -94,6 +94,11 @@ class Wisuda extends Model
         return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
+    public function gelar_lulusan()
+    {
+        return $this->hasMany(GelarLulusan::class, 'id_gelar_lulusan', 'id');
+    }
+
     public function predikat_kelulusan()
     {
         return $this->belongsTo(PredikatKelulusan::class, 'id_predikat_kelulusan', 'id');

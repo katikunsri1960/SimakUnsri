@@ -208,11 +208,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::prefix('ijazah')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah'])->name('bak.wisuda.ijazah.index');
+                    Route::get('/download-excel', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah_download_excel'])->name('bak.wisuda.ijazah.download-excel');
                     Route::get('/download-pdf', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah_download_pdf'])->name('bak.wisuda.ijazah.download-pdf');
                 });
 
                 Route::prefix('transkrip')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'transkrip'])->name('bak.wisuda.transkrip.index');
+                    Route::get('/download-pdf', [App\Http\Controllers\Bak\WisudaController::class, 'transkrip_download_pdf'])->name('bak.wisuda.transkrip.download-pdf');
                 });
 
                 Route::prefix('album')->group(function(){
