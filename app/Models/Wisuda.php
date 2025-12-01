@@ -54,6 +54,8 @@ class Wisuda extends Model
         'abstrak_file',
         'abstrak_file_eng',
         'ijazah_terakhir_file',
+        'id_bku_prodi',
+        'id_predikat_kelulusan',
         'approved',
         'alasan_pembatalan',
         // KOLOM SEMENTARA
@@ -90,6 +92,11 @@ class Wisuda extends Model
     public function transkrip_mahasiswa()
     {
         return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function gelar_lulusan()
+    {
+        return $this->hasMany(GelarLulusan::class, 'id_gelar_lulusan', 'id');
     }
 
     public function predikat_kelulusan()
