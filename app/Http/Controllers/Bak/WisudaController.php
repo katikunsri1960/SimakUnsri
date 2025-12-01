@@ -28,6 +28,7 @@ use App\Models\SemesterAktif;
 use App\Models\PejabatFakultas;
 use App\Exports\IjazahExport;
 use Maatwebsite\Excel\Facades\Excel;
+use setasign\Fpdi\Fpdi;
 
 class WisudaController extends Controller
 {
@@ -558,6 +559,36 @@ class WisudaController extends Controller
         ]);
     }
 
+    public function mergeTwoToOne()
+    {
+        $input = storage_path('app/result.pdf');
+        $output = storage_path('app/result-2up.pdf');
+
+        $pdf = new FPDI('L', 'mm', 'A4');
+
+        $pageCount = $pdf->setSourceFile($input);
+
+        for ($i = 1; $i <= $pageCount; $i += 2) {
+            // Landscape page
+            $pdf->AddPage();
+
+            // Halaman kiri
+            $tpl1 = $pdf->importPage($i);
+            $pdf->useTemplate($tpl1, 10, 10, 135); // skala otomatis
+
+            // Halaman kanan
+            if ($i + 1 <= $pageCount) {
+                $tpl2 = $pdf->importPage($i + 1);
+                $pdf->useTemplate($tpl2, 150, 10, 135);
+            }
+        }
+
+        $pdf->Output($output, 'F');
+
+        return response()->download($output);
+    }
+
+
     public function transkrip_download_pdf(Request $request)
     {
         $fakultas = $request->input('fakultas');
@@ -585,7 +616,7 @@ class WisudaController extends Controller
             $prodi = null;
         }
 
-        $data = Wisuda::with('transkrip_mahasiswa')
+        $data = Wisuda::with('transkrip_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa')
                 ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
@@ -616,19 +647,19 @@ class WisudaController extends Controller
         $kode_univ = ProfilPt::select('kode_perguruan_tinggi')->first()->kode_perguruan_tinggi ?? "Data Kosong";
 
         $paper_size = [0,0, 609.45, 779.53];
-        $fakultas = Fakultas::select('id', 'nama_fakultas')->where('id', $fakultas)->first()->nama_fakultas;
+        $fakultas = Fakultas::select('id', 'nama_fakultas', 'nama_fakultas_eng')->where('id', $fakultas)->first();
 
-        $fakultas = str_replace('Fakultas ', '', $fakultas);
+        // $fakultas = str_replace('Fakultas ', '', $fakultas);
 
         $wr1 = PejabatUniversitas::join('pejabat_universitas_jabatans as j', 'j.id', 'pejabat_universitas.jabatan_id')
                                     ->where('j.id', 2)
                                     ->select('pejabat_universitas.nama as nama', 'pejabat_universitas.gelar_depan as gelar_depan',
-                                    'pejabat_universitas.gelar_belakang as gelar_belakang', 'pejabat_universitas.nip as nip')
+                                    'pejabat_universitas.gelar_belakang as gelar_belakang', 'pejabat_universitas.nip as nip', 'j.nama as jabatan')
                                     ->first();
         
         $wd1 = PejabatFakultas::where('id_jabatan', 1)
                                 ->where('id_fakultas', $fakultas_id)
-                                ->select('nip', 'gelar_depan', 'gelar_belakang', 'nama_dosen as nama')
+                                ->select('nip', 'gelar_depan', 'gelar_belakang', 'nama_dosen as nama', 'nama_jabatan as jabatan')
                                 ->first();
                                 // dd($dekan);
 
@@ -639,7 +670,7 @@ class WisudaController extends Controller
             'wr1' => $wr1,
             'wd1' => $wd1,
         ])
-        ->setPaper($paper_size, 'landscape');
+        ->setPaper($paper_size, 'potrait');
 
         return $pdf->stream('TRANSKRIP-'.$data[0]->periode_wisuda.'.pdf');
     }

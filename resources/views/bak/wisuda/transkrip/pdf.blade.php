@@ -5,174 +5,317 @@
     <title>Transkrip Akademik</title>
 
     <style>
-        body { font-family: DejaVu Sans, sans-serif; font-size: 10px; }
+    body {
+        font-family: "Times New Roman", serif;
+        font-size: 10px;
+        margin: 5px;
+    }
 
-        .page-break { page-break-after: always; }
+    table { border-collapse: collapse; 
+        width: 100%; 
+            page-break-inside: auto;
+    }
 
-        .container {
-            width: 100%;
-            display: flex;
-            gap: 10px;
-        }
+    tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+    }
 
-        .left-col, .right-col {
-            width: 49%;
-            vertical-align: top;
-        }
+    /* Header tabel tetap bergaris */
+    thead th {
+        border: 1px solid #000;
+        padding-top: 10px;
+        padding-bottom: 10px;
+    }
 
-        table { width: 100%; border-collapse: collapse; }
-        th, td { border: 1px solid #000; padding: 3px 4px; font-size: 9px; }
+    /* Hilangkan garis antar baris isi */
+    tbody td {
+        border-left: 1px solid #000;
+        border-right: 1px solid #000;
+        padding: 2px 4px;
+    }
 
-        .no-border td { border: none !important; font-size: 10px; }
-        .header-title { text-align:center; font-size: 12pt; font-weight:bold; }
+    /* Tambahkan border bawah tiap halaman */
+    tfoot {
+        display: table-row-group;
+    }
 
-        .signature-table td { border: none; padding: 4px; }
+    tfoot td.footer-border {
+        border-bottom: 1px solid #000;
+    }
+
+    .no-border td {
+        border: none !important;
+        padding: 2px 0;
+    }
+
+    .ipk-table tr {
+        vertical-align: top;
+        margin-bottom: 50px; /* bebas atur */
+    }
+
+    .header-title {
+        text-align:center;
+        font-weight:bold;
+    }
+
+    .text-upper{ text-transform: uppercase; }
+
+    .header-title .title1 { font-size: 18px; }
+    .header-title .title2 { font-size: 16px; font-style: italic; }
+    .header-title .title3 { font-size: 14px; margin-top: 20px; }
+    .header-title .title4 { font-size: 12px; }
+
+    .page-break { page-break-after: always; }
     </style>
+
 </head>
 
 <body>
 
 @foreach($data as $d)
 
-@php
-    $total = count($d->transkrip_mahasiswa);
-    $half = ceil($total/2);
+{{-- ========================================================= --}}
+{{--                         HEADER                           --}}
+{{-- ========================================================= --}}
+<table class="no-border">
+    <tr>
+        <td width="90">
+            <img src="{{ public_path('images/unsri.png') }}" width="90">
+        </td>
+        <td align="center">
+            <div class="header-title">
+                <div class="title1">KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
+                <div class="title2">MINISTRY OF HIGHER EDUCATION, SCIENCE, AND TECHNOLOGY</div>
+                <div class="title1">UNIVERSITAS SRIWIJAYA</div>
+                <div class="title2">SRIWIJAYA UNIVERSITY</div>
+                <div class="title1">{{ strtoupper($fakultas->nama_fakultas) }}</div>
+                <div class="title2">{{ strtoupper($fakultas->nama_fakultas_eng) }}</div>
+                <div class="title3 mt-100">DAFTAR NILAI AKADEMIK (TRANSKRIP)</div>
+                <div class="title4">ACADEMIC TRANSCRIPT</div>
+            </div>
+        </td>
+    </tr>
+</table>
 
-    $left = $d->transkrip_mahasiswa->slice(0, $half);
-    $right = $d->transkrip_mahasiswa->slice($half);
-@endphp
+<br>
 
+{{-- ========================================================= --}}
+{{--                        BIODATA                           --}}
+{{-- ========================================================= --}}
+<table class="no-border text-upper">
+    <tr><td width="220">NAMA (NAME)</td> <td>: {{ strtoupper($d->nama_mahasiswa) }}</td></tr>
+    <tr><td>TEMPAT LAHIR (PLACE OF BIRTH)</td> <td>: {{ $d->tempat_lahir }}</td></tr>
+    <tr><td>TANGGAL LAHIR (DATE OF BIRTH)</td> <td>: {{ $d->tanggal_lahir }}</td></tr>
+    <tr><td>NIM (STUDENT REGISTRATION NUMBER)</td> <td>: {{ $d->nim }}</td></tr>
+    <tr><td>FAKULTAS (FACULTY)</td> <td>: {{ $fakultas->nama_fakultas }}</td></tr>
+    <tr><td>STRATA PENDIDIKAN (EDUCATION PROGRAM)</td> <td>: {{ $d->jenjang }}</td></tr>
+    <tr><td>PROGRAM STUDI (STUDY PROGRAM)</td> <td>: {{ $d->nama_prodi }}</td></tr>
 
-<div class="container">
+    <tr><td>TANGGAL LULUS (DATE OF COMPLETION)</td> <td>: {{ $d->tgl_yudisium }}</td></tr>
+    <tr><td>TANGGAL WISUDA (CONVOCATION DATE)</td> <td>: {{ $d->tgl_sk_yudisium }}</td></tr>
+    <tr><td>MASA STUDI (LENGTH OF STUDY)</td> <td>: {{ $d->masa_studi }}</td></tr>
+    <tr><td>NOMOR IJAZAH (CERTIFICATE NUMBER)</td> <td>: {{ $d->no_ijazah }}</td></tr>
+    <tr><td>KODE UNIVERSITAS (UNIVERSITY CODE)</td> <td>: {{ $kode_univ }}</td></tr>
+</table>
 
-    {{-- ========================= KOLOM KIRI ========================== --}}
-    <div class="left-col">
+<br>
 
-        {{-- HEADER --}}
-        <img src="{{ public_path('images/unsri.png') }}" width="70">
+{{-- ========================================================= --}}
+{{--                TABEL MATA KULIAH — SINGLE COLUMN          --}}
+{{-- ========================================================= --}}
+<table>
+    <thead>
+        <tr>
+            <th rowspan="2" width="20">NO</th>
+            <th rowspan="2" width="40">KODE<br>(CODE)</th>
+            <th rowspan="2">MATA KULIAH (SUBJECT)</th>
+            <th width="52">SKS (K)</th>
+            <th width="35">NILAI</th>
+            <th width="60">BOBOT (B)</th>
+            <th width="30">K × B</th>
+        </tr>
+        <tr>
+            <th width="52">CREDIT (C)</th>
+            <th width="35">GRADE</th>
+            <th width="60">WEIGHT (W)</th>
+            <th width="30">C × W</th>
+        </tr>
+    </thead>
+    <tbody>
+        @php
+            $totalSks = 0;
+            $totalBobot = 0;
+        @endphp
 
-        <div class="header-title">
-            KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI<br>
-            UNIVERSITAS SRIWIJAYA<br>
-            {{ strtoupper($fakultas) }}<br>
-            <u>DAFTAR NILAI AKADEMIK (TRANSKRIP)</u><br>
-            ACADEMIC TRANSCRIPT
-        </div>
+        @foreach($d->transkrip_mahasiswa as $i => $mk)
+            @php
+                $sks = floor($mk->sks_mata_kuliah);
+                $bobot = $mk->nilai_indeks * $sks;
 
-        {{-- BIODATA --}}
-        <table class="no-border" style="margin-top: 10px;">
-            <tr><td width="125">NAMA</td> <td>: {{ $d->nama_mahasiswa }}</td></tr>
-            <tr><td>TEMPAT LAHIR</td> <td>: {{ $d->tempat_lahir }}</td></tr>
-            <tr><td>TGL LAHIR</td> <td>: {{ $d->tanggal_lahir }}</td></tr>
-            <tr><td>NIM</td> <td>: {{ $d->nim }}</td></tr>
-            <tr><td>FAKULTAS</td> <td>: {{ $fakultas }}</td></tr>
-            <tr><td>PROGRAM STUDI</td> <td>: {{ $d->jenjang }} {{ $d->nama_prodi }}</td></tr>
-            <tr><td>TGL LULUS</td> <td>: {{ $d->tgl_yudisium }}</td></tr>
-            <tr><td>TGL WISUDA</td> <td>: {{ $d->tgl_sk_yudisium }}</td></tr>
-            <tr><td>MASA STUDI</td> <td>: {{ $d->masa_studi }}</td></tr>
-            <tr><td>NO IJAZAH</td> <td>: {{ $d->no_ijazah }}</td></tr>
-        </table>
+                $totalSks += $sks;
+                $totalBobot += $bobot;
+            @endphp
 
-        <br>
+            <tr style="padding: 0; margin: 0;">
+                <td align="center">{{ $i+1 }}</td>
+                <td align="center">{{ $mk->kode_mata_kuliah }}</td>
+                <td align="left">{{ strtoupper($mk->nama_mata_kuliah) }}</td>
+                <td align="center">{{ $sks }}</td>
+                <td align="center">{{ $mk->nilai_huruf }}</td>
+                <td align="center">{{ $mk->nilai_indeks }}</td>
 
-        {{-- TABEL MATA KULIAH BAGIAN KIRI --}}
-        <table>
-            <thead>
-            <tr>
-                <th width="25">NO</th>
-                <th width="70">KODE</th>
-                <th>MATA KULIAH</th>
-                <th width="28">SKS</th>
-                <th width="28">NILAI</th>
-                <th width="28">BOBOT</th>
-                <th width="28">K x B</th>
+                {{-- 🔥 Kolom baru hasil perkalian indeks × SKS --}}
+                <td align="center">{{ $bobot}}</td>
             </tr>
-            </thead>
+        @endforeach
 
-            <tbody>
-            @foreach($left as $i => $mk)
-                <tr>
-                    <td align="center">{{ $i+1 }}</td>
-                    <td align="center">{{ $mk->kode_mata_kuliah }}</td>
-                    <td>{{ $mk->nama_mata_kuliah }}</td>
-                    <td align="center">{{ $mk->sks_mata_kuliah }}</td>
-                    <td align="center">{{ $mk->nilai_huruf }}</td>
-                    <td align="center">{{ $mk->nilai_indeks }}</td>
-                    <td align="center">{{ $mk->kali }}</td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+        <tr style="border: 1px solid #000; text-align:center;">
+            <td colspan="3">TOTAL</td>
+            <td>{{ $totalSks }}</td>
+            <td colspan="2"></td>
+            <td>{{$totalBobot}}</td>
+        </tr>
+    </tbody>
 
-    </div>
 
-    {{-- ========================= KOLOM KANAN ========================== --}}
-    <div class="right-col">
 
-        {{-- TABEL MATA KULIAH BAGIAN KANAN --}}
-        <table>
-            <thead>
-            <tr>
-                <th width="25">NO</th>
-                <th width="70">KODE</th>
-                <th>MATA KULIAH</th>
-                <th width="28">SKS</th>
-                <th width="28">NILAI</th>
-                <th width="28">BOBOT</th>
-                <th width="28">K x B</th>
-            </tr>
-            </thead>
+    <!-- FOOTER UNTUK GARIS DI BAWAH SETIAP HALAMAN -->
+    <!-- <tfoot>
+        <tr>
+            <td colspan="7" class="footer-border"></td>
+        </tr>
+    </tfoot> -->
+</table>
 
-            <tbody>
-            @foreach($right as $i => $mk)             
-                <tr>
-                    <td align="center">{{ $i+1 }}</td>
-                    <td align="center">{{ $mk->kode_mata_kuliah }}</td>
-                    <td>{{ $mk->nama_mata_kuliah }}</td>
-                    <td align="center">{{ $mk->sks_mata_kuliah }}</td>
-                    <td align="center">{{ $mk->nilai_huruf }}</td>
-                    <td align="center">{{ $mk->nilai_indeks }}</td>
-                    <td align="center">{{ $mk->kali }}</td>
-                </tr>
-            @endforeach
-            </tbody>
-        </table>
+<br>
 
-        <br>
+{{-- ========================================================= --}}
+{{--                   IPK + SKRIPSI + PEMBIMBING              --}}
+{{-- ========================================================= --}}
+<table class="no-border ipk-table">
+    <tr>
+        <td colspan="2">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
+        <!-- <td></td> -->
+        <td width="200" colspan="2">: {{$totalBobot}}/{{$totalSks}} = {{ $d->ipk }}</td>
+    </tr>
 
-        {{-- IPK, SKRIPSI, TTD --}}
-        <table class="no-border">
-            <tr><td width="160">IPK</td> <td>: {{ $d->ipk }}</td></tr>
-            <tr><td>PREDIKAT</td> <td>: {{ $d->predikat }}</td></tr>
-            <tr><td>JUDUL SKRIPSI</td> <td>: {{ $d->judul_skripsi }}</td></tr>
-            <tr><td>PEMBIMBING</td> <td>: {{ $d->pembimbing1 }} & {{ $d->pembimbing2 }}</td></tr>
-        </table>
+    <tr>
+        <td width="100"  colspan="2">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
+        <!-- <td></td> -->
+        <td width="200" colspan="2">: {{ $d->predikat }}</td>
+    </tr>
 
-        <br><br>
+    <tr>
+        <td width="200">JUDUL SKRIPSI<br><em>(FINAL PROJECT TITLE)</em></td>
+        <td colspan="3">: {{ $d->judul_skripsi }}</td>
+    </tr>
 
-        <table class="no-border">
-            <tr>
-                <td align="center">
-                    Indralaya, {{ date('d F Y') }}<br>
-                    Wakil Dekan Bidang Akademik<br><br><br>
-                    {{ $wd1->nama }}<br>
-                    NIP {{ $wd1->nip }}
-                </td>
-            </tr>
+    <tr>
+        <td width="200">PEMBIMBING SKRIPSI<br><em>(FINAL PROJECT ADVISORS)</em></td>
+        <td>
+    <span style="float:left;">: </span>
+    <span style="display:block; margin-left: 10px;">
+        @foreach($d->aktivitas_mahasiswa->bimbing_mahasiswa as $pembimbing)
+            <div>{{ $pembimbing->pembimbing_ke }}. {{ $pembimbing->nama_dosen }}</div>
+        @endforeach
+    </span>
+</td>
 
-            <tr>
-                <td align="center">
-                    <br>
-                    Wakil Rektor Bidang Akademik<br><br><br>
-                    {{ $wr1->nama }}<br>
-                    NIP {{ $wr1->nip }}
-                </td>
-            </tr>
-        </table>
 
-    </div>
+    </tr>
+</table>
 
-</div>
+
+<br><br>
+
+{{-- ========================================================= --}}
+{{--                        TANDA TANGAN                       --}}
+{{-- ========================================================= --}}
+<table class="no-border" width="100%" style="font-size: 10px;">
+    <tr>
+        <td width="40%"></td>
+        <td width="20%"></td>
+        <td width="40%">
+            INDRALAYA, 
+            @php
+                $tgl = \Carbon\Carbon::now();
+
+                // Format Indonesia dengan BULAN kapital
+                $indo = strtoupper($tgl->translatedFormat('j F Y'));
+
+                // Format Inggris
+                $day = $tgl->format('j');
+
+                // Superscript "st nd rd th" tanpa redeclare error
+                $supFn = function ($str) {
+                    return strtr($str, [
+                        'st' => 'ˢᵗ',
+                        'nd' => 'ⁿᵈ',
+                        'rd' => 'ʳᵈ',
+                        'th' => 'ᵗʰ',
+                    ]);
+                };
+
+                // Tentukan suffix bahasa Inggris
+                $suffix = $tgl->format('S'); // st, nd, rd, th
+                $supSuffix = $supFn($suffix);
+
+                $english = $day . $supSuffix . ' ' . strtoupper($tgl->format('F Y'));
+            @endphp
+
+            {{ $indo }} ({{ $english }})
+
+        </td>
+
+    </tr>
+
+    <tr>
+        <td width="40%">
+            {{strtoupper($wd1->jabatan)}}
+        </td>
+        <td width="20%"></td>
+        <td width="40%">
+            {{strtoupper($wr1->jabatan)}}
+        </td>
+    </tr>
+    <tr>
+        <td width="40%">
+            {{strtoupper($wd1->jabatan)}}
+        </td>
+        <td width="20%"></td>
+        <td width="40%">
+            {{strtoupper($wr1->jabatan)}}
+        </td>
+    </tr>
+
+    <tr>
+        <td width="40%"></td>
+        <td style="text-align:center; vertical-align:bottom;">
+            <img src="{{ $d->pas_foto }}" alt="Foto" width="100">
+        </td>
+        <td width="40%"></td>
+    </tr>
+
+    <tr>
+        <td width="40%">
+            {{$wd1->gelar_depan}} {{strtoupper($wd1->nama)}}{{$wd1->gelar_belakang ? ', '.$wd1->gelar_belakang : ''}}
+        </td>
+        <td width="20%"></td>
+        <td width="40%">
+            {{$wr1->gelar_depan}} {{strtoupper($wr1->nama)}}{{$wr1->gelar_belakang ? ', '.$wr1->gelar_belakang : ''}}
+        </td>
+    </tr>
+    <tr>
+        <td width="40%">
+            NIP {{strtoupper($wd1->nip)}}
+        </td>
+        <td width="20%"></td>
+        <td width="40%">
+            NIP {{strtoupper($wr1->nip)}}
+        </td>
+    </tr>
+</table>
 
 @if(!$loop->last)
     <div class="page-break"></div>
