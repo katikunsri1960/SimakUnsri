@@ -562,35 +562,6 @@ class WisudaController extends Controller
         ]);
     }
 
-    public function mergeTwoToOne()
-    {
-        $input = storage_path('app/result.pdf');
-        $output = storage_path('app/result-2up.pdf');
-
-        $pdf = new FPDI('L', 'mm', 'A4');
-
-        $pageCount = $pdf->setSourceFile($input);
-
-        for ($i = 1; $i <= $pageCount; $i += 2) {
-            // Landscape page
-            $pdf->AddPage();
-
-            // Halaman kiri
-            $tpl1 = $pdf->importPage($i);
-            $pdf->useTemplate($tpl1, 10, 10, 135); // skala otomatis
-
-            // Halaman kanan
-            if ($i + 1 <= $pageCount) {
-                $tpl2 = $pdf->importPage($i + 1);
-                $pdf->useTemplate($tpl2, 150, 10, 135);
-            }
-        }
-
-        $pdf->Output($output, 'F');
-
-        return response()->download($output);
-    }
-
 
     public function transkrip_download_pdf(Request $request)
     {
@@ -619,7 +590,7 @@ class WisudaController extends Controller
             $prodi = null;
         }
 
-        $data = Wisuda::with('transkrip_mahasiswa','aktivitas_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa')
+        $data = Wisuda::with('transkrip_mahasiswa','aktivitas_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa', 'predikat_kelulusan')
                 ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
@@ -628,7 +599,7 @@ class WisudaController extends Controller
                 ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 // ->leftJoin('transkrip_mahasiswas as t', 't.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
-                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
+                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_program_studi_en as nama_prodi_en', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
                         'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang', 
                         'l.no_seri_ijazah as no_ijazah', 'l.sert_prof as no_sertifikat')
                 ->where('data_wisuda.wisuda_ke', $periode)
@@ -649,7 +620,7 @@ class WisudaController extends Controller
 
         $kode_univ = ProfilPt::select('kode_perguruan_tinggi')->first()->kode_perguruan_tinggi ?? "Data Kosong";
 
-        $paper_size = [0,0, 609.45, 779.53];
+        $paper_size = [0, 0, 612, 792];
         $fakultas = Fakultas::select('id', 'nama_fakultas', 'nama_fakultas_eng')->where('id', $fakultas)->first();
 
         // $fakultas = str_replace('Fakultas ', '', $fakultas);
@@ -673,10 +644,148 @@ class WisudaController extends Controller
             'wr1' => $wr1,
             'wd1' => $wd1,
         ])
-        ->setPaper($paper_size, 'potrait');
+        ->setPaper($paper_size, 'landscape');
 
         return $pdf->stream('TRANSKRIP-'.$data[0]->periode_wisuda.'.pdf');
     }
+
+
+    public function downloadMerged(Request $request)
+{
+    $fakultas = $request->input('fakultas');
+    $fakultas_id = $request->input('fakultas');
+    $periode = $request->input('periode');
+    $prodi = $request->input('prodi');
+
+    if (!$fakultas || !$periode) {
+        return response()->json(['error' => 'Fakultas dan Periode wajib diisi']);
+    }
+
+    if ($prodi == '*') {
+        $prodi = null;
+    }
+
+    // ================================
+    //           QUERY
+    // ================================
+    $data = Wisuda::with('transkrip_mahasiswa','aktivitas_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa', 'predikat_kelulusan')
+        ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
+        ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
+        ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
+        ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
+        ->leftJoin('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
+        ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
+        ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
+        ->select(
+            'data_wisuda.*',
+            'f.nama_fakultas', 
+            'p.nama_program_studi as nama_prodi',
+            'p.nama_program_studi_en as nama_prodi_en',
+            'p.kode_program_studi as kode_prodi',
+            'p.nama_jenjang_pendidikan as jenjang',
+            'r.nama_mahasiswa',
+            'r.nim',
+            'b.tempat_lahir', 
+            'b.tanggal_lahir',
+            'p.bku_pada_ijazah as is_bku',
+            'bku.bku_prodi_id',
+            'g.gelar', 
+            'g.gelar_panjang',
+            'l.no_seri_ijazah as no_ijazah',
+            'l.sert_prof as no_sertifikat'
+        )
+        ->where('data_wisuda.wisuda_ke', $periode)
+        ->where('f.id', $fakultas);
+
+    if ($prodi != null) {
+        $data->where('r.id_prodi', $prodi);
+    }
+
+    $data = $data->get();
+
+
+    // ================================
+    //       DATA TAMBAHAN PDF
+    // ================================
+    $kode_univ = ProfilPt::select('kode_perguruan_tinggi')->first()->kode_perguruan_tinggi ?? "Data Kosong";
+
+    $fakultas_data = Fakultas::select('id', 'nama_fakultas', 'nama_fakultas_eng')
+        ->where('id', $fakultas)
+        ->first();
+
+    $wr1 = PejabatUniversitas::join('pejabat_universitas_jabatans as j', 'j.id', 'pejabat_universitas.jabatan_id')
+        ->where('j.id', 2)
+        ->select(
+            'pejabat_universitas.nama',
+            'pejabat_universitas.gelar_depan',
+            'pejabat_universitas.gelar_belakang',
+            'pejabat_universitas.nip',
+            'j.nama as jabatan'
+        )
+        ->first();
+
+    $wd1 = PejabatFakultas::where('id_jabatan', 1)
+        ->where('id_fakultas', $fakultas_id)
+        ->select(
+            'nip',
+            'gelar_depan',
+            'gelar_belakang',
+            'nama_dosen as nama',
+            'nama_jabatan as jabatan'
+        )
+        ->first();
+
+
+    // ================================
+    //       MERGE 2 PAGE → 1 PAGE
+    // ================================
+    $final = new FPDI();
+
+    foreach ($data as $mhs) {
+
+        // Generate PDF mahasiswa
+        $pdf = PDF::loadView('bak.wisuda.transkrip.pdf', [
+            'data'      => [$mhs],
+            'kode_univ' => $kode_univ,
+            'fakultas'  => $fakultas_data,
+            'wr1'       => $wr1,
+            'wd1'       => $wd1
+        ])->setPaper([0,0,612,792], 'portrait');
+
+        $tempFile = storage_path("app/temp_{$mhs->nim}.pdf");
+        file_put_contents($tempFile, $pdf->output());
+
+        $src = new FPDI();
+        $pageCount = $src->setSourceFile($tempFile);
+
+        // Loop per 2 halaman
+        for ($i = 1; $i <= $pageCount; $i += 2) {
+
+            $final->AddPage('L', [842, 595]); // Landscape A4
+
+            // Kiri
+            $template1 = $src->importPage($i);
+            $final->useTemplate($template1, 10, 10, 400);
+
+            // Kanan
+            if ($i + 1 <= $pageCount) {
+                $template2 = $src->importPage($i + 1);
+                $final->useTemplate($template2, 430, 10, 400);
+            }
+        }
+
+        unlink($tempFile);
+    }
+
+    $output = storage_path("app/TRANSKRIP-DOUBLE-COLUMN-$periode.pdf");
+    $final->Output($output, 'F');
+
+    return response()->download($output)->deleteFileAfterSend(true);
+}
+
+
+
+
 
     public function album(Request $request)
     {

@@ -13,13 +13,7 @@
 
         .row-table {
             width: 100%;
-            border: none !important;       /* hapus border tabel utama */
-            border-collapse: collapse;   
-                }
-
-        .row-table td,
-        .row-table th {
-            border: none !important;       /* hapus border sel di tabel utama */
+            border-collapse: collapse;
         }
 
         .col-left {
@@ -37,6 +31,7 @@
 
         body {
             font-family: "Times New Roman", serif;
+            font-size: 10px;
             margin: 5px;
         }
 
@@ -81,34 +76,28 @@
 
         .dataDiri-table tr td {
             vertical-align: top;
-            font-size: 8px;
+            font-size: 9px;
         }
 
         .transkrip-table th {
-            padding: 10px 1px 10px 1px;
-            font-size: 5pt;
-            border: 1px solid #000 !important; 
+            padding: 0px 5px;
+            font-size: 6pt;
         }
 
         .transkrip-table tr td {
-            border-left: 1px solid #000 !important; 
-            border-right: 1px solid #000 !important; 
-            /* border-top: none;
-            border-bottom: none; */
-            padding: 1px 1px 0px 1px;
-            font-size: 5pt;
+            vertical-align: top;
+            padding: 0px 5px;
+            font-size: 6pt;
         }
 
         .ipk-table tr td {
             vertical-align: top;
             padding: 8px 3px;
-            font-size:5pt;
         }
 
         .ttd-table tr td {
             vertical-align: top;
             padding: 0px 3px;
-            font-size:5pt
         }
 
         .header-title {
@@ -118,10 +107,10 @@
 
         .text-upper{ text-transform: uppercase; }
 
-        .header-title .title1 { font-size: 10px; }
-        .header-title .title2 { font-size: 9px; font-style: italic; }
-        .header-title .title3 { font-size: 9px; margin-top: 10px; }
-        .header-title .title4 { font-size: 8px; }
+        .header-title .title1 { font-size: 12px; }
+        .header-title .title2 { font-size: 11px; font-style: italic; }
+        .header-title .title3 { font-size: 11px; margin-top: 10px; }
+        .header-title .title4 { font-size: 10px; }
 
         .font-small td, 
         .font-small th {
@@ -129,34 +118,29 @@
             padding: 1px 2px !important;
         }
 
-        .no-wrap {
-            white-space: nowrap; /* pastikan teks tidak terpecah */
-        }
 
         .page-break { page-break-after: always; }
     </style>
 </head>
 
 <body>
-@foreach($data as $d)
 @php
-    $splitIndex = 30; // batas baris kolom kiri
+    $splitIndex = 34; // jumlah baris maksimum kolom kiri
 @endphp
-
+@foreach($data as $d)
 <div class="page-landscape">
     <table class="row-table">
         <tr>
-            {{-- KOLM KIRI --}}
             <td class="col-left">
                 {{-- ========================================================= --}}
                 {{--                         HEADER                           --}}
                 {{-- ========================================================= --}}
                 <table class="no-border">
                     <tr>
-                        <td width="5%" align="center" style="padding-left:20px;">
-                            <img src="{{ public_path('images/unsri.png') }}" width="50">
+                        <td width="70" align="center" style="padding-left:10px;">
+                            <img src="{{ public_path('images/unsri.png') }}" width="60">
                         </td>
-                        <td align="center" width="90%">
+                        <td align="center">
                             <div class="header-title">
                                 <div class="title1">KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
                                 <div class="title2">MINISTRY OF HIGHER EDUCATION, SCIENCE, AND TECHNOLOGY</div>
@@ -185,7 +169,7 @@
                 {{-- ========================================================= --}}
                 <table class="no-border dataDiri-table">
                     <tr>
-                        <td width="150">NAMA <em>(NAME)</em></td> 
+                        <td width="170">NAMA <em>(NAME)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ strtoupper($d->nama_mahasiswa) }}</td>
                     </tr>
@@ -271,123 +255,80 @@
                 <table class="transkrip-table {{ $jumlahMK > 70 ? 'font-small' : '' }}">
                     <thead>
                         <tr>
-                            <th rowspan="2" width="7">NO</th>
-                            <th rowspan="2" width="20">KODE<br>(CODE)</th>
+                            <th rowspan="2" width="2%">NO</th>
+                            <th rowspan="2" width="10%">KODE<br>(CODE)</th>
                             <th rowspan="2">MATA KULIAH (SUBJECT)</th>
-                            <th width="28">SKS (K)</th>
-                            <th width="10">NILAI</th>
-                            <th width="32">BOBOT (B)</th>
-                            <th width="15">K × B</th>
+                            <th width="10%">SKS (K)</th>
+                            <th width="10%">NILAI</th>
+                            <th width="10%">BOBOT (B)</th>
+                            <th width="10%">K × B</th>
                         </tr>
                         <tr>
-                            <th>CREDIT (C)</th>
-                            <th>GRADE</th>
-                            <th>WEIGHT (W)</th>
-                            <th>C × W</th>
+                            <th width="10%">CREDIT (C)</th>
+                            <th width="10%">GRADE</th>
+                            <th width="10%">WEIGHT (W)</th>
+                            <th width="10%">C × W</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($mkLeft as $i => $mk)
+                        @foreach($d->transkrip_mahasiswa as $i => $mk)
                             @php
                                 $sks = floor($mk->sks_mata_kuliah);
                                 $bobot = $mk->nilai_indeks * $sks;
 
-                                // tambahkan ke total sehingga meliputi kolom kiri dan kanan
                                 $totalSks += $sks;
                                 $totalBobot += $bobot;
                             @endphp
-                            <tr>
+
+                            <tr style="padding: 0; margin: 0;">
                                 <td align="center">{{ $i+1 }}</td>
-                                <td>{{ $mk->kode_mata_kuliah }}</td>
-                                <td>{{ strtoupper($mk->nama_mata_kuliah) }}
-                                    <em>({{ strtoupper($mk->nama_mata_kuliah) }})</em>
-                                </td>
+                                <td align="left">{{ $mk->kode_mata_kuliah }}</td>
+                                <td align="left">{{ strtoupper($mk->nama_mata_kuliah) }}</td>
                                 <td align="center">{{ $sks }}</td>
                                 <td align="center">{{ $mk->nilai_huruf }}</td>
                                 <td align="center">{{ $mk->nilai_indeks }}</td>
-                                <td align="center">{{ $bobot }}</td>
+
+                                {{-- 🔥 Kolom baru hasil perkalian indeks × SKS --}}
+                                <td align="center">{{ $bobot}}</td>
                             </tr>
                         @endforeach
-                        <tr style="border-top: 1px solid #000;">
-                            <td colspan="7"></td>
+
+                        <tr style="border: 1px solid #000; text-align:center;">
+                            <td colspan="3">TOTAL</td>
+                            <td>{{ $totalSks }}</td>
+                            <td colspan="2"></td>
+                            <td>{{$totalBobot}}</td>
                         </tr>
                     </tbody>
+
+                    <!-- FOOTER UNTUK GARIS DI BAWAH SETIAP HALAMAN -->
+                    <!-- <tfoot>
+                        <tr>
+                            <td colspan="7" class="footer-border"></td>
+                        </tr>
+                    </tfoot> -->
                 </table>
+                <br>
             </td>
 
-            {{-- KOLM KANAN --}}
             <td class="col-right">
-                @if(count($mkRight) > 0)
-                    {{-- TABEL MATA KULIAH KOLON KANAN --}}
-                    <div style="margin-top:50px;">
-                        <table class="transkrip-table {{ $jumlahMK > 70 ? 'font-small' : '' }}">
-                            <thead>
-                                <tr>
-                                    <th rowspan="2" width="7">NO</th>
-                                    <th rowspan="2" width="20">KODE<br>(CODE)</th>
-                                    <th rowspan="2">MATA KULIAH (SUBJECT)</th>
-                                    <th width="28">SKS (K)</th>
-                                    <th width="10">NILAI</th>
-                                    <th width="32">BOBOT (B)</th>
-                                    <th width="15">K × B</th>
-                                </tr>
-                                <tr>
-                                    <th>CREDIT (C)</th>
-                                    <th>GRADE</th>
-                                    <th>WEIGHT (W)</th>
-                                    <th>C × W</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($mkRight as $i => $mk)
-                                    @php
-                                        $sks = floor($mk->sks_mata_kuliah);
-                                        $bobot = $mk->nilai_indeks * $sks;
-
-                                        $totalSks += $sks;
-                                        $totalBobot += $bobot;
-                                    @endphp
-                                    <tr>
-                                        <td align="center">{{ $i+1 }}</td>
-                                        <td>{{ $mk->kode_mata_kuliah }}</td>
-                                        <td>{{ strtoupper($mk->nama_mata_kuliah) }}
-                                            <em>({{ strtoupper($mk->nama_mata_kuliah) }})</em>
-                                        </td>
-                                        <td align="center">{{ $sks }}</td>
-                                        <td align="center">{{ $mk->nilai_huruf }}</td>
-                                        <td align="center">{{ $mk->nilai_indeks }}</td>
-                                        <td align="center">{{ $bobot }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                            {{-- TOTAL SKS & BOBOT kolom kanan --}}
-                            <tr style="border: 1px solid #000; text-align:center;">
-                                <td colspan="3">TOTAL</td>
-                                <td>{{ $totalSks }}</td>
-                                <td colspan="2"></td>
-                                <td>{{$totalBobot}}</td>
-                            </tr>
-                        </table>
-                    </div>
-                @endif                                
-                <br>
-
                 {{-- ========================================================= --}}
                 {{--                   IPK + SKRIPSI + PEMBIMBING              --}}
                 {{-- ========================================================= --}}
                 <!-- @if($jumlahMK < 37)
                     <div class="page-break"></div>
                 @endif -->
+                
                 <table class="no-border ipk-table">
                     <tr>
-                        <td class="no-wrap">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
-                        <td width="1">: </td>
-                        <td colspan="3">{{$totalBobot}}/{{$totalSks}} = {{ $d->ipk }}</td>
+                        <td colspan="3">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
+                        <!-- <td></td> -->
+                        <td width="400" colspan="3">: {{$totalBobot}}/{{$totalSks}} = {{ $d->ipk }}</td>
                     </tr>
 
                     <tr class="text-upper">
-                        <td class="no-wrap">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
-                        <td width="1">: </td>
+                        <td colspan="3">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
+                        <!-- <td></td> -->
                         <td width="400" colspan="3">: 
                             {{ $d->predikat_kelulusan->indonesia }}
                             <em>({{ $d->predikat_kelulusan->inggris }})</em>
@@ -395,7 +336,7 @@
                     </tr>
 
                     <tr>
-                        <td width="50">JUDUL SKRIPSI<br><em>(FINAL PROJECT TITLE)</em></td>
+                        <td width="180">JUDUL SKRIPSI<br><em>(FINAL PROJECT TITLE)</em></td>
                         <td width="1">: </td>
                         <!-- <td width="1">: </td> -->
                         <td colspan="4">
@@ -405,7 +346,7 @@
                     </tr>
 
                     <tr>
-                        <td width="50">PEMBIMBING SKRIPSI<br><em>(FINAL PROJECT ADVISORS)</em></td>
+                        <td width="180">PEMBIMBING SKRIPSI<br><em>(FINAL PROJECT ADVISORS)</em></td>
                         <td width="1">: </td>
                         <!-- <td width="1">: </td> -->
                         <td colspan="4">
@@ -439,15 +380,15 @@
 
                     {{-- Baris 2 --}}
                     <tr>
-                        <td width="45%">
+                        <td width="40%">
                             {{ strtoupper($wd1->jabatan) }}
                         </td>
-                        <td width="10%" rowspan="10" style="text-align:center; vertical-align:top;
+                        <td width="20%" rowspan="10" style="text-align:center; vertical-align:top;
                         /* padding-top:10px; */
                         ">
-                            <img src="{{ $d->pas_foto }}" alt="Foto" width="80">
+                            <img src="{{ $d->pas_foto }}" alt="Foto" width="100">
                         </td>
-                        <td width="45%">
+                        <td width="40%">
                             {{ strtoupper($wr1->jabatan) }}
                         </td>
                     </tr>
@@ -491,11 +432,13 @@
                     </tr>
 
                 </table>
+                <!-- @if(!$loop->last)
+                    <div class="page-break"></div>
+                @endif -->
             </td>
         </tr>
     </table>
 </div>
-
 @endforeach
 
 </body>

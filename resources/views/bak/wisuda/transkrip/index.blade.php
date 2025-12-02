@@ -68,8 +68,9 @@ Daftar Transkrip Wisudawan
                     <div class="table-responsive">
                         <div class="mb-3">
                             <!-- <button class="btn btn-outline btn-success btn-sm me-2"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR Transkrip (EXCEL)</button> -->
-                            <button class="btn btn-outline btn-success btn-sm me-2" onclick="downloadExcel()"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR TRANSKRIP (EXCEL)</button>
+                            <!-- <button class="btn btn-outline btn-success btn-sm me-2" onclick="downloadExcel()"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR TRANSKRIP (EXCEL)</button> -->
                             <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD TRANSKRIP (PDF)</button>
+                            <button class="btn btn-outline btn-danger btn-sm me-2" onclick="download1Pdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD 1 TRANSKRIP (PDF)</button>
                         </div>
 
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
@@ -193,6 +194,27 @@ function downloadPdf()
     }
 
     var baseUrl = '{{ route('bak.wisuda.transkrip.download-pdf') }}';
+    var url = baseUrl + '?fakultas=' + encodeURIComponent(fakultas) +
+            '&prodi=' + encodeURIComponent(prodi) +
+            '&periode=' + encodeURIComponent(p_wisuda);
+    window.open(url, '_blank');
+    // console.log(url);
+}
+
+function download1Pdf()
+{
+
+    var fakultas = $('#fakultas').val();
+    var prodi = $('#prodi').val();
+    var p_wisuda = $('#periode').val();
+
+    if (fakultas == '' || prodi == '' || p_wisuda == '') {
+
+        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
+        return;
+    }
+
+    var baseUrl = '{{ route('bak.wisuda.transkrip.download-1-pdf') }}';
     var url = baseUrl + '?fakultas=' + encodeURIComponent(fakultas) +
             '&prodi=' + encodeURIComponent(prodi) +
             '&periode=' + encodeURIComponent(p_wisuda);

@@ -215,6 +215,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('transkrip')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'transkrip'])->name('bak.wisuda.transkrip.index');
                     Route::get('/download-pdf', [App\Http\Controllers\Bak\WisudaController::class, 'transkrip_download_pdf'])->name('bak.wisuda.transkrip.download-pdf');
+                    Route::get('/download-1-pdf', [App\Http\Controllers\Bak\WisudaController::class, 'downloadMerged'])->name('bak.wisuda.transkrip.download-1-pdf');
                 });
 
                 Route::prefix('album')->group(function(){
