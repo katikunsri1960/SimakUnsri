@@ -95,7 +95,8 @@
             border-right: 1px solid #000 !important; 
             /* border-top: none;
             border-bottom: none; */
-            padding: 1px 1px 0px 1px;
+            vertical-align: top;
+            padding: 1px 2px 0px 2px;
             font-size: 5pt;
         }
 
@@ -153,10 +154,14 @@
                 {{-- ========================================================= --}}
                 <table class="no-border">
                     <tr>
-                        <td width="5%" align="center" style="padding-left:20px;">
+                        <td width="30" align="center" style="padding:0px 0px 0px 20px; 
+                            {{--border:1px solid #000 !important;--}}
+                        ">
                             <img src="{{ public_path('images/unsri.png') }}" width="50">
                         </td>
-                        <td align="center" width="90%">
+                        <td align="center" width="300" style="padding:0px 0px 0px 0px; margin-right:0px;  
+                            {{--border:1px solid #000 !important;--}}
+                        ">
                             <div class="header-title">
                                 <div class="title1">KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
                                 <div class="title2">MINISTRY OF HIGHER EDUCATION, SCIENCE, AND TECHNOLOGY</div>
@@ -185,7 +190,7 @@
                 {{-- ========================================================= --}}
                 <table class="no-border dataDiri-table">
                     <tr>
-                        <td width="150">NAMA <em>(NAME)</em></td> 
+                        <td width="140">NAMA <em>(NAME)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ strtoupper($d->nama_mahasiswa) }}</td>
                     </tr>
