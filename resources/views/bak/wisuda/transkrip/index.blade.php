@@ -198,28 +198,6 @@ function downloadPdf()
     // console.log(url);
 }
 
-function download1Pdf()
-{
-
-    var fakultas = $('#fakultas').val();
-    var prodi = $('#prodi').val();
-    var p_wisuda = $('#periode').val();
-
-    if (fakultas == '' || prodi == '' || p_wisuda == '') {
-
-        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
-        return;
-    }
-
-    var baseUrl = '{{ route('bak.wisuda.transkrip.download-1-pdf') }}';
-    var url = baseUrl + '?fakultas=' + encodeURIComponent(fakultas) +
-            '&prodi=' + encodeURIComponent(prodi) +
-            '&periode=' + encodeURIComponent(p_wisuda);
-    window.open(url, '_blank');
-    // console.log(url);
-}
-
-
 function filterProdi()
 {
     var prodi = @json($prodi);

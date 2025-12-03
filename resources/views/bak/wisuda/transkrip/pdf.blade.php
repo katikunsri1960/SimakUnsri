@@ -53,15 +53,15 @@
         /* Header tabel tetap bergaris */
         thead th {
             font-size: 10px;
-            border: 1px solid #000;
+            border: 0.25px solid #000;
             padding-top: 10px;
             padding-bottom: 10px;
         }
 
         /* Hilangkan garis antar baris isi */
         tbody td {
-            border-left: 1px solid #000;
-            border-right: 1px solid #000;
+            border-left: 0.25px solid #000;
+            border-right: 0.25px solid #000;
             padding: 2px 4px;
         }
 
@@ -71,7 +71,7 @@
         }
 
         tfoot td.footer-border {
-            border-bottom: 1px solid #000;
+            border-bottom: 0.25px solid #000;
         }
 
         .no-border td {
@@ -85,18 +85,18 @@
         }
 
         .transkrip-table th {
-            padding: 10px 1px 10px 1px;
+            padding: 10px 2px 10px 2px;
             font-size: 5pt;
-            border: 1px solid #000 !important; 
+            border: 0.25px solid #000 !important; 
         }
 
         .transkrip-table tr td {
-            border-left: 1px solid #000 !important; 
-            border-right: 1px solid #000 !important; 
+            border-left: 0.25px solid #000 !important; 
+            border-right: 0.25px solid #000 !important; 
             /* border-top: none;
             border-bottom: none; */
             vertical-align: top;
-            padding: 1px 5px 0px 5px;
+            padding: 1px 5px 1px 5px;
             font-size: 5pt;
             margin-bottom: 0px;
         }
@@ -157,14 +157,14 @@
                     <tr>
                         <td width="30" align="center" style="padding:0px 0px 0px 20px; 
                             {{-- 
-                            border:1px solid #000 !important;
+                            border:0.25px solid #000 !important;
                             --}}
                         ">
                             <img src="{{ public_path('images/unsri.png') }}" width="50">
                         </td>
                         <td align="center" width="300" style="padding:0px 0px px 0px;  
                             {{--
-                            border:1px solid #000 !important;
+                            border:0.25px solid #000 !important;
                             --}}
                         ">
                             <div class="header-title" style="margin-right:50px;">
@@ -321,7 +321,7 @@
                                 <td align="center">{{ $bobot }}</td>
                             </tr>
                         @endforeach
-                        <tr style="border-top: 1px solid #000;">
+                        <tr style="border-bottom: 0.25px solid #000;">
                             <td colspan="7"></td>
                         </tr>
                     </tbody>
@@ -374,7 +374,7 @@
                                 @endforeach
                             </tbody>
                             {{-- TOTAL SKS & BOBOT kolom kanan --}}
-                            <tr style="border: 1px solid #000; text-align:center;">
+                            <tr style="border: 0.25px solid #000; text-align:center;">
                                 <td colspan="3">TOTAL</td>
                                 <td>{{ $totalSks }}</td>
                                 <td colspan="2"></td>
