@@ -392,10 +392,14 @@
                     <div class="page-break"></div>
                 @endif -->
                 <table class="no-border ipk-table pt-100">
-                    <tr>
+                    <tr class="text-upper">
                         <td class="no-wrap">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
                         <td width="1">: </td>
-                        <td colspan="3">{{$totalBobot}}/{{$totalSks}} = {{ str_replace('.', ',', $d->ipk) }}</td>
+                        <td colspan="3">
+                            {{$totalBobot}}/{{$totalSks}} = 
+                            {{ str_replace('.', ',', $d->ipk) }} ({{terbilang_ipk($d->ipk)}}) / 
+                            {{ str_replace('.', ',', $d->ipk) }} ({{terbilang_ipk_en($d->ipk)}})
+                        </td>
                     </tr>
 
                     <tr class="text-upper">
