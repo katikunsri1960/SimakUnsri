@@ -96,13 +96,14 @@
             /* border-top: none;
             border-bottom: none; */
             vertical-align: top;
-            padding: 1px 2px 0px 2px;
+            padding: 1px 5px 0px 5px;
             font-size: 5pt;
+            margin-bottom: 0px;
         }
 
         .ipk-table tr td {
             vertical-align: top;
-            padding: 8px 3px;
+            padding: 5px 3px;
             font-size:5pt;
         }
 
@@ -155,14 +156,18 @@
                 <table class="no-border">
                     <tr>
                         <td width="30" align="center" style="padding:0px 0px 0px 20px; 
-                            {{--border:1px solid #000 !important;--}}
+                            {{-- 
+                            border:1px solid #000 !important;
+                            --}}
                         ">
                             <img src="{{ public_path('images/unsri.png') }}" width="50">
                         </td>
-                        <td align="center" width="300" style="padding:0px 0px 0px 0px; margin-right:0px;  
-                            {{--border:1px solid #000 !important;--}}
+                        <td align="center" width="300" style="padding:0px 0px px 0px;  
+                            {{--
+                            border:1px solid #000 !important;
+                            --}}
                         ">
-                            <div class="header-title">
+                            <div class="header-title" style="margin-right:50px;">
                                 <div class="title1">KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
                                 <div class="title2">MINISTRY OF HIGHER EDUCATION, SCIENCE, AND TECHNOLOGY</div>
                                 <div class="title1">UNIVERSITAS SRIWIJAYA</div>
@@ -175,7 +180,7 @@
                     <tr>
                         <td></td>
                         <td>
-                            <div class="header-title">
+                            <div class="header-title" style="margin-right:50px;">
                                 <div class="title3">DAFTAR NILAI AKADEMIK (TRANSKRIP)</div>
                                 <div class="title4">ACADEMIC TRANSCRIPT</div>
                             </div>
@@ -241,12 +246,15 @@
                     <tr>
                     <td>TANGGAL WISUDA <em>(CONVOCATION DATE)</em></td>
                         <td width="1%">:</td>
-                        <td>{{ idDate($d->tgl_sk_yudisium)}} (<em>{!! enDate($d->tgl_sk_yudisium)!!}</em>)</td>
+                        <td>{{ idDate($d->periode_wisuda->first()->tanggal_wisuda)}} (<em>{!! enDate($d->periode_wisuda->first()->tanggal_wisuda)!!}</em>)</td>
                     </tr>
                     <tr class="text-upper">
                         <td>MASA STUDI <em>(LENGTH OF STUDY)</em></td> 
                         <td width="1%">:  </td>
-                        <td> {{ $d->masa_studi }}</td>
+                        <td> 
+                            {{ $d->masa_studi }}
+                            <em>({{$d->masa_studi_en}})</em>
+                        </td>
                     </tr>
                     <tr class="text-upper">
                         <td>NOMOR IJAZAH NASIONAL <em>(NATIONAL CERTIFICATE NUMBER)</em></td> 
@@ -324,7 +332,7 @@
             <td class="col-right">
                 @if(count($mkRight) > 0)
                     {{-- TABEL MATA KULIAH KOLON KANAN --}}
-                    <div style="margin-top:50px;">
+                    <div style="margin:50px 0px 5px 0px; padding:0px 0px 0px 0px;" >
                         <table class="transkrip-table {{ $jumlahMK > 70 ? 'font-small' : '' }}">
                             <thead>
                                 <tr>
@@ -375,7 +383,7 @@
                         </table>
                     </div>
                 @endif                                
-                <br>
+                <!-- <br> -->
 
                 {{-- ========================================================= --}}
                 {{--                   IPK + SKRIPSI + PEMBIMBING              --}}
@@ -383,17 +391,17 @@
                 <!-- @if($jumlahMK < 37)
                     <div class="page-break"></div>
                 @endif -->
-                <table class="no-border ipk-table">
+                <table class="no-border ipk-table pt-100">
                     <tr>
                         <td class="no-wrap">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
                         <td width="1">: </td>
-                        <td colspan="3">{{$totalBobot}}/{{$totalSks}} = {{ $d->ipk }}</td>
+                        <td colspan="3">{{$totalBobot}}/{{$totalSks}} = {{ str_replace('.', ',', $d->ipk) }}</td>
                     </tr>
 
                     <tr class="text-upper">
                         <td class="no-wrap">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
                         <td width="1">: </td>
-                        <td width="400" colspan="3">: 
+                        <td width="400" colspan="3">
                             {{ $d->predikat_kelulusan->indonesia }}
                             <em>({{ $d->predikat_kelulusan->inggris }})</em>
                         </td>
@@ -446,12 +454,9 @@
                     <tr>
                         <td width="45%">
                             {{ strtoupper($wd1->jabatan) }}
-                        </td>
-                        <td width="10%" rowspan="10" style="text-align:center; vertical-align:top;
-                        /* padding-top:10px; */
-                        ">
-                            <img src="{{ $d->pas_foto }}" alt="Foto" width="80">
-                        </td>
+                        </td width="10%">
+                        <td></td>
+                        
                         <td width="45%">
                             {{ strtoupper($wr1->jabatan) }}
                         </td>
@@ -459,10 +464,15 @@
 
                     {{-- Baris 3 --}}
                     <tr>
-                        <td width="40%">
+                        <td width="45%">
                             VICE DEAN OF ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS,
                         </td>
-                        <td width="40%">
+                        <td width="10%" rowspan="10" style="text-align:center; vertical-align:top;
+                        /* padding-top:5px; */
+                        ">
+                            <img src="{{ $d->pas_foto }}" alt="Foto" width="70">
+                        </td>
+                        <td width="45%">
                             VICE RECTOR FOR ACADEMIC, STUDENT AFFAIRS, AND QUALITY ASSURANCE
                         </td>
                     </tr>
@@ -473,10 +483,10 @@
                         <td width="40%"></td>
                     </tr>
 
-                    <tr><td><br><br><br><br><br></td></tr>
+                    <tr><td><br><br><br><br><br><br></td></tr>
 
                     {{-- Baris 5 --}}
-                    <tr>
+                    <tr class="margin:0px;">
                         <td width="40%">
                             {{ $wd1->gelar_depan }} {{ strtoupper($wd1->nama) }}{{ $wd1->gelar_belakang ? ', '.$wd1->gelar_belakang : '' }}
                         </td>
@@ -486,10 +496,11 @@
                     </tr>
 
                     {{-- Baris 6 --}}
-                    <tr>
+                    <tr class="margin:0px;">
                         <td width="40%">
                             NIP {{ strtoupper($wd1->nip) }}
                         </td>
+                        
                         <td width="40%">
                             NIP {{ strtoupper($wr1->nip) }}
                         </td>

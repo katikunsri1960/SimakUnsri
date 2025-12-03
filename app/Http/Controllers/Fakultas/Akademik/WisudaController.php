@@ -441,102 +441,100 @@ class WisudaController extends Controller
     }
 
     public function editSkYudisium(Request $request, $id)
-{
-    try {
-        $fakultas_id = auth()->user()->fk_id;
+    {
+        try {
+            $fakultas_id = auth()->user()->fk_id;
 
-        // ID YANG BENAR ADALAH ID WISUDA
-        $wisuda = Wisuda::findOrFail($id);
+            // ID YANG BENAR ADALAH ID WISUDA
+            $wisuda = Wisuda::findOrFail($id);
 
-        // VALIDASI DATA WAJIB
-        $request->validate([
-            'no_sk_yudisium'   => 'required|string|max:255',
-            'tgl_sk_yudisium'  => 'required|date',
-            'tgl_yudisium'     => 'required|date',
-        ]);
-
-        /**
-         |--------------------------------------------------------------------------
-         | MODE 1: PAKAI FILE LAMA
-         |--------------------------------------------------------------------------
-        */
-        if (!$request->upload_baru && $request->id_file) {
-
-            $file = FileFakultas::where('id', $request->id_file)
-                ->where('fakultas_id', $fakultas_id)
-                ->firstOrFail();
-
-            // UPDATE DATA FILE FAKULTAS
-            $file->update([
-                'nama_file'    => $request->no_sk_yudisium,
-                'tgl_surat'    => $request->tgl_sk_yudisium,
-                'tgl_kegiatan' => $request->tgl_yudisium,
-            ]);
-
-            // UPDATE DATA PADA TABEL WISUDA
-            $wisuda->update([
-                'id_file_fakultas' => $file->id,
-                'no_sk_yudisium'   => $request->no_sk_yudisium,
-                'tgl_sk_yudisium'  => $request->tgl_sk_yudisium,
-                'tgl_yudisium'     => $request->tgl_yudisium,
-                'sk_yudisium_file' => $file->dir_file,
-            ]);
-
-            return back()->with('success', 'SK Yudisium berhasil diperbarui (pakai file lama).');
-        }
-
-        /**
-         |--------------------------------------------------------------------------
-         | MODE 2: UPLOAD FILE BARU
-         |--------------------------------------------------------------------------
-        */
-        if ($request->upload_baru) {
-
+            // VALIDASI DATA WAJIB
             $request->validate([
-                'sk_yudisium_file' => 'required|file|mimes:pdf|max:1024',
+                'no_sk_yudisium'   => 'required|string|max:255',
+                'tgl_sk_yudisium'  => 'required|date',
+                'tgl_yudisium'     => 'required|date',
             ]);
 
-            // UPLOAD FILE
-            $file = $request->file('sk_yudisium_file');
-            $uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
+            /**
+             |--------------------------------------------------------------------------
+            | MODE 1: PAKAI FILE LAMA
+            |--------------------------------------------------------------------------
+            */
+            if (!$request->upload_baru && $request->id_file) {
 
-            $storedPath = $file->storeAs(
-                'wisuda/sk_yudisium',
-                $uuid . '.' . $file->getClientOriginalExtension(),
-                'public'
-            );
+                $file = FileFakultas::where('id', $request->id_file)
+                    ->where('fakultas_id', $fakultas_id)
+                    ->firstOrFail();
 
-            $fileUrl = 'storage/' . $storedPath;
+                // UPDATE DATA FILE FAKULTAS
+                $file->update([
+                    'nama_file'    => $request->no_sk_yudisium,
+                    'tgl_surat'    => $request->tgl_sk_yudisium,
+                    'tgl_kegiatan' => $request->tgl_yudisium,
+                ]);
 
-            // BUAT DATA FILE_FAKULTAS BARU
-            $fileRecord = FileFakultas::create([
-                'fakultas_id' => $fakultas_id,
-                'nama_file'   => $request->no_sk_yudisium,
-                'tgl_surat'   => $request->tgl_sk_yudisium,
-                'tgl_kegiatan'=> $request->tgl_yudisium,
-                'dir_file'    => $fileUrl,
-            ]);
+                // UPDATE DATA PADA TABEL WISUDA
+                $wisuda->update([
+                    'id_file_fakultas' => $file->id,
+                    'no_sk_yudisium'   => $request->no_sk_yudisium,
+                    'tgl_sk_yudisium'  => $request->tgl_sk_yudisium,
+                    'tgl_yudisium'     => $request->tgl_yudisium,
+                    'sk_yudisium_file' => $file->dir_file,
+                ]);
 
-            // UPDATE DATA WISUDA
-            $wisuda->update([
-                'id_file_fakultas' => $fileRecord->id,
-                'no_sk_yudisium'   => $request->no_sk_yudisium,
-                'tgl_sk_yudisium'  => $request->tgl_sk_yudisium,
-                'tgl_yudisium'     => $request->tgl_yudisium,
-                'sk_yudisium_file' => $fileUrl,
-            ]);
+                return back()->with('success', 'SK Yudisium berhasil diperbarui (pakai file lama).');
+            }
 
-            return back()->with('success', 'SK Yudisium berhasil diperbarui (file baru).');
+            /**
+             |--------------------------------------------------------------------------
+            | MODE 2: UPLOAD FILE BARU
+            |--------------------------------------------------------------------------
+            */
+            if ($request->upload_baru) {
+
+                $request->validate([
+                    'sk_yudisium_file' => 'required|file|mimes:pdf|max:1024',
+                ]);
+
+                // UPLOAD FILE
+                $file = $request->file('sk_yudisium_file');
+                $uuid = \Ramsey\Uuid\Uuid::uuid4()->toString();
+
+                $storedPath = $file->storeAs(
+                    'wisuda/sk_yudisium',
+                    $uuid . '.' . $file->getClientOriginalExtension(),
+                    'public'
+                );
+
+                $fileUrl = 'storage/' . $storedPath;
+
+                // BUAT DATA FILE_FAKULTAS BARU
+                $fileRecord = FileFakultas::create([
+                    'fakultas_id' => $fakultas_id,
+                    'nama_file'   => $request->no_sk_yudisium,
+                    'tgl_surat'   => $request->tgl_sk_yudisium,
+                    'tgl_kegiatan'=> $request->tgl_yudisium,
+                    'dir_file'    => $fileUrl,
+                ]);
+
+                // UPDATE DATA WISUDA
+                $wisuda->update([
+                    'id_file_fakultas' => $fileRecord->id,
+                    'no_sk_yudisium'   => $request->no_sk_yudisium,
+                    'tgl_sk_yudisium'  => $request->tgl_sk_yudisium,
+                    'tgl_yudisium'     => $request->tgl_yudisium,
+                    'sk_yudisium_file' => $fileUrl,
+                ]);
+
+                return back()->with('success', 'SK Yudisium berhasil diperbarui (file baru).');
+            }
+
+            return back()->with('error', 'Tidak ada metode update yang dipilih.');
+
+        } catch (\Throwable $e) {
+            return back()->with('error', 'Gagal memperbarui SK Yudisium! Error: ' . $e->getMessage());
         }
-
-        return back()->with('error', 'Tidak ada metode update yang dipilih.');
-
-    } catch (\Throwable $e) {
-        return back()->with('error', 'Gagal memperbarui SK Yudisium! Error: ' . $e->getMessage());
     }
-}
-
-
 
     public function deleteSkYudisium($id)
     {
