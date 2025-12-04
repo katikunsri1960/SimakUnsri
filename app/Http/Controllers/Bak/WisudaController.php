@@ -385,13 +385,18 @@ class WisudaController extends Controller
         if (!$check) {
             return redirect()->back()->with('error', 'Mahasiswa belum diluluskan!!');
         }
-        
+
+        $check_wisuda = Wisuda::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
+
+        if (!$check_wisuda) {
+            return redirect()->back()->with('error', 'Mahasiswa belum mendaftar wisuda!!');
+        }
         // dd($request->tanggal_pembayaran);
         $data['id_registrasi_mahasiswa'] = $check->id_registrasi_mahasiswa;
         $data['nim'] = $check->nim;
         $data['id_semester'] = SemesterAktif::first()->id_semester;
-        $data['periode_wisuda'] = Wisuda::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first()->wisuda_ke;
-        $data['penomoran_ijazah_nasional'] = $request->penomoran_ijazah_nasional;
+        $data['periode_wisuda'] = $check_wisuda->wisuda_ke;
+        $data['penomoran_ijazah_nasional'] = $request->pisn_mahasiswa;
 
         // dd($data);
         PisnMahasiswa::create($data);
