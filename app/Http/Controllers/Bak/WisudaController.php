@@ -27,7 +27,10 @@ use App\Models\Mahasiswa\PisnMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\SemesterAktif;
+use App\Models\PejabatFakultas;
+use App\Exports\IjazahExport;
 use Maatwebsite\Excel\Facades\Excel;
+use setasign\Fpdi\Fpdi;
 
 class WisudaController extends Controller
 {
