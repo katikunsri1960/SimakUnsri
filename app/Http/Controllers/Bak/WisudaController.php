@@ -423,7 +423,7 @@ class WisudaController extends Controller
         ]);
 
         $file = $request->file('file');
-        $import = Excel::import(new PembayaranManualImport(), $file);
+        $import = Excel::import(new PisnMahasiswaImport(), $file);
 
         return redirect()->back()->with('success', "Data successfully imported!");
     }
