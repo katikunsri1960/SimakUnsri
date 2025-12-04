@@ -396,7 +396,7 @@ class WisudaController extends Controller
         $data['nim'] = $check->nim;
         $data['id_semester'] = SemesterAktif::first()->id_semester;
         $data['periode_wisuda'] = $check_wisuda->wisuda_ke;
-        $data['penomoran_ijazah_nasional'] = $request->pisn_mahasiswa;
+        $data['penomoran_ijazah_nasional'] = $request->penomoran_ijazah_nasional;
 
         // dd($data);
         PisnMahasiswa::create($data);
