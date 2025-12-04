@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Services\Feeder\FeederUpload;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
+use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\AktivitasMagang;
 use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
@@ -1796,6 +1797,111 @@ class FeederUploadController extends Controller
                         'feeder' => 1,
                         'status_sync' => 'sudah sync'
                     ]);
+                    $dataBerhasil++;
+                } else {
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+
+    public function lulus_mahasiswa()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.mahasiswa.lulus-mahasiswa', [
+            'prodi' => $prodi,
+            'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function lulus_mahasiswa_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $data = LulusDo::join('program_studis as p', 'p.id_prodi', 'lulus_dos.id_prodi')
+                    ->where('id_periode_keluar', $request->id_semester)
+                    ->where('lulus_dos.id_prodi', $prodi)
+                    ->where('feeder', 0)
+                    ->select('lulus_dos.*', DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi'))
+                    ->get();
+
+        return response()->json($data);
+    }
+
+    public function lulus_mahasiswa_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+        $semester = $request->semester;
+
+        // return response()->json(['message' => $semester.' - '.$prodi]);
+
+        $data = LulusDo::where('id_periode_keluar', $semester)
+                    ->where('id_prodi', $prodi)
+                    ->where('feeder', 0)
+                    ->where('nim', '09012682226017')
+                    ->get();
+
+        $totalData = $data->count();
+        dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertMahasiswaLulusDO';
+        $actGet = 'GetListMahasiswaLulusDO';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+
+                $record = [
+                    'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
+                    'id_jenis_keluar' => $d->id_jenis_keluar,
+                    'tanggal_keluar' => $d->tgl_keluar,
+                    'keterangan' => $d->keterangan,
+                    'nomor_sk_yudisium' => $d->sk_yudisium,
+                    'tanggal_sk_yudisium' => $d->tgl_sk_yudisium,
+                    'ipk' => round($d->ipk, 2),
+                    'nomor_ijazah' => '',
+                    'jalur_skripsi' => NULL,
+                    'judul_skripsi' => $d->judul_skripsi,
+                    'bulan_awal_bimbingan' => date('yyyy-mm-dd', $d->bln_awal_bimbingan),
+                    'bulan_akhir_bimbingan' => date('yyyy-mm-dd', $d->bln_awal_bimbingan)
+                ];
+
+                $recordGet = "id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+
+                $result = $req->uploadLulusMahasiswa();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    $d->update([
+                        'id_registrasi_mahasiswa' => $result['data']['id_registrasi_mahasiswa'],
+                        'feeder' => 1
+                    ]);
+
                     $dataBerhasil++;
                 } else {
                     $d->update(

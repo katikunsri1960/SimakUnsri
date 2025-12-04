@@ -237,6 +237,19 @@
                                     </li>
                                 </ul>
                             </li>
+                            <li class="treeview {{request()->routeIs('univ.feeder-upload.mahasiswa.*') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mahasiswa
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('univ.feeder-upload.mahasiswa.lulus-mahasiswa') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.mahasiswa.lulus-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus Mahasiswa</a>
+                                    </li>
+                                </ul>
+                            </li>
                             <li class="treeview {{request()->routeIs('univ.feeder-upload.kelas') | request()->routeIs('univ.feeder-upload.perkuliahan.*') ? 'active menu-open' : ''}}">
                                 <a href="#">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Perkuliahan
