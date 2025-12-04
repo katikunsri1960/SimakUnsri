@@ -67,8 +67,6 @@ Daftar Transkrip Wisudawan
                 <div class="box-body">
                     <div class="table-responsive">
                         <div class="mb-3">
-                            <!-- <button class="btn btn-outline btn-success btn-sm me-2"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR Transkrip (EXCEL)</button> -->
-                            <button class="btn btn-outline btn-success btn-sm me-2" onclick="downloadExcel()"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR TRANSKRIP (EXCEL)</button>
                             <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD TRANSKRIP (PDF)</button>
                         </div>
 
@@ -199,7 +197,6 @@ function downloadPdf()
     window.open(url, '_blank');
     // console.log(url);
 }
-
 
 function filterProdi()
 {

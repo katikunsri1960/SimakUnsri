@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-        <title>Transkrip Akademik</title>
+        <title>Album Wisudawan</title>
     <style>
         @page { margin: 40px 20px 40px 20px; }
 
@@ -168,7 +168,7 @@
                             --}}
                         ">
                             <div class="header-title" style="margin-right:50px;">
-                                <div class="title1">KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
+                                <div class="title1">ALBUM WISUDAWAN</div>
                                 <div class="title2">MINISTRY OF HIGHER EDUCATION, SCIENCE, AND TECHNOLOGY</div>
                                 <div class="title1">UNIVERSITAS SRIWIJAYA</div>
                                 <div class="title2">SRIWIJAYA UNIVERSITY</div>
