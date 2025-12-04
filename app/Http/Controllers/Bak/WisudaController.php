@@ -194,12 +194,13 @@ class WisudaController extends Controller
                 ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
                 ->leftJoin('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
+                ->leftJoin('pisn_mahasiswas as pisn', 'pisn.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 // ✅ JOIN BARU : file_fakultas
                 ->leftJoin('file_fakultas as ff','ff.id','data_wisuda.id_file_fakultas')
 
                 ->where('pw.periode', $req['periode'])
                 ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'b.nik as nik', 'akt.judul',
-                        'g.gelar', 'g.gelar_panjang', 'l.no_seri_ijazah as no_ijazah', 'l.sert_prof as no_sertifikat', 
+                        'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat', 
                         'b.tempat_lahir', 'jm.nama_jalur_masuk as jalur_masuk', 'b.tanggal_lahir', 'b.rt', 'b.rw', 'b.jalan', 'b.dusun', 'b.kelurahan', 'b.id_wilayah', 'b.nama_wilayah', 'b.handphone',
                         'b.email', 'b.nama_ayah', 'b.nama_ibu_kandung', 'b.alamat_orang_tua', DB::raw("DATE_FORMAT(tanggal_daftar, '%d-%m-%Y') as tanggal_daftar"));
 
@@ -501,9 +502,10 @@ class WisudaController extends Controller
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
                 ->leftJoin('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
+                ->leftJoin('pisn_mahasiswas as pisn', 'pisn.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
-                        'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang', 'l.no_seri_ijazah as no_ijazah', 'l.sert_prof as no_sertifikat')
+                        'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas);
 
@@ -563,9 +565,10 @@ class WisudaController extends Controller
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
                 ->leftJoin('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
+                ->leftJoin('pisn_mahasiswas as pisn', 'pisn.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
-                        'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang', 'l.no_seri_ijazah as no_ijazah', 'l.sert_prof as no_sertifikat')
+                        'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas);
         if ($prodi != null) {
@@ -669,11 +672,12 @@ class WisudaController extends Controller
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
                 ->leftJoin('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
+                ->leftJoin('pisn_mahasiswas as pisn', 'pisn.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 // ->leftJoin('transkrip_mahasiswas as t', 't.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_program_studi_en as nama_prodi_en', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
                         'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang', 
-                        'l.no_seri_ijazah as no_ijazah', 'l.sert_prof as no_sertifikat')
+                        'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas);
         if ($prodi != null) {
@@ -795,28 +799,12 @@ class WisudaController extends Controller
         $paper_size = [0, 0, 612, 792];
         $fakultas = Fakultas::select('id', 'nama_fakultas', 'nama_fakultas_eng')->where('id', $fakultas)->first();
 
-        // $fakultas = str_replace('Fakultas ', '', $fakultas);
-
-        $wr1 = PejabatUniversitas::join('pejabat_universitas_jabatans as j', 'j.id', 'pejabat_universitas.jabatan_id')
-                                    ->where('j.id', 2)
-                                    ->select('pejabat_universitas.nama as nama', 'pejabat_universitas.gelar_depan as gelar_depan',
-                                    'pejabat_universitas.gelar_belakang as gelar_belakang', 'pejabat_universitas.nip as nip', 'j.nama as jabatan')
-                                    ->first();
-        
-        $wd1 = PejabatFakultas::where('id_jabatan', 1)
-                                ->where('id_fakultas', $fakultas_id)
-                                ->select('nip', 'gelar_depan', 'gelar_belakang', 'nama_dosen as nama', 'nama_jabatan as jabatan')
-                                ->first();
-                                // dd($dekan);
-
         $periode_wisuda = PeriodeWisuda::where('periode', $periode)->first();
         $pdf = PDF::loadview('bak.wisuda.album.pdf', [
             'data' => $data,
             'periode_wisuda' => $periode_wisuda,
             'kode_univ' => $kode_univ,
             'fakultas' => $fakultas,
-            'wr1' => $wr1,
-            'wd1' => $wd1,
         ])
         ->setPaper($paper_size, 'landscape');
 
