@@ -5,6 +5,8 @@ namespace App\Models\Mahasiswa;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\SemesterAktif;
+use App\Models\Semester;
+use App\Models\Wisuda;
 use Illuminate\Database\Eloquent\Model;
 
 class PisnMahasiswa extends Model
