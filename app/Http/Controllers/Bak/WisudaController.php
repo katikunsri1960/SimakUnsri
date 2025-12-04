@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bak;
 
 use Carbon\Carbon;
+use App\Models\Semester;
 use App\Models\Wisuda;
 use App\Models\Fakultas;
 use App\Models\PeriodeWisuda;
@@ -22,13 +23,11 @@ use App\Http\Controllers\Controller;
 use App\Models\Connection\CourseUsept;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Mahasiswa\PisnMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AnggotaAktivitasMahasiswa;
 use App\Models\SemesterAktif;
-use App\Models\PejabatFakultas;
-use App\Exports\IjazahExport;
 use Maatwebsite\Excel\Facades\Excel;
-use setasign\Fpdi\Fpdi;
 
 class WisudaController extends Controller
 {
@@ -358,13 +357,79 @@ class WisudaController extends Controller
                 'message' => 'Terjadi kesalahan saat membatalkan pendaftaran wisuda!',
             ]);
         }
-    }
-
-    
+    } 
 
     public function registrasi_ijazah(Request $request)
     {
-        return view('bak.wisuda.registrasi-ijazah.index');
+        $data = PisnMahasiswa::with(['semester', 'lulus_do', 'wisuda'])->filter($request)->get();
+        $semester = Semester::orderBy('id_semester', 'desc')->get();
+
+        return view('bak.wisuda.registrasi-ijazah.index', compact('data', 'semester'));
+    }
+
+    public function registrasi_ijazah_store(Request $request)
+    {
+        $data = $request->validate([
+            'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
+            'pisn_mahasiswa' => 'required'
+        ]);
+
+        $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
+
+        if (!$check) {
+            return redirect()->back()->with('error', 'Mahasiswa belum diluluskan!!');
+        }
+        // dd($request->tanggal_pembayaran);
+        $data['id_registrasi_mahasiswa'] = $check->id_registrasi_mahasiswa;
+        $data['nim'] = $check->nim;
+        $data['id_semester'] = SemesterAktif::first()->id_semester;
+        $data['periode_wisuda'] = Wisuda::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first()->wisuda_ke;
+        $data['tanggal_pembayaran'] = $request->pisn_mahasiswa;
+
+        PisnMahasiswa::create($data);
+
+        return redirect()->back()->with('success', 'Data berhasil disimpan');
+    }
+
+    public function registrasi_ijazah_update(PisnMahasiswa $idmanual, Request $request)
+    {
+        $data = $request->validate([
+            'status' => 'required|in:0,1',
+        ]);
+
+        $idmanual->update($data);
+
+        return redirect()->back()->with('success', 'Data berhasil diubah');
+    }
+
+    public function registrasi_ijazah_destroy(PisnMahasiswa $idmanual)
+    {
+        $idmanual->delete();
+
+        return redirect()->back()->with('success', 'Data berhasil dihapus');
+    }
+
+    public function registrasi_ijazah_upload(Request $request)
+    {
+        $data = $request->validate([
+            'file' => 'required|mimes:xls,xlsx'
+        ]);
+
+        $file = $request->file('file');
+        $import = Excel::import(new PembayaranManualImport(), $file);
+
+        return redirect()->back()->with('success', "Data successfully imported!");
+    }
+
+    public function get_mahasiswa(Request $request)
+    {
+        $db = new RiwayatPendidikan();
+
+        $data = $db->where('nim', 'like', '%'.$request->q.'%')
+                    ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
+                    ->orderBy('id_periode_masuk', 'desc')->get();
+
+        return response()->json($data);
     }
 
     public function ijazah(Request $request)

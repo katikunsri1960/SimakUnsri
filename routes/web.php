@@ -204,6 +204,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::prefix('registrasi-ijazah')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'registrasi_ijazah'])->name('bak.wisuda.registrasi-ijazah.index');
+                    Route::post('/upload', [App\Http\Controllers\Bak\WisudaController::class, 'registrasi_ijazah_upload'])->name('bak.wisuda.registrasi-ijazah.upload');
+                    Route::post('/store', [App\Http\Controllers\Bak\WisudaController::class, 'registrasi_ijazah_store'])->name('bak.wisuda.registrasi-ijazah.store');
+                    Route::patch('/update/{idmanual}', [App\Http\Controllers\Bak\WisudaController::class, 'registrasi_ijazah_update'])->name('bak.wisuda.registrasi-ijazah.update');
+                    Route::delete('/delete/{idmanual}', [App\Http\Controllers\Bak\WisudaController::class, 'registrasi_ijazah_destroy'])->name('bak.wisuda.registrasi-ijazah.delete');
+                     Route::get('/get-mahasiswa', [App\Http\Controllers\Bak\WisudaController::class, 'get_mahasiswa'])->name('bak.wisuda.registrasi-ijazah.get-mahasiswa');
                 });
 
                 Route::prefix('ijazah')->group(function(){
@@ -1219,6 +1224,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
 
                 Route::post('/ajax', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_ajax'])->name('univ.feeder-upload.ajax');
+
+                Route::prefix('mahasiswa')->group(function(){
+                    Route::prefix('lulus-mahasiswa')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'lulus_mahasiswa'])->name('univ.feeder-upload.mahasiswa.lulus-mahasiswa');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'lulus_mahasiswa_upload'])->name('univ.feeder-upload.mahasiswa.lulus-mahasiswa.upload');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'lulus_mahasiswa_data'])->name('univ.feeder-upload.mahasiswa.lulus-mahasiswa.data');
+                    });
+                });
 
                 Route::prefix('mata-kuliah')->group(function(){
                     Route::prefix('rps')->group(function(){
