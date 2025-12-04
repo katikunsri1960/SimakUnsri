@@ -26,7 +26,7 @@ Daftar Registrasi Ijazah
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between">
                     <div class="d-flex justify-content-start">
-                        <form action="{{route('univ.pembayaran-manual')}}" method="get" id="semesterForm">
+                        <form action="{{route('bak.wisuda.registrasi-ijazah.index')}}" method="get" id="semesterForm">
                             <select name="id_semester" id="id_semester" class="form-select"
                                 onchange="document.getElementById('semesterForm').submit();">
                                 <option value="">-- Pilih Semester --</option>
@@ -73,8 +73,10 @@ Daftar Registrasi Ijazah
                                     <td class="text-center align-middle">{{$d->wisuda->wisuda_ke}}</td>
                                     <td class="text-center align-middle">{{$d->nim}}</td>
                                     <td class="text-start align-middle">{{$d->lulus_do ? $d->lulus_do->nama_mahasiswa :
-                                        ''}}</td>
-                                    <td class="text-end align-middle">{{$d->nama_jenis_keluar}}</td>
+                                        '-'}}</td>
+                                    <td class="text-center align-middle">{{$d->lulus_do ? $d->lulus_do->nama_jenis_keluar :
+                                        'Aktif'}}</td>
+                                    <td class="text-center align-middle">{{$d->penomoran_ijazah_nasional ? $d->penomoran_ijazah_nasional : '-'}}</td>
                                     <td class="text-center align-middle">
                                         {{-- <button class="btn btn-rounded bg-warning" title="Edit Data"
                                             data-bs-toggle="modal" data-bs-target="#editModal"
@@ -87,7 +89,7 @@ Daftar Registrasi Ijazah
                                             <i class="fa fa-trash"><span class="path1"></span><span
                                                     class="path2"></span></i>
                                         </button>
-                                        <form action="{{route('univ.pembayaran-manual.delete', $d->id)}}" method="POST"
+                                        <form action="{{route('bak.wisuda.registrasi-ijazah.delete', $d->id)}}" method="POST"
                                             id="delete-form-{{$d->id}}">
                                             @csrf
                                             @method('delete')

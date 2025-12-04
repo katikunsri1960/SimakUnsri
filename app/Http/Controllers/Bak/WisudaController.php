@@ -367,28 +367,32 @@ class WisudaController extends Controller
         $data = PisnMahasiswa::with(['semester', 'lulus_do', 'wisuda'])->filter($request)->get();
         $semester = Semester::orderBy('id_semester', 'desc')->get();
 
+        // dd($data[0]->lulus_do);
         return view('bak.wisuda.registrasi-ijazah.index', compact('data', 'semester'));
     }
 
     public function registrasi_ijazah_store(Request $request)
     {
+        // dd($request->all());
         $data = $request->validate([
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
-            'pisn_mahasiswa' => 'required'
+            'penomoran_ijazah_nasional' => 'required'
         ]);
-
+//  dd($data);
         $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
 
         if (!$check) {
             return redirect()->back()->with('error', 'Mahasiswa belum diluluskan!!');
         }
+        
         // dd($request->tanggal_pembayaran);
         $data['id_registrasi_mahasiswa'] = $check->id_registrasi_mahasiswa;
         $data['nim'] = $check->nim;
         $data['id_semester'] = SemesterAktif::first()->id_semester;
         $data['periode_wisuda'] = Wisuda::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first()->wisuda_ke;
-        $data['tanggal_pembayaran'] = $request->pisn_mahasiswa;
+        $data['penomoran_ijazah_nasional'] = $request->penomoran_ijazah_nasional;
 
+        // dd($data);
         PisnMahasiswa::create($data);
 
         return redirect()->back()->with('success', 'Data berhasil disimpan');

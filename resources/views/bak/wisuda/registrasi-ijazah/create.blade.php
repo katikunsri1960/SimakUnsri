@@ -21,7 +21,7 @@
                     <div class="mb-3">
                         <label for="pisn_mahasiswa" class="col-sm-4 col-form-label">PISN Mahasiswa</label>
                         <div class="col-sm-12">
-                          <input class="form-control" type="text" name="pisn_mahasiswa"  id="pisn_mahasiswa" >
+                          <input class="form-control" type="text" name="penomoran_ijazah_nasional"  id="penomoran_ijazah_nasional" >
                         </div>
                     </div>
                 </div>
