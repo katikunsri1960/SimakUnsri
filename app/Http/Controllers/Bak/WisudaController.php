@@ -805,8 +805,10 @@ class WisudaController extends Controller
                                 ->first();
                                 // dd($dekan);
 
+        $periode_wisuda = PeriodeWisuda::where('periode', $periode)->first();
         $pdf = PDF::loadview('bak.wisuda.album.pdf', [
             'data' => $data,
+            'periode_wisuda' => $periode_wisuda,
             'kode_univ' => $kode_univ,
             'fakultas' => $fakultas,
             'wr1' => $wr1,
@@ -814,7 +816,7 @@ class WisudaController extends Controller
         ])
         ->setPaper($paper_size, 'landscape');
 
-        return $pdf->stream('TRANSKRIP-'.$data[0]->periode_wisuda.'.pdf');
+        return $pdf->stream('ALBUM-'.strtoupper($fakultas->nama_fakultas).'-'.$periode_wisuda->periode.'.pdf');
     }
 
     public function usept(Request $request)
