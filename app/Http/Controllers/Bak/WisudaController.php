@@ -387,7 +387,7 @@ class WisudaController extends Controller
         $data['nim'] = $check->nim;
         $data['id_semester'] = SemesterAktif::first()->id_semester;
         $data['periode_wisuda'] = Wisuda::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first()->wisuda_ke;
-        $data['tanggal_pembayaran'] = $request->pisn_mahasiswa;
+        $data['penomoran_ijazah_nasional'] = $request->pisn_mahasiswa;
 
         PisnMahasiswa::create($data);
 
@@ -419,7 +419,7 @@ class WisudaController extends Controller
         ]);
 
         $file = $request->file('file');
-        $import = Excel::import(new PembayaranManualImport(), $file);
+        $import = Excel::import(new PisnMahasiswaImport(), $file);
 
         return redirect()->back()->with('success', "Data successfully imported!");
     }
