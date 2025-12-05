@@ -181,37 +181,38 @@ class PesertaKelasKuliah extends Model
 
         $total_nilai_tagihan = 0;
 
-        try{
+        if(!$beasiswa && !$pembayaran_manual){
+            try{
 
-            if(substr($semester_aktif->id_semester,-1) == 3){
-                $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester-1)
-                    ->first();
-            }else{
-                $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester
-                    // -1
-                    )
-                    ->first();
+                if(substr($semester_aktif->id_semester,-1) == 3){
+                    $tagihan = Tagihan::with('pembayaran')
+                        ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                        ->where('kode_periode', $semester_aktif->id_semester-1)
+                        ->first();
+                }else{
+                    $tagihan = Tagihan::with('pembayaran')
+                        ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                        ->where('kode_periode', $semester_aktif->id_semester
+                        // -1
+                        )
+                        ->first();
+                }
+                
+
+                // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
+                $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
+
+                $ukt_mahasiswa = $pembayaran_manual?->nominal_ukt ?? $tagihan->total_nilai_tagihan;
+
+            }catch (\Exception $e) {
+                $result = [
+                    'status' => 'error',
+                    'message' => 'Koneksi Database Keuangan Terputus!'
+                ];
+
+                return $result;
             }
-            
-
-            // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
-            $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
-
-            $ukt_mahasiswa = $pembayaran_manual?->nominal_ukt ?? $tagihan->total_nilai_tagihan;
-
-        }catch (\Exception $e) {
-            $result = [
-                'status' => 'error',
-                'message' => 'Koneksi Database Keuangan Terputus!!'
-            ];
-
-            return $result;
         }
-
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                     ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
@@ -930,34 +931,38 @@ class PesertaKelasKuliah extends Model
 
         $total_nilai_tagihan = 0;
 
-        try{
+        $beasiswa = $beasiswa ?? null; // Ensure $beasiswa is initialized
+        $pembayaran_manual = $pembayaran_manual ?? null; // Ensure $pembayaran_manual is initialized
+        if(!$beasiswa && !$pembayaran_manual){
+            try{
 
-            if(substr($semester_aktif->id_semester,-1) == 3){
-                $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester-1)
-                    ->first();
-            }else{
-                $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester
-                    // -1
-                    )
-                    ->first();
+                if(substr($semester_aktif->id_semester,-1) == 3){
+                    $tagihan = Tagihan::with('pembayaran')
+                        ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                        ->where('kode_periode', $semester_aktif->id_semester-1)
+                        ->first();
+                }else{
+                    $tagihan = Tagihan::with('pembayaran')
+                        ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                        ->where('kode_periode', $semester_aktif->id_semester
+                        // -1
+                        )
+                        ->first();
+                }
+
+                // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
+                $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
+
+                $ukt_mahasiswa = $pembayaran_manual?->nominal_ukt ?? $tagihan->total_nilai_tagihan;
+
+            }catch (\Exception $e) {
+                $result = [
+                    'status' => 'error',
+                    'message' => 'Koneksi Database Keuangan Terputus!'
+                ];
+
+                return $result;
             }
-
-            // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
-            $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
-
-            $ukt_mahasiswa = $pembayaran_manual?->nominal_ukt ?? $tagihan->total_nilai_tagihan;
-
-        }catch (\Exception $e) {
-            $result = [
-                'status' => 'error',
-                'message' => 'Koneksi Database Keuangan Terputus!!'
-            ];
-
-            return $result;
         }
 
 
