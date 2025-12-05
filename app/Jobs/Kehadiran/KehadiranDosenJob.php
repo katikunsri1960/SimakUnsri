@@ -116,7 +116,7 @@ class KehadiranDosenJob implements ShouldQueue
         // Jalankan pool
         $pool->promise()->wait();
 
-        Log::info('Job kehadiran dosen selesai (anti-hang)', [
+        Log::info('Job kehadiran dosen selesai ', [
             'batch_id' => $this->batchId,
             'processed_idnumbers' => count($this->idnumbers),
         ]);
