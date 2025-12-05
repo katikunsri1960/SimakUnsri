@@ -67,8 +67,9 @@ Daftar Ijazah Wisudawan
                 <div class="box-body">
                     <div class="table-responsive">
                         <div class="mb-3">
-                            <button class="btn btn-outline btn-success btn-sm me-2"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR IJAZAH (EXCEL)</button>
-                             <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD IJAZAH (PDF)</button>
+                            <!-- <button class="btn btn-outline btn-success btn-sm me-2"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR IJAZAH (EXCEL)</button> -->
+                            <button class="btn btn-outline btn-success btn-sm me-2" onclick="downloadExcel()"><i class="fa fa-file-excel me-2"></i> DOWNLOAD DAFTAR IJAZAH (EXCEL)</button>
+                            <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD IJAZAH (PDF)</button>
                         </div>
 
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
@@ -117,8 +118,6 @@ function getData()
     var prodi = $('#prodi').val();
     var periode = $('#periode').val();
 
-    console.log(fakultas, prodi, periode);
-
     if (fakultas == '' || prodi == '' || periode == '') {
         swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
         return;
@@ -145,10 +144,17 @@ function getData()
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
                     var foto = item.pas_foto ? '<img src="{{ asset('' ) }}' + item.pas_foto + '" class="img-fluid" style="max-width: 300px; max-height: 500px;">' : '';
+                    // ===============================
+                    // KONDISI KHUSUS NO IJAZAH
+                    // ===============================
+                    var nomor_ijazah = item.jenjang === 'Profesi'
+                        ? (item.no_sertifikat ?? '-')
+                        : (item.no_ijazah ?? '-');
+
                     table.row.add([
                         index + 1,
                         foto,
-                        item.no_ijazah ?? '-',
+                        nomor_ijazah ?? '-',
                         item.wisuda_ke,
                         item.nim,
                         item.nama_mahasiswa,
@@ -158,8 +164,8 @@ function getData()
                         spanStatus,
                         item.ijazah_terakhir ?? '-',
                         berkasButton,
-                        item.nama_fakultas,
-                        item.nama_fakultas,
+                        item.jenjang + ' - ' + item.nama_prodi ,
+                        item.gelar ?? '-',
                     ]).draw(false);
                 });
 
@@ -193,6 +199,22 @@ function downloadPdf()
     window.open(url, '_blank');
     // console.log(url);
 }
+
+function downloadExcel() {
+    var fakultas = $('#fakultas').val();
+    var prodi = $('#prodi').val();
+    var periode = $('#periode').val();
+
+    if (!fakultas || !prodi || !periode) {
+        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
+        return;
+    }
+
+    var url = `{{ route('bak.wisuda.ijazah.download-excel') }}?fakultas=${fakultas}&prodi=${prodi}&periode=${periode}`;
+
+    window.open(url, '_blank');
+}
+
 
 function filterProdi()
 {

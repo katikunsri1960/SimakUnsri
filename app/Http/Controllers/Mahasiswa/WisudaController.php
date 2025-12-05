@@ -271,6 +271,11 @@ class WisudaController extends Controller
             'abstrak_file_eng' => 'required|file|mimes:pdf|max:1024',
             'ijazah_terakhir_file' => 'required|file|mimes:pdf|max:1024',
             'alamat_orang_tua' => 'required',
+        ], [
+            'pas_foto.max' => 'Ukuran pas foto maksimal 500 KB.',
+            'abstrak_file.max' => 'Ukuran file abstrak maksimal 1 MB.',
+            'abstrak_file_eng.max' => 'Ukuran file abstrak (English) maksimal 1 MB.',
+            'ijazah_terakhir_file.max' => 'Ukuran file ijazah terakhir maksimal 1 MB.',
         ]);
 
         // dd($request->all());
