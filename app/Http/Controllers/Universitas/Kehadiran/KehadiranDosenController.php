@@ -70,7 +70,6 @@ class KehadiranDosenController extends Controller
 
             $batch = Bus::batch($jobs)
                 ->name('sinkronisasi-kehadiran-dosen')
-                ->onQueue('kehadiran-dosen')
                 ->allowFailures()
                 ->dispatch();
 

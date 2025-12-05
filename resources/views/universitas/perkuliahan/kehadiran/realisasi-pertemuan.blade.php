@@ -58,7 +58,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {{-- DataTables otomatis isi --}}
                                 </tbody>
                             </table>
                         </div>

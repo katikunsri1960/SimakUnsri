@@ -59,7 +59,6 @@ class RealisasiPertemuanController extends Controller
 
         $batch = Bus::batch($jobs)
             ->name('sinkronisasi-realisasi-pertemuan')
-            ->onQueue('sinkronisasi-realisasi-pertemuan')
             ->dispatch();
 
         return response()->json([
