@@ -54,6 +54,8 @@ class Wisuda extends Model
         'abstrak_file',
         'abstrak_file_eng',
         'ijazah_terakhir_file',
+        'id_bku_prodi',
+        'id_predikat_kelulusan',
         'approved',
         'alasan_pembatalan',
         // KOLOM SEMENTARA
@@ -92,9 +94,19 @@ class Wisuda extends Model
         return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
+    public function gelar_lulusan()
+    {
+        return $this->hasMany(GelarLulusan::class, 'id_gelar_lulusan', 'id');
+    }
+
     public function predikat_kelulusan()
     {
         return $this->belongsTo(PredikatKelulusan::class, 'id_predikat_kelulusan', 'id');
+    }
+
+    public function periode_wisuda()
+    {
+        return $this->hasMany(PeriodeWisuda::class, 'periode', 'wisuda_ke');
     }
 
     public function bku_prodi()
@@ -132,6 +144,17 @@ class Wisuda extends Model
         $tahun = floor($masa_studi / 12);
         $bulan = $masa_studi % 12;
         return $tahun . ' tahun, ' . $bulan . ' bulan';
+    }
+
+    public function getMasaStudiEnAttribute()
+    {
+        // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
+        $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
+        $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
+        $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
+        $tahun = floor($masa_studi / 12);
+        $bulan = $masa_studi % 12;
+        return $tahun . ' years, ' . $bulan . ' months';
     }
 
     public function getStatusAttribute()
