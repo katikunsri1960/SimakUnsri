@@ -45,7 +45,6 @@ class KehadiranMahasiswaController extends Controller
 
             $batch = Bus::batch($jobs)
                 ->name('sinkronisasi-kehadiran-mahasiswa')
-                ->onQueue('kehadiran-mahasiswa')
                 ->allowFailures()
                 ->dispatch();
 
