@@ -45,10 +45,6 @@ class WisudaController extends Controller
 
         // dd($riwayat_pendidikan->lulus_do);
 
-        if ($riwayat_pendidikan->lulus_do) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '.$riwayat_pendidikan->lulus_do->nama_jenis_keluar.'!');
-        }
-
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $semester_aktif->id_semester)
                 ->orderBy('id_semester', 'desc')
@@ -94,7 +90,22 @@ class WisudaController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
         }
 
-        $wisuda = Wisuda::with('aktivitas_mahasiswa')->where('id_registrasi_mahasiswa', $id_reg)->first();
+        $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)
+                    ->whereHas('periode_wisuda', function($q){
+                        $q->where('is_active', 1);
+                    })
+                    ->with([
+                        'aktivitas_mahasiswa',
+                        'periode_wisuda' => function ($q) {
+                            $q->where('is_active', 1);
+                        }
+                    ])
+                    ->first();
+
+
+        if ($riwayat_pendidikan->lulus_do && $wisuda == null) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '.$riwayat_pendidikan->lulus_do->nama_jenis_keluar.'!');
+        }
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 

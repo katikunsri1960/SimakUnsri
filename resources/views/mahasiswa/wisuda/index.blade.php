@@ -5,7 +5,7 @@ Pendaftaran Wisuda Mahasiswa
 @section('content')
 @include('swal')
 
-<section class="content bg-white">
+<section class="content bg-white text-uppercase">
     <div class="row">
         <div class="col-xxl-12">
             <div class="box box-outline-success bs-3 border-success">

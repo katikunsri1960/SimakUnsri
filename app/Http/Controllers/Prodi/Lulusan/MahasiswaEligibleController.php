@@ -111,8 +111,13 @@ class MahasiswaEligibleController extends Controller
 
             foreach($d->transkrip_mahasiswa as $dt){
                 $temp = $temp + ($dt->nilai_indeks * $dt->sks_mata_kuliah);
-                $d->ipk = $temp/$sks_transkrip;
-                $d->status_ipk = isset($requiredIPK[$jenjang]) && ($akm_terakhir->ipk >= $requiredIPK[$jenjang] && $temp/$sks_transkrip == $akm_terakhir->ipk) ? '1' : '0';
+                
+                $d->ipk = round($temp / $sks_transkrip, 2); // normalized to 2 decimals
+
+                // Exact comparison after rounding
+                // $data->ipk_transkrip_akm = ($data->ipk === round($akm_terakhir->ipk, 2)) ? '1' : '0';
+
+                $d->status_ipk = isset($requiredIPK[$jenjang]) && $akm_terakhir->ipk >= $requiredIPK[$jenjang] ? '1' : '0';
             }
 
             $akm_semester_pendek = AktivitasKuliahMahasiswa::whereRaw("RIGHT(id_semester, 1) = '3'")->where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)->sum('sks_semester');
@@ -306,8 +311,10 @@ class MahasiswaEligibleController extends Controller
 
     public function approved_ajuan(Request $request, $id)
     {
+        // dd($request->all());
         $data = $request->validate([
-            'agreement' => 'required'
+            'agreement' => 'required',
+            // 'predikat_mhs' => 'required'
         ]);
 
         // dd($request->agreement);

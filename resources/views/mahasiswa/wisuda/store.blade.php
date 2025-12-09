@@ -297,6 +297,7 @@ Pendaftaran Wisuda Mahasiswa
                                             aria-describedby="fileHelpId" accept=".jpg" required />
                                         <small id="fileHelpId" class="form-text text-danger">
                                             Maksimal ukuran file <strong>1 MB</strong>.
+                                            TAMBAH CONTOH FOTO
                                         </small>
                                     </div>
                                 </div>
@@ -323,7 +324,7 @@ Pendaftaran Wisuda Mahasiswa
                                             placeholder="Masukkan Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris" required></textarea>
                                     </div>
                                     <div class=" col-lg-12 mb-3">
-                                        <label for="kosentrasi" class="form-label">Bidang Kajian Utama (BKU) / Kosentrasi</label><span class="text-danger"> *</span>
+                                        <label for="kosentrasi" class="form-label">Bidang Kajian Utama (BKU) / Kosentrasi (ubah ambil dari inputan)</label><span class="text-danger"> *</span>
                                         <input type="text"class="form-control"name="kosentrasi"id="kosentrasi"aria-describedby="helpId" placeholder="Masukkan Kosentrasi" required/>
                                     </div>
                                     <div class="col-lg-6 mb-3">
