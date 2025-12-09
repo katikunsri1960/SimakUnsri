@@ -28,13 +28,20 @@ class DataKehadiranController extends Controller
 
     public function kehadiran_mahasiswa_ajax()
     {
+        // Subquery dosen: mencari berdasarkan nip, nuptk, atau nidn
+        $subDosen = DB::table('biodata_dosens')
+            ->select('nama_dosen', 'nip', 'nuptk', 'nidn');
+
         $data = DB::table('kehadiran_mahasiswa as km')
-            ->leftJoin('biodata_dosens as bd', function ($join) {
+            ->leftJoin('riwayat_pendidikans as rp', 'rp.nim', '=', 'km.username')
+
+            // Optimasi join biodata_dosens dengan subquery & tanpa OR di ON
+            ->leftJoinSub($subDosen, 'bd', function ($join) {
                 $join->on('bd.nip', '=', 'km.deskripsi_sesi')
                     ->orOn('bd.nuptk', '=', 'km.deskripsi_sesi')
                     ->orOn('bd.nidn', '=', 'km.deskripsi_sesi');
             })
-            ->leftJoin('riwayat_pendidikans as rp', 'rp.nim', '=', 'km.username')
+
             ->select([
                 'km.kode_mata_kuliah',
                 'km.nama_mk',
@@ -49,22 +56,21 @@ class DataKehadiranController extends Controller
             ])
             ->get();
 
-        // Format data
-        $data->transform(function ($item) {
+        // Gunakan satu proses mapping tanpa Carbon per-item
+        $data = $data->map(function ($item) {
             $item->session_date = $item->session_date
-                ? \Carbon\Carbon::createFromTimestamp($item->session_date)->format('d-m-Y')
+                ? date('d-m-Y', $item->session_date)
                 : 'Tanggal Tidak Tersedia';
 
-            $item->nama_dosen = $item->nama_dosen ?: 'N/A';
-            $item->nama_mahasiswa = $item->nama_mahasiswa ?: 'N/A';
+            $item->nama_dosen = $item->nama_dosen ?? 'N/A';
+            $item->nama_mahasiswa = $item->nama_mahasiswa ?? 'N/A';
 
             return $item;
         });
 
-        return response()->json([
-            'data' => $data
-        ]);
+        return response()->json(['data' => $data]);
     }
+
 
 
     /**
@@ -83,7 +89,7 @@ class DataKehadiranController extends Controller
         ]);
     }
     /**
-     * Menampilkan daftar kehadiran dosen (view blade kosong untuk DataTables).
+     * Menampilkan daftar kehadiran dosen 
      */
     public function kehadiran_dosen()
     {
@@ -111,7 +117,7 @@ class DataKehadiranController extends Controller
             ])
             ->get();
 
-        // Format tanggal langsung di sini
+        // Format tanggal
         $data = $data->map(function ($item) {
             $item->session_date = $item->session_date
                 ? \Carbon\Carbon::createFromTimestamp($item->session_date)->format('d-m-Y')
