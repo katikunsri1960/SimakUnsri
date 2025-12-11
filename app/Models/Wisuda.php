@@ -58,9 +58,11 @@ class Wisuda extends Model
         'id_predikat_kelulusan',
         'approved',
         'alasan_pembatalan',
+        'no_urut',
         // KOLOM SEMENTARA
         'bebas_pustaka',
         'useptData',
+
 
     ];
 
