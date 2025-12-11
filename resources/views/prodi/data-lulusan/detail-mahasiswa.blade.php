@@ -218,7 +218,7 @@ Dashboard
                     <h4>
                     <div class="row mt-10">
                         <div class="table-responsive">
-                            <table id="dt" class="table table-bordered table-striped text-center" style="font-size: 11px;">
+                            <table id="dt" class="table table-bordered table-striped text-center text-uppercase" style="font-size: 11px;">
                                 <thead>
                                     <tr>
                                         <th>Kode Mata Kuliah</th>
@@ -233,7 +233,7 @@ Dashboard
                                         @foreach ($data->transkrip_mahasiswa as $t)
                                             <tr>
                                                 <td>{{$t->kode_mata_kuliah}}</td>
-                                                <td>{{$t->nama_mata_kuliah}}</td>
+                                                <td class="text-start">{{$t->nama_mata_kuliah}}</td>
                                                 <td>{{$t->sks_mata_kuliah}}</td>
                                                 <td>{{$t->nilai_indeks}}</td>
                                                 <td>{{$t->nilai_huruf}}</td>

@@ -549,10 +549,6 @@ function submitApprove(id) {
     });
 }
 
-
-
-
-
 // Tambahkan fungsi berikut agar tombol Decline berfungsi
 // Tampilkan Modal Decline
 function showDeclineModal(id) {
