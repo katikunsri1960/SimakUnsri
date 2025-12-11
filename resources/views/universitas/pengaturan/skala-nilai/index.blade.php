@@ -77,8 +77,8 @@ Skala Nilai
                                     <td class="text-start align-middle">{{$d->prodi->nama_jenjang_pendidikan}} {{$d->prodi->nama_program_studi}}</td>
                                     <td class="text-center align-middle">{{$d->nilai_huruf}}</td>
                                     <td class="text-center align-middle">{{$d->nilai_indeks}}</td>
-                                    <td class="text-center align-middle">{{$d->bobot_minimum}}</td>
-                                    <td class="text-center align-middle">{{$d->bobot_maksimum}}</td>
+                                    <td class="text-center align-middle">{{$d->bobot_nilai_min}}</td>
+                                    <td class="text-center align-middle">{{$d->bobot_nilai_maks}}</td>
                                     <td class="text-center align-middle">{{$d->tanggal_mulai_efektif}}</td>
                                     <td class="text-center align-middle">{{$d->tanggal_akhir_efektif}}</td>
                                 </tr>
