@@ -73,9 +73,9 @@
                             <li class="{{request()->routeIs('prodi.data-akademik.krs') || request()->routeIs('prodi.data-akademik.krs.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Rencana Studi</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-akademik.khs') || request()->routeIs('prodi.data-akademik.khs.*') ? 'active' : ''}}">
+                            {{--<li class="{{request()->routeIs('prodi.data-akademik.khs') || request()->routeIs('prodi.data-akademik.khs.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
-                            </li>
+                            </li>--}}
                             <li class="{{request()->routeIs('prodi.data-akademik.tugas-akhir') || request()->routeIs('prodi.data-akademik.tugas-akhir.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.tugas-akhir')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Aktivitas @if(Auth::user()->fk->nama_jenjang_pendidikan == 'S1')Skripsi
                                     @elseif (Auth::user()->fk->nama_jenjang_pendidikan == 'S2')Tesis
