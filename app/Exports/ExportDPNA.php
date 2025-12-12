@@ -58,64 +58,96 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         //Get Skala Nilai Prodi
         $this->batas_min_A = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'A')
-            ->first()->bobot_minimum;
+            ->first()->bobot_nilai_min;
         
         $this->batas_max_A = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'A')
-            ->first()->bobot_maksimum;
+            ->first()->bobot_nilai_maks;
+        
+        $this->batas_min_A_min = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'A-')
+            ->first()->bobot_nilai_min;
+        
+        $this->batas_max_A_min = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'A-')
+            ->first()->bobot_nilai_maks;
+        
+        $this->batas_min_B_plus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'B+')
+            ->first()->bobot_nilai_min;
+        
+        $this->batas_max_B_plus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'B+')
+            ->first()->bobot_nilai_maks;
         
         $this->batas_min_B = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'B')
-            ->first()->bobot_minimum;
+            ->first()->bobot_nilai_min;
         
         $this->batas_max_B = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'B')
-            ->first()->bobot_maksimum;
+            ->first()->bobot_nilai_maks;
+        
+        $this->batas_min_B_min = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'B-')
+            ->first()->bobot_nilai_min;
+        
+        $this->batas_max_B_min = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'B-')
+            ->first()->bobot_nilai_maks;
+
+        $this->batas_min_C_plus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'C+')
+            ->first()->bobot_nilai_min;
+        
+        $this->batas_max_C_plus = SkalaNilai::where('id_prodi', $prodi)
+            ->where('nilai_huruf', 'C+')
+            ->first()->bobot_nilai_maks;
         
         $this->batas_min_C = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'C')
-            ->first()->bobot_minimum;
+            ->first()->bobot_nilai_min;
         
         $this->batas_max_C = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'C')
-            ->first()->bobot_maksimum;
+            ->first()->bobot_nilai_maks;
         
         $this->batas_min_D = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'D')
-            ->first()->bobot_minimum;
+            ->first()->bobot_nilai_min;
         
         $this->batas_max_D = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'D')
-            ->first()->bobot_maksimum;
+            ->first()->bobot_nilai_maks;
         
         $this->batas_min_E = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'E')
-            ->first()->bobot_minimum;
+            ->first()->bobot_nilai_min;
         
         $this->batas_max_E = SkalaNilai::where('id_prodi', $prodi)
             ->where('nilai_huruf', 'E')
-            ->first()->bobot_maksimum;
+            ->first()->bobot_nilai_maks;
 
         //Skala Nilai Statik
-        // $this->batas_min_A = 86.00;
+        // $this->batas_min_A_lampau = 86.00;
         
-        // $this->batas_max_A = 100.00;
+        // $this->batas_max_A_lampau = 100.00;
         
-        // $this->batas_min_B = 71.00;
+        // $this->batas_min_B_lampau = 71.00;
         
-        // $this->batas_max_B = 85.99;
+        // $this->batas_max_B_lampau = 85.99;
         
-        // $this->batas_min_C = 56.00;
+        // $this->batas_min_C_lampau = 56.00;
         
-        // $this->batas_max_C = 70.99;
+        // $this->batas_max_C_lampau = 70.99;
         
-        // $this->batas_min_D = 41.00;
+        // $this->batas_min_D_lampau = 41.00;
         
-        // $this->batas_max_D = 55.99;
+        // $this->batas_max_D_lampau = 55.99;
         
-        // $this->batas_min_E = 00.00;
+        // $this->batas_min_E_lampau = 00.00;
         
-        // $this->batas_max_E = 40.99;
+        // $this->batas_max_E_lampau = 40.99;
     }  
 
     /**
@@ -302,7 +334,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         // Add formula in the column (M) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'M' . $row;
-            $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))";
+            $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"A-\", 3.70, IF(N{$row}=\"B+\", 3.30, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"B-\", 2.70, IF(N{$row}=\"C+\", 2.30, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))))))";
             
             $sheet->setCellValue($cell, $formula);
         }
@@ -310,7 +342,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         // Add formula in the column (N) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'N' . $row;
-            $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Perbaiki Skala Nilai Feeder\"))))))";
+            $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_A_min}, L{$row}<={$this->batas_max_A_min}), \"A-\", IF(AND(L{$row}>={$this->batas_min_B_plus}, L{$row}<={$this->batas_max_B_plus}), \"B+\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_B_min}, L{$row}<={$this->batas_max_B_min}), \"B-\", IF(AND(L{$row}>={$this->batas_min_C_plus}, L{$row}<={$this->batas_max_C_plus}), \"C+\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Perbaiki Skala Nilai Feeder\"))))))))))";
             
             $sheet->setCellValue($cell, $formula);
         }
