@@ -73,6 +73,9 @@
                             <li class="{{request()->routeIs('prodi.data-akademik.krs') || request()->routeIs('prodi.data-akademik.krs.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Rencana Studi</a>
                             </li>
+                            <li class="{{request()->routeIs('prodi.data-akademik.khs') || request()->routeIs('prodi.data-akademik.khs.*') ? 'active' : ''}}">
+                                <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
+                            </li>
                             {{--<li class="{{request()->routeIs('prodi.data-akademik.khs') || request()->routeIs('prodi.data-akademik.khs.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Hasil Studi</a>
                             </li>--}}
