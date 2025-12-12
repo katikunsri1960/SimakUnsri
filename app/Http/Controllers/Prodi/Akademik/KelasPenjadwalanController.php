@@ -777,7 +777,7 @@ class KelasPenjadwalanController extends Controller
         $data = $request->validate([
             'dosen_pengajar' => 'required',
             'rencana_minggu_pertemuan' => 'required',
-            'realisasi_minggu_pertemuan' => 'required',
+            // 'realisasi_minggu_pertemuan' => 'required',
             'evaluasi.*' => [
                 'required',
                 Rule::in(['1','2','3','4'])

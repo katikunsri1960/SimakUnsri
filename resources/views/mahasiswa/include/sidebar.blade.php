@@ -39,12 +39,19 @@
                         </a>
                     </li>
                     <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') | request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan.*') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan')}}">
+                        <a href="#">
                             <i class="fa fa-line-chart"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Nilai Perkuliahan</span>
                         </a>
                     </li>
+                    {{--<li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') | request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan.*') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan')}}">
+                            <i class="fa fa-line-chart"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Nilai Perkuliahan</span>
+                        </a>
+                    </li>--}}
                     <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-usept') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.perkuliahan.nilai-usept')}}">
                             <i class="fa fa-chart-line"><span class="path1"></span><span

@@ -71,7 +71,7 @@ Ubah Dosen Pengajar Mahasiswa
                                             id="realisasi_minggu_pertemuan"
                                             aria-describedby="helpId"
                                             value="{{$data->realisasi_minggu_pertemuan}}"
-                                            required
+                                            disabled
                                         />
                                     </div>
                                 </div>
