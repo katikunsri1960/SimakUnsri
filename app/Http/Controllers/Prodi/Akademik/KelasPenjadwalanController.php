@@ -813,24 +813,24 @@ class KelasPenjadwalanController extends Controller
                                                 })->get();
             $count_dosen_pengajar = count($dosen_pengajar);
             $dosen_rencana_ajar = 0;
-            $dosen_realisasi_ajar = 0;
+            // $dosen_realisasi_ajar = 0;
 
             if ($dosen_pengajar) {
                 foreach ($dosen_pengajar as $pengajar) {
                     $dosen_rencana_ajar += $pengajar['rencana_minggu_pertemuan'];
-                    $dosen_realisasi_ajar += $pengajar['realisasi_minggu_pertemuan'];
+                    // $dosen_realisasi_ajar += $pengajar['realisasi_minggu_pertemuan'];
                 }
 
                 $total_rencana_pertemuan = (int) $request->rencana_minggu_pertemuan[0] + $dosen_rencana_ajar;
-                $total_realisasi_pertemuan = (int) $request->realisasi_minggu_pertemuan[0] + $dosen_realisasi_ajar;
+                // $total_realisasi_pertemuan = (int) $request->realisasi_minggu_pertemuan[0] + $dosen_realisasi_ajar;
 
                 if ($total_rencana_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan+1) {
                     return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
                 }
 
-                if ($total_realisasi_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan+1) {
-                    return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
-                }
+                // if ($total_realisasi_pertemuan > $rencana_prodi->jumlah_minggu_pertemuan+1) {
+                //     return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+                // }
 
                 for($d=0;$d<$count_dosen_pengajar;$d++){
                     $update_sks_substansi = round(($dosen_pengajar[$d]['rencana_minggu_pertemuan']/$total_rencana_pertemuan) * $kelas->matkul->sks_mata_kuliah, 2);
@@ -875,7 +875,7 @@ class KelasPenjadwalanController extends Controller
                 // Update the DosenPengajarKelasKuliah
                 $updateFields = [
                     'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
-                    'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
+                    // 'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
                     'id_jenis_evaluasi' => $request->evaluasi[0],
                     'sks_substansi_total' => $sks_substansi
                 ];
@@ -895,7 +895,7 @@ class KelasPenjadwalanController extends Controller
                 // Update the DosenPengajarKelasKuliah
                 $updateFields = [
                     'rencana_minggu_pertemuan' => $request->rencana_minggu_pertemuan[0],
-                    'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
+                    // 'realisasi_minggu_pertemuan' => $request->realisasi_minggu_pertemuan[0],
                     'id_jenis_evaluasi' => $request->evaluasi[0],
                     'sks_substansi_total' => $sks_substansi
                 ];
