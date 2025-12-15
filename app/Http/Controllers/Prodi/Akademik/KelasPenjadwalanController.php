@@ -793,9 +793,9 @@ class KelasPenjadwalanController extends Controller
             return redirect()->back()->with('error', 'Rencana Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
         }
 
-        if ((int) $request->realisasi_minggu_pertemuan[0] > $rencana_prodi->jumlah_minggu_pertemuan+1) {
-            return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
-        }
+        // if ((int) $request->realisasi_minggu_pertemuan[0] > $rencana_prodi->jumlah_minggu_pertemuan+1) {
+        //     return redirect()->back()->with('error', 'Realisasi Pertemuan Melebihi Batas Jumlah Minggu Pertemuan Pada Periode Perkuliahan');
+        // }
         // dd($rencana_pertemuan);
         try {
             DB::beginTransaction();
