@@ -390,4 +390,9 @@ class KHSController extends Controller
 
          return $pdf->stream('KHS-'.$prodi->kode_program_studi.'-ANGKATAN-'.$tahun_ajaran->id_tahun_ajaran.'-'.str_replace('/', '_', $semester->nama_semester) . '.pdf');
     }
+
+    public function devop()
+    {
+        return view('fakultas.data-akademik.khs.devop');
+    }
 }

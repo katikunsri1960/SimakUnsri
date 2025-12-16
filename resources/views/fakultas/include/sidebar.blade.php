@@ -76,10 +76,10 @@
                                 </a>
                                 <ul class="treeview-menu">
                                     <li class="{{request()->routeIs('fakultas.data-akademik.khs') ? 'active' : ''}}">
-                                        <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mahasiswa</a>
+                                        <a href="{{route('fakultas.data-akademik.khs.devop')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mahasiswa</a>
                                     </li>
                                     <li class="{{request()->routeIs('fakultas.data-akademik.khs.angkatan') ? 'active' : ''}}">
-                                        <a href="#"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Angkatan</a>
+                                        <a href="{{route('fakultas.data-akademik.khs.devop')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Angkatan</a>
                                     </li>
                                     {{--<li class="{{request()->routeIs('fakultas.data-akademik.khs') ? 'active' : ''}}">
                                         <a href="{{route('fakultas.data-akademik.khs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mahasiswa</a>

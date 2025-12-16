@@ -304,6 +304,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs_angkatan_data'])->name('fakultas.data-akademik.khs.angkatan.data');
                         Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs_angkatan_download'])->name('fakultas.data-akademik.khs.angkatan.download');
                     });
+                    Route::get('/under-devop', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'devop'])->name('fakultas.data-akademik.khs.devop');
                 });
 
                 Route::prefix('nilai-usept')->group(function(){
@@ -519,7 +520,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
 
                 Route::get('/nilai-usept', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-usept');
-                Route::get('/under_devop', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'devop'])->name('mahasiswa.perkuliahan.nilai-usept.devop');
+                Route::get('/under_devop', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'devop'])->name('mahasiswa.perkuliahan.devop');
             });
 
             //Route for prestasi mahasiswa
@@ -875,6 +876,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('khs')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'khs'])->name('prodi.data-akademik.khs');
                     Route::get('/data', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'data'])->name('prodi.data-akademik.khs.data');
+                    Route::get('/under_devop', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'devop'])->name('prodi.data-akademik.khs.devop');
                 });
 
                 // Route::get('', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'krs'])->name('prodi.data-akademik.krs');
