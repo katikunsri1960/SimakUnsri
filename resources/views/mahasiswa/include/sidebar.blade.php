@@ -39,7 +39,7 @@
                         </a>
                     </li>
                     <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') | request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan.*') ? 'active' : ''}}">
-                        <a href="#">
+                        <a href="{{route('mahasiswa.perkuliahan.devop')}}">
                             <i class="fa fa-line-chart"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Nilai Perkuliahan</span>

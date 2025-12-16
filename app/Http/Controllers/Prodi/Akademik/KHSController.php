@@ -78,4 +78,9 @@ class KHSController extends Controller
 
         return response()->json($response);
     }
+
+    public function devop()
+    {
+        return view('prodi.data-akademik.khs.devop');
+    }
 }
