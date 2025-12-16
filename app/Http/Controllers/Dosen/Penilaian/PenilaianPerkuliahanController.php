@@ -90,6 +90,11 @@ class PenilaianPerkuliahanController extends Controller
         // pluck('id_registrasi_mahasiswa')->toArray();
         $reg = $peserta->pluck('id_registrasi_mahasiswa')->toArray();
         $nilai_komponen = NilaiKomponenEvaluasi::where('id_kelas', $kelas)->whereIn('id_registrasi_mahasiswa', $reg)->orderBy('urutan')->get();
+
+        if($nilai_komponen->isEmpty()){
+            return redirect()->back()->with('error', 'Data Nilai Komponen Evaluasi Mahasiswa belum diupload!');
+        }
+
         $dosen = DosenPengajarKelasKuliah::with(['dosen'])->where('id_kelas_kuliah', $kelas)->orderBy(
             'urutan'
         )->get();
