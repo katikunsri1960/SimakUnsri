@@ -165,9 +165,38 @@ Mahasiswa Prodi
                         return 'Aktif';
                     }
                 },
-                {data: null, searchable: false, sortable:false, class:"text-center align-middle", render: function(data, type, row, meta) {
-                        return "";
-                }},
+                {
+                    data: null,
+                    searchable: false,
+                    sortable: false,
+                    orderData: [3],
+                    class: "text-center align-middle",
+                    render: function(data, type, row, meta) {
+                        let result = "";
+
+                        // Jika ada beasiswa
+                        if (row.beasiswa) {
+                            result = `<h5><span class="badge bg-primary">${row.beasiswa.jenis_beasiswa.nama_jenis_beasiswa}</span></h5>`;
+                        } else {
+                            // Jika ada tagihan
+                            if (row.tagihan) {
+                                // Jika pembayaran ada
+                                if (row.tagihan.pembayaran) {
+                                    result = `<h5><span class="badge bg-success">Lunas</span></h5>`;
+                                } else {
+                                    // Jika penundaan bayar ada
+                                    if (row.penundaan_bayar == 1) {
+                                        result = `<h5><span class="badge bg-warning">Penundaan Bayar</span></h5>`;
+                                    } else {
+                                        result = `<h5><span class="badge bg-danger">Belum Bayar</span></h5>`;
+                                    }
+                                }
+                            }
+                        }
+
+                        return result;
+                    }
+                },
                 {
                     data: null,
                     render: function(data, type, row) {

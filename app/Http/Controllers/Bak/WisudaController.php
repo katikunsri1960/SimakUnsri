@@ -327,7 +327,7 @@ class WisudaController extends Controller
             DB::rollBack();
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan saat menyetujui pendaftaran wisuda!',
+                'message' => 'Terjadi kesalahan saat menyetujui pendaftaran wisuda!'.$e,
             ]);
         }
     }

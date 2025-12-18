@@ -20,6 +20,10 @@ use App\Models\Wisuda;
 use App\Models\BkuProgramStudi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use App\Models\Connection\Registrasi;
+use App\Models\Connection\Tagihan;
+use App\Models\SemesterAktif;
+use App\Models\PenundaanBayar;
 
 class DataMasterController extends Controller
 {
@@ -36,8 +40,9 @@ class DataMasterController extends Controller
     public function mahasiswa_data(Request $request)
     {
         $searchValue = $request->input('search.value');
+        $semesterAktif = SemesterAktif::first()->id_semester;
 
-        $query = RiwayatPendidikan::with('kurikulum', 'pembimbing_akademik', 'lulus_do')
+        $query = RiwayatPendidikan::with('kurikulum', 'pembimbing_akademik', 'lulus_do', 'beasiswa', 'beasiswa.jenis_beasiswa')
             ->where('id_prodi', auth()->user()->fk_id)
             ->orderBy('id_periode_masuk', 'desc'); // Pastikan orderBy di sini
 
@@ -64,10 +69,10 @@ class DataMasterController extends Controller
         //     $query->whereIn('id_jenis_keluar', $filterStatus);
         // }
 
+        $data = $query->get();
+
         $limit = $request->input('length');
         $offset = $request->input('start');
-
-        $data = $query->get();
 
         if ($request->has('order')) {
             $orderColumn = $request->input('order.0.column');
@@ -97,6 +102,20 @@ class DataMasterController extends Controller
         $recordsFiltered = $data->count();
 
         $data = $data->slice($offset, $limit)->values();
+
+        //BISA DIOPTIMALISASI DENGAN GUNAKAN WHEREIN DARI DATA(NIM) UNTUK PEMBAYARAN DAN REGISTRASI
+        foreach($data as $key => $value) {
+            $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
+
+            $value->tagihan = Tagihan::with('pembayaran')
+                        ->whereIn('tagihan.nomor_pembayaran', [$value->rm_no_test, $value->nim])
+                        ->where('tagihan.kode_periode', $semesterAktif)
+                        ->first();
+
+            $value->penundaan_bayar = PenundaanBayar::where('id_registrasi_mahasiswa', $value->id_registrasi_mahasiswa)
+                                    ->where('id_semester', $semesterAktif)
+                                    ->first() ? 1 : 0;
+        }
 
         $recordsTotal = RiwayatPendidikan::where('id_prodi', auth()->user()->fk_id)->count();
 

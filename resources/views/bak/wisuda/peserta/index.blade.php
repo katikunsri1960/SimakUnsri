@@ -310,46 +310,58 @@ function filterProdi()
     $.each(filteredProdi, function (i, p) {
         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
     });
-
 }
+
 
 function approvePeserta(id) {
     swal({
         title: "Apakah Anda yakin?",
-        text: `Peserta dengan ID ${id} akan disetujui.`,
+        text: "Peserta dengan ID " + id + " akan disetujui?",
         type: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Lanjutkan',
-        cancelButtonText: 'Batal',
-    }, function(isConfirmed) {
-        if (isConfirmed) {
+        confirmButtonText: "Lanjutkan",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        closeOnConfirm: false,
+        closeOnCancel: true
+    }, function (isConfirm) {
+        if (isConfirm) {
             $.ajax({
-                url: `{{route('bak.wisuda.peserta.approve', ['id' => 'ID'])}}`.replace('ID', id),
+                url: `{{ route('bak.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
                 type: 'POST',
                 data: {
-                    _token: '{{ csrf_token() }}',
-                    status: 1
+                    _token: '{{ csrf_token() }}'
                 },
-                success: function(response) {
+                success: function (response) {
+                    console.log('Response success:', response);
+
                     if (response.status === 'success') {
-                        // console.log('Approval successful:', response.data);
-                        swal('Berhasil', response.message, 'success');
+                        swal("Berhasil", response.message, "success");
                         getData();
                     } else {
-                        // console.log('Approval failed:', response.data);
-                        swal('Gagal', response.message, 'error');
+                        console.error('Response error:', response.message);
+                        swal("Gagal", response.message, "error");
                     }
                 },
-                error: function(xhr) {
-                    // console.log('Approval failed:', response.data);
-                    swal('Gagal', 'Terjadi kesalahan saat menyetujui peserta.', 'error');
+                error: function (xhr) {
+                    console.error('AJAX error:', xhr);
+
+                    let message = 'Terjadi kesalahan saat menyetujui peserta.';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message; // 👈 pesan $e
+                    }
+
+                    swal("Gagal", message, "error");
                 }
             });
         }
-    })
+    });
 }
+
+
+
 
 // Tambahkan fungsi berikut agar tombol Decline berfungsi
 function showDeclineModal(id) {

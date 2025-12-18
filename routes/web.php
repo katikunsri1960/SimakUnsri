@@ -85,12 +85,19 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::get('/', [App\Http\Controllers\Bak\DashboardController::class, 'index'])->name('bak');
             Route::get('/check-sync', [App\Http\Controllers\Bak\DashboardController::class, 'check_sync'])->name('bak.check-sync');
             
+            Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Bak\DataMasterController::class, 'getProdi'])->name('bak.mahasiswa.get-fak-prodi-ang');
+
             Route::prefix('data-master')->group(function(){
                 Route::prefix('predikat')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat'])->name('bak.data-master.predikat');
                     Route::post('/', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_store'])->name('bak.data-master.predikat.store');
                     Route::patch('/{predikat}', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_update'])->name('bak.data-master.predikat.update');
                     Route::delete('/{predikat}', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_delete'])->name('bak.data-master.predikat.delete');
+                });
+
+                Route::prefix('mahasiswa')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Bak\DataMasterController::class, 'mahasiswa'])->name('bak.mahasiswa');
+                    Route::get('/data', [App\Http\Controllers\Bak\DataMasterController::class, 'mahasiswa_data'])->name('bak.mahasiswa.data');
                 });
             });
             Route::prefix('tunda-bayar')->group(function() {
