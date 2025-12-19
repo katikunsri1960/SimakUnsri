@@ -141,6 +141,11 @@ class WisudaController extends Controller
 
     public function peserta_formulir(Wisuda $id)
     {
+        // dd($id);
+        if(!$id -> tgl_sk_yudisium){
+            return redirect()->back()->with('error', 'SK Yudisium belum diisi Fakultas!');
+        }
+        
         $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'biodata'])->where('id_registrasi_mahasiswa', $id->id_registrasi_mahasiswa)->first();
         $pt = AllPt::where('id_perguruan_tinggi', $id->id_perguruan_tinggi)->select('nama_perguruan_tinggi')->first();
         $syaratAdm = WisudaSyaratAdm::orderBy('urutan')->select('syarat')->get();
@@ -237,35 +242,53 @@ class WisudaController extends Controller
         return response()->json($response);
     }
 
+
     public function approve(Request $request, $id)
     {
+        // $request->validate([
+        //     'no_urut' => 'required|integer',
+        // ]);
+
         try {
             DB::beginTransaction();
 
             $wisuda = Wisuda::findOrFail($id);
 
             $riwayatPendidikan = RiwayatPendidikan::with('prodi', 'prodi.jurusan')
-                        ->where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->first();
+                ->where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)
+                ->first();
 
             $aktivitasMahasiswa = AktivitasMahasiswa::with('anggota_aktivitas', 'bimbing_mahasiswa')
-                        ->where('id_aktivitas', $wisuda->id_aktivitas)->first();
+                ->where('id_aktivitas', $wisuda->id_aktivitas)
+                ->first();
 
             $semester_aktif = SemesterAktif::first();
 
-            // Validate required data
             if (!$riwayatPendidikan || !$aktivitasMahasiswa || !$semester_aktif) {
                 DB::rollBack();
                 return response()->json([
                     'status' => 'error',
                     'message' => 'Data yang diperlukan tidak lengkap.',
-                ]);
+                ], 422);
             }
 
-            // Perform update and create only if no errors
+            // ❗ CEK LULUS DO DUPLIKAT
+            if (LulusDo::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->exists()) {
+                DB::rollBack();
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'Mahasiswa ini sudah memiliki data Lulus DO.',
+                ], 422);
+            }
+
+            // UPDATE WISUDA
             $wisuda->update([
                 'approved' => 3,
+                // 'no_urut' => $request->no_urut,
             ]);
+            
 
+            // INSERT LULUS DO
             LulusDo::create([
                 'feeder'=>'0',
                 'id_registrasi_mahasiswa' => $wisuda->id_registrasi_mahasiswa,
@@ -323,15 +346,30 @@ class WisudaController extends Controller
                 'status' => 'success',
                 'message' => 'Pendaftaran Wisuda berhasil disetujui.',
             ]);
+
+        } catch (QueryException $e) {
+            DB::rollBack();
+
+            // ❗ KHUSUS UNIQUE CONSTRAINT
+            if ($e->getCode() == '23000') {
+                return response()->json([
+                    'status' => 'error',
+                    'message' => 'No urut wisuda sudah digunakan. Silakan pilih nomor lain.',
+                ], 422);
+            }
+
+            throw $e; // lempar ulang jika bukan error unique
         } catch (\Exception $e) {
             DB::rollBack();
+
             return response()->json([
                 'status' => 'error',
-                'message' => 'Terjadi kesalahan saat menyetujui pendaftaran wisuda!',
-            ]);
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ], 500);
         }
     }
-
     
     public function decline(Request $request, $id)
     {

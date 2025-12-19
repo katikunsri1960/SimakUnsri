@@ -209,9 +209,45 @@ function getData()
                         `<td class="text-center align-middle text-nowrap">
                             <div class="row">
                                 ${item.approved == 2 ? `
-                                    <button onclick="approvePeserta(${item.id})" class="btn btn-success btn-sm my-2" title="Setujui Pengajuan">
-                                        <i class="fa fa-check"> </i> Approve
-                                    </button>` : ''}
+                                    <button 
+                                        class="btn btn-success btn-sm my-2"
+                                        title="Setujui Pengajuan"
+                                        onclick="showApproveModal(${item.id})">
+                                        <i class="fa fa-check"></i> Approve
+                                    </button>
+                                    <div class="modal fade" id="approveModal${item.id}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title">Approve Peserta</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">No Urut Wisuda</label>
+                                                        <input 
+                                                            type="number"
+                                                            class="form-control"
+                                                            id="no_urut_${item.id}"
+                                                            placeholder="Masukkan No Urut"
+                                                            required>
+                                                    </div>
+                                                </div>
+
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                    <button class="btn btn-success" onclick="submitApprove(${item.id})">
+                                                        Setujui
+                                                    </button>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                ` : ''}
                                 ${(item.approved == 2 || item.approved == 3) ? `
                                     <button onclick="showDeclineModal(${item.id})" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan">
                                         <i class="fa fa-ban"> </i> Decline
@@ -312,55 +348,133 @@ function filterProdi()
     });
 }
 
+function showApproveModal(id) {
+    $('#approveModal' + id).modal('show');
+}
 
-function approvePeserta(id) {
-    swal({
-        title: "Apakah Anda yakin?",
-        text: "Peserta dengan ID " + id + " akan disetujui?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Lanjutkan",
-        cancelButtonText: "Batal",
-        confirmButtonColor: "#3085d6",
-        cancelButtonColor: "#d33",
-        closeOnConfirm: false,
-        closeOnCancel: true
-    }, function (isConfirm) {
-        if (isConfirm) {
-            $.ajax({
-                url: `{{ route('bak.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
-                type: 'POST',
-                data: {
-                    _token: '{{ csrf_token() }}'
-                },
-                success: function (response) {
-                    console.log('Response success:', response);
+function submitApprove(id) {
+    console.log('=== KLIK TOMBOL SETUJUI ===');
+    console.log('ID Peserta:', id);
 
-                    if (response.status === 'success') {
+    const noUrut = $('#no_urut_' + id).val();
+    console.log('No Urut Input:', noUrut);
+
+    if (!noUrut) {
+        console.warn('❌ No urut kosong');
+        swal("Validasi", "No urut wajib diisi!", "warning");
+        return;
+    }
+
+    console.log('✔ Validasi no urut OK');
+
+    // Tutup modal terlebih dahulu (hindari aria-hidden warning)
+    $('#approveModal' + id).modal('hide');
+    console.log('Modal approve ditutup');
+
+    setTimeout(function () {
+
+        console.log('Menampilkan SweetAlert konfirmasi');
+
+        swal({
+            title: "Apakah Anda yakin?",
+            text: "Peserta akan disetujui dengan No Urut " + noUrut,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Setujui",
+            cancelButtonText: "Batal",
+        }, function (isConfirm) {
+
+            console.log('Hasil klik SweetAlert:', isConfirm);
+
+            if (isConfirm) {
+
+                const url = `{{ route('bak.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id);
+
+                console.log('▶️ APPROVE DISETUJUI');
+                console.log('URL:', url);
+                console.log('Payload:', {
+                    no_urut: noUrut
+                });
+
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        no_urut: noUrut
+                    },
+
+                    beforeSend: function () {
+                        console.log('⏳ AJAX dikirim...');
+                    },
+
+                    success: function (response) {
+                        console.log('✅ AJAX SUCCESS:', response);
+
                         swal("Berhasil", response.message, "success");
                         getData();
-                    } else {
-                        console.error('Response error:', response.message);
-                        swal("Gagal", response.message, "error");
+                    },
+
+                    error: function (xhr, status, error) {
+                        console.error('❌ AJAX ERROR');
+                        console.error('Status:', status);
+                        console.error('Error:', error);
+                        console.error('Response:', xhr.responseText);
+
+                        let message = 'Terjadi kesalahan.';
+                        if (xhr.responseJSON?.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+                        swal("Gagal", message, "error");
                     }
-                },
-                error: function (xhr) {
-                    console.error('AJAX error:', xhr);
+                });
 
-                    let message = 'Terjadi kesalahan saat menyetujui peserta.';
+            } else {
+                console.log('⛔ Approve dibatalkan oleh user');
+            }
+        });
 
-                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                        message = xhr.responseJSON.message; // 👈 pesan $e
-                    }
-
-                    swal("Gagal", message, "error");
-                }
-            });
-        }
-    });
+    }, 300);
 }
 
 
+
+// function submitApprove(id) {
+//     swal({
+//         title: "Apakah Anda yakin?",
+//         text: "Peserta dengan ID " + id + " akan disetujui?",
+//         type: "warning",
+//         showCancelButton: true,
+//         confirmButtonText: "Lanjutkan",
+//         cancelButtonText: "Batal",
+//         confirmButtonColor: "#3085d6",
+//         cancelButtonColor: "#d33",
+//         closeOnConfirm: false,
+//         closeOnCancel: true
+//     }, function (isConfirm) {
+//         if (isConfirm) {
+//             $.ajax({
+//                 url: `{{ route('bak.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
+//                 type: 'POST',
+//                 data: {
+//                     _token: '{{ csrf_token() }}'
+//                 },
+//                 success: function (response) {
+//                     if (response.status === 'success') {
+//                         swal("Berhasil", response.message, "success");
+//                         getData();
+//                     } else {
+//                         swal("Gagal", response.message, "error");
+//                     }
+//                 },
+//                 error: function () {
+//                     swal("Gagal", "Terjadi kesalahan saat menyetujui peserta.", "error");
+//                 }
+//             });
+//         }
+//     });
+// }
 
 
 // Tambahkan fungsi berikut agar tombol Decline berfungsi

@@ -23,6 +23,14 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('bak.mahasiswa') || request()->routeIs('bak.mahasiswa.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.mahasiswa')}}">
+                                    <i class="fa fa-graduation-cap"><span class="path1"></span><span
+                                            class="path2"></span></i>
+                                    <span>Mahasiswa</span>
+
+                                </a>
+                            </li>
                             <li class="treeview {{request()->routeIs('bak.pejabat.*') ? 'active menu-open' : ''}}">
                                 <a href="#">
                                     <i span class="fa fa-sitemap"><span class="path1"></span><span class="path2"></span></i>

@@ -3,6 +3,7 @@
 Detail Penilaian Perkuliahan Mahasiswa
 @endsection
 @section('content')
+@include('swal')
 <section class="content bg-white">
     <div class="row align-items-end">
         <div class="col-12">
@@ -44,7 +45,7 @@ Detail Penilaian Perkuliahan Mahasiswa
                             </div>
                             <div class="col-xl-6 col-lg-6 mb-4">
                                 <form action="{{route('dosen.penilaian.penilaian-perkuliahan.pdf-dpna', ['kelas' => $data->id_kelas_kuliah])}}" method="get" target="_blank">
-                                    <button type="submit" class="btn btn-rounded bg-primary-light float-end"><i class="fa fa-file-pdf"><span class="path1"></span><span class="path2"></span></i> Download / Cetak DPNA</button>
+                                    <button type="submit" class="btn btn-rounded bg-primary-light float-end"><i class="fa fa-file-pdf"><span class="path1"></span><span class="path2"></span></i> Cetak DPNA PDF</button>
                                 </form>
                             </div>
                         </div>
