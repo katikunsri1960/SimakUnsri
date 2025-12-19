@@ -27,9 +27,26 @@
                                 <a href="{{route('prodi.data-master.detail-prodi')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Detail Prodi</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-master.dosen') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-master.dosen')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('prodi.data-master.dosen.index') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-master.dosen.index')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Dosen</a>
+                            </li>
+                            <li class="treeview {{request()->routeIs('prodi.data-master.dosen.*') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i span class="icon-Commit"><span<span class="path1"></span><span class="path2"></span></i>
+                                    <span>Dosen</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('prodi.data-master.dosen.index') || request()->routeIs('prodi.data-master.dosen.index.*') ? 'active' : ''}}">
+                                        <a href="{{route('prodi.data-master.dosen.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Dosen</a>
+                                    </li>
+                                    <li class="{{request()->routeIs('prodi.data-master.dosen.gelar') || request()->routeIs('prodi.data-master.dosen.gelar.*') ? 'active' : ''}}">
+                                        <a href="{{route('prodi.data-master.dosen.gelar')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Gelar Dosen</a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-master.mahasiswa') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.mahasiswa')}}"><i class="icon-Commit"><span

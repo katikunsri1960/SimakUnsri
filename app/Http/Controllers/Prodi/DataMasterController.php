@@ -37,6 +37,16 @@ class DataMasterController extends Controller
         ]);
     }
 
+    public function gelar_dosen()
+    {
+        $db = new BiodataDosen();
+        $data = $db->get();
+
+        return view('prodi.data-master.dosen.gelar', [
+            'data' => $data
+        ]);
+    }
+
     public function mahasiswa_data(Request $request)
     {
         $searchValue = $request->input('search.value');

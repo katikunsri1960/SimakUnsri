@@ -517,13 +517,17 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             //Route for perkuliahan mahasiswa
             Route::prefix('perkuliahan')->group(function () {
                 Route::prefix('nilai-perkuliahan')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-perkuliahan');
+                    // Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-perkuliahan');
+                    Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'devop'])->name('mahasiswa.perkuliahan.nilai-perkuliahan');
                     Route::prefix('kuisioner')->group(function(){
                         Route::get('/{kelas}', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'kuisioner'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner');
                         Route::post('/store/{kelas}', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'kuisioner_store'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner.store');
                     });
-                    Route::get('/{id_semester}/lihat-khs', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'lihat_khs'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs');
-                    Route::get('/{id_matkul}/histori-nilai', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'histori_nilai'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai');
+                    // Route::get('/{id_semester}/lihat-khs', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'lihat_khs'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs');
+                    Route::get('/{id_semester}/lihat-khs', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'devop'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs');
+                    
+                    // Route::get('/{id_matkul}/histori-nilai', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'histori_nilai'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai');
+                    Route::get('/{id_matkul}/histori-nilai', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'devop'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai');
                 });
 
                 Route::get('/nilai-usept', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-usept');
@@ -787,7 +791,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
         Route::prefix('prodi')->group(function() {
             //Route for Data Master
             Route::prefix('data-master')->group(function(){
-                Route::get('/dosen', [App\Http\Controllers\Prodi\DataMasterController::class, 'dosen'])->name('prodi.data-master.dosen');
+                Route::prefix('dosen')->group(function(){
+                    Route::get('/daftar', [App\Http\Controllers\Prodi\DataMasterController::class, 'dosen'])->name('prodi.data-master.dosen.index');
+                    Route::get('/gelar', [App\Http\Controllers\Prodi\DataMasterController::class, 'gelar_dosen'])->name('prodi.data-master.dosen.gelar');
+                });
 
                 Route::prefix('mahasiswa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'mahasiswa'])->name('prodi.data-master.mahasiswa');
