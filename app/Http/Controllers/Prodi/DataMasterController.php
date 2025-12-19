@@ -39,13 +39,27 @@ class DataMasterController extends Controller
 
     public function gelar_dosen()
     {
-        $db = new BiodataDosen();
-        $data = $db->get();
+        $semesterAktif = SemesterAktif::first()->id_semester;
+        $tahunAjaran = substr($semesterAktif, 0, 4);
+
+        $data = BiodataDosen::with(['penugasan' => function ($query) use ($tahunAjaran) {
+                $query->where('id_tahun_ajaran', $tahunAjaran)
+                    ->where('id_prodi', auth()->user()->fk_id);
+            }])
+            ->whereHas('penugasan', function ($query) use ($tahunAjaran) {
+                $query->where('id_tahun_ajaran', $tahunAjaran)
+                    ->where('id_prodi', auth()->user()->fk_id);
+            })
+            // ->limit(10)
+            ->get();
+
+        // dd($data[5]->penugasan);
 
         return view('prodi.data-master.dosen.gelar', [
             'data' => $data
         ]);
     }
+
 
     public function mahasiswa_data(Request $request)
     {

@@ -27,10 +27,10 @@
                                 <a href="{{route('prodi.data-master.detail-prodi')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Detail Prodi</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-master.dosen.index') ? 'active' : ''}}">
+                            <!-- <li class="{{request()->routeIs('prodi.data-master.dosen.index') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-master.dosen.index')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Dosen</a>
-                            </li>
+                            </li> -->
                             <li class="treeview {{request()->routeIs('prodi.data-master.dosen.*') ? 'active menu-open' : ''}}">
                                 <a href="#">
                                     <i span class="icon-Commit"><span<span class="path1"></span><span class="path2"></span></i>
