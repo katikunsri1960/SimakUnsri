@@ -295,10 +295,20 @@ Pendaftaran Wisuda Mahasiswa
                                         <label for="pas_foto" class="form-label">Foto Wisuda (.jpg / .png)</label><span class="text-danger"> *</span>
                                         <input type="file" class="form-control" name="pas_foto" id="pas_foto"
                                             aria-describedby="fileHelpId" accept=".jpg" required />
-                                        <small id="fileHelpId" class="form-text text-danger">
-                                            Maksimal ukuran file <strong>1 MB</strong>.
-                                            TAMBAH CONTOH FOTO
-                                        </small>
+                                        <div class="mt-2 text-center">
+                                            <label class="text-center form-label">Contoh Foto Ijazah</label>
+                                            <div>
+                                                <img src="{{ asset('images/pas_foto_ijazah.jpg') }}" alt="Contoh Foto 3x4"
+                                                     style="width:120px;height:160px;object-fit:cover;border:0px solid #ddd;padding:4px;">
+                                            </div>
+                                            <small class="form-text text-danger text-center mt-5">
+                                                Gunakan rasio 3:4<br>
+                                                Disarankan minimal 300x400 piksel; format .jpg/.png.
+                                            </small><br>
+                                            <small id="fileHelpId" class="form-text text-danger">
+                                                Maksimal ukuran file <strong>500 KB</strong>.
+                                            </small>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -323,17 +333,30 @@ Pendaftaran Wisuda Mahasiswa
                                         <textarea type="text" class="form-control" name="judul_eng" id="judul_eng" aria-describedby="helpId"
                                             placeholder="Masukkan Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris" required></textarea>
                                     </div>
-                                    <div class=" col-lg-12 mb-3">
-                                        <label for="kosentrasi" class="form-label">Bidang Kajian Utama (BKU) / Kosentrasi (ubah ambil dari inputan)</label><span class="text-danger"> *</span>
-                                        <input type="text"class="form-control"name="kosentrasi"id="kosentrasi"aria-describedby="helpId" placeholder="Masukkan Kosentrasi" required/>
+
+                                    @if($aktivitas->prodi->bku_pada_ijazah == 1)  
+                                    <div class="col-lg-12 mb-3">
+                                        <label for="bku_prodi" class="form-label">BKU Program Studi</label><span class="text-danger"> *</span>
+                                        <select id="bku_prodi" name="bku_prodi" class="form-select" required>
+                                            <option value="">-- BKU Program Studi --</option>
+                                            @foreach ($bku_prodi as $bku)
+                                                <option value="{{ $bku->id }}">
+                                                    {{ $bku->bku_prodi_id }}
+                                                </option>
+                                            @endforeach
+                                        </select>
                                     </div>
+                                    @endif
+
                                     <div class="col-lg-6 mb-3">
                                         <label for="tgl_sk_pembimbing" class="form-label">Tanggal SK Pembimbing</label><span class="text-danger"> *</span>
-                                        <input type="date" class="form-control" name="tgl_sk_pembimbing" id="tgl_sk_pembimbing" aria-describedby="helpId" required />
+                                        <input type="date" class="form-control" name="tgl_sk_pembimbing" id="tgl_sk_pembimbing" aria-describedby="helpId" 
+                                        value="{{ $aktivitas->tanggal_sk_tugas }}" disabled required />
                                     </div>
                                     <div class="col-lg-6 mb-3">
-                                        <label for="no_sk_pembimbing" class="form-label">Nomor SK Pembimbing</label><span class="text-danger"> *</span>
-                                        <input type="text" class="form-control" name="no_sk_pembimbing" id="no_sk_pembimbing" aria-describedby="helpId" required />
+                                        <label for="no_sk_pembimbing" class="form-label">Nomor SK Pembimbing</label><span class="text-danger">*</span>
+                                        <input type="text" class="form-control" name="no_sk_pembimbing" id="no_sk_pembimbing" aria-describedby="helpId" 
+                                        value="{{ $aktivitas->sk_tugas }}" disabled required />
                                     </div>
                                     <div class=" col-lg-12 mb-3">
                                         <label for="abstrak_ta" class="form-label">Abstrak {{$aktivitas->nama_jenis_aktivitas}}</label><span class="text-danger"> *</span>
@@ -352,14 +375,14 @@ Pendaftaran Wisuda Mahasiswa
                                                 Maksimal ukuran file <strong>1 MB</strong>.
                                             </small>
                                         </div>
-                                        <div class="col-md-6 mb-3">
+                                        <!-- <div class="col-md-6 mb-3">
                                             <label for="abstrak_file_eng" class="form-label">Bahasa Inggris(.pdf)</label><span class="text-danger"> *</span>
                                             <input type="file" class="form-control" name="abstrak_file_eng" id="abstrak_file_eng"
                                                 aria-describedby="fileHelpId" accept=".pdf" required />
                                             <small id="fileHelpId" class="form-text text-danger">
                                                 Maksimal ukuran file <strong>1 MB</strong>.
                                             </small>
-                                        </div>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>

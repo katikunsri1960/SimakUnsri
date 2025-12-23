@@ -47,7 +47,7 @@ class Wisuda extends Model
         'kosentrasi',
         'pas_foto',
         'lokasi_kuliah',
-        'tanggal_sk_pembimbing',
+        'tgl_sk_pembimbing',
         'no_sk_pembimbing',
         'judul_eng',
         'abstrak_ta',
