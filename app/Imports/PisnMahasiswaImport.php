@@ -8,47 +8,62 @@ use App\Models\Mahasiswa\PisnMahasiswa;
 use App\Models\SemesterAktif;
 use App\Models\PeriodeWisuda;
 use Maatwebsite\Excel\Concerns\ToCollection;
+use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
 
-class PisnMahasiswaImport implements ToCollection
+class PisnMahasiswaImport implements ToCollection, WithHeadingRow
 {
-    /**
-    * @param Collection $collection
-    */
     public function collection(Collection $collection)
     {
         ini_set('max_execution_time', 300);
         ini_set('memory_limit', '2048M');
 
-        try {
-            DB::beginTransaction();
+        DB::beginTransaction();
 
-            foreach ($collection as $index => $row) {
-                // dd($row);
-                $mahasiswa = LulusDo::where('nim', $row['nim'])->orderBy('id_periode_masuk', 'desc')->first();
+        try {
+            foreach ($collection as $row) {
+
+                // 🔎 Validasi kolom wajib
+                if (!isset($row['nim'])) {
+                    throw new \Exception('Kolom NIM tidak ditemukan di file Excel');
+                }
+
+                $mahasiswa = LulusDo::where('nim', $row['nim'])
+                    ->orderBy('angkatan', 'desc')
+                    ->first();
 
                 if (!$mahasiswa) {
-                    return back()->withErrors(["Data mahasiswa dengan NIM {$row['nim']} tidak ditemukan!!"]);
+                    throw new \Exception("Mahasiswa dengan NIM {$row['nim']} tidak ditemukan");
                 }
 
-                $periode = PeriodeWisuda::where('periode', $row['periode_wisuda'])->where('is_active', 1)->first();
+                $periode = PeriodeWisuda::where('periode', $row['periode_wisuda'])
+                    ->where('is_active', 1)
+                    ->first();
 
                 if (!$periode) {
-                    return back()->withErrors(["Periode wisuda {$row['nim']} tidak aktif!!"]);
+                    throw new \Exception("Periode wisuda {$row['periode_wisuda']} tidak aktif");
                 }
 
-                PisnMahasiswa::updateOrCreate(['id_registrasi_mahasiswa' => $mahasiswa->id_registrasi_mahasiswa, 'id_semester' => $row['id_semester'], 'periode_wisuda' => $row['periode_wisuda']], [
-                    'nim' => $$mahasiswa->nim,
-                    'penomoran_ijazah_nasional' => $row['penomoran_ijazah_nasional']
-                ]);
-
+                PisnMahasiswa::updateOrCreate(
+                    [
+                        'id_registrasi_mahasiswa' => $mahasiswa->id_registrasi_mahasiswa,
+                        'id_semester'            => $row['id_semester'],
+                        'periode_wisuda'         => $row['periode_wisuda'],
+                    ],
+                    [
+                        'nim' => $mahasiswa->nim,
+                        'penomoran_ijazah_nasional' => $row['penomoran_ijazah_nasional'],
+                    ]
+                );
             }
 
             DB::commit();
-        } catch (\Throwable $th) {
-            // throw $th;
+
+        } catch (\Throwable $e) {
+
             DB::rollBack();
 
-            dd($th->getMessage());
+            throw $e; // biar muncul di controller
         }
     }
 }
