@@ -162,57 +162,67 @@ BEBAS PUSTAKA
                     swal('Peringatan', 'NIM tidak boleh kosong', 'warning');
                 } else {
                     $.ajax({
-                        url: '{{route('perpus.bebas-pustaka.get-data')}}',
+                        url: '{{ route('perpus.bebas-pustaka.get-data') }}',
                         type: 'GET',
                         data: {
                             nim: nim
                         },
                         success: function (response) {
-                            // clear krsDiv
 
-                            if (response.status == 'error') {
+                            if (response.status === 'error') {
                                 swal({
                                     title: "Peringatan!",
                                     text: response.message,
-                                    type: "warning",
-                                    buttons: {
-                                        confirm: {
-                                            className : 'btn btn-warning'
-                                        }
-                                    }
+                                    type: "warning"
                                 });
-                                return false;
+                                return;
                             }
+
+                            // ==== JIKA SUKSES ====
                             $('#nimCetak').val(nim);
                             $('#krsDiv').removeAttr('hidden');
-                            // append response.krs to table of krs-regular
+
                             $('#nimKrs').text(response.riwayat.nim);
-                            // remove "Fakultas " from nama_fakultas
                             var fakultas = response.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '');
                             $('#fakultasKrs').text(fakultas);
                             $('#namaKrs').text(response.riwayat.nama_mahasiswa);
-                            var jurusan = response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-';
-                            $('#jurusanKrs').text(jurusan);
+                            $('#jurusanKrs').text(response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-');
+
                             var nip_pa = response.riwayat.pembimbing_akademik ? response.riwayat.pembimbing_akademik.nip : '-';
                             $('#nippaKrs').text(nip_pa);
+
                             var dosen_pa = response.riwayat.pembimbing_akademik ? response.riwayat.pembimbing_akademik.nama_dosen : '-';
                             $('#dosenpaKrs').text(dosen_pa);
+
                             var prodi = response.riwayat.prodi.nama_jenjang_pendidikan + ' ' + response.riwayat.prodi.nama_program_studi;
                             $('#prodiKrs').text(prodi);
-                            // var semesterText =  $('#semester option:selected').text();
-                            // $('#semesterKrs').text(semesterText);
-                            // $('#krs-regular tbody').empty();
 
-                            // append foto
-                            var imagePath = '{{ asset('storage') }}' + '/' + response.riwayat.angkatan + '/' + response.riwayat.nim + '.jpg';
+                            var imagePath = '{{ asset('storage') }}/' + response.riwayat.angkatan + '/' + response.riwayat.nim + '.jpg';
                             $('#foto').html(`
-                                <img class="rounded20 bg-light img-fluid w-80" src="` + imagePath + `" alt="" onerror="this.onerror=null;this.src='{{ asset('images/images/avatar/avatar-15.png') }}';">
+                                <img class="rounded20 bg-light img-fluid w-80"
+                                    src="${imagePath}"
+                                    onerror="this.onerror=null;this.src='{{ asset('images/images/avatar/avatar-15.png') }}';">
                             `);
 
                             $('#id_registrasi_mahasiswa').val(response.riwayat.id_registrasi_mahasiswa);
+                        },
 
+                        error: function (xhr) {
+
+                            let message = 'Terjadi kesalahan sistem!';
+
+                            if (xhr.responseJSON && xhr.responseJSON.message) {
+                                message = xhr.responseJSON.message;
+                            }
+
+                            swal({
+                                title: "Tidak Bisa Diproses!",
+                                text: message,
+                                type: "warning"
+                            });
                         }
                     });
+
 
                 }
             });
