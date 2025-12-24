@@ -6,8 +6,8 @@
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Menu Utama</li>
-                    <li class="{{request()->routeIs('dppm.dashboard') ? 'active' : ''}}">
-                        <a href="{{route('dppm.dashboard')}}">
+                    <li class="{{request()->routeIs('perpus') ? 'active' : ''}}">
+                        <a href="{{route('perpus')}}">
                             <i class="fa fa-th-large"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
