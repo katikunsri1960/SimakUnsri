@@ -1,4 +1,4 @@
-@extends('layouts.dppm')
+@extends('layouts.perpus')
 @section('title')
 Dashboard Perpustakaan
 @endsection
