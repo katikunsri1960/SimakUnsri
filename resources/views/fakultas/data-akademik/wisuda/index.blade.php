@@ -64,7 +64,6 @@ Pendaftaran Wisuda Fakultas
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">NO</th>
-                                    <th class="text-center align-middle">AKSI</th>
                                     <th class="text-center align-middle">PERIODE</th>
                                     <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
@@ -137,7 +136,7 @@ function getData()
         success: function (response) {
 
             if (response.status === 'success') {
-                console.log(response.data);
+                // console.log(response.data);
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
@@ -233,72 +232,50 @@ function getData()
                         </td>
                     ` : '';
 
-                    var aksi = 
-                        `<td class="align-middle text-nowrap">
+                    var aksi = `
+                        <td class="align-middle text-nowrap">
                             <div class="row">
 
                                 ${item.approved == 1 ? `
-                                    <button onclick="showApproveModal(${item.id})" class="btn btn-success btn-sm my-2" title="Setujui Pengajuan">
-                                        <i class="fa fa-check"> </i> Approve
+                                    <button onclick="showApproveModal(${item.id})" class="btn btn-success btn-sm my-2">
+                                        <i class="fa fa-check"></i> Approve
                                     </button>
 
-                                    <div class="modal fade" id="approveModal${item.id}" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog"
-                                        aria-labelledby="modalLabel${item.id}" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal fade" id="approveModal${item.id}" tabindex="-1">
+                                        <div class="modal-dialog modal-lg modal-dialog-centered">
                                             <div class="modal-content">
 
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title" id="modalLabel${item.id}">
-                                                        Approve & Input Gelar + Predikat Lulusan
-                                                    </h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    <h5 class="modal-title">Approve & Input No Urut & Gelar</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
 
-                                                <form action="{{route('fakultas.wisuda.peserta.approve', '')}}/${item.id}" 
-                                                    method="post" 
-                                                    id="upload-class-${item.id}" 
-                                                    enctype="multipart/form-data">
+                                                <div class="modal-body justify-content-center row">
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3">
+                                                            <label>No Urut Wisuda</label>
+                                                            <input type="number" class="form-control mx-0" id="no_urut_${item.id}" 
+                                                            placeholder="-- Masukkan No Urut Wisuda --">
+                                                        </div>
 
-                                                    @csrf
-
-                                                    <div class="modal-body">
-                                                        <div class="row">
-
-                                                            <!-- Gelar Lulusan -->
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="gelar_${item.id}" class="form-label">Gelar Lulusan</label>
-                                                                <select class="form-select" name="gelar" id="gelar_${item.id}" required>
-                                                                    <option value="">-- Pilih Gelar Lulusan --</option>
-                                                                    @foreach($gelar_lulusan as $gelar)
-                                                                        <option value="{{ $gelar->id }}">{{ $gelar->gelar }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-
-                                                            <!-- Predikat Lulusan -->
-                                                            <div class="col-md-12 mb-3">
-                                                                <label for="predikat_${item.id}" class="form-label">Predikat Lulusan</label>
-                                                                <select class="form-select" name="predikat" id="predikat_${item.id}" required>
-                                                                    <option value="">-- Pilih Predikat Lulusan --</option>
-                                                                    @foreach($predikat as $p)
-                                                                        <option value="{{ $p->id }}">{{ $p->indonesia }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-
+                                                        <div class="mb-3">
+                                                            <label>Gelar Lulusan</label>
+                                                            <select class="form-select" id="gelar_${item.id}">
+                                                                <option value="">-- Pilih Gelar --</option>
+                                                                @foreach($gelar_lulusan as $g)
+                                                                    <option value="{{ $g->id }}">{{ $g->gelar }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
+                                                </div>
 
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                                            Tutup
-                                                        </button>
-                                                        <button type="button" class="btn btn-success" onclick="submitApprove(${item.id})">
-                                                            Setuju
-                                                        </button>
-                                                    </div>
-
-                                                </form>
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                    <button class="btn btn-success" onclick="submitApprove(${item.id})">
+                                                        Setujui
+                                                    </button>
+                                                </div>
 
                                             </div>
                                         </div>
@@ -341,7 +318,6 @@ function getData()
 
                     table.row.add([
                         index + 1,
-                        aksi,
                         item.wisuda_ke,
                         spanStatus,
                         ijazahButton,
@@ -474,80 +450,66 @@ function setDosenPa(data, id) {
 function showApproveModal(id) {
     $('#approveModal' + id).modal('show');
 }
-
 function submitApprove(id) {
-    var gelar = $('#gelar_' + id).val();
-    var predikat = $('#predikat_' + id).val();
+    let gelar  = $('#gelar_' + id).val();
+    let noUrut = $('#no_urut_' + id).val();
 
-    if (!gelar) {
-        swal('Peringatan', 'Silakan pilih gelar lulusan.', 'warning');
-        return;
-    }
-    if (!predikat) {
-        swal('Peringatan', 'Silakan pilih predikat lulusan.', 'warning');
+    if (!gelar || !noUrut) {
+        swal("Peringatan", "Gelar dan No Urut wajib diisi", "warning");
         return;
     }
 
     swal({
-        title: "Konfirmasi Persetujuan",
-        text: "Apakah Anda yakin ingin menyetujui peserta ini?",
+        title: "Konfirmasi",
+        text: "Setujui peserta wisuda ini?",
         type: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, Setujui',
-        cancelButtonText: 'Batal',
-    }, function(isConfirmed) {
-        if (isConfirmed) {
-            $.ajax({
-                url: `{{route('fakultas.wisuda.peserta.approve', ['id' => 'ID'])}}`.replace('ID', id),
-                type: 'POST',
-                dataType: 'json',
-                data: {
-                    _token: '{{ csrf_token() }}',
-                    status: 1,
-                    gelar: gelar,
-                    predikat: predikat
-                },
-                success: function(response) {
-                    if (response.status === 'success') {
+        confirmButtonText: "Ya, Setujui",
+        cancelButtonText: "Batal"
+    }, function (isConfirm) {
 
-                        // 0. Hilangkan fokus dari tombol modal (FIX untuk warning aria-hidden)
-                        $('body').focus();
+        if (!isConfirm) return;
 
-                        // 1. Tutup modal
-                        $('#approveModal' + id).modal('hide');
+        $.ajax({
+            url: `{{ route('fakultas.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                no_urut: noUrut,
+                gelar: gelar
+            },
+            success: function (response) {
 
-                        // 2. Tunggu modal selesai menutup
-                        setTimeout(function() {
+                const modalId = '#approveModal' + id;
 
-                            // Hapus backdrop kalau masih tersisa
-                            $('.modal-backdrop').remove();
+                $(modalId).one('hidden.bs.modal', function () {
+                    swal({
+                        title: "Berhasil",
+                        text: response.message,
+                        type: "success"
+                    }, function () {
+                        getData(); // 🔄 reload tabel AJAX
+                    });
+                });
 
-                            // 3. Tampilkan swal
-                            swal({
-                                title: "Berhasil",
-                                text: response.message,
-                                type: "success"
-                            }, function() {
-                                getData();
-                            });
+                $(modalId).modal('hide');
+            },
+            error: function (xhr) {
 
-                        }, 350);
+                let message = "Terjadi kesalahan sistem.";
 
-                    } else {
-                        swal('Gagal', response.message, 'error');
-                    }
-                },
-
-                error: function(xhr) {
-                    console.log('Approve error:', xhr.responseText);
-                    swal('Gagal', 'Terjadi kesalahan saat menyetujui peserta.', 'error');
+                if (xhr.responseJSON?.message) {
+                    message = xhr.responseJSON.message;
                 }
-            });
-        }
+
+                swal("Gagal", message, "error");
+            }
+        });
+
     });
 }
+
+
 
 // Tambahkan fungsi berikut agar tombol Decline berfungsi
 // Tampilkan Modal Decline
@@ -627,6 +589,60 @@ function submitDecline(id) {
 
     });
 }
+
+$(document).on('click', '.btn-hapus-sk', function () {
+    const id = $(this).data('id');
+
+    swal({
+        title: "Yakin?",
+        text: "SK Yudisium akan dihapus!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ya, Hapus",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false // ⬅️ penting agar swal tidak nutup sebelum AJAX
+    }, function (isConfirm) {
+
+        if (!isConfirm) return;
+
+        $.ajax({
+            url: `{{ route('fakultas.wisuda.hapus-sk-yudisium', ['id' => 'ID']) }}`.replace('ID', id),
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                _token: '{{ csrf_token() }}',
+                _method: 'DELETE'
+            },
+            success: function (response) {
+
+                swal({
+                    title: "Berhasil",
+                    text: response.message || "SK Yudisium berhasil dihapus.",
+                    type: "success"
+                }, function () {
+                    // 🔄 reload tabel setelah klik OK
+                    getData();
+                });
+
+            },
+            error: function (xhr) {
+
+                let message = "Terjadi kesalahan sistem.";
+
+                if (xhr.status === 422 && xhr.responseJSON?.message) {
+                    message = xhr.responseJSON.message;
+                } else if (xhr.responseJSON?.message) {
+                    message = xhr.responseJSON.message;
+                }
+
+                swal("Gagal", message, "error");
+            }
+        });
+
+    });
+});
+
+
 
 
 </script>

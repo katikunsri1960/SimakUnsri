@@ -161,18 +161,20 @@ Pendaftaran Wisuda Mahasiswa
                                                 <td class="text-center" style="width: 5%;">:</td>
                                                 <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->wisuda_ke}}</td>
                                             </tr>
-                                            <tr>
-                                                <td class="text-left" style="width: 30%;">Bidang Kajian Utama (BKU) / Kosentrasi</td>
-                                                <td class="text-center" style="width: 5%;">:</td>
-                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->kosentrasi}}</td>
-                                            </tr>
+                                            @if($wisuda->prodi->bku_pada_ijazah == 1)                        
+                                                <tr>
+                                                    <td class="text-left" style="width: 30%;">Bidang Kajian Utama (BKU) / Kosentrasi</td>
+                                                    <td class="text-center" style="width: 5%;">:</td>
+                                                    <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->bku_prodi ? $wisuda->bku_prodi->bku_prodi_id : '-'}}</td>
+                                                </tr>
+                                            @endif
                                             <tr>
                                                 <td class="text-left" style="width: 30%;">Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
                                                 <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->abstrak_ta}}</td>
                                             </tr>
                                             <tr>
-                                                <td class="text-left" style="width: 30%;">File Abstak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-left" style="width: 30%;">File Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
                                                 {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
                                                 <td class="text-left" style="width: 65%; text-align: justify;">
@@ -181,11 +183,11 @@ Pendaftaran Wisuda Mahasiswa
                                                     @else
                                                         <span class="badge badge-lg bg-danger mb-5">Abstrak Indonesia Tidak Diupload</span>
                                                     @endif
-                                                    @if($wisuda->abstrak_file_eng)
+                                                    <!-- @if($wisuda->abstrak_file_eng)
                                                         <a class="btn btn-sm btn-success  my-5" href="{{ asset($wisuda->abstrak_file_eng) }}" type="button" target="_blank">Lihat Abstrak Inggris</a>
                                                     @else
                                                         <span class="badge badge-lg bg-danger mb-5">Abstrak Inggris Tidak Diupload</span>
-                                                    @endif
+                                                    @endif -->
                                                 </td>
                                             </tr>
                                             <tr>

@@ -133,7 +133,7 @@ function getData()
         success: function (response) {
 
             if (response.status === 'success') {
-                console.log(response.data);
+                // console.log(response.data);
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {

@@ -334,18 +334,18 @@ function approvePeserta(id) {
                     _token: '{{ csrf_token() }}'
                 },
                 success: function (response) {
-                    console.log('Response success:', response);
+                    // console.log('Response success:', response);
 
                     if (response.status === 'success') {
                         swal("Berhasil", response.message, "success");
                         getData();
                     } else {
-                        console.error('Response error:', response.message);
+                        // console.error('Response error:', response.message);
                         swal("Gagal", response.message, "error");
                     }
                 },
                 error: function (xhr) {
-                    console.error('AJAX error:', xhr);
+                    // console.error('AJAX error:', xhr);
 
                     let message = 'Terjadi kesalahan saat menyetujui peserta.';
 
@@ -405,7 +405,7 @@ function submitDecline(id) {
                     }
                 },
                 error: function(xhr) {
-                    console.log('Decline error:', xhr.responseText);
+                    // console.log('Decline error:', xhr.responseText);
                     swal('Gagal', 'Terjadi kesalahan saat menolak peserta.', 'error');
                 }
             });

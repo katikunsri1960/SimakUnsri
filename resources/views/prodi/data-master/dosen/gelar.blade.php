@@ -57,10 +57,10 @@ Gelar Dosen
                                     <td class="text-center align-middle">{{$d->nuptk ?? '-'}}</td>
                                     <td class="text-start align-middle">{{$d->email ?? '-'}}</td>
                                     <td class="text-center align-middle">
-                                        @if($d->homebase == 1)
-                                            <i class="fa-regular fa-circle-check "></i>
-                                        @endif
+                                    <td class="text-center align-middle">
+                                        {{ $d->a_sp_homebase === '1' ? '√' : '-' }}
                                     </td>
+
 
                                 </tr>
                             @endforeach
