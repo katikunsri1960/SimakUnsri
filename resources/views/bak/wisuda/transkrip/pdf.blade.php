@@ -8,7 +8,6 @@
 
         .page-landscape {
             width: 100%;
-            page-break-after: always;
         }
 
         .row-table {
