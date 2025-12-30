@@ -55,7 +55,7 @@ class AuthController extends Controller
      */
     public function login(Request $request)
 {
-    // 1️⃣ Validasi (UBAH DI SINI)
+    // Validasi
     $request->validate([
         'login' => 'required|string', // bisa email atau username
         'password' => 'required|string',
@@ -68,7 +68,7 @@ class AuthController extends Controller
         ? 'email'
         : 'username';
 
-    //Proses autentikasi (UBAH DI SINI)
+    //Proses autentikasi 
     if (!Auth::attempt([
         $field => $login,
         'password' => $request->password,
