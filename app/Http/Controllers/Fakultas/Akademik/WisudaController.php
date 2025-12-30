@@ -43,7 +43,7 @@ class WisudaController extends Controller
         $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
             ->orderBy('id_jenjang_pendidikan')
             ->where('status', 'A')
-            ->where('kode_program_studi', '=', '54241')
+            // ->where('kode_program_studi', '=', '54241')
             ->orderBy('nama_program_studi')
             ->get();
 
