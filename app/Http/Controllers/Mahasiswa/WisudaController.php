@@ -28,6 +28,7 @@ use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\BkuProgramStudi;
 
 class WisudaController extends Controller
 {
@@ -90,7 +91,8 @@ class WisudaController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
         }
 
-        $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)
+        $wisuda = Wisuda::with('bku_prodi')
+                ->where('id_registrasi_mahasiswa', $id_reg)
                     ->whereHas('periode_wisuda', function($q){
                         $q->where('is_active', 1);
                     })
@@ -162,6 +164,8 @@ class WisudaController extends Controller
         $semester_aktif=SemesterAktif::with('semester')->first();
 
         $kecamatan = Wilayah::with('level', 'kab_kota')->where('id_level_wilayah', 3)->get();
+
+        $bku_prodi = BkuProgramStudi::where('id_prodi', $riwayat_pendidikan->id_prodi)->get();
 
         $today = Carbon::now()->toDateString();
 
@@ -247,10 +251,10 @@ class WisudaController extends Controller
                             'data_sekolah.nama_sekolah', 'reg_master.rm_pddk_slta_jurusan', 'reg_master.rm_pddk_slta_thn_lulus',
                             'data_sekolah.nama_kabupaten', 'data_sekolah.nama_provinsi', 'data_sekolah.akreditasi_sekolah')
                     ->where('rm_nim', $riwayat_pendidikan->nim)->first();
-        // dd($asal_sekolah);
+        // dd($bku_prodi);
 
         return view('mahasiswa.wisuda.store', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 'kecamatan'=> $kecamatan,'wisuda_ke' => $wisuda_ke,
-                    'aktivitas' => $aktivitas, 'usept' => $useptData, 'bebas_pustaka' => $bebas_pustaka, 'asal_sekolah' => $asal_sekolah]);
+                    'aktivitas' => $aktivitas, 'usept' => $useptData, 'bebas_pustaka' => $bebas_pustaka, 'asal_sekolah' => $asal_sekolah, 'bku_prodi'=> $bku_prodi]);
     }
 
     public function get_kecamatan(Request $request)
@@ -265,8 +269,21 @@ class WisudaController extends Controller
         return response()->json($data);
     }
 
+    // public function get_bku(Request $request)
+    // {
+    //     $db = new BkuProgramStudi();
+
+    //     $data = $db->where('bku_prodi_id', 'like', '%'.$request->q.'%')
+    //                 ->where('bku_prodi_id', 'like', '%'.$request->q.'%')
+    //                 ->where('id_level_wilayah', 3)
+    //                 ->orderBy('id', 'desc')->get();
+
+    //     return response()->json($data);
+    // }
+
     public function store(Request $request)
     {
+        // dd($request->all());
         // Validate request data
         $request->validate([
             'no_hp_ayah' => 'required|regex:/^[0-9]+$/',
@@ -275,17 +292,17 @@ class WisudaController extends Controller
             'nik' => 'required',
             'lokasi_kuliah' => 'required',
             'wisuda_ke' => 'required',
-            'kosentrasi' => 'required',
             'abstrak_ta' => 'required|max:500',
             'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500',
+            'bku_prodi' => 'nullable',
             'abstrak_file' => 'required|file|mimes:pdf|max:1024',
-            'abstrak_file_eng' => 'required|file|mimes:pdf|max:1024',
+            // 'abstrak_file_eng' => 'required|file|mimes:pdf|max:1024',
             'ijazah_terakhir_file' => 'required|file|mimes:pdf|max:1024',
             'alamat_orang_tua' => 'required',
         ], [
             'pas_foto.max' => 'Ukuran pas foto maksimal 500 KB.',
             'abstrak_file.max' => 'Ukuran file abstrak maksimal 1 MB.',
-            'abstrak_file_eng.max' => 'Ukuran file abstrak (English) maksimal 1 MB.',
+            // 'abstrak_file_eng.max' => 'Ukuran file abstrak (English) maksimal 1 MB.',
             'ijazah_terakhir_file.max' => 'Ukuran file ijazah terakhir maksimal 1 MB.',
         ]);
 
@@ -337,7 +354,7 @@ class WisudaController extends Controller
                 ->whereNot('nilai_huruf', 'F')
                 ->get();
 
-        // dd($ipk, $riwayat_pendidikan);
+        // dd($aktivitas, $riwayat_pendidikan);
 
         $ipk_total = 0;
         $sks_total = 0;
@@ -361,7 +378,7 @@ class WisudaController extends Controller
         // Generate file name
         $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('pas_foto')->getClientOriginalExtension();
         $abstrakName = 'abstrak_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('abstrak_file')->getClientOriginalExtension();
-        $abstrakEngName = 'abstrak_eng_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('abstrak_file_eng')->getClientOriginalExtension();
+        // $abstrakEngName = 'abstrak_eng_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('abstrak_file_eng')->getClientOriginalExtension();
         $ijazahName = 'ijazah_terakhir_' . str_replace(' ', '_', $riwayat_pendidikan->nim) . '.' . $request->file('ijazah_terakhir_file')->getClientOriginalExtension();
 
         // Simpan file ke folder public/storage/wisuda/abstrak, wisuda/pas_foto, dan wisuda/ijazah
@@ -383,13 +400,13 @@ class WisudaController extends Controller
 
         $pasFotoPath = $request->file('pas_foto')->storeAs('wisuda/pas_foto', $pasFotoName, 'public');
         $abstrakPath = $request->file('abstrak_file')->storeAs('wisuda/abstrak', $abstrakName, 'public');
-        $abstrakEngPath = $request->file('abstrak_file_eng')->storeAs('wisuda/abstrak', $abstrakEngName, 'public');
+        // $abstrakEngPath = $request->file('abstrak_file_eng')->storeAs('wisuda/abstrak', $abstrakEngName, 'public');
         $ijazahPath = $request->file('ijazah_terakhir_file')->storeAs('wisuda/ijazah', $ijazahName, 'public');
 
         // Simpan path ke database
         $pas_foto = 'storage/' . $pasFotoPath;
         $abstrak_file = 'storage/' . $abstrakPath;
-        $abstrak_file_eng = 'storage/' . $abstrakEngPath;
+        // $abstrak_file_eng = 'storage/' . $abstrakEngPath;
         $ijazah_terakhir_file = 'storage/' . $ijazahPath;
 
         // dd($pas_foto, $abstrak_file, $abstrak_file_eng, $ijazah_terakhir_file);
@@ -403,9 +420,9 @@ class WisudaController extends Controller
             return redirect()->back()->with('error', 'File abstrak gagal diunggah. Silakan coba lagi.');
         }
 
-        if (!$abstrakEngPath) {
-            return redirect()->back()->with('error', 'File abstrak (English) gagal diunggah. Silakan coba lagi.');
-        }
+        // if (!$abstrakEngPath) {
+        //     return redirect()->back()->with('error', 'File abstrak (English) gagal diunggah. Silakan coba lagi.');
+        // }
 
         if (!$ijazahPath) {
             return redirect()->back()->with('error', 'File ijazah terakhir gagal diunggah. Silakan coba lagi.');
@@ -413,10 +430,11 @@ class WisudaController extends Controller
 
         // dd($abstrakPath, $abstrak_file);
         // dd($request->all());
+
         try {
             DB::beginTransaction();
 
-            Wisuda::create([
+            $wisuda = Wisuda::create([
             'id_perguruan_tinggi' => $perguruan_tinggi->id_perguruan_tinggi,
             'id_registrasi_mahasiswa' => $id_reg,
             'id_prodi' => $riwayat_pendidikan->id_prodi,
@@ -429,17 +447,20 @@ class WisudaController extends Controller
             'nim' => $riwayat_pendidikan->nim,
             'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
             'kosentrasi' => $request->kosentrasi,
-            'tgl_sk_pembimbing' => $request->tgl_sk_pembimbing,
-            'no_sk_pembimbing' => $request->no_sk_pembimbing,
+            'tgl_sk_pembimbing' => $aktivitas->tanggal_sk_tugas,
+            'no_sk_pembimbing' => $aktivitas->sk_tugas,
             'pas_foto' => $pas_foto,
             'lokasi_kuliah' => $request->lokasi_kuliah,
             'judul_eng' => strtoupper($request->judul_eng),
             'abstrak_ta' => $request->abstrak_ta,
             'abstrak_file' => $abstrak_file,
-            'abstrak_file_eng' => $abstrak_file_eng,
+            // 'abstrak_file_eng' => $abstrak_file_eng,
             'ijazah_terakhir_file' => $ijazah_terakhir_file,
+            'id_bku_prodi' => $request->bku_prodi,
             'approved' => 0,
             ]);
+
+            // dd($wisuda);
 
             // Update biodata_mahasiswas table
             BiodataMahasiswa::where('id_mahasiswa', $riwayat_pendidikan->id_mahasiswa)
@@ -469,8 +490,9 @@ class WisudaController extends Controller
 
             // Redirect kembali ke halaman index dengan pesan sukses
             return redirect()->route('mahasiswa.wisuda.index')->with('success', 'Data Berhasil di Tambahkan');
-        } catch (\Exception) {
+        } catch (\Exception $e) {
             DB::rollBack();
+            \Illuminate\Support\Facades\Log::error('Wisuda store error: '.$e->getMessage());
             // Handle exception
             return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data!');
         }

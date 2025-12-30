@@ -38,6 +38,7 @@
                             <span>Kartu Rencana Studi</span>
                         </a>
                     </li>
+                    {{--
                     <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') | request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.perkuliahan.devop')}}">
                             <i class="fa fa-line-chart"><span class="path1"></span><span
@@ -45,13 +46,16 @@
                             <span>Nilai Perkuliahan</span>
                         </a>
                     </li>
-                    {{--<li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') | request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan.*') ? 'active' : ''}}">
+                    --}}
+
+                    <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan') | request()->routeIs('mahasiswa.perkuliahan.nilai-perkuliahan.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan')}}">
                             <i class="fa fa-line-chart"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Nilai Perkuliahan</span>
                         </a>
-                    </li>--}}
+                    </li>
+
                     <li class="{{request()->routeIs('mahasiswa.perkuliahan.nilai-usept') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.perkuliahan.nilai-usept')}}">
                             <i class="fa fa-chart-line"><span class="path1"></span><span
@@ -59,15 +63,7 @@
                             <span>Nilai USEPT</span>
                         </a>
                     </li>
-                     <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
-                        <a href="#">
-                            <i class="fa fa-user-graduate"><span class="path1"></span><span
-                                    class="path2"></span></i>
-                            <span>Wisuda</span>
-                        </a>
-                    </li> 
                     
-                    {{--
                     <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.wisuda.index')}}">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span
@@ -75,7 +71,7 @@
                             <span>Wisuda</span>
                         </a>
                     </li>
-                    --}}
+                    
                     
                     <li class="header">Bimbingan</li>
                     <li class="{{request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir') | request()->routeIs('mahasiswa.bimbingan.bimbingan-tugas-akhir.asistensi') ? 'active' : ''}}">

@@ -25,16 +25,19 @@ class BebasPustakaController extends Controller
 
     public function getData(Request $request)
     {
-
         $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('nim', $request->nim)->orderBy('id_periode_masuk', 'desc')->first();
 
-        $check = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
+        $check = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+            ->whereNotNull('file_bebas_pustaka')
+            ->whereNotNull('link_repo')
+            ->whereNotNull('verifikator')
+            ->first();
 
-        if($check) {
+        if ($check) {
             return response()->json([
-                'status' => 'error',
-                'message' => 'Data Bebas Pustaka sudah ada!!',
-            ]);
+                'status'  => 'error',
+                'message' => 'Data Bebas Pustaka Mahasiswa sudah lengkap dan tidak dapat ditambahkan lagi!',
+            ], 422);
         }
 
         if(!$riwayat) {
@@ -44,7 +47,6 @@ class BebasPustakaController extends Controller
             ]);
         }
 
-
         return response()->json([
             'status' => 'success',
             'riwayat' => $riwayat
@@ -52,38 +54,67 @@ class BebasPustakaController extends Controller
 
     }
 
+
     public function store(Request $request)
     {
-        $data = $request->validate([
-            'id_registrasi_mahasiswa' => 'required|unique:bebas_pustakas,id_registrasi_mahasiswa',
-            'file_bebas_pustaka' => 'required|file|mimes:pdf|max:1024',
-            'link_repo' => 'required|active_url',
-            "verifikator" => 'required',
+        $request->validate([
+            'id_registrasi_mahasiswa' => 'required',
+            'file_bebas_pustaka'      => 'nullable|file|mimes:pdf|max:1024',
+            'link_repo'               => 'nullable|active_url',
+            'verifikator'             => 'required',
         ]);
 
-        $data['user_id'] = auth()->user()->id;
+        $userId = auth()->user()->id;
 
-        // Define the folder within the public disk
-        $folder = 'bebas-pustaka';
+        $riwayat = RiwayatPendidikan::where(
+            'id_registrasi_mahasiswa',
+            $request->id_registrasi_mahasiswa
+        )->firstOrFail();
 
-        // Ensure the folder exists (not necessary for public disk, but included for completeness)
-        if (!Storage::disk('public')->exists($folder)) {
-            Storage::disk('public')->makeDirectory($folder);
+        // Ambil data lama (jika ada)
+        $bebas = BebasPustaka::where(
+            'id_registrasi_mahasiswa',
+            $request->id_registrasi_mahasiswa
+        )->first();
+
+        $data = [
+            'verifikator' => $request->verifikator,
+            'user_id'     => $userId,
+        ];
+
+        // ✅ HANYA update link_repo jika diisi
+        if ($request->filled('link_repo')) {
+            $data['link_repo'] = $request->link_repo;
         }
 
-        $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
+        // ✅ HANYA update file jika upload baru
+        if ($request->hasFile('file_bebas_pustaka')) {
 
-        // Generate the file name using $riwayat->nim
-        $file = $request->file('file_bebas_pustaka');
-        $fileName = $riwayat->nim . '.' . $file->getClientOriginalExtension();
+            $folder = 'bebas-pustaka';
 
-        // Store the file in the specified folder with the new file name on the public disk
-        $data['file_bebas_pustaka'] = $file->storeAs($folder, $fileName, 'public');
+            $file     = $request->file('file_bebas_pustaka');
+            $fileName = $riwayat->nim . '.' . $file->getClientOriginalExtension();
 
-        BebasPustaka::create($data);
+            $data['file_bebas_pustaka'] =
+                $file->storeAs($folder, $fileName, 'public');
+        }
 
-        return redirect()->route('perpus.bebas-pustaka')->with('success', 'Data Bebas Pustaka berhasil ditambahkan');
+        // 🔥 CREATE / UPDATE TANPA MENGHAPUS DATA LAMA
+        if ($bebas) {
+            $bebas->update($data);
+        } else {
+            BebasPustaka::create(array_merge(
+                $data,
+                ['id_registrasi_mahasiswa' => $request->id_registrasi_mahasiswa]
+            ));
+        }
+
+        return redirect()
+            ->route('perpus.bebas-pustaka')
+            ->with('success', 'Data Bebas Pustaka berhasil disimpan.');
     }
+
+
 
     public function delete(BebasPustaka $bebasPustaka)
     {
