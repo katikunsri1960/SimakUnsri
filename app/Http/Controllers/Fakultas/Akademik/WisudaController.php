@@ -161,6 +161,7 @@ class WisudaController extends Controller
                 ->leftJoin('file_fakultas as ff','ff.id','data_wisuda.id_file_fakultas')
 
                 ->where('pw.periode', $req['periode'])
+                ->where('p.fakultas_id', auth()->user()->fk_id)
                 ->select(
                     'data_wisuda.*',
                     'p.nama_program_studi as nama_prodi',
@@ -231,7 +232,7 @@ class WisudaController extends Controller
 
             // ✅ VALIDASI MANUAL (WAJIB UNTUK AJAX)
             $validator = Validator::make($request->all(), [
-                'no_urut' => 'required|numeric',
+                // 'no_urut' => 'required|numeric',
                 'gelar'   => 'required|exists:gelar_lulusans,id',
             ]);
 
@@ -253,7 +254,7 @@ class WisudaController extends Controller
             // UPDATE
             $wisuda->update([
                 'approved'         => 2,
-                'no_urut'          => $request->no_urut,
+                // 'no_urut'          => $request->no_urut,
                 'id_gelar_lulusan' => $request->gelar,
             ]);
 

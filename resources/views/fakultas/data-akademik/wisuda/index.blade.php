@@ -253,12 +253,6 @@ function getData()
                                                 <div class="modal-body justify-content-center row">
                                                     <div class="col-md-12">
                                                         <div class="mb-3">
-                                                            <label>No Urut Wisuda</label>
-                                                            <input type="number" class="form-control mx-0" id="no_urut_${item.id}" 
-                                                            placeholder="-- Masukkan No Urut Wisuda --">
-                                                        </div>
-
-                                                        <div class="mb-3">
                                                             <label>Gelar Lulusan</label>
                                                             <select class="form-select" id="gelar_${item.id}">
                                                                 <option value="">-- Pilih Gelar --</option>
@@ -452,10 +446,13 @@ function showApproveModal(id) {
 }
 function submitApprove(id) {
     let gelar  = $('#gelar_' + id).val();
-    let noUrut = $('#no_urut_' + id).val();
+    // let noUrut = $('#no_urut_' + id).val();
 
-    if (!gelar || !noUrut) {
-        swal("Peringatan", "Gelar dan No Urut wajib diisi", "warning");
+    if (!gelar 
+    // || !noUrut
+
+    ) {
+        swal("Peringatan", "Gelar wajib diisi", "warning");
         return;
     }
 
@@ -475,7 +472,7 @@ function submitApprove(id) {
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
-                no_urut: noUrut,
+                // no_urut: noUrut,
                 gelar: gelar
             },
             success: function (response) {
@@ -586,7 +583,6 @@ function submitDecline(id) {
                 }
             });
         }
-
     });
 }
 

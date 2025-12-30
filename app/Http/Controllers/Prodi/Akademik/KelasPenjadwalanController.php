@@ -51,6 +51,19 @@ class KelasPenjadwalanController extends Controller
 
         // dd($semester_aktif);
 
+        $idSemester = (int) $semester_aktif->id_semester;
+
+        // semester_allow SUDAH berupa array
+        $semesterAllow = collect($semester_aktif->semester_allow ?? [])
+                            ->map(fn ($v) => (int) $v);
+
+        // ambil semester terbesar
+        $semesterMax = $semesterAllow
+                            ->push($idSemester)
+                            ->max();
+
+                            // dd($semesterMax);
+
         // if ($semester_view != null && !in_array($semester_view, $semester_aktif->semester_allow)) {
         //     return redirect()->back()->with('error', "Semester Tidak dalam list yang di izinkan!");
         // }
@@ -59,7 +72,7 @@ class KelasPenjadwalanController extends Controller
         $dbSemester = Semester::select('id_semester', 'nama_semester');
 
         // $pilihan_semester = $semester_aktif->semester_allow != null ? $dbSemester->whereIn('id_semester', $semester_aktif->semester_allow)->orderBy('id_semester', 'desc')->get() : $dbSemester->whereIn('id_semester', [$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
-        $pilihan_semester = $dbSemester->whereBetween('id_semester', ['20241',$semester_aktif->id_semester])->orderBy('id_semester', 'desc')->get();
+        $pilihan_semester = $dbSemester->whereBetween('id_semester', ['20241',$semesterMax])->orderBy('id_semester', 'desc')->get();
         // dd($pilihan_semester);
         $prodi_id = auth()->user()->fk_id;
 

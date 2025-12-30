@@ -104,8 +104,11 @@ class WisudaController extends Controller
                     ])
                     ->first();
 
+        if (!$riwayat_pendidikan->lulus_do) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, Anda masih berstatus Mahasiswa Aktif!');
+        }
 
-        if ($riwayat_pendidikan->lulus_do && $wisuda == null) {
+        if ($riwayat_pendidikan->lulus_do && $riwayat_pendidikan->lulus_do->id_jenis_keluar != 1 && $wisuda == null) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '.$riwayat_pendidikan->lulus_do->nama_jenis_keluar.'!');
         }
 

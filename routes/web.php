@@ -205,6 +205,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/approve/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'approve'])->name('bak.wisuda.peserta.approve');
                     Route::post('/decline/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'decline'])->name('bak.wisuda.peserta.decline');
                     Route::get('/data', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data'])->name('bak.wisuda.peserta.data');
+                    Route::get('/data_approved', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data_approved'])->name('bak.wisuda.peserta.data_approved');
                     Route::get('/formulir/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_formulir'])->name('bak.wisuda.peserta.formulir');
                     Route::get('/ijazah/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah_terakhir'])->name('bak.wisuda.peserta.ijazah');
                 });
