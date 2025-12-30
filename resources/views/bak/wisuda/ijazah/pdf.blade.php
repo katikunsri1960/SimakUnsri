@@ -174,7 +174,7 @@
             <table style="width: 100%">
                 <tr>
                     <td style="width: 66%"></td>
-                    <td>Indralaya, Tanggal Wisuda</td>
+                    <td>Indralaya, {{ \Carbon\Carbon::parse($d->tanggal_wisuda)->locale('id')->translatedFormat('d F Y') }}</td>
                 </tr>
                 <tr>
                     <td style="width: 66%">Dekan,</td>
@@ -283,7 +283,7 @@
             <table style="width: 100%">
                 <tr>
                     <td style="width: 66%"></td>
-                    <td>Indralaya, Tanggal Wisuda</td>
+                    <td>Indralaya, {{ \Carbon\Carbon::parse($d->tanggal_wisuda)->locale('id')->translatedFormat('d F Y') }}</td>
                 </tr>
                 <tr>
                     <td style="width: 66%">Dekan,</td>

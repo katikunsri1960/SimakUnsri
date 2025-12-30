@@ -92,7 +92,8 @@ Pendaftaran Wisuda Mahasiswa
                                     <tr>
                                         <td class="text-left text-nowrap">Total SKS</td>
                                         <td class="text-center">:</td>
-                                        <td class="text-left" style="text-align: justify">{{$aktivitas_kuliah->sks_total}} SKS<br>
+                                        <td class="text-left" style="text-align: justify">
+                                            <strong>{{$aktivitas_kuliah->sks_total}} SKS</strong><br>
                                             @if ($aktivitas_kuliah->sks_total >= $kurikulum->jumlah_sks_lulus)
                                                 <span class="badge rounded bg-success" style="padding: 7px"> (Memenuhi Syarat)</span>
                                             @else
@@ -103,7 +104,20 @@ Pendaftaran Wisuda Mahasiswa
                                     <tr>
                                         <td class="text-left text-nowrap">IPK</td>
                                         <td class="text-center">:</td>
-                                        <td class="text-left" style="text-align: justify">{{$aktivitas_kuliah->ipk}}
+                                        <td class="text-left" style="text-align: justify">
+                                            <strong>{{$aktivitas_kuliah->ipk}}</strong>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="text-left text-nowrap">Status Mahasiswa</td>
+                                        <td class="text-center">:</td>
+                                        <td class="text-left" style="text-align: justify">
+                                            <strong>{{$riwayat_pendidikan->lulus_do->nama_jenis_keluar}}</strong><br>
+                                            @if ($riwayat_pendidikan->lulus_do->id_jenis_keluar == 1)
+                                                <span class="badge rounded bg-success" style="padding: 7px"> (Memenuhi Syarat)</span>
+                                            @else
+                                                <span class="badge rounded bg-danger" style="padding: 7px"> (Tidak Memenuhi Syarat SKS Lulus)</span>
+                                            @endif
                                         </td>
                                     </tr>
                                 </table>
@@ -213,13 +227,13 @@ Pendaftaran Wisuda Mahasiswa
                                                     @elseif($wisuda->approved == 2)
                                                         <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Fakultas</span>
                                                     @elseif($wisuda->approved == 3)
-                                                        <span class="badge badge-lg badge-success mb-5 rounded">Disetujui BAK</span>
+                                                        <span class="badge badge-lg badge-success mb-5 rounded">Disetujui Dir. Akademik</span>
                                                     @elseif($wisuda->approved == 97)
                                                         <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Koor. Prodi</span>
                                                     @elseif($wisuda->approved == 98)
                                                         <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Fakultas</span>
                                                     @elseif($wisuda->approved == 99)
-                                                        <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak BAK</span>
+                                                        <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Dir. Akademik</span>
                                                     @endif
                                                 </td>
                                             </tr>
