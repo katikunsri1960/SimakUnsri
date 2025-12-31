@@ -27,6 +27,7 @@ class KehadiranDosenJob implements ShouldQueue
     protected array $idnumbers;
     protected string $url;
     protected string $token;
+    protected int $cutoffDate;
 
     /**
      * Constructor.
@@ -55,6 +56,25 @@ class KehadiranDosenJob implements ShouldQueue
             'idnumbers_count' => count($this->idnumbers),
         ]);
 
+        $semesterAktif = DB::table('semester_aktifs')
+            ->whereNotNull('krs_mulai')       // Pastikan datanya ada
+            ->orderBy('krs_mulai', 'desc')    // Urutkan dari tanggal terbaru
+            ->select('krs_mulai')
+            ->first();
+
+        if (!$semesterAktif || empty($semesterAktif->krs_mulai)) {
+            Log::error('Job berhenti: Data semester_aktif tidak ditemukan atau krs_mulai kosong.');
+            return; // Safety exit: Jangan lanjut kalau tidak punya acuan tanggal
+        }
+
+        // Convert string tanggal DB ke Timestamp (integer) agar ringan saat validasi nanti
+        $this->cutoffDate = strtotime($semesterAktif->krs_mulai);
+
+        Log::info('Memulai job kehadiran dosen', [
+            'batch_id' => $this->batchId,
+            'idnumbers_count' => count($this->idnumbers),
+            'cutoff_date_used' => $semesterAktif->krs_mulai
+        ]);
         $client = new Client([
             'timeout' => 30,  // Timeout per HTTP request
             'connect_timeout' => 10,
@@ -362,19 +382,13 @@ class KehadiranDosenJob implements ShouldQueue
         // Ambil sessdate (UNIX timestamp)
         $sessdate = intval($session['sessdate'] ?? 0);
 
-        // Cutoff tanggal
-        $cutoff = strtotime('2025-08-01');
-
-        // Jika sessdate kosong atau lebih kecil dari cutoff, skip
-        if ($sessdate < $cutoff) {
-            Log::info('❌ Skip session karena sessdate < cutoff', [
-                'session_id'    => $session['id'] ?? null,
-                'sessdate_raw'  => $session['sessdate'] ?? null,
-                'sessdate_human' => $sessdate ? date('Y-m-d H:i:s', $sessdate) : null,
-                'cutoff'        => date('Y-m-d H:i:s', $cutoff),
-            ]);
+        // --- [STEP 2: VALIDASI PAKAI PROPERTY CLASS] ---
+        // $this->cutoffDate 
+        if ($sessdate < $this->cutoffDate) {
+            // Log::debug('Skip session old date', ['sessdate' => date('Y-m-d', $sessdate)]);
             return false;
         }
+        
         return true;
     }
 
