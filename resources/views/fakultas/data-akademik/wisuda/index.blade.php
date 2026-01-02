@@ -257,7 +257,7 @@ function getData()
                                                             <select class="form-select" id="gelar_${item.id}">
                                                                 <option value="">-- Pilih Gelar --</option>
                                                                 @foreach($gelar_lulusan as $g)
-                                                                    <option value="{{ $g->id }}">{{ $g->gelar }}</option>
+                                                                    <option value="{{ $g->id }}">{{ $g->gelar }} ({{ $g->prodi->nama_jenjang_pendidikan }} - {{ $g->prodi->nama_program_studi }})</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>

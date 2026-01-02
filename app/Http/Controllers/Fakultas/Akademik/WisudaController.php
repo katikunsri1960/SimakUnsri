@@ -48,9 +48,14 @@ class WisudaController extends Controller
             ->get();
 
         // $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
-        $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
+        $periode = PeriodeWisuda::select('periode')
+                ->orderBy('periode', 'desc')
+                ->get();
 
-        $gelar_lulusan = GelarLulusan::whereIn('id_prodi', $prodi->pluck('id_prodi'))->get();
+        $gelar_lulusan = GelarLulusan::with('prodi')
+                ->whereIn('id_prodi', $prodi
+                ->pluck('id_prodi'))
+                ->get();
 
         $predikat = PredikatKelulusan::get();
         // dd($gelar_lulusan);

@@ -208,8 +208,8 @@ class WisudaController extends Controller
 
                 ->where('pw.periode', $req['periode'])
                 ->where('data_wisuda.approved', 3)
-                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'b.nik as nik', 'akt.judul',
-                        'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat', 
+                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'b.nik as nik', 'akt.judul', 'r.jenis_kelamin',
+                        'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat', DB::raw("DATE_FORMAT(pw.tanggal_wisuda, '%d-%m-%Y') as tanggal_wisuda"),
                         'b.tempat_lahir', 'jm.nama_jalur_masuk as jalur_masuk', 'b.tanggal_lahir', 'b.rt', 'b.rw', 'b.jalan', 'b.dusun', 'b.kelurahan', 'b.id_wilayah', 'b.nama_wilayah', 'b.handphone',
                         'b.email', 'b.nama_ayah', 'b.nama_ibu_kandung', 'b.alamat_orang_tua', DB::raw("DATE_FORMAT(tanggal_daftar, '%d-%m-%Y') as tanggal_daftar"));
 
@@ -282,7 +282,7 @@ class WisudaController extends Controller
                 ->leftJoin('file_fakultas as ff','ff.id','data_wisuda.id_file_fakultas')
 
                 ->where('pw.periode', $req['periode'])
-                ->where('data_wisuda.approved', 3)
+                // ->where('data_wisuda.approved', 3)
                 ->select(
                     'data_wisuda.*',
                     // 'r.nim',                 // ✅ WAJIB
