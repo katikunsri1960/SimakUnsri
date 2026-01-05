@@ -94,6 +94,27 @@ class SemesterAktif extends Model
         $this->attributes['mulai_isi_nilai'] = date('Y-m-d', strtotime($value));
     }
 
+    //TUNDA BAYAR
+    public function getIdMulaiTundaBayarAttribute()
+    {
+        return date('d-m-Y', strtotime($this->mulai_tunda_bayar)) ?? '';
+    }
+
+    public function setMulaiTundaBayarAttribute($value)
+    {
+        $this->attributes['mulai_tunda_bayar'] = date('Y-m-d', strtotime($value));
+    }
+
+    public function getIdBatasTundaBayarAttribute()
+    {
+        return date('d-m-Y', strtotime($this->batas_tunda_bayar)) ?? '';
+    }
+
+    public function setBatasTundaBayarAttribute($value)
+    {
+        $this->attributes['batas_tunda_bayar'] = date('Y-m-d', strtotime($value));
+    }
+
     // PERIODE SO
     public function getIdTglMulaiPengajuanCutiAttribute()
     {
