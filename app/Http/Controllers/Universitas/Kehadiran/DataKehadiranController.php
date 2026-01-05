@@ -12,6 +12,7 @@ use App\Models\kehadiran_dosen;
 use App\Models\kehadiran_mahasiswa;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Http\Request;
 
 
 class DataKehadiranController extends Controller
@@ -26,52 +27,57 @@ class DataKehadiranController extends Controller
     }
 
 
-    public function kehadiran_mahasiswa_ajax()
+    public function kehadiran_mahasiswa_ajax(Request $request)
     {
-        // Subquery dosen: mencari berdasarkan nip, nuptk, atau nidn
-        $subDosen = DB::table('biodata_dosens')
-            ->select('nama_dosen', 'nip', 'nuptk', 'nidn');
+        // Jika frontend mengirim parameter 'limit' atau 'length', gunakan itu.
+        // Jika tidak ada, default ambil SEMUA data (limit besar).
+        $limit = $request->input('limit', $request->input('length', -1));
 
-        $data = DB::table('kehadiran_mahasiswa as km')
+        $query = DB::table('kehadiran_mahasiswa as km')
             ->leftJoin('riwayat_pendidikans as rp', 'rp.nim', '=', 'km.username')
 
-            // Optimasi join biodata_dosens dengan subquery & tanpa OR di ON
-            ->leftJoinSub($subDosen, 'bd', function ($join) {
-                $join->on('bd.nip', '=', 'km.deskripsi_sesi')
-                    ->orOn('bd.nuptk', '=', 'km.deskripsi_sesi')
-                    ->orOn('bd.nidn', '=', 'km.deskripsi_sesi');
-            })
+            // [OPTIMASI 1] Tetap gunakan 3 Join ini agar index database jalan (Cepat)
+            ->leftJoin('biodata_dosens as d_nip', 'd_nip.nip', '=', 'km.deskripsi_sesi')
+            ->leftJoin('biodata_dosens as d_nidn', 'd_nidn.nidn', '=', 'km.deskripsi_sesi')
+            ->leftJoin('biodata_dosens as d_nuptk', 'd_nuptk.nuptk', '=', 'km.deskripsi_sesi')
 
             ->select([
                 'km.kode_mata_kuliah',
                 'km.nama_mk',
                 'km.nama_kelas',
                 'km.username',
-                'rp.nama_mahasiswa',
                 'km.session_id',
-                'km.session_date',
                 'km.status_mahasiswa',
-                'bd.nama_dosen',
                 'km.deskripsi_sesi',
+
+                // [OPTIMASI 2] Format Tanggal langsung di SQL (Agar PHP tidak berat looping)
+                DB::raw("FROM_UNIXTIME(km.session_date, '%d-%m-%Y') as session_date"),
+
+                // [OPTIMASI 3] Pilih nama dosen langsung di SQL
+                DB::raw("COALESCE(d_nip.nama_dosen, d_nidn.nama_dosen, d_nuptk.nama_dosen, 'Dosen Tidak Dikenal') as nama_dosen"),
+
+                // Handle nama mahasiswa null
+                DB::raw("COALESCE(rp.nama_mahasiswa, 'Mahasiswa Tidak Dikenal') as nama_mahasiswa")
             ])
-            ->get();
 
-        // Gunakan satu proses mapping tanpa Carbon per-item
-        $data = $data->map(function ($item) {
-            $item->session_date = $item->session_date
-                ? date('d-m-Y', $item->session_date)
-                : 'Tanggal Tidak Tersedia';
+            // Urutkan dari yang terbaru
+            ->orderBy('km.session_date', 'desc');
 
-            $item->nama_dosen = $item->nama_dosen ?? 'N/A';
-            $item->nama_mahasiswa = $item->nama_mahasiswa ?? 'N/A';
+        // [LOGIKA SHOW ENTRIES]
+        // Jika user minta "All" (biasanya -1) atau tidak kirim limit, pakai get()
+        if ($limit == -1 || !$limit) {
+            $data = $query->get(); // Ambil SEMUA data
 
-            return $item;
-        });
-
-        return response()->json(['data' => $data]);
+            // Return format standar array data
+            return response()->json(['data' => $data]);
+        }
+        // Jika user pilih "Show 10", "Show 25" lewat dropdown frontend yang mengirim parameter
+        else {
+            // Gunakan paginate agar query cepat sesuai limit yang diminta user
+            $data = $query->paginate($limit);
+            return response()->json($data);
+        }
     }
-
-
 
     /**
      * DataTables AJAX untuk mata kuliah e-learning (dioptimasi dengan select eksplisit).

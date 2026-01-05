@@ -54,37 +54,50 @@ class AuthController extends Controller
      * Login user (pakai params/form-data)
      */
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|string|email',
-            'password' => 'required|string',
-        ]);
+{
+    // Validasi
+    $request->validate([
+        'login' => 'required|string', // bisa email atau username
+        'password' => 'required|string',
+    ]);
 
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->password,
-        ];
+    // Field login (EMAIL / USERNAME)
+    $login = trim($request->login);
 
-        if (!Auth::attempt($credentials)) {
-            throw ValidationException::withMessages([
-                'email' => ['Email atau password salah.'],
-            ]);
-        }
+    $field = filter_var($login, FILTER_VALIDATE_EMAIL)
+        ? 'email'
+        : 'username';
 
-        /** @var \App\Models\User $user */
-        $user = Auth::user();
-        $token = $user->createToken('api_token')->plainTextToken;
-
-        return response()->json([
-            'message' => 'Login berhasil',
-            'user' => [
-                'name' => $user->name,
-                'username' => $user->username,
-                'email' => $user->email,
-            ],
-            'token' => $token,
+    //Proses autentikasi 
+    if (!Auth::attempt([
+        $field => $login,
+        'password' => $request->password,
+    ])) {
+        throw ValidationException::withMessages([
+            'login' => ['Username / Email atau password salah.'],
         ]);
     }
+
+    //Ambil user & buat token
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
+
+    $token = $user->createToken('api_token')->plainTextToken;
+
+    //  Response
+    return response()->json([
+        'message' => 'Login berhasil',
+        'user' => [
+            'id' => $user->id,
+            'name' => $user->name,
+            'username' => $user->username,
+            'email' => $user->email,
+            'role' => $user->role,
+        ],
+        'token' => $token,
+    ]);
+}
+
     /**
      * Logout user
      */
