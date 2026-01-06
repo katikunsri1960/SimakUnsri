@@ -89,9 +89,15 @@ PENUNDAAN BAYAR
                                         <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
                                         <td class="text-start align-middle">{{$d->keterangan}}</td>
                                         <td class="text-start align-middle">
+                                            @if($d->file_pendukung)
                                             <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-sm btn-primary mb-5">
                                                 <i class="fa fa-file-pdf-o"></i> File Pendukung
                                             </a> 
+                                            @else
+                                            <a target="_blank" class="btn btn-sm btn-danger mb-5">
+                                                <i class="fa fa-cross-o"></i> Tidak Ada File
+                                            </a> 
+                                            @endif
                                         </td>
                                         <td class="text-center align-middle" style="width:10%">
                                             @if($d->status == 0)

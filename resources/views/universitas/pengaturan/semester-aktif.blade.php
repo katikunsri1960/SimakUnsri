@@ -57,6 +57,24 @@ Semester Aktif
                                 </div>
                             </div>
                         </div>
+                        <h4 class="text-info mt-20"><i class="fa fa-clock-o"></i> Jadwal Tunda Bayar</h4>
+                        <hr class="my-10">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="mulai_tunda_bayar" class="form-label">Tanggal Mulai Tunda Bayar</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="mulai_tunda_bayar" id="mulai_tunda_bayar" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_mulai_tunda_bayar : '' }}"/>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 mb-3">
+                                <label for="batas_tunda_bayar" class="form-label">Tanggal Akhir Tunda Bayar</label>
+                                <div class="input-group">
+                                    <span class="input-group-text" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+                                    <input type="text" class="form-control" name="batas_tunda_bayar" id="batas_tunda_bayar" aria-describedby="helpId" placeholder="" required value="{{ $data ? $data->id_batas_tunda_bayar : '' }}"/>
+                                </div>
+                            </div>
+                        </div>
                         <h4 class="text-info mt-20"><i class="fa fa-calendar-o"></i> Jadwal KRS</h4>
                         <hr class="my-10">
                         <div class="row">
@@ -201,6 +219,14 @@ Semester Aktif
         });
 
         flatpickr("#batas_bayar_ukt", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#mulai_tunda_bayar", {
+            dateFormat: "d-m-Y",
+        });
+
+        flatpickr("#batas_tunda_bayar", {
             dateFormat: "d-m-Y",
         });
 

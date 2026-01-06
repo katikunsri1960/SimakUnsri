@@ -91,6 +91,7 @@ Daftar Tunda Bayar
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama Mahasiswa</th>
                                     <th class="text-center align-middle">Keterangan</th>
+                                    <th class="text-center align-middle">File Pendukung</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Terakhir Update</th>
                                     <th class="text-center align-middle">Aksi</th>
@@ -107,6 +108,11 @@ Daftar Tunda Bayar
                                     <td class="text-center align-middle">{{$d->nim}}</td>
                                     <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
                                     <td class="text-start align-middle">{{$d->keterangan}}</td>
+                                    <td class="text-start align-middle">
+                                        <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-sm btn-primary mb-5">
+                                            <i class="fa fa-file-pdf-o"></i> File Pendukung
+                                        </a> 
+                                    </td>
                                     <td class="text-center align-middle">
                                         @php
                                         switch ($d->status) {
@@ -128,7 +134,6 @@ Daftar Tunda Bayar
                                         <span class="badge bg-{{$text}}">
                                             {{$d->status_text}}
                                         </span>
-
                                     </td>
                                     <td class="text-center align-middle">{{$d->terakhir_update}}</td>
                                     <td class="text-center align-middle text-nowrap">
