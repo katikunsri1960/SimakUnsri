@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Universitas;
 
 use App\Models\SyncError;
+use App\Models\Semester;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
