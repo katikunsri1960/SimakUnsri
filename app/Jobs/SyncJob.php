@@ -20,15 +20,15 @@ class SyncJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    public function __construct($act, $limit, $offset, $order, $filter = null, $model, $primary)
+    public function __construct($act, $limit, $offset, $order, $filter = null, /*$model, $primary*/)
     {
         $this->act = $act;
         $this->limit = $limit;
         $this->offset = $offset;
         $this->order = $order;
         $this->filter = $filter;
-        $this->model = $model;
-        $this->primary = $primary;
+        // $this->model = $model;
+        // $this->primary = $primary;
     }
 
     /**

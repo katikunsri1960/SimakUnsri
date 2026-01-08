@@ -58,7 +58,7 @@ class MahasiswaController extends Controller
                 for ($i = 0; $i < $count; $i += $limit) {
                     $batch->add(
                         new $d['job'](
-                            $d['act'], $i, $limit, $d['order'] ?? null
+                            $d['act'], $i, $limit, $d['order'] ?? null, $d['filter'] ?? null
                         )
                     );
                 }
