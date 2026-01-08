@@ -25,7 +25,7 @@ class MahasiswaController extends Controller
 
         return $count;
     }
-    public function sync_mahasiswa()
+    /*public function sync_mahasiswa()
     {
         $semester = Semester::orderBy('id_semester')
             ->pluck('id_semester');
@@ -91,14 +91,14 @@ class MahasiswaController extends Controller
         }
 
         return redirect()->route('univ.mahasiswa');
-    }
+    }*/
 
 
-   /* public function sync_mahasiswa()
+    public function sync_mahasiswa()
     {
         $data = [
             ['act' => 'GetBiodataMahasiswa', 'count' => 'GetCountBiodataMahasiswa', 'order' => 'id_mahasiswa', 'job' => \App\Jobs\Mahasiswa\BiodataJob::class],
-            ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'filter' => "id_periode_masuk = '20252'",'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class],
+            ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa','job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class],
             ['act' => 'GetListMahasiswaLulusDO', 'count' => 'GetCountMahasiswaLulusDO', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\SyncJob::class]
         ];
 
@@ -132,7 +132,7 @@ class MahasiswaController extends Controller
 
         return redirect()->route('univ.mahasiswa');
 
-    }*/
+    }
 
     public function daftar_mahasiswa_data(Request $request)
     {
