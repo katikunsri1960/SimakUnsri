@@ -26,8 +26,7 @@ class MahasiswaController extends Controller
     }
     public function sync_mahasiswa()
     {
-        $semesterAktif = Semester::where('status_aktif', 1)
-            ->orderBy('id_semester')
+        $semester = Semester::orderBy('id_semester')
             ->pluck('id_semester');
 
         $data = [
@@ -68,7 +67,7 @@ class MahasiswaController extends Controller
         }
 
         // === Riwayat Pendidikan → per semester ===
-        foreach ($semesterAktif as $idSemester) {
+        foreach ($semester as $idSemester) {
 
             $count = $this->count_value(
                 'GetCountRiwayatPendidikanMahasiswa',
