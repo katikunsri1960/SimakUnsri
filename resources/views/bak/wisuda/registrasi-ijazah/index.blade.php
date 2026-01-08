@@ -70,7 +70,7 @@ Daftar Registrasi Ijazah
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-center align-middle">{{$d->semester->nama_semester}}</td>
-                                    <td class="text-center align-middle">{{$d->wisuda->wisuda_ke}}</td>
+                                    <td class="text-center align-middle">{{$d->periode_wisuda}}</td>
                                     <td class="text-center align-middle">{{$d->nim}}</td>
                                     <td class="text-start align-middle">{{$d->lulus_do ? $d->lulus_do->nama_mahasiswa :
                                         '-'}}</td>

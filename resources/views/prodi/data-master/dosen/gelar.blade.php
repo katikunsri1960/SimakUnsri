@@ -1,19 +1,19 @@
 @extends('layouts.prodi')
 @section('title')
-Dosen
+Gelar Dosen
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Master Dosen</h3>
+            <h3 class="page-title">Gelar Dosen</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Master</li>
                         <li class="breadcrumb-item" aria-current="page">Dosen</li>
-                        <li class="breadcrumb-item active" aria-current="page">Master Dosen</li>
+                        <li class="breadcrumb-item active" aria-current="page">Gelar Dosen</li>
                     </ol>
                 </nav>
             </div>
@@ -57,10 +57,10 @@ Dosen
                                     <td class="text-center align-middle">{{$d->nuptk ?? '-'}}</td>
                                     <td class="text-start align-middle">{{$d->email ?? '-'}}</td>
                                     <td class="text-center align-middle">
-                                        @if($d->a_sp_homebase == 1)
-                                            <i class="fa-regular fa-circle-check "></i>
-                                        @endif
+                                    <td class="text-center align-middle">
+                                        {{ $d->a_sp_homebase === '1' ? '√' : '-' }}
                                     </td>
+
 
                                 </tr>
                             @endforeach

@@ -43,14 +43,19 @@ class WisudaController extends Controller
         $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
             ->orderBy('id_jenjang_pendidikan')
             ->where('status', 'A')
-            ->where('kode_program_studi', '=', '54241')
+            // ->where('kode_program_studi', '=', '54241')
             ->orderBy('nama_program_studi')
             ->get();
 
         // $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
-        $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
+        $periode = PeriodeWisuda::select('periode')
+                ->orderBy('periode', 'desc')
+                ->get();
 
-        $gelar_lulusan = GelarLulusan::whereIn('id_prodi', $prodi->pluck('id_prodi'))->get();
+        $gelar_lulusan = GelarLulusan::with('prodi')
+                ->whereIn('id_prodi', $prodi
+                ->pluck('id_prodi'))
+                ->get();
 
         $predikat = PredikatKelulusan::get();
         // dd($gelar_lulusan);
@@ -153,7 +158,7 @@ class WisudaController extends Controller
                 ->leftJoin('aktivitas_mahasiswas as akt', 'akt.id_aktivitas', 'data_wisuda.id_aktivitas')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('jalur_masuks as jm', 'jm.id_jalur_masuk', 'r.id_jalur_daftar')
-                ->leftJoin('gelar_lulusans as g', 'g.id_prodi', 'p.id_prodi')
+                ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
 
@@ -161,6 +166,7 @@ class WisudaController extends Controller
                 ->leftJoin('file_fakultas as ff','ff.id','data_wisuda.id_file_fakultas')
 
                 ->where('pw.periode', $req['periode'])
+                ->where('p.fakultas_id', auth()->user()->fk_id)
                 ->select(
                     'data_wisuda.*',
                     'p.nama_program_studi as nama_prodi',
@@ -214,62 +220,66 @@ class WisudaController extends Controller
         ]);
     }
 
+    // public function approve(Request $request, $id)
+    // {
+    //      dd($id);
+    //         dd($request->all());
+    // }
+
+
 
     public function approve(Request $request, $id)
     {
-        // dd($request->all(), $id);
-
         DB::beginTransaction();
 
         try {
             $wisuda = Wisuda::findOrFail($id);
 
-            // VALIDASI AJAX
+            // ✅ VALIDASI MANUAL (WAJIB UNTUK AJAX)
             $validator = Validator::make($request->all(), [
-                'gelar' => 'required|numeric',
-                'predikat' => 'required|numeric',
+                // 'no_urut' => 'required|numeric',
+                'gelar'   => 'required|exists:gelar_lulusans,id',
             ]);
 
             if ($validator->fails()) {
                 return response()->json([
-                    'status' => 'error',
-                    'message' => implode(', ', $validator->errors()->all()),
+                    'status'  => 'error',
+                    'message' => implode("\n", $validator->errors()->all()),
                 ], 422);
             }
 
-            // CEK SK YUDISIUM
-            if (!$wisuda->sk_yudisium_file) {
+            // ❗ CEK FILE FAKULTAS (INI KASUS KAMU)
+            if (!$wisuda->id_file_fakultas) {
                 return response()->json([
-                    'status' => 'error',
-                    'message' => 'SK Yudisium belum diupload! Silahkan upload SK terlebih dahulu.',
-                ]);
+                    'status'  => 'error',
+                    'message' => 'File SK Yudisium Fakultas belum diupload.',
+                ], 422);
             }
 
-            // UPDATE DATA
+            // UPDATE
             $wisuda->update([
-                'approved' => 2,
+                'approved'         => 2,
+                // 'no_urut'          => $request->no_urut,
                 'id_gelar_lulusan' => $request->gelar,
-                'id_predikat_kelulusan' => $request->predikat,
             ]);
 
             DB::commit();
 
             return response()->json([
-                'status' => 'success',
+                'status'  => 'success',
                 'message' => 'Pendaftaran Wisuda berhasil disetujui.',
-            ], 200);
+            ]);
 
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+
             DB::rollBack();
 
             return response()->json([
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan saat menyetujui pendaftaran wisuda!',
-                'debug' => $e->getMessage(),
+                'status'  => 'error',
+                'message' => 'Terjadi kesalahan sistem.',
             ], 500);
         }
     }
-
 
 
     public function decline(Request $request, $id)
@@ -538,29 +548,36 @@ class WisudaController extends Controller
 
     public function deleteSkYudisium($id)
     {
-        // dd($id);
+        DB::beginTransaction();
+
         try {
-            DB::beginTransaction();
             $wisuda = Wisuda::findOrFail($id);
 
-            // Set kolom file di Wisuda menjadi null
             $wisuda->update([
                 'id_file_fakultas' => null,
-                'no_sk_yudisium' => null,
-                'tgl_sk_yudisium' => null,
-                'tgl_keluar' => null,
-                'lama_studi' => null,
+                'no_sk_yudisium'   => null,
+                'tgl_sk_yudisium'  => null,
+                'tgl_keluar'       => null,
+                'lama_studi'       => null,
                 'sk_yudisium_file' => null,
             ]);
 
             DB::commit();
-            return redirect()->back()->with('success', 'SK Yudisium berhasil dihapus.');
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'SK Yudisium berhasil dihapus.'
+            ], 200);
+
         } catch (\Throwable $e) {
             DB::rollBack();
-            return redirect()->back()->with('error', 'Gagal hapus SK Yudisium!');
+
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal menghapus SK Yudisium.',
+                'debug'   => config('app.debug') ? $e->getMessage() : null
+            ], 500);
         }
     }
-
-
 
 }

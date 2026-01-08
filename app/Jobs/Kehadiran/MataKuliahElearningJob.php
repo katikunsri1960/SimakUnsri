@@ -7,22 +7,24 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Support\Facades\DB;
-use App\Models\mk_kelas;
-use App\Models\SemesterAktif;
 use Illuminate\Bus\Batchable;
-
+use App\Models\mk_kelas;
 
 class MataKuliahElearningJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected $item;
+    protected $idSemester;
 
     /**
      * Create a new job instance.
+     * Terima data satuan dari Controller
      */
-    public function __construct()
+    public function __construct($item, $idSemester)
     {
-        //
+        $this->item = $item;
+        $this->idSemester = $idSemester;
     }
 
     /**
@@ -30,28 +32,25 @@ class MataKuliahElearningJob implements ShouldQueue
      */
     public function handle(): void
     {
-         $idSemester = SemesterAktif::latest()->value('id_semester');
+        // Cek jika batch dibatalkan
+        if ($this->batch()->cancelled()) {
+            return;
+        }
 
-        $semesteraktif = DB::table('semester_aktifs')
-            ->join('kelas_kuliahs', 'semester_aktifs.id_semester', '=', 'kelas_kuliahs.id_semester')
-            ->join('matkul_kurikulums', 'kelas_kuliahs.id_matkul', '=', 'matkul_kurikulums.id_matkul')
-            ->where('semester_aktifs.id_semester', $idSemester)
-            ->select('matkul_kurikulums.kode_mata_kuliah', 'kelas_kuliahs.nama_kelas_kuliah','kelas_kuliahs.id_kelas_kuliah')
-            ->get();
+        $item = $this->item;
+        $idSemester = $this->idSemester;
 
-        foreach ($semesteraktif as $items) {
-            if (!empty($items->kode_mata_kuliah) && !empty($items->nama_kelas_kuliah)) {
-                mk_kelas::updateOrCreate(
-                    [
-                        'kode_mata_kuliah' => "{$items->kode_mata_kuliah}-" . substr($idSemester, -3),
-                        'nama_kelas_kuliah' => $items->nama_kelas_kuliah,
-                    ],
-                    [
-                        'kelas_kuliah' => "{$items->kode_mata_kuliah}-{$items->nama_kelas_kuliah}",
-                        'id_kelas_kuliah' => $items->id_kelas_kuliah,
-                    ]
-                );
-            }
+        if (!empty($item->kode_mata_kuliah) && !empty($item->nama_kelas_kuliah)) {
+            mk_kelas::updateOrCreate(
+                [
+                    'kode_mata_kuliah' => "{$item->kode_mata_kuliah}-" . substr($idSemester, -3),
+                    'nama_kelas_kuliah' => $item->nama_kelas_kuliah,
+                ],
+                [
+                    'kelas_kuliah' => "{$item->kode_mata_kuliah}-{$item->nama_kelas_kuliah}",
+                    'id_kelas_kuliah' => $item->id_kelas_kuliah,
+                ]
+            );
         }
     }
 }

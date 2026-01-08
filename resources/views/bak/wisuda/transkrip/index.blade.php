@@ -123,7 +123,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{route('bak.wisuda.peserta.data')}}`,
+        url: `{{route('bak.wisuda.peserta.data_approved')}}`,
         type: 'GET',
         data: {
             fakultas: fakultas,
@@ -133,7 +133,7 @@ function getData()
         success: function (response) {
 
             if (response.status === 'success') {
-                console.log(response.data);
+                // console.log(response.data);
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
@@ -142,6 +142,7 @@ function getData()
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
                     var foto = item.pas_foto ? '<img src="{{ asset('' ) }}' + item.pas_foto + '" class="img-fluid" style="max-width: 300px; max-height: 500px;">' : '';
+                    var jenis_kelamin = item.jenis_kelamin === 'L' ? 'Laki-laki' : (item.jenis_kelamin === 'P' ? 'Perempuan' : '-');
                     // ===============================
                     // KONDISI KHUSUS NO IJAZAH
                     // ===============================
@@ -159,9 +160,9 @@ function getData()
                         item.nik,
                         item.tempat_lahir,
                         item.tanggal_lahir,
-                        spanStatus,
-                        item.ijazah_terakhir ?? '-',
-                        berkasButton,
+                        item.tanggal_wisuda,
+                        item.ipk,
+                        jenis_kelamin,
                         item.jenjang + ' - ' + item.nama_prodi ,
                         item.gelar ?? '-',
                     ]).draw(false);

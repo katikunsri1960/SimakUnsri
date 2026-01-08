@@ -85,12 +85,19 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::get('/', [App\Http\Controllers\Bak\DashboardController::class, 'index'])->name('bak');
             Route::get('/check-sync', [App\Http\Controllers\Bak\DashboardController::class, 'check_sync'])->name('bak.check-sync');
             
+            Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Bak\DataMasterController::class, 'getProdi'])->name('bak.mahasiswa.get-fak-prodi-ang');
+
             Route::prefix('data-master')->group(function(){
                 Route::prefix('predikat')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat'])->name('bak.data-master.predikat');
                     Route::post('/', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_store'])->name('bak.data-master.predikat.store');
                     Route::patch('/{predikat}', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_update'])->name('bak.data-master.predikat.update');
                     Route::delete('/{predikat}', [App\Http\Controllers\Bak\DataMasterController::class, 'predikat_delete'])->name('bak.data-master.predikat.delete');
+                });
+
+                Route::prefix('mahasiswa')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Bak\DataMasterController::class, 'mahasiswa'])->name('bak.mahasiswa');
+                    Route::get('/data', [App\Http\Controllers\Bak\DataMasterController::class, 'mahasiswa_data'])->name('bak.mahasiswa.data');
                 });
             });
             Route::prefix('tunda-bayar')->group(function() {
@@ -198,6 +205,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/approve/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'approve'])->name('bak.wisuda.peserta.approve');
                     Route::post('/decline/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'decline'])->name('bak.wisuda.peserta.decline');
                     Route::get('/data', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data'])->name('bak.wisuda.peserta.data');
+                    Route::get('/data_approved', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data_approved'])->name('bak.wisuda.peserta.data_approved');
                     Route::get('/formulir/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_formulir'])->name('bak.wisuda.peserta.formulir');
                     Route::get('/ijazah/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah_terakhir'])->name('bak.wisuda.peserta.ijazah');
                 });
@@ -304,6 +312,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs_angkatan_data'])->name('fakultas.data-akademik.khs.angkatan.data');
                         Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'khs_angkatan_download'])->name('fakultas.data-akademik.khs.angkatan.download');
                     });
+                    Route::get('/under-devop', [App\Http\Controllers\Fakultas\Akademik\KHSController::class, 'devop'])->name('fakultas.data-akademik.khs.devop');
                 });
 
                 Route::prefix('nilai-usept')->group(function(){
@@ -510,16 +519,20 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('perkuliahan')->group(function () {
                 Route::prefix('nilai-perkuliahan')->group(function(){
                     Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-perkuliahan');
+                    // Route::get('/', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'devop'])->name('mahasiswa.perkuliahan.nilai-perkuliahan');
                     Route::prefix('kuisioner')->group(function(){
                         Route::get('/{kelas}', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'kuisioner'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner');
                         Route::post('/store/{kelas}', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'kuisioner_store'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner.store');
                     });
                     Route::get('/{id_semester}/lihat-khs', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'lihat_khs'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs');
+                    // Route::get('/{id_semester}/lihat-khs', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'devop'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.lihat-khs');
+                    
                     Route::get('/{id_matkul}/histori-nilai', [App\Http\Controllers\Mahasiswa\Akademik\NilaiController::class, 'histori_nilai'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai');
+                    // Route::get('/{id_matkul}/histori-nilai', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'devop'])->name('mahasiswa.perkuliahan.nilai-perkuliahan.histori-nilai');
                 });
 
                 Route::get('/nilai-usept', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'index'])->name('mahasiswa.perkuliahan.nilai-usept');
-                Route::get('/under_devop', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'devop'])->name('mahasiswa.perkuliahan.nilai-usept.devop');
+                Route::get('/under_devop', [App\Http\Controllers\Mahasiswa\Akademik\NilaiUseptController::class, 'devop'])->name('mahasiswa.perkuliahan.devop');
             });
 
             //Route for prestasi mahasiswa
@@ -779,7 +792,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
         Route::prefix('prodi')->group(function() {
             //Route for Data Master
             Route::prefix('data-master')->group(function(){
-                Route::get('/dosen', [App\Http\Controllers\Prodi\DataMasterController::class, 'dosen'])->name('prodi.data-master.dosen');
+                Route::prefix('dosen')->group(function(){
+                    Route::get('/daftar', [App\Http\Controllers\Prodi\DataMasterController::class, 'dosen'])->name('prodi.data-master.dosen.index');
+                    Route::get('/gelar', [App\Http\Controllers\Prodi\DataMasterController::class, 'gelar_dosen'])->name('prodi.data-master.dosen.gelar');
+                });
 
                 Route::prefix('mahasiswa')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'mahasiswa'])->name('prodi.data-master.mahasiswa');
@@ -875,6 +891,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('khs')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'khs'])->name('prodi.data-akademik.khs');
                     Route::get('/data', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'data'])->name('prodi.data-akademik.khs.data');
+                    Route::get('/under_devop', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'devop'])->name('prodi.data-akademik.khs.devop');
                 });
 
                 // Route::get('', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'krs'])->name('prodi.data-akademik.krs');

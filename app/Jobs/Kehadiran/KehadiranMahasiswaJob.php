@@ -17,11 +17,15 @@ use GuzzleHttp\Promise\Utils;
 
 class KehadiranMahasiswaJob implements ShouldQueue
 {
-     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
 
     protected array $idnumbers;
     protected string $url;
     protected string $token;
+
+    // [BARU] Property untuk menyimpan tanggal cutoff dan cache user
+    protected int $cutoffDate;
+    protected array $userCache = []; 
 
     public function __construct(array $idnumbers, string $batchId)
     {
@@ -37,6 +41,25 @@ class KehadiranMahasiswaJob implements ShouldQueue
         if ($this->batch()?->cancelled()) {
             return;
         }
+
+        // --- [ AMBIL TANGGAL CUTOFF DARI DB] ---
+        // Query ini hanya jalan 1x per Job
+         $semesterAktif = DB::table('semester_aktifs')
+            ->whereNotNull('krs_mulai')       // Pastikan datanya ada
+            ->orderBy('krs_mulai', 'desc')    // Urutkan dari tanggal terbaru
+            ->select('krs_mulai')
+            ->first();
+
+        if (!$semesterAktif || empty($semesterAktif->krs_mulai)) {
+            Log::error('Job Mahasiswa berhenti: Data semester_aktif/krs_mulai tidak ditemukan.');
+            return;
+        }
+
+        // Simpan ke property class
+        $this->cutoffDate = strtotime($semesterAktif->krs_mulai);
+        
+        Log::info("Job Mahasiswa dimulai dengan cutoff: " . $semesterAktif->krs_mulai);
+        // ---------------------------------------------
 
         $promises = [];
 
@@ -55,14 +78,8 @@ class KehadiranMahasiswaJob implements ShouldQueue
                 ->then(function ($response) use ($idnumber) {
                     if ($response->successful()) {
                         $result = $response->json();
-
-                        if (json_last_error() !== JSON_ERROR_NONE) {
-                            Log::error("JSON tidak valid untuk $idnumber", [
-                                'body' => $response->body(),
-                                'json_error' => json_last_error_msg(),
-                            ]);
-                            return;
-                        }
+                        // ... validasi json error ...
+                        if (json_last_error() !== JSON_ERROR_NONE) return;
 
                         $courses = $result['courses'] ?? [];
 
@@ -71,18 +88,11 @@ class KehadiranMahasiswaJob implements ShouldQueue
                             $this->fetchAttendanceSessions($idnumber, $course, $courseFullname);
                         }
                     } else {
-                        Log::error("Status code bukan 200 saat ambil course", [
-                            'idnumber' => $idnumber,
-                            'status_code' => $response->status(),
-                            'body' => $response->body(),
-                        ]);
+                        Log::error("Status code bukan 200 saat ambil course", ['idnumber' => $idnumber]);
                     }
                 })
                 ->otherwise(function ($error) use ($idnumber) {
-                    Log::error("Gagal fetch data course", [
-                        'idnumber' => $idnumber,
-                        'exception' => $error instanceof \Exception ? $error->getMessage() : (string) $error,
-                    ]);
+                    Log::error("Gagal fetch data course: " . $error);
                 });
         }
 
@@ -91,19 +101,25 @@ class KehadiranMahasiswaJob implements ShouldQueue
 
     private function fetchAttendanceSessions($idnumber, $course, $courseFullname)
     {
+        // Optimasi: Cache attendance IDs agar tidak query berulang jika batch besar
+        // (Tapi di sini pluck unique sudah cukup oke jika data tidak jutaan)
         $attendanceIDs = kehadiran_dosen::pluck('id_kehadiran')->unique()->toArray();
 
         if (empty($attendanceIDs)) {
-            Log::warning("No attendanceIDs found in the table kehadiran_dosen");
+            Log::warning("No attendanceIDs found in table kehadiran_dosen");
             return;
         }
 
-        $batchSize = 100;
+        $batchSize = 50; // Turunkan sedikit batch size agar HTTP client tidak timeout
         $batches = array_chunk($attendanceIDs, $batchSize);
 
+        // Ambil Groups SEKALI saja per course
+        $groups = $this->processGroup($course);
+
         foreach ($batches as $batchIndex => $batch) {
+            if ($this->batch()?->cancelled()) return;
+
             $promises = [];
-            $groups = $this->processGroup($course);
 
             foreach ($batch as $attendanceID) {
                 $sessionParams = [
@@ -121,17 +137,16 @@ class KehadiranMahasiswaJob implements ShouldQueue
                             $sessionsData = $sessionsResponse->json();
                             $sessions = $sessionsData['sessions'] ?? $sessionsData;
 
-                            $afterTimestamp = strtotime('2025-08-01 00:00:00');
-
-                            $filteredSessions = array_filter($sessions, function ($session) use ($groups, $afterTimestamp) {
+                            // --- [ FILTER TANGGAL DINAMIS] ---
+                            $filteredSessions = array_filter($sessions, function ($session) use ($groups) {
                                 $description = $session['description'] ?? '';
-                                $sessdate = $session['sessdate'] ?? 0;
+                                $sessdate = intval($session['sessdate'] ?? 0);
 
+                                // Gunakan $this->cutoffDate yang diambil dari DB
                                 if (
-                                    is_null($description) ||
-                                    trim($description) === "" ||
+                                    empty($description) ||
                                     !preg_match('/\d/', $description) ||
-                                    $sessdate < $afterTimestamp
+                                    $sessdate < $this->cutoffDate 
                                 ) {
                                     return false;
                                 }
@@ -147,21 +162,11 @@ class KehadiranMahasiswaJob implements ShouldQueue
                             foreach ($filteredSessions as $session) {
                                 $this->processSession($session, $idnumber, $courseFullname, $groups);
                             }
-                        } else {
-                            Log::error("Failed to fetch sessions for attendanceID: {$attendanceID}", [
-                                'status_code' => $sessionsResponse->status(),
-                                'body' => $sessionsResponse->body(),
-                            ]);
                         }
                     });
             }
 
             Utils::settle($promises)->wait();
-
-            Log::info("Batch {$batchIndex} processed", [
-                'batch_size' => count($batch),
-                'attendance_ids' => $batch,
-            ]);
         }
     }
 
@@ -184,32 +189,22 @@ class KehadiranMahasiswaJob implements ShouldQueue
             }
         }
 
-        if (is_null($groupName)) {
-            Log::info("Sesi dilewati karena groupId tidak sesuai", [
-                'groupId' => $groupId,
-                'idnumber' => $idnumber,
-            ]);
-            return;
-        }
+        if (is_null($groupName)) return;
 
         $deskripsi_sesi = isset($session['description']) ? strip_tags($session['description']) : null;
         preg_match('/\d+/', $deskripsi_sesi, $matches);
         $deskripsi_sesi = $matches[0] ?? null;
 
-        if (is_null($deskripsi_sesi) || !preg_match('/\d/', $deskripsi_sesi)) {
-            Log::info("Deskripsi sesi tidak valid, dilewati.", [
-                'session_id' => $session['id'],
-            ]);
-            return;
-        }
+        if (is_null($deskripsi_sesi)) return;
 
         $data = [];
         foreach ($attendanceLogs as $log) {
             $studentid = $log['studentid'];
-            $username = $this->getUsernameById($studentid);
-            if (is_null($username)) {
-                continue;
-            }
+            
+            // [OPTIMASI] Gunakan method caching username
+            $username = $this->getUsernameById($studentid); 
+            
+            if (is_null($username)) continue;
 
             $data[] = [
                 'kode_mata_kuliah'  => $idnumber,
@@ -221,7 +216,7 @@ class KehadiranMahasiswaJob implements ShouldQueue
                 'deskripsi_sesi'    => $deskripsi_sesi,
                 'id_kehadiran'      => $session['attendanceid'],
                 'status_id'         => $log['statusid'],
-                'status_mahasiswa'  => $statusDescriptions[$log['statusid']] ?? 'Unknown Status',
+                'status_mahasiswa'  => $statusDescriptions[$log['statusid']] ?? 'Unknown',
                 'created_at'        => now(),
                 'updated_at'        => now(),
             ];
@@ -239,45 +234,49 @@ class KehadiranMahasiswaJob implements ShouldQueue
     private function processGroup($course)
     {
         $courseId = $course['id'] ?? null;
-        if (!$courseId) {
-            Log::warning("Course ID tidak ditemukan", ['course' => $course]);
-            return [];
-        }
-        $groupParams = [
+        if (!$courseId) return [];
+
+        // 1. Ambil semua groups dari Moodle untuk course ini
+        $groupResponse = Http::withOptions(['verify' => false])->get($this->url, [
             'wstoken' => $this->token,
             'wsfunction' => 'core_group_get_course_groups',
             'courseid' => $courseId,
             'moodlewsrestformat' => 'json',
-        ];
-        $groupResponse = Http::withOptions(['verify' => false])->get($this->url, $groupParams);
-        if (!$groupResponse->successful()) {
-            Log::error("Gagal mendapatkan grup untuk Course ID $courseId", [
-                'status_code' => $groupResponse->status(),
-                'body' => $groupResponse->body(),
-            ]);
-            return [];
-        }
+        ]);
+
+        if (!$groupResponse->successful()) return [];
 
         $groups = $groupResponse->json();
-        // Ambil hanya grup valid yang punya idnumber
         $validGroups = array_filter($groups, fn($group) => !empty($group['idnumber']));
-        // Ambil semua nama kelas dari tabel kehadiran_dosen
-        $kelasList = [];
-        DB::table('kehadiran_dosen')->orderBy('id')->chunk(1000, function ($rows) use (&$kelasList) {
-            foreach ($rows as $row) {
-                $kelasList[] = $row->nama_kelas;
-            }
+
+        if (empty($validGroups)) return [];
+
+        // [OPTIMASI DATABASE]
+        // Jangan ambil seluruh tabel kehadiran_dosen. Cukup cek apakah idnumber group ada di tabel tsb.
+        $moodleGroupIds = array_column($validGroups, 'idnumber');
+        
+        $validKelasList = DB::table('kehadiran_dosen')
+            ->whereIn('nama_kelas', $moodleGroupIds) // Cek hanya yg relevan
+            ->distinct()
+            ->pluck('nama_kelas')
+            ->toArray();
+
+        // Filter group Moodle yang hanya ada di DB Lokal
+        $filteredGroups = array_filter($validGroups, function ($group) use ($validKelasList) {
+            return in_array($group['idnumber'], $validKelasList);
         });
-        // Filter: hanya grup yang idnumber-nya cocok dengan nama_kelas
-        $filteredGroups = array_filter($validGroups, function ($group) use ($kelasList) {
-            return in_array($group['idnumber'], $kelasList);
-        });
-        // Reset array keys supaya rapi
+
         return array_values($filteredGroups);
     }
 
     private function getUsernameById($studentid)
     {
+        // [OPTIMASI CACHE MEMORY]
+        // Cek dulu apakah student ini sudah pernah diambil di Job ini
+        if (isset($this->userCache[$studentid])) {
+            return $this->userCache[$studentid];
+        }
+
         $response = Http::withOptions(['verify' => false])->get($this->url, [
             'wstoken' => $this->token,
             'wsfunction' => 'core_user_get_users',
@@ -290,26 +289,20 @@ class KehadiranMahasiswaJob implements ShouldQueue
             $result = $response->json();
             if (!empty($result['users'])) {
                 $username = $result['users'][0]['username'];
+                
+                // Cek DB Lokal
                 $exists = RiwayatPendidikan::where('nim', $username)->exists();
 
                 if ($exists) {
+                    // Simpan ke Cache dan return
+                    $this->userCache[$studentid] = $username;
                     return $username;
-                } else {
-                    Log::warning("Username tidak ditemukan di database lokal", [
-                        'student_id' => $studentid,
-                        'username' => $username,
-                    ]);
                 }
-            } else {
-                Log::warning("Tidak ada user ditemukan di Moodle untuk student ID: $studentid");
             }
-        } else {
-            Log::error("Gagal mengambil user dari Moodle untuk student ID: $studentid", [
-                'status_code' => $response->status(),
-                'body' => $response->body()
-            ]);
         }
-
+        
+        // Simpan null ke cache supaya tidak direquest ulang kalau gagal/tidak ketemu
+        $this->userCache[$studentid] = null;
         return null;
     }
 }

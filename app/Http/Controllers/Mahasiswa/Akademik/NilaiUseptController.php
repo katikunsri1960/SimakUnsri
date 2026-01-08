@@ -26,6 +26,6 @@ class NilaiUseptController extends Controller
 
     public function devop()
     {
-        return view('mahasiswa.perkuliahan.nilai-usept.devop');
+        return view('mahasiswa.perkuliahan.devop');
     }
 }

@@ -1,33 +1,41 @@
-@extends('layouts.fakultas')
+@extends('layouts.bak')
 @section('title')
-Pendaftaran Wisuda Fakultas
+Daftar Peserta Wisuda
 @endsection
 @section('content')
-@include('swal')
-<section class="content bg-white">
+<section class="content">
     <div class="row align-items-end">
-        <div class="col-12">
-			<div class="box pull-up">
-				<div class="box-body bg-img bg-primary-light">
-					<div class="d-lg-flex align-items-center justify-content-between">
-						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
-			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
-							<div class="ms-30">
-								<h2 class="mb-10">Pendaftaran Wisuda Fakultas</h2>
-								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
-							</div>
-						</div>
-					<div>
-				</div>
-			</div>							
-		</div>
+        <div class="col-xl-12 col-12">
+            <div class="box bg-primary-light pull-up">
+                <div class="box-body p-xl-0">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-lg-3"><img
+                                src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" alt="">
+                        </div>
+                        <div class="col-12 col-lg-9">
+                            <h2>Daftar Peserta Wisuda</h2>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    @include('fakultas.data-akademik.wisuda.upload-sk')
-    @include('fakultas.data-akademik.wisuda.edit-sk')
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Fakultas</label>
+                        <div class="col-md-8">
+                            <select name="fakultas" id="fakultas" required class="form-select" onchange="filterProdi()">
+                                <option value="*">-- Semua Fakultas --</option>
+                                @foreach ($fakultas as $f)
+                                <option value="{{$f->id}}">{{$f->nama_fakultas}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-2">Prodi</label>
                         <div class="col-md-8">
@@ -49,7 +57,7 @@ Pendaftaran Wisuda Fakultas
                             </select>
                         </div>
                     </div>
-                   <div class="form-group row">
+                    <div class="form-group row">
                         <label class="col-form-label col-md-2">&nbsp;</label>
                         <div class="col-md-8">
                            <div class="row mx-2">
@@ -60,7 +68,7 @@ Pendaftaran Wisuda Fakultas
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
-                        <table id="data" class="table table-bordered table-striped ">
+                        <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">NO</th>
@@ -68,12 +76,12 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
                                     <th class="text-center align-middle">SK YUDISIUM</th>
-                                    <!-- <th class="text-center align-middle">BERKAS REGISTRASI WISUDA</th> -->
+                                    <th class="text-center align-middle">BERKAS REGISTRASI WISUDA</th>
                                     <th class="text-center align-middle">NOMOR REGISTRASI</th>
                                     <th class="text-center align-middle">FOTO</th>
-                                    <th class="text-center align-middle">JENJANG</th>
+                                    <th class="text-center align-middle">FAKULTAS</th>
                                     <th class="text-center align-middle">PROGRAM STUDI</th>
-                                    <th class="text-center align-middle">GELAR</th>
+                                    <th class="text-center align-middle">JENJANG</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">NIK</th>
@@ -88,8 +96,7 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">NAMA ORANG TUA</th>
                                     <th class="text-center align-middle">ALAMAT ORANG TUA</th>
                                     <th class="text-center align-middle">TANGGAL MASUK</th>
-                                    <th class="text-center align-middle">TGL SK YUDISIUM</th>
-                                    <th class="text-center align-middle">TGL YUDISIUM</th>
+                                    <th class="text-center align-middle">TANGGAL YUDISIUM</th>
                                     <th class="text-center align-middle">MASA STUDI</th>
                                     <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
                                     <th class="text-center align-middle">SCOR USEPT</th>
@@ -97,13 +104,15 @@ Pendaftaran Wisuda Fakultas
                                 </tr>
                             </thead>
                             <tbody>
+
                             </tbody>
-					  </table>
+                        </table>
                     </div>
                 </div>
+
             </div>
         </div>
-    </div>			
+    </div>
 </section>
 @endsection
 @push('js')
@@ -111,25 +120,25 @@ Pendaftaran Wisuda Fakultas
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
-
 function getData()
 {
-    // var fakultas = $('#fakultas').val();
+    var fakultas = $('#fakultas').val();
     var prodi = $('#prodi').val();
     var periode = $('#periode').val();
 
     // console.log(fakultas, prodi, periode);
 
-    if (prodi == '' || periode == '') {
-        swal('Peringatan', 'Silahkan pilih prodi, dan periode wisuda terlebih dahulu', 'warning');
+    if (fakultas == '' || prodi == '' || periode == '') {
+        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
         return;
 
     }
 
     $.ajax({
-        url: `{{route('fakultas.wisuda.peserta.data')}}`,
+        url: `{{route('bak.wisuda.peserta.data')}}`,
         type: 'GET',
         data: {
+            fakultas: fakultas,
             prodi: prodi,
             periode: periode
         },
@@ -141,55 +150,19 @@ function getData()
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
                     // console.log(item.id);
+                    var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
+                    url_berkas = url_berkas.replace('ID', item.id);
+                    var berkasButton = '<a class="btn btn-sm btn-success" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     
                     var url_ijazah = item.ijazah_terakhir_file ? '{{ asset('') }}' + item.ijazah_terakhir_file : NULL;
                     var ijazahButton = item.ijazah_terakhir_file ? 
                         '<a class="btn btn-sm btn-success" href="' + url_ijazah + '" target="_blank"><i class="fa fa-file me-2"></i>Lihat Ijazah</a>' : 
                         '<span class="badge badge-warning text-center"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload SK Yudisium</span>';
 
-                    // var skYudisium = (item.no_sk_yudisium && item.tgl_sk_yudisium)
-                    //     ? item.no_sk_yudisium + '<br>( ' + moment(item.tgl_sk_yudisium).format('D MMMM YYYY') + ' )'
-                    //     : '-';
-
-                    var jsonData = encodeURIComponent(JSON.stringify(response.data).replace(/'/g, '&#39;'));
                     var url_sk_yudisium = item.sk_yudisium_file ? '{{ asset('') }}' + item.sk_yudisium_file : null;
-                    var skYudisiumButton = '';
-                    if (!item.sk_yudisium_file) {
-                        skYudisiumButton = `
-                            <td class="text-center align-middle">
-                                <button class="btn btn-warning btn-sm pilihSkBtn" data-id="${item.id}">
-                                    <i class="fa fa-upload"></i> Pilih SK Yudisium
-                                </button>
-                            </td>
-                        `;
-                    } else {
-                        skYudisiumButton = `
-                            <td class="text-center align-middle">
-                                <a href="{{ asset('') }}${item.sk_yudisium_file}" target="_blank" class="btn btn-success btn-sm my-2">
-                                    <i class="fa fa-file"></i> Lihat
-                                </a>
-                                <button type="button" 
-                                    class="btn btn-primary btn-sm my-2 btn-edit-sk"
-                                    data-id="${item.id}"
-                                    data-nosk="${item.sk_nama_file ?? 'Belum Diisi'}"
-                                    data-tglsk="${item.sk_tgl_surat ?? 'Belum Diisi'}"
-                                    data-tglyudisium="${item.sk_tgl_kegiatan ?? 'Belum Diisi'}"
-                                    data-file="{{ asset('') }}${item.sk_yudisium_file}"
-                                >
-                                    <i class="fa fa-edit"></i> Edit
-                                </button>
-
-                                
-                                <button type="button" class="btn btn-danger btn-sm my-2 btn-hapus-sk" data-id="${item.id}">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </button>
-                                <form id="form-hapus-sk-${item.id}" action="{{ route('fakultas.wisuda.hapus-sk-yudisium', '') }}/${item.id}" method="POST" style="display:none;">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </td>
-                        `;
-                    }
+                    var skYudisiumButton = url_sk_yudisium ? 
+                        '<a class="btn btn-sm btn-success" href="' + url_sk_yudisium + '" target="_blank"><i class="fa fa-file me-2"></i>Lihat SK Yudisium</a>' : 
+                        '<span class="badge badge-warning text-center"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload<br>SK Yudisium</span>';
 
                     var spanStatus = '';
                     if (item.approved === 0 || item.approved > 3) {
@@ -232,40 +205,39 @@ function getData()
                         </td>
                     ` : '';
 
-                    var aksi = `
-                        <td class="align-middle text-nowrap">
+                    var aksi = 
+                        `<td class="text-center align-middle text-nowrap">
                             <div class="row">
-
-                                ${item.approved == 1 ? `
-                                    <button onclick="showApproveModal(${item.id})" class="btn btn-success btn-sm my-2">
+                                ${item.approved == 2 ? `
+                                    <button 
+                                        class="btn btn-success btn-sm my-2"
+                                        title="Setujui Pengajuan"
+                                        onclick="showApproveModal(${item.id})">
                                         <i class="fa fa-check"></i> Approve
                                     </button>
-
-                                    <div class="modal fade" id="approveModal${item.id}" tabindex="-1">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered">
+                                    <div class="modal fade" id="approveModal${item.id}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
 
                                                 <div class="modal-header">
-                                                    <h5 class="modal-title">Approve & Input No Urut & Gelar</h5>
+                                                    <h5 class="modal-title">Approve Peserta</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                 </div>
 
-                                                <div class="modal-body justify-content-center row">
-                                                    <div class="col-md-12">
-                                                        <div class="mb-3">
-                                                            <label>Gelar Lulusan</label>
-                                                            <select class="form-select" id="gelar_${item.id}">
-                                                                <option value="">-- Pilih Gelar --</option>
-                                                                @foreach($gelar_lulusan as $g)
-                                                                    <option value="{{ $g->id }}">{{ $g->gelar }} ({{ $g->prodi->nama_jenjang_pendidikan }} - {{ $g->prodi->nama_program_studi }})</option>
-                                                                @endforeach
-                                                            </select>
-                                                        </div>
+                                                <div class="modal-body">
+                                                    <div class="mb-3">
+                                                        <label class="form-label">No Urut Wisuda</label>
+                                                        <input 
+                                                            type="number"
+                                                            class="form-control"
+                                                            id="no_urut_${item.id}"
+                                                            placeholder="Masukkan No Urut"
+                                                            required>
                                                     </div>
                                                 </div>
 
                                                 <div class="modal-footer">
-                                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                                     <button class="btn btn-success" onclick="submitApprove(${item.id})">
                                                         Setujui
                                                     </button>
@@ -274,39 +246,33 @@ function getData()
                                             </div>
                                         </div>
                                     </div>
-                                ` : ''}
 
-                                ${(item.approved == 1 || item.approved == 2) ? `
+                                ` : ''}
+                                ${(item.approved == 2 || item.approved == 3) ? `
                                     <button onclick="showDeclineModal(${item.id})" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan">
                                         <i class="fa fa-ban"> </i> Decline
                                     </button>
-
                                     <div class="modal fade" id="declineModal${item.id}" tabindex="-1" aria-labelledby="declineModalLabel${item.id}" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
                                             <div class="modal-content">
-
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="declineModalLabel${item.id}">Alasan Penolakan</h5>
                                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
-
                                                 <div class="modal-body">
                                                     <div class="col-md-12 mb-3">
                                                         <label for="alasan_pembatalan${item.id}" class="form-label">Alasan Penolakan</label>
-                                                        <input class="form-control" name="alasan_pembatalan" id="alasan_pembatalan${item.id}" placeholder="Masukkan alasan penolakan">
+                                                        <input class="form-control" name="alasan_pembatalan" id="alasan_pembatalan${item.id}" rows="3" placeholder="Masukkan alasan penolakan"></input>
                                                     </div>
                                                 </div>
-
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
                                                     <button type="button" class="btn btn-danger" onclick="submitDecline(${item.id})">Tolak</button>
                                                 </div>
-
                                             </div>
                                         </div>
                                     </div>
                                 ` : ''}
-
                             </div>
                         </td>`;
 
@@ -315,13 +281,13 @@ function getData()
                         item.wisuda_ke,
                         spanStatus,
                         ijazahButton,
-                        skYudisiumButton, 
-                        // skYudisium,
+                        skYudisiumButton,
+                        berkasButton,
                         item.nomor_registrasi ?? '-',
                         foto,
-                        item.jenjang,
+                        item.nama_fakultas,
                         item.nama_prodi,
-                        item.gelar ?? '-',
+                        item.jenjang,
                         item.nim,
                         item.nama_mahasiswa,
                         item.nik,
@@ -337,12 +303,10 @@ function getData()
                         item.alamat_orang_tua ?? '-',
                         item.tanggal_daftar,
                         item.tgl_sk_yudisium ?? spanStatus,
-                        item.sk_tgl_kegiatan ?? spanStatus,
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
                         item.scor_usept ?? '-',
                         aksi,
-
                         
                     ]).draw(false);
                 });
@@ -382,147 +346,148 @@ function filterProdi()
     $.each(filteredProdi, function (i, p) {
         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
     });
-
 }
 
-$(function () {
-    $('#data').DataTable({
-        "paging": true,
-        "lengthChange": true,
-        "searching": true,
-        "ordering": true,
-        "info": true,
-        "autoWidth": true,
-        // "responsive": true,
-    });
-
-    $('.btn-hapus-sk').click(function(e){
-        e.preventDefault();
-        var id = $(this).data('id');
-        swal({
-            title: 'Hapus SK Yudisium?',
-            text: "Anda yakin ingin menghapus SK Yudisium ini?",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#d33',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Ya, Hapus!',
-            cancelButtonText: 'Batal'
-        }, function(isConfirm){
-            if (isConfirm) {
-                $('#form-hapus-sk-' + id).submit();
-            }
-        });
-    });
-});
-
-function setDosenPa(data, id) {
-    // data di sini adalah array, cari objek dengan id yang sesuai
-    // data = data.replace(/&#39;/g, "'");
-    data = JSON.parse(data);
-    var peserta = Array.isArray(data) ? data.find(function(item) { return item.id == id; }) : data;
-    if (!peserta) {
-        console.log('Data peserta tidak ditemukan untuk id:', id);
-        return;
-    }
-    // console.log(peserta, peserta.no_sk_yudisium, peserta.tgl_sk_yudisium, peserta.tgl_keluar);
-    if (peserta.no_sk_yudisium) {
-        $('#no_sk_yudisium').val(peserta.no_sk_yudisium);
-    }
-    if (peserta.tgl_sk_yudisium) {
-        $('#tgl_sk_yudisium').val(peserta.tgl_sk_yudisium);
-    }
-    if (peserta.tgl_keluar) {
-        $('#tgl_yudisium').val(peserta.tgl_keluar);
-    }
-
-    // Populate other fields...
-    // document.getElementById('editForm').action = '/fakultas/pendaftaran-wisuda/' + id;
-}
-
-//TOMBOL APPROVE
 function showApproveModal(id) {
     $('#approveModal' + id).modal('show');
 }
+
 function submitApprove(id) {
-    let gelar  = $('#gelar_' + id).val();
-    // let noUrut = $('#no_urut_' + id).val();
+    console.log('=== KLIK TOMBOL SETUJUI ===');
+    console.log('ID Peserta:', id);
 
-    if (!gelar 
-    // || !noUrut
+    const noUrut = $('#no_urut_' + id).val();
+    console.log('No Urut Input:', noUrut);
 
-    ) {
-        swal("Peringatan", "Gelar wajib diisi", "warning");
+    if (!noUrut) {
+        console.warn('❌ No urut kosong');
+        swal("Validasi", "No urut wajib diisi!", "warning");
         return;
     }
 
-    swal({
-        title: "Konfirmasi",
-        text: "Setujui peserta wisuda ini?",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Setujui",
-        cancelButtonText: "Batal"
-    }, function (isConfirm) {
+    console.log('✔ Validasi no urut OK');
 
-        if (!isConfirm) return;
+    // Tutup modal terlebih dahulu (hindari aria-hidden warning)
+    $('#approveModal' + id).modal('hide');
+    console.log('Modal approve ditutup');
 
-        $.ajax({
-            url: `{{ route('fakultas.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
-            type: 'POST',
-            data: {
-                _token: '{{ csrf_token() }}',
-                // no_urut: noUrut,
-                gelar: gelar
-            },
-            success: function (response) {
+    setTimeout(function () {
 
-                const modalId = '#approveModal' + id;
+        console.log('Menampilkan SweetAlert konfirmasi');
 
-                $(modalId).one('hidden.bs.modal', function () {
-                    swal({
-                        title: "Berhasil",
-                        text: response.message,
-                        type: "success"
-                    }, function () {
-                        getData(); // 🔄 reload tabel AJAX
-                    });
+        swal({
+            title: "Apakah Anda yakin?",
+            text: "Peserta akan disetujui dengan No Urut " + noUrut,
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonText: "Ya, Setujui",
+            cancelButtonText: "Batal",
+        }, function (isConfirm) {
+
+            console.log('Hasil klik SweetAlert:', isConfirm);
+
+            if (isConfirm) {
+
+                const url = `{{ route('bak.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id);
+
+                console.log('▶️ APPROVE DISETUJUI');
+                console.log('URL:', url);
+                console.log('Payload:', {
+                    no_urut: noUrut
                 });
 
-                $(modalId).modal('hide');
-            },
-            error: function (xhr) {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                        no_urut: noUrut
+                    },
 
-                let message = "Terjadi kesalahan sistem.";
+                    beforeSend: function () {
+                        console.log('⏳ AJAX dikirim...');
+                    },
 
-                if (xhr.responseJSON?.message) {
-                    message = xhr.responseJSON.message;
-                }
+                    success: function (response) {
+                        console.log('✅ AJAX SUCCESS:', response);
 
-                swal("Gagal", message, "error");
+                        swal("Berhasil", response.message, "success");
+                        getData();
+                    },
+
+                    error: function (xhr, status, error) {
+                        console.error('❌ AJAX ERROR');
+                        console.error('Status:', status);
+                        console.error('Error:', error);
+                        console.error('Response:', xhr.responseText);
+
+                        let message = 'Terjadi kesalahan.';
+                        if (xhr.responseJSON?.message) {
+                            message = xhr.responseJSON.message;
+                        }
+
+                        swal("Gagal", message, "error");
+                    }
+                });
+
+            } else {
+                console.log('⛔ Approve dibatalkan oleh user');
             }
         });
 
-    });
+    }, 300);
 }
 
 
 
+// function submitApprove(id) {
+//     swal({
+//         title: "Apakah Anda yakin?",
+//         text: "Peserta dengan ID " + id + " akan disetujui?",
+//         type: "warning",
+//         showCancelButton: true,
+//         confirmButtonText: "Lanjutkan",
+//         cancelButtonText: "Batal",
+//         confirmButtonColor: "#3085d6",
+//         cancelButtonColor: "#d33",
+//         closeOnConfirm: false,
+//         closeOnCancel: true
+//     }, function (isConfirm) {
+//         if (isConfirm) {
+//             $.ajax({
+//                 url: `{{ route('bak.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
+//                 type: 'POST',
+//                 data: {
+//                     _token: '{{ csrf_token() }}'
+//                 },
+//                 success: function (response) {
+//                     if (response.status === 'success') {
+//                         swal("Berhasil", response.message, "success");
+//                         getData();
+//                     } else {
+//                         swal("Gagal", response.message, "error");
+//                     }
+//                 },
+//                 error: function () {
+//                     swal("Gagal", "Terjadi kesalahan saat menyetujui peserta.", "error");
+//                 }
+//             });
+//         }
+//     });
+// }
+
+
 // Tambahkan fungsi berikut agar tombol Decline berfungsi
-// Tampilkan Modal Decline
 function showDeclineModal(id) {
     $('#declineModal' + id).modal('show');
 }
 
-// Submit Penolakan
 function submitDecline(id) {
     var alasan = $('#alasan_pembatalan' + id).val();
-
     if (!alasan) {
         swal('Peringatan', 'Silakan isikan alasan penolakan.', 'warning');
         return;
     }
-
     swal({
         title: "Konfirmasi Penolakan",
         text: "Apakah Anda yakin ingin menolak peserta ini?",
@@ -531,52 +496,28 @@ function submitDecline(id) {
         confirmButtonColor: '#d33',
         cancelButtonColor: '#3085d6',
         confirmButtonText: 'Ya, Tolak',
-        cancelButtonText: 'Batal'
+        cancelButtonText: 'Batal',
     }, function(isConfirmed) {
-
         if (isConfirmed) {
+            // console.log('alasan_pembatalan:', alasan);
             $.ajax({
-                url: `{{ route('fakultas.wisuda.peserta.decline', ['id' => 'ID']) }}`.replace('ID', id),
+                url: `{{route('bak.wisuda.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
                 type: 'POST',
-                dataType: 'json',
                 data: {
                     _token: '{{ csrf_token() }}',
                     status: 0,
                     alasan: alasan
                 },
-
                 success: function(response) {
                     if (response.status === 'success') {
-
-                        // 🟢 FIX: Hilangkan fokus sebelum modal ditutup
-                        $('body').focus();
-
-                        // Tutup modal
+                        swal('Berhasil', response.message, 'success');
                         $('#declineModal' + id).modal('hide');
-
-                        // Tunggu modal selesai ditutup (300–350ms)
-                        setTimeout(function() {
-
-                            // FIX: Hapus backdrop jika masih tersisa
-                            $('.modal-backdrop').remove();
-
-                            // Tampilkan swal success
-                            swal({
-                                title: "Berhasil",
-                                text: response.message,
-                                type: "success"
-                            }, function() {
-                                getData(); // refresh data tabel
-                            });
-
-                        }, 350);
-
+                        getData();
                     } else {
                         console.log('Decline failed:', response);
                         swal('Gagal', response.message, 'error');
                     }
                 },
-
                 error: function(xhr) {
                     console.log('Decline error:', xhr.responseText);
                     swal('Gagal', 'Terjadi kesalahan saat menolak peserta.', 'error');
@@ -586,62 +527,13 @@ function submitDecline(id) {
     });
 }
 
-$(document).on('click', '.btn-hapus-sk', function () {
-    const id = $(this).data('id');
+$(function () {
+    // "use strict";
+    $('#data').DataTable();
 
-    swal({
-        title: "Yakin?",
-        text: "SK Yudisium akan dihapus!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Ya, Hapus",
-        cancelButtonText: "Batal",
-        closeOnConfirm: false // ⬅️ penting agar swal tidak nutup sebelum AJAX
-    }, function (isConfirm) {
-
-        if (!isConfirm) return;
-
-        $.ajax({
-            url: `{{ route('fakultas.wisuda.hapus-sk-yudisium', ['id' => 'ID']) }}`.replace('ID', id),
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                _token: '{{ csrf_token() }}',
-                _method: 'DELETE'
-            },
-            success: function (response) {
-
-                swal({
-                    title: "Berhasil",
-                    text: response.message || "SK Yudisium berhasil dihapus.",
-                    type: "success"
-                }, function () {
-                    // 🔄 reload tabel setelah klik OK
-                    getData();
-                });
-
-            },
-            error: function (xhr) {
-
-                let message = "Terjadi kesalahan sistem.";
-
-                if (xhr.status === 422 && xhr.responseJSON?.message) {
-                    message = xhr.responseJSON.message;
-                } else if (xhr.responseJSON?.message) {
-                    message = xhr.responseJSON.message;
-                }
-
-                swal("Gagal", message, "error");
-            }
-        });
-
-    });
+    $('#fakultas').select2();
+    $('#prodi').select2();
+    $('#periode').select2();
 });
-
-
-
-
 </script>
-
 @endpush
-

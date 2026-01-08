@@ -99,7 +99,7 @@ Daftar Peserta Wisuda
                                     <th class="text-center align-middle">TANGGAL YUDISIUM</th>
                                     <th class="text-center align-middle">MASA STUDI</th>
                                     <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
-                                    <th class="text-center align-middle">SCOR USEPT</th>
+                                    <th class="text-center align-middle">SKOR USEPT</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -145,7 +145,7 @@ function getData()
         success: function (response) {
 
             if (response.status === 'success') {
-                // console.log(response.data);
+                console.log(response.data);
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
@@ -240,6 +240,27 @@ function getData()
                             </div>
                         </td>`;
 
+                    var useptData = item.useptdata
+                        ? `
+                            <div class="text-center">
+                                <span class="text-${item.useptdata.class}">
+                                    <strong>${item.useptdata.score}</strong>
+                                </span>
+                                <br>
+                                <span class="badge ${
+                                    item.useptdata.class === 'success'
+                                        ? 'bg-success'
+                                        : 'bg-danger'
+                                }">
+                                    ${item.useptdata.status}
+                                </span>
+                            </div>
+                        `
+                        : '-';
+
+
+
+
                     table.row.add([
                         index + 1,
                         item.wisuda_ke,
@@ -269,7 +290,7 @@ function getData()
                         item.tgl_sk_yudisium ?? spanStatus,
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
-                        item.scor_usept ?? '-',
+                        useptData,
                         aksi,
                         
                     ]).draw(false);
@@ -310,46 +331,58 @@ function filterProdi()
     $.each(filteredProdi, function (i, p) {
         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
     });
-
 }
+
 
 function approvePeserta(id) {
     swal({
         title: "Apakah Anda yakin?",
-        text: `Peserta dengan ID ${id} akan disetujui.`,
+        text: "Peserta dengan ID " + id + " akan disetujui?",
         type: "warning",
         showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Lanjutkan',
-        cancelButtonText: 'Batal',
-    }, function(isConfirmed) {
-        if (isConfirmed) {
+        confirmButtonText: "Lanjutkan",
+        cancelButtonText: "Batal",
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        closeOnConfirm: false,
+        closeOnCancel: true
+    }, function (isConfirm) {
+        if (isConfirm) {
             $.ajax({
-                url: `{{route('bak.wisuda.peserta.approve', ['id' => 'ID'])}}`.replace('ID', id),
+                url: `{{ route('bak.wisuda.peserta', ['id' => 'ID']) }}`.replace('ID', id),
                 type: 'POST',
                 data: {
-                    _token: '{{ csrf_token() }}',
-                    status: 1
+                    _token: '{{ csrf_token() }}'
                 },
-                success: function(response) {
+                success: function (response) {
+                    // console.log('Response success:', response);
+
                     if (response.status === 'success') {
-                        // console.log('Approval successful:', response.data);
-                        swal('Berhasil', response.message, 'success');
+                        swal("Berhasil", response.message, "success");
                         getData();
                     } else {
-                        // console.log('Approval failed:', response.data);
-                        swal('Gagal', response.message, 'error');
+                        // console.error('Response error:', response.message);
+                        swal("Gagal", response.message, "error");
                     }
                 },
-                error: function(xhr) {
-                    // console.log('Approval failed:', response.data);
-                    swal('Gagal', 'Terjadi kesalahan saat menyetujui peserta.', 'error');
+                error: function (xhr) {
+                    // console.error('AJAX error:', xhr);
+
+                    let message = 'Terjadi kesalahan saat menyetujui peserta.';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        message = xhr.responseJSON.message; // 👈 pesan $e
+                    }
+
+                    swal("Gagal", message, "error");
                 }
             });
         }
-    })
+    });
 }
+
+
+
 
 // Tambahkan fungsi berikut agar tombol Decline berfungsi
 function showDeclineModal(id) {
@@ -393,7 +426,7 @@ function submitDecline(id) {
                     }
                 },
                 error: function(xhr) {
-                    console.log('Decline error:', xhr.responseText);
+                    // console.log('Decline error:', xhr.responseText);
                     swal('Gagal', 'Terjadi kesalahan saat menolak peserta.', 'error');
                 }
             });

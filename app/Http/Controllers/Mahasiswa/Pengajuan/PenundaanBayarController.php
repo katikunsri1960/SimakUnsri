@@ -26,8 +26,8 @@ class PenundaanbayarController extends Controller
 
         $today = Carbon::now()->toDateString();
 
-        if($semester_aktif->batas_bayar_ukt){
-            if($today > $semester_aktif->batas_bayar_ukt){
+        if($semester_aktif->batas_tunda_bayar){
+            if($today > $semester_aktif->batas_tunda_bayar){
             // return redirect()->back()->with('error', 'Periode Pengajuan Penundaan Bayar telah berakhir!');
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat mengajukan Penundaan Bayar, Periode pengajuan Penundaan Bayar telah berakhir!');
             }
@@ -61,8 +61,8 @@ class PenundaanbayarController extends Controller
         $penundaan_bayar = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
                             ->get();
 
-        if($semester_aktif->batas_bayar_ukt){
-            if($today > $semester_aktif->batas_bayar_ukt){
+        if($semester_aktif->batas_tunda_bayar){
+            if($today > $semester_aktif->batas_tunda_bayar){
                 return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat mengajukan Penundaan Bayar, Periode pengajuan Penundaan Bayar telah berakhir!');
             }
         }

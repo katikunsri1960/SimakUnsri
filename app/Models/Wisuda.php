@@ -47,7 +47,7 @@ class Wisuda extends Model
         'kosentrasi',
         'pas_foto',
         'lokasi_kuliah',
-        'tanggal_sk_pembimbing',
+        'tgl_sk_pembimbing',
         'no_sk_pembimbing',
         'judul_eng',
         'abstrak_ta',
@@ -128,10 +128,10 @@ class Wisuda extends Model
             '0' => 'Belum Diapproved',
             '1' => 'Disetujui Prodi',
             '2' => 'Disetujui Fakultas',
-            '3' => 'Disetujui BAK',
+            '3' => 'Disetujui Dir. Akademik',
             '97' => 'Ditolak Prodi',
             '98' => 'Ditolak Fakultas',
-            '99' => 'Ditolak BAK',
+            '99' => 'Ditolak Dir. Akademik',
         ];
 
         return $status[$this->approved];
