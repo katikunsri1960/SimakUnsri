@@ -24,12 +24,80 @@ class MahasiswaController extends Controller
 
         return $count;
     }
-
     public function sync_mahasiswa()
+    {
+        $semester = Semester::orderBy('id_semester')
+            ->pluck('id_semester');
+
+        $data = [
+            [
+                'act'   => 'GetBiodataMahasiswa',
+                'count' => 'GetCountBiodataMahasiswa',
+                'order' => 'id_mahasiswa',
+                'job'   => \App\Jobs\Mahasiswa\BiodataJob::class
+            ],
+            [
+                'act'   => 'GetListMahasiswaLulusDO',
+                'count' => 'GetCountMahasiswaLulusDO',
+                'order' => 'id_registrasi_mahasiswa',
+                'job'   => \App\Jobs\SyncJob::class
+            ]
+        ];
+
+        $batch = Bus::batch([])->dispatch();
+
+        foreach ($data as $d) {
+
+            // Job tanpa filter semester
+            if (!isset($d['filter'])) {
+
+                $count = $this->count_value($d['count']);
+                $limit = 1000;
+
+                for ($i = 0; $i < $count; $i += $limit) {
+                    $batch->add(
+                        new $d['job'](
+                            $d['act'], $i, $limit, $d['order'] ?? null
+                        )
+                    );
+                }
+
+                continue;
+            }
+        }
+
+        // === Riwayat Pendidikan → per semester ===
+        foreach ($semester as $idSemester) {
+
+            $count = $this->count_value(
+                'GetCountRiwayatPendidikanMahasiswa',
+                "id_periode_masuk = '{$idSemester}'"
+            );
+
+            $limit = 1000;
+
+            for ($i = 0; $i < $count; $i += $limit) {
+                $batch->add(
+                    new \App\Jobs\Mahasiswa\RiwayatPendidikanJob(
+                        'GetListRiwayatPendidikanMahasiswa',
+                        $i,
+                        $limit,
+                        'id_registrasi_mahasiswa',
+                        "id_periode_masuk = '{$idSemester}'"
+                    )
+                );
+            }
+        }
+
+        return redirect()->route('univ.mahasiswa');
+    }
+
+
+   /* public function sync_mahasiswa()
     {
         $data = [
             ['act' => 'GetBiodataMahasiswa', 'count' => 'GetCountBiodataMahasiswa', 'order' => 'id_mahasiswa', 'job' => \App\Jobs\Mahasiswa\BiodataJob::class],
-            ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'filter' => "id_periode_masuk = '20251'",'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class],
+            ['act' => 'GetListRiwayatPendidikanMahasiswa', 'count' => 'GetCountRiwayatPendidikanMahasiswa', 'order' => 'id_registrasi_mahasiswa', 'filter' => "id_periode_masuk = '20252'",'job' => \App\Jobs\Mahasiswa\RiwayatPendidikanJob::class],
             ['act' => 'GetListMahasiswaLulusDO', 'count' => 'GetCountMahasiswaLulusDO', 'order' => 'id_registrasi_mahasiswa', 'job' => \App\Jobs\SyncJob::class]
         ];
 
@@ -63,7 +131,7 @@ class MahasiswaController extends Controller
 
         return redirect()->route('univ.mahasiswa');
 
-    }
+    }*/
 
     public function daftar_mahasiswa_data(Request $request)
     {
