@@ -374,6 +374,7 @@ class KrsController extends Controller
 
         $penundaan_pembayaran = PenundaanBayar::where('id_registrasi_mahasiswa', $id_reg)
             ->where('id_semester', $semester_aktif->id_semester)
+            ->where('status', 4)
             ->count();
 
         $pembayaran_manual = PembayaranManualMahasiswa::with(['semester', 'riwayat'])

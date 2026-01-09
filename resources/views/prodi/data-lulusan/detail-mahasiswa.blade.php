@@ -157,7 +157,7 @@ Dashboard
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                        <!-- <div class="row">
                              <div class="col-lg-12">
                                 <div class="form-group">
                                     <div class="mb-2">
@@ -173,7 +173,7 @@ Dashboard
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         @if($data->prodi->bku_pada_ijazah == 1)
                             <div class="row">
                                 <div class="col-lg-12">
