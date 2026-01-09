@@ -129,7 +129,7 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="treeview {{request()->routeIs('bak.wisuda.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('fakultas.wisuda.index.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i>
                             <span>Wisuda</span>

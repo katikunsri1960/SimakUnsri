@@ -144,7 +144,8 @@
                     </li>
                     <li class="{{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*')
                                 ? 'active' : ''}}">
-                        <a href="{{route('prodi.data-lulusan.index')}}"><i class="fa fa-university"><span class="path1"></span><span class="path2"></span></i> Ajuan Wisuda</a>
+                        <a href="{{route('prodi.data-lulusan.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i> 
+                        Wisuda</a>
                     </li>
                     <li class="header">Report & Monitoring</li>
                     <li class="treeview {{request()->routeIs('prodi.report.*') ? 'active menu-open' : ''}}">
