@@ -349,7 +349,7 @@ function approvePeserta(id) {
     }, function (isConfirm) {
         if (isConfirm) {
             $.ajax({
-                url: `{{ route('bak.wisuda.peserta', ['id' => 'ID']) }}`.replace('ID', id),
+                url: `{{ route('bak.wisuda.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
