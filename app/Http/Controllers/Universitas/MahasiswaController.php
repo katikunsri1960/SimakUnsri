@@ -25,7 +25,7 @@ class MahasiswaController extends Controller
 
         return $count;
     }
-    /*public function sync_mahasiswa()
+    public function sync_mahasiswa()
     {
         $semester = Semester::orderBy('id_semester')
             ->pluck('id_semester');
@@ -54,13 +54,22 @@ class MahasiswaController extends Controller
 
                 $count = $this->count_value($d['count']);
                 $limit = 1000;
+                $act = $d['act'];
+                $order = $d['order'] ?? null;
+                $filter = $d['filter'] ?? null;
 
-                for ($i = 0; $i < $count; $i += $limit) {
-                    $batch->add(
-                        new $d['job'](
-                            $d['act'], $i, $limit, $d['order'] ?? null, $d['filter'] ?? null
-                        )
-                    );
+                if ($d['act'] == 'GetListMahasiswaLulusDO') {
+
+                    for ($i=0; $i < $count; $i+=$limit) {
+                        $job = new $d['job']($act, $i, $limit, $order, null, \App\Models\Mahasiswa\LulusDo::class, 'id_registrasi_mahasiswa');
+                        $batch->add($job);
+                    }
+
+                } else {
+                    for ($i=0; $i < $count; $i+=$limit) {
+                        $job = new $d['job']($act, $i, $limit, $order, $filter);
+                        $batch->add($job);
+                    }
                 }
 
                 continue;
@@ -91,10 +100,10 @@ class MahasiswaController extends Controller
         }
 
         return redirect()->route('univ.mahasiswa');
-    }*/
+    }
 
 
-    public function sync_mahasiswa()
+    /*public function sync_mahasiswa()
     {
         $data = [
             ['act' => 'GetBiodataMahasiswa', 'count' => 'GetCountBiodataMahasiswa', 'order' => 'id_mahasiswa', 'job' => \App\Jobs\Mahasiswa\BiodataJob::class],
@@ -132,7 +141,7 @@ class MahasiswaController extends Controller
 
         return redirect()->route('univ.mahasiswa');
 
-    }
+    }*/
 
     public function daftar_mahasiswa_data(Request $request)
     {
