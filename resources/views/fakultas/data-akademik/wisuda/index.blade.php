@@ -262,6 +262,17 @@ function getData()
                                                             </select>
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-12">
+                                                        <div class="mb-3">
+                                                            <label>Predikat Lulusan</label>
+                                                            <select class="form-select" id="predikat_${item.id}">
+                                                                <option value="">-- Pilih Predikat --</option>
+                                                                @foreach($predikat_lulusan as $p)
+                                                                    <option value="{{ $p->id }}">{{ $p->indonesia }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                 </div>
 
                                                 <div class="modal-footer">
@@ -446,13 +457,16 @@ function showApproveModal(id) {
 }
 function submitApprove(id) {
     let gelar  = $('#gelar_' + id).val();
+    let predikat  = $('#predikat_' + id).val();
     // let noUrut = $('#no_urut_' + id).val();
 
-    if (!gelar 
-    // || !noUrut
-
-    ) {
+    if (!gelar ) {
         swal("Peringatan", "Gelar wajib diisi", "warning");
+        return;
+    }
+
+    if (!predikat) {
+        swal("Peringatan", "Predikat wajib diisi", "warning");
         return;
     }
 
@@ -474,6 +488,7 @@ function submitApprove(id) {
                 _token: '{{ csrf_token() }}',
                 // no_urut: noUrut,
                 gelar: gelar
+                , predikat: predikat
             },
             success: function (response) {
 
@@ -634,12 +649,8 @@ $(document).on('click', '.btn-hapus-sk', function () {
                 swal("Gagal", message, "error");
             }
         });
-
     });
 });
-
-
-
 
 </script>
 

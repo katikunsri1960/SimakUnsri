@@ -7,6 +7,7 @@ use Ramsey\Uuid\Uuid;
 use App\Models\Wisuda;
 use App\Models\FileFakultas;
 use App\Models\ProgramStudi;
+use App\Models\Semester;
 use Illuminate\Http\Request;
 use App\Models\PeriodeWisuda;
 use App\Models\SemesterAktif;
@@ -31,6 +32,10 @@ use App\Models\Perkuliahan\RevisiSidangMahasiswa;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Referensi\GelarLulusan;
 use App\Models\Referensi\PredikatKelulusan;
+use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\NilaiTransferPendidikan;
+
 use Illuminate\Support\Facades\Validator;
 
 
@@ -57,14 +62,14 @@ class WisudaController extends Controller
                 ->pluck('id_prodi'))
                 ->get();
 
-        $predikat = PredikatKelulusan::get();
+        $predikat_lulusan = PredikatKelulusan::get();
         // dd($gelar_lulusan);
 
         return view('fakultas.data-akademik.wisuda.index', [
             'prodi' => $prodi,
             'periode' => $periode,
             'gelar_lulusan' => $gelar_lulusan,
-            'predikat' => $predikat,
+            'predikat_lulusan' => $predikat_lulusan,
         ]);
     }
 
@@ -239,6 +244,7 @@ class WisudaController extends Controller
             $validator = Validator::make($request->all(), [
                 // 'no_urut' => 'required|numeric',
                 'gelar'   => 'required|exists:gelar_lulusans,id',
+                'predikat' => 'required|exists:predikat_kelulusans,id'
             ]);
 
             if ($validator->fails()) {
@@ -261,6 +267,7 @@ class WisudaController extends Controller
                 'approved'         => 2,
                 // 'no_urut'          => $request->no_urut,
                 'id_gelar_lulusan' => $request->gelar,
+                'id_predikat_kelulusan' => $request->predikat,
             ]);
 
             DB::commit();
@@ -279,6 +286,84 @@ class WisudaController extends Controller
                 'message' => 'Terjadi kesalahan sistem.',
             ], 500);
         }
+    }
+
+    public function khs_index(Request $request)
+    {
+        $semesters = Semester::orderBy('id_semester', 'desc')->get();
+        $semesterAktif = SemesterAktif::with('semester')->first();
+        return view('fakultas.data-akademik.wisuda.khs-transkrip',[
+            'semesters' => $semesters,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function khs_transkrip_data(Request $request)
+    {
+        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
+                    ->pluck('id_prodi');
+
+                    // dd($id_prodi_fak);
+        // $semester = $request->semester;
+        $nim = $request->nim;
+
+        $riwayat = RiwayatPendidikan::with('dosen_pa','prodi', 'prodi.jurusan', 'prodi.fakultas')
+                    ->whereHas('prodi', function($query) {
+                            $query->where('status', 'A');
+                        })
+                    ->where('nim', $nim)
+                    ->whereIn('id_prodi', $id_prodi_fak)
+                    ->first();
+
+        // dd($riwayat);
+        if (!$riwayat) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data mahasiswa tidak ditemukan',
+            ]);
+        }
+
+        $nilai = NilaiPerkuliahan::with('semester')
+                ->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                ->orderBy('kode_mata_kuliah', 'desc')
+                ->orderBy('nama_kelas_kuliah')
+                ->orderBy('id_semester')
+                ->get();
+
+        $konversi = KonversiAktivitas::with(['matkul', 'semester'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+                    // ->where('id_semester', $semester)
+                    ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                    ->get();
+
+        $transfer = NilaiTransferPendidikan::with('semester')->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                    // ->where('id_semester', $semester)
+                    ->get();
+
+        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                // ->where('id_semester', $semester)
+                ->orderBy('id_semester', 'desc')
+                ->get();
+
+        if($nilai->isEmpty() && $konversi->isEmpty() && $transfer->isEmpty()) {
+            $response = [
+                'status' => 'error',
+                'message' => 'Data KHS tidak ditemukan!',
+            ];
+            return response()->json($response);
+        }
+
+        $response = [
+            'status' => 'success',
+            'message' => 'Data KRS berhasil diambil',
+            'nilai' => $nilai,
+            'transfer' => $transfer,
+            'konversi' => $konversi,
+            'riwayat' => $riwayat,
+            'akm' => $akm,
+        ];
+
+
+        return response()->json($response);
     }
 
 

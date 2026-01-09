@@ -439,6 +439,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::put('/edit-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'editSkYudisium'])->name('fakultas.wisuda.edit-sk-yudisium');
                 Route::delete('/hapus-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'deleteSkYudisium'])->name('fakultas.wisuda.hapus-sk-yudisium');
 
+                Route::get('/khs', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_index'])->name('fakultas.wisuda.khs-index');   
+                Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_transkrip_data'])->name('fakultas.wisuda.khs-transkrip-data');   
+                
                 Route::prefix('sk-yudisium')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
                     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.wisuda.sk-yudisium.store');

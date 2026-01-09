@@ -129,11 +129,30 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
+                    <li class="treeview {{request()->routeIs('bak.wisuda.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Wisuda</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('fakultas.wisuda.index') || request()->routeIs('fakultas.wisuda.index.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.wisuda.index')}}"><i class="icon-Commit"><span class="path1"></span>
+                                <span class="path2"></span></i>Peserta Wisuda</a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.wisuda.khs-index') || request()->routeIs('fakultas.wisuda.khs-index.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.wisuda.khs-index')}}"><i class="icon-Commit"><span class="path1"></span>
+                                <span class="path2"></span></i>Daftar MK Mahasiswa</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
                         <a href="{{route('fakultas.wisuda.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><spanclass="path2"></spanclass=></i>
                             <span>Wisuda</span>
                         </a>
-                    </li>
+                    </li> -->
                     
 
                     <li class="header">Monitoring</li>
