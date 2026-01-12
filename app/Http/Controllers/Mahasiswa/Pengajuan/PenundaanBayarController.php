@@ -95,9 +95,9 @@ class PenundaanbayarController extends Controller
 
         // Jika sudah ada Penundaan Bayar yang sedang diproses, tampilkan pesan error
         if ($existingData) {
-            if ($existingData->approved == 0) {
+            if ($existingData->status == 0) {
                 return redirect()->back()->with('error', 'Anda sudah memiliki Penundaan Bayar yang sedang diproses. Tunggu persetujuan atau batalkan pengajuan sebelum membuat pengajuan baru.');
-            } elseif ($existingData->approved > 0) {
+            } elseif ($existingData->status > 0) {
                 return redirect()->back()->with('error', 'Anda sudah memiliki Penundaan Bayar yang sudah diproses!');
             }
         }
@@ -160,7 +160,7 @@ class PenundaanbayarController extends Controller
                 return redirect()->route('mahasiswa.penundaan-bayar.index')->with('error', 'Pengajuan Penundaan Bayar tidak ditemukan.');
             }
 
-            if ($penundaan->approved != 0) {
+            if ($penundaan->status > 0) {
                 return redirect()->route('mahasiswa.penundaan-bayar.index')->with('error', 'Pengajuan Penundaan Bayar tidak dapat dihapus! Pengajuan Penundaan Bayar sudah disetujui!');
             }
 

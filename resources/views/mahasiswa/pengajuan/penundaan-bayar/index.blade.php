@@ -60,21 +60,21 @@ PENUNDAAN BAYAR
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->semester->nama_semester}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->keterangan ?? '-'}}</td>
                                         <td class= "text-center align-middle text-nowrap">
-                                            <a href="{{ $d->file_pendukung ? asset('storage/' . $d->file_pendukung) : '#' }}" target="_blank" class="btn btn-sm btn-primary mb-5 {{ $d->file_pendukung ? '' : 'd-none' }}">
+                                            <a href="{{ $d->file_pendukung ? asset('storage/' . $d->file_pendukung) : '#' }}" target="_blank" class="btn btn-sm p-2 rounded btn-primary mb-5 {{ $d->file_pendukung ? '' : 'd-none' }}">
                                                 <i class="fa fa-file-pdf-o"></i> Lihat File
                                             </a>
                                         </td>
                                         <td class="text-center align-middle" style="width:10%">
-                                            @if($d->approved == 0)
-                                                <span class="badge badge-l badge-danger mb-5">Diajukan</span>
-                                            @elseif($d->approved == 2)
-                                                <span class="badge badge-l badge-warning mb-5">Disetujui Koor. Prodi</span>
-                                            @elseif($d->approved == 3)
-                                                <span class="badge badge-l badge-success mb-5">Disetujui Fakultas</span>
-                                            @elseif($d->approved == 4)
-                                                <span class="badge badge-l badge-warning mb-5">Disetujui BAK</span>
-                                            @elseif($d->approved == 5)
-                                                <span class="badge badge-l badge-success mb-5">Ditolak</span>
+                                            @if($d->status == 0)
+                                                <span class="badge badge-xl rounded badge-warning mb-5">Diajukan</span>
+                                            @elseif($d->status == 2)
+                                                <span class="badge badge-xl rounded badge-primary mb-5">Disetujui Koor. Prodi</span>
+                                            @elseif($d->status == 3)
+                                                <span class="badge badge-xl rounded badge-primary mb-5">Disetujui Fakultas</span>
+                                            @elseif($d->status == 4)
+                                                <span class="badge badge-xl rounded badge-success mb-5">Disetujui BAK</span>
+                                            @elseif($d->status == 5)
+                                                <span class="badge badge-xl rounded badge-danger mb-5">Ditolak</span>
                                             @endif
                                         </td>
                                         <td class="text-start align-middle">{{$d->alasan_pembatalan}}</td>
@@ -83,7 +83,7 @@ PENUNDAAN BAYAR
                                                 @csrf
                                                 @method('delete')
                                                 <button type="submit" class="btn btn-danger" data-id="{{ $d->id }}" title="Hapus Data" 
-                                                    {{ $d->approved != 0 ? 'disabled' : '' }}>
+                                                    {{ $d->status != 0 ? 'disabled' : '' }}>
                                                     <i class="fa fa-trash"></i>
                                                 </button>
                                             </form>

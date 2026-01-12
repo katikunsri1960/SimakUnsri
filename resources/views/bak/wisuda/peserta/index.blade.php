@@ -74,6 +74,7 @@ Daftar Peserta Wisuda
                                     <th class="text-center align-middle">NO</th>
                                     <th class="text-center align-middle">PERIODE</th>
                                     <th class="text-center align-middle">STATUS</th>
+                                    <th class="text-center align-middle">PREDIKAT LULUSAN</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
                                     <th class="text-center align-middle">SK YUDISIUM</th>
                                     <th class="text-center align-middle">BERKAS REGISTRASI WISUDA</th>
@@ -131,7 +132,6 @@ function getData()
     if (fakultas == '' || prodi == '' || periode == '') {
         swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
         return;
-
     }
 
     $.ajax({
@@ -145,7 +145,8 @@ function getData()
         success: function (response) {
 
             if (response.status === 'success') {
-                console.log(response.data);
+                //CEK DATA PADA CONSOLE
+                // console.log(response.data);
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
@@ -183,27 +184,100 @@ function getData()
                                     namaOrtu = item.nama_ibu_kandung;
                                 }
                     var alamat = 'RT ' + item.rt + ' RW ' + item.rw + ', ' + item.dusun + ', ' + item.kelurahan + ', ' + item.jalan + ', ' + item.nama_wilayah;
+                    
                     var foto = item.pas_foto ? `
-                        <td class="text-center align-middle text-nowrap">
-                            <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal${item.id}">
-                                <img src="{{ asset('') }}${item.pas_foto}" alt="Pas Foto" style="width: 150px;" title="Lihat Foto">
-                            </a>
-                            <!-- Modal -->
-                            <div class="modal fade" id="fotoModal${item.id}" tabindex="-1" aria-labelledby="fotoModalLabel${item.id}" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content rounded-3">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="fotoModalLabel${item.id}">FOTO ${item.nama_mahasiswa}</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body text-center m-20">
-                                            <img src="{{ asset('') }}${item.pas_foto}" alt="Foto" style="width: 100%; max-width: 500px;" class="rounded-3">
-                                        </div>
+                    <td class="text-center align-middle text-nowrap">
+
+                        <!-- Thumbnail -->
+                        <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal${item.id}">
+                            <img src="{{ asset('storage') }}/${item.pas_foto}"
+                                alt="Pas Foto"
+                                style="width: 120px; cursor:pointer"
+                                class="rounded mb-1"
+                                title="Lihat Foto">
+                        </a>
+
+                        <!-- Tombol Edit -->
+                        <div class="mt-1">
+                            <button class="btn btn-sm btn-warning"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editFotoModal${item.id}">
+                                <i class="fa fa-edit"></i> Edit
+                            </button>
+                        </div>
+
+                        <!-- Modal Lihat Foto -->
+                        <div class="modal fade" id="fotoModal${item.id}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                <div class="modal-content rounded-3">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">FOTO ${item.nama_mahasiswa}</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body text-center">
+                                        <img src="{{ asset('storage') }}/${item.pas_foto}"
+                                            class="img-fluid rounded">
                                     </div>
                                 </div>
                             </div>
-                        </td>
-                    ` : '';
+                        </div>
+
+                        <!-- Modal Edit Foto -->
+                        <div class="modal fade" id="editFotoModal${item.id}" tabindex="-1">
+                            <div class="modal-dialog modal-dialog-centered">
+                                <div class="modal-content rounded-3">
+                                    <form method="POST"
+                                        action="{{ route('bak.wisuda.peserta.update-foto') }}"
+                                        enctype="multipart/form-data">
+                                        @csrf
+
+                                        <input type="hidden" name="id" value="${item.id}">
+
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Upload Ulang Foto</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+
+                                        <div class="modal-body">
+                                            <div class="text-center mb-3">
+                                                <img src="{{ asset('storage') }}/${item.pas_foto}"
+                                                    class="img-fluid rounded"
+                                                    style="max-width:200px">
+                                                <small class="d-block mt-2 text-muted">
+                                                    Foto lama
+                                                </small>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Pas Foto Baru</label>
+                                                <input type="file"
+                                                    name="pas_foto"
+                                                    class="form-control"
+                                                    accept="image/*"
+                                                    required>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="button"
+                                                    class="btn btn-secondary"
+                                                    data-bs-dismiss="modal">
+                                                Batal
+                                            </button>
+                                            <button type="submit"
+                                                    class="btn btn-primary">
+                                                <i class="fa fa-upload"></i> Simpan
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+
+                    </td>
+                    ` : '-';
+
+
 
                     var aksi = 
                         `<td class="text-center align-middle text-nowrap">
@@ -265,6 +339,7 @@ function getData()
                         index + 1,
                         item.wisuda_ke,
                         spanStatus,
+                        item.predikat_kelulusan ?? '-',
                         ijazahButton,
                         skYudisiumButton,
                         berkasButton,

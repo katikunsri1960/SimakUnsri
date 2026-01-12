@@ -13,6 +13,7 @@ use App\Models\Connection\CourseUsept;
 use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use DateTime;
 
 class MahasiswaEligibleController extends Controller
@@ -127,6 +128,43 @@ class MahasiswaEligibleController extends Controller
 
         // dd($data);
         return view('prodi.data-lulusan.mahasiswa-eligible', ['data' => $data ]);
+    }
+
+    public function update_foto(Request $request)
+    {
+        // dd($request->all());
+        $request->validate([
+            'id' => 'required',
+            'pas_foto' => 'required|image|mimes:jpg,jpeg,png|max:512',
+        ], [
+            'pas_foto.max' => 'Ukuran pas foto maksimal 500 KB.',
+        ]);
+
+        $wisuda = Wisuda::findOrFail($request->id);
+
+        if ($wisuda->approved >=1) {
+            return back()->with('error', 'Ajuan telah di Approve, Silahkan hubungi Direktorat Akademik untuk melakukan perbaikan.');
+        }
+
+        // Hapus foto lama
+        if ($wisuda->pas_foto && Storage::disk('public')->exists($wisuda->pas_foto)) {
+            Storage::disk('public')->delete($wisuda->pas_foto);
+        }
+
+        // Nama file custom
+        $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $wisuda->nim) . '.' .
+            $request->file('pas_foto')->getClientOriginalExtension();
+
+        // Simpan foto baru (PATH BENAR)
+        $path = $request->file('pas_foto')
+            ->storeAs('wisuda/pas_foto', $pasFotoName, 'public');
+
+        // Update DB
+        $wisuda->update([
+            'pas_foto' => $path
+        ]);
+
+        return back()->with('success', 'Foto berhasil diperbarui');
     }
 
     public function detail_mahasiswa($id)
@@ -328,7 +366,8 @@ class MahasiswaEligibleController extends Controller
 
             DB::commit();
 
-            return redirect()->route('prodi.data-lulusan.detail', $id)->with('success', 'Data Berhasil di Setujui');
+            // return redirect()->route('prodi.data-lulusan.detail', $id)->with('success', 'Data Berhasil di Setujui');
+            return redirect()->route('prodi.data-lulusan.index')->with('success', 'Data Berhasil di Setujui');
 
         } catch (\Throwable $th) {
             DB::rollback();

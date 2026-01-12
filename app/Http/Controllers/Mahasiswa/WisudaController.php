@@ -11,6 +11,10 @@ use App\Models\PeriodeWisuda;
 use App\Models\SemesterAktif;
 use App\Models\AsistensiAkhir;
 use App\Models\ProfilPt;
+use App\Models\WisudaChecklist;
+use App\Models\WisudaSyaratAdm;
+use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\Referensi\AllPt;
 use App\Models\Connection\Usept;
 use Illuminate\Cache\Repository;
 use App\Models\BeasiswaMahasiswa;
@@ -509,6 +513,8 @@ class WisudaController extends Controller
         }
         
         $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'biodata'])->where('id_registrasi_mahasiswa', $id->id_registrasi_mahasiswa)->first();
+        $biodata = BiodataMahasiswa::where('id_mahasiswa', $riwayat->id_mahasiswa)->first();
+        $aktivitas = AktivitasMahasiswa::with('bimbing_mahasiswa.dosen')->where('id_aktivitas', $id->id_aktivitas)->first();
         $pt = AllPt::where('id_perguruan_tinggi', $id->id_perguruan_tinggi)->select('nama_perguruan_tinggi')->first();
         $syaratAdm = WisudaSyaratAdm::orderBy('urutan')->select('syarat')->get();
         $checklist = WisudaChecklist::orderBy('urutan')->select('checklist')->get();
@@ -519,6 +525,8 @@ class WisudaController extends Controller
 
         $pdf = PDF::loadview('bak.wisuda.peserta.formulir', [
             'riwayat' => $riwayat,
+            'biodata' => $biodata,
+            'aktivitas' => $aktivitas,
             'pt' => $pt,
             'data' => $id,
             'syaratAdm' => $syaratAdm,
@@ -527,6 +535,9 @@ class WisudaController extends Controller
          ])
          ->setPaper('legal', 'portrait');
 
+        //  dd($riwayat, $biodata, $pt, $id, $syaratAdm, $checklist, $now);
+
          return $pdf->stream('Formulir_pendaftara_wisuda-'.$riwayat->nim.'.pdf');
     }
+    
 }
