@@ -155,12 +155,15 @@ Pendaftaran Wisuda Mahasiswa
                                     <div class="row text-center mb-20">
                                         <div class="widget-user-image">
                                             @php
-                                            $imagePath =
-                                            public_path($wisuda->pas_foto);
+                                                $imagePath = public_path('storage/' . $wisuda->pas_foto);
                                             @endphp
+
                                             <img class="rounded bg-success"
-                                                src="{{file_exists($imagePath) ? asset($wisuda->pas_foto) : asset('images/images/avatar/avatar-15.png')}}"
-                                                alt="User Avatar" style="width: 250px;">
+                                                src="{{ (!empty($wisuda->pas_foto) && file_exists($imagePath))
+                                                        ? asset('storage/' . $wisuda->pas_foto)
+                                                        : asset('images/images/avatar/avatar-15.png') }}"
+                                                alt="User Avatar"
+                                                style="width: 250px;">
                                         </div>
                                     </div>
                                     <div class="table-responsive">
