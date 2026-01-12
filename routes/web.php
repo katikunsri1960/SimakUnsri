@@ -208,6 +208,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/data_approved', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data_approved'])->name('bak.wisuda.peserta.data_approved');
                     Route::get('/formulir/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_formulir'])->name('bak.wisuda.peserta.formulir');
                     Route::get('/ijazah/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah_terakhir'])->name('bak.wisuda.peserta.ijazah');
+                    Route::post('/update-foto', [App\Http\Controllers\Bak\WisudaController::class, 'update_foto'])->name('bak.wisuda.peserta.update-foto');
                 });
 
                 Route::prefix('registrasi-ijazah')->group(function(){
@@ -1004,6 +1005,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             //Route for Lulusan
             Route::prefix('data-lulusan')->group(function(){
                 Route::get('/', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'index'])->name('prodi.data-lulusan.index');
+                Route::post('/prodi/wisuda/peserta/update-foto',[App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'update_foto'])->name('prodi.data-lulusan.update-foto');
+
                 Route::get('/detail/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'detail_mahasiswa'])->name('prodi.data-lulusan.detail');
                 Route::post('/update/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'update_detail_mahasiswa'])->name('prodi.data-lulusan.detail.update');
                 Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');

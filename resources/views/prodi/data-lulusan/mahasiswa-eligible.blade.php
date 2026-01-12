@@ -32,6 +32,7 @@ Ajuan Wisuda Mahasiswa
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA MAHASISWA</th>
+                                    <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">ANGKATAN</th>
                                     <th class="text-center align-middle">JUDUL SKRIPSI</th>
                                     <th class="text-center align-middle">TANGGAL SIDANG</th>
@@ -51,6 +52,107 @@ Ajuan Wisuda Mahasiswa
                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                         <td class="text-start align-middle">{{ $d->nim }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_mahasiswa }}</td>
+                                        <td class="text-center align-middle text-nowrap">
+
+                                        {{-- Thumbnail --}}
+                                        @if($d->pas_foto)
+                                            <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal{{ $d->id }}">
+                                                <img src="{{ asset('storage/' . $d->pas_foto) }}"
+                                                    alt="Pas Foto"
+                                                    style="width:100px; cursor:pointer"
+                                                    class="rounded mb-1"
+                                                    title="Lihat Foto">
+                                            </a>
+
+                                            {{-- Tombol Edit --}}
+                                            <div class="mt-1">
+                                                <button class="btn btn-sm btn-warning"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editFotoModal{{ $d->id }}">
+                                                    <i class="fa fa-edit"></i> Edit
+                                                </button>
+                                            </div>
+                                        @else
+                                            <span class="text-muted">Tidak ada foto</span>
+                                        @endif
+
+                                        {{-- Modal Lihat Foto --}}
+                                        <div class="modal fade" id="fotoModal{{ $d->id }}" tabindex="-1">
+                                            <div class="modal-dialog modal-dialog-centered modal-lg">
+                                                <div class="modal-content rounded-3">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title">FOTO {{ $d->nama_mahasiswa }}</h5>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                    </div>
+                                                    <div class="modal-body text-center">
+                                                        <img src="{{ asset('storage/' . $d->pas_foto) }}"
+                                                            class="img-fluid rounded"
+                                                            style="max-width:500px">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {{-- Modal Edit Foto --}}
+                                        <div class="modal fade" id="editFotoModal{{ $d->id }}" tabindex="-1">
+                                            <div class="modal-dialog modal-dialog-centered">
+                                                <div class="modal-content rounded-3">
+
+                                                    <form method="POST"
+                                                        action="{{ route('prodi.data-lulusan.update-foto') }}"
+                                                        enctype="multipart/form-data">
+                                                        @csrf
+
+                                                        <input type="hidden" name="id" value="{{ $d->id }}">
+
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Upload Ulang Pas Foto</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+                                                            <div class="text-center mb-3">
+                                                                <img src="{{ asset('storage/' . $d->pas_foto) }}"
+                                                                    class="img-fluid rounded"
+                                                                    style="max-width:200px">
+                                                                <small class="d-block mt-2 text-muted">
+                                                                    Foto lama
+                                                                </small>
+                                                            </div>
+
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Pas Foto Baru</label>
+                                                                <input type="file"
+                                                                    name="pas_foto"
+                                                                    class="form-control"
+                                                                    accept="image/*"
+                                                                    required>
+                                                                <small class="text-muted">
+                                                                    JPG / PNG • Maks 500 KB
+                                                                </small>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="button"
+                                                                    class="btn btn-secondary"
+                                                                    data-bs-dismiss="modal">
+                                                                Batal
+                                                            </button>
+                                                            <button type="submit"
+                                                                    class="btn btn-primary">
+                                                                <i class="fa fa-upload"></i> Simpan
+                                                            </button>
+                                                        </div>
+
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </td>
+
                                         <td class="text-center align-middle">{{ $d->angkatan }}</td>
                                         <td class="text-start align-middle">{{ $d->aktivitas_mahasiswa->judul }}</td>
                                         <td class="text-center align-middle">{{ $d->aktivitas_mahasiswa->tanggal_selesai }}</td>

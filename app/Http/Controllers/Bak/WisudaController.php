@@ -33,6 +33,7 @@ use App\Imports\PisnMahasiswaImport;
 use Maatwebsite\Excel\Facades\Excel;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Storage;
 
 
 class WisudaController extends Controller
@@ -1006,6 +1007,41 @@ class WisudaController extends Controller
 
         return $pdf->stream('ALBUM-'.strtoupper($fakultas->nama_fakultas).'-'.$periode_wisuda->periode.'.pdf');
     }
+
+    public function update_foto(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'pas_foto' => 'required|image|mimes:jpg,jpeg,png|max:512',
+        ], [
+            'pas_foto.max' => 'Ukuran pas foto maksimal 500 KB.',
+        ]);
+
+        $wisuda = Wisuda::findOrFail($request->id);
+
+        // Hapus foto lama
+        if ($wisuda->pas_foto && Storage::disk('public')->exists($wisuda->pas_foto)) {
+            Storage::disk('public')->delete($wisuda->pas_foto);
+        }
+
+        // Nama file custom
+        $pasFotoName = 'pas_foto_' . str_replace(' ', '_', $wisuda->nim) . '.' .
+            $request->file('pas_foto')->getClientOriginalExtension();
+
+        // Simpan foto baru (PATH BENAR)
+        $path = $request->file('pas_foto')
+            ->storeAs('wisuda/pas_foto', $pasFotoName, 'public');
+
+        // Update DB
+        $wisuda->update([
+            'pas_foto' => $path
+        ]);
+
+        return back()->with('success', 'Foto berhasil diperbarui');
+    }
+
+
+
 
     public function usept(Request $request)
     {
