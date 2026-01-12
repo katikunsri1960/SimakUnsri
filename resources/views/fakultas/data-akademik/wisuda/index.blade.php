@@ -92,7 +92,7 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">TGL YUDISIUM</th>
                                     <th class="text-center align-middle">MASA STUDI</th>
                                     <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
-                                    <th class="text-center align-middle">SCOR USEPT</th>
+                                    <th class="text-center align-middle">SKOR USEPT</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -136,7 +136,7 @@ function getData()
         success: function (response) {
 
             if (response.status === 'success') {
-                // console.log(response.data);
+                console.log(response.data);
                 var table = $('#data').DataTable();
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
@@ -321,6 +321,24 @@ function getData()
                             </div>
                         </td>`;
 
+                        var useptData = item.useptdata
+                        ? `
+                            <div class="text-center">
+                                <span class="text-${item.useptdata.class}">
+                                    <strong>${item.useptdata.score}</strong>
+                                </span>
+                                <br>
+                                <span class="badge ${
+                                    item.useptdata.class === 'success'
+                                        ? 'bg-success'
+                                        : 'bg-danger'
+                                }">
+                                    ${item.useptdata.status}
+                                </span>
+                            </div>
+                        `
+                        : '-';
+
                     table.row.add([
                         index + 1,
                         item.wisuda_ke,
@@ -351,7 +369,7 @@ function getData()
                         item.sk_tgl_kegiatan ?? spanStatus,
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
-                        item.scor_usept ?? '-',
+                        useptData,
                         aksi,
 
                         

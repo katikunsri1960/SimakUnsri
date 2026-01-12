@@ -218,6 +218,49 @@ class WisudaController extends Controller
             ]);
         }
 
+        $nimList = $data->pluck('nim')->filter()->unique();
+        $nikList = $data->pluck('nik')->filter()->unique();
+
+        $useptScores = Usept::whereIn('nim', $nimList->merge($nikList))
+            ->pluck('score', 'nim');
+
+        $courseScores = CourseUsept::whereIn('nim', $nimList->merge($nikList))
+            ->get()
+            ->groupBy('nim')
+            ->map(fn ($items) => $items->max('konversi'));
+
+        $kurikulumUsept = ListKurikulum::pluck('nilai_usept', 'id_kurikulum');
+
+        $data->transform(function ($item) use (
+            $useptScores,
+            $courseScores,
+            $kurikulumUsept
+        ) {
+
+            // Ambil semua kemungkinan skor USEPT
+            $scores = collect([
+                $useptScores[$item->nim] ?? null,
+                $useptScores[$item->nik] ?? null,
+                $courseScores[$item->nim] ?? null,
+                $courseScores[$item->nik] ?? null,
+            ])->filter();
+
+            $nilaiUsept = $scores->max() ?? 0;
+
+            // Ambil batas minimal USEPT prodi
+            $batasUsept = $kurikulumUsept[$item->id_kurikulum] ?? 0;
+
+            $item->useptdata = [
+                'score'  => $nilaiUsept,
+                'class'  => $nilaiUsept >= $batasUsept ? 'success' : 'danger',
+                'status' => $nilaiUsept >= $batasUsept
+                    ? 'Memenuhi Syarat'
+                    : 'Tidak Memenuhi Syarat',
+            ];
+
+            return $item;
+        });
+
         return response()->json([
             'status' => 'success',
             'message' => 'Data berhasil diambil',
