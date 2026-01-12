@@ -576,6 +576,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'index'])->name('mahasiswa.wisuda.index');
                 Route::get('/tambah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'tambah'])->name('mahasiswa.wisuda.tambah');
                 Route::post('/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'store'])->name('mahasiswa.wisuda.store');
+                Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'peserta_formulir'])->name('mahasiswa.wisuda.formulir');
                 Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'delete'])->name('mahasiswa.wisuda.delete');
                 Route::get('/get-wilayah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'get_wilayah'])->name('mahasiswa.wisuda.get-wilayah');
                 Route::get('/get-kecamatan', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'get_kecamatan'])->name('mahasiswa.wisuda.get-kecamatan');

@@ -30,6 +30,7 @@ use App\Models\SemesterAktif;
 use App\Models\PejabatFakultas;
 use App\Exports\IjazahExport;
 use App\Imports\PisnMahasiswaImport;
+use App\Models\Mahasiswa\BiodataMahasiswa;
 use Maatwebsite\Excel\Facades\Excel;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Database\QueryException;
@@ -151,6 +152,8 @@ class WisudaController extends Controller
         }
         
         $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'biodata'])->where('id_registrasi_mahasiswa', $id->id_registrasi_mahasiswa)->first();
+        $biodata = BiodataMahasiswa::where('id_mahasiswa', $riwayat->id_mahasiswa)->first();
+        $aktivitas = AktivitasMahasiswa::with('bimbing_mahasiswa.dosen')->where('id_aktivitas', $id->id_aktivitas)->first();
         $pt = AllPt::where('id_perguruan_tinggi', $id->id_perguruan_tinggi)->select('nama_perguruan_tinggi')->first();
         $syaratAdm = WisudaSyaratAdm::orderBy('urutan')->select('syarat')->get();
         $checklist = WisudaChecklist::orderBy('urutan')->select('checklist')->get();
@@ -161,6 +164,8 @@ class WisudaController extends Controller
 
         $pdf = PDF::loadview('bak.wisuda.peserta.formulir', [
             'riwayat' => $riwayat,
+            'biodata' => $biodata,
+            'aktivitas' => $aktivitas,
             'pt' => $pt,
             'data' => $id,
             'syaratAdm' => $syaratAdm,
@@ -168,6 +173,8 @@ class WisudaController extends Controller
             'now' => $now,
          ])
          ->setPaper('legal', 'portrait');
+
+        //  dd($riwayat, $biodata, $pt, $id, $syaratAdm, $checklist, $now);
 
          return $pdf->stream('Formulir_pendaftara_wisuda-'.$riwayat->nim.'.pdf');
     }
@@ -277,6 +284,7 @@ class WisudaController extends Controller
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
+                ->leftJoin('predikat_kelulusans as pk', 'pk.id', 'data_wisuda.id_predikat_kelulusan')
                 ->leftJoin('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 ->leftJoin('pisn_mahasiswas as pisn', 'pisn.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 // ✅ JOIN BARU : file_fakultas
@@ -297,6 +305,7 @@ class WisudaController extends Controller
                     'r.jenis_kelamin',
                     'g.gelar',
                     'g.gelar_panjang',
+                    'pk.indonesia as predikat_kelulusan',
                     'pisn.penomoran_ijazah_nasional as no_ijazah',
                     'l.sert_prof as no_sertifikat',
                     DB::raw("DATE_FORMAT(pw.tanggal_wisuda, '%d-%m-%Y') as tanggal_wisuda"),
@@ -420,13 +429,13 @@ class WisudaController extends Controller
             }
 
             // ❗ CEK LULUS DO DUPLIKAT
-            if (LulusDo::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->exists()) {
-                DB::rollBack();
-                return response()->json([
-                    'status' => 'error',
-                    'message' => 'Mahasiswa ini sudah memiliki data Lulus DO.',
-                ], 422);
-            }
+            // if (LulusDo::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->exists()) {
+            //     DB::rollBack();
+            //     return response()->json([
+            //         'status' => 'error',
+            //         'message' => 'Mahasiswa ini sudah memiliki data Lulus DO.',
+            //     ], 422);
+            // }
 
             // UPDATE WISUDA
             $wisuda->update([
@@ -436,56 +445,56 @@ class WisudaController extends Controller
             
 
             // INSERT LULUS DO
-            LulusDo::create([
-                'feeder'=>'0',
-                'id_registrasi_mahasiswa' => $wisuda->id_registrasi_mahasiswa,
-                'id_mahasiswa' => $riwayatPendidikan->id_mahasiswa,
-                'id_perguruan_tinggi' => $riwayatPendidikan->id_perguruan_tinggi,
-                'id_prodi' => $riwayatPendidikan->id_prodi,
-                'tgl_masuk_sp' => $riwayatPendidikan->tanggal_daftar,
-                'tgl_keluar' => $wisuda->tgl_sk_yudisium,
-                'skhun' => NULL,
-                'no_peserta_ujian' => NULL,
-                'no_seri_ijazah' => in_array($riwayatPendidikan->prodi->id_jenjang_pendidikan, ['31', '32', '37']) ? NULL : '-', // Conditional logic
-                'tgl_create' => now(),
-                'sks_diakui' => $wisuda->sks_diakui ?? null,
-                'jalur_skripsi' => NULL,
-                'judul_skripsi' => $aktivitasMahasiswa->judul,
-                'bln_awal_bimbingan' => NULL,
-                'bln_akhir_bimbingan' => NULL,
-                'sk_yudisium' => $wisuda->no_sk_yudisium,
-                'tgl_sk_yudisium' => $wisuda->tgl_sk_yudisium,
-                'ipk' => $wisuda->ipk,
-                'sert_prof' => $riwayatPendidikan->prodi->id_jenjang_pendidikan === '31' ? NULL : NULL, // Conditional logic
-                'a_pindah_mhs_asing' => $riwayatPendidikan->a_pindah_mhs_asing ?? null,
-                'id_pt_asal' => $riwayatPendidikan->id_perguruan_tinggi_asal,
-                'nm_pt_asal' => $riwayatPendidikan->nama_perguruan_tinggi_asal,
-                'id_prodi_asal' => $riwayatPendidikan->id_prodi_asal,
-                'nm_prodi_asal' => $riwayatPendidikan->nama_program_studi_asal,
-                'id_jns_daftar' => $riwayatPendidikan->id_jenis_daftar,
-                'id_jns_keluar' => 1,
-                'id_jalur_masuk' => $riwayatPendidikan->id_jalur_daftar,
-                'id_pembiayaan' => $riwayatPendidikan->id_pembiayaan,
-                'id_minat_bidang' => $riwayatPendidikan->id_minat_bidang ?? null,
-                'bidang_mayor' => NULL,
-                'bidang_minor' => NULL,
-                'biaya_masuk_kuliah' => $riwayatPendidikan->biaya_masuk,
-                'namapt' => $riwayatPendidikan->nama_perguruan_tinggi,
-                'id_jur' => $riwayatPendidikan->prodi->jurusan->jurusan_id,
-                'nm_jns_daftar' => $riwayatPendidikan->nama_jenis_daftar,
-                'nm_smt' => $riwayatPendidikan->nama_periode_masuk,
-                'nim' => $riwayatPendidikan->nim,
-                'nama_mahasiswa' => $riwayatPendidikan->nama_mahasiswa,
-                'nama_program_studi' => $riwayatPendidikan->prodi->nama_program_studi,
-                'angkatan' => $riwayatPendidikan->angkatan,
-                'id_jenis_keluar' => 1,
-                'nama_jenis_keluar' => 'Lulus',
-                'tanggal_keluar' => $wisuda->tgl_sk_yudisium,
-                'id_periode_keluar' => $semester_aktif->id_semester,
-                'keterangan' => 'WISUDA ' . $wisuda->wisuda_ke,
-                'no_sertifikat_profesi' => $riwayatPendidikan->prodi->id_jenjang_pendidikan === '31' ? NULL : NULL, // Conditional logic
-                'status_sync' => 'belum sync',
-            ]);
+            // LulusDo::create([
+            //     'feeder'=>'0',
+            //     'id_registrasi_mahasiswa' => $wisuda->id_registrasi_mahasiswa,
+            //     'id_mahasiswa' => $riwayatPendidikan->id_mahasiswa,
+            //     'id_perguruan_tinggi' => $riwayatPendidikan->id_perguruan_tinggi,
+            //     'id_prodi' => $riwayatPendidikan->id_prodi,
+            //     'tgl_masuk_sp' => $riwayatPendidikan->tanggal_daftar,
+            //     'tgl_keluar' => $wisuda->tgl_sk_yudisium,
+            //     'skhun' => NULL,
+            //     'no_peserta_ujian' => NULL,
+            //     'no_seri_ijazah' => in_array($riwayatPendidikan->prodi->id_jenjang_pendidikan, ['31', '32', '37']) ? NULL : '-', // Conditional logic
+            //     'tgl_create' => now(),
+            //     'sks_diakui' => $wisuda->sks_diakui ?? null,
+            //     'jalur_skripsi' => NULL,
+            //     'judul_skripsi' => $aktivitasMahasiswa->judul,
+            //     'bln_awal_bimbingan' => NULL,
+            //     'bln_akhir_bimbingan' => NULL,
+            //     'sk_yudisium' => $wisuda->no_sk_yudisium,
+            //     'tgl_sk_yudisium' => $wisuda->tgl_sk_yudisium,
+            //     'ipk' => $wisuda->ipk,
+            //     'sert_prof' => $riwayatPendidikan->prodi->id_jenjang_pendidikan === '31' ? NULL : NULL, // Conditional logic
+            //     'a_pindah_mhs_asing' => $riwayatPendidikan->a_pindah_mhs_asing ?? null,
+            //     'id_pt_asal' => $riwayatPendidikan->id_perguruan_tinggi_asal,
+            //     'nm_pt_asal' => $riwayatPendidikan->nama_perguruan_tinggi_asal,
+            //     'id_prodi_asal' => $riwayatPendidikan->id_prodi_asal,
+            //     'nm_prodi_asal' => $riwayatPendidikan->nama_program_studi_asal,
+            //     'id_jns_daftar' => $riwayatPendidikan->id_jenis_daftar,
+            //     'id_jns_keluar' => 1,
+            //     'id_jalur_masuk' => $riwayatPendidikan->id_jalur_daftar,
+            //     'id_pembiayaan' => $riwayatPendidikan->id_pembiayaan,
+            //     'id_minat_bidang' => $riwayatPendidikan->id_minat_bidang ?? null,
+            //     'bidang_mayor' => NULL,
+            //     'bidang_minor' => NULL,
+            //     'biaya_masuk_kuliah' => $riwayatPendidikan->biaya_masuk,
+            //     'namapt' => $riwayatPendidikan->nama_perguruan_tinggi,
+            //     'id_jur' => $riwayatPendidikan->prodi->jurusan->jurusan_id,
+            //     'nm_jns_daftar' => $riwayatPendidikan->nama_jenis_daftar,
+            //     'nm_smt' => $riwayatPendidikan->nama_periode_masuk,
+            //     'nim' => $riwayatPendidikan->nim,
+            //     'nama_mahasiswa' => $riwayatPendidikan->nama_mahasiswa,
+            //     'nama_program_studi' => $riwayatPendidikan->prodi->nama_program_studi,
+            //     'angkatan' => $riwayatPendidikan->angkatan,
+            //     'id_jenis_keluar' => 1,
+            //     'nama_jenis_keluar' => 'Lulus',
+            //     'tanggal_keluar' => $wisuda->tgl_sk_yudisium,
+            //     'id_periode_keluar' => $semester_aktif->id_semester,
+            //     'keterangan' => 'WISUDA ' . $wisuda->wisuda_ke,
+            //     'no_sertifikat_profesi' => $riwayatPendidikan->prodi->id_jenjang_pendidikan === '31' ? NULL : NULL, // Conditional logic
+            //     'status_sync' => 'belum sync',
+            // ]);
 
             DB::commit();
 

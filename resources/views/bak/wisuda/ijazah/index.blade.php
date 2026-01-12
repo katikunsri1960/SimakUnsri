@@ -143,7 +143,10 @@ function getData()
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
-                    var foto = item.pas_foto ? '<img src="{{ asset('' ) }}' + item.pas_foto + '" class="img-fluid" style="max-width: 300px; max-height: 500px;">' : '';
+                    var foto = item.pas_foto
+                        ? '<img src="{{ asset("storage") }}/' + item.pas_foto + '" class="img-fluid" style="max-width:300px; max-height:500px;">'
+                        : '';
+
                     var jenis_kelamin = item.jenis_kelamin === 'L' ? 'Laki-laki' : (item.jenis_kelamin === 'P' ? 'Perempuan' : '-');
                     // ===============================
                     // KONDISI KHUSUS NO IJAZAH

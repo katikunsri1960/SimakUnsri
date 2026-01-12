@@ -74,13 +74,12 @@ Daftar Peserta Wisuda
                                     <th class="text-center align-middle">NO</th>
                                     <th class="text-center align-middle">PERIODE</th>
                                     <th class="text-center align-middle">STATUS</th>
+                                    <th class="text-center align-middle">PREDIKAT LULUSAN</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
                                     <th class="text-center align-middle">SK YUDISIUM</th>
                                     <th class="text-center align-middle">BERKAS REGISTRASI WISUDA</th>
                                     <th class="text-center align-middle">NOMOR REGISTRASI</th>
-                                    <th class="text-center align-middle" style="width: 300px;">
-                                        FOTO
-                                    </th>
+                                    <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">FAKULTAS</th>
                                     <th class="text-center align-middle">PROGRAM STUDI</th>
                                     <th class="text-center align-middle">JENJANG</th>
@@ -340,6 +339,7 @@ function getData()
                         index + 1,
                         item.wisuda_ke,
                         spanStatus,
+                        item.predikat_kelulusan ?? '-',
                         ijazahButton,
                         skYudisiumButton,
                         berkasButton,

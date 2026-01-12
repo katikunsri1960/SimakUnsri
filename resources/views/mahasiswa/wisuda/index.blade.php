@@ -237,16 +237,16 @@ Pendaftaran Wisuda Mahasiswa
                                                     @endif
                                                 </td>
                                             </tr>
-                                            {{--
+                                            
                                             <tr>
                                                 <td class="text-left" style="width: 30%;">Berkas Registrasi Wisuda</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
                                                 <td class="text-left align-middle">
-                                                    @if($wisuda->berkas_registrasi)
+                                                    @if($wisuda->approved >= 2)
                                                         <a class="btn btn-sm btn-success"
-                                                        href="{{ asset($wisuda->berkas_registrasi) }}"
+                                                        href="{{ route('mahasiswa.wisuda.formulir', ['id' => $wisuda->id]) }}"
                                                         target="_blank">
-                                                            <i class="fa fa-file me-2"></i>Unduh Berkas Registrasi
+                                                            <i class="fa fa-file me-2"></i> Unduh Berkas Registrasi
                                                         </a>
                                                     @else
                                                         <span class="badge badge-lg bg-danger">
@@ -255,7 +255,8 @@ Pendaftaran Wisuda Mahasiswa
                                                     @endif
                                                 </td>
                                             </tr>
-                                            --}}
+
+                                            
                                         </table>
                                     </div>
                                 </div>

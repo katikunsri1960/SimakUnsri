@@ -473,7 +473,7 @@
                         <td width="10%" rowspan="10" style="text-align:center; vertical-align:top;
                         /* padding-top:5px; */
                         ">
-                            <img src="{{ $d->pas_foto }}" alt="Foto" width="70">
+                            <img src="storage/{{ $d->pas_foto }}" alt="Foto" width="70">
                         </td>
                         <td width="45%">
                             VICE RECTOR FOR ACADEMIC, STUDENT AFFAIRS, AND QUALITY ASSURANCE
