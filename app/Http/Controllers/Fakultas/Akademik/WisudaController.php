@@ -58,9 +58,13 @@ class WisudaController extends Controller
                 ->get();
 
         $gelar_lulusan = GelarLulusan::with('prodi')
-                ->whereIn('id_prodi', $prodi
-                ->pluck('id_prodi'))
+                ->join('program_studis', 'program_studis.id_prodi', '=', 'gelar_lulusans.id_prodi')
+                ->whereIn('gelar_lulusans.id_prodi', $prodi->pluck('id_prodi'))
+                ->orderBy('program_studis.id_jenjang_pendidikan', 'asc')
+                ->orderBy('program_studis.nama_program_studi', 'asc')
+                ->select('gelar_lulusans.*')
                 ->get();
+
 
         $predikat_lulusan = PredikatKelulusan::get();
         // dd($gelar_lulusan);
