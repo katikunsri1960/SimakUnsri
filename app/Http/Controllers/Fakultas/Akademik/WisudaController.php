@@ -58,9 +58,13 @@ class WisudaController extends Controller
                 ->get();
 
         $gelar_lulusan = GelarLulusan::with('prodi')
-                ->whereIn('id_prodi', $prodi
-                ->pluck('id_prodi'))
+                ->join('program_studis', 'program_studis.id_prodi', '=', 'gelar_lulusans.id_prodi')
+                ->whereIn('gelar_lulusans.id_prodi', $prodi->pluck('id_prodi'))
+                ->orderBy('program_studis.id_jenjang_pendidikan', 'asc')
+                ->orderBy('program_studis.nama_program_studi', 'asc')
+                ->select('gelar_lulusans.*')
                 ->get();
+
 
         $predikat_lulusan = PredikatKelulusan::get();
         // dd($gelar_lulusan);
@@ -164,6 +168,7 @@ class WisudaController extends Controller
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('jalur_masuks as jm', 'jm.id_jalur_masuk', 'r.id_jalur_daftar')
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
+                ->leftJoin('predikat_kelulusans as pk', 'pk.id', 'data_wisuda.id_predikat_kelulusan')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
 
@@ -177,6 +182,8 @@ class WisudaController extends Controller
                     'p.nama_program_studi as nama_prodi',
                     'p.nama_jenjang_pendidikan as jenjang',
                     'g.gelar',
+                    'g.gelar_panjang',
+                    'pk.indonesia as predikat_kelulusan',
                     'b.nik as nik',
                     'akt.judul',
                     'b.tempat_lahir',
@@ -217,6 +224,49 @@ class WisudaController extends Controller
                 'data' => [],
             ]);
         }
+
+        $nimList = $data->pluck('nim')->filter()->unique();
+        $nikList = $data->pluck('nik')->filter()->unique();
+
+        $useptScores = Usept::whereIn('nim', $nimList->merge($nikList))
+            ->pluck('score', 'nim');
+
+        $courseScores = CourseUsept::whereIn('nim', $nimList->merge($nikList))
+            ->get()
+            ->groupBy('nim')
+            ->map(fn ($items) => $items->max('konversi'));
+
+        $kurikulumUsept = ListKurikulum::pluck('nilai_usept', 'id_kurikulum');
+
+        $data->transform(function ($item) use (
+            $useptScores,
+            $courseScores,
+            $kurikulumUsept
+        ) {
+
+            // Ambil semua kemungkinan skor USEPT
+            $scores = collect([
+                $useptScores[$item->nim] ?? null,
+                $useptScores[$item->nik] ?? null,
+                $courseScores[$item->nim] ?? null,
+                $courseScores[$item->nik] ?? null,
+            ])->filter();
+
+            $nilaiUsept = $scores->max() ?? 0;
+
+            // Ambil batas minimal USEPT prodi
+            $batasUsept = $kurikulumUsept[$item->id_kurikulum] ?? 0;
+
+            $item->useptdata = [
+                'score'  => $nilaiUsept,
+                'class'  => $nilaiUsept >= $batasUsept ? 'success' : 'danger',
+                'status' => $nilaiUsept >= $batasUsept
+                    ? 'Memenuhi Syarat'
+                    : 'Tidak Memenuhi Syarat',
+            ];
+
+            return $item;
+        });
 
         return response()->json([
             'status' => 'success',
