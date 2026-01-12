@@ -66,6 +66,7 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">NO</th>
                                     <th class="text-center align-middle">PERIODE</th>
                                     <th class="text-center align-middle">STATUS</th>
+                                    <th class="text-center align-middle">PREDIKAT KELULUSAN</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
                                     <th class="text-center align-middle">SK YUDISIUM</th>
                                     <!-- <th class="text-center align-middle">BERKAS REGISTRASI WISUDA</th> -->
@@ -343,6 +344,7 @@ function getData()
                         index + 1,
                         item.wisuda_ke,
                         spanStatus,
+                        item.predikat_kelulusan ?? '-',
                         ijazahButton,
                         skYudisiumButton, 
                         // skYudisium,
@@ -371,11 +373,8 @@ function getData()
                         item.judul,
                         useptData,
                         aksi,
-
-                        
                     ]).draw(false);
                 });
-
             } else if(response.status === 'error') {
                 swal('Error', response.message, 'error');
             } else {

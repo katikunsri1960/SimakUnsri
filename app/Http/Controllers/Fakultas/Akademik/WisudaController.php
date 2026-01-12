@@ -168,6 +168,7 @@ class WisudaController extends Controller
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('jalur_masuks as jm', 'jm.id_jalur_masuk', 'r.id_jalur_daftar')
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
+                ->leftJoin('predikat_kelulusans as pk', 'pk.id', 'data_wisuda.id_predikat_kelulusan')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
 
@@ -181,6 +182,8 @@ class WisudaController extends Controller
                     'p.nama_program_studi as nama_prodi',
                     'p.nama_jenjang_pendidikan as jenjang',
                     'g.gelar',
+                    'g.gelar_panjang',
+                    'pk.indonesia as predikat_kelulusan',
                     'b.nik as nik',
                     'akt.judul',
                     'b.tempat_lahir',
