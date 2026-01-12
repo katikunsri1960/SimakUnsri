@@ -299,19 +299,32 @@ class WisudaController extends Controller
             'nik' => 'required',
             'lokasi_kuliah' => 'required',
             'wisuda_ke' => 'required',
-            'abstrak_ta' => 'required|max:500',
+
+            // abstrak_ta → TANPA max
+            'abstrak_ta' => 'required',
+
             'pas_foto' => 'required|file|mimes:jpeg,jpg,png|max:500',
             'bku_prodi' => 'nullable',
             'abstrak_file' => 'required|file|mimes:pdf|max:1024',
-            // 'abstrak_file_eng' => 'required|file|mimes:pdf|max:1024',
             'ijazah_terakhir_file' => 'required|file|mimes:pdf|max:1024',
             'alamat_orang_tua' => 'required',
         ], [
             'pas_foto.max' => 'Ukuran pas foto maksimal 500 KB.',
             'abstrak_file.max' => 'Ukuran file abstrak maksimal 1 MB.',
-            // 'abstrak_file_eng.max' => 'Ukuran file abstrak (English) maksimal 1 MB.',
             'ijazah_terakhir_file.max' => 'Ukuran file ijazah terakhir maksimal 1 MB.',
         ]);
+
+        // ✅ VALIDASI KHUSUS JUMLAH KATA
+        $wordCount = str_word_count(strip_tags($request->abstrak_ta));
+
+        if ($wordCount > 500) {
+            return back()
+                ->withErrors([
+                    'abstrak_ta' => "Abstrak maksimal 500 kata. Saat ini: $wordCount kata."
+                ])
+                ->withInput();
+        }
+
 
         // dd($request->all());
 
@@ -411,7 +424,7 @@ class WisudaController extends Controller
         $ijazahPath = $request->file('ijazah_terakhir_file')->storeAs('wisuda/ijazah', $ijazahName, 'public');
 
         // Simpan path ke database
-        $pas_foto = 'storage/' . $pasFotoPath;
+        $pas_foto = $pasFotoPath;
         $abstrak_file = 'storage/' . $abstrakPath;
         // $abstrak_file_eng = 'storage/' . $abstrakEngPath;
         $ijazah_terakhir_file = 'storage/' . $ijazahPath;
