@@ -254,8 +254,8 @@ Pendaftaran Wisuda Mahasiswa
                                         <label for="lokasi_kuliah">Lokasi Kuliah</label><span class="text-danger"> *</span>
                                         <select id="lokasi_kuliah" name="lokasi_kuliah" class="form-select" required>
                                             <option value="">-- Pilih Lokasi Kuliah --</option>
-                                            <option value="Inderalaya">Inderalaya</option>
-                                            <option value="Palembang">Palembang</option>
+                                            <option value="Inderalaya">INDERALAYA</option>
+                                            <option value="Palembang">PALEMBANG</option>
                                         </select>
                                     </div>
                                 </div>
@@ -292,24 +292,72 @@ Pendaftaran Wisuda Mahasiswa
                                         </select>
                                     </div>
                                     <div class="col-md-6 mb-3">
-                                        <label for="pas_foto" class="form-label">Foto Wisuda (.jpg / .png)</label><span class="text-danger"> *</span>
-                                        <input type="file" class="form-control" name="pas_foto" id="pas_foto"
-                                            aria-describedby="fileHelpId" accept=".jpg" required />
-                                        <div class="mt-2 text-center">
-                                            <label class="text-center form-label">Contoh Foto Ijazah</label>
-                                            <div>
-                                                <img src="{{ asset('images/pas_foto_ijazah.jpg') }}" alt="Contoh Foto 3x4"
-                                                     style="width:120px;height:160px;object-fit:cover;border:0px solid #ddd;padding:4px;">
+                                        <label for="pas_foto" class="form-label">
+                                            Foto Wisuda (.jpg / .png)
+                                        </label>
+                                        <span class="text-danger"> *</span>
+
+                                        <input type="file"
+                                            class="form-control"
+                                            name="pas_foto"
+                                            id="pas_foto"
+                                            accept=".jpg,.jpeg,.png"
+                                            required />
+
+                                        <div class="mt-3">
+                                            <label class="form-label fw-bold">
+                                                Contoh Foto Wisuda (Rasio 3:4)
+                                            </label>
+
+                                            <div class="row justify-content-center mt-2">
+                                                <!-- Contoh Laki-laki -->
+                                                <div class="col-6 text-center">
+                                                    <img src="{{ asset('images/contoh_wisuda_laki.jpg') }}"
+                                                        alt="Contoh Foto Wisuda Laki-laki"
+                                                        style="width:120px;height:160px;object-fit:cover;border:1px solid #ddd;padding:4px;">
+                                                    <small class="d-block mt-1 text-muted">
+                                                        Laki-laki
+                                                    </small>
+                                                </div>
+
+                                                <!-- Contoh Perempuan -->
+                                                <div class="col-6 text-center">
+                                                    <img src="{{ asset('images/contoh_wisuda_perempuan.jpg') }}"
+                                                        alt="Contoh Foto Wisuda Perempuan"
+                                                        style="width:120px;height:160px;object-fit:cover;border:1px solid #ddd;padding:4px;">
+                                                    <small class="d-block mt-1 text-muted">
+                                                        Perempuan
+                                                    </small>
+                                                </div>
                                             </div>
-                                            <small class="form-text text-danger text-center mt-5">
-                                                Gunakan rasio 3:4<br>
-                                                Disarankan minimal 300x400 piksel; format .jpg/.png.
-                                            </small><br>
-                                            <small id="fileHelpId" class="form-text text-danger">
-                                                Maksimal ukuran file <strong>500 KB</strong>.
+
+                                            <small class="form-text text-danger d-block mt-3">
+                                                Gunakan rasio <strong>3:4</strong> | 
+                                                Disarankan minimal <strong>300 x 400 piksel</strong> |
+                                                Format <strong>.jpg / .png</strong>
                                             </small>
+
+                                            <small id="fileHelpId" class="form-text text-danger">
+                                                Maksimal ukuran file <strong>500 KB</strong><br><br>
+                                            </small>
+
+                                            <small id="fileHelpId" class="form-text text-start">
+                                                <strong>Catatan:</strong>
+                                                <ul>
+                                                    <li>
+                                                        Foto Yang telah diupload tidak dapat diganti oleh mahasiswa dan akan tercetak di Ijazah Anda.
+                                                    </li>
+                                                    <li>
+                                                         Pastikan menyesuaiakan Pas Foto dengan ketentuan di atas. posisikan pundak kepala di tengah frame foto dengan latar belakang sesuai.
+                                                    </li>
+                                                    <li>
+                                                        Laki Laki : Latar Belakang Biru, Kemeja Putih, Dasi Hitam.<br>
+                                                        Perempuan : Latar Belakang Merah, Kebaya, Selendang.
+                                                    </li>
+                                                </ul>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>
@@ -362,6 +410,9 @@ Pendaftaran Wisuda Mahasiswa
                                         <label for="abstrak_ta" class="form-label">Abstrak {{$aktivitas->nama_jenis_aktivitas}}</label><span class="text-danger"> *</span>
                                         <textarea type="text" class="form-control" name="abstrak_ta" id="abstrak_ta" aria-describedby="helpId"
                                         placeholder="Masukkan Abstrak {{$aktivitas->nama_jenis_aktivitas}}" required></textarea>
+                                        <small id="helpId" class="form-text text-danger">
+                                            Maksimal 500 kata.
+                                        </small>
                                     </div>
                                 </div>
                                 <h4 class="text-info mb-10 mt-10">File Abstrak {{$aktivitas->nama_jenis_aktivitas}}</h4>
