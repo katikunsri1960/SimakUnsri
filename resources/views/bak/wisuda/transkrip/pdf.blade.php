@@ -311,9 +311,10 @@
                             <tr>
                                 <td align="center">{{ $i+1 }}</td>
                                 <td>{{ $mk->kode_mata_kuliah }}</td>
-                                <td>{{ strtoupper($mk->nama_mata_kuliah) }}
-                                    <em>({{ strtoupper($mk->nama_mata_kuliah) }})</em>
-                                </td>
+                                <td>
+                                    {{ strtoupper($mk->nama_mata_kuliah) }}
+                                    {!! $mk->nama_mata_kuliah_english ? '<em>(' . strtoupper($mk->nama_mata_kuliah_english) . ')</em>' : '' !!}
+                                </td> 
                                 <td align="center">{{ $sks }}</td>
                                 <td align="center">{{ $mk->nilai_huruf }}</td>
                                 <td align="center">{{ $mk->nilai_indeks }}</td>
