@@ -46,4 +46,8 @@ class TranskripMahasiswa extends Model
         return ['status' => 1, 'message' => 'Data berhasil dihapus'];
     }
 
+    public function mk_english()
+    {
+        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');
+    }
 }
