@@ -313,7 +313,7 @@
                                 <td>{{ $mk->kode_mata_kuliah }}</td>
                                 <td>
                                     {{ strtoupper($mk->nama_mata_kuliah) }}
-                                    {!! $mk->nama_mata_kuliah_english ? '<em>(' . strtoupper($mk->nama_mata_kuliah_english) . ')</em>' : '' !!}
+                                    {!! $mk->mk_english->nama_mata_kuliah_english ? '<em>(' . strtoupper($mk->mk_english->nama_mata_kuliah_english) . ')</em>' : '' !!}
                                 </td> 
                                 <td align="center">{{ $sks }}</td>
                                 <td align="center">{{ $mk->nilai_huruf }}</td>
@@ -363,9 +363,10 @@
                                     <tr>
                                         <td align="center">{{ $i+1 }}</td>
                                         <td>{{ $mk->kode_mata_kuliah }}</td>
-                                        <td>{{ strtoupper($mk->nama_mata_kuliah) }}
-                                            <em>({{ strtoupper($mk->nama_mata_kuliah) }})</em>
-                                        </td>
+                                        <td>
+                                            {{ strtoupper($mk->nama_mata_kuliah) }}
+                                            {!! $mk->mk_english->nama_mata_kuliah_english ? '<em>(' . strtoupper($mk->mk_english->nama_mata_kuliah_english) . ')</em>' : '' !!}
+                                        </td> 
                                         <td align="center">{{ $sks }}</td>
                                         <td align="center">{{ $mk->nilai_huruf }}</td>
                                         <td align="center">{{ $mk->nilai_indeks }}</td>
@@ -416,8 +417,10 @@
                         <td width="1">: </td>
                         <!-- <td width="1">: </td> -->
                         <td colspan="4">
-                            {{ $d->aktivitas_mahasiswa->judul }}<br>
-                            <em>({{ $d->judul_eng }})</em>     
+                            {{ strtoupper($d->aktivitas_mahasiswa->judul) }}<br>
+                            @if(!empty($d->judul_eng))
+                                <em>{{ strtoupper($d->judul_eng) }}</em>
+                            @endif     
                         </td>
                     </tr>
 
