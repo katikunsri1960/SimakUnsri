@@ -224,7 +224,15 @@
                     <tr>
                         <td>STRATA PENDIDIKAN <em>(EDUCATION PROGRAM)</em></td> 
                         <td width="1%">:  </td>
-                        <td> {{ $d->jenjang }}</td>
+                        <td> {{ $d->jenjang }}
+                            @if($d->jenjang == 'S1')
+                                <em>(UNDERGRADUATE)</em>
+                            @elseif($d->jenjang == 'S2')
+                                <em>(GRADUATE)</em>
+                            @elseif($d->jenjang == 'S3')
+                                <em>(DOCTORAL)</em>
+                            @endif
+                        </td>
                     </tr>
                     <tr class="text-upper">
                         <td>JURUSAN/PROGRAM STUDI <br><em>(DEPARTMENT/STUDY PROGRAM)</em></td> 
@@ -419,7 +427,7 @@
                         <td colspan="4">
                             {{ strtoupper($d->aktivitas_mahasiswa->judul) }}<br>
                             @if(!empty($d->judul_eng))
-                                <em>{{ strtoupper($d->judul_eng) }}</em>
+                                <em>({{ strtoupper($d->judul_eng) }})</em>
                             @endif     
                         </td>
                     </tr>
