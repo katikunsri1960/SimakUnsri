@@ -178,7 +178,8 @@ class PesertaKelasKuliah extends Model
         $pembayaran_manual = PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
-
+        
+        $tagihan = null;
         $total_nilai_tagihan = 0;
 
         if(!$beasiswa && !$pembayaran_manual){
@@ -405,7 +406,7 @@ class PesertaKelasKuliah extends Model
                         return $result;
                     }
                 }else{
-                    if($beasiswa ){
+                    if($beasiswa){
                         if($beasiswa->id_pembiayaan == '3'){
                             $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
                                 'feeder' => 0,
@@ -506,6 +507,15 @@ class PesertaKelasKuliah extends Model
                 }
 
             }else{
+
+                if(count($data) == 0 && count($aktivitas) == 0){
+                    $result = [
+                        'status' => 'error',
+                        'message' => 'Mahasiswa belum submit KRS final.',
+                    ];
+
+                    return $result;
+                }
 
                 foreach ($aktivitas as $item) {
                     $item->update([
@@ -929,6 +939,7 @@ class PesertaKelasKuliah extends Model
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
+        $tagihan = null;
         $total_nilai_tagihan = 0;
 
         $beasiswa = $beasiswa ?? null; // Ensure $beasiswa is initialized
