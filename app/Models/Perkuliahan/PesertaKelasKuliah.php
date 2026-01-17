@@ -178,7 +178,8 @@ class PesertaKelasKuliah extends Model
         $pembayaran_manual = PembayaranManualMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $semester_aktif->id_semester)->first();
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
-
+        
+        $tagihan = null;
         $total_nilai_tagihan = 0;
 
         if(!$beasiswa && !$pembayaran_manual){
@@ -202,8 +203,6 @@ class PesertaKelasKuliah extends Model
                 // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
                 $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
 
-                $ukt_mahasiswa = $pembayaran_manual?->nominal_ukt ?? $tagihan->total_nilai_tagihan;
-
             }catch (\Exception $e) {
                 $result = [
                     'status' => 'error',
@@ -213,6 +212,8 @@ class PesertaKelasKuliah extends Model
                 return $result;
             }
         }
+
+        $ukt_mahasiswa = $pembayaran_manual?->nominal_ukt ?? $total_nilai_tagihan;
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                     ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
@@ -325,7 +326,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => $total_nilai_tagihan,
+                                'biaya_kuliah_smt' => $ukt_mahasiswa,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -405,7 +406,7 @@ class PesertaKelasKuliah extends Model
                         return $result;
                     }
                 }else{
-                    if($beasiswa ){
+                    if($beasiswa){
                         if($beasiswa->id_pembiayaan == '3'){
                             $peserta = AktivitasKuliahMahasiswa::where('id',$akm_aktif->id)->update([
                                 'feeder' => 0,
@@ -424,7 +425,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => $total_nilai_tagihan,
+                                'biaya_kuliah_smt' => $ukt_mahasiswa,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -506,6 +507,15 @@ class PesertaKelasKuliah extends Model
                 }
 
             }else{
+
+                if(count($data) == 0 && count($aktivitas) == 0){
+                    $result = [
+                        'status' => 'error',
+                        'message' => 'Mahasiswa belum submit KRS final.',
+                    ];
+
+                    return $result;
+                }
 
                 foreach ($aktivitas as $item) {
                     $item->update([
@@ -929,6 +939,7 @@ class PesertaKelasKuliah extends Model
 
         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
 
+        $tagihan = null;
         $total_nilai_tagihan = 0;
 
         $beasiswa = $beasiswa ?? null; // Ensure $beasiswa is initialized
@@ -953,8 +964,6 @@ class PesertaKelasKuliah extends Model
                 // Check if tagihan is null or total_nilai_tagihan == 0 ? 0 ? $total_nilai_tagihan is null, and set to 0
                 $total_nilai_tagihan = !$tagihan || $tagihan->total_nilai_tagihan == NULL ? 0 : $tagihan->total_nilai_tagihan;
 
-                $ukt_mahasiswa = $pembayaran_manual?->nominal_ukt ?? $tagihan->total_nilai_tagihan;
-
             }catch (\Exception $e) {
                 $result = [
                     'status' => 'error',
@@ -965,6 +974,7 @@ class PesertaKelasKuliah extends Model
             }
         }
 
+        $ukt_mahasiswa = $pembayaran_manual?->nominal_ukt ?? $total_nilai_tagihan;
 
         $krs_aktivitas_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas'])
                     ->whereHas('anggota_aktivitas' , function($query) use ($id_reg) {
@@ -1086,7 +1096,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => $total_nilai_tagihan,
+                                'biaya_kuliah_smt' => $ukt_mahasiswa,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -1185,7 +1195,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => $total_nilai_tagihan,
+                                'biaya_kuliah_smt' => $ukt_mahasiswa,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -1302,7 +1312,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => $total_nilai_tagihan,
+                                'biaya_kuliah_smt' => $ukt_mahasiswa,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
@@ -1401,7 +1411,7 @@ class PesertaKelasKuliah extends Model
                                 'ipk'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->ipk,
                                 'sks_semester'=> $total_sks,
                                 'sks_total'=> !$transkrip && $riwayat_pendidikan->id_periode_masuk == $semester_aktif->id_semester ? 0 : $transkrip->total_sks,
-                                'biaya_kuliah_smt' => $total_nilai_tagihan,
+                                'biaya_kuliah_smt' => $ukt_mahasiswa,
                                 'id_pembiayaan' => 3,
                                 'status_sync' => 'belum sync',
                             ]);
