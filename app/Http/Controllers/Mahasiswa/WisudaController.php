@@ -118,6 +118,27 @@ class WisudaController extends Controller
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
+        if (!$bebas_pustaka) {
+            return redirect()
+                ->route('mahasiswa.dashboard')
+                ->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
+        }
+
+        if(!$wisuda){
+            if (empty($bebas_pustaka->file_bebas_pustaka)) {
+                return redirect()
+                    ->route('mahasiswa.dashboard')
+                    ->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
+            }
+
+            if (empty($bebas_pustaka->link_repo)) {
+                return redirect()
+                    ->route('mahasiswa.dashboard')
+                    ->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
+            }
+        }
+        
+
         if(!$riwayat_pendidikan->id_kurikulum ) {
             return redirect()->route('mahasiswa.wisuda.index')->with('error', 'Kurikulum Belum diatur, Silahkan hubungi Koor. Prodi!');
         }else{

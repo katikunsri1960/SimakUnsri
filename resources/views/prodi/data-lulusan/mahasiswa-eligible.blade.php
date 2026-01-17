@@ -181,10 +181,30 @@ Ajuan Wisuda Mahasiswa
                                             </div>
                                         </td>
                                         <td class="text-center align-middle">
-                                            <div class="row d-flex justify-content-center">
-                                                <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-secondary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
-                                                <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Wisuda" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
-                                            </div>
+                                            @if($d->bebas_pustaka && $d->bebas_pustaka->file_bebas_pustaka && $d->bebas_pustaka->link_repo)
+                                                <div class="row d-flex justify-content-center">
+                                                    <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-secondary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
+                                                    <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Wisuda" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
+                                                </div>
+                                            @elseif($d->bebas_pustaka && !$d->bebas_pustaka->file_bebas_pustaka)
+                                                <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                    Ditangguhkan
+                                                </span>
+                                                <p class="text-danger">
+                                                    <strong>
+                                                        Mahasiswa belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
+                                                    </strong>
+                                                </p>
+                                            @elseif($d->bebas_pustaka && !$d->bebas_pustaka->link_repo)
+                                                <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                    Ditangguhkan
+                                                </span>
+                                                <p class="text-danger">
+                                                    <strong>
+                                                        Mahasiswa belum Upload Repository!
+                                                    </strong>
+                                                </p>
+                                            @endif
                                         </td>
                                     </tr>     
                                 @endforeach

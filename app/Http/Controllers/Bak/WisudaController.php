@@ -289,6 +289,7 @@ class WisudaController extends Controller
                 ->leftJoin('pisn_mahasiswas as pisn', 'pisn.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
                 // ✅ JOIN BARU : file_fakultas
                 ->leftJoin('file_fakultas as ff','ff.id','data_wisuda.id_file_fakultas')
+                ->leftJoin('bebas_pustakas as bp','bp.id_registrasi_mahasiswa','data_wisuda.id_registrasi_mahasiswa')
 
                 ->where('pw.periode', $req['periode'])
                 // ->where('data_wisuda.approved', 3)
@@ -317,7 +318,11 @@ class WisudaController extends Controller
                     'b.handphone', 'b.email',
                     'b.nama_ayah', 'b.nama_ibu_kandung',
                     'b.alamat_orang_tua',
-                    DB::raw("DATE_FORMAT(tanggal_daftar, '%d-%m-%Y') as tanggal_daftar")
+                    DB::raw("DATE_FORMAT(tanggal_daftar, '%d-%m-%Y') as tanggal_daftar"),
+
+                    // Tambahkan data bebas pustaka
+                    'bp.file_bebas_pustaka as file_bebas_pustaka',
+                    'bp.link_repo as link_repo'
                 );
                         
         if ($req['prodi'] != "*") {

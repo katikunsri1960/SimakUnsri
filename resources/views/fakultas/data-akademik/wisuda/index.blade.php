@@ -237,92 +237,101 @@ function getData()
                         <td class="align-middle text-nowrap">
                             <div class="row">
 
-                                ${item.approved == 1 ? `
-                                    <button onclick="showApproveModal(${item.id})" class="btn btn-success btn-sm my-2">
-                                        <i class="fa fa-check"></i> Approve
-                                    </button>
+                                ${
+                                    item.approved == 1
+                                    ? (
+                                        !item.file_bebas_pustaka
+                                        ? `
+                                            <span class="badge badge-lg bg-danger mb-2 rounded">
+                                                Ditangguhkan
+                                            </span>
+                                            <p class="text-danger mb-0">
+                                                <strong>
+                                                    Mahasiswa belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
+                                                </strong>
+                                            </p>
+                                        `
+                                        : !item.link_repo
+                                        ? `
+                                            <span class="badge badge-lg bg-danger mb-2 rounded">
+                                                Ditangguhkan
+                                            </span>
+                                            <p class="text-danger mb-0">
+                                                <strong>
+                                                    Mahasiswa belum Upload Repository!
+                                                </strong>
+                                            </p>
+                                        `
+                                        : `
+                                            <button onclick="showApproveModal(${item.id})" class="btn btn-success btn-sm my-2">
+                                                <i class="fa fa-check"></i> Approve
+                                            </button>
 
-                                    <div class="modal fade" id="approveModal${item.id}" tabindex="-1">
-                                        <div class="modal-dialog modal-lg modal-dialog-centered">
-                                            <div class="modal-content">
+                                            <div class="modal fade" id="approveModal${item.id}" tabindex="-1">
+                                                <div class="modal-dialog modal-lg modal-dialog-centered">
+                                                    <div class="modal-content">
 
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Approve & Input No Urut & Gelar</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-
-                                                <div class="modal-body justify-content-center row">
-                                                    <div class="col-md-12">
-                                                        <div class="mb-3">
-                                                            <label>Gelar Lulusan</label>
-                                                            <select class="form-select" id="gelar_${item.id}">
-                                                                <option value="">-- Pilih Gelar --</option>
-                                                                @foreach($gelar_lulusan as $g)
-                                                                    <option value="{{ $g->id }}">{{ $g->gelar }} ({{ $g->prodi->nama_jenjang_pendidikan }} - {{ $g->prodi->nama_program_studi }})</option>
-                                                                @endforeach
-                                                            </select>
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Approve & Input No Urut & Gelar</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
-                                                    </div>
-                                                    <div class="col-md-12">
-                                                        <div class="mb-3">
-                                                            <label>Predikat Lulusan</label>
-                                                            <select class="form-select" id="predikat_${item.id}">
-                                                                <option value="">-- Pilih Predikat --</option>
-                                                                @foreach($predikat_lulusan as $p)
-                                                                    <option value="{{ $p->id }}">{{ $p->indonesia }}</option>
-                                                                @endforeach
-                                                            </select>
+
+                                                        <div class="modal-body row">
+                                                            <div class="col-md-12 mb-3">
+                                                                <label>Gelar Lulusan</label>
+                                                                <select class="form-select" id="gelar_${item.id}">
+                                                                    <option value="">-- Pilih Gelar --</option>
+                                                                    @foreach($gelar_lulusan as $g)
+                                                                        <option value="{{ $g->id }}">
+                                                                            {{ $g->gelar }} ({{ $g->prodi->nama_jenjang_pendidikan }} - {{ $g->prodi->nama_program_studi }})
+                                                                        </option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="col-md-12 mb-3">
+                                                                <label>Predikat Lulusan</label>
+                                                                <select class="form-select" id="predikat_${item.id}">
+                                                                    <option value="">-- Pilih Predikat --</option>
+                                                                    @foreach($predikat_lulusan as $p)
+                                                                        <option value="{{ $p->id }}">{{ $p->indonesia }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                            </div>
                                                         </div>
+
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
+                                                            <button class="btn btn-success" onclick="submitApprove(${item.id})">
+                                                                Setujui
+                                                            </button>
+                                                        </div>
+
                                                     </div>
                                                 </div>
-
-                                                <div class="modal-footer">
-                                                    <button class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                                                    <button class="btn btn-success" onclick="submitApprove(${item.id})">
-                                                        Setujui
-                                                    </button>
-                                                </div>
-
                                             </div>
-                                        </div>
-                                    </div>
-                                ` : ''}
 
-                                ${(item.approved == 1 || item.approved == 2) ? `
-                                    <button onclick="showDeclineModal(${item.id})" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan">
-                                        <i class="fa fa-ban"> </i> Decline
-                                    </button>
-
-                                    <div class="modal fade" id="declineModal${item.id}" tabindex="-1" aria-labelledby="declineModalLabel${item.id}" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
-                                            <div class="modal-content">
-
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="declineModalLabel${item.id}">Alasan Penolakan</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-
-                                                <div class="modal-body">
-                                                    <div class="col-md-12 mb-3">
-                                                        <label for="alasan_pembatalan${item.id}" class="form-label">Alasan Penolakan</label>
-                                                        <input class="form-control" name="alasan_pembatalan" id="alasan_pembatalan${item.id}" placeholder="Masukkan alasan penolakan">
-                                                    </div>
-                                                </div>
-
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                    <button type="button" class="btn btn-danger" onclick="submitDecline(${item.id})">Tolak</button>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                ` : ''}
+                                            <button onclick="showDeclineModal(${item.id})" class="btn btn-danger btn-sm my-2">
+                                                <i class="fa fa-ban"></i> Decline
+                                            </button>
+                                        `
+                                    )
+                                    : (item.approved == 2
+                                        ? `
+                                            <button onclick="showDeclineModal(${item.id})" class="btn btn-danger btn-sm my-2">
+                                                <i class="fa fa-ban"></i> Decline
+                                            </button>
+                                        `
+                                        : ''
+                                    )
+                                }
 
                             </div>
-                        </td>`;
+                        </td>
+                        `;
 
-                        var useptData = item.useptdata
+
+                    var useptData = item.useptdata
                         ? `
                             <div class="text-center">
                                 <span class="text-${item.useptdata.class}">
