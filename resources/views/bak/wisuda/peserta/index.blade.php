@@ -279,40 +279,91 @@ function getData()
 
 
 
-                    var aksi = 
-                        `<td class="text-center align-middle text-nowrap">
+                    var aksi = `
+                        <td class="text-center align-middle text-nowrap">
                             <div class="row">
-                                ${item.approved == 2 ? `
-                                    <button onclick="approvePeserta(${item.id})" class="btn btn-success btn-sm my-2" title="Setujui Pengajuan">
-                                        <i class="fa fa-check"> </i> Approve
-                                    </button>` : ''}
-                                ${(item.approved == 2 || item.approved == 3) ? `
-                                    <button onclick="showDeclineModal(${item.id})" class="btn btn-danger btn-sm my-2" title="Tolak Pengajuan">
-                                        <i class="fa fa-ban"> </i> Decline
-                                    </button>
-                                    <div class="modal fade" id="declineModal${item.id}" tabindex="-1" aria-labelledby="declineModalLabel${item.id}" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="declineModalLabel${item.id}">Alasan Penolakan</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <div class="col-md-12 mb-3">
-                                                        <label for="alasan_pembatalan${item.id}" class="form-label">Alasan Penolakan</label>
-                                                        <input class="form-control" name="alasan_pembatalan" id="alasan_pembatalan${item.id}" rows="3" placeholder="Masukkan alasan penolakan"></input>
+
+                                ${
+                                    item.approved == 2
+                                    ? (
+                                        !item.file_bebas_pustaka
+                                        ? `
+                                            <span class="badge badge-lg bg-danger mb-2 rounded">
+                                                Ditangguhkan
+                                            </span>
+                                            <p class="text-danger mb-0">
+                                                <strong>
+                                                    Mahasiswa belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
+                                                </strong>
+                                            </p>
+                                        `
+                                        : !item.link_repo
+                                        ? `
+                                            <span class="badge badge-lg bg-danger mb-2 rounded">
+                                                Ditangguhkan
+                                            </span>
+                                            <p class="text-danger mb-0">
+                                                <strong>
+                                                    Mahasiswa belum Upload Repository!
+                                                </strong>
+                                            </p>
+                                        `
+                                        : `
+                                            <button onclick="approvePeserta(${item.id})"
+                                                    class="btn btn-success btn-sm my-2"
+                                                    title="Setujui Pengajuan">
+                                                <i class="fa fa-check"></i> Approve
+                                            </button>
+
+                                            <button onclick="showDeclineModal(${item.id})"
+                                                    class="btn btn-danger btn-sm my-2"
+                                                    title="Tolak Pengajuan">
+                                                <i class="fa fa-ban"></i> Decline
+                                            </button>
+
+                                            <div class="modal fade" id="declineModal${item.id}" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Alasan Penolakan</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Alasan Penolakan</label>
+                                                                <input class="form-control"
+                                                                    id="alasan_pembatalan${item.id}"
+                                                                    placeholder="Masukkan alasan penolakan">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                            <button class="btn btn-danger" onclick="submitDecline(${item.id})">
+                                                                Tolak
+                                                            </button>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                    <button type="button" class="btn btn-danger" onclick="submitDecline(${item.id})">Tolak</button>
-                                                </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                ` : ''}
+                                        `
+                                    )
+                                    : (
+                                        item.approved == 3
+                                        ? `
+                                            <button onclick="showDeclineModal(${item.id})"
+                                                    class="btn btn-danger btn-sm my-2"
+                                                    title="Tolak Pengajuan">
+                                                <i class="fa fa-ban"></i> Decline
+                                            </button>
+                                        `
+                                        : ''
+                                    )
+                                }
+
                             </div>
-                        </td>`;
+                        </td>
+                        `;
+
 
                     var useptData = item.useptdata
                         ? `

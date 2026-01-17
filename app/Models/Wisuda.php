@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Perpus\BebasPustaka;
 use App\Models\ProgramStudi;
 use App\Models\BkuProgramStudi;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
@@ -114,6 +115,11 @@ class Wisuda extends Model
     public function bku_prodi()
     {
         return $this->belongsTo(BkuProgramStudi::class, 'id_bku_prodi', 'id');
+    }
+
+    public function bebas_pustaka()
+    {
+        return $this->hasOne(BebasPustaka::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function getIdTanggalSkYudisiumAttribute()
