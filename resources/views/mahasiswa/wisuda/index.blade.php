@@ -71,7 +71,7 @@ Pendaftaran Wisuda Mahasiswa
                                         <td class="text-left">Bebas Pustaka</td>
                                         <td class="text-center">:</td>
                                         <td class="text-left" style="text-align: justify">
-                                            @if(!$bebas_pustaka)
+                                            @if(!$bebas_pustaka || !$bebas_pustaka->file_bebas_pustaka)
                                                 <span class="badge bg-danger">Belum Bebas Pustaka</span>
                                             @else
                                                 <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$bebas_pustaka->file_bebas_pustaka}}" type="button" target="_blank">Lihat Bebas Pustaka</a>
@@ -82,7 +82,7 @@ Pendaftaran Wisuda Mahasiswa
                                         <td class="text-left">Link Repository</td>
                                         <td class="text-center">:</td>
                                         <td class="text-left" style="text-align: justify">
-                                            @if(!$bebas_pustaka)
+                                            @if(!$bebas_pustaka || !$bebas_pustaka->link_repo)
                                                 <span class="badge bg-danger">Belum Upload Repositroy</span>
                                             @else
                                                 <a class="btn btn-sm btn-success" href="{{$bebas_pustaka->link_repo}}" type="button" target="_blank">Lihat Repository</a>
@@ -223,21 +223,47 @@ Pendaftaran Wisuda Mahasiswa
                                                 <td class="text-left" style="width: 30%;">Status Pendaftaran Wisuda</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
                                                 <td class="text-left align-middle" style="width:10%">
-                                                    @if($wisuda->approved == 0)
-                                                        <span class="badge badge-lg badge-warning mb-5 rounded">Belum Disetujui Koor. Prodi</span>
-                                                    @elseif($wisuda->approved == 1)
-                                                        <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Koor. Prodi</span>
-                                                    @elseif($wisuda->approved == 2)
-                                                        <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Fakultas</span>
-                                                    @elseif($wisuda->approved == 3)
-                                                        <span class="badge badge-lg badge-success mb-5 rounded">Disetujui Dir. Akademik</span>
-                                                    @elseif($wisuda->approved == 97)
-                                                        <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Koor. Prodi</span>
-                                                    @elseif($wisuda->approved == 98)
-                                                        <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Fakultas</span>
-                                                    @elseif($wisuda->approved == 99)
-                                                        <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Dir. Akademik</span>
+                                                    @if($bebas_pustaka && $bebas_pustaka->file_bebas_pustaka && $bebas_pustaka->link_repo)
+                                                        @if($wisuda->approved == 0)
+                                                            <span class="badge badge-lg badge-warning mb-5 rounded">Belum Disetujui Koor. Prodi</span>
+                                                        @elseif($wisuda->approved == 1)
+                                                            <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Koor. Prodi</span>
+                                                        @elseif($wisuda->approved == 2)
+                                                            <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Fakultas</span>
+                                                        @elseif($wisuda->approved == 3)
+                                                            <span class="badge badge-lg badge-success mb-5 rounded">Disetujui Dir. Akademik</span>
+                                                        @elseif($wisuda->approved == 97)
+                                                            <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Koor. Prodi</span>
+                                                        @elseif($wisuda->approved == 98)
+                                                            <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Fakultas</span>
+                                                        @elseif($wisuda->approved == 99)
+                                                            <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Dir. Akademik</span>
+                                                        @endif
+                                                    @elseif($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
+                                                        <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                            Ditangguhkan
+                                                        </span>
+                                                        <p class="text-danger">
+                                                            <strong>
+                                                                Anda belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
+                                                            </strong>
+                                                        </p>
+                                                    @elseif($bebas_pustaka && !$bebas_pustaka->link_repo)
+                                                        <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                            Ditangguhkan
+                                                        </span>
+                                                        <p class="text-danger">
+                                                            <strong>
+                                                                Anda belum Upload Repository!
+                                                            </strong>
+                                                        </p>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                            Persyaratan Wisuda Belum Lengkap
+                                                        </span>
                                                     @endif
+
+                                                    
                                                 </td>
                                             </tr>
                                             
@@ -245,8 +271,16 @@ Pendaftaran Wisuda Mahasiswa
                                                 <td class="text-left" style="width: 30%;">Berkas Registrasi Wisuda</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
                                                 <td class="text-left align-middle">
-                                                    @if($wisuda->approved >= 2)
-                                                        <a class="btn btn-sm btn-success"
+                                                    @if($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
+                                                        <span class="badge badge-lg bg-danger mb-5">
+                                                            Berkas Registrasi Ditangguhkan
+                                                        </span>
+                                                    @elseif($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
+                                                        <span class="badge badge-lg bg-danger mb-5">
+                                                            Berkas Registrasi Ditangguhkan
+                                                        </span>
+                                                    @elseif($wisuda->approved >= 2 && $wisuda->approved < 90)
+                                                        <a class="btn btn-sm btn-primary my-5"
                                                         href="{{ route('mahasiswa.wisuda.formulir', ['id' => $wisuda->id]) }}"
                                                         target="_blank">
                                                             <i class="fa fa-file me-2"></i> Unduh Berkas Registrasi
@@ -257,9 +291,7 @@ Pendaftaran Wisuda Mahasiswa
                                                         </span>
                                                     @endif
                                                 </td>
-                                            </tr>
-
-                                            
+                                            </tr>                                            
                                         </table>
                                     </div>
                                 </div>

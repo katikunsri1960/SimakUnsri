@@ -148,7 +148,7 @@ Dashboard
                             </div>
                             <div class="d-flex flex-column font-weight-500" style="margin-left: 20px">
                                 <a class="text-dark hover-primary mb-1 font-size-16"><strong>Bebas Pustaka</strong></a>
-                                @if ($bebas_pustaka == NULL)
+                                @if (!$bebas_pustaka || empty($bebas_pustaka->file_bebas_pustaka))
                                     <a class="badge bg-danger badge-lg">Belum Bebas Pustaka</a>
                                 @else
                                     <a class="btn btn-success btn-sm" href="{{asset('storage/'. $bebas_pustaka->file_bebas_pustaka) }}" title="Lihat Surat Bebas Pustaka" target="_blank">Sudah Bebas Pustaka</a>
@@ -169,7 +169,7 @@ Dashboard
                             </div>
                             <div class="d-flex flex-column font-weight-500" style="margin-left: 20px">
                                 <a class="text-dark hover-primary mb-1 font-size-16"><strong>Upload Repository</strong></a>
-                                @if ($bebas_pustaka == NULL)
+                                @if (!$bebas_pustaka || empty($bebas_pustaka->link_repo))
                                     <a class="badge bg-danger badge-lg">Belum Upload Repository</a>
                                 @else
                                     <a class="btn btn-success btn-sm" href="{{$bebas_pustaka->link_repo}}" title="Lihat Link Repository" target="_blank">{{$bebas_pustaka->link_repo}}</a>
