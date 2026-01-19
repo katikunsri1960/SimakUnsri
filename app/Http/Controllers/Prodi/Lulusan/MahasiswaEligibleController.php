@@ -29,8 +29,8 @@ class MahasiswaEligibleController extends Controller
             'S2'  => 36,
             'S3'  => 42,
             'Profesi' => 24,
-            'Sp1' => 92,
-            'Sp2' => 42
+            'Sp-1' => 92,
+            'Sp-2' => 42
         ];
 
         // Define required Masa Studi for each "jenjang_pendidikan"
@@ -40,8 +40,8 @@ class MahasiswaEligibleController extends Controller
             'S2'  => 4,
             'S3'  => 7,
             'Profesi' => 5,
-            'Sp1' => 8,
-            'Sp2' => 6
+            'Sp-1' => 8,
+            'Sp-2' => 6
         ];
 
         // Define required Masa Studi for each "jenjang_pendidikan"
@@ -51,8 +51,8 @@ class MahasiswaEligibleController extends Controller
             'S2'  => 3,
             'S3'  => 3,
             'Profesi' => 3,
-            'Sp1' => 3,
-            'Sp2' => 3
+            'Sp-1' => 3,
+            'Sp-2' => 3
         ];
 
         $data = Wisuda::with([
@@ -179,8 +179,8 @@ class MahasiswaEligibleController extends Controller
             'S2'  => 36,
             'S3'  => 42,
             'Profesi' => 24,
-            'Sp1' => 92,
-            'Sp2' => 42
+            'Sp-1' => 92,
+            'Sp-2' => 42
         ];
 
         // Define required Masa Studi for each "jenjang_pendidikan"
@@ -190,8 +190,8 @@ class MahasiswaEligibleController extends Controller
             'S2'  => 4,
             'S3'  => 7,
             'Profesi' => 5,
-            'Sp1' => 8,
-            'Sp2' => 6
+            'Sp-1' => 8,
+            'Sp-2' => 6
         ];
 
         // Define required Masa Studi for each "jenjang_pendidikan"
@@ -201,8 +201,8 @@ class MahasiswaEligibleController extends Controller
             'S2'  => 3,
             'S3'  => 3,
             'Profesi' => 3,
-            'Sp1' => 3,
-            'Sp2' => 3
+            'Sp-1' => 3,
+            'Sp-2' => 3
         ];
 
         $data = Wisuda::with([
@@ -224,6 +224,8 @@ class MahasiswaEligibleController extends Controller
             ->withSum('transkrip_mahasiswa', 'sks_mata_kuliah')
             ->withSum('aktivitas_kuliah', 'sks_semester')
             ->first();
+
+        // dd($data);
 
         // Add eligibility status to each student
         $jenjang = $data->prodi->nama_jenjang_pendidikan ?? 'Unknown'; // Get jenjang from prodi
