@@ -761,19 +761,22 @@ class PerkuliahanController extends Controller
     public function aktivitas_mahasiswa_update($id, Request $request)
     {
         $data = $request->validate([
-            'judul' => 'required',
-            'tanggal_mulai' => 'required',
+            'judul'           => 'required',
+            'tanggal_mulai'   => 'required',
             'tanggal_selesai' => 'required',
         ]);
 
-        $aktivitas = AktivitasMahasiswa::find($id);
+        $aktivitas = AktivitasMahasiswa::findOrFail($id);
 
-        $data['tanggal_mulai'] = date('Y-m-d', strtotime($data['tanggal_mulai']));
+        $data['tanggal_mulai']   = date('Y-m-d', strtotime($data['tanggal_mulai']));
         $data['tanggal_selesai'] = date('Y-m-d', strtotime($data['tanggal_selesai']));
+        $data['feeder']          = 0;
 
         $aktivitas->update($data);
 
-        return redirect()->route('univ.perkuliahan.aktivitas-mahasiswa')->with('success', 'Data Berhasil Diupdate!');
+        return redirect()
+            ->route('univ.perkuliahan.aktivitas-mahasiswa')
+            ->with('success', 'Data Berhasil Diupdate!');
     }
 
     public function sync_aktivitas_mahasiswa()
