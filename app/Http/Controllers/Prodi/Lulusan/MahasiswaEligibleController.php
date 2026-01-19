@@ -225,6 +225,8 @@ class MahasiswaEligibleController extends Controller
             ->withSum('aktivitas_kuliah', 'sks_semester')
             ->first();
 
+        dd($data);
+
         // Add eligibility status to each student
         $jenjang = $data->prodi->nama_jenjang_pendidikan ?? 'Unknown'; // Get jenjang from prodi
         $sks_transkrip= $data->transkrip_mahasiswa_sum_sks_mata_kuliah ?? 0; // Get summed SKS Transkrip
