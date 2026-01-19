@@ -353,7 +353,10 @@ class WisudaController extends Controller
         $nikList = $data->pluck('nik')->filter()->unique();
 
         $useptScores = Usept::whereIn('nim', $nimList->merge($nikList))
-            ->pluck('score', 'nim');
+            ->select('nim')
+            ->selectRaw('MAX(score) as max_score')
+            ->groupBy('nim')
+            ->pluck('max_score', 'nim');
 
         $courseScores = CourseUsept::whereIn('nim', $nimList->merge($nikList))
             ->get()
