@@ -404,10 +404,16 @@
                     <tr class="text-upper">
                         <td class="no-wrap">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
                         <td width="1">: </td>
+                        @php
+                            $ipk = $totalSks > 0 ? round($totalBobot / $totalSks, 2) : 0;
+                        @endphp
+
                         <td colspan="3">
-                            {{$totalBobot}}/{{$totalSks}} = 
-                            {{ str_replace('.', ',', $d->ipk) }} ({{terbilang_ipk($d->ipk)}}) / 
-                            {{ str_replace('.', ',', $d->ipk) }} ({{terbilang_ipk_en($d->ipk)}})
+                            {{ $totalBobot }}/{{ $totalSks }} =
+                            {{ str_replace('.', ',', $ipk) }}
+                            ({{ terbilang_ipk($ipk) }}) /
+                            {{ str_replace('.', ',', $ipk) }}
+                            ({{ terbilang_ipk_en($ipk) }})
                         </td>
                     </tr>
 
