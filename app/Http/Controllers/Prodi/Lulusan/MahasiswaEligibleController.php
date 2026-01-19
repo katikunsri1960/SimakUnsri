@@ -329,7 +329,7 @@ class MahasiswaEligibleController extends Controller
     {
         $data = $request->validate([
             'judul_en' => 'required',
-            'predikat_mhs' => 'required',
+            // 'predikat_mhs' => 'required',
             'bku_mhs' => 'nullable'
         ]);
 
@@ -338,7 +338,7 @@ class MahasiswaEligibleController extends Controller
             DB::beginTransaction();
 
                 //Update detail ajuan wisuda by prodi
-                Wisuda::where('id', $id)->update(['judul_eng' => $request->judul_en, 'id_predikat_kelulusan' => $request->predikat_mhs == 0 ? null : $request->predikat_mhs, 'id_bku_prodi' => $request->bku_mhs]);
+                Wisuda::where('id', $id)->update(['judul_eng' => $request->judul_en, 'id_bku_prodi' => $request->bku_mhs]);
 
             DB::commit();
 
