@@ -272,7 +272,7 @@ function getData()
                                                     <div class="modal-content">
 
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Approve & Input No Urut & Gelar</h5>
+                                                            <h5 class="modal-title">Approve Fakultas</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
 
