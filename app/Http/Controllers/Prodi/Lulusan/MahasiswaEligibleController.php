@@ -225,7 +225,7 @@ class MahasiswaEligibleController extends Controller
             ->withSum('aktivitas_kuliah', 'sks_semester')
             ->first();
 
-        dd($data);
+        // dd($data);
 
         // Add eligibility status to each student
         $jenjang = $data->prodi->nama_jenjang_pendidikan ?? 'Unknown'; // Get jenjang from prodi
@@ -311,6 +311,8 @@ class MahasiswaEligibleController extends Controller
 
             $data->status_ipk = isset($requiredIPK[$jenjang]) && $akm_terakhir->ipk >= $requiredIPK[$jenjang] ? '1' : '0';
         }
+
+        dd($data);
 
 
         $akm_semester_pendek = AktivitasKuliahMahasiswa::whereRaw("RIGHT(id_semester, 1) = '3'")->where('id_registrasi_mahasiswa', $data->id_registrasi_mahasiswa)->sum('sks_semester');
