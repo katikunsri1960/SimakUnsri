@@ -313,6 +313,7 @@ class MahasiswaEligibleController extends Controller
         }
 
         dd($data);
+        dd($requiredSks[$jenjang]);
 
 
         $akm_semester_pendek = AktivitasKuliahMahasiswa::whereRaw("RIGHT(id_semester, 1) = '3'")->where('id_registrasi_mahasiswa', $data->id_registrasi_mahasiswa)->sum('sks_semester');
