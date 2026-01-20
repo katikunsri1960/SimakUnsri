@@ -800,6 +800,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('dosen')->group(function(){
                     Route::get('/daftar', [App\Http\Controllers\Prodi\DataMasterController::class, 'dosen'])->name('prodi.data-master.dosen.index');
                     Route::get('/gelar', [App\Http\Controllers\Prodi\DataMasterController::class, 'gelar_dosen'])->name('prodi.data-master.dosen.gelar');
+                    Route::post('/store', [App\Http\Controllers\Prodi\DataMasterController::class, 'gelar_dosen_store'])->name('prodi.data-master.dosen.gelar.store');
                 });
 
                 Route::prefix('mahasiswa')->group(function(){

@@ -111,10 +111,6 @@ Pejabat Universitas
         document.getElementById('nip').value = data.pejabat ? data.pejabat.nip : '';
 
     }
-
-
-
-
-
+    
 </script>
 @endpush
