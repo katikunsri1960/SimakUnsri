@@ -385,6 +385,7 @@ class PerkuliahanController extends Controller
 
     public function aktivitas_kuliah_update(Request $request, $id)
     {
+        // dd($id);
         // Validasi data
         $validated = $request->validate([
             'ips' => 'required|numeric|between:0,4.00',
@@ -395,6 +396,8 @@ class PerkuliahanController extends Controller
             'id_semester' => 'required|exists:semesters,id_semester',
             'id_status_mahasiswa' => 'required|exists:status_mahasiswas,id_status_mahasiswa',
         ]);
+
+        $semester = Semester::where('id_semester', $validated['id_semester'])->first();
 
         try {
             $aktivitasKuliah = AktivitasKuliahMahasiswa::findOrFail($id);
@@ -411,6 +414,7 @@ class PerkuliahanController extends Controller
             ];
 
             $validated['nama_status_mahasiswa'] = $statusMapping[$validated['id_status_mahasiswa']] ?? null;
+            $validated['nama_semester'] = $semester->nama_semester ?? '-';
 
             $validated['feeder'] = 0;
             $aktivitasKuliah->update($validated);
