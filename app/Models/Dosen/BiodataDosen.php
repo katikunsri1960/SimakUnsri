@@ -27,6 +27,12 @@ class BiodataDosen extends Model
         return $this->hasMany(PenugasanDosen::class, 'id_dosen', 'id_dosen');
     }
 
+    public function penugasan_terbaru()
+    {
+        return $this->hasOne(PenugasanDosen::class, 'id_dosen', 'id_dosen')
+                    ->latest('mulai_surat_tugas');
+    }
+
     public function getJenisKelaminAttribute($value)
     {
         switch ($value) {

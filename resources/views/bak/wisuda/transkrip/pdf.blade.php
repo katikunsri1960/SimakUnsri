@@ -427,7 +427,15 @@
                     </tr>
 
                     <tr>
-                        <td width="50">JUDUL SKRIPSI<br><em>(FINAL PROJECT TITLE)</em></td>
+                        @if($d->jenjang == 'D3')
+                            <td width="50">JUDUL TUGAS AKHIR<br><em>(FINAL PROJECT TITLE)</em></td>
+                        @elseif($d->jenjang == 'S1')
+                            <td width="50">JUDUL SKRIPSI<br><em>(FINAL PROJECT TITLE)</em></td>
+                        @elseif($d->jenjang == 'S2')
+                            <td width="50">JUDUL TESIS<br><em>(THESIS TITLE)</em></td>
+                        @elseif($d->jenjang == 'S3')
+                            <td width="50">JUDUL DISERTASI<br><em>(DISERTATION TITLE)</em></td>
+                        @endif
                         <td width="1">: </td>
                         <!-- <td width="1">: </td> -->
                         <td colspan="4">
@@ -439,14 +447,22 @@
                     </tr>
 
                     <tr>
-                        <td width="50">PEMBIMBING SKRIPSI<br><em>(FINAL PROJECT ADVISORS)</em></td>
+                        @if($d->jenjang == 'D3')
+                            <td width="50">PEMBIMBING TUGAS AKHIR<br><em>(FINAL PROJECT ADVISORS)</em></td>
+                        @elseif($d->jenjang == 'S1')
+                            <td width="50">PEMBIMBING SKRIPSI<br><em>(FINAL PROJECT ADVISORS)</em></td>
+                        @elseif($d->jenjang == 'S2')
+                            <td width="50">PEMBIMBING TESIS<br><em>(THESIS ADVISORS)</em></td>
+                        @elseif($d->jenjang == 'S3')
+                            <td width="50">PEMBIMBING DISERTASI<br><em>(DISERTATION ADVISORS)</em></td>
+                        @endif
                         <td width="1">: </td>
                         <!-- <td width="1">: </td> -->
                         <td colspan="4">
                             <span style="float:left;"></span>
                             <span style="display:block; margin-left: 0px;">
                                 @foreach($d->aktivitas_mahasiswa->bimbing_mahasiswa as $pembimbing)
-                                    <div>{{ $pembimbing->pembimbing_ke }}. {{ $pembimbing->nama_dosen }}</div>
+                                    <div>{{ $pembimbing->pembimbing_ke }}. {{$pembimbing->dosen->gelar_depan}} {{ $pembimbing->nama_dosen }}, {{$pembimbing->dosen->gelar_belakang}} </div>
                                 @endforeach
                             </span>
                         </td>

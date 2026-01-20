@@ -42,24 +42,55 @@ class DataMasterController extends Controller
         $semesterAktif = SemesterAktif::first()->id_semester;
         $tahunAjaran = substr($semesterAktif, 0, 4);
 
-        $data = BiodataDosen::with(['penugasan' => function ($query) use ($tahunAjaran) {
+        $data = BiodataDosen::with(['penugasan_terbaru' => function ($query) use ($tahunAjaran) {
                 $query->where('id_tahun_ajaran', $tahunAjaran)
                     ->where('id_prodi', auth()->user()->fk_id);
             }])
-            ->whereHas('penugasan', function ($query) use ($tahunAjaran) {
+            ->whereHas('penugasan_terbaru', function ($query) use ($tahunAjaran) {
                 $query->where('id_tahun_ajaran', $tahunAjaran)
                     ->where('id_prodi', auth()->user()->fk_id);
             })
+            ->orderBy('nama_dosen', 'ASC')
             // ->limit(10)
             ->get();
 
-        // dd($data[5]->penugasan);
+        // dd($data[15]->penugasan_terbaru);
 
         return view('prodi.data-master.dosen.gelar', [
             'data' => $data
         ]);
     }
 
+    public function gelar_dosen_store(Request $request)
+    {
+        $data = $request->validate([
+            'id_dosen'     => 'required|exists:biodata_dosens,id_dosen',
+            'gelar_depan'    => 'nullable|string|max:50',
+            'gelar_belakang' => 'nullable|string|max:50',
+        ]);
+        // dd($data);
+
+        try {
+            // $dosen = BiodataDosen::findOrFail($data['id_dosen']);
+
+            $dosen = BiodataDosen::where('id_dosen',$data['id_dosen'])->first();
+
+            $dosen->update([
+                'gelar_depan'    => $data['gelar_depan'],
+                'gelar_belakang' => $data['gelar_belakang'],
+            ]);
+
+            // dd($dosen);
+        } catch (\Throwable $th) {
+            return redirect()
+                ->route('prodi.data-master.dosen.gelar')
+                ->with('error', 'Data Gelar Dosen gagal disimpan!');
+        }
+
+        return redirect()
+            ->route('prodi.data-master.dosen.gelar')
+            ->with('success', 'Data Gelar Dosen berhasil disimpan!');
+    }
 
     public function mahasiswa_data(Request $request)
     {

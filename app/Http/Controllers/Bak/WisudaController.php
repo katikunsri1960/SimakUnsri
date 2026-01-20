@@ -876,7 +876,7 @@ class WisudaController extends Controller
             $prodi = null;
         }
 
-        $data = Wisuda::with('transkrip_mahasiswa', 'transkrip_mahasiswa.mk_english','aktivitas_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa', 'predikat_kelulusan', 'periode_wisuda')
+        $data = Wisuda::with('transkrip_mahasiswa', 'transkrip_mahasiswa.mk_english','aktivitas_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa.dosen', 'predikat_kelulusan', 'periode_wisuda')
                 ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
@@ -899,7 +899,7 @@ class WisudaController extends Controller
         }
         $data = $data->get();
 
-        // dd($data[0]->transkrip_mahasiswa[0]->mk_english);
+        // dd($data[0]->aktivitas_mahasiswa->bimbing_mahasiswa[0]->dosen);
 
         if ($data->isEmpty()) {
             return response()->json([
