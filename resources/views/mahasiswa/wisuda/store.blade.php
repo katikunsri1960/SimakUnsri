@@ -44,7 +44,7 @@ Pendaftaran Wisuda Mahasiswa
                                     value="{{$riwayat_pendidikan->nama_mahasiswa}}" disabled required/>
                             </div>
                             <div class=" col-lg-6 mb-3">
-                                <label for="nik" class="form-label">NIK</label>
+                                <label for="nik" class="form-label">NIK <span class="text-danger">*</span></label>
                                 <input type="text"class="form-control"name="nik"id="nik"aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->nik}}" required/>
                             </div>
@@ -53,7 +53,7 @@ Pendaftaran Wisuda Mahasiswa
                         <h4 class="text-info mb-10 mt-10">Alamat Mahasiswa</h4>
                         <div class="data-wisuda-field row" style="margin-left: 10px;">
                             <div class=" col-lg-12 mb-3">
-                                <label for="jalan" class="form-label">Jalan</label>
+                                <label for="jalan" class="form-label">Jalan <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="jalan" id="jalan" aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->jalan}}" required/>
                             </div>
@@ -63,36 +63,39 @@ Pendaftaran Wisuda Mahasiswa
                                     value="{{$riwayat_pendidikan->biodata->dusun}}"/>
                             </div>
                             <div class=" col-lg-2 mb-3">
-                                <label for="rt" class="form-label">RT</label>
+                                <label for="rt" class="form-label">RT <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="rt" id="rt" aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->rt}}" required/>
                             </div>
                             <div class=" col-lg-2 mb-3">
-                                <label for="rw" class="form-label">RW</label>
+                                <label for="rw" class="form-label">RW <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="rw" id="rw" aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->rw}}" required/>
                             </div>
                             <div class=" col-lg-4 mb-3">
-                                <label for="kelurahan" class="form-label">Kelurahan</label>
+                                <label for="kelurahan" class="form-label">Kelurahan <span class="text-danger">*</span></label>
                                 <input type="text"class="form-control"name="kelurahan"id="kelurahan"aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->kelurahan}}" required/>
                             </div>
                             <div class=" col-lg-4 mb-3">
-                                <label for="kode_pos" class="form-label">Kode Pos</label>
+                                <label for="kode_pos" class="form-label">Kode Pos <span class="text-danger">*</span></label>
                                 <input type="text" class="form-control" name="kode_pos" id="kode_pos" aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->kode_pos}}"/>
                             </div>
                             <div class="col-lg-8 mb-3">
-                                <label for="id_wilayah" class="form-label">Wilayah</label>
-                                <select id="id_wilayah"  name="id_wilayah"></select>
+                                <label for="id_wilayah" class="form-label">
+                                    Wilayah <span class="text-danger">*</span>
+                                </label>
+                                <select id="id_wilayah" name="id_wilayah" style="width:100%"></select>
                             </div>
+
                             <div class=" col-lg-6 mb-3">
-                                <label for="handphone" class="form-label">No. Telp/HP</label>
+                                <label for="handphone" class="form-label">No. Telp/HP <span class="text-danger">*</span></label>
                                 <input type="text"class="form-control"name="handphone"id="handphone"aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->handphone}}" required/>
                             </div>
                             <div class=" col-lg-6 mb-3">
-                                <label for="email" class="form-label">Email</label>
+                                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
                                 <input type="text"class="form-control"name="email"id="email"aria-describedby="helpId"
                                     value="{{$riwayat_pendidikan->biodata->email}}" required/>
                             </div>
@@ -455,56 +458,95 @@ Pendaftaran Wisuda Mahasiswa
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
-    $(document).ready(function(){
-        $('#tambah-wisuda').submit(function(e){
-            e.preventDefault();
-            swal({
-                title: 'Pendaftaran Wisuda',
-                text: "Apakah anda yakin ingin mendaftar Wisuda?",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Lanjutkan',
-                cancelButtonText: 'Batal'
-            },function(isConfirmed){
-                if (isConfirmed) {
-                    $('#tambah-wisuda').unbind('submit').submit();
-                    $('#spinner').show();
-                }
-            });
-        });
-    });
+$(document).ready(function () {
 
-    $("#id_wilayah").select2({
-        placeholder: {
-            id: '{{$riwayat_pendidikan->biodata->id_wilayah}}',
-            text: '{{$riwayat_pendidikan->biodata->nama_wilayah}}, {{$riwayat_pendidikan->biodata->wilayah->kab_kota->nama_wilayah}}'
-        },
+    let placeholderText = 'Pilih Kecamatan';
+
+    @if(
+        !empty($riwayat_pendidikan->biodata) &&
+        !empty($riwayat_pendidikan->biodata->id_wilayah) &&
+        !empty($riwayat_pendidikan->biodata->nama_wilayah) &&
+        !empty($riwayat_pendidikan->biodata->wilayah) &&
+        !empty($riwayat_pendidikan->biodata->wilayah->kab_kota) &&
+        !empty($riwayat_pendidikan->biodata->wilayah->kab_kota->nama_wilayah)
+    )
+        placeholderText = '{{ $riwayat_pendidikan->biodata->nama_wilayah }}, {{ $riwayat_pendidikan->biodata->wilayah->kab_kota->nama_wilayah }}';
+    @endif
+
+    $('#id_wilayah').select2({
+        placeholder: placeholderText,
         width: '100%',
         minimumInputLength: 3,
         ajax: {
-            url: "{{route('mahasiswa.wisuda.get-kecamatan')}}",
+            url: "{{ route('mahasiswa.wisuda.get-kecamatan') }}",
             type: "GET",
             dataType: 'json',
             delay: 250,
             data: function (params) {
                 return {
-                    q: params.term // search term
+                    q: params.term
                 };
             },
             processResults: function (data) {
-                // console.log(data); // Display data in console
                 return {
                     results: $.map(data, function (item) {
                         return {
-                            text: item.nama_wilayah+", " + item.kab_kota.nama_wilayah,
-                            id: item.id_wilayah
-                        }
+                            id: item.id_wilayah,
+                            text: item.nama_wilayah + ', ' + item.kab_kota.nama_wilayah
+                        };
                     })
                 };
-            },
+            }
         }
-    }).data('select2').$container.find('.select2-selection__placeholder').css('color', 'black');
+    });
+
+    // VALIDASI SUBMIT
+    $('#tambah-wisuda').on('submit', function (e) {
+        e.preventDefault();
+
+        let wilayah = $('#id_wilayah').val();
+
+        if (!wilayah) {
+            swal({
+                title: 'Wilayah Belum Dipilih',
+                text: 'Silakan pilih Kecamatan terlebih dahulu.',
+                type: 'error',
+                confirmButtonText: 'OK'
+            });
+
+            // Highlight select2
+            $('#id_wilayah').next('.select2-container')
+                .find('.select2-selection')
+                .css('border', '1px solid red');
+
+            return false;
+        }
+
+        swal({
+            title: 'Pendaftaran Wisuda',
+            text: 'Apakah anda yakin ingin mendaftar Wisuda?',
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function (isConfirmed) {
+            if (isConfirmed) {
+                $('#tambah-wisuda').off('submit').submit();
+                $('#spinner').show();
+            }
+        });
+    });
+
+    // Hilangkan border merah saat dipilih
+    $('#id_wilayah').on('change', function () {
+        $('#id_wilayah').next('.select2-container')
+            .find('.select2-selection')
+            .css('border', '');
+    });
+
+});
 </script>
+
 @endpush
