@@ -230,7 +230,7 @@
                             @elseif($d->jenjang == 'S2')
                                 <em>(GRADUATE)</em>
                             @elseif($d->jenjang == 'S3')
-                                <em>(DOCTORAL)</em>
+                                <em>(POST GRADUATE)</em>
                             @endif
                         </td>
                     </tr>
