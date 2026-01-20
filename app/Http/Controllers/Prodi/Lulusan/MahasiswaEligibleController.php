@@ -243,24 +243,35 @@ class MahasiswaEligibleController extends Controller
         )->max('score');
         $temp = 0;
 
+        // Ambil nilai course USEPT
         $nilai_course = CourseUsept::whereIn(
             'nim',
             [$data->nim, $data->riwayat_pendidikan->biodata->nik]
         )->get();
 
+        // Instance object (WAJIB karena method non-static)
+        $db_course_usept = new CourseUsept();
+
         $nilai_course_max = 0;
 
         foreach ($nilai_course as $n) {
-            $hasil = CourseUsept::KonversiNilaiUsept($n->grade, $n->total_score);
+            $hasil = $db_course_usept->KonversiNilaiUsept(
+                $n->grade,
+                $n->total_score
+            );
+
             $nilai_course_max = max($nilai_course_max, $hasil);
         }
 
+        // Ambil nilai USEPT tertinggi (USEPT murni vs course)
         $nilai_usept_final = max(
             $nilai_usept_mhs ?? 0,
             $nilai_course_max
         );
 
+        // Status kelulusan USEPT
         $status_usept = $nilai_usept_final >= $nilai_usept_prodi->nilai_usept ? 1 : 0;
+
 
 
 
