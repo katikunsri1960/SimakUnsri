@@ -202,7 +202,7 @@ class WisudaController extends Controller
                     ->where('is_active', '1')
                     ->first();
 
-                    // dd($wisuda_ke);
+                    // dd($kecamatan->where('id_wilayah',999999));
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
                 ->whereHas('bimbing_mahasiswa', function ($query) {
@@ -318,6 +318,7 @@ class WisudaController extends Controller
             'no_hp_ibu' => 'required|regex:/^[0-9]+$/',
             'nama_ayah' => 'required|regex:/^[a-zA-Z\s]+$/',
             'nik' => 'required',
+            'id_wilayah' => 'required',
             'lokasi_kuliah' => 'required',
             'wisuda_ke' => 'required',
 
