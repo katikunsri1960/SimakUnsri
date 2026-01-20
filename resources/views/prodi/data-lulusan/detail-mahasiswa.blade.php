@@ -95,7 +95,11 @@ Dashboard
                                         name="nilai_usept"
                                         id="nilai_usept"
                                         aria-describedby="helpId"
-                                        value="{{$nilai_usept == 0 || $nilai_usept == 1 ? 'Belum Ada Nilai' : $nilai_usept}}"
+                                        value="{{ 
+                                            $nilai_usept > 0 
+                                            ? $nilai_usept . ' - ' . ($status_usept ? 'Lulus USEPT' : 'Belum Lulus USEPT') 
+                                            : 'Belum Ada Nilai'
+                                        }}"
                                         disabled
                                     />
                                 </div>
