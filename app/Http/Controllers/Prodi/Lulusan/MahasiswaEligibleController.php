@@ -233,37 +233,47 @@ class MahasiswaEligibleController extends Controller
         $sks_akm= $data->aktivitas_kuliah_sum_sks_semester ?? 0; // Get summed SKS AKM
         $tanggal_masuk = $data->riwayat_pendidikan->tanggal_daftar ?? '1970-01-01';
         $akm_terakhir = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $data->id_registrasi_mahasiswa)->orderBy('id_semester', 'desc')->first();
-        $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $data->riwayat_pendidikan->id_kurikulum)->first();
-        $nilai_usept_mhs = Usept::whereIn('nim', [$data->nim, $data->riwayat_pendidikan->biodata->nik])->max('score');
-        $db_course_usept = new CourseUsept;
-        $nilai_course = $db_course_usept->whereIn('nim', [$data->nim, $data->riwayat_pendidikan->biodata->nik])->get();
+        $nilai_usept_prodi = ListKurikulum::where(
+            'id_kurikulum',
+            $data->riwayat_pendidikan->id_kurikulum
+        )->first();
+        $nilai_usept_mhs = Usept::whereIn(
+            'nim',
+            [$data->nim, $data->riwayat_pendidikan->biodata->nik]
+        )->max('score');
         $temp = 0;
 
-        if ($nilai_usept_mhs >= $nilai_usept_prodi->nilai_usept) {
-            $nilai_usept = $nilai_usept_mhs;
-        } else {
-            if($nilai_course){
-                $nilai_hasil_course = null;
-                foreach($nilai_course as $n){
-                    $nilai_hasil_course = $db_course_usept->KonversiNilaiUsept($n->grade, $n->total_score);
+        // Ambil nilai course USEPT
+        $nilai_course = CourseUsept::whereIn(
+            'nim',
+            [$data->nim, $data->riwayat_pendidikan->biodata->nik]
+        )->get();
 
-                    // Jika nilai course sudah memenuhi syarat, lanjutkan
-                    if($nilai_hasil_course >= $nilai_usept_prodi->nilai_usept){
-                        $nilai_usept = $nilai_hasil_course;
-                        // Hentikan loop karena syarat sudah terpenuhi
-                        break;
-                    }
-                }
+        // Instance object (WAJIB karena method non-static)
+        $db_course_usept = new CourseUsept();
 
-                // Cek setelah loop jika tidak ada nilai yang memenuhi syarat
-                if (!$nilai_hasil_course || $nilai_hasil_course < $nilai_usept_prodi->nilai_usept) {
-                    $nilai_usept = 0;
-                }
+        $nilai_course_max = 0;
 
-            } else {
-                $nilai_usept = 1;
-            }
+        foreach ($nilai_course as $n) {
+            $hasil = $db_course_usept->KonversiNilaiUsept(
+                $n->grade,
+                $n->total_score
+            );
+
+            $nilai_course_max = max($nilai_course_max, $hasil);
         }
+
+        // Ambil nilai USEPT tertinggi (USEPT murni vs course)
+        $nilai_usept_final = max(
+            $nilai_usept_mhs ?? 0,
+            $nilai_course_max
+        );
+
+        // Status kelulusan USEPT
+        $status_usept = $nilai_usept_final >= $nilai_usept_prodi->nilai_usept ? 1 : 0;
+
+
+
 
         if($data->riwayat_pendidikan->id_jenis_daftar == 16 || $data->riwayat_pendidikan->id_jenis_daftar == 2 || $data->riwayat_pendidikan->id_jenis_daftar == 8){
             $kampus_merdeka = $data->aktivitas_kuliah->where('id_status_mahasiswa', 'M')->first();
@@ -322,7 +332,7 @@ class MahasiswaEligibleController extends Controller
 
         // dd($akm_semester_pendek);
 
-        return view('prodi.data-lulusan.detail-mahasiswa', ['data' => $data, 'bku' => $bku, 'predikat_kelulusan' => $predikat_kelulusan, 'nilai_usept' => $nilai_usept]);
+        return view('prodi.data-lulusan.detail-mahasiswa', ['data' => $data, 'bku' => $bku, 'predikat_kelulusan' => $predikat_kelulusan, 'nilai_usept' => $nilai_usept_final, 'status_usept' => $status_usept]);
     }
 
     public function update_detail_mahasiswa(Request $request, $id)
