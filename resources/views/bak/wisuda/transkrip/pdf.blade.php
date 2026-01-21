@@ -459,13 +459,37 @@
                         <td width="1">: </td>
                         <!-- <td width="1">: </td> -->
                         <td colspan="4">
-                            <span style="float:left;"></span>
-                            <span style="display:block; margin-left: 0px;">
+                            <span style="display:block;">
                                 @foreach($d->aktivitas_mahasiswa->bimbing_mahasiswa as $pembimbing)
-                                    <div>{{ $pembimbing->pembimbing_ke }}. {{$pembimbing->dosen->gelar_depan}} {{ $pembimbing->nama_dosen }}, {{$pembimbing->dosen->gelar_belakang}} </div>
+                                    @php
+                                        $gelar = $pembimbing->gelar;
+
+                                        $gelarDepan = $gelar
+                                            ? collect([
+                                                $gelar->gelar_depan_gb,
+                                                $gelar->gelar_depan_s3,
+                                                $gelar->gelar_depan_s2,
+                                                $gelar->gelar_depan_s1,
+                                            ])->filter()->implode(' ')
+                                            : null;
+
+                                        $gelarBelakang = $gelar
+                                            ? collect([
+                                                $gelar->gelar_belakang_s1,
+                                                $gelar->gelar_belakang_s2,
+                                                $gelar->gelar_belakang_s3,
+                                            ])->filter()->implode(' ')
+                                            : null;
+                                    @endphp
+
+                                    <div>
+                                        {{ $pembimbing->pembimbing_ke }}.
+                                        {{ trim(($gelarDepan ? $gelarDepan.' ' : '').$pembimbing->nama_dosen) }}@if($gelarBelakang), {{ $gelarBelakang }}@endif
+                                    </div>
                                 @endforeach
                             </span>
                         </td>
+
                     </tr>
                 </table>
 

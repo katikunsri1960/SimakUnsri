@@ -3,6 +3,7 @@
 namespace App\Models\Perkuliahan;
 
 use App\Models\Dosen\BiodataDosen;
+use App\Models\Dosen\GelarDosen;
 use App\Models\Referensi\KategoriKegiatan;
 use App\Models\SemesterAktif;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -37,6 +38,11 @@ class BimbingMahasiswa extends Model
     public function dosen()
     {
         return $this->belongsTo(BiodataDosen::class, 'id_dosen', 'id_dosen');
+    }
+
+    public function gelar()
+    {
+        return $this->belongsTo(GelarDosen::class, 'id_dosen','id_dosen');
     }
 
     public function aktivitas_pa_prodi($prodi, $semester)
