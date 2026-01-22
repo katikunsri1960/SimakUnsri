@@ -798,7 +798,8 @@ class WisudaController extends Controller
 
         $kode_univ = ProfilPt::select('kode_perguruan_tinggi')->first()->kode_perguruan_tinggi ?? "Data Kosong";
 
-        $paper_size = [0,0, 609.45, 779.53];
+        $paper_size = [0, 0, 609, 774];
+
         $fakultas = Fakultas::select('id', 'nama_fakultas')->where('id', $fakultas)->first()->nama_fakultas;
 
         $fakultas = str_replace('Fakultas ', '', $fakultas);
@@ -815,6 +816,7 @@ class WisudaController extends Controller
                                 ->first();
                                 // dd($dekan);
 
+                                // dd($data[0]->wisuda_ke);
         $pdf = PDF::loadview('bak.wisuda.ijazah.pdf', [
             'data' => $data,
             'kode_univ' => $kode_univ,
@@ -824,7 +826,7 @@ class WisudaController extends Controller
         ])
         ->setPaper($paper_size, 'landscape');
 
-        return $pdf->stream('Ijazah-'.$data[0]->periode_wisuda.'.pdf');
+        return $pdf->stream('Ijazah-'.$data[0]->wisuda_ke.'.pdf');
     }
 
     //TRANSKRIP
@@ -876,7 +878,7 @@ class WisudaController extends Controller
             $prodi = null;
         }
 
-        $data = Wisuda::with('transkrip_mahasiswa', 'transkrip_mahasiswa.mk_english','aktivitas_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa.dosen', 'predikat_kelulusan', 'periode_wisuda')
+        $data = Wisuda::with('transkrip_mahasiswa', 'transkrip_mahasiswa.mk_english','aktivitas_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa.gelar', 'predikat_kelulusan', 'periode_wisuda')
                 ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
@@ -901,6 +903,8 @@ class WisudaController extends Controller
 
         // dd($data[0]->aktivitas_mahasiswa->bimbing_mahasiswa[0]->dosen);
 
+        // dd($data[0]->aktivitas_mahasiswa->bimbing_mahasiswa[0]->dosen);
+
         if ($data->isEmpty()) {
             return response()->json([
                 'status' => 'error',
@@ -910,7 +914,8 @@ class WisudaController extends Controller
 
         $kode_univ = ProfilPt::select('kode_perguruan_tinggi')->first()->kode_perguruan_tinggi ?? "Data Kosong";
 
-        $paper_size = [0, 0, 612, 792];
+        $paper_size = [0, 0, 609, 944];
+
         $fakultas = Fakultas::select('id', 'nama_fakultas', 'nama_fakultas_eng')->where('id', $fakultas)->first();
 
         // $fakultas = str_replace('Fakultas ', '', $fakultas);

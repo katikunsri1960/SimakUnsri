@@ -24,6 +24,7 @@ use App\Models\Connection\Registrasi;
 use App\Models\Connection\Tagihan;
 use App\Models\SemesterAktif;
 use App\Models\PenundaanBayar;
+use App\Models\Dosen\GelarDosen;
 
 class DataMasterController extends Controller
 {
@@ -42,7 +43,7 @@ class DataMasterController extends Controller
         $semesterAktif = SemesterAktif::first()->id_semester;
         $tahunAjaran = substr($semesterAktif, 0, 4);
 
-        $data = BiodataDosen::with(['penugasan_terbaru' => function ($query) use ($tahunAjaran) {
+        $data = BiodataDosen::with(['gelar','penugasan_terbaru' => function ($query) use ($tahunAjaran) {
                 $query->where('id_tahun_ajaran', $tahunAjaran)
                     ->where('id_prodi', auth()->user()->fk_id);
             }])
@@ -64,33 +65,42 @@ class DataMasterController extends Controller
     public function gelar_dosen_store(Request $request)
     {
         $data = $request->validate([
-            'id_dosen'     => 'required|exists:biodata_dosens,id_dosen',
-            'gelar_depan'    => 'nullable|string|max:50',
-            'gelar_belakang' => 'nullable|string|max:50',
+            'id_dosen'            => 'required|exists:biodata_dosens,id_dosen',
+            'gelar_depan_s1'      => 'nullable|string|max:50',
+            'gelar_depan_s2'      => 'nullable|string|max:50',
+            'gelar_depan_s3'      => 'nullable|string|max:50',
+            // 'gelar_depan_gb'      => 'nullable|string|max:50',
+            'gelar_belakang_s1'   => 'nullable|string|max:50',
+            'gelar_belakang_s2'   => 'nullable|string|max:50',
+            'gelar_belakang_s3'   => 'nullable|string|max:50',
         ]);
+
         // dd($data);
 
         try {
-            // $dosen = BiodataDosen::findOrFail($data['id_dosen']);
+            GelarDosen::updateOrCreate(
+                ['id_dosen' => $data['id_dosen']], // kondisi
+                [
+                    'gelar_depan_s1'    => $data['gelar_depan_s1'],
+                    'gelar_depan_s2'    => $data['gelar_depan_s2'],
+                    'gelar_depan_s3'    => $data['gelar_depan_s3'],
+                    // 'gelar_depan_gb'    => $data['gelar_depan_gb'],
+                    'gelar_belakang_s1' => $data['gelar_belakang_s1'],
+                    'gelar_belakang_s2' => $data['gelar_belakang_s2'],
+                    'gelar_belakang_s3' => $data['gelar_belakang_s3'],
+                ]
+            );
 
-            $dosen = BiodataDosen::where('id_dosen',$data['id_dosen'])->first();
-
-            $dosen->update([
-                'gelar_depan'    => $data['gelar_depan'],
-                'gelar_belakang' => $data['gelar_belakang'],
-            ]);
-
-            // dd($dosen);
+            return redirect()
+                ->route('prodi.data-master.dosen.gelar')
+                ->with('success', 'Data Gelar Dosen berhasil disimpan!');
         } catch (\Throwable $th) {
             return redirect()
                 ->route('prodi.data-master.dosen.gelar')
                 ->with('error', 'Data Gelar Dosen gagal disimpan!');
         }
-
-        return redirect()
-            ->route('prodi.data-master.dosen.gelar')
-            ->with('success', 'Data Gelar Dosen berhasil disimpan!');
     }
+
 
     public function mahasiswa_data(Request $request)
     {
