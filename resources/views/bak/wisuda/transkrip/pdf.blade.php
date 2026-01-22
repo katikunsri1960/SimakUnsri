@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
         <title>Transkrip Akademik</title>
     <style>
-        @page { margin: 40px 20px 40px 20px; }
+        @page { margin: 15mm 11mm 15mm 20mm; }
 
         .page-landscape {
             width: 100%;
@@ -217,8 +217,10 @@
                         <td>FAKULTAS <em>(FACULTY)</em></td> 
                         <td width="1%">:  </td>
                         <td> 
-                            {{str_replace('Fakultas ', '', $fakultas->nama_fakultas) }}<br>
-                            <em>({{str_replace('Faculty of ', '', $fakultas->nama_fakultas_eng) }})</em>
+                            {{str_replace('Fakultas ', '', $fakultas->nama_fakultas) }}
+                            @if($fakultas->nama_fakultas_eng)
+                                <em>({{str_replace('Faculty of ', '', $fakultas->nama_fakultas_eng) }})</em>
+                            @endif
                         </td>
                     </tr>
                     <tr>

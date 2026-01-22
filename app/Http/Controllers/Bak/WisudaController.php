@@ -798,7 +798,8 @@ class WisudaController extends Controller
 
         $kode_univ = ProfilPt::select('kode_perguruan_tinggi')->first()->kode_perguruan_tinggi ?? "Data Kosong";
 
-        $paper_size = [0,0, 609.45, 779.53];
+        $paper_size = [0, 0, 609, 774];
+
         $fakultas = Fakultas::select('id', 'nama_fakultas')->where('id', $fakultas)->first()->nama_fakultas;
 
         $fakultas = str_replace('Fakultas ', '', $fakultas);
@@ -815,6 +816,7 @@ class WisudaController extends Controller
                                 ->first();
                                 // dd($dekan);
 
+                                // dd($data[0]->wisuda_ke);
         $pdf = PDF::loadview('bak.wisuda.ijazah.pdf', [
             'data' => $data,
             'kode_univ' => $kode_univ,
@@ -824,7 +826,7 @@ class WisudaController extends Controller
         ])
         ->setPaper($paper_size, 'landscape');
 
-        return $pdf->stream('Ijazah-'.$data[0]->periode_wisuda.'.pdf');
+        return $pdf->stream('Ijazah-'.$data[0]->wisuda_ke.'.pdf');
     }
 
     //TRANSKRIP
@@ -912,7 +914,8 @@ class WisudaController extends Controller
 
         $kode_univ = ProfilPt::select('kode_perguruan_tinggi')->first()->kode_perguruan_tinggi ?? "Data Kosong";
 
-        $paper_size = [0, 0, 612, 792];
+        $paper_size = [0, 0, 609, 944];
+
         $fakultas = Fakultas::select('id', 'nama_fakultas', 'nama_fakultas_eng')->where('id', $fakultas)->first();
 
         // $fakultas = str_replace('Fakultas ', '', $fakultas);
