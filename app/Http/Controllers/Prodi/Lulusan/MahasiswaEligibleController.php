@@ -57,6 +57,7 @@ class MahasiswaEligibleController extends Controller
 
         $data = Wisuda::with([
                 'riwayat_pendidikan',
+                'lulus_do',
                 'transkrip_mahasiswa',
                 'aktivitas_kuliah',
                 'prodi', // Assuming 'prodi' contains 'jenjang_pendidikan'
@@ -80,6 +81,7 @@ class MahasiswaEligibleController extends Controller
             $sks_transkrip= $d->transkrip_mahasiswa_sum_sks_mata_kuliah ?? 0; // Get summed SKS Transkrip
             $sks_akm= $d->aktivitas_kuliah_sum_sks_semester ?? 0; // Get summed SKS AKM
             $tanggal_masuk = $d->riwayat_pendidikan->tanggal_daftar ?? '1970-01-01';
+            $tanggal_keluar = $data->lulus_do->tgl_sk_yudisium ?? '1970-01-01';
             $akm_terakhir = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)->orderBy('id_semester', 'desc')->first();
             $temp = 0;
 
@@ -107,7 +109,7 @@ class MahasiswaEligibleController extends Controller
                 }
             }
 
-            $hitung_masa_studi = $this->getYearMonthDifference($tanggal_masuk);
+            $hitung_masa_studi = $this->getYearMonthDifference($tanggal_masuk, $tanggal_keluar);
 
             $d->status_masa_studi = isset($requiredMasaStudi[$jenjang]) && $hitung_masa_studi <= $requiredMasaStudi[$jenjang] ? '1' : '0';
 
@@ -207,6 +209,7 @@ class MahasiswaEligibleController extends Controller
 
         $data = Wisuda::with([
                 'riwayat_pendidikan',
+                'lulus_do',
                 'transkrip_mahasiswa',
                 'aktivitas_kuliah',
                 'aktivitas_mahasiswa',
@@ -232,6 +235,7 @@ class MahasiswaEligibleController extends Controller
         $sks_transkrip= $data->transkrip_mahasiswa_sum_sks_mata_kuliah ?? 0; // Get summed SKS Transkrip
         $sks_akm= $data->aktivitas_kuliah_sum_sks_semester ?? 0; // Get summed SKS AKM
         $tanggal_masuk = $data->riwayat_pendidikan->tanggal_daftar ?? '1970-01-01';
+        $tanggal_keluar = $data->lulus_do->tgl_sk_yudisium ?? '1970-01-01';
         $akm_terakhir = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $data->id_registrasi_mahasiswa)->orderBy('id_semester', 'desc')->first();
         $nilai_usept_prodi = ListKurikulum::where(
             'id_kurikulum',
@@ -307,7 +311,7 @@ class MahasiswaEligibleController extends Controller
             }
         }
 
-        $hitung_masa_studi = $this->getYearMonthDifference($tanggal_masuk);
+        $hitung_masa_studi = $this->getYearMonthDifference($tanggal_masuk, $tanggal_keluar);
 
         $data->status_masa_studi = isset($requiredMasaStudi[$jenjang]) && $hitung_masa_studi <= $requiredMasaStudi[$jenjang] ? '1' : '0';
 
@@ -402,9 +406,9 @@ class MahasiswaEligibleController extends Controller
         return redirect()->back()->with('success', 'Data berhasil dibatalkan');
     }
 
-    private function getYearMonthDifference($tanggal_masuk) {
+    private function getYearMonthDifference($tanggal_masuk, $tanggal_keluar) {
         $start = new DateTime($tanggal_masuk);
-        $end = new DateTime();
+        $end = new DateTime($tanggal_keluar);
         $diff = $start->diff($end);
 
         // Calculate total months

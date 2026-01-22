@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
+use App\Models\Mahasiswa\LulusDo;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perpus\BebasPustaka;
 use App\Models\ProgramStudi;
@@ -120,6 +121,11 @@ class Wisuda extends Model
     public function bebas_pustaka()
     {
         return $this->hasOne(BebasPustaka::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function lulus_do()
+    {
+        return $this->hasOne(LulusDo::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function getIdTanggalSkYudisiumAttribute()
