@@ -54,7 +54,6 @@ Gelar Dosen
 
                                                 $gelarDepan = $gelar
                                                     ? collect([
-                                                        $gelar->gelar_depan_gb,
                                                         $gelar->gelar_depan_s3,
                                                         $gelar->gelar_depan_s2,
                                                         $gelar->gelar_depan_s1,
@@ -87,7 +86,6 @@ Gelar Dosen
                                     </td>
                                     <!-- <td class="text-center align-middle">
                                         @if($d->gelar)
-                                            {{$d->gelar->gelar_depan_gb}}
                                             {{$d->gelar->gelar_depan_s3}}
                                             {{$d->gelar->gelar_depan_s2}}
                                             {{$d->gelar->gelar_depan_s1}}
@@ -169,7 +167,6 @@ Gelar Dosen
         document.getElementById('gelar_depan_s1').value = gelar.gelar_depan_s1 ?? '';
         document.getElementById('gelar_depan_s2').value = gelar.gelar_depan_s2 ?? '';
         document.getElementById('gelar_depan_s3').value = gelar.gelar_depan_s3 ?? '';
-        document.getElementById('gelar_depan_gb').value = gelar.gelar_depan_gb ?? '';
 
         document.getElementById('gelar_belakang_s1').value = gelar.gelar_belakang_s1 ?? '';
         document.getElementById('gelar_belakang_s2').value = gelar.gelar_belakang_s2 ?? '';

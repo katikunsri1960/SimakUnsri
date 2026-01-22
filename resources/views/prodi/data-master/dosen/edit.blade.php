@@ -40,12 +40,12 @@
                                     aria-describedby="helpId" placeholder="" />
                                 <small class="text-danger">Inputkan gelar akademik beserta tanda baca! </small>
                             </div>
-                            <div class="col-md-12 mb-3">
+                            <!-- <div class="col-md-12 mb-3">
                                 <label for="gelar_depan_gb" class="form-label">Gelar Depan Guru Besar</label>
                                 <input type="text" class="form-control" name="gelar_depan_gb" id="gelar_depan_gb"
                                     aria-describedby="helpId" placeholder="" />
                                 <small class="text-danger">Inputkan gelar akademik beserta tanda baca! </small>
-                            </div>
+                            </div> -->
                         </div>
                         <div class="col-md-6 mb-3 box-outline-success bs-3 border-success rounded mt-10">
                             <h4 for="gelar_depan" class="form-label mt-5">GELAR BELAKANG</h4>
