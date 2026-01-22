@@ -536,7 +536,7 @@
                             <img src="storage/{{ $d->pas_foto }}" alt="Foto" width="70">
                         </td>
                         <td width="45%">
-                            VICE RECTOR FOR ACADEMIC, STUDENT AFFAIRS, AND QUALITY ASSURANCE
+                            VICE RECTOR FOR ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS
                         </td>
                     </tr>
 
