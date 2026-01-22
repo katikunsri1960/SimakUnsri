@@ -146,38 +146,56 @@ class WisudaController extends Controller
 
     public function peserta_formulir(Wisuda $id)
     {
-        // dd($id);
-        if(!$id -> tgl_sk_yudisium){
+        if (!$id->tgl_sk_yudisium) {
             return redirect()->back()->with('error', 'SK Yudisium belum diisi Fakultas!');
         }
-        
-        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'biodata'])->where('id_registrasi_mahasiswa', $id->id_registrasi_mahasiswa)->first();
+
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'biodata'])
+            ->where('id_registrasi_mahasiswa', $id->id_registrasi_mahasiswa)
+            ->first();
+
         $biodata = BiodataMahasiswa::where('id_mahasiswa', $riwayat->id_mahasiswa)->first();
-        $aktivitas = AktivitasMahasiswa::with('bimbing_mahasiswa.dosen')->where('id_aktivitas', $id->id_aktivitas)->first();
-        $pt = AllPt::where('id_perguruan_tinggi', $id->id_perguruan_tinggi)->select('nama_perguruan_tinggi')->first();
+
+        $aktivitas = AktivitasMahasiswa::with('bimbing_mahasiswa.dosen')
+            ->where('id_aktivitas', $id->id_aktivitas)
+            ->first();
+
+        $pt = AllPt::where('id_perguruan_tinggi', $id->id_perguruan_tinggi)
+            ->select('nama_perguruan_tinggi')
+            ->first();
+
         $syaratAdm = WisudaSyaratAdm::orderBy('urutan')->select('syarat')->get();
         $checklist = WisudaChecklist::orderBy('urutan')->select('checklist')->get();
 
         Carbon::setLocale('id');
-        $now = Carbon::now()->format('d-m-Y');
-        $now = Carbon::createFromFormat('d-m-Y', $now)->translatedFormat('d F Y');
+        $now = Carbon::now()->translatedFormat('d F Y');
 
-        $pdf = PDF::loadview('bak.wisuda.peserta.formulir', [
-            'riwayat' => $riwayat,
-            'biodata' => $biodata,
-            'aktivitas' => $aktivitas,
-            'pt' => $pt,
-            'data' => $id,
-            'syaratAdm' => $syaratAdm,
-            'checklist' => $checklist,
-            'now' => $now,
-         ])
-         ->setPaper('legal', 'portrait');
+        $pdf = Pdf::loadView('bak.wisuda.peserta.formulir', [
+            'riwayat'    => $riwayat,
+            'biodata'    => $biodata,
+            'aktivitas'  => $aktivitas,
+            'pt'         => $pt,
+            'data'       => $id,
+            'syaratAdm'  => $syaratAdm,
+            'checklist'  => $checklist,
+            'now'        => $now,
+        ])
+        ->setPaper('legal', 'portrait');
 
-        //  dd($riwayat, $biodata, $pt, $id, $syaratAdm, $checklist, $now);
+        // 🔐 KUNCI PDF (READ ONLY)
+        $pdf->setEncryption(
+            '', // ✅ TANPA password membuka
+            '$2y$12$bqW0AGNzVcOz9CYTy16Fc.Sneytgre16.zT20BM6M19w5Q8jDMBbK', // owner password
+            ['print']
+        );
+        // dd((string) $riwayat->id_registrasi_mahasiswa);
 
-         return $pdf->stream('Formulir_pendaftara_wisuda-'.$riwayat->nim.'.pdf');
+
+        return $pdf->stream(
+            'Formulir_pendaftaran_wisuda-' . $riwayat->nim . '.pdf'
+        );
     }
+
 
     public function peserta_data_approved(Request $request)
     {
@@ -693,12 +711,14 @@ class WisudaController extends Controller
         // Ambil nama prodi (hanya jika bukan '*')
         $nama_prodi = null;
         if ($prodi != '*') {
-            $nama_prodi = \DB::table('prodi')
+            $nama_prodi = \DB::table('program_studis')
                 ->where('id_prodi', $prodi)
                 ->value('nama_program_studi');
         } else {
             $prodi = null; // prodi all
         }
+
+
 
         // =========================
         // QUERY EXPORT
@@ -718,7 +738,7 @@ class WisudaController extends Controller
                 ->where('approved', 3); // hanya yang sudah disetujui
 
         if (!empty($prodi)) {
-            $query->where('prodi_id', $prodi);
+            $query->where('p.id_prodi', $prodi);
         }
 
         $data = $query->orderBy('jenjang', 'ASC')
