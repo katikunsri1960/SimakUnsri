@@ -381,35 +381,60 @@ class AktivitasNonTAController extends Controller
 
                 $jumlah_sks = $matkul->sks_mata_kuliah;
 
-                if($request->nilai_angka[$i] > 100){
-                    $nilai_akhir_sidang = 100;
+                $check_angkatan = RiwayatPendidikan::where(
+                    'id_registrasi_mahasiswa',
+                    $aktivitas_mahasiswa->anggota_aktivitas_personal->id_registrasi_mahasiswa
+                )->first();
+
+                if (!$check_angkatan || !$check_angkatan->id_periode_masuk) {
+                    return redirect()->back()->with('error', 'Data angkatan mahasiswa tidak ditemukan.');
                 }
 
-                if($request->nilai_angka[$i] >= 86 && $request->nilai_angka[$i] <=100){
-                    $nilai_indeks = '4.00';
-                    $nilai_huruf = 'A';
-                }
-                else if($request->nilai_angka[$i] >= 71 && $request->nilai_angka[$i] < 86){
-                    $nilai_indeks = '3.00';
-                    $nilai_huruf = 'B';
-                }
-                else if($request->nilai_angka[$i] >= 56 && $request->nilai_angka[$i] < 71){
-                    $nilai_indeks = '2.00';
-                    $nilai_huruf = 'C';
-                }
-                else if($request->nilai_angka[$i] >= 41 && $request->nilai_angka[$i] < 56){
-                    $nilai_indeks = '1.00';
-                    $nilai_huruf = 'D';
-                }
-                else if($request->nilai_angka[$i] >= 0 && $request->nilai_angka[$i] < 41){
-                    $nilai_indeks = '0.00';
-                    $nilai_huruf = 'E';
-                }else{
-                    return redirect()->back()->with('error', 'Nilai di luar range skala nilai.');
+                $angkatan = (int) substr($check_angkatan->id_periode_masuk, 0, 4);
+                $nilai = round((float) $request->nilai_angka[$i], 2);
+
+                if ($angkatan >= 2025) {
+                    // SKALA BARU
+                    if ($nilai >= 86 && $nilai <= 100) {
+                        $nilai_indeks = 4.00; $nilai_huruf = 'A';
+                    } elseif ($nilai >= 80) {
+                        $nilai_indeks = 3.70; $nilai_huruf = 'A-';
+                    } elseif ($nilai >= 75) {
+                        $nilai_indeks = 3.30; $nilai_huruf = 'B+';
+                    } elseif ($nilai >= 70) {
+                        $nilai_indeks = 3.00; $nilai_huruf = 'B';
+                    } elseif ($nilai >= 65) {
+                        $nilai_indeks = 2.70; $nilai_huruf = 'B-';
+                    } elseif ($nilai >= 60) {
+                        $nilai_indeks = 2.30; $nilai_huruf = 'C+';
+                    } elseif ($nilai >= 56) {
+                        $nilai_indeks = 2.00; $nilai_huruf = 'C';
+                    } elseif ($nilai >= 40) {
+                        $nilai_indeks = 1.00; $nilai_huruf = 'D';
+                    } elseif ($nilai >= 0) {
+                        $nilai_indeks = 0.00; $nilai_huruf = 'E';
+                    } else {
+                        return redirect()->back()->with('error', 'Nilai di luar range.');
+                    }
+                } else {
+                    // SKALA LAMA
+                    if ($nilai >= 86 && $nilai <= 100) {
+                        $nilai_indeks = 4.00; $nilai_huruf = 'A';
+                    } elseif ($nilai >= 71) {
+                        $nilai_indeks = 3.00; $nilai_huruf = 'B';
+                    } elseif ($nilai >= 56) {
+                        $nilai_indeks = 2.00; $nilai_huruf = 'C';
+                    } elseif ($nilai >= 41) {
+                        $nilai_indeks = 1.00; $nilai_huruf = 'D';
+                    } elseif ($nilai >= 0) {
+                        $nilai_indeks = 0.00; $nilai_huruf = 'E';
+                    } else {
+                        return redirect()->back()->with('error', 'Nilai di luar range.');
+                    }
                 }
 
                 //Store data to table tanpa substansi kuliah
-                KonversiAktivitas::create(['feeder'=> 0, 'id_konversi_aktivitas'=> $id_konversi_aktivitas, 'id_matkul'=> $matkul->id_matkul, 'nama_mata_kuliah' => $matkul->nama_mata_kuliah, 'id_aktivitas' => $aktivitas_mahasiswa->id_aktivitas, 'judul' => $aktivitas_mahasiswa->judul, 'id_anggota' => $aktivitas_mahasiswa->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $aktivitas_mahasiswa->anggota_aktivitas_personal->nama_mahasiswa, 'nim'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $matkul->sks_mata_kuliah, 'nilai_angka' => $request->nilai_angka[$i], 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $semester->id_semester, 'nama_semester' => $semester->nama_semester, 'status_sync' => 'belum sync']);
+                KonversiAktivitas::create(['feeder'=> 0, 'id_konversi_aktivitas'=> $id_konversi_aktivitas, 'id_matkul'=> $matkul->id_matkul, 'nama_mata_kuliah' => $matkul->nama_mata_kuliah, 'id_aktivitas' => $aktivitas_mahasiswa->id_aktivitas, 'judul' => $aktivitas_mahasiswa->judul, 'id_anggota' => $aktivitas_mahasiswa->anggota_aktivitas_personal->id_anggota, 'nama_mahasiswa' => $aktivitas_mahasiswa->anggota_aktivitas_personal->nama_mahasiswa, 'nim'=> $aktivitas_mahasiswa->anggota_aktivitas_personal->nim, 'sks_mata_kuliah' => $matkul->sks_mata_kuliah, 'nilai_angka' => $nilai, 'nilai_indeks' => $nilai_indeks, 'nilai_huruf' => $nilai_huruf, 'id_semester' => $semester->id_semester, 'nama_semester' => $semester->nama_semester, 'status_sync' => 'belum sync']);
 
             }
 
@@ -538,8 +563,20 @@ class AktivitasNonTAController extends Controller
                 if($request->nilai_huruf_transfer[$i] == 'A'){
                     $nilai_indeks = '4.00';
                 }
+                else if($request->nilai_huruf_transfer[$i] == 'A-'){
+                    $nilai_indeks = '3.70';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'B+'){
+                    $nilai_indeks = '3.30';
+                }
                 else if($request->nilai_huruf_transfer[$i] == 'B'){
                     $nilai_indeks = '3.00';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'B-'){
+                    $nilai_indeks = '2.70';
+                }
+                else if($request->nilai_huruf_transfer[$i] == 'C+'){
+                    $nilai_indeks = '2.30';
                 }
                 else if($request->nilai_huruf_transfer[$i] == 'C'){
                     $nilai_indeks = '2.00';

@@ -81,7 +81,7 @@ class MahasiswaEligibleController extends Controller
             $sks_transkrip= $d->transkrip_mahasiswa_sum_sks_mata_kuliah ?? 0; // Get summed SKS Transkrip
             $sks_akm= $d->aktivitas_kuliah_sum_sks_semester ?? 0; // Get summed SKS AKM
             $tanggal_masuk = $d->riwayat_pendidikan->tanggal_daftar ?? '1970-01-01';
-            $tanggal_keluar = $data->lulus_do->tgl_sk_yudisium ?? '1970-01-01';
+            $tanggal_keluar = $d->lulus_do->tgl_sk_yudisium ?? '1970-01-01';
             $akm_terakhir = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)->orderBy('id_semester', 'desc')->first();
             $temp = 0;
 
