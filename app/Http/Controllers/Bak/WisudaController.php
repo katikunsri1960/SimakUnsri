@@ -693,12 +693,14 @@ class WisudaController extends Controller
         // Ambil nama prodi (hanya jika bukan '*')
         $nama_prodi = null;
         if ($prodi != '*') {
-            $nama_prodi = \DB::table('prodi')
+            $nama_prodi = \DB::table('program_studis')
                 ->where('id_prodi', $prodi)
                 ->value('nama_program_studi');
         } else {
             $prodi = null; // prodi all
         }
+
+
 
         // =========================
         // QUERY EXPORT
@@ -718,7 +720,7 @@ class WisudaController extends Controller
                 ->where('approved', 3); // hanya yang sudah disetujui
 
         if (!empty($prodi)) {
-            $query->where('prodi_id', $prodi);
+            $query->where('p.id_prodi', $prodi);
         }
 
         $data = $query->orderBy('jenjang', 'ASC')
