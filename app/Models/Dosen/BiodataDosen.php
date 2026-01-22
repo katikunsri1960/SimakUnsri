@@ -9,6 +9,7 @@ use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Semester;
 use App\Models\SemesterAktif;
 use App\Models\Wilayah;
+use App\Models\Dosen\GelarDosen;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model; 
 
@@ -31,6 +32,11 @@ class BiodataDosen extends Model
     {
         return $this->hasOne(PenugasanDosen::class, 'id_dosen', 'id_dosen')
                     ->latest('mulai_surat_tugas');
+    }
+
+    public function gelar()
+    {
+        return $this->hasOne(GelarDosen::class, 'id_dosen','id_dosen');
     }
 
     public function getJenisKelaminAttribute($value)
@@ -63,7 +69,6 @@ class BiodataDosen extends Model
 
     public function list_dosen_prodi($tahun_ajaran = null, $id_prodi)
     {
-
         $tahun_ajaran = $tahun_ajaran ?? SemesterAktif::where('id', 1)->first()->semester->id_tahun_ajaran ?? (date('m') >= 8 ? date('Y') : date('Y') - 1);
 
         return $this->leftJoin('penugasan_dosens as p', 'p.id_dosen', '=', 'biodata_dosens.id_dosen')

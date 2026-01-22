@@ -18,7 +18,6 @@ Gelar Dosen
                 </nav>
             </div>
         </div>
-
     </div>
 </div>
 
@@ -36,13 +35,11 @@ Gelar Dosen
                              <tr>
                                 <th class="text-center align-middle">No</th>
                                 <th class="text-center align-middle">NAMA</th>
-                                <th class="text-center align-middle">GELAR DEPAN</th>
-                                <th class="text-center align-middle">GELAR BELAKANG</th>
+                                <th class="text-center align-middle">NAMA & GELAR</th>
                                 <th class="text-center align-middle">NIDK/NIDN</th>
                                 <th class="text-center align-middle">NUPTK</th>
                                 <th class="text-center align-middle">E-MAIL</th>
                                 <th class="text-center align-middle">HOMEBASE</th>
-                                <th class="text-center align-middle">AKSI</th>
                              </tr>
                           </thead>
                           <tbody>
@@ -50,23 +47,68 @@ Gelar Dosen
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
                                     <td class="text-start align-middle">{{$d->nama_dosen}}</td>
-                                    <td class="text-center align-middle">{{$d->gelar_depan ?? '-'}}</td>
-                                    <td class="text-center align-middle">{{$d->gelar_belakang ?? '-'}}</td>
+                                    <td class="text-start align-middle">
+                                        <span style="display:block;">
+                                            @php
+                                                $gelar = $d->gelar;
+
+                                                $gelarDepan = $gelar
+                                                    ? collect([
+                                                        $gelar->gelar_depan_gb,
+                                                        $gelar->gelar_depan_s3,
+                                                        $gelar->gelar_depan_s2,
+                                                        $gelar->gelar_depan_s1,
+                                                    ])->filter()->implode(' ')
+                                                    : null;
+
+                                                $gelarBelakang = $gelar
+                                                    ? collect([
+                                                        $gelar->gelar_belakang_s1,
+                                                        $gelar->gelar_belakang_s2,
+                                                        $gelar->gelar_belakang_s3,
+                                                    ])->filter()->implode(' ')
+                                                    : null;
+                                            @endphp
+
+                                            <div class="row px-3">
+                                                <div class="col-md-8">
+                                                    {{ trim(($gelarDepan ? $gelarDepan.' ' : '').$d->nama_dosen) }}@if($gelarBelakang), {{ $gelarBelakang }}@endif
+                                                </div>
+                                                <div class="col-md-4">
+                                                    <button class="btn btn-warning btn-sm" type="button"
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#editModal"
+                                                        onclick='edit(@json($d))'>
+                                                        <i class="fa fa-pencil"></i> Edit Gelar
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </span>
+                                    </td>
+                                    <!-- <td class="text-center align-middle">
+                                        @if($d->gelar)
+                                            {{$d->gelar->gelar_depan_gb}}
+                                            {{$d->gelar->gelar_depan_s3}}
+                                            {{$d->gelar->gelar_depan_s2}}
+                                            {{$d->gelar->gelar_depan_s1}}
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle">
+                                        @if($d->gelar)
+                                            {{$d->gelar->gelar_belakang_s1}}
+                                            {{$d->gelar->gelar_belakang_s2}}
+                                            {{$d->gelar->gelar_belakang_s3}}
+                                        @else
+                                            -
+                                        @endif
+                                    </td> -->
                                     <td class="text-center align-middle">{{$d->nidn ?? '-'}}</td>
                                     <td class="text-center align-middle">{{$d->nuptk ?? '-'}}</td>
                                     <td class="text-start align-middle">{{$d->email ?? '-'}}</td>
                                     <td class="text-center align-middle">
                                         {{ $d->penugasan_terbaru->a_sp_homebase === '1' ? '√' : '-' }}
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <div class="row px-3">
-                                            <button class="btn btn-warning btn-sm" type="button"
-                                                data-bs-toggle="modal"
-                                                data-bs-target="#editModal"
-                                                onclick='edit(@json($d))'>
-                                                <i class="fa fa-pencil"></i> Edit Data
-                                            </button>
-                                        </div>
                                     </td>
                                 </tr>
                             @endforeach
@@ -120,14 +162,20 @@ Gelar Dosen
         document.getElementById('editForm').reset();
 
         document.getElementById('id_dosen').value = data.id_dosen;
-        document.getElementById('gelar_depan').value = data.gelar_depan ?? '';
         document.getElementById('nama').value = data.nama_dosen ?? '';
-        document.getElementById('gelar_belakang').value = data.gelar_belakang ?? '';
-        document.getElementById('nip').value = data.nip ?? '';
-        document.getElementById('nidn').value = data.nidn ?? '';
-        document.getElementById('nuptk').value = data.nuptk ?? '';
-        
+
+        const gelar = data.gelar ?? {};
+
+        document.getElementById('gelar_depan_s1').value = gelar.gelar_depan_s1 ?? '';
+        document.getElementById('gelar_depan_s2').value = gelar.gelar_depan_s2 ?? '';
+        document.getElementById('gelar_depan_s3').value = gelar.gelar_depan_s3 ?? '';
+        document.getElementById('gelar_depan_gb').value = gelar.gelar_depan_gb ?? '';
+
+        document.getElementById('gelar_belakang_s1').value = gelar.gelar_belakang_s1 ?? '';
+        document.getElementById('gelar_belakang_s2').value = gelar.gelar_belakang_s2 ?? '';
+        document.getElementById('gelar_belakang_s3').value = gelar.gelar_belakang_s3 ?? '';
     }
+
 </script>
 
 @endpush
