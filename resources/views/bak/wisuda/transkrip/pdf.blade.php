@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
         <title>Transkrip Akademik</title>
     <style>
-        @page { margin: 15mm 11mm 15mm 20mm; }
+        @page { margin: 10mm 14mm 5mm 12mm; }
 
         .page-landscape {
             width: 100%;
@@ -52,15 +52,15 @@
         /* Header tabel tetap bergaris */
         thead th {
             font-size: 10px;
-            border: 0.25px solid #000;
+            border: 0.5pt solid #000;
             padding-top: 10px;
             padding-bottom: 10px;
         }
 
         /* Hilangkan garis antar baris isi */
         tbody td {
-            border-left: 0.25px solid #000;
-            border-right: 0.25px solid #000;
+            border-left: 0.5pt solid #000;
+            border-right: 0.5pt solid #000;
             padding: 2px 4px;
         }
 
@@ -70,46 +70,42 @@
         }
 
         tfoot td.footer-border {
-            border-bottom: 0.25px solid #000;
+            border-bottom: 0.5pt solid #000;
         }
 
         .no-border td {
             border: none !important;
-            padding: 2px 0;
+            padding: 0px 0;
         }
 
         .dataDiri-table tr td {
             vertical-align: top;
-            font-size: 8px;
+            font-size: 10px;
+            padding: 0.60px 0px 0.60px 0px;
         }
 
         .transkrip-table th {
-            padding: 10px 2px 10px 2px;
-            font-size: 5pt;
-            border: 0.25px solid #000 !important; 
+            padding: 7.5px 2px 7.5px 2px;
+            font-size:7.5px;
+            border: 0.5pt solid #000 !important; 
         }
 
         .transkrip-table tr td {
-            border-left: 0.25px solid #000 !important; 
-            border-right: 0.25px solid #000 !important; 
-            /* border-top: none;
-            border-bottom: none; */
+            border-left: 0.5pt solid #000 !important; 
+            border-right: 0.5pt solid #000 !important; 
             vertical-align: top;
             padding: 1px 5px 1px 5px;
-            font-size: 5pt;
+            font-size:7.5px;
             margin-bottom: 0px;
         }
 
         .ipk-table tr td {
             vertical-align: top;
             padding: 5px 3px;
-            font-size:5pt;
         }
 
         .ttd-table tr td {
             vertical-align: top;
-            padding: 0px 3px;
-            font-size:5pt
         }
 
         .header-title {
@@ -119,15 +115,14 @@
 
         .text-upper{ text-transform: uppercase; }
 
-        .header-title .title1 { font-size: 10px; }
-        .header-title .title2 { font-size: 9px; font-style: italic; }
-        .header-title .title3 { font-size: 9px; margin-top: 10px; }
-        .header-title .title4 { font-size: 8px; }
+        .header-title .title1 { font-size: 12px; margin-bottom: -2px; }
+        .header-title .title2 { font-size: 11px; font-style: italic; margin-bottom: -2px; }
+        .header-title .title3 { font-size: 11px;}
+        .header-title .title4 { font-size: 10px; font-style: italic; margin-bottom: -2px; }
 
         .font-small td, 
         .font-small th {
-            font-size: 6px !important;
-            padding: 1px 2px !important;
+            font-size: 7px !important;
         }
 
         .no-wrap {
@@ -154,18 +149,10 @@
                 {{-- ========================================================= --}}
                 <table class="no-border">
                     <tr>
-                        <td width="30" align="center" style="padding:0px 0px 0px 20px; 
-                            {{-- 
-                            border:0.25px solid #000 !important;
-                            --}}
-                        ">
-                            <img src="{{ public_path('images/unsri.png') }}" width="50">
+                        <td width="30" align="center" style="padding:0px 0px 0px 18px;">
+                            <img src="{{ public_path('images/unsri.png') }}" width="60">
                         </td>
-                        <td align="center" width="300" style="padding:0px 0px px 0px;  
-                            {{--
-                            border:0.25px solid #000 !important;
-                            --}}
-                        ">
+                        <td align="center" width="300" style="padding:0px 0px 0px 0px;">
                             <div class="header-title" style="margin-right:50px;">
                                 <div class="title1">KEMENTERIAN PENDIDIKAN TINGGI, SAINS, DAN TEKNOLOGI</div>
                                 <div class="title2">MINISTRY OF HIGHER EDUCATION, SCIENCE, AND TECHNOLOGY</div>
@@ -179,7 +166,7 @@
                     <tr>
                         <td></td>
                         <td>
-                            <div class="header-title" style="margin-right:50px;">
+                            <div class="header-title" style="margin: 12px 50px 0px 0px;">
                                 <div class="title3">DAFTAR NILAI AKADEMIK (TRANSKRIP)</div>
                                 <div class="title4">ACADEMIC TRANSCRIPT</div>
                             </div>
@@ -192,9 +179,9 @@
                 {{-- ========================================================= --}}
                 {{--                        BIODATA                           --}}
                 {{-- ========================================================= --}}
-                <table class="no-border dataDiri-table">
+                <table class="no-border dataDiri-table" style="margin: -10px 0px 15px 0px;">
                     <tr>
-                        <td width="140">NAMA <em>(NAME)</em></td> 
+                        <td style="margin: -20px 0px -20px 0px;" width="165">NAMA <em>(NAME)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ strtoupper($d->nama_mahasiswa) }}</td>
                     </tr>
@@ -277,8 +264,6 @@
                     </tr>
                 </table>
 
-                <br>
-
                 {{-- ========================================================= --}}
                 {{--                TABEL MATA KULIAH TRANSKRIP                --}}
                 {{-- ========================================================= --}}
@@ -331,7 +316,7 @@
                                 <td align="center">{{ $bobot }}</td>
                             </tr>
                         @endforeach
-                        <tr style="border-bottom: 0.25px solid #000;">
+                        <tr style="border-bottom: 0.5pt solid #000;">
                             <td colspan="7"></td>
                         </tr>
                     </tbody>
@@ -342,7 +327,7 @@
             <td class="col-right">
                 @if(count($mkRight) > 0)
                     {{-- TABEL MATA KULIAH KOLON KANAN --}}
-                    <div style="margin:50px 0px 5px 0px; padding:0px 0px 0px 0px;" >
+                    <div style="margin:35px 0px 5px 0px; padding:0px 0px 0px 0px;" >
                         <table class="transkrip-table {{ $jumlahMK > 70 ? 'font-small' : '' }}">
                             <thead>
                                 <tr>
@@ -385,7 +370,7 @@
                                 @endforeach
                             </tbody>
                             {{-- TOTAL SKS & BOBOT kolom kanan --}}
-                            <tr style="border: 0.25px solid #000; text-align:center;">
+                            <tr style="border: 0.5pt solid #000; text-align:center;">
                                 <td colspan="3">TOTAL</td>
                                 <td>{{ $totalSks }}</td>
                                 <td colspan="2"></td>
@@ -402,7 +387,7 @@
                 <!-- @if($jumlahMK < 37)
                     <div class="page-break"></div>
                 @endif -->
-                <table class="no-border ipk-table pt-100">
+                <table class="no-border ipk-table pt-100" style="font-size: 7.5px;">
                     <tr class="text-upper">
                         <td class="no-wrap">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
                         <td width="1">: </td>
@@ -495,13 +480,10 @@
                     </tr>
                 </table>
 
-
-                <br><br>
-
                 {{-- ========================================================= --}}
                 {{--                        TANDA TANGAN                       --}}
                 {{-- ========================================================= --}}
-                <table class="no-border ttd-table" width="100%" style="font-size: 10px;">
+                <table class="no-border ttd-table" width="100%" style="font-size: 7.5px; margin : 10px 0px 0px 0px">
 
                     {{-- Baris 1 --}}
                     <tr>
@@ -514,7 +496,7 @@
                     </tr>
 
                     {{-- Baris 2 --}}
-                    <tr>
+                    <tr style="padding:0px; margin:0px">
                         <td width="45%">
                             {{ strtoupper($wd1->jabatan) }}
                         </td width="10%">
@@ -546,7 +528,7 @@
                         <td width="40%"></td>
                     </tr>
 
-                    <tr><td><br><br><br><br><br><br></td></tr>
+                    <tr><td><br><br><br><br><br></td></tr>
 
                     {{-- Baris 5 --}}
                     <tr class="margin:0px;">
