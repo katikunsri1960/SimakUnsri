@@ -83,10 +83,12 @@ Aktivitas Mahasiswa
                     <div class="d-flex justify-content-end">
                        <div class="btn-group">
                             <button class="btn btn-warning btn-rounded waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#BkuIjazah"><i class="fa fa-edit"><span class="path1"></span><span class="path2"></span></i> Setting BKU pada Ijazah</button> 
+                            <button class="btn btn-primary btn-rounded waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#PeminatanIjazah"><i class="fa fa-edit"><span class="path1"></span><span class="path2"></span></i> Setting Peminatan pada Transkrip</button> 
                             <a class="btn btn-success btn-rounded waves-effect waves-light" data-bs-toggle="modal" data-bs-target="#TambahBKU"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah BKU Prodi</a>
                         </div>   
                     </div>
                     @include('prodi.data-master.detail-prodi.setting-bku')
+                    @include('prodi.data-master.detail-prodi.setting-peminatan')
                     @include('prodi.data-master.detail-prodi.create-bku')
                     <h3 class="text-info mb-0 mt-10"><i class="fa fa-list"></i> Bidang Kajian Utama</h3>
                 </div>

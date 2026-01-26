@@ -854,6 +854,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/update-bku/{bku_prodi}', [App\Http\Controllers\Prodi\DataMasterController::class, 'update_bku'])->name('prodi.data-master.detail-prodi.update-bku');
                     Route::delete('/delete-bku/{bku_prodi}', [App\Http\Controllers\Prodi\DataMasterController::class, 'destroy_bku'])->name('prodi.data-master.detail-prodi.delete-bku');
                     Route::post('/setting-bku', [App\Http\Controllers\Prodi\DataMasterController::class, 'setting_bku'])->name('prodi.data-master.detail-prodi.setting-bku');
+                    Route::post('/setting-peminatan', [App\Http\Controllers\Prodi\DataMasterController::class, 'setting_peminatan'])->name('prodi.data-master.detail-prodi.setting-peminatan');
                 });
             });
 
