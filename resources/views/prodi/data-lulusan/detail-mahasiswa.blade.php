@@ -120,7 +120,7 @@ Dashboard
                             </div>
                             <div class="form-group">
                                 <div class="mb-2">
-                                    <label for="judul_en" class="form-label">Judul (Inggris)</label>
+                                    <label for="judul_en" class="form-label">Judul (Inggris) <strong class="text-danger">*</strong></label>
                                     <input
                                         type="text"
                                         class="form-control"
@@ -165,12 +165,12 @@ Dashboard
                              <div class="col-lg-12">
                                 <div class="form-group">
                                     <div class="mb-2">
-                                        <label for="predikat_mhs" class="form-label">Predikat Kelulusan Mahasiswa</label>
+                                        <label for="predikat_mhs" class="form-label">BKU / Peminatan</label>
                                         <select class="form-select" name="predikat_mhs" id="predikat_mhs">
-                                            <option value="0" {{ $data->id_predikat_kelulusan == 0 ? 'selected' : '' }}>Tidak Ada Predikat</option>
-                                            @foreach($predikat_kelulusan as $p)
-                                                <option value="{{ $p->id }}" {{ $data->id_predikat_kelulusan == $p->id ? 'selected' : '' }}>
-                                                    {{ $p->indonesia }}
+                                            <option value="0" {{ $data->id_bku_prodi == 0 ? 'selected' : '' }}>Tidak BKU / Peminatan</option>
+                                            @foreach($bku as $b)
+                                                <option value="{{ $b->id }}" {{ $data->id_bku_prodi == $b->id ? 'selected' : '' }}>
+                                                    {{ $b->bku_prodi_id }}
                                                 </option>
                                             @endforeach
                                         </select>
@@ -178,16 +178,33 @@ Dashboard
                                 </div>
                             </div>
                         </div> -->
-                        @if($data->prodi->bku_pada_ijazah == 1)
+                        @if($data->prodi->bku_pada_ijazah == 1 )
                             <div class="row">
                                 <div class="col-lg-12">
                                     <div class="form-group">
                                         <div class="mb-2">
-                                            <label for="bku_mhs" class="form-label">Bidang Kajian Umum</label>
+                                            <label for="bku_mhs" class="form-label">Bidang Kajian Umum / Peminatan <strong class="text-danger">*</strong></label>
                                             <select class="form-select" name="bku_mhs" id="bku_mhs">
                                                 @foreach($bku as $b)
                                                     <option value="{{ $b->id }}" {{ $data->id_bku_prodi == $b->id ? 'selected' : '' }}>
-                                                        {{ $b->bku_prodi_id }}
+                                                        {{ strtoupper($b->bku_prodi_id) }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @elseif($data->prodi->peminatan_pada_transkrip == 1 )
+                            <div class="row">
+                                <div class="col-lg-12">
+                                    <div class="form-group">
+                                        <div class="mb-2">
+                                            <label for="bku_mhs" class="form-label">Bidang Kajian Umum / Peminatan <strong class="text-danger">*</strong> </label>
+                                            <select class="form-select" name="bku_mhs" id="bku_mhs">
+                                                @foreach($bku as $b)
+                                                    <option value="{{ $b->id }}" {{ $data->id_bku_prodi == $b->id ? 'selected' : '' }}>
+                                                        {{ strtoupper($b->bku_prodi_id) }}
                                                     </option>
                                                 @endforeach
                                             </select>

@@ -87,31 +87,55 @@
     <!-- KONDISI IJAZAH PROFESI -->
     @if($d->jenjang == 'Profesi')
         <header>
-            <img src="{{ public_path('images/unsri.png') }}" height="11mm">
+            <img src="{{ public_path('images/unsri.png') }}">
+            <!-- <div class="judul">UNIVERSITAS SRIWIJAYA</div> -->
         </header>
 
-        <div id="no_sertifikat">
-            <table>
-                <tr>
-                    <td>No. Ijazah Nasional</td>
-                    <td style="padding-left: 5px; padding-right: 5px">:</td>
-                    <td>{{$d->no_ijazah}}</td>
-                </tr>
-                <tr>
-                    <td>Kode Universitas</td>
-                    <td style="padding-left: 5px; padding-right: 5px">:</td>
-                    <td>{{$kode_univ}}</td>
-                </tr>
-            </table>
-        </div>
+        @if($d->id_prodi == '98223413-b27d-4afe-a2b8-d0d80173506e' || 
+                $d->id_prodi == 'be779246-fe70-4e66-8fa2-8929d97779a2' ||
+                
+                $d->id_prodi == '91360393-8632-4240-bed0-bfc707406efa' 
+                
+                )
+            <div id="no_sertifikat" 
+                style="margin-top: 8px;"
+            >
+                <table>
+                    <tr>
+                        <td>No. Ijazah Nasional</td>
+                        <td style="padding-left: 5px; padding-right: 5px">:</td>
+                        <td>{{$d->no_sertifikat}}</td>
+                    </tr>
+                    <tr>
+                        <td>Kode Universitas</td>
+                        <td style="padding-left: 5px; padding-right: 5px">:</td>
+                        <td>{{$kode_univ}}</td>
+                    </tr>
+                </table>
+            </div>
+        @else
+            <div id="no_sertifikat">
+                <table>
+                    <tr>
+                        <td>No. Ijazah Nasional</td>
+                        <td style="padding-left: 5px; padding-right: 5px">:</td>
+                        <td>{{$d->no_sertifikat}}</td>
+                    </tr>
+                    <tr>
+                        <td>Kode Universitas</td>
+                        <td style="padding-left: 5px; padding-right: 5px">:</td>
+                        <td>{{$kode_univ}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="judul">SERTIFIKAT PROFESI</div>
+            
+            <div style="text-align: center; font-size: 13pt; font-weight: bold;">
+                Diberikan kepada:
+            </div>
+        @endif
 
-        <div class="judul">SERTIFIKAT PROFESI</div>
-
-        <div style="text-align: center; font-size: 13pt; font-weight: bold;">
-            Diberikan kepada:
-        </div>
-
-        <div class="data-diri">
+        <div class="data-diri" style="margin-bottom: -10px;">
             <table>
                 <tr>
                     <td style="width:70px">Nama</td>
@@ -188,7 +212,7 @@
         <div class="mid-word" >
             <center>Telah memenuhi semua persyaratan pendidikan Profesi pada Program Studi Program Profesi Insinyur.<br>
             Kepadanya diberikan sertifikat, dan sebutan profesi:</center>
-            <div class="gelar">
+            <div class="gelar" style="margin-top: 5px; margin-bottom: 5px;">
                 {{ $d->gelar_panjang}} ({{ $d->gelar}})         
             </div>
             <center>beserta segala hak dan kewajiban yang melekat pada sebutan tersebut.</center>
@@ -221,7 +245,7 @@
                 Telah memenuhi semua persyaratan penyelesaian program profesi apoteker, dan lulus Uji Kompetensi Apoteker Indonesia. 
                 Kepadanya diberikan sebutan profesi
             </center>
-            <div class="gelar">
+            <div class="gelar" style="margin-top: 5px; margin-bottom: 5px;">
                 {{ $d->gelar_panjang}} ({{ $d->gelar}})         
             </div>
             <center>

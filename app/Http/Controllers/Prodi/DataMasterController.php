@@ -547,6 +547,7 @@ class DataMasterController extends Controller
         $data = ProgramStudi::with('jurusan','fakultas')->where('id_prodi', $prodi_id)->first();
         $data_bku = BkuProgramStudi::where('id_prodi', $prodi_id)->get();
 
+
         // dd($data_prodi);
 
         return view('prodi.data-master.detail-prodi.index', [
@@ -575,6 +576,18 @@ class DataMasterController extends Controller
         ]);
 
         ProgramStudi::where('id_prodi', $prodi_id)->update(['bku_pada_ijazah'=> $request->bku_pada_ijazah]);
+
+        return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
+    }
+
+    public function setting_peminatan(Request $request)
+    {
+        $prodi_id = auth()->user()->fk_id;
+        $data = $request->validate([
+            'peminatan_pada_transkrip' => 'required',
+        ]);
+
+        ProgramStudi::where('id_prodi', $prodi_id)->update(['peminatan_pada_transkrip'=> $request->peminatan_pada_transkrip]);
 
         return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
     }
