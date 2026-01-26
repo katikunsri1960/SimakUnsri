@@ -102,7 +102,7 @@
             >
                 <table>
                     <tr>
-                        <td>No. Ijazah Nasional</td>
+                        <td>No. Sertifikat Nasional</td>
                         <td style="padding-left: 5px; padding-right: 5px">:</td>
                         <td>{{$d->no_sertifikat}}</td>
                     </tr>
@@ -117,7 +117,7 @@
             <div id="no_sertifikat">
                 <table>
                     <tr>
-                        <td>No. Ijazah Nasional</td>
+                        <td>No. Sertifikat Nasional</td>
                         <td style="padding-left: 5px; padding-right: 5px">:</td>
                         <td>{{$d->no_sertifikat}}</td>
                     </tr>

@@ -155,7 +155,7 @@ class Wisuda extends Model
         $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
         $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
         $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
-        $tahun = floor($masa_studi / 12);
+        $tahun = ceil($masa_studi / 12);
         $bulan = $masa_studi % 12;
         return $tahun . ' tahun, ' . $bulan . ' bulan';
     }
@@ -166,7 +166,7 @@ class Wisuda extends Model
         $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
         $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
         $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
-        $tahun = floor($masa_studi / 12);
+        $tahun = ceil($masa_studi / 12);
         $bulan = $masa_studi % 12;
         return $tahun . ' years, ' . $bulan . ' months';
     }
