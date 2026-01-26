@@ -149,27 +149,50 @@ class Wisuda extends Model
         return $status[$this->approved];
     }
 
-    public function getMasaStudiAttribute()
+    public function getMasaStudiLamaAttribute()
     {
         // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
         $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
         $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
-        $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
-        $tahun = ceil($masa_studi / 12);
+        $tgl_keluar = Carbon::createFromFormat('Y-m-d', $this->lulus_do->tgl_keluar);
+        $masa_studi = $tgl_daftar->diffInMonths($tgl_keluar);
+        $tahun = floor($masa_studi / 12);
         $bulan = $masa_studi % 12;
         return $tahun . ' tahun, ' . $bulan . ' bulan';
     }
 
-    public function getMasaStudiEnAttribute()
+    public function getMasaStudiEnLamaAttribute()
     {
         // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
         $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
         $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
-        $masa_studi = $tgl_daftar->diffInMonths($tgl_yudisium);
-        $tahun = ceil($masa_studi / 12);
+        $tgl_keluar = Carbon::createFromFormat('Y-m-d', $this->lulus_do->tgl_keluar);
+        $masa_studi = $tgl_daftar->diffInMonths($tgl_keluar);
+        $tahun = floor($masa_studi / 12);
         $bulan = $masa_studi % 12;
         return $tahun . ' years, ' . $bulan . ' months';
     }
+
+
+    public function getMasaStudiAttribute()
+    {
+        // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
+        $masa_studi = $this->lama_studi;
+        $tahun = floor($masa_studi / 12);
+        $bulan = $masa_studi % 12;
+        return $tahun . ' tahun, ' . $bulan . ' bulan';
+    }
+
+
+    public function getMasaStudiEnAttribute()
+    {
+        // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
+        $masa_studi = $this->lama_studi;
+        $tahun = floor($masa_studi / 12);
+        $bulan = $masa_studi % 12;
+        return $tahun . ' years, ' . $bulan . ' months';
+    }
+
 
     public function getStatusAttribute()
     {
