@@ -136,7 +136,7 @@
 <body>
 @foreach($data as $d)
 @php
-    $splitIndex = 30; // batas baris kolom kiri
+    $splitIndex = 28; // batas baris kolom kiri
 @endphp
 
 <div class="page-landscape">
@@ -273,6 +273,7 @@
                     $jumlahMK = count($d->transkrip_mahasiswa);
                     $mkLeft = $d->transkrip_mahasiswa->slice(0, $splitIndex);
                     $mkRight = $d->transkrip_mahasiswa->slice($splitIndex);
+
                 @endphp
 
                 <table class="transkrip-table {{ $jumlahMK > 70 ? 'font-small' : '' }}">
