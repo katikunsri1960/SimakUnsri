@@ -26,7 +26,7 @@ class GelarLulusanController extends Controller
 
     public function edit($id_gelar)
     {
-        // dd($prodi);
+        // dd($id_gelar);
 
         $gelar = GelarLulusan::where('id', $id_gelar)->first();
         $prodi = ProgramStudi::where('id_prodi', $gelar->id_prodi)->first();
@@ -56,13 +56,12 @@ class GelarLulusanController extends Controller
     {
         $data = $request->validate([
             'id_gelar' => 'required',
-            'id_prodi' => 'required|exists:program_studis,id_prodi',
             'gelar' => 'required',
             'gelar_panjang' => 'required',
         ]);
 
         try {
-            GelarLulusan::updateOrCreate(['id' => $data['id_gelar'], 'id_prodi' => $data['id_prodi']], [
+            GelarLulusan::updateOrCreate(['id' => $data['id_gelar']], [
                 'gelar' => $data['gelar'],
                 'gelar_panjang' => $data['gelar_panjang'],
             ]);
@@ -78,15 +77,15 @@ class GelarLulusanController extends Controller
         // dd($request);
         $data = $request->validate([
             'id_prodi' => 'required|exists:program_studis,id_prodi',
-            'gelar' => 'required',
-            'gelar_panjang' => 'required',
+            'gelar_new' => 'required',
+            'gelar_panjang_new' => 'required',
         ]);
 
         try {
             GelarLulusan::create([
                 'id_prodi' => $data['id_prodi'],
-                'gelar' => $data['gelar'],
-                'gelar_panjang' => $data['gelar_panjang'],
+                'gelar' => $data['gelar_new'],
+                'gelar_panjang' => $data['gelar_panjang_new'],
             ]);
         } catch (\Throwable $th) {
             return redirect()->route('bak.gelar-lulusan')->with('error', 'Data gelar lulusan gagal disimpan!');

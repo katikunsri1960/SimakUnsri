@@ -79,11 +79,11 @@ Gelar Lulusan
 
         $('#createModal').on('shown.bs.modal', function () {
 
-            if ($('#prodi').hasClass("select2-hidden-accessible")) {
-                $('#prodi').select2('destroy');
+            if ($('#id_prodi').hasClass("select2-hidden-accessible")) {
+                $('#id_prodi').select2('destroy');
             }
 
-            $('#prodi').select2({
+            $('#id_prodi').select2({
                 dropdownParent: $('#createModal'),
                 placeholder: '-- Pilih Program Studi --',
                 minimumInputLength: 3,
@@ -176,7 +176,6 @@ Gelar Lulusan
         document.getElementById('editForm').reset();
 
         $('#id_gelar').val(data.id);
-        $('#id_prodi').val(data.id_prodi);
 
         document.getElementById('fakultas').value = data.prodi.fakultas ? data.prodi.fakultas.nama_fakultas : '';
         document.getElementById('prodi').value = data.prodi.nama_jenjang_pendidikan + " - " + data.prodi.nama_program_studi;
@@ -189,8 +188,8 @@ Gelar Lulusan
         document.getElementById('createForm').reset();
 
         $('#id_prodi').val(data.id_prodi);
-        document.getElementById('gelar_panjang').value = data ? data.gelar_panjang : '';
-        document.getElementById('gelar').value = data ? data.gelar : '';
+        document.getElementById('gelar_panjang_new').value = data ? data.gelar_panjang : '';
+        document.getElementById('gelar_new').value = data ? data.gelar : '';
 
     }
 

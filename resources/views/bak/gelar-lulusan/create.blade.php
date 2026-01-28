@@ -17,13 +17,13 @@
                             <select class="form-select" name="id_prodi" id="id_prodi" required></select>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="gelar_panjang" class="form-label">Gelar Panjang</label>
-                            <input type="text" class="form-control" name="gelar_panjang" id="gelar_panjang"
+                            <label for="gelar_panjang_new" class="form-label">Gelar Panjang</label>
+                            <input type="text" class="form-control" name="gelar_panjang_new" id="gelar_panjang_new"
                                 aria-describedby="helpId" placeholder="" required/>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="gelar" class="form-label">Gelar Singkatan</label>
-                            <input type="text" class="form-control" name="gelar" id="gelar" aria-describedby="helpId"
+                            <label for="gelar_new" class="form-label">Gelar Singkatan</label>
+                            <input type="text" class="form-control" name="gelar_new" id="gelar_new" aria-describedby="helpId"
                                 placeholder="" required/>
                         </div>
                     </div>
