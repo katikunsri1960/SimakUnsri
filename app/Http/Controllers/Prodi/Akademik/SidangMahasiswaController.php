@@ -315,6 +315,7 @@ class SidangMahasiswaController extends Controller
     public function approve_hasil_sidang($aktivitas)
     {
         $data = AktivitasMahasiswa::with('anggota_aktivitas_personal')->where('id', $aktivitas)->first();
+        $check_angkatan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $data->anggota_aktivitas_personal->id_registrasi_mahasiswa)->first();
         $data_nilai_sidang = NilaiSidangMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $pembimbing = BimbingMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
         $penguji = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->get();
@@ -331,8 +332,8 @@ class SidangMahasiswaController extends Controller
         }
 
         //Generate nilai akhir sidang
-        $bobot_penguji = round((60/count($penguji)),2);
-        $bobot_pembimbing = round((30/count($pembimbing)),2);
+        $bobot_penguji = round((40/count($penguji)),2);
+        $bobot_pembimbing = round((50/count($pembimbing)),2);
         $bobot_proses_bimbingan = round((10/count($pembimbing)),2);
 
         $nilai_penguji = 0;
@@ -374,7 +375,16 @@ class SidangMahasiswaController extends Controller
             return redirect()->back()->with('error', 'Nilai di luar skala yang ditentukan.');
         }
 
-        $skala = $this->skala_nilai($nilai_akhir_sidang);
+        if(substr($check_angkatan,0,4) >= 2025){
+
+            $skala = $this->skala_nilai_baru($nilai_akhir_sidang);
+
+        }else{
+
+            $skala = $this->skala_nilai_lama($nilai_akhir_sidang);
+
+        }
+
         $nilai_indeks = $skala['nilai_indeks'];
         $nilai_huruf = $skala['nilai_huruf'];
 
@@ -441,7 +451,7 @@ class SidangMahasiswaController extends Controller
         }
     }
 
-    private function skala_nilai($nilai){
+    private function skala_nilai_lama($nilai){
         switch (true) {
             case ($nilai >= 86.0 && $nilai <= 100.0):
 
@@ -477,6 +487,108 @@ class SidangMahasiswaController extends Controller
                 ];
 
             case ($nilai >= 41.0 && $nilai < 56.0):
+
+                $nilai_indeks = '1.00';
+                $nilai_huruf = 'D';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            default:
+                $nilai_indeks = '0.00';
+                $nilai_huruf = 'E';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+        }
+    }
+
+    private function skala_nilai_baru($nilai){
+        switch (true) {
+            case ($nilai >= 86.0 && $nilai <= 100.0):
+
+                $nilai_indeks = '4.00';
+                $nilai_huruf = 'A';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 80.0 && $nilai < 86.0):
+
+                $nilai_indeks = '3.70';
+                $nilai_huruf = 'A-';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 75.0 && $nilai < 80.0):
+
+                $nilai_indeks = '3.30';
+                $nilai_huruf = 'B+';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 70.0 && $nilai < 75.0):
+
+                $nilai_indeks = '3.00';
+                $nilai_huruf = 'B';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+            
+            case ($nilai >= 65.0 && $nilai < 70.0):
+
+                $nilai_indeks = '2.70';
+                $nilai_huruf = 'B-';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 60.0 && $nilai < 65.0):
+
+                $nilai_indeks = '2.30';
+                $nilai_huruf = 'C+';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 56.0 && $nilai < 60.0):
+
+                $nilai_indeks = '2.00';
+                $nilai_huruf = 'C';
+
+                // Return the values as an associative array
+                return [
+                    'nilai_indeks' => $nilai_indeks,
+                    'nilai_huruf' => $nilai_huruf
+                ];
+
+            case ($nilai >= 40.0 && $nilai < 56.0):
 
                 $nilai_indeks = '1.00';
                 $nilai_huruf = 'D';

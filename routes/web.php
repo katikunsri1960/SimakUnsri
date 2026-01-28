@@ -133,7 +133,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('gelar-lulusan')->group(function(){
                 Route::get('/', [App\Http\Controllers\Bak\GelarLulusanController::class, 'index'])->name('bak.gelar-lulusan');
-                Route::get('/edit/{prodi}', [App\Http\Controllers\Bak\GelarLulusanController::class, 'edit'])->name('bak.gelar-lulusan.edit');
+                Route::get('/edit/{id_gelar}', [App\Http\Controllers\Bak\GelarLulusanController::class, 'edit'])->name('bak.gelar-lulusan.edit');
+                Route::get('/get-prodi', [App\Http\Controllers\Bak\GelarLulusanController::class, 'get_prodi'])->name('bak.gelar-lulusan.get-prodi');
+                Route::post('/update', [App\Http\Controllers\Bak\GelarLulusanController::class, 'update'])->name('bak.gelar-lulusan.update');
                 Route::post('/store', [App\Http\Controllers\Bak\GelarLulusanController::class, 'store'])->name('bak.gelar-lulusan.store');
             });
 

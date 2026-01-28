@@ -181,19 +181,19 @@ class MahasiswaEligibleController extends Controller
             'S2'  => 36,
             'S3'  => 42,
             'Profesi' => 24,
-            'Sp-1' => 92,
-            'Sp-2' => 42
+            'Sp-1' => 86,
+            'Sp-2' => 70
         ];
 
         // Define required Masa Studi for each "jenjang_pendidikan"
         $requiredMasaStudi = [
-            'D3'  => 5,
+            'D3'  => 4,
             'S1'  => 7,
             'S2'  => 4,
-            'S3'  => 7,
+            'S3'  => 6,
             'Profesi' => 5,
-            'Sp-1' => 8,
-            'Sp-2' => 6
+            'Sp-1' => 7,
+            'Sp-2' => 4
         ];
 
         // Define required Masa Studi for each "jenjang_pendidikan"
