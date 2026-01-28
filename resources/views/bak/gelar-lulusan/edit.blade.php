@@ -12,7 +12,6 @@
                 @csrf
                 <div class="modal-body">
                     <input type="hidden" name="id_gelar" id="id_gelar">
-                    <input type="hidden" name="id_prodi" id="id_prodi">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="nip" class="form-label">Fakultas</label>
