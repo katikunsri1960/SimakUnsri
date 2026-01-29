@@ -35,6 +35,7 @@ use App\Models\Referensi\PredikatKelulusan;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
+use App\Models\Mahasiswa\LulusDo;
 
 use Illuminate\Support\Facades\Validator;
 
@@ -302,6 +303,22 @@ class WisudaController extends Controller
                 'predikat' => 'required|exists:predikat_kelulusans,id'
             ]);
 
+            $lulus=LulusDo::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)
+                        ->where('id_jenis_keluar', 1)
+                        ->first();
+
+            $lama_studi = null;
+            
+            if ($lulus) {
+                $hari = Carbon::parse($lulus->tgl_keluar)
+                    ->diffInDays(Carbon::parse($lulus->tgl_masuk_sp));
+
+                $lama_studi = (int) ceil($hari / 30);
+            }
+
+
+            // dd($lama_studi,$lulus);
+
             if ($validator->fails()) {
                 return response()->json([
                     'status'  => 'error',
@@ -321,6 +338,8 @@ class WisudaController extends Controller
             $wisuda->update([
                 'approved'         => 2,
                 // 'no_urut'          => $request->no_urut,
+                'lama_studi'      => $lama_studi,
+                'tgl_keluar'      => $lulus ? $lulus->tgl_keluar : null,
                 'id_gelar_lulusan' => $request->gelar,
                 'id_predikat_kelulusan' => $request->predikat,
             ]);
@@ -565,15 +584,15 @@ class WisudaController extends Controller
 
             // dd($file_fakultas, $sk_yudisium_file);
 
-            $lama_studi = null;
-            if ($file_fakultas->tgl_kegiatan && $wisuda->tgl_masuk) {
-                $lama_studi = Carbon::parse($file_fakultas->tgl_yudisium)->diffInMonths(Carbon::parse($wisuda->tgl_masuk));
-            }
+            // $lama_studi = null;
+            // if ($file_fakultas->tgl_kegiatan && $wisuda->tgl_masuk) {
+            //     $lama_studi = Carbon::parse($file_fakultas->tgl_yudisium)->diffInMonths(Carbon::parse($wisuda->tgl_masuk));
+            // }
 
             $wisuda->update([
                 'id_file_fakultas' => $file_fakultas->id,
-                'lama_studi'=> $lama_studi,
-                'tgl_keluar' => $request->tgl_yudisium,
+                // 'lama_studi'=> $lama_studi,
+                // 'tgl_keluar' => $request->tgl_yudisium,
                 'no_sk_yudisium' => $request->no_sk_yudisium,
                 'tgl_sk_yudisium' => $request->tgl_sk_yudisium,
                 'sk_yudisium_file' => $sk_yudisium_file,
