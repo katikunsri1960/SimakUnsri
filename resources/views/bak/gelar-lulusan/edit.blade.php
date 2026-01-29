@@ -8,10 +8,10 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('bak.gelar-lulusan.store')}}" method="post" id="editForm">
+            <form action="{{route('bak.gelar-lulusan.update')}}" method="post" id="editForm">
                 @csrf
                 <div class="modal-body">
-                    <input type="hidden" name="id_prodi" id="id_prodi">
+                    <input type="hidden" name="id_gelar" id="id_gelar">
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="nip" class="form-label">Fakultas</label>
@@ -19,7 +19,7 @@
                                 placeholder="" disabled/>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label for="jabatan" class="form-label">Prodi</label>
+                            <label for="prodi" class="form-label">Prodi</label>
                             <input type="text" class="form-control" name="prodi" id="prodi"
                                 aria-describedby="helpId" placeholder="" disabled />
                         </div>
