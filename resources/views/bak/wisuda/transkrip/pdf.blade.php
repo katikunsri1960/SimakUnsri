@@ -237,7 +237,7 @@
                     <tr>
                         <td>TANGGAL LULUS <em>(DATE OF COMPLETION)</em></td>
                         <td width="1%">:</td>
-                        <td>{{ idDate($d->tgl_sk_yudisium)}} (<em>{!! enDate($d->tgl_sk_yudisium)!!}</em>)</td>
+                        <td>{{ idDate($d->tgl_keluar)}} (<em>{!! enDate($d->tgl_keluar)!!}</em>)</td>
                     </tr>
                     <tr>
                     <td>TANGGAL WISUDA <em>(CONVOCATION DATE)</em></td>
