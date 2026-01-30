@@ -129,25 +129,25 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             ->first()->bobot_nilai_maks;
 
         //Skala Nilai Statik
-        // $this->batas_min_A_lampau = 86.00;
+        $this->batas_min_A_lampau = 86.00;
         
-        // $this->batas_max_A_lampau = 100.00;
+        $this->batas_max_A_lampau = 100.00;
         
-        // $this->batas_min_B_lampau = 71.00;
+        $this->batas_min_B_lampau = 71.00;
         
-        // $this->batas_max_B_lampau = 85.99;
+        $this->batas_max_B_lampau = 85.99;
         
-        // $this->batas_min_C_lampau = 56.00;
+        $this->batas_min_C_lampau = 56.00;
         
-        // $this->batas_max_C_lampau = 70.99;
+        $this->batas_max_C_lampau = 70.99;
         
-        // $this->batas_min_D_lampau = 41.00;
+        $this->batas_min_D_lampau = 41.00;
         
-        // $this->batas_max_D_lampau = 55.99;
+        $this->batas_max_D_lampau = 55.99;
         
-        // $this->batas_min_E_lampau = 00.00;
+        $this->batas_min_E_lampau = 00.00;
         
-        // $this->batas_max_E_lampau = 40.99;
+        $this->batas_max_E_lampau = 40.99;
     }  
 
     /**
@@ -162,6 +162,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             'kelas_kuliahs.nama_kelas_kuliah',
             'peserta_kelas_kuliahs.nim',
             'peserta_kelas_kuliahs.nama_mahasiswa',
+            'peserta_kelas_kuliahs.angkatan',
             DB::raw("(SELECT nilai_komponen_evaluasis.nilai_komp_eval 
                       FROM nilai_komponen_evaluasis 
                       WHERE nilai_komponen_evaluasis.id_registrasi_mahasiswa = peserta_kelas_kuliahs.id_registrasi_mahasiswa 
@@ -220,6 +221,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             'Nama Kelas Kuliah',
             'NIM',
             'Nama Mahasiswa',
+            'Angkatan',
             'Nilai Keaktifan Mahasiswa',
             'Nilai Proyek',
             'Nilai Tugas',
@@ -244,6 +246,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             $data_kelas->nama_kelas_kuliah,
             $data_kelas->nim,
             $data_kelas->nama_mahasiswa,
+            $data_kelas->angkatan,
             $data_kelas->nilai_keaktifan_kelas,
             $data_kelas->nilai_projek,
             $data_kelas->nilai_tugas,
@@ -278,18 +281,19 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         $sheet->setCellValue('C1', 'Nama Kelas Kuliah');
         $sheet->setCellValue('D1', 'NIM');
         $sheet->setCellValue('E1', 'Nama Mahasiswa');
-        $sheet->setCellValue('F1', 'Nilai Aktivitas Partisipatif');
-        $sheet->setCellValue('G1', 'Nilai Hasil Proyek');
-        $sheet->setCellValue('H1', 'Nilai Tugas');
-        $sheet->setCellValue('I1', 'Nilai Kuis');
-        $sheet->setCellValue('J1', 'Nilai UTS');
-        $sheet->setCellValue('K1', 'Nilai UAS');
-        $sheet->setCellValue('L1', 'Nilai Angka');
-        $sheet->setCellValue('M1', 'Nilai Indeks');
-        $sheet->setCellValue('N1', 'Nilai Huruf');
+        $sheet->setCellValue('F1', 'Angkatan');
+        $sheet->setCellValue('G1', 'Nilai Aktivitas Partisipatif');
+        $sheet->setCellValue('H1', 'Nilai Hasil Proyek');
+        $sheet->setCellValue('I1', 'Nilai Tugas');
+        $sheet->setCellValue('J1', 'Nilai Kuis');
+        $sheet->setCellValue('K1', 'Nilai UTS');
+        $sheet->setCellValue('L1', 'Nilai UAS');
+        $sheet->setCellValue('M1', 'Nilai Angka');
+        $sheet->setCellValue('N1', 'Nilai Indeks');
+        $sheet->setCellValue('O1', 'Nilai Huruf');
 
         // Apply styles to header cells
-        $sheet->getStyle('A1:N1')->applyFromArray([
+        $sheet->getStyle('A1:O1')->applyFromArray([
             'font' => [
                 'bold' => true,
             ],
@@ -310,7 +314,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         ]);
 
         // Apply borders and alignment to all data cells
-        $sheet->getStyle('A2:N' . $highestRow)->applyFromArray([
+        $sheet->getStyle('A2:O' . $highestRow)->applyFromArray([
             'alignment' => [
                 'horizontal' => Alignment::HORIZONTAL_LEFT,
                 'vertical' => Alignment::VERTICAL_CENTER,
@@ -323,32 +327,40 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
             ],
         ]);
 
-        // Add formula in the column (L) for each row
-        for ($row = 2; $row <= $highestRow; $row++) {
-            $cell = 'L' . $row;
-            $formula = "=F{$row}*{$this->bobot_participatory} + G{$row}*{$this->bobot_project} + H{$row}*{$this->bobot_assignment} + I{$row}*{$this->bobot_quiz} + J{$row}*{$this->bobot_midterm} + K{$row}*{$this->bobot_finalterm}";
-
-            $sheet->setCellValue($cell, $formula);
-        }
-
         // Add formula in the column (M) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'M' . $row;
-            $formula = "=IF(N{$row}=\"A\", 4.00, IF(N{$row}=\"A-\", 3.70, IF(N{$row}=\"B+\", 3.30, IF(N{$row}=\"B\", 3.00, IF(N{$row}=\"B-\", 2.70, IF(N{$row}=\"C+\", 2.30, IF(N{$row}=\"C\", 2.00, IF(N{$row}=\"D\", 1.00, IF(N{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))))))";
-            
+            $formula = "=G{$row}*{$this->bobot_participatory} + H{$row}*{$this->bobot_project} + I{$row}*{$this->bobot_assignment} + J{$row}*{$this->bobot_quiz} + K{$row}*{$this->bobot_midterm} + L{$row}*{$this->bobot_finalterm}";
+
             $sheet->setCellValue($cell, $formula);
         }
 
         // Add formula in the column (N) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'N' . $row;
-            $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_A_min}, L{$row}<={$this->batas_max_A_min}), \"A-\", IF(AND(L{$row}>={$this->batas_min_B_plus}, L{$row}<={$this->batas_max_B_plus}), \"B+\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_B_min}, L{$row}<={$this->batas_max_B_min}), \"B-\", IF(AND(L{$row}>={$this->batas_min_C_plus}, L{$row}<={$this->batas_max_C_plus}), \"C+\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Perbaiki Skala Nilai Feeder\"))))))))))";
+            //NEW FORMULA
+            $formula = "=IF(F{$row}>=2025,IF(O{$row}=\"A\",4.00,IF(O{$row}=\"A-\",3.70,IF(O{$row}=\"B+\",3.30,IF(O{$row}=\"B\",3.00,IF(O{$row}=\"B-\",2.70,IF(O{$row}=\"C+\",2.30,IF(O{$row}=\"C\",2.00,IF(O{$row}=\"D\",1.00,IF(O{$row}=\"E\",0.00,\"Perbaiki Skala Nilai Feeder\"))))))))),IF(O{$row}=\"A\",4.00,IF(O{$row}=\"B\",3.00,IF(O{$row}=\"C\",2.00,IF(O{$row}=\"D\",1.00,IF(O{$row}=\"E\",0.00,\"Perbaiki Skala Nilai Feeder\"))))))";
+
+            //OLD FORMULA
+            // $formula = "=IF(O{$row}=\"A\", 4.00, IF(O{$row}=\"A-\", 3.70, IF(O{$row}=\"B+\", 3.30, IF(O{$row}=\"B\", 3.00, IF(O{$row}=\"B-\", 2.70, IF(O{$row}=\"C+\", 2.30, IF(O{$row}=\"C\", 2.00, IF(O{$row}=\"D\", 1.00, IF(O{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))))))";
             
             $sheet->setCellValue($cell, $formula);
         }
 
-        // Set number format for columns L and M
-        $sheet->getStyle('F2:M' . $highestRow)
+        // Add formula in the column (O) for each row
+        for ($row = 2; $row <= $highestRow; $row++) {
+            $cell = 'O' . $row;
+            //NEW FORMULA
+            $formula = "=IF(F$row>=2025,IFS(L$row>={$this->batas_min_A},\"A\",L$row>={$this->batas_min_A_min},\"A-\",L$row>={$this->batas_min_B_plus},\"B+\",L$row>={$this->batas_min_B},\"B\",L$row>={$this->batas_min_B_min},\"B-\",L$row>={$this->batas_min_C_plus},\"C+\",L$row>={$this->batas_min_C},\"C\",L$row>={$this->batas_min_D},\"D\",L$row>={$this->batas_min_E},\"E\"),IFS(L$row>={$this->batas_min_A_lampau},\"A\",L$row>={$this->batas_min_B_lampau},\"B\",L$row>={$this->batas_min_C_lampau},\"C\", L$row>={$this->batas_min_D_lampau},\"D\", L$row>={$this->batas_min_E_lampau},\"E\"))";
+            
+            //OLD FORMULA
+            // $formula = "=IF(AND(L{$row}>={$this->batas_min_A}, L{$row}<={$this->batas_max_A}), \"A\", IF(AND(L{$row}>={$this->batas_min_A_min}, L{$row}<={$this->batas_max_A_min}), \"A-\", IF(AND(L{$row}>={$this->batas_min_B_plus}, L{$row}<={$this->batas_max_B_plus}), \"B+\", IF(AND(L{$row}>={$this->batas_min_B}, L{$row}<={$this->batas_max_B}), \"B\", IF(AND(L{$row}>={$this->batas_min_B_min}, L{$row}<={$this->batas_max_B_min}), \"B-\", IF(AND(L{$row}>={$this->batas_min_C_plus}, L{$row}<={$this->batas_max_C_plus}), \"C+\", IF(AND(L{$row}>={$this->batas_min_C}, L{$row}<={$this->batas_max_C}), \"C\", IF(AND(L{$row}>={$this->batas_min_D}, L{$row}<={$this->batas_max_D}), \"D\", IF(AND(L{$row}=0, F{$row}=\"\", G{$row}=\"\", H{$row}=\"\", I{$row}=\"\", J{$row}=\"\", K{$row}=\"\"), \"E\", IF(AND(L{$row}>={$this->batas_min_E}, L{$row}<={$this->batas_max_E}), \"E\", \"Perbaiki Skala Nilai Feeder\"))))))))))";
+            
+            $sheet->setCellValue($cell, $formula);
+        }
+
+        // Set number format for columns M and N
+        $sheet->getStyle('G2:N' . $highestRow)
               ->getNumberFormat()
               ->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
 
@@ -357,7 +369,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         //       ->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
 
         // Lock specific columns
-        $columnsToLock = ['A', 'B', 'C', 'D', 'E', 'L', 'M', 'N'];
+        $columnsToLock = ['A', 'B', 'C', 'D', 'E', 'F', 'M', 'N', 'O'];
         foreach ($columnsToLock as $column) {
             $sheet->getStyle($column . '1:' . $column . $highestRow)
                 ->getProtection()
@@ -365,7 +377,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         }
 
         // Ensure other cells are unlocked before applying sheet protection
-        $sheet->getStyle('F2:K'.$highestRow)
+        $sheet->getStyle('G2:L'.$highestRow)
               ->getProtection()
               ->setLocked(Protection::PROTECTION_UNPROTECTED);
 
@@ -380,12 +392,13 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         $sheet->getColumnDimension('C')->setWidth(15);
         $sheet->getColumnDimension('D')->setWidth(20);
         $sheet->getColumnDimension('E')->setWidth(32);
-        $sheet->getColumnDimension('F')->setWidth(22);
-        $sheet->getColumnDimension('G')->setWidth(15);
+        $sheet->getColumnDimension('F')->setWidth(15);
+        $sheet->getColumnDimension('G')->setWidth(22);
         $sheet->getColumnDimension('H')->setWidth(15);
         $sheet->getColumnDimension('I')->setWidth(15);
         $sheet->getColumnDimension('J')->setWidth(15);
         $sheet->getColumnDimension('K')->setWidth(15);
+        $sheet->getColumnDimension('L')->setWidth(15);
         $sheet->getColumnDimension('L')->setWidth(15);
     }
 }
