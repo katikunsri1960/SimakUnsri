@@ -654,6 +654,104 @@ class WisudaController extends Controller
         return redirect()->back()->with('success', "Data successfully imported!");
     }
 
+    public function perbaikan_data()
+    {
+        return view('bak.wisuda.perbaikan-data.index');
+    }
+
+    public function data_perbaikan_data(Request $request)
+    {
+        $request->validate([
+            'nim' => 'required',
+        ]);
+
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('id_registrasi_mahasiswa', $request->nim)->first();
+
+        if(!$riwayat) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data Mahasiswa tidak ditemukan!!',
+            ]);
+        }
+
+        $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat->id_kurikulum)->first();
+
+        try {
+
+            $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->pluck('score');
+            $nilai_course = CourseUsept::whereIn('nim', [$riwayat->nim, $riwayat->biodata->nik])->get()->pluck('konversi');
+
+            $all_scores = $nilai_usept_mhs->merge($nilai_course);
+            $usept = $all_scores->max();
+
+            $useptData = [
+                'score' => $usept,
+                'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
+                'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
+            ];
+
+        } catch (\Throwable $th) {
+
+            $useptData = [
+                'score' => 0,
+                'class' => 'danger',
+                'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
+            ];
+        }
+
+        $transkrip = TranskripMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->whereNotIn('nilai_huruf', ['F', ''])->get();
+
+        $total_sks = $transkrip->sum('sks_mata_kuliah');
+        $total_indeks = $transkrip->sum('nilai_indeks');
+
+        $ipk = 0;
+        if($total_sks > 0){
+            $ipk = ($total_sks * $total_indeks) / $total_sks;
+        }
+
+        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
+                ->orderBy('id_semester')
+                ->select('nama_semester', 'sks_semester', 'sks_total', 'ipk','ips', 'nama_status_mahasiswa', 'id_semester')
+                ->get();
+
+        $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)->first();
+
+        try {
+            $id_test = Registrasi::where('rm_nim', $riwayat->nim)->pluck('rm_no_test')->first();
+
+            $pembayaran = Tagihan::with('pembayaran')
+                            ->whereIn('nomor_pembayaran', [$id_test, $riwayat->nim])
+                            ->orderBy('kode_periode', 'ASC')
+                            ->get();
+
+            $dataPembayaran = [
+                'status' => '1',
+                'data' => $pembayaran,
+            ];
+        } catch (\Throwable $th) {
+            //throw $th;
+            $dataPembayaran = [
+                'status' => '0',
+                'message' => 'Koneksi database keuangan terputus!!',
+            ];
+        }
+
+        $data = [
+            'status' => 'success',
+            'data' => $transkrip,
+            'akm' => $akm,
+            'riwayat' => $riwayat,
+            'total_sks' => $total_sks,
+            'ipk' => $ipk,
+            'bebas_pustaka' => $bebas_pustaka,
+            'usept' => $useptData,
+            'pembayaran' => $dataPembayaran,
+        ];
+
+        return response()->json($data);
+
+    }
+
     public function get_mahasiswa(Request $request)
     {
         $db = new RiwayatPendidikan();
