@@ -339,10 +339,10 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         for ($row = 2; $row <= $highestRow; $row++) {
             $cell = 'N' . $row;
             //NEW FORMULA
-            // $formula = "=IF(F{$row}>=2025,IF(O{$row}=\"A\",4,IF(O{$row}=\"A-\",3.7,IF(O{$row}=\"B+\",3.3,IF(O{$row}=\"B\",3,IF(O{$row}=\"B-\",2.7,IF(O{$row}=\"C+\",2.3,IF(O{$row}=\"C\",2,IF(O{$row}=\"D\",1,IF(O{$row}=\"E\",0,\"Perbaiki Skala Nilai Feeder\"))))))))),IF(O{$row}=\"A\",4,IF(O{$row}=\"B\",3,IF(O{$row}=\"C\",2,IF(O{$row}=\"D\",1,IF(O{$row}=\"E\",0,\"Perbaiki Skala Nilai Feeder\"))))))";
+            $formula = "=IF(F{$row}>=2025,IF(O{$row}=\"A\",4.00,IF(O{$row}=\"A-\",3.70,IF(O{$row}=\"B+\",3.30,IF(O{$row}=\"B\",3.00,IF(O{$row}=\"B-\",2.70,IF(O{$row}=\"C+\",2.30,IF(O{$row}=\"C\",2.00,IF(O{$row}=\"D\",1.00,IF(O{$row}=\"E\",0.00,\"Perbaiki Skala Nilai Feeder\"))))))))),IF(O{$row}=\"A\",4.00,IF(O{$row}=\"B\",3.00,IF(O{$row}=\"C\",2.00,IF(O{$row}=\"D\",1.00,IF(O{$row}=\"E\",0.00,\"Perbaiki Skala Nilai Feeder\"))))))";
 
             //OLD FORMULA
-            $formula = "=IF(O{$row}=\"A\", 4.00, IF(O{$row}=\"A-\", 3.70, IF(O{$row}=\"B+\", 3.30, IF(O{$row}=\"B\", 3.00, IF(O{$row}=\"B-\", 2.70, IF(O{$row}=\"C+\", 2.30, IF(O{$row}=\"C\", 2.00, IF(O{$row}=\"D\", 1.00, IF(O{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))))))";
+            // $formula = "=IF(O{$row}=\"A\", 4.00, IF(O{$row}=\"A-\", 3.70, IF(O{$row}=\"B+\", 3.30, IF(O{$row}=\"B\", 3.00, IF(O{$row}=\"B-\", 2.70, IF(O{$row}=\"C+\", 2.30, IF(O{$row}=\"C\", 2.00, IF(O{$row}=\"D\", 1.00, IF(O{$row}=\"E\", 0.00, \"Perbaiki Skala Nilai Feeder\")))))))))";
             
             $sheet->setCellValue($cell, $formula);
         }
