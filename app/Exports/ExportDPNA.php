@@ -329,7 +329,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
 
         // Add formula in the column (L) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
-            $cell = 'L' . $row;
+            $cell = 'M' . $row;
             $formula = "=G{$row}*{$this->bobot_participatory} + H{$row}*{$this->bobot_project} + I{$row}*{$this->bobot_assignment} + J{$row}*{$this->bobot_quiz} + K{$row}*{$this->bobot_midterm} + L{$row}*{$this->bobot_finalterm}";
 
             $sheet->setCellValue($cell, $formula);
@@ -337,7 +337,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
 
         // Add formula in the column (M) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
-            $cell = 'M' . $row;
+            $cell = 'N' . $row;
             //NEW FORMULA
             $formula = "=IF(F{$row}>=2025,IF(O{$row}=\"A\",4,IF(O{$row}=\"A-\",3.7,IF(O{$row}=\"B+\",3.3,IF(O{$row}=\"B\",3,IF(O{$row}=\"B-\",2.7,IF(O{$row}=\"C+\",2.3,IF(O{$row}=\"C\",2,IF(O{$row}=\"D\",1,IF(O{$row}=\"E\",0,\"Perbaiki Skala Nilai Feeder\"))))))))),IF(O{$row}=\"A\",4,IF(O{$row}=\"B\",3,IF(O{$row}=\"C\",2,IF(O{$row}=\"D\",1,IF(O{$row}=\"E\",0,\"Perbaiki Skala Nilai Feeder\"))))))";
 
@@ -349,7 +349,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
 
         // Add formula in the column (N) for each row
         for ($row = 2; $row <= $highestRow; $row++) {
-            $cell = 'N' . $row;
+            $cell = 'O' . $row;
             //NEW FORMULA
             $formula = "=IF(F{$row}>=2025,IF(AND(L{$row}>={$this->batas_min_A},L{$row}<={$this->batas_max_A}),\"A\",IF(AND(L{$row}>={$this->batas_min_A_min},L{$row}<={$this->batas_max_A_min}),\"A-\",IF(AND(L{$row}>={$this->batas_min_B_plus},L{$row}<={$this->batas_max_B_plus}),\"B+\",IF(AND(L{$row}>={$this->batas_min_B},L{$row}<={$this->batas_max_B}),\"B\",IF(AND(L{$row}>={$this->batas_min_B_min},L{$row}<={$this->batas_max_B_min}),\"B-\",IF(AND(L{$row}>={$this->batas_min_C_plus},L{$row}<={$this->batas_max_C_plus}),\"C+\",IF(AND(L{$row}>={$this->batas_min_C},L{$row}<={$this->batas_max_C}),\"C\",IF(AND(L{$row}>={$this->batas_min_D},L{$row}<={$this->batas_max_D}),\"D\",IF(AND(L{$row}=0,F{$row}=\"\",G{$row}=\"\",H{$row}=\"\",I{$row}=\"\",J{$row}=\"\",K{$row}=\"\"),\"E\",IF(AND(L{$row}>={$this->batas_min_E},L{$row}<={$this->batas_max_E}),\"E\",\"Perbaiki Skala Nilai Feeder\"))))))))))),IF(AND(L{$row}>={$this->batas_min_A_lampau},L{$row}<={$this->batas_max_A_lampau}),\"A\",IF(AND(L{$row}>={$this->batas_min_B_lampau},L{$row}<={$this->batas_max_B_lampau}),\"B\",IF(AND(L{$row}>={$this->batas_min_C_lampau},L{$row}<={$this->batas_max_C_lampau}),\"C\",IF(AND(L{$row}>={$this->batas_min_D_lampau},L{$row}<={$this->batas_max_D_lampau}),\"D\",IF(AND(L{$row}=0,F{$row}=\"\",G{$row}=\"\",H{$row}=\"\",I{$row}=\"\",J{$row}=\"\",K{$row}=\"\"),\"E\",IF(AND(L{$row}>={$this->batas_min_E_lampau},L{$row}<={$this->batas_max_E_lampau}),\"E\",\"Perbaiki Skala Nilai Feeder\")))))))";
             
@@ -377,7 +377,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         }
 
         // Ensure other cells are unlocked before applying sheet protection
-        $sheet->getStyle('F2:L'.$highestRow)
+        $sheet->getStyle('G2:L'.$highestRow)
               ->getProtection()
               ->setLocked(Protection::PROTECTION_UNPROTECTED);
 
@@ -392,8 +392,8 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         $sheet->getColumnDimension('C')->setWidth(15);
         $sheet->getColumnDimension('D')->setWidth(20);
         $sheet->getColumnDimension('E')->setWidth(32);
-        $sheet->getColumnDimension('F')->setWidth(20);
-        $sheet->getColumnDimension('G')->setWidth(15);
+        $sheet->getColumnDimension('F')->setWidth(15);
+        $sheet->getColumnDimension('G')->setWidth(22);
         $sheet->getColumnDimension('H')->setWidth(15);
         $sheet->getColumnDimension('I')->setWidth(15);
         $sheet->getColumnDimension('J')->setWidth(15);
