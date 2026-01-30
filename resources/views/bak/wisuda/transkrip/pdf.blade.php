@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
         <title>Transkrip Akademik</title>
     <style>
-        @page { margin: 10mm 14mm 5mm 12mm; }
+        @page { margin: 10mm 14mm 10mm 12mm; }
 
         .page-landscape {
             width: 100%;
@@ -61,7 +61,7 @@
         tbody td {
             border-left: 0.5pt solid #000;
             border-right: 0.5pt solid #000;
-            padding: 2px 4px;
+            padding: 2px 0px 4px 0px;
         }
 
         /* Tambahkan border bawah tiap halaman */
@@ -88,14 +88,42 @@
             padding: 7.5px 2px 7.5px 2px;
             font-size:7.5px;
             border: 0.5pt solid #000 !important; 
+            vertical-align: middle;
         }
 
-        .transkrip-table tr td {
+        .transkrip-table tr {
             border-left: 0.5pt solid #000 !important; 
             border-right: 0.5pt solid #000 !important; 
             vertical-align: top;
-            padding: 1px 5px 1px 5px;
-            font-size:7.5px;
+            margin-bottom: 0px;
+        }
+
+        .transkrip-table tr.mk-small td {
+            padding: 5px 2px 5px 2px;
+            font-size: 7.5px;
+        }
+
+        .transkrip-table tr.mk-medium td {
+            padding: 2px 2px 2px 2px;
+            font-size: 7px;
+        }
+
+        .transkrip-table tr.mk-large td {
+            padding: 1px 2px 1px 2px;
+            font-size: 7px;
+        }
+
+        .transkrip-table tr.mk-xlarge td {
+            padding: 0px 2px 0px 2px;
+            font-size: 6.5px;
+        }
+
+
+        .transkrip-table td {
+            border-left: 0.5pt solid #000 !important; 
+            border-right: 0.5pt solid #000 !important; 
+            vertical-align: top;
+            padding: 0px 2px 0px 2px;
             margin-bottom: 0px;
         }
 
@@ -233,6 +261,19 @@
                             @endif
                         </td>
                     </tr>
+                    
+                    @if($d->is_peminatan == 1)
+                        <tr class="text-upper">
+                            <td>PEMINATAN <br><em>(MAJOR)</em></td> 
+                            <td width="1%">:  </td>
+                            <td> 
+                                {{ $d->bku_prodi_id }}
+                                @if(!empty($d->bku_prodi_en))
+                                    <em>({{ $d->bku_prodi_en }})</em>
+                                @endif
+                            </td>
+                        </tr>
+                    @endif
 
                     <tr>
                         <td>TANGGAL LULUS <em>(DATE OF COMPLETION)</em></td>
@@ -274,9 +315,23 @@
                     $mkLeft = $d->transkrip_mahasiswa->slice(0, $splitIndex);
                     $mkRight = $d->transkrip_mahasiswa->slice($splitIndex);
 
+                    // margin dinamis tabel
+                    //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
+                    if ($jumlahMK <= 25) {
+                        $rowStyle = 'mk-small';
+                    } elseif ($jumlahMK > 25 && $jumlahMK <= 40) {
+                        $rowStyle = 'mk-medium';
+                    } elseif ($jumlahMK > 40 && $jumlahMK < 65) {
+                        $rowStyle = 'mk-large';
+                    } else {
+                        $rowStyle = 'mk-xlarge';
+                    }
+
+                    //dd($jumlahMK);
                 @endphp
 
-                <table class="transkrip-table {{ $jumlahMK > 70 ? 'font-small' : '' }}">
+
+                <table class="transkrip-table">
                     <thead>
                         <tr>
                             <th rowspan="2" width="7">NO</th>
@@ -304,7 +359,7 @@
                                 $totalSks += $sks;
                                 $totalBobot += $bobot;
                             @endphp
-                            <tr>
+                            <tr class="{{$rowStyle}}">
                                 <td align="center">{{ $i+1 }}</td>
                                 <td>{{ $mk->kode_mata_kuliah }}</td>
                                 <td>
@@ -326,10 +381,10 @@
 
             {{-- KOLM KANAN --}}
             <td class="col-right">
-                @if(count($mkRight) > 0)
-                    {{-- TABEL MATA KULIAH KOLON KANAN --}}
-                    <div style="margin:35px 0px 5px 0px; padding:0px 0px 0px 0px;" >
-                        <table class="transkrip-table {{ $jumlahMK > 70 ? 'font-small' : '' }}">
+                <div style="margin:35px 0px 5px 0px; padding:0px 0px 0px 0px;" >
+                    @if(count($mkRight) > 0)
+                        {{-- TABEL MATA KULIAH KOLON KANAN --}}
+                        <table class="transkrip-table" >
                             <thead>
                                 <tr>
                                     <th rowspan="2" width="7">NO</th>
@@ -356,7 +411,7 @@
                                         $totalSks += $sks;
                                         $totalBobot += $bobot;
                                     @endphp
-                                    <tr>
+                                    <tr class="{{$rowStyle}}">
                                         <td align="center">{{ $i+1 }}</td>
                                         <td>{{ $mk->kode_mata_kuliah }}</td>
                                         <td>
@@ -371,16 +426,16 @@
                                 @endforeach
                             </tbody>
                             {{-- TOTAL SKS & BOBOT kolom kanan --}}
-                            <tr style="border: 0.5pt solid #000; text-align:center;">
+                            <tr style="border: 0.5pt solid #000; text-align:center; font-size:7.5px; padding:10px 0px 10px 0px;">
                                 <td colspan="3">TOTAL</td>
                                 <td>{{ $totalSks }}</td>
                                 <td colspan="2"></td>
                                 <td>{{$totalBobot}}</td>
                             </tr>
                         </table>
-                    </div>
-                @endif                                
+                    @endif                                
                 <!-- <br> -->
+                </div>
 
                 {{-- ========================================================= --}}
                 {{--                   IPK + SKRIPSI + PEMBIMBING              --}}
@@ -417,16 +472,16 @@
                     <tr>
                         @if($d->jenjang == 'D3')
                             <td width="50">JUDUL TUGAS AKHIR<br><em>(FINAL PROJECT TITLE)</em></td>
-                        @elseif($d->jenjang == 'S1')
+                        @elseif($d->jenjang == 'S1' || $d->jenjang == 'Sp-1')
                             <td width="50">JUDUL SKRIPSI<br><em>(FINAL PROJECT TITLE)</em></td>
-                        @elseif($d->jenjang == 'S2')
+                        @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-2')
                             <td width="50">JUDUL TESIS<br><em>(THESIS TITLE)</em></td>
                         @elseif($d->jenjang == 'S3')
                             <td width="50">JUDUL DISERTASI<br><em>(DISERTATION TITLE)</em></td>
                         @endif
                         <td width="1">: </td>
                         <!-- <td width="1">: </td> -->
-                        <td colspan="4">
+                        <td colspan="3">
                             {{ strtoupper($d->aktivitas_mahasiswa->judul) }}<br>
                             @if(!empty($d->judul_eng))
                                 <em>({{ strtoupper($d->judul_eng) }})</em>
@@ -437,9 +492,9 @@
                     <tr>
                         @if($d->jenjang == 'D3')
                             <td width="50">PEMBIMBING TUGAS AKHIR<br><em>(FINAL PROJECT ADVISORS)</em></td>
-                        @elseif($d->jenjang == 'S1')
+                        @elseif($d->jenjang == 'S1' || $d->jenjang == 'Sp-1')
                             <td width="50">PEMBIMBING SKRIPSI<br><em>(FINAL PROJECT ADVISORS)</em></td>
-                        @elseif($d->jenjang == 'S2')
+                        @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-2')
                             <td width="50">PEMBIMBING TESIS<br><em>(THESIS ADVISORS)</em></td>
                         @elseif($d->jenjang == 'S3')
                             <td width="50">PEMBIMBING DISERTASI<br><em>(DISERTATION ADVISORS)</em></td>
@@ -454,7 +509,6 @@
 
                                         $gelarDepan = $gelar
                                             ? collect([
-                                                $gelar->gelar_depan_gb,
                                                 $gelar->gelar_depan_s3,
                                                 $gelar->gelar_depan_s2,
                                                 $gelar->gelar_depan_s1,
