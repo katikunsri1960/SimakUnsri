@@ -360,7 +360,7 @@ class ExportDPNA implements FromCollection, WithHeadings, WithEvents, WithMappin
         }
 
         // Set number format for columns M and N
-        $sheet->getStyle('F2:N' . $highestRow)
+        $sheet->getStyle('G2:N' . $highestRow)
               ->getNumberFormat()
               ->setFormatCode(NumberFormat::FORMAT_NUMBER_00);
 
