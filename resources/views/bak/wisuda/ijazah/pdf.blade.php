@@ -152,14 +152,14 @@
                     <td style="width: 235px">Tanggal Lulus</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                     <td>
-                        {{ \Carbon\Carbon::parse($d->tanggal_keluar)->locale('id')->translatedFormat('d F Y') }}
+                        {{ \Carbon\Carbon::parse($d->tgl_keluar)->locale('id')->translatedFormat('d F Y') }}
                     </td>
                 </tr>
                 <tr>
                     <td style="width:70px">Tanggal</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                     <td style="width: 340px; margin-right:30px">
-                        {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
+                        {{ \Carbon\Carbon::parse(2000-11-11)->locale('id')->translatedFormat('d F Y') }}
                     </td>
                     <td style="width: 235px">Fakultas</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
