@@ -134,7 +134,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{route('bak.wisuda.peserta.data_approved')}}`,
+        url: `{{route('bak.wisuda.peserta.data_approved_transkrip')}}`,
         type: 'GET',
         data: {
             fakultas: fakultas,

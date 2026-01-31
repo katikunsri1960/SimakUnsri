@@ -461,8 +461,8 @@
                     <td>Indralaya, {{ \Carbon\Carbon::parse($d->tanggal_wisuda)->locale('id')->translatedFormat('d F Y') }}</td>
                 </tr>
                 <tr>
-                    <td style="width: 66%">Dekan,</td>
-                    <td>Rektor,</td>
+                    <td style="width: 66%">{{$dekan->jabatan  ?? 'Belum Diisi'}},</td>
+                    <td>{{ $rektor->jabatan ?? 'Belum Diisi'}},</td>
                 </tr>
                 <tr style="">
                     <td style="width: 66%;padding-top: 65px">{{$dekan && $dekan->gelar_depan ? $dekan->gelar_depan.' ' : ''}}{{$dekan ? Str::title($dekan->nama) : 'Belum Diisi'}}, {{$dekan && $dekan->gelar_belakang ? $dekan->gelar_belakang : ''}}
