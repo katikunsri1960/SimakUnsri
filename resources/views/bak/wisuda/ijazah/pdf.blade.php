@@ -140,7 +140,11 @@
                 <tr>
                     <td style="width:70px">Nama</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                    <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                    @if($d->nama_perbaikan)
+                        <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_perbaikan)}}</td>
+                    @else
+                        <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                    @endif
                     <td style="width: 235px">No. Induk Mahasiswa</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                     <td>{{$d->nim}}</td>
@@ -148,7 +152,11 @@
                 <tr>
                     <td style="width:70px">Lahir di</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                    <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                    @if($d->tmpt_perbaikan)
+                        <td style="width: 340px; margin-right:30px">{{Str::title($d->tmpt_perbaikan)}}</td>
+                    @else
+                        <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                    @endif
                     <td style="width: 235px">Tanggal Lulus</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                     <td>
@@ -158,9 +166,15 @@
                 <tr>
                     <td style="width:70px">Tanggal</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                    <td style="width: 340px; margin-right:30px">
-                        {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
-                    </td>
+                    @if($d->tgl_perbaikan)
+                        <td style="width: 340px; margin-right:30px">
+                            {{ \Carbon\Carbon::parse($d->tgl_perbaikan)->locale('id')->translatedFormat('d F Y') }}
+                        </td>
+                    @else
+                        <td style="width: 340px; margin-right:30px">
+                            {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
+                        </td>
+                    @endif
                     <td style="width: 235px">Fakultas</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                     <td>{{$fakultas}}</td>
@@ -306,7 +320,11 @@
                     <tr>
                         <td style="width:70px">Nama</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                        <td style="width: 280px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                        @if($d->nama_perbaikan)
+                            <td style="width: 280px; margin-right:30px">{{Str::title($d->nama_perbaikan)}}</td>
+                        @else
+                            <td style="width: 280px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                        @endif
                         <td style="width: 235px">No. Induk Mahasiswa</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         <td>{{$d->nim}}</td>
@@ -314,7 +332,11 @@
                     <tr>
                         <td style="width:70px">Lahir di</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                        <td style="width: 280px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                        @if($d->tmpt_perbaikan)
+                            <td style="width: 280px; margin-right:30px">{{Str::title($d->tmpt_perbaikan)}}</td>
+                        @else
+                            <td style="width: 280px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                        @endif
                         <td style="width: 235px">Tanggal Lulus</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         <td>
@@ -324,9 +346,15 @@
                     <tr>
                         <td style="width:70px">Tanggal</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                        <td style="width: 280px; margin-right:30px">
-                            {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
-                        </td>
+                        @if($d->tgl_perbaikan)
+                            <td style="width: 280px; margin-right:30px">
+                                {{ \Carbon\Carbon::parse($d->tgl_perbaikan)->locale('id')->translatedFormat('d F Y') }}
+                            </td>
+                        @else
+                            <td style="width: 280px; margin-right:30px">
+                                {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
+                            </td>
+                        @endif
                         <td style="width: 235px">Fakultas</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         <td>{{$fakultas}}</td>
@@ -358,7 +386,11 @@
                     <tr>
                         <td style="width:70px">Nama</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                        <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                        @if($d->nama_perbaikan)
+                            <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_perbaikan)}}</td>
+                        @else
+                            <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                        @endif
                         <td style="width: 235px">No. Induk Mahasiswa</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         <td>{{$d->nim}}</td>
@@ -366,7 +398,11 @@
                     <tr>
                         <td style="width:70px">Lahir di</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                        <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                        @if($d->tmpt_perbaikan)
+                            <td style="width: 340px; margin-right:30px">{{Str::title($d->tmpt_perbaikan)}}</td>
+                        @else
+                            <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                        @endif
                         <td style="width: 235px">Tanggal Lulus</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         <td>
@@ -376,9 +412,15 @@
                     <tr>
                         <td style="width:70px">Tanggal</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
-                        <td style="width: 340px; margin-right:30px">
-                            {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
-                        </td>
+                        @if($d->tgl_perbaikan)
+                            <td style="width: 340px; margin-right:30px">
+                                {{ \Carbon\Carbon::parse($d->tgl_perbaikan)->locale('id')->translatedFormat('d F Y') }}
+                            </td>
+                        @else
+                            <td style="width: 340px; margin-right:30px">
+                                {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
+                            </td>
+                        @endif
                         <td style="width: 235px">Fakultas</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         <td>{{$fakultas}}</td>

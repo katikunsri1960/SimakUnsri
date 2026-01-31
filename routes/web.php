@@ -226,6 +226,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'perbaikan_data'])->name('bak.wisuda.perbaikan-data');
                     Route::get('/search', [App\Http\Controllers\Bak\WisudaController::class, 'search_perbaikan_data'])->name('bak.wisuda.perbaikan-data.search');
                     Route::get('/get-transkrip-nilai', [App\Http\Controllers\Bak\WisudaController::class, 'data_perbaikan_data'])->name('bak.wisuda.perbaikan-data.get');
+                    Route::post('/store', [App\Http\Controllers\Bak\WisudaController::class, 'store_perbaikan_data'])->name('bak.wisuda.perbaikan-data.store');
+
                     // Route::get('/download', [App\Http\Controllers\Bak\WisudaController::class, 'download'])->name('bak.perbaikan-data.download');
                     // Route::get('/{semester}/{id_reg}/khs', [App\Http\Controllers\Bak\WisudaController::class, 'khs'])->name('bak.perbaikan-data.khs');
                 });

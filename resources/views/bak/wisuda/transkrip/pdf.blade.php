@@ -113,11 +113,15 @@
             font-size: 7px;
         }
 
-        .transkrip-table tr.mk-xlarge td {
-            padding: 0px 2px 0px 2px;
-            font-size: 6.5px;
+        .transkrip-table tr.mk-large td {
+            padding: 0.5px 2px 0.5px 2px;
+            font-size: 7px;
         }
 
+        .transkrip-table tr.mk-xlarge td {
+            padding: 0px 2px 0px 2px;
+            font-size: 7px;
+        }
 
         .transkrip-table td {
             border-left: 0.5pt solid #000 !important; 
@@ -211,17 +215,29 @@
                     <tr>
                         <td style="margin: -20px 0px -20px 0px;" width="165">NAMA <em>(NAME)</em></td> 
                         <td width="1%">:  </td>
-                        <td> {{ strtoupper($d->nama_mahasiswa) }}</td>
+                        @if($d->nama_perbaikan)
+                            <td> {{ strtoupper($d->nama_perbaikan) }}</td>
+                        @else
+                            <td> {{ strtoupper($d->nama_mahasiswa) }}</td>
+                        @endif
                     </tr>
                     <tr>
                         <td>TEMPAT LAHIR <em>(PLACE OF BIRTH)</em></td> 
                         <td width="1%">:  </td>
-                        <td> {{ $d->tempat_lahir }}</td>
+                        @if($d->tmpt_perbaikan)
+                            <td> {{ strtoupper($d->tmpt_perbaikan) }}</td>
+                        @else
+                            <td> {{ strtoupper($d->tempat_lahir) }}</td>
+                        @endif
                     </tr>
                     <tr>
                         <td>TANGGAL LAHIR <em>(DATE OF BIRTH)</em></td>
                         <td width="1%">:</td>
-                        <td>{{ idDate($d->tanggal_lahir)}} (<em>{!! enDate($d->tanggal_lahir)!!}</em>)</td>
+                        @if($d->tgl_perbaikan)
+                            <td>{{ idDate($d->tgl_perbaikan)}} (<em>{!! enDate($d->tgl_perbaikan)!!}</em>)</td>
+                        @else
+                            <td>{{ idDate($d->tanggal_lahir)}} (<em>{!! enDate($d->tanggal_lahir)!!}</em>)</td>
+                        @endif
                     </tr>
                     <tr>
                         <td>NIM <em>(STUDENT REGISTRATION NUMBER)</em></td> 
@@ -321,7 +337,9 @@
                         $rowStyle = 'mk-small';
                     } elseif ($jumlahMK > 25 && $jumlahMK <= 40) {
                         $rowStyle = 'mk-medium';
-                    } elseif ($jumlahMK > 40 && $jumlahMK < 65) {
+                    } elseif ($jumlahMK > 40 && $jumlahMK <= 60) {
+                        $rowStyle = 'mk-mlarge';
+                    } elseif ($jumlahMK > 60 && $jumlahMK <= 80) {
                         $rowStyle = 'mk-large';
                     } else {
                         $rowStyle = 'mk-xlarge';
