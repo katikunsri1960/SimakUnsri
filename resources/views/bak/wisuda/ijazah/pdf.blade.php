@@ -141,7 +141,7 @@
                     <td style="width:70px">Nama</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                     @if($d->nama_perbaikan)
-                        <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_perbaikan)}}</td>
+                        <td style="width: 340px; margin-right:30px">{{$d->nama_perbaikan}}</td>
                     @else
                         <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
                     @endif
@@ -153,7 +153,7 @@
                     <td style="width:70px">Lahir di</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                     @if($d->tmpt_perbaikan)
-                        <td style="width: 340px; margin-right:30px">{{Str::title($d->tmpt_perbaikan)}}</td>
+                        <td style="width: 340px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
                     @else
                         <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
                     @endif
@@ -321,7 +321,7 @@
                         <td style="width:70px">Nama</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         @if($d->nama_perbaikan)
-                            <td style="width: 280px; margin-right:30px">{{Str::title($d->nama_perbaikan)}}</td>
+                            <td style="width: 280px; margin-right:30px">{{$d->nama_perbaikan}}</td>
                         @else
                             <td style="width: 280px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
                         @endif
@@ -333,7 +333,7 @@
                         <td style="width:70px">Lahir di</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         @if($d->tmpt_perbaikan)
-                            <td style="width: 280px; margin-right:30px">{{Str::title($d->tmpt_perbaikan)}}</td>
+                            <td style="width: 280px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
                         @else
                             <td style="width: 280px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
                         @endif
@@ -387,7 +387,7 @@
                         <td style="width:70px">Nama</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         @if($d->nama_perbaikan)
-                            <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_perbaikan)}}</td>
+                            <td style="width: 340px; margin-right:30px">{{$d->nama_perbaikan}}</td>
                         @else
                             <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
                         @endif
@@ -399,7 +399,7 @@
                         <td style="width:70px">Lahir di</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         @if($d->tmpt_perbaikan)
-                            <td style="width: 340px; margin-right:30px">{{Str::title($d->tmpt_perbaikan)}}</td>
+                            <td style="width: 340px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
                         @else
                             <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
                         @endif
