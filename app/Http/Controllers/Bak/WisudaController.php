@@ -815,7 +815,7 @@ class WisudaController extends Controller
                     : null,
 
                 'tmpt_perbaikan' => $request->tmpt_perbaikan
-                    ? strtoupper($request->tmpt_perbaikan)
+                    ? $request->tmpt_perbaikan
                     : null,
 
                 'tgl_perbaikan' => $request->tgl_perbaikan,
@@ -1124,6 +1124,11 @@ class WisudaController extends Controller
         if ($prodi != null) {
             $data->where('r.id_prodi', $prodi);
         }
+
+        if ($angkatan != null) {
+            $data->where('r.id_periode_masuk', 'like', $angkatan.'%');
+        }
+
         $data = $data->orderBy('jenjang', 'ASC')
                     ->orderBy('r.nim', 'ASC')
                     ->get();
