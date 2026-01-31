@@ -24,178 +24,70 @@ Perbaikan Data Mahasiswa
         <div class="col-12">
             <div class="box">
                 <div class="box-body py-10">
-                    <div class="mt-5">
-                        <div class="box-body text-center">
-                            <div class="">
-                                <div id="krsDiv" hidden>
-                                    <div class="row mb-2">
-                                        <form action="{{route('bak.transkrip-nilai.download')}}" method="get"
-                                            id="cetakForm" target="_blank">
-                                            <input type="hidden" name="nim" id="nimCetak">
-                                            <button class="btn btn-success" type="submit"><i class="fa fa-print"></i>
-                                                Cetak</button>
-                                        </form>
-                                    </div>
-                                    <h3 class="text-center">Transkrip Mahasiswa</h3>
-                                    <div class="row">
-                                        <div class="col-md-2" id="foto">
+                    <div class="col-md-8 mt-5">
+                        <div class="form-group row">
+                            <label class="col-form-label col-md-2">Cari</label>
+                            <div class="col-md-8">
+                                <input type="hidden" name="nim">
+                                <select name="id_registrasi_mahasiswa" id="id_registrasi_mahasiswa" required class="form-select">
+                                    <option value=""></option>
+                                </select>
 
-                                        </div>
-                                        <div class="col-md-10">
-                                            <table style="width:100%" class="mb-3">
-                                                <tr>
-                                                    <td class="text-start align-middle" style="width: 12%">NIM</td>
-                                                    <td>:</td>
-                                                    <td class="text-start" id="nimKrs"
-                                                        style="width: 45%; padding-left: 10px"></td>
-                                                    <td class="text-start align-middle" style="width: 18%">FAKULTAS</td>
-                                                    <td>:</td>
-                                                    <td class="text-start align-middle" id="fakultasKrs"
-                                                        style="width: 30%; padding-left: 10px"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-start align-middle" style="width: 12%">NAMA</td>
-                                                    <td>:</td>
-                                                    <td class="text-start" id="namaKrs"
-                                                        style="width: 45%; padding-left: 10px"></td>
-                                                    <td class="text-start align-middle" style="width: 18%">JURUSAN</td>
-                                                    <td>:</td>
-                                                    <td class="text-start align-middle" id="jurusanKrs"
-                                                        style="width: 30%; padding-left: 10px"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-start align-middle" style="width: 12%">NIP PA</td>
-                                                    <td>:</td>
-                                                    <td class="text-start" id="nippaKrs"
-                                                        style="width: 45%; padding-left: 10px"></td>
-                                                    <td class="text-start align-middle" style="width: 18%">PROGRAM STUDI
-                                                    </td>
-                                                    <td>:</td>
-                                                    <td class="text-start align-middle" id="prodiKrs"
-                                                        style="width: 30%; padding-left: 10px"></td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-start align-middle" style="width: 12%">DOSEN PA</td>
-                                                    <td>:</td>
-                                                    <td class="text-start" id="dosenpaKrs"
-                                                        style="width: 45%; padding-left: 10px"></td>
-                                                    <td class="text-start align-middle" style="width: 18%"></td>
-                                                    <td></td>
-                                                    <td class="text-start align-middle" id="semesterKrs"
-                                                        style="width: 30%; padding-left: 10px"></td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-                                    <hr>
-                                    <div class="row">
-                                        <div class="col-md-2 text-center">
-                                            <div class="bg-primary rounded p-2">
-                                                <i class="fa fa-qrcode" style="font-size: 45px"></i>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-md-10">
-                                            <table style="width:100%; text-size: 15pt" class="mb-3">
-                                                <tr>
-                                                    <td class="text-start align-middle" style="width: 12%">Bebas Pustaka
-                                                    </td>
-                                                    <td>:</td>
-                                                    <td class="text-start"
-                                                        style="width: 45%; padding-left: 10px"> <div id="statusBebasPustaka"></div> </td>
-                                                    <td class="text-start align-middle" style="width: 18%">Upload Repository</td>
-                                                    <td>:</td>
-                                                    <td class="text-start align-middle"
-                                                        style="width: 30%; padding-left: 10px">
-                                                        <div id="uploadRepo"></div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-start align-middle" style="width: 12%">Nilai USEPT</td>
-                                                    <td>:</td>
-                                                    <td class="text-start"
-                                                        style="width: 45%; padding-left: 10px"> <div id="nilaiUsept"></div> </td>
-                                                    <td class="text-start align-middle" style="width: 18%"></td>
-                                                    <td></td>
-                                                    <td class="text-start align-middle"
-                                                        style="width: 30%; padding-left: 10px">
-
-                                                    </td>
-                                                </tr>
-                                            </table>
-                                        </div>
-                                    </div>
-
-                                    <table class="table table-bordered mt-4" id="krs-regular">
-                                        <thead>
-                                            <tr>
-                                                <th class="text-center align-middle">NO.</th>
-                                                <th class="text-center align-middle">KODE</th>
-                                                <th class="text-center align-middle">MATA KULIAH</th>
-                                                <th class="text-center align-middle">HURUF<br>MUTU</th>
-                                                <th class="text-center align-middle">ANGKA<br>MUTU</th>
-                                                <th class="text-center align-middle">KREDIT</th>
-                                                <th class="text-center align-middle">MUTU</th>
-
-
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-
-                                        </tbody>
-                                        <tfoot>
-                                            <tr>
-                                                <th colspan="3" class="text-center align-middle">Total SKS</th>
-                                                <th></th>
-                                                <th class="text-center align-middle" id="totalSks"></th>
-                                                <th></th>
-                                                <th></th>
-                                            </tr>
-                                            <tr>
-                                                <th colspan="3" class="text-center align-middle">IPK</th>
-                                                <th></th>
-                                                <th class="text-center align-middle" id="ipk"></th>
-                                                <th></th>
-                                                <th></th>
-                                            </tr>
-                                        </tfoot>
-                                    </table>
-                                    <hr>
-                                    <div class="row mt-5" id="transferDiv" hidden>
-                                        <h3>Nilai Transfer</h3>
-                                        <table class="table table-bordered table-hover mt-2" id="transferTable">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center align-middle">No</th>
-                                                    <th class="text-center align-middle">Kode Mata Kuliah</th>
-                                                    <th class="text-start align-middle">Nama Mata Kuliah</th>
-                                                    <th class="text-center align-middle">Nilai Huruf Diakui</th>
-                                                    <th class="text-center align-middle">Semester</th>
-                                                    <th class="text-center align-middle">SKS Diakui</th>
-                                                    <th class="text-center align-middle">Nilai Index Diakui</th>
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-
-                                            </tbody>
-
-                                        </table>
-                                    </div>
-
-                                    <div class="row mt-5" id="akmDiv">
-
-                                    </div>
-
-                                    <div class="row mt-5" id="pembayaranDiv">
-
-                                    </div>
-
-                                    <div class="row mt-5" id="totalDiv">
-
-                                    </div>
+                            </div>
+                            <div class="col-md-2 pt-1">
+                                <div class="row">
+                                    <button class="btn btn-primary btn-sm" id="btnCari"><i class="fa fa-search"></i>
+                                        Cari</button>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mt-5">
+                        <div class="box-body text-center">
+                            <div id="formDiv" hidden>
+                                <form id="formPerbaikanData">
+                                    @csrf
+                                    <input type="hidden" id="id_registrasi_mahasiswa_hidden">
+
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label>NIM</label>
+                                            <input type="text" class="form-control" id="nim" disabled>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Nama Mahasiswa</label>
+                                            <input type="text" class="form-control" id="nama" disabled>
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Nama Perbaikan</label>
+                                            <input type="text" class="form-control" id="nama_perbaikan"
+                                                placeholder="Contoh: Nama Mahasiswa">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Tempat Perbaikan</label>
+                                            <input type="text" class="form-control" id="tmpt_perbaikan"
+                                                placeholder="Contoh: Palembang">
+                                        </div>
+
+                                        <div class="col-md-6 mb-3">
+                                            <label>Tanggal Perbaikan</label>
+                                            <input type="date" class="form-control" id="tgl_perbaikan">
+                                        </div>
+                                    </div>
+
+                                    <div class="text-end">
+                                        <button type="button" class="btn btn-success btn-sm" id="btnSimpan">
+                                            <i class="fa fa-save"></i> Simpan Perbaikan
+                                        </button>
+                                    </div>
+
+                                    <small id="saveStatus" class="text-muted d-block mt-2"></small>
+                                </form>
+                            </div>
+
                         </div>
                     </div>
                 </div>
@@ -211,299 +103,210 @@ Perbaikan Data Mahasiswa
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
-        $("#id_registrasi_mahasiswa").select2({
-            placeholder : '-- Masukan NIM / Nama Mahasiswa --',
-            width: '100%',
-            minimumInputLength: 3,
-            ajax: {
-                url: "{{route('bak.wisuda.registrasi-ijazah.get-mahasiswa')}}",
-                type: "GET",
-                dataType: 'json',
-                delay: 250,
-                data: function (params) {
-                    return {
-                        q: params.term // search term
-                    };
-                },
-                processResults: function (data) {
-                    // console.log(data);
-                    return {
-                        results: $.map(data, function (item) {
-                            return {
-                                text: item.nama_mahasiswa + " ("+item.nim+" - "+item.nama_program_studi+")",
-                                id: item.id_registrasi_mahasiswa
-                            }
-                        })
-                    };
-                },
+$('#btnSimpan').on('click', function (e) {
+
+    e.preventDefault();
+
+    let id = $('#id_registrasi_mahasiswa_hidden').val();
+    let nama = $('#nama_perbaikan').val();
+    let tempat = $('#tmpt_perbaikan').val();
+    let tanggal = $('#tgl_perbaikan').val();
+
+    if (!id) {
+        swal('Peringatan', 'Data mahasiswa belum dipilih', 'warning');
+        return;
+    }
+
+    if (!nama && !tempat && !tanggal) {
+        swal('Peringatan', 'Minimal satu data perbaikan harus diisi', 'warning');
+        return;
+    }
+
+    swal({
+        title: 'Simpan Data',
+        text: "Apakah anda yakin ingin menyimpan data?",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Lanjutkan',
+        cancelButtonText: 'Batal'
+    }, function (isConfirm) {
+
+        if (!isConfirm) return;
+
+        $('#spinner').show();
+        $('#saveStatus').text('Menyimpan data...');
+
+        $.ajax({
+            url: "{{ route('bak.wisuda.perbaikan-data.store') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                id_registrasi_mahasiswa: id,
+                nama_perbaikan: nama ? nama.toUpperCase() : null,
+                tmpt_perbaikan: tempat ? tempat.toUpperCase() : null,
+                tgl_perbaikan: tanggal || null,
+            },
+            success: function (res) {
+
+                $('#spinner').hide();
+
+                if (res.status === 'success') {
+
+                    swal('Berhasil', res.message, 'success');
+
+                    $('#saveStatus')
+                        .removeClass('text-danger')
+                        .addClass('text-success')
+                        .text('✔ Data perbaikan tersimpan');
+
+                } else {
+
+                    swal('Gagal', res.message ?? 'Gagal menyimpan data', 'error');
+
+                    $('#saveStatus')
+                        .removeClass('text-success')
+                        .addClass('text-danger')
+                        .text('❌ Gagal menyimpan');
+                }
+
+            },
+            error: function (xhr) {
+
+                $('#spinner').hide();
+
+                let msg = xhr.responseJSON?.message ?? 'Terjadi kesalahan sistem';
+                swal('Gagal', msg, 'error');
+                $('#saveStatus').text('❌ Gagal menyimpan');
             }
         });
+    });
+});
+
+function toDateInputFormat(dateStr) {
+    if (!dateStr) return null;
+
+    // asumsi format: DD-MM-YYYY
+    let parts = dateStr.split('-');
+    if (parts.length !== 3) return null;
+
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+}
 
 
-
-
-        function checkSync(id_batch) {
-            $.ajax({
-                url: '{{ route('bak.check-sync') }}',
-                type: 'GET',
-                data: {
-                    id_batch: id_batch
-                },
-                success: function(response) {
-                    // Handle the response here
-
-
-                    // Update the progress bar
-                    var progressBar = document.getElementById('sync-progress-bar');
-                    progressBar.style.width = response.progress + '%';
-                    progressBar.setAttribute('aria-valuenow', response.progress);
-                    // set text percentage
-                    progressBar.innerHTML = response.progress + '%';
-
-                    if (response.progress < 100) {
-                        setTimeout(function() {
-                            checkSync(id_batch);
-                        }, 3000); // Request every 2 seconds
-                    } else {
-
-                        // reload page
-                        location.reload();
+$("#id_registrasi_mahasiswa").select2({
+    placeholder : '-- Masukan NIM / Nama Mahasiswa --',
+    width: '100%',
+    minimumInputLength: 3,
+    ajax: {
+        url: "{{ route('bak.wisuda.registrasi-ijazah.get-mahasiswa') }}",
+        type: "GET",
+        dataType: 'json',
+        delay: 250,
+        data: function (params) {
+            return { q: params.term };
+        },
+        processResults: function (data) {
+            return {
+                results: $.map(data, function (item) {
+                    return {
+                        id: item.id_registrasi_mahasiswa,
+                        text: item.nama_mahasiswa + " (" + item.nim + " - " + item.nama_program_studi + ")"
                     }
-                },
-                error: function(xhr, status, error) {
-                    console.error('Error checking sync:', error);
-                }
-            });
+                })
+            };
         }
-        $(document).ready(function () {
-            $('#btnCari').click(function () {
-                console.log('masuk');
-                $("#spinner").show();
-                var nim = $('#id_registrasi_mahasiswa').val();
-                // fix error cannot reinitialize DataTable
-                $('#krs-regular').DataTable().clear().destroy();
+    }
+});
 
-                if (nim == '') {
-                    $("#spinner").hide();
-                    swal('Peringatan', 'NIM / Nama tidak boleh kosong', 'warning');
-                } else {
-                    $.ajax({
-                        url: '{{route('bak.transkrip-nilai.get')}}',
-                        type: 'GET',
-                        data: {
-                            nim: nim
-                        },
-                        success: function (response) {
-                            $("#spinner").hide();
-                            if (response.status == 'error') {
-                                swal({
-                                    title: "Peringatan!",
-                                    text: response.message,
-                                    type: "warning",
-                                    buttons: {
-                                        confirm: {
-                                            className : 'btn btn-warning'
-                                        }
-                                    }
-                                });
-                                return false;
-                            }
-                            $('#nimCetak').val(response.riwayat.nim);
-                            $('#krsDiv').removeAttr('hidden');
-                            // append response.krs to table of krs-regular
-                            $('#nimKrs').text(response.riwayat.nim);
-                            // remove "Fakultas " from nama_fakultas
-                            var fakultas = response.riwayat.prodi.fakultas.nama_fakultas.replace('Fakultas ', '');
-                            $('#fakultasKrs').text(fakultas);
-                            $('#namaKrs').text(response.riwayat.nama_mahasiswa);
-                            var jurusan = response.riwayat.prodi.jurusan.nama_jurusan_id ?? '-';
-                            $('#jurusanKrs').text(jurusan);
-                            var nip_pa = response.riwayat.pembimbing_akademik ? response.riwayat.pembimbing_akademik.nip : '-';
-                            $('#nippaKrs').text(nip_pa);
-                            var dosen_pa = response.riwayat.pembimbing_akademik ? response.riwayat.pembimbing_akademik.nama_dosen : '-';
-                            $('#dosenpaKrs').text(dosen_pa);
-                            var fullProdi = response.riwayat.prodi.nama_jenjang_pendidikan + ' ' + response.riwayat.prodi.nama_program_studi;
-                            $('#prodiKrs').text(fullProdi);
-                            var semesterText =  $('#semester option:selected').text();
-                            $('#semesterKrs').text(semesterText);
-                            $('#krs-regular tbody').empty();
+$(document).ready(function () {
 
-                            if(response.bebas_pustaka == null){
-                                $('#statusBebasPustaka').html('<span class="badge bg-danger">Belum Bebas Pustaka</span>');
-                                $('#uploadRepo').html('<span class="badge bg-danger">Belum Upload Repository</span>');
-                            }else{
-                                $('#statusBebasPustaka').html('<a class="btn btn-success btn-sm" href="' + '{{ asset('storage') }}/' + response.bebas_pustaka.file_bebas_pustaka + '" target="_blank">Sudah Bebas Pustaka</a>');
-                                $('#uploadRepo').html('<a class="btn btn-success btn-sm" href="' + response.bebas_pustaka.link_repo + '" target="_blank">'+ response.bebas_pustaka.link_repo +'</a>');
-                            }
+    function loadMahasiswa(nim) {
 
-                            $('#nilaiUsept').html(`
-                                <span class="badge bg-${response.usept.class}">${response.usept.score} (${response.usept.status})</span>
-                                `);
+        if (!nim) {
+            swal('Peringatan', 'NIM / Nama tidak boleh kosong', 'warning');
+            return;
+        }
 
+        $("#spinner").show();
 
-                            // append foto
-                            var imagePath = '{{ asset('storage') }}' + '/' + response.riwayat.angkatan + '/' + response.riwayat.nim + '.jpg';
-                            $('#foto').html(`
-                                <img class="rounded20 bg-light img-fluid w-80" src="` + imagePath + `" alt="" onerror="this.onerror=null;this.src='{{ asset('images/images/avatar/avatar-15.png') }}';">
-                            `);
+        $.ajax({
+            url: "{{ route('bak.wisuda.perbaikan-data.get') }}",
+            type: 'GET',
+            data: { nim: nim },
+            success: function (response) {
 
-                              // Initialize DataTable
-                             // Initialize DataTable with no pagination and custom draw callback
-                             var table = $('#krs-regular').DataTable({
-                                paging: false,
-                                info: false,
-                                columnDefs: [
-                                    { orderable: false, targets: 0 }, // Make the first column non-sortable
-                                    { className: 'text-start', targets: 2 } // Add text-left class to the second column
-                                ],
-                                order: [], // Disable initial sorting
-                                drawCallback: function(settings) {
-                                    var api = this.api();
-                                    api.rows({ page: 'current' }).every(function (rowIdx, tableLoop, rowLoop) {
-                                        var data = this.data();
-                                        data[0] = rowIdx + 1; // Update the first column with the row number
-                                        this.invalidate();
-                                    });
-                                }
-                            });
-                            table.clear().draw(); // Clear existing data
-                            // count response.krs.approved
-                            var approved = 0;
-                            var no = 1;
-                            var totalSks = 0;
-                            var nilai_bobot = 0;
-                            var ipk = 0;
+                $("#spinner").hide();
 
-                            response.data.forEach(function (krs, index) {
-                                var trClass = '';
-                                if (krs.nilai_huruf == 'F' || krs.nilai_huruf == null) {
-                                    trClass = 'bg-danger';
-                                }
-                                var mutu = 0;
-
-                                mutu = krs.nilai_indeks*krs.sks_mata_kuliah
-                                table.row.add([
-
-                                    `<td class="text-center align-middle"></td>`,
-                                    `<td class="text-center align-middle">${krs.kode_mata_kuliah}</td>`,
-                                    `<td class="text-start align-middle" style="text-align:left !important;">${krs.nama_mata_kuliah}</td>`,
-                                    `<td class="text-center align-middle">${krs.nilai_huruf ?? '-'}</td>`,
-                                    `<td class="text-center align-middle">${krs.nilai_indeks ?? '-'}</td>`,
-                                    `<td class="text-center align-middle">${krs.sks_mata_kuliah}</td>`,
-                                    `<td class="text-center align-middle">${mutu ?? '-'}</td>`,
-
-
-                                ]).node().className = trClass;
-
-                                var nilai_bobot_temp = parseInt(krs.sks_mata_kuliah) * parseFloat(krs.nilai_indeks);
-                                nilai_bobot += nilai_bobot_temp;
-                                totalSks += parseInt(krs.sks_mata_kuliah);
-                            });
-
-                            table.draw(); // Redraw the DataTable with new data
-                            if (totalSks > 0) {
-                                ipk = nilai_bobot / totalSks;
-
-                            }
-                            $('#totalSks').text(totalSks);
-                            $('#ipk').text(ipk.toFixed(2));
-
-
-                            // check length of response.akm
-                            if(response.akm.length > 0) {
-                                $('#akmDiv').removeAttr('hidden');
-                                $('#akmDiv').html(`
-                                    <h3>Data Aktivitas Kuliah Mahasiswa</h3>
-                                    <div class="m-3">
-                                        <table class="table table-bordered table-hover mt-2" id="akmTable">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center align-middle">No</th>
-                                                    <th class="text-center align-middle">Semester</th>
-                                                    <th class="text-center align-middle">Status</th>
-                                                    <th class="text-center align-middle">SKS Semester</th>
-                                                    <th class="text-center align-middle">SKS Total</th>
-                                                    <th class="text-center align-middle">IPS</th>
-                                                    <th class="text-center align-middle">IPK</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody></tbody>
-                                            <tfoot></tfoot>
-                                        </table>
-                                    </div>
-                                `);
-
-                                response.akm.forEach(function (akm, index) {
-                                    var url = '{{ route("bak.transkrip-nilai.khs", ["id_reg" => ":id_reg", "semester" => ":semester"]) }}';
-                                    url = url.replace(':id_reg', response.riwayat.id_registrasi_mahasiswa);
-                                    url = url.replace(':semester', akm.id_semester);
-
-                                    $('#akmTable tbody').append(`
-                                        <tr>
-                                            <td class="text-center align-middle">${index + 1}</td>
-                                            <td class="text-center align-middle">
-                                                <a href="${url}" class="btn btn-primary btn-sm" target="_blank">
-                                                    ${akm.nama_semester}
-                                                </a>
-                                            </td>
-                                            <td class="text-center align-middle">${akm.nama_status_mahasiswa}</td>
-                                            <td class="text-center align-middle">${akm.sks_semester}</td>
-                                            <td class="text-center align-middle">${akm.sks_total}</td>
-                                            <td class="text-center align-middle">${akm.ips}</td>
-                                            <td class="text-center align-middle">${akm.ipk}</td>
-                                        </tr>
-                                    `);
-                                });
-
-                            } else {
-                                $('#akmDiv').attr('hidden', true);
-                            }
-
-                            if (response.pembayaran.status == '1') {
-                                console.log(response.pembayaran.data);
-                                $('#pembayaranDiv').removeAttr('hidden');
-                                $('#pembayaranDiv').html(`
-                                    <h3>Data Pembayaran Mahasiswa</h3>
-                                    <div class="m-3">
-                                         <table class="table table-bordered table-hover mt-2" id="pembayaranTable">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center align-middle">No</th>
-                                                    <th class="text-center align-middle">Semester</th>
-                                                    <th class="text-center align-middle">Tagihan</th>
-                                                    <th class="text-center align-middle">Status Pembayaran</th>
-                                                    <th class="text-center align-middle">Waktu Pembayaran</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                `);
-
-                                response.pembayaran.data.forEach(function (pembayaran, index) {
-                                    var statusPembayaran = pembayaran.pembayaran && pembayaran.pembayaran.status_pembayaran == 1 ? 'Lunas' : 'Belum Lunas';
-                                    var tanggalPembayaran = pembayaran.pembayaran && pembayaran.pembayaran.status_pembayaran == 1 ? pembayaran.pembayaran.waktu_transaksi : '-';
-                                    $('#pembayaranTable tbody').append(`
-                                        <tr>
-                                            <td class="text-center align-middle">${index + 1}</td>
-                                            <td class="text-center align-middle">${pembayaran.kode_periode}</td>
-                                            <td class="text-center align-middle">${pembayaran.total_nilai_tagihan.toLocaleString('id-ID')}</td>
-                                            <td class="text-center align-middle">${statusPembayaran}</td>
-                                            <td class="text-center align-middle">${tanggalPembayaran}</td>
-                                        </tr>
-                                    `);
-                                });
-                            } else {
-                                $('#pembayaranDiv').attr('hidden', true);
-                            }
-
-                        }
-                    });
-
+                if (response.status === 'error') {
+                    swal("Peringatan!", response.message, "warning");
+                    return;
                 }
-            });
+
+                // tampilkan form
+                $('#formDiv').prop('hidden', false);
+
+                // =============================
+                // DATA UTAMA
+                // =============================
+                $('#nim').val(response.riwayat.nim);
+                $('#nama').val(response.riwayat.nama_mahasiswa);
+                $('#id_registrasi_mahasiswa_hidden')
+                    .val(response.riwayat.id_registrasi_mahasiswa);
+
+                // =============================
+                // DATA PERBAIKAN
+                // =============================
+                if (response.riwayat.data_perbaikan) {
+
+                    $('#nama_perbaikan').val(response.riwayat.data_perbaikan.nama_perbaikan);
+                    $('#tmpt_perbaikan').val(response.riwayat.data_perbaikan.tmpt_perbaikan);
+                    $('#tgl_perbaikan').val(response.riwayat.data_perbaikan.tgl_perbaikan);
+
+                    swal(
+                        'Info',
+                        'Data perbaikan sebelumnya ditemukan dan ditampilkan',
+                        'info'
+                    );
+
+                } else {
+
+                    $('#nama_perbaikan').val(response.riwayat.nama_mahasiswa);
+                                    $('#tmpt_perbaikan').val(response.riwayat.biodata.tempat_lahir);
+                                    $('#tgl_perbaikan').val(toDateInputFormat(response.riwayat.biodata.tanggal_lahir));
+                }
+            },
+            error: function () {
+                $("#spinner").hide();
+                swal("Error", "Gagal mengambil data mahasiswa", "error");
+            }
         });
+    }
+
+    // =============================
+    // AUTO LOAD SETELAH RELOAD
+    // =============================
+    let lastId = localStorage.getItem('last_id_registrasi_mahasiswa');
+
+    if (lastId) {
+
+        let option = new Option('Memuat data...', lastId, true, true);
+        $('#id_registrasi_mahasiswa').append(option).trigger('change');
+
+        loadMahasiswa(lastId);
+
+        localStorage.removeItem('last_id_registrasi_mahasiswa');
+    }
+
+    // =============================
+    // MANUAL CARI
+    // =============================
+    $('#btnCari').on('click', function () {
+        loadMahasiswa($('#id_registrasi_mahasiswa').val());
+    });
+
+});
+
+
 </script>
+
 @endpush

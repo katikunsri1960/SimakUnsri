@@ -75,6 +75,11 @@ class RiwayatPendidikan extends Model
         return $this->belongsTo(BiodataMahasiswa::class, 'id_mahasiswa', 'id_mahasiswa');
     }
 
+    public function data_perbaikan()
+    {
+        return $this->hasOne(PerbaikanDataPokok::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
     public function prodi()
     {
         return $this->belongsTo(ProgramStudi::class, 'id_prodi', 'id_prodi');

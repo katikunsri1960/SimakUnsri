@@ -46,6 +46,16 @@ Daftar Transkrip Wisudawan
                         </div>
                     </div>
                     <div class="form-group row">
+                        <label class="col-form-label col-md-2">Angkatan</label>
+                        <div class="col-md-8">
+                            <select name="angkatan" id="angkatan" required class="form-select">
+                                @foreach ($angkatan as $a)
+                                <option value="{{$a->angkatan_raw}}">{{$a->angkatan_raw}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-form-label col-md-2">Periode</label>
                         <div class="col-md-3">
                             <select name="periode" id="periode" required class="form-select">
@@ -114,20 +124,22 @@ function getData()
 {
     var fakultas = $('#fakultas').val();
     var prodi = $('#prodi').val();
+    var angkatan = $('#angkatan').val();
     var periode = $('#periode').val();
 
-    if (fakultas == '' || prodi == '' || periode == '') {
-        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
+    if (fakultas == '' || prodi == '' || periode == '' || angkatan == '') {
+        swal('Peringatan', 'Silahkan pilih fakultas, prodi, periode wisuda, dan angkatan terlebih dahulu', 'warning');
         return;
 
     }
 
     $.ajax({
-        url: `{{route('bak.wisuda.peserta.data_approved')}}`,
+        url: `{{route('bak.wisuda.peserta.data_approved_transkrip')}}`,
         type: 'GET',
         data: {
             fakultas: fakultas,
             prodi: prodi,
+            angkatan: angkatan,
             periode: periode
         },
         success: function (response) {
@@ -185,17 +197,19 @@ function downloadPdf()
 
     var fakultas = $('#fakultas').val();
     var prodi = $('#prodi').val();
+    var angkatan = $('#angkatan').val();
     var p_wisuda = $('#periode').val();
 
-    if (fakultas == '' || prodi == '' || p_wisuda == '') {
+    if (fakultas == '' || prodi == '' || angkatan == '' || p_wisuda == '') {
 
-        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
+        swal('Peringatan', 'Silahkan pilih fakultas, prodi, angkatan, dan periode wisuda terlebih dahulu', 'warning');
         return;
     }
 
     var baseUrl = '{{ route('bak.wisuda.transkrip.download-pdf') }}';
     var url = baseUrl + '?fakultas=' + encodeURIComponent(fakultas) +
             '&prodi=' + encodeURIComponent(prodi) +
+            '&angkatan=' + encodeURIComponent(angkatan) +
             '&periode=' + encodeURIComponent(p_wisuda);
     window.open(url, '_blank');
     // console.log(url);
@@ -225,6 +239,7 @@ $(function () {
 
     $('#fakultas').select2();
     $('#prodi').select2();
+    $('#angkatan').select2();
     $('#periode').select2();
 });
 </script>
