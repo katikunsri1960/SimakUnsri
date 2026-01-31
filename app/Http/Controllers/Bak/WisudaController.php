@@ -777,6 +777,7 @@ class WisudaController extends Controller
             'tmpt_perbaikan' => 'nullable|string|max:100',
             'tgl_perbaikan' => 'nullable|date',
         ]);
+        // dd($request->all());
 
         // 🔐 validasi minimal satu terisi
         if (
@@ -811,7 +812,7 @@ class WisudaController extends Controller
                 'nama_mahasiswa' => strtoupper($riwayat->nama_mahasiswa),
 
                 'nama_perbaikan' => $request->nama_perbaikan
-                    ? strtoupper($request->nama_perbaikan)
+                    ? $request->nama_perbaikan
                     : null,
 
                 'tmpt_perbaikan' => $request->tmpt_perbaikan
