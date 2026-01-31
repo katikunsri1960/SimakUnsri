@@ -777,6 +777,7 @@ class WisudaController extends Controller
             'tmpt_perbaikan' => 'nullable|string|max:100',
             'tgl_perbaikan' => 'nullable|date',
         ]);
+        // dd($request->all());
 
         // 🔐 validasi minimal satu terisi
         if (
@@ -811,11 +812,11 @@ class WisudaController extends Controller
                 'nama_mahasiswa' => strtoupper($riwayat->nama_mahasiswa),
 
                 'nama_perbaikan' => $request->nama_perbaikan
-                    ? strtoupper($request->nama_perbaikan)
+                    ? $request->nama_perbaikan
                     : null,
 
                 'tmpt_perbaikan' => $request->tmpt_perbaikan
-                    ? strtoupper($request->tmpt_perbaikan)
+                    ? $request->tmpt_perbaikan
                     : null,
 
                 'tgl_perbaikan' => $request->tgl_perbaikan,
@@ -1124,6 +1125,11 @@ class WisudaController extends Controller
         if ($prodi != null) {
             $data->where('r.id_prodi', $prodi);
         }
+
+        if ($angkatan != null) {
+            $data->where('r.id_periode_masuk', 'like', $angkatan.'%');
+        }
+
         $data = $data->orderBy('jenjang', 'ASC')
                     ->orderBy('r.nim', 'ASC')
                     ->get();

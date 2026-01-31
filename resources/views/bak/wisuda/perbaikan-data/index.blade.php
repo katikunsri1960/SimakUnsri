@@ -142,8 +142,8 @@ $('#btnSimpan').on('click', function (e) {
             data: {
                 _token: "{{ csrf_token() }}",
                 id_registrasi_mahasiswa: id,
-                nama_perbaikan: nama ? nama.toUpperCase() : null,
-                tmpt_perbaikan: tempat ? tempat.toUpperCase() : null,
+                nama_perbaikan: nama ? nama : null,
+                tmpt_perbaikan: tempat ? tempat : null,
                 tgl_perbaikan: tanggal || null,
             },
             success: function (res) {
