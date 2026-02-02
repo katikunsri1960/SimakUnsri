@@ -104,7 +104,11 @@
                     <tr>
                         <td>No. Sertifikat Nasional</td>
                         <td style="padding-left: 5px; padding-right: 5px">:</td>
-                        <td>{{$d->no_sertifikat}}</td>
+                        @if($d->no_sertifikat)
+                            <td>{{$d->no_sertifikat}}</td>
+                        @else
+                            <td>{{$d->no_ijazah}}</td>
+                        @endif
                     </tr>
                     <tr>
                         <td>Kode Universitas</td>
@@ -119,7 +123,11 @@
                     <tr>
                         <td>No. Sertifikat Nasional</td>
                         <td style="padding-left: 5px; padding-right: 5px">:</td>
-                        <td>{{$d->no_sertifikat}}</td>
+                        @if($d->no_sertifikat)
+                            <td>{{$d->no_sertifikat}}</td>
+                        @else
+                            <td>{{$d->no_ijazah}}</td>
+                        @endif
                     </tr>
                     <tr>
                         <td>Kode Universitas</td>

@@ -93,10 +93,25 @@ class Wisuda extends Model
         return $this->belongsTo(AktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
     }
 
+    // public function transkrip_mahasiswa()
+    // {
+    //     return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    // }
+
     public function transkrip_mahasiswa()
     {
-        return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+        return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa')
+            ->orderByRaw("
+                CASE
+                    WHEN kode_mata_kuliah LIKE 'UNI%' THEN 1
+                    WHEN UPPER(nama_mata_kuliah) REGEXP 'SKRIPSI|TESIS|DISERTASI|TUGAS AKHIR' THEN 4
+                    ELSE 3
+                END
+            ")
+            ->orderBy('kode_mata_kuliah', 'ASC')
+            ->orderBy('nama_mata_kuliah', 'ASC');
     }
+
 
     public function gelar_lulusan()
     {
