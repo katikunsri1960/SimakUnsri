@@ -329,9 +329,9 @@
 
                     // margin dinamis tabel
                     //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
-                    if ($jumlahMK <= 35) {
+                    if ($jumlahMK <= 33) {
                         $rowStyle = 'mk-small';
-                    } elseif ($jumlahMK > 35 && $jumlahMK <= 50) {
+                    } elseif ($jumlahMK > 33 && $jumlahMK <= 50) {
                         $rowStyle = 'mk-medium';
                     } elseif ($jumlahMK > 50 && $jumlahMK <= 80) {
                         $rowStyle = 'mk-large';
