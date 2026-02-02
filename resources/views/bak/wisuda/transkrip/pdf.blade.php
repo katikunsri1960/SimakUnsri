@@ -511,13 +511,15 @@
                         <td width="1">: </td>
                         @php
                             $ipk = $totalSks > 0 ? round($totalBobot / $totalSks, 2) : 0;
+                            $ipkFormatted = number_format($ipk, 2, ',', '');
+                            $ipkFormattedEn = number_format($ipk, 2, '.', '');
                         @endphp
 
                         <td colspan="3">
                             {{ $totalBobot }}/{{ $totalSks }} =
-                            {{ str_replace('.', ',', $ipk) }}
+                            {{ $ipkFormatted }}
                             ({{ terbilang_ipk($ipk) }}) /
-                            {{ str_replace('.', ',', $ipk) }}
+                            {{ $ipkFormattedEn }}
                             ({{ terbilang_ipk_en($ipk) }})
                         </td>
                     </tr>
