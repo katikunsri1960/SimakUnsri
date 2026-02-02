@@ -9,6 +9,7 @@ use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Perkuliahan\NilaiSidangMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\MataKuliah;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Dosen\PenugasanDosen;
 use App\Models\Referensi\KategoriKegiatan;
 use App\Models\Semester;
