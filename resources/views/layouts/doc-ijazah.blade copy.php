@@ -13,7 +13,25 @@
             margin: 0;
             padding: 0;
         }
-        
+        header {
+            position: fixed;
+            display: block !important;
+            top: -50px;
+            width: 100% !important;
+            left: 0px;
+            height: 50px;
+            text-align: center;
+            margin-top: -30px !important;
+            padding-top: -30px !important;
+        }
+        .header img {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: -40px !important;
+            position: static;
+            width: 50px;
+        }
         .header h1, .header p {
             margin: 0;
         }
@@ -110,9 +128,10 @@
     @stack('styles')
 </head>
 <body>
-    <header>
-        <img src="{{ public_path('images/unsri.png') }}">
-    </header>
-<div class="container">@yield('content')</div>
+    <div class="header">
+        @stack('header')
+    </div>
+    <br>
+<div class="container-fluid">@yield('content')</div>
 </body>
 </html>

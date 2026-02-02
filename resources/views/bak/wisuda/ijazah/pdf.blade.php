@@ -6,24 +6,32 @@
     /* @page {
         margin: 150px 45px 40px 45px;
     } */
-    @page { margin: 40mm 17mm 0mm 17mm; }
+    @page { margin: 40mm 17mm 2mm 17mm; }
 
     header {
         position: fixed;
-        top: -29mm;
-        left: 0;
-        right: 0;
+        display: block !important;
+        top: -102px;
+        width: 100% !important;
+        left: 0px;
+        right: 0px;
+        height: 50px;
         text-align: center;
     }
 
     header img{
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: -40px !important;
+        position: static;
         height: 65px;
-        padding-left:20px;
+        /* padding-left:20px; */
     }
-
+/* 
     .page-break {
         page-break-after: always;
-    }
+    } */
 
     .judul {
         font-weight: bold;
@@ -39,7 +47,7 @@
         display: flex;
         justify-content: flex-end;
         width: 100%;
-        margin-top:-2px;
+        margin-top: 20px;
         margin-left: 57%;
         font-size: 10pt;
     }
@@ -76,7 +84,7 @@
     .ttd {
         font-weight: bold;
         font-size: 13pt;
-        margin-top: 14mm;
+        margin-top: 11mm;
     }
 
 </style>
@@ -86,20 +94,15 @@
 
     <!-- KONDISI IJAZAH PROFESI -->
     @if($d->jenjang == 'Profesi')
-        <header>
+        <!-- <header>
             <img src="{{ public_path('images/unsri.png') }}">
-            <!-- <div class="judul">UNIVERSITAS SRIWIJAYA</div> -->
-        </header>
+        </header> -->
 
         @if($d->id_prodi == '98223413-b27d-4afe-a2b8-d0d80173506e' || 
                 $d->id_prodi == 'be779246-fe70-4e66-8fa2-8929d97779a2' ||
-                
                 $d->id_prodi == '91360393-8632-4240-bed0-bfc707406efa' 
-                
-                )
-            <div id="no_sertifikat" 
-                style="margin-top: 8px;"
-            >
+            )
+            <div id="no_sertifikat">
                 <table>
                     <tr>
                         <td>No. Sertifikat Nasional</td>
@@ -143,7 +146,7 @@
             </div>
         @endif
 
-        <div class="data-diri" style="margin-bottom: -10px;">
+        <div class="data-diri">
             <table>
                 <tr>
                     <td style="width:70px">Nama</td>
@@ -232,7 +235,7 @@
 
         <!-- START PROFESI INSINYUR -->
         @elseif($d->id_prodi == 'b68efc34-c0f0-4334-9970-e02d769e3f49')
-        <div class="mid-word" >
+        <div class="mid-word" style="margin: 20px 0px 0px 0px">
             <center>Telah memenuhi semua persyaratan pendidikan Profesi pada Program Studi Program Profesi Insinyur.<br>
             Kepadanya diberikan sertifikat, dan sebutan profesi:</center>
             <div class="gelar" style="margin-top: 5px; margin-bottom: 5px;">
@@ -268,7 +271,7 @@
                 Telah memenuhi semua persyaratan penyelesaian program profesi apoteker, dan lulus Uji Kompetensi Apoteker Indonesia. 
                 Kepadanya diberikan sebutan profesi
             </center>
-            <div class="gelar" style="margin-top: 5px; margin-bottom: 5px;">
+            <div class="gelar" style="padding-top: 5px; padding-bottom: 5px;">
                 {{ $d->gelar_panjang}} ({{ $d->gelar}})         
             </div>
             <center>
@@ -302,10 +305,9 @@
         @endif
          
     @else
-        <header>
+        <!-- <header>
             <img src="{{ public_path('images/unsri.png') }}">
-            <!-- <div class="judul">UNIVERSITAS SRIWIJAYA</div> -->
-        </header>
+        </header> -->
 
         <div id="no_sertifikat">
             <table>
