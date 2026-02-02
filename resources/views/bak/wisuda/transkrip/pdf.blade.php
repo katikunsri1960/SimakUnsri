@@ -102,22 +102,18 @@
             padding: 5px 2px 5px 2px;
             font-size: 7.5px;
         }
-
         .transkrip-table tr.mk-medium td {
-            padding: 2px 2px 2px 2px;
+            padding: 1.5px 2px 1.5px 2px;
             font-size: 7px;
         }
-
-        .transkrip-table tr.mk-large td {
-            padding: 1px 2px 1px 2px;
+        .transkrip-table tr.mk-mlarge td {
+            padding: 0.5px 2px 0.5px 2px;
             font-size: 7px;
         }
-
         .transkrip-table tr.mk-large td {
             padding: 0.5px 2px 0.5px 2px;
             font-size: 7px;
         }
-
         .transkrip-table tr.mk-xlarge td {
             padding: 0px 2px 0px 2px;
             font-size: 7px;
@@ -328,24 +324,59 @@
                     $totalSks = 0;
                     $totalBobot = 0;
                     $jumlahMK = count($d->transkrip_mahasiswa);
-                    $mkLeft = $d->transkrip_mahasiswa->slice(0, $splitIndex);
-                    $mkRight = $d->transkrip_mahasiswa->slice($splitIndex);
+                    //$mkLeft = $d->transkrip_mahasiswa->slice(0, $splitIndex);
+                    //$mkRight = $d->transkrip_mahasiswa->slice($splitIndex);
 
                     // margin dinamis tabel
                     //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
-                    if ($jumlahMK <= 25) {
+                    if ($jumlahMK <= 35) {
                         $rowStyle = 'mk-small';
-                    } elseif ($jumlahMK > 25 && $jumlahMK <= 40) {
+                    } elseif ($jumlahMK > 35 && $jumlahMK <= 50) {
                         $rowStyle = 'mk-medium';
-                    } elseif ($jumlahMK > 40 && $jumlahMK <= 60) {
-                        $rowStyle = 'mk-mlarge';
-                    } elseif ($jumlahMK > 60 && $jumlahMK <= 80) {
+                    } elseif ($jumlahMK > 50 && $jumlahMK <= 80) {
                         $rowStyle = 'mk-large';
                     } else {
                         $rowStyle = 'mk-xlarge';
                     }
 
-                    //dd($jumlahMK);
+                    if($rowStyle == 'mk-small'){
+                        $MAX_ROWS_LEFT = 15;
+                    } elseif($rowStyle == 'mk-medium'){
+                        $MAX_ROWS_LEFT = 32;
+                    } elseif($rowStyle == 'mk-large'){
+                        $MAX_ROWS_LEFT = 37;
+                    } else{
+                        $MAX_ROWS_LEFT = 20;
+                    }
+                    
+                    $totalRows = 0;
+
+                    $mkLeft = collect();
+                    $mkRight = collect();
+
+                    foreach ($d->transkrip_mahasiswa as $mk) {
+
+                        $namaId = strtoupper($mk->nama_mata_kuliah);
+                        $namaEn = $mk->mk_english->nama_mata_kuliah_english ?? '';
+
+                        // hitung jumlah karakter
+                        $totalChar = mb_strlen($namaId) + mb_strlen($namaEn);
+
+                        // 1 baris per 80 karakter
+                        $rowsNeeded = ceil($totalChar / 80);
+
+                        // minimal 1 baris
+                        $rowsNeeded = max(1, $rowsNeeded);
+
+                        if ($totalRows + $rowsNeeded <= $MAX_ROWS_LEFT) {
+                            $mkLeft->push($mk);
+                            $totalRows += $rowsNeeded;
+                        } else {
+                            $mkRight->push($mk);
+                        }
+                    }
+
+                    //dd($totalRows, $rowStyle, $mkLeft->count(), $mkRight->count() );
                 @endphp
 
 
@@ -390,7 +421,7 @@
                                 <td align="center">{{ $bobot }}</td>
                             </tr>
                         @endforeach
-                        @if($mkLeft->count() < $splitIndex)
+                        @if($mkRight->count() == 0)
                             {{-- TOTAL SKS & BOBOT kolom kanan --}}
                             <tr style="border: 0.5pt solid #000; text-align:center; font-size:7.5px;">
                                 <td style="padding:2px 0px 2px 0px;" colspan="3">TOTAL</td>
@@ -441,7 +472,7 @@
                                         $totalBobot += $bobot;
                                     @endphp
                                     <tr class="{{$rowStyle}}">
-                                        <td align="center">{{ $i+1 }}</td>
+                                        <td align="center">{{ $mkLeft->count() + $i + 1 }}</td>
                                         <td>{{ $mk->kode_mata_kuliah }}</td>
                                         <td>
                                             {{ strtoupper($mk->nama_mata_kuliah) }}
