@@ -168,7 +168,7 @@
 <body>
 @foreach($data as $d)
 @php
-    $splitIndex = 28; // batas baris kolom kiri
+    $splitIndex = 30; // batas baris kolom kiri
 @endphp
 
 <div class="page-landscape">
@@ -355,10 +355,10 @@
                             <th rowspan="2" width="7">NO</th>
                             <th rowspan="2" width="20">KODE<br>(CODE)</th>
                             <th rowspan="2">MATA KULIAH (SUBJECT)</th>
-                            <th width="28">SKS (K)</th>
+                            <th width="35">SKS (K)</th>
                             <th width="10">NILAI</th>
-                            <th width="32">BOBOT (B)</th>
-                            <th width="15">K × B</th>
+                            <th width="35">BOBOT (B)</th>
+                            <th width="20">K × B</th>
                         </tr>
                         <tr>
                             <th>CREDIT (C)</th>
@@ -390,28 +390,39 @@
                                 <td align="center">{{ $bobot }}</td>
                             </tr>
                         @endforeach
-                        <tr style="border-bottom: 0.5pt solid #000;">
-                            <td colspan="7"></td>
-                        </tr>
+                        @if($mkLeft->count() < $splitIndex)
+                            {{-- TOTAL SKS & BOBOT kolom kanan --}}
+                            <tr style="border: 0.5pt solid #000; text-align:center; font-size:7.5px;">
+                                <td style="padding:2px 0px 2px 0px;" colspan="3">TOTAL</td>
+                                <td style="padding:2px 0px 2px 0px;">{{ $totalSks }}</td>
+                                <td style="padding:2px 0px 2px 0px;" colspan="2"></td>
+                                <td style="padding:2px 0px 2px 0px;">{{$totalBobot}}</td>
+                            </tr>
+                        @else
+                            <tr style="border-bottom: 0.5pt solid #000;">
+                                <td colspan="7"></td>
+                            </tr>
+                        @endif
                     </tbody>
                 </table>
             </td>
 
             {{-- KOLM KANAN --}}
             <td class="col-right">
-                <div style="margin:35px 0px 5px 0px; padding:0px 0px 0px 0px;" >
-                    @if(count($mkRight) > 0)
-                        {{-- TABEL MATA KULIAH KOLON KANAN --}}
+                
+                @if(count($mkRight) > 0)
+                    {{-- TABEL MATA KULIAH KOLON KANAN --}}
+                    <div style="margin: 35px 0px 5px 0px; padding:0px 0px 0px 0px;" >
                         <table class="transkrip-table" >
                             <thead>
                                 <tr>
                                     <th rowspan="2" width="7">NO</th>
                                     <th rowspan="2" width="20">KODE<br>(CODE)</th>
                                     <th rowspan="2">MATA KULIAH (SUBJECT)</th>
-                                    <th width="28">SKS (K)</th>
+                                    <th width="35">SKS (K)</th>
                                     <th width="10">NILAI</th>
-                                    <th width="32">BOBOT (B)</th>
-                                    <th width="15">K × B</th>
+                                    <th width="35">BOBOT (B)</th>
+                                    <th width="20">K × B</th>
                                 </tr>
                                 <tr>
                                     <th>CREDIT (C)</th>
@@ -444,16 +455,18 @@
                                 @endforeach
                             </tbody>
                             {{-- TOTAL SKS & BOBOT kolom kanan --}}
-                            <tr style="border: 0.5pt solid #000; text-align:center; font-size:7.5px; padding:10px 0px 10px 0px;">
-                                <td colspan="3">TOTAL</td>
-                                <td>{{ $totalSks }}</td>
-                                <td colspan="2"></td>
-                                <td>{{$totalBobot}}</td>
+                            <tr style="border: 0.5pt solid #000; text-align:center; font-size:7.5px;">
+                                <td style="padding:2px 0px 2px 0px;" colspan="3">TOTAL</td>
+                                <td style="padding:2px 0px 2px 0px;">{{ $totalSks }}</td>
+                                <td style="padding:2px 0px 2px 0px;" colspan="2"></td>
+                                <td style="padding:2px 0px 2px 0px;">{{$totalBobot}}</td>
                             </tr>
                         </table>
-                    @endif                                
-                <!-- <br> -->
-                </div>
+                    </div>
+                @else
+                    {{-- jika tidak ada kolom kanan, tambahkan jarak --}}
+                    <div style="margin:70px 0px 5px 0px; padding:0px 0px 0px 0px;" ></div>
+                @endif                         
 
                 {{-- ========================================================= --}}
                 {{--                   IPK + SKRIPSI + PEMBIMBING              --}}
@@ -461,7 +474,7 @@
                 <!-- @if($jumlahMK < 37)
                     <div class="page-break"></div>
                 @endif -->
-                <table class="no-border ipk-table pt-100" style="font-size: 7.5px;">
+                <table class="no-border ipk-table" style="font-size: 7.5px; padding-top:-20px;">
                     <tr class="text-upper">
                         <td class="no-wrap">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
                         <td width="1">: </td>
@@ -563,34 +576,34 @@
                         <td width="38%"></td>
                         <td width="24%"></td>
                         <td width="38%" style="padding-bottom:5px">
-                            INDRALAYA, {{ idDate($d->tgl_sk_yudisium)}} 
-                            (<em>{!! enDate($d->tgl_sk_yudisium) !!}</em>)
+                            INDRALAYA, {{ idDate($d->periode_wisuda->first()->tanggal_wisuda)}} 
+                            (<em>{!! enDate($d->periode_wisuda->first()->tanggal_wisuda) !!}</em>)
                         </td>
                     </tr>
 
                     {{-- Baris 2 --}}
                     <tr style="padding:0px; margin:0px">
-                        <td width="45%">
+                        <td width="35%">
                             {{ strtoupper($wd1->jabatan) }}
-                        </td width="10%">
+                        </td width="35%">
                         <td></td>
                         
-                        <td width="45%">
+                        <td width="35%">
                             {{ strtoupper($wr1->jabatan) }}
                         </td>
                     </tr>
 
                     {{-- Baris 3 --}}
                     <tr>
-                        <td width="45%">
+                        <td width="35%">
                             VICE DEAN OF ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS,
                         </td>
-                        <td width="10%" rowspan="10" style="text-align:center; vertical-align:top;
+                        <td width="35%" rowspan="10" style="text-align:center; vertical-align:top;
                         /* padding-top:5px; */
                         ">
                             <img src="storage/{{ $d->pas_foto }}" alt="Foto" width="70">
                         </td>
-                        <td width="45%">
+                        <td width="35%">
                             VICE RECTOR FOR ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS
                         </td>
                     </tr>
