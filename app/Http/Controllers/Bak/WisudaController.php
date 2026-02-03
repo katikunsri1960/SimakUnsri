@@ -1178,16 +1178,17 @@ class WisudaController extends Controller
 
         // return $pdf->stream('TRANSKRIP-'.strtoupper($fakultas->nama_fakultas).'-'.$periode.'.pdf');
 
-        $pdf = PDF::loadView('bak.wisuda.transkrip.pdf', [
-                'data' => $data,
-                'kode_univ' => $kode_univ,
-                'fakultas' => $fakultas,
-                'wr1' => $wr1,
-                'wd1' => $wd1,
-            ])
-            ->setPaper($paper_size, 'landscape');
+        ini_set('memory_limit', '1024M');
+        set_time_limit(0);
 
-        ini_set('memory_limit', '512M');
+        $pdf = PDF::loadView('bak.wisuda.transkrip.pdf', [
+            'data' => $data,
+            'kode_univ' => $kode_univ,
+            'fakultas' => $fakultas,
+            'wr1' => $wr1,
+            'wd1' => $wd1,
+        ])
+        ->setPaper($paper_size, 'landscape');
 
         return response()->streamDownload(
             function () use ($pdf) {
@@ -1198,7 +1199,6 @@ class WisudaController extends Controller
                 'Content-Type' => 'application/pdf',
             ]
         );
-
     }
 
     public function album(Request $request)
