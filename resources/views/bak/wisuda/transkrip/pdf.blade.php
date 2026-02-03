@@ -329,9 +329,9 @@
 
                     // margin dinamis tabel
                     //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
-                    if ($jumlahMK <= 35) {
+                    if ($jumlahMK <= 33) {
                         $rowStyle = 'mk-small';
-                    } elseif ($jumlahMK > 35 && $jumlahMK <= 50) {
+                    } elseif ($jumlahMK > 33 && $jumlahMK <= 50) {
                         $rowStyle = 'mk-medium';
                     } elseif ($jumlahMK > 50 && $jumlahMK <= 80) {
                         $rowStyle = 'mk-large';
@@ -511,13 +511,15 @@
                         <td width="1">: </td>
                         @php
                             $ipk = $totalSks > 0 ? round($totalBobot / $totalSks, 2) : 0;
+                            $ipkFormatted = number_format($ipk, 2, ',', '');
+                            $ipkFormattedEn = number_format($ipk, 2, '.', '');
                         @endphp
 
                         <td colspan="3">
                             {{ $totalBobot }}/{{ $totalSks }} =
-                            {{ str_replace('.', ',', $ipk) }}
+                            {{ $ipkFormatted }}
                             ({{ terbilang_ipk($ipk) }}) /
-                            {{ str_replace('.', ',', $ipk) }}
+                            {{ $ipkFormattedEn }}
                             ({{ terbilang_ipk_en($ipk) }})
                         </td>
                     </tr>
