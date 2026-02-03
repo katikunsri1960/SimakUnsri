@@ -1178,7 +1178,7 @@ class WisudaController extends Controller
 
         // return $pdf->stream('TRANSKRIP-'.strtoupper($fakultas->nama_fakultas).'-'.$periode.'.pdf');
 
-        ini_set('memory_limit', '1024M');
+        ini_set('memory_limit', '2048M');
         set_time_limit(0);
 
         $pdf = PDF::loadView('bak.wisuda.transkrip.pdf', [
