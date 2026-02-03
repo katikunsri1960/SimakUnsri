@@ -112,8 +112,8 @@ Pendaftaran Wisuda Mahasiswa
                                         <td class="text-left text-nowrap">Status Mahasiswa</td>
                                         <td class="text-center">:</td>
                                         <td class="text-left" style="text-align: justify">
-                                            <strong>{{$riwayat_pendidikan->lulus_do->nama_jenis_keluar}}</strong><br>
-                                            @if ($riwayat_pendidikan->lulus_do->id_jenis_keluar == 1)
+                                            <strong>{{$riwayat_pendidikan->lulus_do?->nama_jenis_keluar ?? $riwayat_pendidikan->keterangan_keluar}}</strong><br>
+                                            @if (($riwayat_pendidikan->lulus_do?->id_jenis_keluar ?? $riwayat_pendidikan->id_jenis_keluar) == 1)
                                                 <span class="badge rounded bg-success" style="padding: 7px"> (Memenuhi Syarat)</span>
                                             @else
                                                 <span class="badge rounded bg-danger" style="padding: 7px"> (Tidak Memenuhi Syarat SKS Lulus)</span>
