@@ -36,8 +36,8 @@ class DashboardController extends Controller
         $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $user->fk_id)
                             ->first();
                             // dd($riwayat_pendidikan);
-
-        $status_aktif = $status_keluar ? $status_keluar->nama_jenis_keluar : 'Aktif';
+        
+        $status_aktif = $status_keluar?->nama_jenis_keluar ?? $riwayat_pendidikan?->keterangan_keluar ?? 'Aktif';
         
         $prodi_id = $riwayat_pendidikan->id_prodi;
         
