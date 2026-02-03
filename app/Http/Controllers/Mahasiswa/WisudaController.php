@@ -48,7 +48,7 @@ class WisudaController extends Controller
 
         // $status_keluar = $riwayat_pendidikan->lulus_do->
 
-        dd($riwayat_pendidikan);
+        // dd($riwayat_pendidikan);
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $semester_aktif->id_semester)
@@ -77,8 +77,8 @@ class WisudaController extends Controller
                 ->whereHas('bimbing_mahasiswa', function ($query) {
                     $query->whereNotNull('id_bimbing_mahasiswa');
                 })
-                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa);
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_reg) {
+                    $query->where('id_registrasi_mahasiswa', $id_reg);
                 })
                 ->whereHas('nilai_konversi', function ($query) {
                     $query->where('nilai_indeks', '>', 0.00);
