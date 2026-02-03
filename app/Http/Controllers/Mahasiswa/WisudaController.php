@@ -48,7 +48,7 @@ class WisudaController extends Controller
 
         // $status_keluar = $riwayat_pendidikan->lulus_do->
 
-        // dd($riwayat_pendidikan->lulus_do);
+        dd($riwayat_pendidikan);
 
         $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $semester_aktif->id_semester)
