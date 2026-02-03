@@ -89,7 +89,7 @@ class WisudaController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
-        // dd($aktivitas_kuliah);
+        dd($aktivitas);
 
         if (!$aktivitas) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
