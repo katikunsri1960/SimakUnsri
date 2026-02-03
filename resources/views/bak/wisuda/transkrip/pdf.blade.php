@@ -253,7 +253,7 @@
                     <tr>
                         <td>STRATA PENDIDIKAN <em>(EDUCATION PROGRAM)</em></td> 
                         <td width="1%">:  </td>
-                        <td> {{ $d->jenjang }}
+                        <td> {{ strtoupper($d->jenjang) }}
                             @if($d->jenjang == 'S1')
                                 <em>(UNDERGRADUATE)</em>
                             @elseif($d->jenjang == 'S2')
@@ -342,7 +342,7 @@
                     if($rowStyle == 'mk-small'){
                         $MAX_ROWS_LEFT = 15;
                     } elseif($rowStyle == 'mk-medium'){
-                        $MAX_ROWS_LEFT = 32;
+                        $MAX_ROWS_LEFT = 30;
                     } elseif($rowStyle == 'mk-large'){
                         $MAX_ROWS_LEFT = 37;
                     } else{
