@@ -86,7 +86,7 @@ class AktivitasMahasiswa extends Model
 
     public function anggota_aktivitas_personal()
     {
-        return $this->hasOne(AnggotaAktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
+        return $this->hasMany(AnggotaAktivitasMahasiswa::class, 'id_aktivitas', 'id_aktivitas');
     }
 
     public function prodi()

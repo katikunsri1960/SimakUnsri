@@ -77,9 +77,9 @@ class WisudaController extends Controller
                 ->whereHas('bimbing_mahasiswa', function ($query) {
                     $query->whereNotNull('id_bimbing_mahasiswa');
                 })
-                // ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-                //     $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa);
-                // })
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa);
+                })
                 ->whereHas('nilai_konversi', function ($query) {
                     $query->where('nilai_indeks', '>', 0.00);
                 })
