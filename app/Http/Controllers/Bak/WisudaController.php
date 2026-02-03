@@ -1187,18 +1187,14 @@ class WisudaController extends Controller
             'fakultas' => $fakultas,
             'wr1' => $wr1,
             'wd1' => $wd1,
-        ])
-        ->setPaper($paper_size, 'landscape');
+        ])->setPaper($paper_size, 'landscape');
 
-        return response()->streamDownload(
-            function () use ($pdf) {
-                echo $pdf->output();
-            },
-            'TRANSKRIP-'.strtoupper($fakultas->nama_fakultas).'-'.$periode.'.pdf',
-            [
-                'Content-Type' => 'application/pdf',
-            ]
-        );
+        $fileName = 'TRANSKRIP-' . strtoupper($fakultas->nama_fakultas) . '-' . $periode . '.pdf';
+        $path = storage_path('app/' . $fileName);
+
+        $pdf->save($path);
+
+        return response()->download($path)->deleteFileAfterSend(true);
     }
 
     public function album(Request $request)
