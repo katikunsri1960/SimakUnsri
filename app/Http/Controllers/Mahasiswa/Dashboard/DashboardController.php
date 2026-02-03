@@ -37,7 +37,15 @@ class DashboardController extends Controller
                             ->first();
                             // dd($riwayat_pendidikan);
         
-        $status_aktif = $status_keluar?->nama_jenis_keluar ?? $riwayat_pendidikan?->keterangan_keluar ?? 'Aktif';
+        // $status_aktif = $status_keluar?->nama_jenis_keluar ?? $riwayat_pendidikan?->keterangan_keluar ?? 'Aktif';
+
+        if ($status_keluar) {
+            $status_aktif = $status_keluar->nama_jenis_keluar;
+        } elseif ($riwayat_pendidikan && $riwayat_pendidikan->keterangan_keluar) {
+            $status_aktif = $riwayat_pendidikan->keterangan_keluar;
+        } else {
+            $status_aktif = 'Aktif';
+        }
         
         $prodi_id = $riwayat_pendidikan->id_prodi;
         
