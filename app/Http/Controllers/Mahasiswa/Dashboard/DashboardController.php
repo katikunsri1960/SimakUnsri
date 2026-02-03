@@ -55,7 +55,7 @@ class DashboardController extends Controller
         }else{
             if ($status_keluar) {
                 $semester_terakhir = $status_keluar->id_periode_keluar;
-            } else() {
+            } else{
                 $semester_terakhir = SemesterAktif::pluck('id_semester')->first();
             } 
         }
