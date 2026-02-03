@@ -53,7 +53,11 @@ class DashboardController extends Controller
         if($status_aktif == 'Aktif'){
             $semester_terakhir = SemesterAktif::pluck('id_semester')->first();
         }else{
-            $semester_terakhir = $status_keluar->id_periode_keluar;
+            if ($status_keluar) {
+                $semester_terakhir = $status_keluar->id_periode_keluar;
+            } else() {
+                $semester_terakhir = SemesterAktif::pluck('id_semester')->first();
+            } 
         }
         
         $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $user->fk_id)
