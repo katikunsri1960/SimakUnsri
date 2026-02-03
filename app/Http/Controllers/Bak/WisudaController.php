@@ -1167,16 +1167,38 @@ class WisudaController extends Controller
                                 ->first();
                                 // dd($dekan);
 
-        $pdf = PDF::loadview('bak.wisuda.transkrip.pdf', [
-            'data' => $data,
-            'kode_univ' => $kode_univ,
-            'fakultas' => $fakultas,
-            'wr1' => $wr1,
-            'wd1' => $wd1,
-        ])
-        ->setPaper($paper_size, 'landscape');
+        // $pdf = PDF::loadview('bak.wisuda.transkrip.pdf', [
+        //     'data' => $data,
+        //     'kode_univ' => $kode_univ,
+        //     'fakultas' => $fakultas,
+        //     'wr1' => $wr1,
+        //     'wd1' => $wd1,
+        // ])
+        // ->setPaper($paper_size, 'landscape'); 
 
-        return $pdf->stream('TRANSKRIP-'.strtoupper($fakultas->nama_fakultas).'-'.$periode.'.pdf');
+        // return $pdf->stream('TRANSKRIP-'.strtoupper($fakultas->nama_fakultas).'-'.$periode.'.pdf');
+
+        $pdf = PDF::loadView('bak.wisuda.transkrip.pdf', [
+                'data' => $data,
+                'kode_univ' => $kode_univ,
+                'fakultas' => $fakultas,
+                'wr1' => $wr1,
+                'wd1' => $wd1,
+            ])
+            ->setPaper($paper_size, 'landscape');
+
+        ini_set('memory_limit', '512M');
+
+        return response()->streamDownload(
+            function () use ($pdf) {
+                echo $pdf->output();
+            },
+            'TRANSKRIP-'.strtoupper($fakultas->nama_fakultas).'-'.$periode.'.pdf',
+            [
+                'Content-Type' => 'application/pdf',
+            ]
+        );
+
     }
 
     public function album(Request $request)

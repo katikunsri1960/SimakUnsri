@@ -72,7 +72,7 @@ class PerkuliahanController extends Controller
     private function sync2($act, $limit, $offset, $order, $job, $name, $model, $primary)
     {
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();
-        $semester = Semester::whereNotIn('id_semester', ['20251'])->pluck('id_semester')->toArray();
+        $semester = Semester::whereNotIn('id_semester', ['20251', '20252'])->pluck('id_semester')->toArray();
         $semester = array_chunk($semester, 6);
         $semester = array_map(function ($value) {
             return "id_semester IN ('" . implode("','", $value) . "')";
