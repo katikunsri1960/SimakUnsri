@@ -376,15 +376,14 @@ class SidangMahasiswaController extends Controller
             return redirect()->back()->with('error', 'Nilai di luar skala yang ditentukan.');
         }
 
-        if(substr($check_angkatan,0,4) >= 2025){
+        $tahun = (int) substr((string) $check_angkatan, 0, 4);
 
+        if ($tahun >= 2025) {
             $skala = $this->skala_nilai_baru($nilai_akhir_sidang);
-
-        }else{
-
+        } else {
             $skala = $this->skala_nilai_lama($nilai_akhir_sidang);
-
         }
+
 
         $nilai_indeks = $skala['nilai_indeks'];
         $nilai_huruf = $skala['nilai_huruf'];
