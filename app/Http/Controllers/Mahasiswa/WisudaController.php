@@ -73,48 +73,23 @@ class WisudaController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal '.$kurikulum->jumlah_sks_lulus.' sks!');
         }
 
-        // $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
-        //         ->whereHas('bimbing_mahasiswa', function ($query) {
-        //             $query->whereNotNull('id_bimbing_mahasiswa');
-        //         })
-        //         // ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-        //         //     $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa);
-        //         // })
-        //         ->whereHas('nilai_konversi', function ($query) {
-        //             $query->where('nilai_indeks', '>', 0.00);
-        //         })
-        //         // ->where('id_semester', $semester_aktif)
-        //         ->where('anggota_aktivitas_personal.id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-        //         ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-        //         ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
-        //         ->first();
+        $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
+                ->whereHas('bimbing_mahasiswa', function ($query) {
+                    $query->whereNotNull('id_bimbing_mahasiswa');
+                })
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                        ->where('nim', $riwayat_pendidikan->nim);
+                })
+                ->whereHas('nilai_konversi', function ($query) {
+                    $query->where('nilai_indeks', '>', 0.00);
+                })
+                // ->where('id_semester', $semester_aktif)
+                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+                ->first();
 
-        $query = AktivitasMahasiswa::query();
-
-        $query->where('id_prodi', $riwayat_pendidikan->id_prodi);
-
-        $query->whereIn('id_jenis_aktivitas', [1, 3, 4, 22]);
-
-        $query->whereHas('anggota_aktivitas_personal', function ($q) use ($riwayat_pendidikan) {
-            $q->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa);
-        });
-
-        $query->whereHas('bimbing_mahasiswa', function ($q) {
-            $q->whereNotNull('id_bimbing_mahasiswa');
-        });
-
-        $query->whereHas('nilai_konversi', function ($q) {
-            $q->where('nilai_indeks', '>', 0);
-        });
-
-        $aktivitas = $query->with([
-            'anggota_aktivitas_personal',
-            'bimbing_mahasiswa',
-            'nilai_konversi'
-        ])->first();
-
-
-        dd($aktivitas);
+        // dd($aktivitas);
 
         if (!$aktivitas) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
