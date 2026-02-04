@@ -524,14 +524,16 @@
                         </td>
                     </tr>
 
-                    <tr class="text-upper {{$rowStyle}}">
-                        <td class="no-wrap">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
-                        <td width="1">: </td>
-                        <td width="400" colspan="3">
-                            {{ $d->predikat_kelulusan->indonesia }}
-                            <em>({{ $d->predikat_kelulusan->inggris }})</em>
-                        </td>
-                    </tr>
+                    @if($d->jenjang != 'Profesi')
+                        <tr class="text-upper {{$rowStyle}}">
+                            <td class="no-wrap">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
+                            <td width="1">: </td>
+                            <td width="400" colspan="3">
+                                {{ $d->predikat_kelulusan->indonesia }}
+                                <em>({{ $d->predikat_kelulusan->inggris }})</em>
+                            </td>
+                        </tr>
+                    @endif
 
                     <tr class="{{$rowStyle}}">
                         @if($d->jenjang == 'D3')
