@@ -190,9 +190,9 @@
     } elseif($rowStyle == 'mk-medium'){
         $MAX_ROWS_LEFT = 30;
     } elseif($rowStyle == 'mk-large'){
-        $MAX_ROWS_LEFT = 33;
+        $MAX_ROWS_LEFT = 37;
     } else{
-        $MAX_ROWS_LEFT = 45;
+        $MAX_ROWS_LEFT = 47;
     }
     
     $totalRows = 0;
