@@ -344,9 +344,9 @@
                     } elseif($rowStyle == 'mk-medium'){
                         $MAX_ROWS_LEFT = 30;
                     } elseif($rowStyle == 'mk-large'){
-                        $MAX_ROWS_LEFT = 34;
+                        $MAX_ROWS_LEFT = 33;
                     } else{
-                        $MAX_ROWS_LEFT = 45;
+                        $MAX_ROWS_LEFT = 42;
                     }
                     
                     $totalRows = 0;
@@ -506,7 +506,7 @@
                     <div class="page-break"></div>
                 @endif -->
                 <table class="no-border ipk-table" style="font-size: 7.5px; padding-top:-20px;">
-                    <tr class="text-upper">
+                    <tr class="text-upper {{$rowStyle}}">
                         <td class="no-wrap">INDEKS PRESTASI KUMULATIF / <em>GRADE POINT AVERAGE</em></td>
                         <td width="1">: </td>
                         @php
@@ -524,7 +524,7 @@
                         </td>
                     </tr>
 
-                    <tr class="text-upper">
+                    <tr class="text-upper {{$rowStyle}}">
                         <td class="no-wrap">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
                         <td width="1">: </td>
                         <td width="400" colspan="3">
@@ -533,7 +533,7 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         @if($d->jenjang == 'D3')
                             <td width="50">JUDUL TUGAS AKHIR<br><em>(FINAL PROJECT TITLE)</em></td>
                         @elseif($d->jenjang == 'S1' || $d->jenjang == 'Sp-1')
@@ -553,7 +553,7 @@
                         </td>
                     </tr>
 
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         @if($d->jenjang == 'D3')
                             <td width="50">PEMBIMBING TUGAS AKHIR<br><em>(FINAL PROJECT ADVISORS)</em></td>
                         @elseif($d->jenjang == 'S1' || $d->jenjang == 'Sp-1')
@@ -605,7 +605,7 @@
                 <table class="no-border ttd-table" width="100%" style="font-size: 7.5px; margin : 10px 0px 0px 0px">
 
                     {{-- Baris 1 --}}
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td width="38%"></td>
                         <td width="24%"></td>
                         <td width="38%" style="padding-bottom:5px">
@@ -615,7 +615,7 @@
                     </tr>
 
                     {{-- Baris 2 --}}
-                    <tr style="padding:0px; margin:0px">
+                    <tr class="{{$rowStyle}}" style="padding:0px; margin:0px">
                         <td width="35%">
                             {{ strtoupper($wd1->jabatan) }}
                         </td width="35%">
@@ -627,7 +627,7 @@
                     </tr>
 
                     {{-- Baris 3 --}}
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td width="35%">
                             VICE DEAN OF ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS,
                         </td>
@@ -650,7 +650,7 @@
                     <tr><td><br><br><br><br><br></td></tr>
 
                     {{-- Baris 5 --}}
-                    <tr class="margin:0px;">
+                    <tr class="{{$rowStyle}}" style="margin:0px;">
                         <td width="40%">
                             {{ $wd1->gelar_depan }} {{ strtoupper($wd1->nama) }}{{ $wd1->gelar_belakang ? ', '.$wd1->gelar_belakang : '' }}
                         </td>
@@ -660,7 +660,7 @@
                     </tr>
 
                     {{-- Baris 6 --}}
-                    <tr class="margin:0px;">
+                    <tr class="{{$rowStyle}}" style="margin:0px;">
                         <td width="40%">
                             NIP {{ strtoupper($wd1->nip) }}
                         </td>
