@@ -344,7 +344,7 @@
                     } elseif($rowStyle == 'mk-medium'){
                         $MAX_ROWS_LEFT = 30;
                     } elseif($rowStyle == 'mk-large'){
-                        $MAX_ROWS_LEFT = 33;
+                        $MAX_ROWS_LEFT = 34;
                     } else{
                         $MAX_ROWS_LEFT = 45;
                     }
