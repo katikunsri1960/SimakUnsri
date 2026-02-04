@@ -116,7 +116,7 @@
         }
         .transkrip-table tr.mk-xlarge td {
             padding: 0px 2px 0px 2px;
-            font-size: 5.5px;
+            font-size: 6px;
         }
 
         .transkrip-table td {
@@ -192,7 +192,7 @@
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 33;
     } else{
-        $MAX_ROWS_LEFT = 42;
+        $MAX_ROWS_LEFT = 45;
     }
     
     $totalRows = 0;
