@@ -116,7 +116,7 @@
         }
         .transkrip-table tr.mk-xlarge td {
             padding: 0px 2px 0px 2px;
-            font-size: 6px;
+            font-size: 5.5px;
         }
 
         .transkrip-table td {
