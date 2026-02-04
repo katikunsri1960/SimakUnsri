@@ -192,7 +192,7 @@
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } else{
-        $MAX_ROWS_LEFT = 50;
+        $MAX_ROWS_LEFT = 55;
     }
     
     $totalRows = 0;
