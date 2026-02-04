@@ -524,7 +524,7 @@
                         </td>
                     </tr>
 
-                    @if($d->jenjang != 'Profesi')
+                    @if($d->jenjang != ('Profesi' || 'Sp-1' || 'Sp-2'))
                         <tr class="text-upper {{$rowStyle}}">
                             <td class="no-wrap">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
                             <td width="1">: </td>
@@ -535,25 +535,27 @@
                         </tr>
                     @endif
 
-                    <tr class="{{$rowStyle}}">
-                        @if($d->jenjang == 'D3')
-                            <td width="50">JUDUL TUGAS AKHIR<br><em>(FINAL PROJECT TITLE)</em></td>
-                        @elseif($d->jenjang == 'S1' || $d->jenjang == 'Sp-1')
-                            <td width="50">JUDUL SKRIPSI<br><em>(FINAL PROJECT TITLE)</em></td>
-                        @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-2')
-                            <td width="50">JUDUL TESIS<br><em>(THESIS TITLE)</em></td>
-                        @elseif($d->jenjang == 'S3')
-                            <td width="50">JUDUL DISERTASI<br><em>(DISERTATION TITLE)</em></td>
-                        @endif
-                        <td width="1">: </td>
-                        <!-- <td width="1">: </td> -->
-                        <td colspan="3">
-                            {{ strtoupper($d->aktivitas_mahasiswa->judul) }}<br>
-                            @if(!empty($d->judul_eng))
-                                <em>({{ strtoupper($d->judul_eng) }})</em>
-                            @endif     
-                        </td>
-                    </tr>
+                    @if($d->jenjang != 'Profesi')
+                        <tr class="{{$rowStyle}}">
+                            @if($d->jenjang == 'D3')
+                                <td width="50">JUDUL TUGAS AKHIR<br><em>(FINAL PROJECT TITLE)</em></td>
+                            @elseif($d->jenjang == 'S1')
+                                <td width="50">JUDUL SKRIPSI<br><em>(FINAL PROJECT TITLE)</em></td>
+                            @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-1')
+                                <td width="50">JUDUL TESIS<br><em>(THESIS TITLE)</em></td>
+                            @elseif($d->jenjang == 'S3' || $d->jenjang == 'Sp-2')
+                                <td width="50">JUDUL DISERTASI<br><em>(DISERTATION TITLE)</em></td>
+                            @endif
+                            <td width="1">: </td>
+                            <!-- <td width="1">: </td> -->
+                            <td colspan="3">
+                                {{ strtoupper($d->aktivitas_mahasiswa->judul) }}<br>
+                                @if(!empty($d->judul_eng))
+                                    <em>({{ strtoupper($d->judul_eng) }})</em>
+                                @endif     
+                            </td>
+                        </tr>
+                    @endif
 
                     <tr class="{{$rowStyle}}">
                         @if($d->jenjang == 'D3')
