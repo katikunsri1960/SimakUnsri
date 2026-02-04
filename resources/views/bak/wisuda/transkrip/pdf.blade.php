@@ -166,6 +166,64 @@
 @php
     $splitIndex = 30; // batas baris kolom kiri
 @endphp
+@php
+    $totalSks = 0;
+    $totalBobot = 0;
+    $jumlahMK = count($d->transkrip_mahasiswa);
+    //$mkLeft = $d->transkrip_mahasiswa->slice(0, $splitIndex);
+    //$mkRight = $d->transkrip_mahasiswa->slice($splitIndex);
+
+    // margin dinamis tabel
+    //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
+    if ($jumlahMK <= 33) {
+        $rowStyle = 'mk-small';
+    } elseif ($jumlahMK > 33 && $jumlahMK <= 50) {
+        $rowStyle = 'mk-medium';
+    } elseif ($jumlahMK > 50 && $jumlahMK <= 80) {
+        $rowStyle = 'mk-large';
+    } else {
+        $rowStyle = 'mk-xlarge';
+    }
+
+    if($rowStyle == 'mk-small'){
+        $MAX_ROWS_LEFT = 15;
+    } elseif($rowStyle == 'mk-medium'){
+        $MAX_ROWS_LEFT = 30;
+    } elseif($rowStyle == 'mk-large'){
+        $MAX_ROWS_LEFT = 33;
+    } else{
+        $MAX_ROWS_LEFT = 42;
+    }
+    
+    $totalRows = 0;
+
+    $mkLeft = collect();
+    $mkRight = collect();
+
+    foreach ($d->transkrip_mahasiswa as $mk) {
+
+        $namaId = strtoupper($mk->nama_mata_kuliah);
+        $namaEn = $mk->mk_english->nama_mata_kuliah_english ?? '';
+
+        // hitung jumlah karakter
+        $totalChar = mb_strlen($namaId) + mb_strlen($namaEn);
+
+        // 1 baris per 80 karakter
+        $rowsNeeded = ceil($totalChar / 80);
+
+        // minimal 1 baris
+        $rowsNeeded = max(1, $rowsNeeded);
+
+        if ($totalRows + $rowsNeeded <= $MAX_ROWS_LEFT) {
+            $mkLeft->push($mk);
+            $totalRows += $rowsNeeded;
+        } else {
+            $mkRight->push($mk);
+        }
+    }
+
+    //dd($totalRows, $rowStyle, $mkLeft->count(), $mkRight->count() );
+@endphp
 
 <div class="page-landscape">
     <table class="row-table">
@@ -320,64 +378,6 @@
                 {{-- ========================================================= --}}
                 {{--                TABEL MATA KULIAH TRANSKRIP                --}}
                 {{-- ========================================================= --}}
-                @php
-                    $totalSks = 0;
-                    $totalBobot = 0;
-                    $jumlahMK = count($d->transkrip_mahasiswa);
-                    //$mkLeft = $d->transkrip_mahasiswa->slice(0, $splitIndex);
-                    //$mkRight = $d->transkrip_mahasiswa->slice($splitIndex);
-
-                    // margin dinamis tabel
-                    //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
-                    if ($jumlahMK <= 33) {
-                        $rowStyle = 'mk-small';
-                    } elseif ($jumlahMK > 33 && $jumlahMK <= 50) {
-                        $rowStyle = 'mk-medium';
-                    } elseif ($jumlahMK > 50 && $jumlahMK <= 80) {
-                        $rowStyle = 'mk-large';
-                    } else {
-                        $rowStyle = 'mk-xlarge';
-                    }
-
-                    if($rowStyle == 'mk-small'){
-                        $MAX_ROWS_LEFT = 15;
-                    } elseif($rowStyle == 'mk-medium'){
-                        $MAX_ROWS_LEFT = 30;
-                    } elseif($rowStyle == 'mk-large'){
-                        $MAX_ROWS_LEFT = 33;
-                    } else{
-                        $MAX_ROWS_LEFT = 42;
-                    }
-                    
-                    $totalRows = 0;
-
-                    $mkLeft = collect();
-                    $mkRight = collect();
-
-                    foreach ($d->transkrip_mahasiswa as $mk) {
-
-                        $namaId = strtoupper($mk->nama_mata_kuliah);
-                        $namaEn = $mk->mk_english->nama_mata_kuliah_english ?? '';
-
-                        // hitung jumlah karakter
-                        $totalChar = mb_strlen($namaId) + mb_strlen($namaEn);
-
-                        // 1 baris per 80 karakter
-                        $rowsNeeded = ceil($totalChar / 80);
-
-                        // minimal 1 baris
-                        $rowsNeeded = max(1, $rowsNeeded);
-
-                        if ($totalRows + $rowsNeeded <= $MAX_ROWS_LEFT) {
-                            $mkLeft->push($mk);
-                            $totalRows += $rowsNeeded;
-                        } else {
-                            $mkRight->push($mk);
-                        }
-                    }
-
-                    //dd($totalRows, $rowStyle, $mkLeft->count(), $mkRight->count() );
-                @endphp
 
 
                 <table class="transkrip-table">
