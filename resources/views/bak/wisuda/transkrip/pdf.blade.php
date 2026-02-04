@@ -208,7 +208,7 @@
                 {{--                        BIODATA                           --}}
                 {{-- ========================================================= --}}
                 <table class="no-border dataDiri-table" style="margin: -10px 0px 15px 0px;">
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td style="margin: -20px 0px -20px 0px;" width="165">NAMA <em>(NAME)</em></td> 
                         <td width="1%">:  </td>
                         @if($d->nama_perbaikan)
@@ -217,7 +217,7 @@
                             <td> {{ strtoupper($d->nama_mahasiswa) }}</td>
                         @endif
                     </tr>
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td>TEMPAT LAHIR <em>(PLACE OF BIRTH)</em></td> 
                         <td width="1%">:  </td>
                         @if($d->tmpt_perbaikan)
@@ -226,7 +226,7 @@
                             <td> {{ strtoupper($d->tempat_lahir) }}</td>
                         @endif
                     </tr>
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td>TANGGAL LAHIR <em>(DATE OF BIRTH)</em></td>
                         <td width="1%">:</td>
                         @if($d->tgl_perbaikan)
@@ -235,12 +235,12 @@
                             <td>{{ idDate($d->tanggal_lahir)}} (<em>{!! enDate($d->tanggal_lahir)!!}</em>)</td>
                         @endif
                     </tr>
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td>NIM <em>(STUDENT REGISTRATION NUMBER)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ $d->nim }}</td>
                     </tr>
-                    <tr class="text-upper">
+                    <tr class="text-upper {{$rowStyle}}">
                         <td>FAKULTAS <em>(FACULTY)</em></td> 
                         <td width="1%">:  </td>
                         <td> 
@@ -250,7 +250,7 @@
                             @endif
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td>STRATA PENDIDIKAN <em>(EDUCATION PROGRAM)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ strtoupper($d->jenjang) }}
@@ -263,7 +263,7 @@
                             @endif
                         </td>
                     </tr>
-                    <tr class="text-upper">
+                    <tr class="text-upper {{$rowStyle}}">
                         <td>JURUSAN/PROGRAM STUDI <br><em>(DEPARTMENT/STUDY PROGRAM)</em></td> 
                         <td width="1%">:  </td>
                         <td> 
@@ -275,7 +275,7 @@
                     </tr>
                     
                     @if($d->is_peminatan == 1)
-                        <tr class="text-upper">
+                        <tr class="text-upper {{$rowStyle}}">
                             <td>PEMINATAN <br><em>(MAJOR)</em></td> 
                             <td width="1%">:  </td>
                             <td> 
@@ -287,17 +287,17 @@
                         </tr>
                     @endif
 
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td>TANGGAL LULUS <em>(DATE OF COMPLETION)</em></td>
                         <td width="1%">:</td>
                         <td>{{ idDate($d->tgl_keluar)}} (<em>{!! enDate($d->tgl_keluar)!!}</em>)</td>
                     </tr>
-                    <tr>
-                    <td>TANGGAL WISUDA <em>(CONVOCATION DATE)</em></td>
+                    <tr class="{{$rowStyle}}">
+                        <td>TANGGAL WISUDA <em>(CONVOCATION DATE)</em></td>
                         <td width="1%">:</td>
                         <td>{{ idDate($d->periode_wisuda->first()->tanggal_wisuda)}} (<em>{!! enDate($d->periode_wisuda->first()->tanggal_wisuda)!!}</em>)</td>
                     </tr>
-                    <tr class="text-upper">
+                    <tr class="text-upper {{$rowStyle}}">
                         <td>MASA STUDI <em>(LENGTH OF STUDY)</em></td> 
                         <td width="1%">:  </td>
                         <td> 
@@ -305,12 +305,12 @@
                             <em>({{$d->masa_studi_en}})</em>
                         </td>
                     </tr>
-                    <tr class="text-upper">
+                    <tr class="text-upper {{$rowStyle}}">
                         <td>NOMOR IJAZAH NASIONAL <em>(NATIONAL CERTIFICATE NUMBER)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ $d->no_ijazah }}</td>
                     </tr>
-                    <tr>
+                    <tr class="{{$rowStyle}}">
                         <td>KODE UNIVERSITAS <em>(UNIVERSITY CODE)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ $kode_univ }}</td>
