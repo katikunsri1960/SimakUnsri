@@ -33,7 +33,6 @@
             padding-left: 10px;
         }
 
-
         body {
             font-family: "Times New Roman", serif;
             margin: 5px;
@@ -164,9 +163,6 @@
 <body>
 @foreach($data as $d)
 @php
-    $splitIndex = 30; // batas baris kolom kiri
-@endphp
-@php
     $totalSks = 0;
     $totalBobot = 0;
     $jumlahMK = count($d->transkrip_mahasiswa);
@@ -189,10 +185,10 @@
         $MAX_ROWS_LEFT = 15;
     } elseif($rowStyle == 'mk-medium'){
         $MAX_ROWS_LEFT = 28;
-    } elseif($rowStyle == 'mk-large'){
-        $MAX_ROWS_LEFT = 37;
     } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf'){ // Sp-1 Ilmu Penyakit Kulit dan Kelamin
         $MAX_ROWS_LEFT = 53;
+    } elseif($rowStyle == 'mk-large'){
+        $MAX_ROWS_LEFT = 37;
     } else{
         $MAX_ROWS_LEFT = 53;
     }
