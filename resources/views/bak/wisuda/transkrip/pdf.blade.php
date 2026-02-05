@@ -191,7 +191,7 @@
         $MAX_ROWS_LEFT = 30;
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
-    } elseif ($mkLeft->count() < 25 && $jumlahMK < 70){
+    } elseif ($mkLeft->count() < 25 && $jumlahMK > 50 && $jumlahMK < 70){
         $MAX_ROWS_LEFT = 53;
     }else{
         $MAX_ROWS_LEFT = 53;
@@ -225,7 +225,7 @@
     }
     //dd($mkLeft->first()->jumlah_baris, $totalRows, $mkLeft->count(), $mkRight->count(), $mkLeft->first()->jumlah_baris, $jumlahMK, $rowsNeeded);
 
-    if ($totalRows <= 37 && $mkLeft->count() < 25 && $jumlahMK < 70){
+    if ($totalRows <= 37 && $mkLeft->count() < 25 && $jumlahMK > 50 && $jumlahMK < 70){
         $rowStyle = 'mk-xlarge';
     }
 
@@ -531,7 +531,7 @@
                         </td>
                     </tr>
 
-                    @if($d->jenjang != ('Profesi' || 'Sp-1' || 'Sp-2'))
+                    @if($d->jenjang != 'Profesi' || $d->jenjang != 'Sp-1' || $d->jenjang != 'Sp-2')
                         <tr class="text-upper {{$rowStyle}}">
                             <td class="no-wrap">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
                             <td width="1">: </td>
@@ -565,13 +565,13 @@
                     @endif
 
                     <tr class="{{$rowStyle}}">
-                        @if($d->jenjang == 'D3')
+                        @if($d->jenjang == 'D3' || $d->jenjang == 'Profesi')
                             <td width="50">PEMBIMBING TUGAS AKHIR<br><em>(FINAL PROJECT ADVISORS)</em></td>
-                        @elseif($d->jenjang == 'S1' || $d->jenjang == 'Sp-1')
+                        @elseif($d->jenjang == 'S1')
                             <td width="50">PEMBIMBING SKRIPSI<br><em>(FINAL PROJECT ADVISORS)</em></td>
-                        @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-2')
+                        @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-1')
                             <td width="50">PEMBIMBING TESIS<br><em>(THESIS ADVISORS)</em></td>
-                        @elseif($d->jenjang == 'S3')
+                        @elseif($d->jenjang == 'S3' || $d->jenjang == 'Sp-2')
                             <td width="50">PEMBIMBING DISERTASI<br><em>(DISERTATION ADVISORS)</em></td>
                         @endif
                         <td width="1">: </td>
