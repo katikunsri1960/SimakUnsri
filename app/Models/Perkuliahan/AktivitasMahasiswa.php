@@ -146,8 +146,9 @@ class AktivitasMahasiswa extends Model
 
     public function ta($id_prodi, $semester)
     {
-        $data = $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi', 'konversi' ])
+        $data = $this->with(['bimbing_mahasiswa', 'anggota_aktivitas_personal', 'prodi', 'konversi', 'penilaian_sidang'])
                     ->withCount([
+                        'penilaian_sidang as nilai_sidang',
                         'bimbing_mahasiswa as approved' => function($query) {
                             $query->where('approved', 0);
                         },

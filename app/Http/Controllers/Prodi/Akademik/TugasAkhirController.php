@@ -70,7 +70,10 @@ class TugasAkhirController extends Controller
     public function ubah_detail_tugas_akhir($aktivitas)
     {
 
-        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])->where('id_aktivitas', $aktivitas)->first();
+        $data = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa'])
+                                ->withCount(['penilaian_sidang as nilai_sidang'])
+                                ->where('id_aktivitas', $aktivitas)
+                                ->first();
         $semester = $data->id_semester;
         return view('prodi.data-akademik.tugas-akhir.edit', [
             'd' => $data,
