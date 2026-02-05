@@ -189,9 +189,7 @@
         $MAX_ROWS_LEFT = 15;
     } elseif($rowStyle == 'mk-medium'){
         $MAX_ROWS_LEFT = 30;
-    } elseif ($mkLeft->count() < 25 && $jumlahMK > 50 && $jumlahMK < 70){
-        $MAX_ROWS_LEFT = 53;
-    }elseif($rowStyle == 'mk-large'){
+    } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } else{
         $MAX_ROWS_LEFT = 53;
