@@ -124,7 +124,7 @@ Tugas Akhir
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center">
-                                            @if ($d->approved > 0 || $d->decline_dosen > 0)
+                                            @if (($d->approved > 0 || $d->decline_dosen > 0) && $nilai_sidang == 0)
                                             <form
                                                 action="{{route('prodi.data-akademik.tugas-akhir.approve-pembimbing', $d)}}"
                                                 method="post" id="approveForm{{$d->id}}" data-id="{{$d->id}}"
@@ -136,9 +136,11 @@ Tugas Akhir
                                                 </div>
                                             </form>
                                             @endif
+                                            @if($nilai_sidang > 0)
                                             <a href="{{route('prodi.data-akademik.tugas-akhir.edit-detail', $d->id_aktivitas)}}"
                                                 class="btn btn-warning btn-sm my-2" title="Edit"><i
                                                     class="fa fa-edit"></i> Edit</a>
+                                            @endif
                                             <a href="#" class="btn btn-info btn-sm my-2" title="Detail"
                                                 data-bs-toggle="modal" data-bs-target="#detailModal"
                                                 onclick="detailFunc({{$d}})">
