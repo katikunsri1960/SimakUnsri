@@ -179,7 +179,7 @@
         $rowStyle = 'mk-small';
     } elseif ($jumlahMK > 33 && $jumlahMK <= 50) {
         $rowStyle = 'mk-medium';
-    } elseif ($jumlahMK > 50 && $jumlahMK <= 80) {
+    } elseif ($jumlahMK > 50 && $jumlahMK <= 76) {
         $rowStyle = 'mk-large';
     } else {
         $rowStyle = 'mk-xlarge';
@@ -191,6 +191,8 @@
         $MAX_ROWS_LEFT = 30;
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
+    } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf'){ // Sp-1 Ilmu Penyakit Kulit dan Kelamin
+        $MAX_ROWS_LEFT = 53;
     } else{
         $MAX_ROWS_LEFT = 53;
     }
@@ -199,6 +201,8 @@
 
     $mkLeft = collect();
     $mkRight = collect();
+
+    //dd($totalRows, $mkLeft->count(), $mkRight->count(), $jumlahMK);
 
     foreach ($d->transkrip_mahasiswa as $mk) {
 
@@ -209,7 +213,7 @@
         $totalChar = mb_strlen($namaId) + mb_strlen($namaEn);
 
         // 1 baris per 80 karakter
-        $rowsNeeded = ceil($totalChar / 80);
+        $rowsNeeded = ceil($totalChar / 83);
 
         // minimal 1 baris
         $rowsNeeded = max(1, $rowsNeeded);
@@ -529,7 +533,7 @@
                         </td>
                     </tr>
 
-                    @if($d->jenjang != 'Profesi' || $d->jenjang != 'Sp-1' || $d->jenjang != 'Sp-2')
+                    @if(!in_array($d->jenjang, ['Profesi', 'Sp-1', 'Sp-2']))
                         <tr class="text-upper {{$rowStyle}}">
                             <td class="no-wrap">PREDIKAT KELULUSAN <em>(OVERALL RATING)</em></td>
                             <td width="1">: </td>
