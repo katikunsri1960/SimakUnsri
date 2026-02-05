@@ -76,7 +76,7 @@ class AktivitasMahasiswa extends Model
 
     public function bimbing_mahasiswa()
     {
-        return $this->hasMany(BimbingMahasiswa::class, 'id_aktivitas', 'id_aktivitas')->orderBy('id_kategori_kegiatan');
+        return $this->hasMany(BimbingMahasiswa::class, 'id_aktivitas', 'id_aktivitas')->orderBy('pembimbing_ke', 'ASC')->orderBy('id_kategori_kegiatan', 'ASC') ;
     }
 
     public function anggota_aktivitas()

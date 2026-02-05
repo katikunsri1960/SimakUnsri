@@ -633,7 +633,11 @@
                     {{-- Baris 3 --}}
                     <tr class="{{$rowStyle}}">
                         <td width="35%">
-                            VICE DEAN OF ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS,
+                            @if($d->nama_fakultas == 'Sekolah Pascasarjana')
+                                VICE DIRECTOR FOR ACADEMIC, RESEARCH, INNOVATION, DOWNSTREAM, COMMUNITY
+                            @else
+                                VICE DEAN OF ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS
+                            @endif
                         </td>
                         <td width="35%" rowspan="10" style="text-align:center; vertical-align:top;
                         /* padding-top:5px; */
