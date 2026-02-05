@@ -222,7 +222,7 @@
         }
     }
 
-    @if ($mkLeft->count() > 0 && $mkLeft->first()->jumlah_baris < 20 && $jumlahMK < 80)
+    @if ($mkLeft->first()->jumlah_baris == 37 && $mkLeft->count() < 25 && $jumlahMK < 70)
         {{-- Jika di kolom kiri ada mata kuliah dengan baris kurang dari 20, pindahkan ke kanan --}}
         $rowStyle = 'mk-xlarge';
     @endif
