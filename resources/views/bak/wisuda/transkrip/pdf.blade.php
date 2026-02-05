@@ -221,9 +221,9 @@
             $mkRight->push($mk);
         }
     }
+    //dd($mkLeft->first()->jumlah_baris, $totalRows, $mkLeft->count(), $mkRight->count(), $mkLeft->first()->jumlah_baris, $jumlahMK, $rowsNeeded);
 
-    if ($mkLeft->first()->jumlah_baris == 37 && $mkLeft->count() < 25 && $jumlahMK < 70){
-        {{-- Jika di kolom kiri ada mata kuliah dengan baris kurang dari 20, pindahkan ke kanan --}}
+    if ($totalRows <= 37 && $mkLeft->count() < 25 && $jumlahMK < 70){
         $rowStyle = 'mk-xlarge';
     }
 
