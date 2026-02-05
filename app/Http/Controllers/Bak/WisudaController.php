@@ -1136,7 +1136,7 @@ class WisudaController extends Controller
                     ->orderBy('r.nim', 'ASC')
                     ->get();
 
-        // dd($data[0]->transkrip_mahasiswa);
+        dd($data);
 
         // dd($data[0]->aktivitas_mahasiswa->bimbing_mahasiswa[0]->dosen);
 
