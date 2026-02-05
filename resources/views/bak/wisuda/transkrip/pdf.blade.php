@@ -191,7 +191,9 @@
         $MAX_ROWS_LEFT = 30;
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
-    } else{
+    } elseif ($mkLeft->count() < 25 && $jumlahMK < 70){
+        $MAX_ROWS_LEFT = 53;
+    }else{
         $MAX_ROWS_LEFT = 53;
     }
     
