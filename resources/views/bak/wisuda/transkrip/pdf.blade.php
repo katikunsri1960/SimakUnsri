@@ -188,7 +188,7 @@
     if($rowStyle == 'mk-small'){
         $MAX_ROWS_LEFT = 15;
     } elseif($rowStyle == 'mk-medium'){
-        $MAX_ROWS_LEFT = 29;
+        $MAX_ROWS_LEFT = 28;
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf'){ // Sp-1 Ilmu Penyakit Kulit dan Kelamin
