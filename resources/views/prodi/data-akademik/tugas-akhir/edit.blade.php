@@ -269,7 +269,7 @@ Tugas Akhir
                                     </td>
                                     <td class="text-center align-middle">
                                         <div class="row d-flex justify-content-center px-3">
-                                            @if (($b->approved == 1 && $b->approved_dosen == 2 && $nilai_sidang == 0) || ($b->approved == 0 && $b->approved_dosen == 0 && $nilai_sidang == 0) || ($b->approved == 1 && $b->approved_dosen == 0 && $nilai_sidang == 0))
+                                            @if (($b->approved == 1 && $b->approved_dosen == 2 && ($nilai_sidang ?? 0) == 0) || ($b->approved == 0 && $b->approved_dosen == 0 && ($nilai_sidang ?? 0) == 0) || ($b->approved == 1 && $b->approved_dosen == 0 && ($nilai_sidang ?? 0) == 0))
                                                 <a href="{{route('prodi.data-akademik.tugas-akhir.edit-dosen', $b->id)}}" class="btn btn-warning btn-sm my-2" title="Edit"><i
                                                         class="fa fa-edit"></i> Edit
                                                 </a>
