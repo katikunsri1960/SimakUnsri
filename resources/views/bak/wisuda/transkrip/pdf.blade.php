@@ -190,7 +190,7 @@
     } elseif($rowStyle == 'mk-medium'){
         $MAX_ROWS_LEFT = 28;
     } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf'){ // Sp-1 Ilmu Penyakit Kulit dan Kelamin
-        $MAX_ROWS_LEFT = 45;
+        $MAX_ROWS_LEFT = 55;
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } else{
