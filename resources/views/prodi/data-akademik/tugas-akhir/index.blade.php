@@ -136,7 +136,7 @@ Tugas Akhir
                                                 </div>
                                             </form>
                                             @endif
-                                            @if(($nilai_sidang ?? 0) > 0)
+                                            @if(($nilai_sidang ?? 0) == 0)
                                             <a href="{{route('prodi.data-akademik.tugas-akhir.edit-detail', $d->id_aktivitas)}}"
                                                 class="btn btn-warning btn-sm my-2" title="Edit"><i
                                                     class="fa fa-edit"></i> Edit</a>
