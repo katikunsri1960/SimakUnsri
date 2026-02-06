@@ -190,7 +190,7 @@
     } elseif($rowStyle == 'mk-medium'){
         $MAX_ROWS_LEFT = 28;
     } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf'){ // Sp-1 Ilmu Penyakit Kulit dan Kelamin
-        $MAX_ROWS_LEFT = 55;
+        $MAX_ROWS_LEFT = 57;
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } else{
@@ -236,7 +236,7 @@
 
 @if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf') {{-- Sp-1 Ilmu Penyakit Kulit dan Kelamin --}}
     <style>
-        @page { margin: 2mm 6mm 2mm 4mm; }
+        @page { margin: 1mm 6mm 1mm 4mm; }
     </style>
 @endif
 
@@ -466,7 +466,7 @@
                 
                 @if(count($mkRight) > 0)
                     {{-- TABEL MATA KULIAH KOLON KANAN --}}
-                    <div style="margin: 35px 0px 5px 0px; padding:0px 0px 0px 0px;" >
+                    <div style="margin: 35px 0px 5px 0px; padding:0px 0px 0px 0px; @if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf') margin: 5px 0px 5px 0px; @endif" >
                         <table class="transkrip-table" >
                             <thead>
                                 <tr>
