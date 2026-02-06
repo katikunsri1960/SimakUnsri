@@ -317,12 +317,20 @@
                         <td>STRATA PENDIDIKAN <em>(EDUCATION PROGRAM)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ strtoupper($d->jenjang) }}
-                            @if($d->jenjang == 'S1')
+                            @if($d->jenjang == 'D3')
                                 <em>(UNDERGRADUATE)</em>
+                            @elseif($d->jenjang == 'S1')
+                                <em>(UNDERGRADUATE)</em>
+                            @elseif($d->jenjang == 'Profesi')
+                                <em>(PROFESSIONAL)</em>
                             @elseif($d->jenjang == 'S2')
                                 <em>(GRADUATE)</em>
                             @elseif($d->jenjang == 'S3')
                                 <em>(POST GRADUATE)</em>
+                            @elseif($d->jenjang == 'Sp-1')
+                                <em>(MEDICAL SPECIALIST)</em>
+                            @elseif($d->jenjang == 'Sp-2')
+                                <em>(MEDICAL SUBSPECIALIST)</em>
                             @endif
                         </td>
                     </tr>
