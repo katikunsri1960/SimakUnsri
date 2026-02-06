@@ -234,6 +234,12 @@
     //dd($totalRows, $rowStyle, $mkLeft->count(), $mkRight->count() );
 @endphp
 
+@if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf') {{-- Sp-1 Ilmu Penyakit Kulit dan Kelamin --}}
+    <style>
+        @page { margin: 2mm 6mm 2mm 4mm; }
+    </style>
+@endif
+
 <div class="page-landscape">
     <table class="row-table">
         <tr>
@@ -242,7 +248,7 @@
                 {{-- ========================================================= --}}
                 {{--                         HEADER                           --}}
                 {{-- ========================================================= --}}
-                <table class="no-border">
+                <table class="no-border" style="@if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf') font-size: 8px; @endif">
                     <tr>
                         <td width="30" align="center" style="padding:0px 0px 0px 18px;">
                             <img src="{{ public_path('images/unsri.png') }}" width="60">
@@ -274,7 +280,7 @@
                 {{-- ========================================================= --}}
                 {{--                        BIODATA                           --}}
                 {{-- ========================================================= --}}
-                <table class="no-border dataDiri-table" style="margin: -10px 0px 15px 0px;">
+                <table class="no-border dataDiri-table" style="margin: -10px 0px 15px 0px; @if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf') font-size: 7px; @endif">
                     <tr class="{{$rowStyle}}">
                         <td style="margin: -20px 0px -20px 0px;" width="165">NAMA <em>(NAME)</em></td> 
                         <td width="1%">:  </td>
