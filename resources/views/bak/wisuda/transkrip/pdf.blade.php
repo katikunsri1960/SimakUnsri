@@ -117,6 +117,10 @@
             padding: 0px 2px 0px 2px;
             font-size: 5.5px;
         }
+        .transkrip-table tr.mk-xxl td {
+            padding: 0px 2px 0px 2px;
+            font-size: 4.5px;
+        }
 
         .transkrip-table td {
             border-left: 0.5pt solid #000 !important; 
@@ -186,7 +190,7 @@
     } elseif($rowStyle == 'mk-medium'){
         $MAX_ROWS_LEFT = 28;
     } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf'){ // Sp-1 Ilmu Penyakit Kulit dan Kelamin
-        $MAX_ROWS_LEFT = 53;
+        $MAX_ROWS_LEFT = 45;
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } else{
@@ -224,7 +228,7 @@
     //dd($mkLeft->first()->jumlah_baris, $totalRows, $mkLeft->count(), $mkRight->count(), $mkLeft->first()->jumlah_baris, $jumlahMK, $rowsNeeded);
 
     if ($totalRows <= 37 && $mkLeft->count() < 25 && $jumlahMK > 50 && $jumlahMK < 70){
-        $rowStyle = 'mk-xlarge';
+        $rowStyle = 'mk-xxl';
     }
 
     //dd($totalRows, $rowStyle, $mkLeft->count(), $mkRight->count() );
@@ -317,12 +321,20 @@
                         <td>STRATA PENDIDIKAN <em>(EDUCATION PROGRAM)</em></td> 
                         <td width="1%">:  </td>
                         <td> {{ strtoupper($d->jenjang) }}
-                            @if($d->jenjang == 'S1')
+                            @if($d->jenjang == 'D3')
+                                <em>(UNDERGRADUATE)</em>
+                            @elseif($d->jenjang == 'S1')
+                                <em>(UNDERGRADUATE)</em>
+                            @elseif($d->jenjang == 'Profesi')
                                 <em>(UNDERGRADUATE)</em>
                             @elseif($d->jenjang == 'S2')
                                 <em>(GRADUATE)</em>
                             @elseif($d->jenjang == 'S3')
                                 <em>(POST GRADUATE)</em>
+                            @elseif($d->jenjang == 'Sp-1')
+                                <em>(MEDICAL SPECIALIST)</em>
+                            @elseif($d->jenjang == 'Sp-2')
+                                <em>(MEDICAL SUBSPECIALIST)</em>
                             @endif
                         </td>
                     </tr>
