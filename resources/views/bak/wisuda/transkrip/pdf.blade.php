@@ -322,7 +322,7 @@
                             @elseif($d->jenjang == 'S1')
                                 <em>(UNDERGRADUATE)</em>
                             @elseif($d->jenjang == 'Profesi')
-                                <em>(PROFESSIONAL)</em>
+                                <em>(UNDERGRADUATE)</em>
                             @elseif($d->jenjang == 'S2')
                                 <em>(GRADUATE)</em>
                             @elseif($d->jenjang == 'S3')
