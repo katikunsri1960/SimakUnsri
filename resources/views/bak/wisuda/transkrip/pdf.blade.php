@@ -328,7 +328,7 @@
                         <td width="1%">:  </td>
                         <td> {{ strtoupper($d->jenjang) }}
                             @if($d->jenjang == 'D3')
-                                <em>(UNDERGRADUATE)</em>
+                                <em>(DIPLOMA)</em>
                             @elseif($d->jenjang == 'S1')
                                 <em>(UNDERGRADUATE)</em>
                             @elseif($d->jenjang == 'Profesi')
