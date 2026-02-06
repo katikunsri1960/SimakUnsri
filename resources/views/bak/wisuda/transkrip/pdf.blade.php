@@ -188,9 +188,12 @@
     if($rowStyle == 'mk-small'){
         $MAX_ROWS_LEFT = 15;
     } elseif($rowStyle == 'mk-medium'){
-        $MAX_ROWS_LEFT = 28;
+        $MAX_ROWS_LEFT = 28;$d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff'
+    } elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' || // Sp-1 Ilmu Kesehatan Anak
+    ){ 
+        $MAX_ROWS_LEFT = 42;
     } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf' || // Sp-1 Ilmu Penyakit Kulit dan Kelamin
-    $d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff'){ // Sp-1 Ilmu Kesehatan Anak
+    ){ 
         $MAX_ROWS_LEFT = 57;
     } elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
