@@ -188,7 +188,7 @@
     if($rowStyle == 'mk-small'){
         $MAX_ROWS_LEFT = 15;
     } elseif($rowStyle == 'mk-medium'){
-        $MAX_ROWS_LEFT = 28;$d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff'
+        $MAX_ROWS_LEFT = 28;
     } elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' || // Sp-1 Ilmu Kesehatan Anak
     ){ 
         $MAX_ROWS_LEFT = 42;
