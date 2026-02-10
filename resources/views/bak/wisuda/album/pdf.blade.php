@@ -161,7 +161,7 @@
             <tr>
                 <td class="text-bold" width="300px">TERDAFTAR DI UNSRI</td>
                 <td> : </td>
-                <td>{{$d->nim}}</td>
+                <td>{{$d->tgl_masuk ? \Carbon\Carbon::parse($d->tgl_masuk)->translatedFormat('F Y') : '-'}}</td>
             </tr>
 
             <tr>
