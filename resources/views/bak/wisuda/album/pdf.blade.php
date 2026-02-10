@@ -34,10 +34,43 @@
             font-size: 28pt;
         }
 
-        /* PERBAIKAN vertical-align */
-        .info-mahasiswa td {
-            vertical-align: top;
+        .page {
+            width: 100%;
+            height: 100%;
+            page-break-after: always;
+
+            display: table;
         }
+
+        .page:last-child {
+            page-break-after: auto;
+        }
+
+        .page-center {
+            display: table-cell;
+            vertical-align: middle;   /* CENTER VERTIKAL PALING STABIL */
+            text-align: center;
+            width: 100%;
+        }
+
+        .info-mahasiswa {
+            margin: 0 auto;
+            width: auto;              /* lebar mengikuti isi */
+            display: inline-table;    /* penting agar tidak full width */
+            text-align: left;
+            /*border: 1px solid #000;   /* opsional kalau mau kotak */
+            padding: 10px 20px;
+        }
+
+        .info-mahasiswa td:first-child {
+            white-space: nowrap;   /* label tidak turun baris */
+            padding-right: 10px;
+        }
+
+        .info-mahasiswa td:nth-child(2) {
+            padding: 0 10px;
+        }
+
 
         .text-upper{ text-transform: uppercase; }
         .text-bold{ font-weight: bold; }
@@ -73,76 +106,73 @@
         {{ $fakultas -> nama_fakultas }}
     </div>
     <div style="margin:10px 110px 0px 110px; font-size: 20pt;">
-        {{ $fakultas -> nama_fakultas }}
+        PROGRAM STUDI {{ $prodi->nama_program_studi }} ({{ $prodi->nama_jenjang_pendidikan }})
     </div>
 </div>
-
 <div class="page-break"></div>
 
-<div class='content text-upper'>
 @foreach($data as $d)
-    <div class="img">
-        <img src="{{ $d->pas_foto }}" alt="Foto" width="150">
+<div class="page text-upper">
+    <div class="page-center">
+
+        <div class="img">
+            <img src="storage/{{ $d->pas_foto }}" width="150">
+        </div>
+
+        <div style="font-weight:bold; font-size:25pt; margin-bottom:20px">
+            {{ $d->nama_mahasiswa }}
+        </div>
+
+        <table class="info-mahasiswa" style="font-size:15pt; margin-bottom:50px;">
+            <tr>
+                <td class="text-bold" width="200px">NOMOR INDUK MAHASISWA</td>
+                <td> : </td>
+                <td>{{$d->nim}}</td>
+            </tr>
+
+            <tr>
+                <td class="text-bold" width="300px">FAKULTAS/PROGRAM</td>
+                <td> : </td>
+
+                <!-- nowrap ditambahkan -->
+                <td style="white-space: nowrap; vertical-align: top;">
+                    {{ str_replace('Fakultas', '', $d->nama_fakultas) }} / {{$d->jenjang}}
+                </td>
+            </tr>
+
+            <tr>
+                <td class="text-bold" width="300px">PROGRAM STUDI</td>
+                <td> : </td>
+                <td>{{$d->nama_prodi}}</td>
+            </tr>
+
+            <tr>
+                <td class="text-bold" width="300px">TEMPAT/TANGGAL LAHIR</td>
+                <td> : </td>
+                <td>{{$d->tempat_lahir}} / {{idDate($d->tanggal_lahir)}}</td>
+            </tr>
+
+            <tr>
+                <td class="text-bold" width="300px">IPK</td>
+                <td> : </td>
+                <td>{{$d->ipk}}</td>
+            </tr>
+
+            <tr>
+                <td class="text-bold" width="300px">TERDAFTAR DI UNSRI</td>
+                <td> : </td>
+                <td>{{$d->nim}}</td>
+            </tr>
+
+            <tr>
+                <td class="text-bold" width="300px">TANGGAL YUDISIUM</td>
+                <td> : </td>
+                <td>{{ idDate($d->tgl_keluar) }}</td>
+            </tr>
+        </table>
     </div>
-    <div style="font-weight:bold; font-size: 25pt; margin-bottom:20px">
-        {{$d->nama_mahasiswa}}
-    </div>
-    <table class="info-mahasiswa" style="font-size: 15pt; margin-bottom:50px; width:100%; text-align:left;">
-        <tr>
-            <td class="text-bold" width="200px">NOMOR INDUK MAHASISWA</td>
-            <td> : </td>
-            <td>{{$d->nim}}</td>
-        </tr>
-
-        <tr>
-            <td class="text-bold" width="300px">FAKULTAS/PROGRAM</td>
-            <td> : </td>
-
-            <!-- nowrap ditambahkan -->
-            <td style="white-space: nowrap; vertical-align: top;">
-                {{ str_replace('Fakultas', '', $d->nama_fakultas) }} / {{$d->jenjang}}
-            </td>
-        </tr>
-
-        <tr>
-            <td class="text-bold" width="300px">PROGRAM STUDI</td>
-            <td> : </td>
-            <td>{{$d->nama_prodi}}</td>
-        </tr>
-
-        <tr>
-            <td class="text-bold" width="300px">TEMPAT/TANGGAL LAHIR</td>
-            <td> : </td>
-            <td>{{$d->tempat_lahir}} / {{$d->tanggal_lahir}}</td>
-        </tr>
-
-        <tr>
-            <td class="text-bold" width="300px">IPK</td>
-            <td> : </td>
-            <td>{{$d->ipk}}</td>
-        </tr>
-
-        <tr>
-            <td class="text-bold" width="300px">TERDAFTAR DI UNSRI</td>
-            <td> : </td>
-            <td>{{$d->nim}}</td>
-        </tr>
-
-        <tr>
-            <td class="text-bold" width="300px">TANGGAL YUDISIUM</td>
-            <td> : </td>
-            <td>{{$d->tgl_sk_yudisium}}</td>
-        </tr>
-    </table>
-
-
-    {{-- Tambahkan kondisi untuk pagebreak --}}
-    @if(!$loop->last)
-        <div class="page-break"></div>
-    @endif
-
-@endforeach
 </div>
+@endforeach
 
 
 

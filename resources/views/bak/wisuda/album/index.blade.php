@@ -68,7 +68,7 @@ Daftar Album Wisudawan
                     <div class="table-responsive">
                         <div class="mb-3">
                             <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD ALBUM (PDF)</button>
-                            <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD ALBUM (PPT)</button>
+                            <!-- <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD ALBUM (PPT)</button> -->
                         </div>
 
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
@@ -117,10 +117,19 @@ function getData()
     var prodi = $('#prodi').val();
     var periode = $('#periode').val();
 
-    if (fakultas == '' || prodi == '' || periode == '') {
-        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
+    if (fakultas == '' ) {
+        swal('Peringatan', 'Silahkan pilih fakultas terlebih dahulu', 'warning');
         return;
+    }
 
+    if (prodi == '' ) {
+        swal('Peringatan', 'Silahkan pilih prodi terlebih dahulu', 'warning');
+        return;
+    }
+
+    if (periode == '' ) {
+        swal('Peringatan', 'Silahkan pilih periode wisuda terlebih dahulu', 'warning');
+        return;
     }
 
     $.ajax({
@@ -142,7 +151,9 @@ function getData()
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-primary" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     var spanStatus = item.approved > 5 ? '<span class="badge badge-danger">' + item.approved_text +'</span>' : '<span class="badge badge-success">' + item.approved_text +'</span>';
-                    var foto = item.pas_foto ? '<img src="{{ asset('' ) }}' + item.pas_foto + '" class="img-fluid" style="max-width: 300px; max-height: 500px;">' : '';
+                    var foto = item.pas_foto
+                        ? '<img src="{{ asset("storage") }}/' + item.pas_foto + '" class="img-fluid" style="max-width:300px; max-height:500px;">'
+                        : '';
                     var jenis_kelamin = item.jenis_kelamin === 'L' ? 'Laki-laki' : (item.jenis_kelamin === 'P' ? 'Perempuan' : '-');
                     // ===============================
                     // KONDISI KHUSUS NO IJAZAH
@@ -211,7 +222,9 @@ function filterProdi()
 
     $('#prodi').empty();
 
-    $('#prodi').append('<option value="*">-- Semua Prodi --</option>');
+    // option kosong → supaya dianggap belum pilih
+    $('#prodi').append('<option value="">-- Pilih Prodi --</option>');
+
     $.each(filteredProdi, function (i, p) {
         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
     });
