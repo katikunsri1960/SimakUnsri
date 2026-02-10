@@ -1202,7 +1202,10 @@ class WisudaController extends Controller
         $fakultas = Fakultas::select('id', 'nama_fakultas')->get();
         $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
         $prodi = ProgramStudi::where('status', 'A')->select('id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'nama_program_studi', 'fakultas_id')
-                    ->orderBy('kode_program_studi')->get();
+                    ->orderBy('id_jenjang_pendidikan', 'ASC')
+                    ->orderBy('kode_program_studi')
+                    ->orderBy('nama_program_studi', 'ASC')
+                    ->get();
 
         return view('bak.wisuda.album.index', [
             'fakultas' => $fakultas,
@@ -1231,14 +1234,11 @@ class WisudaController extends Controller
             ]);
         }
 
-        $prodi = $request->input('prodi');
+        $id_prodi = $request->input('prodi');
 
-        if($prodi == '*')
-        {
-            $prodi = null;
-        }
+        $prodi = ProgramStudi::where('id_prodi', $id_prodi)->first();
 
-        $data = Wisuda::with('transkrip_mahasiswa','aktivitas_mahasiswa', 'aktivitas_mahasiswa.bimbing_mahasiswa', 'predikat_kelulusan', 'periode_wisuda')
+        $data = Wisuda::with('predikat_kelulusan', 'periode_wisuda')
                 ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
@@ -1253,8 +1253,8 @@ class WisudaController extends Controller
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas)
                 ->where('approved', 3); // hanya yang sudah disetujui
-        if ($prodi != null) {
-            $data->where('r.id_prodi', $prodi);
+        if ($id_prodi != null) {
+            $data->where('r.id_prodi', $id_prodi);
         }
         $data = $data->get();
 
@@ -1278,6 +1278,7 @@ class WisudaController extends Controller
             'periode_wisuda' => $periode_wisuda,
             'kode_univ' => $kode_univ,
             'fakultas' => $fakultas,
+            'prodi' => $prodi,
         ])
         ->setPaper($paper_size, 'landscape');
 
