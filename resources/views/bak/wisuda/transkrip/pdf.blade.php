@@ -189,7 +189,11 @@
         $MAX_ROWS_LEFT = 15;
     } elseif($rowStyle == 'mk-medium'){
         $MAX_ROWS_LEFT = 28;
-    } elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff'  
+    } elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' && $d->angkatan == '2018'  
+        // Sp-1 Ilmu Kesehatan Anak angkatan 2018
+    ){ 
+        $MAX_ROWS_LEFT = 42;
+    }elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff'  
         // Sp-1 Ilmu Kesehatan Anak
     ){ 
         $MAX_ROWS_LEFT = 47;
