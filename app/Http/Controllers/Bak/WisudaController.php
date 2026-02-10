@@ -136,8 +136,13 @@ class WisudaController extends Controller
     public function peserta()
     {
         $fakultas = Fakultas::select('id','nama_fakultas')->get();
-        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $prodi = ProgramStudi::where('status', 'A')->select('id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'nama_program_studi', 'fakultas_id')
+                    ->orderBy('id_jenjang_pendidikan', 'ASC')
+                    ->orderBy('kode_program_studi')
+                    ->orderBy('nama_program_studi', 'ASC')
+                    ->get();
         $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
+        
         return view('bak.wisuda.peserta.index', [
             'fakultas' => $fakultas,
             'prodi' => $prodi,
@@ -846,7 +851,10 @@ class WisudaController extends Controller
         $fakultas = Fakultas::select('id', 'nama_fakultas')->get();
         $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
         $prodi = ProgramStudi::where('status', 'A')->select('id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'nama_program_studi', 'fakultas_id')
-                    ->orderBy('kode_program_studi')->get();
+                    ->orderBy('id_jenjang_pendidikan', 'ASC')
+                    ->orderBy('kode_program_studi')
+                    ->orderBy('nama_program_studi', 'ASC')
+                    ->get();
 
         return view('bak.wisuda.ijazah.index', [
             'fakultas' => $fakultas,
@@ -1044,7 +1052,10 @@ class WisudaController extends Controller
         $fakultas = Fakultas::select('id', 'nama_fakultas')->get();
         $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
         $prodi = ProgramStudi::where('status', 'A')->select('id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'nama_program_studi', 'fakultas_id')
-                    ->orderBy('kode_program_studi')->get();
+                    ->orderBy('id_jenjang_pendidikan', 'ASC')
+                    ->orderBy('kode_program_studi')
+                    ->orderBy('nama_program_studi', 'ASC')
+                    ->get();
 
         $angkatan = RiwayatPendidikan::select(DB::raw('LEFT(id_periode_masuk, 4) as angkatan_raw'))
                     ->distinct()
