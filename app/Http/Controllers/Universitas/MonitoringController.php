@@ -24,6 +24,7 @@ use App\Models\Perkuliahan\ListKurikulum;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Monitoring\MonevStatusMahasiswa;
 use App\Models\Monitoring\MonevStatusMahasiswaDetail;
+use App\Models\Mahasiswa\PerbaikanDataPokok;
 
 class MonitoringController extends Controller
 {
@@ -942,6 +943,103 @@ class MonitoringController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function perbaikan_pokok(Request $request)
+    {
+        $db = new PerbaikanDataPokok();
+        
+        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
+            $filter = $request->id_prodi;
+        }
+
+        if ($request->has('angkatan') && !empty($request->angkatan)) {
+            $filter = $request->angkatan;
+        }
+
+        $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
+
+        // $angkatan = $db->join('riwayat_pendidikans as rp', 'rp.id_registrasi_mahasiswa', '=', 'perbaikan_data_pokok.id_registrasi_mahasiswa')
+        //             ->selectRaw('LEFT(rp.id_periode_masuk, 4) as angkatan')
+        //             ->groupBy('angkatan')
+        //             ->orderByDesc('angkatan')
+        //             ->pluck('angkatan');
+
+        $angkatan = $db->join('riwayat_pendidikans as rp', 'rp.id_registrasi_mahasiswa', '=', 'perbaikan_data_pokok.id_registrasi_mahasiswa')
+                    ->selectRaw('LEFT(rp.id_periode_masuk, 4) as angkatan')
+                    ->groupBy('angkatan')
+                    ->orderByDesc('angkatan')
+                    ->get();
+              
+        // dd($db->get(), $angkatan);
+        return view('universitas.monitoring.perbaikan-data-pokok.index', [
+            'prodi' => $prodi,
+            'angkatan' => $angkatan
+        ]);
+    }
+
+    public function perbaikan_pokok_data(Request $request)
+    {
+        $searchValue = $request->input('search.value');
+
+        $query = PerbaikanDataPokok::with('riwayat_pendidikan.prodi', 'riwayat_pendidikan.biodata');
+
+        if ($searchValue) {
+            $query = $query->where('nim', 'like', '%' . $searchValue . '%')
+                ->orWhere('nama_mahasiswa', 'like', '%' . $searchValue . '%')
+                ->orWhere('nama_program_studi', 'like', '%' . $searchValue . '%');
+        }
+
+        if ($request->has('id_prodi') && !empty($request->id_prodi)) {
+            $filter = $request->id_prodi;
+            $query->whereIn('id_prodi', $filter);
+        }
+
+        if ($request->has('angkatan') && !empty($request->angkatan)) {
+            $filter = $request->angkatan;
+            $query->whereIn('angkatan', $filter);
+        }
+
+        if($request->has('jenis_keluar') && !empty($request->jenis_keluar)) {
+            $filter = $request->jenis_keluar;
+            $query->whereIn('id_jenis_keluar', $filter);
+        }
+
+        $recordsFiltered = $query->count();
+
+        $limit = $request->input('length');
+        $offset = $request->input('start');
+
+        // Define the column names that correspond to the DataTables column indices
+        if ($request->has('order')) {
+            $orderColumn = $request->input('order.0.column');
+            $orderDirection = $request->input('order.0.dir');
+
+            // Define the column names that correspond to the DataTables column indices
+            $columns = ['nim','nama_mahasiswa', 'nama_program_studi', 'angkatan', 'tanggal_keluar', 'nm_smt', 'keterangan'];
+
+            // if ($columns[$orderColumn] == 'prodi') {
+            //     $query = $query->join('program_studis as prodi', 'mata_kuliahs.id_prodi', '=', 'prodi.id')
+            //         ->orderBy('prodi.nama_jenjang_pendidikan', $orderDirection)
+            //         ->orderBy('prodi.nama_program_studi', $orderDirection)
+            //         ->select('mata_kuliahs.*', 'prodi.nama_jenjang_pendidikan', 'prodi.nama_program_studi'); // Avoid column name conflicts
+            // } else {
+                $query = $query->orderBy($columns[$orderColumn], $orderDirection);
+            // }
+        }
+
+        $data = $query->skip($offset)->take($limit)->get();
+
+        $recordsTotal = LulusDo::count();
+
+        $response = [
+            'draw' => $request->input('draw'),
+            'recordsTotal' => $recordsTotal,
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data,
+        ];
+
+        return response()->json($response);
     }
 
     public function batch_job()

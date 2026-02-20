@@ -2,14 +2,17 @@
     <thead>
         <tr>
             <th>NO.</th>
-            <th>NOMOR IJAZAH NASIONAL</th>
+            <th>PISN</th>
             <th>NAMA</th>
             <th>NIM</th>
             <th>TEMPAT LAHIR</th>
             <th>TANGGAL LAHIR</th>
-            <th>TANGGAL YUDISIUM</th>
+            <th>TANGGAL MASUK</th>
+            <th>TANGGAL KELUAR</th>
+            <th>LAMA STUDI</th>
             <th>PROGRAM STUDI</th>
             <th>GELAR</th>
+            <th>PREDIKAT KELULUSAN</th>
         </tr>
     </thead>
     <tbody>
@@ -30,14 +33,24 @@
 
                 {{-- Tanggal Yudisium (tanggal_keluar) --}}
                 <td>
-                    {{ $d->tgl_sk_yudisium
+                    {{ $d->riwayat_pendidikan
+                        ? \Carbon\Carbon::parse($d->riwayat_pendidikan->tanggal_daftar)->format('d-m-Y') 
+                        : '-' 
+                    }}
+                </td>
+                
+                <td>
+                    {{ $d->tgl_keluar
                         ? \Carbon\Carbon::parse($d->tanggal_keluar)->format('d-m-Y') 
                         : '-' 
                     }}
                 </td>
 
+                <td>{{ $d->lama_studi ? $d->lama_studi . ' Bulan' : '-' }}</td>
+
                 <td>{{ $d->jenjang }} - {{ $d->nama_prodi }}</td>
                 <td>{{ $d->gelar }}</td>
+                <td>{{ $d->predikat_kelulusan ? $d->predikat_kelulusan->indonesia : '-' }}</td>
             </tr>
         @endforeach
     </tbody>

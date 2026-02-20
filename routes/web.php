@@ -226,11 +226,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('perbaikan-data')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'perbaikan_data'])->name('bak.wisuda.perbaikan-data');
                     Route::get('/search', [App\Http\Controllers\Bak\WisudaController::class, 'search_perbaikan_data'])->name('bak.wisuda.perbaikan-data.search');
-                    Route::get('/get-transkrip-nilai', [App\Http\Controllers\Bak\WisudaController::class, 'data_perbaikan_data'])->name('bak.wisuda.perbaikan-data.get');
+                    Route::get('/get-perbaikan-data', [App\Http\Controllers\Bak\WisudaController::class, 'data_perbaikan_data'])->name('bak.wisuda.perbaikan-data.get');
                     Route::post('/store', [App\Http\Controllers\Bak\WisudaController::class, 'store_perbaikan_data'])->name('bak.wisuda.perbaikan-data.store');
-
-                    // Route::get('/download', [App\Http\Controllers\Bak\WisudaController::class, 'download'])->name('bak.perbaikan-data.download');
-                    // Route::get('/{semester}/{id_reg}/khs', [App\Http\Controllers\Bak\WisudaController::class, 'khs'])->name('bak.perbaikan-data.khs');
                 });
 
                 Route::prefix('ijazah')->group(function(){
@@ -1223,6 +1220,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_ukt'])->name('univ.monitoring.status-ukt');
                     Route::get('/data', [App\Http\Controllers\Universitas\MonitoringController::class, 'status_ukt_data'])->name('univ.monitoring.status-ukt.data');
                     Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Universitas\MonitoringController::class, 'getProdi'])->name('univ.monitoring.status-ukt.getProdi');
+                });
+
+                Route::prefix('perbaikan-data')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Universitas\MonitoringController::class, 'perbaikan_pokok'])->name('univ.monitoring.perbaikan-data');
+                    Route::get('/search', [App\Http\Controllers\Universitas\MonitoringController::class, 'search_perbaikan_pokok'])->name('univ.monitoring.perbaikan-data.search');
+                    Route::get('/get-perbaikan-data', [App\Http\Controllers\Universitas\MonitoringController::class, 'perbaikan_pokok_data'])->name('univ.monitoring.perbaikan-data.get');
+                    // Route::post('/store', [App\Http\Controllers\Universitas\MonitoringController::class, 'store_perbaikan_data'])->name('univ.monitoring.perbaikan-data.store');
                 });
 
                 Route::prefix('pengisian-krs')->group(function () {
