@@ -906,7 +906,8 @@ class WisudaController extends Controller
         // =========================
         // QUERY EXPORT
         // =========================
-        $query = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
+        $query = Wisuda::with('predikat_kelulusan')
+                ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
                 ->leftJoin('bku_program_studis as bku', 'bku.id', 'data_wisuda.id_bku_prodi')
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
@@ -1069,7 +1070,6 @@ class WisudaController extends Controller
             'angkatan' => $angkatan,
         ]);
     }
-
 
     public function transkrip_download_pdf(Request $request)
     {

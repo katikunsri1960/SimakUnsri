@@ -345,6 +345,9 @@
                             <li class="{{request()->routeIs('univ.monitoring.pengisian-krs') || request()->routeIs('univ.monitoring.pengisian-krs.*') ? 'active' : ''}}">
                                 <a href="{{route('univ.monitoring.pengisian-krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian KRS</a>
                             </li>
+                            <li class="{{request()->routeIs('univ.monitoring.perbaikan-data') || request()->routeIs('univ.monitoring.perbaikan-data.*') ? 'active' : ''}}">
+                                <a href="{{route('univ.monitoring.perbaikan-data')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Perbaikan Data</a>
+                            </li>
                             <li class="{{request()->routeIs('univ.monitoring.upload-feeder') || request()->routeIs('univ.monitoring.upload-feeder.*') ? 'active' : ''}}">
                                 <a href="{{route('univ.monitoring.upload-feeder')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Upload Feeder</a>
                             </li>
