@@ -551,10 +551,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             //Route for prestasi mahasiswa
             Route::prefix('prestasi')->group(function () {
-                Route::get('/prestasi-non-pendanaan', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'prestasi_mahasiswa_non_pendanaan'])->name('mahasiswa.prestasi.prestasi-non-pendanaan');
-                Route::get('/prestasi-non-pendanaan/tambah', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'tambah_prestasi_mahasiswa_non_pendanaan'])->name('mahasiswa.prestasi.prestasi-non-pendanaan.tambah');
-                Route::post('/prestasi-non-pendanaan/store', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'store_prestasi_mahasiswa_non_pendanaan'])->name('mahasiswa.prestasi.prestasi-non-pendanaan.store');
-                Route::delete('/{prestasi}', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'delete_prestasi_mahasiswa_non_pendanaan'])->name('mahasiswa.prestasi.prestasi-non-pendanaan.hapus');
+                Route::get('/prestasi', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'prestasi_mahasiswa'])->name('mahasiswa.prestasi.index');
+                Route::get('/prestasi/tambah', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'tambah_prestasi_mahasiswa'])->name('mahasiswa.prestasi.tambah');
+                Route::post('/prestasi/store', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'store_prestasi_mahasiswa'])->name('mahasiswa.prestasi.store');
+                Route::post('/prestasi/upload/{id}', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'upload_file'])->name('mahasiswa.prestasi.upload');
+                Route::get('/prestasi/{id}/edit', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'edit'])->name('mahasiswa.prestasi.edit');
+                Route::put('/prestasi/{id}', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'update'])->name('mahasiswa.prestasi.update');
+                Route::delete('/{id}', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'delete_prestasi_mahasiswa'])->name('mahasiswa.prestasi.hapus');
             });
 
             Route::prefix('bimbingan-tugas-akhir')->group(function(){
