@@ -114,6 +114,7 @@ class NilaiController extends Controller
             'semester_aktif' => $semester_aktif,
         ]);
     }
+    
     public function histori_nilai($id_matkul)
     {
         $id_reg_mhs = auth()->user()->fk_id;

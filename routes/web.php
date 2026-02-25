@@ -585,10 +585,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\Pengajuan\PenundaanBayarController::class, 'delete'])->name('mahasiswa.penundaan-bayar.delete');
             });
 
-            Route::prefix('pendaftaran-wisuda')->group(function () {
+            Route::prefix('pendaftaran-yudisium')->group(function () {
                 Route::get('/', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'index'])->name('mahasiswa.wisuda.index');
                 Route::get('/tambah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'tambah'])->name('mahasiswa.wisuda.tambah');
                 Route::post('/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'store'])->name('mahasiswa.wisuda.store');
+                Route::get('/transkrip', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'transkrip_mahasiswa'])->name('mahasiswa.wisuda.transkrip');
                 Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'peserta_formulir'])->name('mahasiswa.wisuda.formulir');
                 Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'delete'])->name('mahasiswa.wisuda.delete');
                 Route::get('/get-wilayah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'get_wilayah'])->name('mahasiswa.wisuda.get-wilayah');
