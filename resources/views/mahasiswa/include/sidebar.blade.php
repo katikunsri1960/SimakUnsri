@@ -68,7 +68,7 @@
                         <a href="{{route('mahasiswa.wisuda.index')}}">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Wisuda</span>
+                            <span>Yudisium</span>
                         </a>
                     </li>
                     

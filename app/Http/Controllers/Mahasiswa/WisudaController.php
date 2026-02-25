@@ -42,7 +42,7 @@ class WisudaController extends Controller
 
         $semester_aktif = SemesterAktif::first();
 
-        $riwayat_pendidikan = RiwayatPendidikan::with('prodi', 'prodi.fakultas', 'prodi.jurusan', 'lulus_do')
+        $riwayat_pendidikan = RiwayatPendidikan::with('prodi', 'prodi.fakultas', 'prodi.jurusan', 'lulus_do', 'biodata')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->first();
 
@@ -69,9 +69,10 @@ class WisudaController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Kurikulum Anda tidak ditemukan, Silahkan hubungi Koor. Prodi!');
         }
 
-        if ($aktivitas_kuliah->sks_total < $kurikulum->jumlah_sks_lulus) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal '.$kurikulum->jumlah_sks_lulus.' sks!');
-        }
+        // 1 SYARAT SKS LULUS
+        // if ($aktivitas_kuliah->sks_total < $kurikulum->jumlah_sks_lulus) {
+        //     return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal '.$kurikulum->jumlah_sks_lulus.' sks!');
+        // }
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
                 ->whereHas('bimbing_mahasiswa', function ($query) {
@@ -91,9 +92,10 @@ class WisudaController extends Controller
 
         // dd($aktivitas);
 
-        if (!$aktivitas) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
-        }
+        // 2 SYARAT AKTIVITAS
+        // if (!$aktivitas) {
+        //     return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
+        // }
 
         $wisuda = Wisuda::with('bku_prodi')
                 ->where('id_registrasi_mahasiswa', $id_reg)
@@ -107,36 +109,39 @@ class WisudaController extends Controller
                         }
                     ])
                     ->first();
+        // 3 SYARAT STATUS KELUAR 
+        // if (!$riwayat_pendidikan->lulus_do && $riwayat_pendidikan->id_jenis_keluar != 1) {
+        //     return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, Anda masih berstatus Mahasiswa Aktif!');
+        // }
 
-        if (!$riwayat_pendidikan->lulus_do && $riwayat_pendidikan->id_jenis_keluar != 1) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, Anda masih berstatus Mahasiswa Aktif!');
-        }
-
-        if ($riwayat_pendidikan->lulus_do && $riwayat_pendidikan->lulus_do->id_jenis_keluar != 1 && $wisuda == null) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '.$riwayat_pendidikan->lulus_do->nama_jenis_keluar.'!');
-        }
+        // 4 SYARAT STATUS KELUAR TAPI BELUM WISUDA
+        // if ($riwayat_pendidikan->lulus_do && $riwayat_pendidikan->lulus_do->id_jenis_keluar != 1 && $wisuda == null) {
+        //     return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '.$riwayat_pendidikan->lulus_do->nama_jenis_keluar.'!');
+        // }
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        if (!$bebas_pustaka) {
-            return redirect()
-                ->route('mahasiswa.dashboard')
-                ->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
-        }
+        // 5 SYARAT BEBAS PUSTAKA
+        // if (!$bebas_pustaka) {
+        //     return redirect()
+        //         ->route('mahasiswa.dashboard')
+        //         ->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
+        // }
 
-        if(!$wisuda){
-            if (empty($bebas_pustaka->file_bebas_pustaka)) {
-                return redirect()
-                    ->route('mahasiswa.dashboard')
-                    ->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
-            }
+        // 6 SYARAT BEBAS PUSTAKA TAPI BELUM WISUDA
+        // if(!$wisuda){
+        //     if (empty($bebas_pustaka->file_bebas_pustaka)) {
+        //         return redirect()
+        //             ->route('mahasiswa.dashboard')
+        //             ->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
+        //     }
 
-            if (empty($bebas_pustaka->link_repo)) {
-                return redirect()
-                    ->route('mahasiswa.dashboard')
-                    ->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
-            }
-        }
+        //     if (empty($bebas_pustaka->link_repo)) {
+        //         return redirect()
+        //             ->route('mahasiswa.dashboard')
+        //             ->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
+        //     }
+        // }
         
 
         if(!$riwayat_pendidikan->id_kurikulum ) {
@@ -187,7 +192,7 @@ class WisudaController extends Controller
         // dd($semester_aktif->id_semester);
         $id_reg = auth()->user()->fk_id;
 
-        $riwayat_pendidikan = RiwayatPendidikan::with('biodata', 'prodi', 'prodi.fakultas', 'prodi.jurusan', 'biodata.wilayah.kab_kota')->where('id_registrasi_mahasiswa', $id_reg)->first();
+        $riwayat_pendidikan = RiwayatPendidikan::with('biodata','lulus_do','prodi', 'prodi.fakultas', 'prodi.jurusan', 'biodata.wilayah.kab_kota')->where('id_registrasi_mahasiswa', $id_reg)->first();
 
         $semester_aktif=SemesterAktif::with('semester')->first();
 
@@ -268,9 +273,27 @@ class WisudaController extends Controller
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        if (!$bebas_pustaka) {
-            return redirect()->back()->with('error', 'Anda belum melakukan upload repository atau bebas pustaka, silahkan menghubungi Admin Perpustakaan !!');
+        // dd($riwayat_pendidikan->lulus_do, $wisuda, $riwayat_pendidikan->id_jenis_keluar);
+        
+        if ($riwayat_pendidikan->lulus_do) {
+            return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->lulus_do->nama_jenis_keluar . '!');
+        }elseif (!empty($riwayat_pendidikan->id_jenis_keluar)) {
+            return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->keterangan_keluar . '!');
         }
+
+        if (!$bebas_pustaka) {
+            return redirect()->back()->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
+        }
+
+        if (empty($bebas_pustaka->file_bebas_pustaka)) {
+            return redirect()->back()->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
+        }
+
+        if (empty($bebas_pustaka->link_repo)) {
+            return redirect()->back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
+        }
+
+
         // dd($useptData);
 
         $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
@@ -573,6 +596,37 @@ class WisudaController extends Controller
         //  dd($riwayat, $biodata, $pt, $id, $syaratAdm, $checklist, $now);
 
          return $pdf->stream('Formulir_pendaftara_wisuda-'.$riwayat->nim.'.pdf');
+    }
+
+    public function transkrip_mahasiswa()
+    {
+        $id_reg_mhs = auth()->user()->fk_id;
+
+        $jobData =  DB::table('job_batches')->where('name', 'transkrip-mahasiswa')->where('pending_jobs', '>', 0)->first();
+
+        $statusSync = $jobData ? 1 : 0;
+
+        $id_batch = $jobData ? $jobData->id : null;
+
+        // dd($jobData);
+        $transkrip_mahasiswa=TranskripMahasiswa::where('id_registrasi_mahasiswa',$id_reg_mhs)->orderBy('nama_mata_kuliah','asc')->get();
+
+        $total_sks_transkrip = $transkrip_mahasiswa ->whereNotNull('nilai_indeks')->sum('sks_mata_kuliah');
+
+        $bobot = 0;
+        
+        foreach ($transkrip_mahasiswa as $t) {
+            $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+        }
+
+        
+        if($total_sks_transkrip != 0){
+            $ipk = number_format($bobot / $total_sks_transkrip, 2);
+        }else{
+            $ipk=0;
+        }
+        
+        return view('mahasiswa.wisuda.transkrip-mahasiswa', ['transkrip' => $transkrip_mahasiswa, 'total_sks_transkrip'=>$total_sks_transkrip, 'bobot'=>$bobot,'ipk'=>$ipk, 'statusSync' => $statusSync, 'id_batch' => $id_batch,]);
     }
     
 }
