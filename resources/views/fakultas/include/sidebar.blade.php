@@ -27,10 +27,12 @@
                                 <a href="{{route('fakultas.data-master.dosen')}}"><i class="icon-Commit"><span
                                             class="path1"></span><span class="path2"></span></i>Dosen</a>
                             </li>
+                            {{--
                             <li class="{{request()->routeIs('fakultas.data-master.mahasiswa') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-master.mahasiswa')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Mahasiswa</a>
                             </li>
+                            --}}
                             <li class="{{request()->routeIs('fakultas.data-master.pejabat-fakultas') || request()->routeIs('fakultas.data-master.pejabat-fakultas.*')
                              ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-master.pejabat-fakultas')}}"><i class="icon-Commit"><span
