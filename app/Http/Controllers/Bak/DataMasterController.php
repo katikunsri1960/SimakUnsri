@@ -132,7 +132,18 @@ class DataMasterController extends Controller
 
         // Tambahan informasi
         foreach ($data as $value) {
-            $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
+            try {
+                $value->rm_no_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+                            ->pluck('rm_no_test')
+                            ->first();
+            } catch (\Exception $e) {
+
+                // log error
+                \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+                // nilai default jika gagal
+                $value->rm_no_test = null;
+            }
 
             $value->tagihan = Tagihan::with('pembayaran')
                 ->whereIn('nomor_pembayaran', [$value->rm_no_test, $value->nim])
