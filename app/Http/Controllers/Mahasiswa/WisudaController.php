@@ -296,13 +296,30 @@ class WisudaController extends Controller
 
         // dd($useptData);
 
-        $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
+        // $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
+        //             ->select('reg_master.rm_pddk_sd_nama','reg_master.rm_pddk_sd_lokasi', 'reg_master.rm_pddk_sd_thn_lulus',
+        //                     'reg_master.rm_pddk_sltp_nama', 'reg_master.rm_pddk_sltp_lokasi', 'reg_master.rm_pddk_sltp_thn_lulus',
+        //                     'data_sekolah.nama_sekolah', 'reg_master.rm_pddk_slta_jurusan', 'reg_master.rm_pddk_slta_thn_lulus',
+        //                     'data_sekolah.nama_kabupaten', 'data_sekolah.nama_provinsi', 'data_sekolah.akreditasi_sekolah')
+        //             ->where('rm_nim', $riwayat_pendidikan->nim)->first();
+        // dd($bku_prodi);
+
+        try {
+            $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
                     ->select('reg_master.rm_pddk_sd_nama','reg_master.rm_pddk_sd_lokasi', 'reg_master.rm_pddk_sd_thn_lulus',
                             'reg_master.rm_pddk_sltp_nama', 'reg_master.rm_pddk_sltp_lokasi', 'reg_master.rm_pddk_sltp_thn_lulus',
                             'data_sekolah.nama_sekolah', 'reg_master.rm_pddk_slta_jurusan', 'reg_master.rm_pddk_slta_thn_lulus',
                             'data_sekolah.nama_kabupaten', 'data_sekolah.nama_provinsi', 'data_sekolah.akreditasi_sekolah')
-                    ->where('rm_nim', $riwayat_pendidikan->nim)->first();
-        // dd($bku_prodi);
+                    ->where('rm_nim', $riwayat_pendidikan->nim)
+                    ->first();
+        } catch (\Exception $e) {
+
+            // log error
+            \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+            // nilai default jika gagal
+            $asal_sekolah = null;
+        }
 
         return view('mahasiswa.wisuda.store', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 'kecamatan'=> $kecamatan,'wisuda_ke' => $wisuda_ke,
                     'aktivitas' => $aktivitas, 'usept' => $useptData, 'bebas_pustaka' => $bebas_pustaka, 'asal_sekolah' => $asal_sekolah, 'bku_prodi'=> $bku_prodi]);
