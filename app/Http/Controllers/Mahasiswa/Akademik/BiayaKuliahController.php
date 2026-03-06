@@ -28,7 +28,18 @@ class BiayaKuliahController extends Controller
                     ->pluck('nim')
                     ->first();
                     
-        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
+        try {
+            $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+                        ->pluck('rm_no_test')
+                        ->first();
+        } catch (\Exception $e) {
+
+            // log error
+            \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+            // nilai default jika gagal
+            $id_test = null;
+        }
 
 
         // dd($id_test);

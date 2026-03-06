@@ -143,13 +143,24 @@ class BiodataController extends Controller
                 $riwayat_pendidikan = RiwayatPendidikan::where('id_mahasiswa', $data->id_mahasiswa)->get();
 
                 // Tambahkan data tambahan ke $data
-                $rm_no_test = Registrasi::where('rm_nim', $data->nim)->pluck('rm_no_test')->first();
-                
+                try {
+                        $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+                                        ->pluck('rm_no_test')
+                                        ->first();
+                } catch (\Exception $e) {
+
+                        // log error
+                        \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+                        // nilai default jika gagal
+                        $id_test = null;
+                }
+
                 $beasiswa = BeasiswaMahasiswa::with('jenis_beasiswa')
                         ->where('id_registrasi_mahasiswa', $id_reg)->first();
 
                 $tagihan = Tagihan::with('pembayaran')
-                        ->whereIn('tagihan.nomor_pembayaran', [$rm_no_test, $data->nim])
+                        ->whereIn('tagihan.nomor_pembayaran', [$id_test, $data->nim])
                         ->where('tagihan.kode_periode', $semesterAktif)
                         ->first();
 

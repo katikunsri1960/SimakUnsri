@@ -1087,6 +1087,20 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::get('/data-krs', [App\Http\Controllers\Universitas\DashboardController::class, 'index'])->name('univ.data-krs');
 
+            Route::prefix('import')->group(function () {
+
+                Route::get('/', [App\Http\Controllers\Universitas\ImportExternalController::class, 'index'])->name('univ.import.index');
+
+                Route::get('/preview-reg', [App\Http\Controllers\Universitas\ImportExternalController::class, 'previewReg'])->name('univ.import.preview.reg');
+                Route::post('/import-reg', [App\Http\Controllers\Universitas\ImportExternalController::class, 'importReg'])->name('univ.import.reg');
+                
+                Route::get('/preview-tagihan', [App\Http\Controllers\Universitas\ImportExternalController::class, 'previewTagihan'])->name('univ.import.keu.preview.tagihan');
+                Route::post('/import-tagihan', [App\Http\Controllers\Universitas\ImportExternalController::class, 'importTagihan'])->name('univ.import.keu.tagihan');
+                
+                Route::get('/preview-pembayaran', [App\Http\Controllers\Universitas\ImportExternalController::class, 'previewPembayaran'])->name('univ.import.keu.preview.pembayaran');
+                Route::post('/import-pembayaran', [App\Http\Controllers\Universitas\ImportExternalController::class, 'importPembayaran'])->name('univ.import.keu.pembayaran');
+            });
+
             // Route::prefix('cuti-kuliah')->group(function(){
             //     Route::get('/', [App\Http\Controllers\Universitas\CutiController::class, 'index'])->name('univ.cuti-kuliah');
             //     Route::post('/store', [App\Http\Controllers\Universitas\CutiController::class, 'store'])->name('univ.cuti-kuliah.store');

@@ -84,7 +84,7 @@
                             </li>
                         </ul>
                     </li>
-                     <li class="treeview {{ request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : '' }}">
+                    <li class="treeview {{ request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : '' }}">
                         <a href="#">
                             <i span class="fa fa-calendar-check-o"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -117,6 +117,36 @@
                                 <a href="{{ route('universitas.perkuliahan.realisasi-pertemuan') }}"><i
                                         class="icon-Commit"><span class="path1"></span><span
                                             class="path2"></span></i>Realisasi Pertemuan</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="treeview {{ request()->routeIs('univ.perkuliahan.*') ? 'active menu-open' : '' }}">
+                        <a href="#">
+                            <i span class="fa fa-calendar-check-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Import Data</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li
+                                class="{{ request()->routeIs('univ.import.preview.reg') ? 'active' : '' }}">
+                                <a href="{{ route('univ.import.preview.reg') }}"><i
+                                        class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Data Registrasi</a>
+                            </li>
+                            <li
+                                class="{{ request()->routeIs('univ.import.keu.preview.tagihan') ? 'active' : '' }}">
+                                <a href="{{ route('univ.import.keu.preview.tagihan') }}"><i
+                                        class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Data Tagihan</a>
+                            </li>
+                            <li
+                                class="{{ request()->routeIs('univ.import.keu.preview.pembayaran') ? 'active' : '' }}">
+                                <a href="{{ route('univ.import.keu.preview.pembayaran') }}"><i
+                                        class="icon-Commit"><span class="path1"></span><span
+                                            class="path2"></span></i>Data Pembayaran</a>
                             </li>
                         </ul>
                     </li>
