@@ -255,8 +255,9 @@ class KrsController extends Controller
         $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select, $data_akt_ids);
-
+            
         $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_select, $riwayat_pendidikan->id_prodi);
+        // dd($krs_regular);
 
         // DATA MK_MERDEKA
         $fakultas = Fakultas::all();
@@ -269,7 +270,18 @@ class KrsController extends Controller
         $beasiswa = BeasiswaMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->first();
         // dd($beasiswa);
 
-        $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)->pluck('rm_no_test')->first();
+        try {
+            $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+                        ->pluck('rm_no_test')
+                        ->first();
+        } catch (\Exception $e) {
+
+            // log error
+            \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+            // nilai default jika gagal
+            $id_test = null;
+        }
 
         // dd($semester_select);
         // Jika 1 angka terakhir dari semester_select tidak sama dengan 3
@@ -292,7 +304,10 @@ class KrsController extends Controller
             // dd($semester_aktif->id_semester);
         try {
             $tagihan = Tagihan::with('pembayaran')
-                ->whereIn('nomor_pembayaran', [$id_test, $riwayat_pendidikan->nim])
+                ->whereIn('nomor_pembayaran', [
+                    // $id_test, 
+                $riwayat_pendidikan->nim
+                ])
                 ->where('kode_periode', (substr($semester_select, -1) == 3)
                     ? $semester_select-1
                     : $semester_select
@@ -698,7 +713,7 @@ class KrsController extends Controller
 
             $total_sks = $total_sks_regular + $total_sks_merdeka + $total_sks_akt + $total_sks_mbkm;
             // $total_sks = $total_sks_regular;
-            // dd($sks_max, $total_sks);
+            // dd($krs_regular);
 
             $sks_mk = KelasKuliah::select('sks_mata_kuliah')
                     ->leftJoin('mata_kuliahs', 'mata_kuliahs.id_matkul', '=', 'kelas_kuliahs.id_matkul')

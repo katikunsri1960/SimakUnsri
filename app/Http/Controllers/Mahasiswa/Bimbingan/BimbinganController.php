@@ -24,7 +24,20 @@ class BimbinganController extends Controller
     {
         $user = auth()->user();
         $nim = $user->username;
-        $id_test = Registrasi::where('rm_nim', $user->username)->pluck('rm_no_test')->first();
+        
+        try {
+            $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+                        ->pluck('rm_no_test')
+                        ->first();
+        } catch (\Exception $e) {
+
+            // log error
+            \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+            // nilai default jika gagal
+            $id_test = null;
+        }
+
         $semester_aktif = SemesterAktif::first();
         $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
                     ->select('riwayat_pendidikans.*')

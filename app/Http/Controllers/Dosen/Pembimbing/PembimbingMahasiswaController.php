@@ -369,7 +369,18 @@ class PembimbingMahasiswaController extends Controller
         $sudah_bayar = 0;
 
         try{
-            $id_test = Registrasi::where('rm_nim', $data_mahasiswa->nim)->pluck('rm_no_test')->first();
+            try {
+                $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+                            ->pluck('rm_no_test')
+                            ->first();
+            } catch (\Exception $e) {
+
+                // log error
+                \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+                // nilai default jika gagal
+                $id_test = null;
+            }
             $tagihan = Tagihan::with('pembayaran')
                     ->whereIn('nomor_pembayaran', [$id_test, $data_mahasiswa->nim])
                     ->where('kode_periode', $semester_aktif->id_semester)

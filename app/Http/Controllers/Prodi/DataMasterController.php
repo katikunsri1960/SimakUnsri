@@ -170,7 +170,19 @@ class DataMasterController extends Controller
 
         //BISA DIOPTIMALISASI DENGAN GUNAKAN WHEREIN DARI DATA(NIM) UNTUK PEMBAYARAN DAN REGISTRASI
         foreach($data as $key => $value) {
-            $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
+            // $value->rm_no_test = Registrasi::where('rm_nim', $value->nim)->pluck('rm_no_test')->first();
+            try {
+                $value->rm_no_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+                            ->pluck('rm_no_test')
+                            ->first();
+            } catch (\Exception $e) {
+
+                // log error
+                \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+                // nilai default jika gagal
+                $value->rm_no_test = null;
+            }
 
             $value->tagihan = Tagihan::with('pembayaran')
                         ->whereIn('tagihan.nomor_pembayaran', [$value->rm_no_test, $value->nim])
