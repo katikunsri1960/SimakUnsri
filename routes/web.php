@@ -1066,6 +1066,15 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
             });
 
+            //Route for Lulusan
+            Route::prefix('data-skpi')->group(function(){
+                Route::get('/', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'index'])->name('prodi.data-skpi.index');
+                Route::get('/detail/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'detail_skpi_mahasiswa'])->name('prodi.data-skpi.detail');
+                Route::put('/update/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'update_detail_skpi'])->name('prodi.data-skpi.detail.update');
+                Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
+                Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
+            });
+
             //Route for Report
             Route::prefix('report')->group(function(){
 

@@ -876,6 +876,8 @@ class WisudaController extends Controller
 
             $riwayat_pendidikan = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)->first();
 
+            $semester_aktif=SemesterAktif::with('semester')->first();
+
             $jenis = SKPIJenisKegiatan::findOrFail($request->id_jenis_skpi);
 
             $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
@@ -894,6 +896,8 @@ class WisudaController extends Controller
 
             SKPI::create([
                 'id_registrasi_mahasiswa' => $id_reg,
+                'id_prodi' => $riwayat_pendidikan->id_prodi,
+                'id_semester' => $semester_aktif->id_semester,
                 'nama_kegiatan' => $request->nama_kegiatan,
                 'id_jenis_skpi' => $jenis->id,
                 'nama_jenis_skpi' => $jenis->nama_jenis,

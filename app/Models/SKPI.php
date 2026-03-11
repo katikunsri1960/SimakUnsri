@@ -13,16 +13,7 @@ class SKPI extends Model
 
     protected $table = 'skpi_data';
 
-    protected $fillable = [
-        'id_registrasi_mahasiswa',
-        'nama_kegiatan',
-        'id_jenis_skpi',
-        'nama_jenis_skpi',
-        'skor',
-        'periode_wisuda',
-        'file_pendukung',
-        'approved'
-    ];
+    protected $guarded = ['id'];
 
     /**
      * Relasi ke riwayat pendidikan (mahasiswa)
@@ -31,6 +22,15 @@ class SKPI extends Model
     {
         return $this->belongsTo(RiwayatPendidikan::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
+
+    /**
+     * Relasi ke riwayat pendidikan (mahasiswa)
+     */
+    public function wisuda()
+    {
+        return $this->belongsTo(Wisuda::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
 
     /**
      * Relasi ke jenis kegiatan SKPI

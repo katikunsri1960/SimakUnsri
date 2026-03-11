@@ -1,18 +1,13 @@
-
-@extends('layouts.mahasiswa')
-
+@extends('layouts.prodi')
 @section('title')
-Pendaftaran Yudisium Mahasiswa
+Dashboard
 @endsection
-
 @section('content')
-
 @include('swal')
-
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Data SKPI Mahasiswa</h3>
+            <h3 class="page-title">Data Ajuan SKPI {{$wisuda->nama_mahasiswa}}</h3>
 
             <div class="d-inline-block align-items-center">
                 <nav>
@@ -28,8 +23,11 @@ Pendaftaran Yudisium Mahasiswa
                     </ol>
                 </nav>
             </div>
-
         </div>
+    </div>
+    <div class="d-flex justify-content-between my-10">
+        <a href="{{route('prodi.data-skpi.index')}}" class="btn btn-warning btn-sm btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+        <!-- <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light"><i class="fa fa-edit"></i> Update Detail Ajuan</button> -->
     </div>
 </div>
 <section class="content">
@@ -66,41 +64,41 @@ Pendaftaran Yudisium Mahasiswa
                                     <th class="text-center" width="200">Kategori</th>
                                     <th class="text-center" width="100">File Pendukung</th>
                                     <th class="text-center" width="100">Skor</th>
-                                    <th class="text-center" width="120">Status</th>
+                                    <th class="text-center" width="100">Status</th>
                                     <th class="text-center" width="120">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @forelse($skpi_data->where('bidang_id',$bidang->id)->values() as $index => $row)
+                                @forelse($data->where('bidang_id',$bidang->id)->values() as $index => $d)
                                 <tr>
                                     <td class="text-center">{{ $index+1 }}</td>
-                                    <td class="text-start">{{ $row->nama_kegiatan }}</td>
-                                    <td class="text-start">{{ $row->nama_jenis_skpi }}</td>
-                                    <td class="text-start">{{ $row->kriteria }}</td>
+                                    <td class="text-start">{{ $d->nama_kegiatan }}</td>
+                                    <td class="text-start">{{ $d->nama_jenis_skpi }}</td>
+                                    <td class="text-start">{{ $d->kriteria }}</td>
                                     <td class="text-center">
-                                        <a href="{{ asset('storage/'.$row->file_pendukung) }}" 
+                                        <a href="{{ asset('storage/'.$d->file_pendukung) }}" 
                                             class="btn btn-sm btn-success text-center" target="_blank">
                                             <i class="fa fa-file-o"></i>
                                             Lihat File
                                         </a>
                                     </td>                                    
-                                    <td class="text-center">{{ $row->skor }}</td>
+                                    <td class="text-center">{{ $d->skor }}</td>
                                     <td class="text-center align-middle">
                                         <div class="row">
                                             @if($wisuda->finalisasi_data == 1)
-                                                @if($row->approved == 0)
+                                                @if($d->approved == 0)
                                                     <span class="badge badge-lg badge-warning">Belum Disetujui</span>
-                                                @elseif($row->approved == 1)
+                                                @elseif($d->approved == 1)
                                                     <span class="badge badge-lg badge-primary mb-5">Disetujui Koor. Prodi</span>
-                                                @elseif($row->approved == 2)
+                                                @elseif($d->approved == 2)
                                                     <span class="badge badge-lg badge-primary mb-5">Disetujui Fakultas</span>
-                                                @elseif($row->approved == 3)
+                                                @elseif($d->approved == 3)
                                                     <span class="badge badge-lg badge-success mb-5">Disetujui Dir. Akademik</span>
-                                                @elseif($row->approved == 97)
+                                                @elseif($d->approved == 97)
                                                     <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
-                                                @elseif($row->approved == 98)
+                                                @elseif($d->approved == 98)
                                                     <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
-                                                @elseif($row->approved == 99)
+                                                @elseif($d->approved == 99)
                                                     <span class="badge badge-lg badge-danger mb-5">Ditolak Dir. Akademik <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
                                                 @endif
                                             @else
@@ -109,28 +107,28 @@ Pendaftaran Yudisium Mahasiswa
                                         </div>
                                     </td>
                                     <td class="text-center align-middle">
-                                        @php
-                                            $disabled = ($wisuda && $wisuda->verified_skpi == 1) ? 'disabled' : '';
-                                        @endphp
+                                        <!-- @php
+                                            $disabled = ($wisuda && $wisuda->approved > 1) ? 'disabled' : '';
+                                        @endphp -->
 
-                                        @if($row->approved == 0)
+                                        @if($d->approved < 1)
                                         <button
                                             type="button"
-                                            class="btn btn-warning btn-sm my-1 {{$disabled}}"
+                                            class="btn btn-success btn-sm my-1"
                                             data-bs-toggle="modal"
-                                            data-bs-target="#modalSkpi{{$bidang->id}}-{{$row->id}}">
-                                            <i class="fa fa-pen"></i>
+                                            data-bs-target="#modalSkpi{{$bidang->id}}-{{$d->id}}">
+                                            Approve
                                         </button>
 
-                                        <form action="{{route('mahasiswa.wisuda.pendaftaran.data-skpi-delete',$row->id)}}" method="POST">
+                                        <!-- <form action="{{route('mahasiswa.wisuda.pendaftaran.data-skpi-delete',$d->id)}}" method="POST">
                                             @csrf
                                             @method('DELETE')
 
-                                            <button type="button" class="btn btn-danger btn-sm btn-delete {{$disabled}}">
+                                            <button type="button" class="btn btn-danger btn-sm btn-delete">
                                                 <i class="fa fa-trash"></i>
                                             </button>
 
-                                        </form>
+                                        </form> -->
                                         @endif
                                     </td>
                                 </tr>
@@ -146,46 +144,7 @@ Pendaftaran Yudisium Mahasiswa
                     </div>
                 </div>
                 {{-- INCLUDE MODAL --}}
-                @include('mahasiswa.wisuda.pendaftaran.skpi.create')
-                @include('mahasiswa.wisuda.pendaftaran.skpi.edit')
-
-                {{-- Tombol Finalisasi hanya muncul di box terakhir --}}
-                @if($loop->last)
-                <div class="box-footer">
-                    <form action="{{route('mahasiswa.wisuda.pendaftaran.data-skpi-store')}}" method="POST" id="data-skpi" >
-                        @csrf
-                        @if($wisuda && $wisuda->verified_skpi == 1)
-                        <div class="checkbox p-3 border border-success rounded bg-light-success">
-                            <input type="checkbox" id="pernyataan_data" name="pernyataan_data" checked disabled>
-                            <label for="pernyataan_data" class="text-success fw-bold">
-                                Data SKPI telah diverifikasi. Perubahan data tidak diperbolehkan.
-                            </label>
-                        </div>
-                        <div class="form-group mt-20">
-                            <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-wisuda')}}" class="btn btn-danger waves-effect waves-light">
-                                Kembali
-                            </a>
-                            <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.resume.index')}}" class="btn btn-primary waves-effect waves-light">
-                                Lanjutkan
-                            </a>
-                        </div>
-                        @else
-                        <div class="checkbox">
-                            <input type="checkbox" id="pernyataan_data" name="pernyataan_data">
-                            <label for="pernyataan_data">
-                                Dengan ini saya menyatakan bahwa Data SKPI saya telah sesuai, dan saya bersedia menggunakan data tersebut untuk keperluan Pencetakan SKPI.
-                            </label>
-                        </div>
-                        <div class="form-group mt-20">
-                            <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-wisuda')}}" class="btn btn-danger waves-effect waves-light">
-                                Kembali
-                            </a>
-                            <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Simpan</button>
-                        </div>
-                        @endif
-                    </form>
-                </div>
-                @endif
+                @include('prodi.data-skpi.edit')
             </div>
             @endforeach
         </div>
@@ -246,10 +205,12 @@ Pendaftaran Yudisium Mahasiswa
     $(document).ready(function(){
 
         /* DATATABLE */
-        $('.datatable').DataTable({
-            responsive: false,
-            autoWidth: false,
-            pageLength: 5
+        $('.datatable').each(function(){
+            $(this).DataTable({
+                responsive: false,
+                autoWidth: false,
+                pageLength: 5
+            });
         });
 
         /* SELECT2 DALAM MODAL */

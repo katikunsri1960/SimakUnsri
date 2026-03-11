@@ -1,18 +1,18 @@
 @extends('layouts.prodi')
 @section('title')
-Ajuan Wisuda Mahasiswa
+Ajuan Yudisium Mahasiswa
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Data Ajuan Wisuda Mahasiswa</h3>
+            <h3 class="page-title">Data Ajuan Yudisium Mahasiswa</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Lulusan</li>
-                        <li class="breadcrumb-item active" aria-current="page">Ajuan Wisuda Mahasiswa</li>
+                        <li class="breadcrumb-item active" aria-current="page">Ajuan Yudisium Mahasiswa</li>
                     </ol>
                 </nav>
             </div>
@@ -183,7 +183,7 @@ Ajuan Wisuda Mahasiswa
                                         <td class="text-center align-middle">
                                             @if($d->bebas_pustaka && $d->bebas_pustaka->file_bebas_pustaka && $d->bebas_pustaka->link_repo)
                                                 <div class="row d-flex justify-content-center">
-                                                    <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-secondary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
+                                                    <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
                                                     <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Wisuda" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
                                                 </div>
                                             @elseif($d->bebas_pustaka && !$d->bebas_pustaka->file_bebas_pustaka)
