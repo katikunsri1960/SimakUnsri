@@ -8,6 +8,359 @@ Pendaftaran Wisuda Mahasiswa
 <section class="content bg-white text-uppercase">
     <div class="row">
         <div class="col-xxl-12">
+            {{-- DATA WISUDA --}}
+            @if($wisuda)
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-header with-border d-flex justify-content-between mx-20">
+                    <div class="d-flex justify-content-start">
+                        <h4 class="text-primary mb-0"><i class="fa-solid fa-list-check"></i> Status Persyaratan Pendaftaran</h4>
+                    </div>                  
+                </div>
+                <div class="box box-body mb-0">
+                    <div class="col-lg-12 mb-3">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover text-center align-middle">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>Nama di Ijazah</th>
+                                        <th style="width:80px">Data Induk</th>
+                                        <th style="width:80px">IPK</th>
+                                        <th style="width:80px">SKS Lulus</th>
+                                        <th style="width:80px">Daftar Semester</th>
+                                        <th style="width:80px">Transkrip</th>
+                                        <th style="width:80px">Data TA</th>
+                                        <th style="width:80px">Data Pembimbing</th>
+                                        <th style="width:80px">Abstrak</th>
+                                        <th style="width:80px">Foto</th>
+                                        <th style="width:80px">SKPI</th>
+                                        <th style="width:80px">PISN</th>
+                                        <th style="width:80px">Ver Mahasiswa</th>
+                                        <th style="width:80px">Ver Pembimbing TA</th>
+                                        <th style="width:80px">Ver Koor. Prodi</th>
+                                        <th style="width:80px">Ver Fakultas</th>
+                                        <th style="width:80px">Ver Dir. Akad</th>
+                                        <th style="width:80px">Persyaratan Lengkap</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-start text-nowrap">
+                                            {{ $riwayat_pendidikan->biodata->nama_mahasiswa }}
+                                        </td>
+
+                                        <td class="p-0"><!--Data Induk-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-induk') }}"
+                                            class="btn btn-sm {{$wisuda->verified_induk == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_induk == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--IPK-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-akademik') }}"
+                                            class="btn btn-sm {{$wisuda->verified_akademik == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_akademik == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--SKS-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-akademik') }}"
+                                            class="btn btn-sm {{$wisuda->verified_akademik == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_akademik == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--AKM-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-akademik') }}"
+                                            class="btn btn-sm {{$wisuda->verified_akademik == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_akademik == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--Transkrip-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-akademik') }}"
+                                            class="btn btn-sm {{$wisuda->verified_akademik == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_akademik == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--TA-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-tugas-akhir') }}"
+                                            class="btn btn-sm {{$wisuda->verified_ta == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_ta == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--Pembimbing-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-tugas-akhir') }}"
+                                            class="btn btn-sm {{$wisuda->verified_ta == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_ta == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--Abstrak-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-tugas-akhir') }}"
+                                            class="btn btn-sm {{$wisuda->verified_ta == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_ta == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--Foto-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-wisuda') }}"
+                                                class="btn btn-sm {{ $wisuda->verified_wisuda == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_wisuda == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--SKPI-->
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.data-skpi') }}"
+                                                @if($wisuda->verified_skpi == 1 && $skpi_data->isNotEmpty())
+                                                    class="btn btn-sm btn-success">
+                                                    <i class="fas fa-check"></i>
+                                                @elseif($wisuda->verified_skpi == 1 && $skpi_data->isEmpty())
+                                                    class="btn btn-sm btn-warning">
+                                                    <i class="fas fa-minus"></i>
+                                                @else
+                                                    class="btn btn-sm btn-danger">
+                                                    <i class="fas fa-times"></i>
+                                                @endif
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--PISN-->
+                                            <button class="btn btn-sm {{ $wisuda->pisn ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->pisn ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Verifikasi Mahasiswa-->
+                                            <button class="btn btn-sm {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Verifikasi Pembimbing TA-->
+                                            <button class="btn btn-sm {{ $wisuda->approved > 0 && $wisuda->approved < 96 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->approved > 0 && $wisuda->approved < 96 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Verifikasi Koor. Prodi-->
+                                            <button class="btn btn-sm {{ $wisuda->approved > 0 && $wisuda->approved < 4 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->approved > 0 && $wisuda->approved < 4 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Verifikasi Fakultas-->
+                                            <button class="btn btn-sm {{ $wisuda->approved > 1 && $wisuda->approved < 4 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->approved > 1 && $wisuda->approved < 4 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Verifikasi Dir. Akad-->
+                                            <button class="btn btn-sm {{ $wisuda->approved == 3 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->approved == 3 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Persyaratan Lengkap-->
+                                            <button class="btn btn-sm {{ 
+                                                    $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
+                                                    $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
+                                                    $wisuda->approved == 3 
+                                                    ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ 
+                                                        $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
+                                                        $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
+                                                    $wisuda->approved == 3 
+                                                        ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-outline-success bs-3 border-success">    
+                <div class="box-header with-border d-flex justify-content-between mx-20">
+                    <div class="d-flex justify-content-start">
+                        <h4 class="text-primary mb-0"><i class="fa fa-graduation-cap"></i> Detail Pendaftaran Wisuda</h4>
+                    </div>                  
+                </div>
+                <div class="box box-body mb-0">
+                    <div class="row mx-20">
+                        <div class="col-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="row text-center mb-20">
+                                        <div class="widget-user-image">
+                                            @php
+                                                $imagePath = public_path('storage/' . $wisuda->pas_foto);
+                                            @endphp
+
+                                            <img class="rounded bg-success"
+                                                src="{{ (!empty($wisuda->pas_foto) && file_exists($imagePath))
+                                                        ? asset('storage/' . $wisuda->pas_foto)
+                                                        : asset('images/images/avatar/avatar-15.png') }}"
+                                                alt="User Avatar"
+                                                style="width: 250px;">
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Judul {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->aktivitas_mahasiswa->judul}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Wisuda Ke-</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->wisuda_ke}}</td>
+                                            </tr>
+                                            @if($wisuda->prodi->bku_pada_ijazah == 1)                        
+                                                <tr>
+                                                    <td class="text-left" style="width: 30%;">Bidang Kajian Utama (BKU) / Kosentrasi</td>
+                                                    <td class="text-center" style="width: 5%;">:</td>
+                                                    <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->bku_prodi ? $wisuda->bku_prodi->bku_prodi_id : '-'}}</td>
+                                                </tr>
+                                            @endif
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->abstrak_ta}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">File Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
+                                                <td class="text-left" style="width: 65%; text-align: justify;">
+                                                    @if($wisuda->abstrak_file)
+                                                        <a class="btn btn-sm btn-success my-5" href="{{ asset($wisuda->abstrak_file) }}" type="button" target="_blank">Lihat Abstrak Indonesia</a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger mb-5">Abstrak Indonesia Tidak Diupload</span>
+                                                    @endif
+                                                    <!-- @if($wisuda->abstrak_file_eng)
+                                                        <a class="btn btn-sm btn-success  my-5" href="{{ asset($wisuda->abstrak_file_eng) }}" type="button" target="_blank">Lihat Abstrak Inggris</a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger mb-5">Abstrak Inggris Tidak Diupload</span>
+                                                    @endif -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">File Ijazah Terakhir</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
+                                                <td class="text-left" style="width: 65%; text-align: justify;">
+                                                    @if($wisuda->abstrak_file)
+                                                        <a class="btn btn-sm btn-success" href="{{ asset($wisuda->ijazah_terakhir_file) }}" type="button" target="_blank">Lihat Ijazah Terakhir</a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger">Ijazah Terakhir Tidak Diupload</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Status Pendaftaran Wisuda</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left align-middle" style="width:10%">
+                                                    {{-- KONDISI PERSYARATAN--}}
+                                                    @if($wisuda->finalisasi_data == 1)
+                                                        
+                                                        {{-- KONDISI BEBAS PUSTAKA--}}
+                                                        @if($bebas_pustaka && $bebas_pustaka->file_bebas_pustaka && $bebas_pustaka->link_repo)
+                                                            
+                                                            {{-- KONDISI APPROVED--}}
+                                                            @if($wisuda->approved == 0)
+                                                                <span class="badge badge-lg badge-warning mb-5 rounded">Belum Disetujui Koor. Prodi</span>
+                                                            @elseif($wisuda->approved == 11)
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Dosen Pembimbing TA</span>
+                                                            @elseif($wisuda->approved == 1)
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Koor. Prodi</span>
+                                                            @elseif($wisuda->approved == 2)
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Fakultas</span>
+                                                            @elseif($wisuda->approved == 3)
+                                                                <span class="badge badge-lg badge-success mb-5 rounded">Disetujui Dir. Akademik</span>
+                                                            @elseif($wisuda->approved == 9)
+                                                                <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Dosen Pembimbing TA</span>
+                                                            @elseif($wisuda->approved == 97)
+                                                                <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Koor. Prodi</span>
+                                                            @elseif($wisuda->approved == 98)
+                                                                <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Fakultas</span>
+                                                            @elseif($wisuda->approved == 99)
+                                                                <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Dir. Akademik</span>
+                                                            @endif
+                                                        @elseif($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
+                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                Ditangguhkan
+                                                            </span>
+                                                            <p class="text-danger">
+                                                                <strong>
+                                                                    Anda belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
+                                                                </strong>
+                                                            </p>
+                                                        @elseif($bebas_pustaka && !$bebas_pustaka->link_repo)
+                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                Ditangguhkan
+                                                            </span>
+                                                            <p class="text-danger">
+                                                                <strong>
+                                                                    Anda belum Upload Repository!
+                                                                </strong>
+                                                            </p>
+                                                        @else
+                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                Persyaratan Wisuda Belum Lengkap
+                                                            </span>
+                                                        @endif
+                                                    @else
+                                                        <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-induk')}}" class="btn btn-sm btn-danger waves-effect waves-light"
+                                                            title="Anda harus melakukan finalisasi data terlebih dahulu">
+                                                            Belum Finalisasi Data
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Berkas Registrasi Wisuda</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left align-middle">
+                                                    @if($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
+                                                        <span class="badge badge-lg bg-danger mb-5">
+                                                            Berkas Registrasi Ditangguhkan
+                                                        </span>
+                                                    @elseif(!$bebas_pustaka && $bebas_pustaka->file_bebas_pustaka)
+                                                        <span class="badge badge-lg bg-danger mb-5">
+                                                            Berkas Registrasi Ditangguhkan
+                                                        </span>
+                                                    @elseif($wisuda->finalisasi_data == 0)
+                                                        <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-induk')}}" class="btn btn-sm btn-danger waves-effect waves-light"
+                                                            title="Anda harus melakukan finalisasi data terlebih dahulu untuk dapat mengunduh berkas registrasi">
+                                                            Belum Finalisasi Data
+                                                        </a>
+                                                    @elseif($wisuda->approved >= 2 && $wisuda->approved < 90)
+                                                        <a class="btn btn-sm btn-primary my-5"
+                                                            href="{{ route('mahasiswa.wisuda.formulir', ['id' => $wisuda->id]) }}"
+                                                            target="_blank">
+                                                            <i class="fa fa-file me-2"></i> Unduh Berkas Registrasi
+                                                        </a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger">
+                                                            Berkas Registrasi Belum Tersedia
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                            </tr>                                            
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @else
             {{-- DATA AKADEMIK --}}
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between mx-20">
@@ -244,7 +597,7 @@ Pendaftaran Wisuda Mahasiswa
                                 </a>
                                 @if(!$wisuda)
                                 <a class="btn bg-primary" 
-                                    href="{{ route('mahasiswa.wisuda.tambah') }}"
+                                    href="{{ route('mahasiswa.wisuda.pendaftaran.data-induk') }}"
                                     id="daftar-wisuda-btn" title="Pastikan semua syarat sudah terpenuhi sebelum mendaftar!">
                                     <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i> 
                                     DAFTAR YUDISIUM
@@ -254,179 +607,8 @@ Pendaftaran Wisuda Mahasiswa
                         </div>
                     </div>
                 </div>
-            </div>                  
-                
-            {{-- DATA WISUDA --}}
-            @if($wisuda)
-            <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border d-flex justify-content-between mx-20">
-                    <div class="d-flex justify-content-start">
-                        <h4 class="text-info mb-0"><i class="fa fa-university"></i> Data Yudisium Mahasiswa
-                        </h4>
-                        <div class="box-header with-border d-flex justify-content-between mx-20">
-                            <div class="d-flex justify-content-start">
-                                <h4 class="text-info mb-0"><i class="fa fa-graduation-cap"></i> Detail Pendaftaran Wisuda</h4>
-                                                {{-- <hr class="my-15"> --}}
-                            </div>                  
-                        </div>
-                        <div class="box box-body mb-0">
-                            <div class="row mx-20">
-                                <div class="col-12">
-                                    <div class="box">
-                                        <div class="box-body">
-                                            <div class="row text-center mb-20">
-                                                <div class="widget-user-image">
-                                                    @php
-                                                        $imagePath = public_path('storage/' . $wisuda->pas_foto);
-                                                    @endphp
-
-                                                    <img class="rounded bg-success"
-                                                        src="{{ (!empty($wisuda->pas_foto) && file_exists($imagePath))
-                                                                ? asset('storage/' . $wisuda->pas_foto)
-                                                                : asset('images/images/avatar/avatar-15.png') }}"
-                                                        alt="User Avatar"
-                                                        style="width: 250px;">
-                                                </div>
-                                            </div>
-                                            <div class="table-responsive">
-                                                <table class="table table-striped">
-                                                    <tr>
-                                                        <td class="text-left" style="width: 30%;">Judul {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
-                                                        <td class="text-center" style="width: 5%;">:</td>
-                                                        <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->aktivitas_mahasiswa->judul}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-left" style="width: 30%;">Wisuda Ke-</td>
-                                                        <td class="text-center" style="width: 5%;">:</td>
-                                                        <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->wisuda_ke}}</td>
-                                                    </tr>
-                                                    @if($wisuda->prodi->bku_pada_ijazah == 1)                        
-                                                        <tr>
-                                                            <td class="text-left" style="width: 30%;">Bidang Kajian Utama (BKU) / Kosentrasi</td>
-                                                            <td class="text-center" style="width: 5%;">:</td>
-                                                            <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->bku_prodi ? $wisuda->bku_prodi->bku_prodi_id : '-'}}</td>
-                                                        </tr>
-                                                    @endif
-                                                    <tr>
-                                                        <td class="text-left" style="width: 30%;">Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
-                                                        <td class="text-center" style="width: 5%;">:</td>
-                                                        <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->abstrak_ta}}</td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-left" style="width: 30%;">File Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
-                                                        <td class="text-center" style="width: 5%;">:</td>
-                                                        {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
-                                                        <td class="text-left" style="width: 65%; text-align: justify;">
-                                                            @if($wisuda->abstrak_file)
-                                                                <a class="btn btn-sm btn-success my-5" href="{{ asset($wisuda->abstrak_file) }}" type="button" target="_blank">Lihat Abstrak Indonesia</a>
-                                                            @else
-                                                                <span class="badge badge-lg bg-danger mb-5">Abstrak Indonesia Tidak Diupload</span>
-                                                            @endif
-                                                            <!-- @if($wisuda->abstrak_file_eng)
-                                                                <a class="btn btn-sm btn-success  my-5" href="{{ asset($wisuda->abstrak_file_eng) }}" type="button" target="_blank">Lihat Abstrak Inggris</a>
-                                                            @else
-                                                                <span class="badge badge-lg bg-danger mb-5">Abstrak Inggris Tidak Diupload</span>
-                                                            @endif -->
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-left" style="width: 30%;">File Ijazah Terakhir</td>
-                                                        <td class="text-center" style="width: 5%;">:</td>
-                                                        {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
-                                                        <td class="text-left" style="width: 65%; text-align: justify;">
-                                                            @if($wisuda->abstrak_file)
-                                                                <a class="btn btn-sm btn-success" href="{{ asset($wisuda->ijazah_terakhir_file) }}" type="button" target="_blank">Lihat Ijazah Terakhir</a>
-                                                            @else
-                                                                <span class="badge badge-lg bg-danger">Ijazah Terakhir Tidak Diupload</span>
-                                                            @endif
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <td class="text-left" style="width: 30%;">Status Pendaftaran Wisuda</td>
-                                                        <td class="text-center" style="width: 5%;">:</td>
-                                                        <td class="text-left align-middle" style="width:10%">
-                                                            @if($bebas_pustaka && $bebas_pustaka->file_bebas_pustaka && $bebas_pustaka->link_repo)
-                                                                @if($wisuda->approved == 0)
-                                                                    <span class="badge badge-lg badge-warning mb-5 rounded">Belum Disetujui Koor. Prodi</span>
-                                                                @elseif($wisuda->approved == 1)
-                                                                    <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Koor. Prodi</span>
-                                                                @elseif($wisuda->approved == 2)
-                                                                    <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Fakultas</span>
-                                                                @elseif($wisuda->approved == 3)
-                                                                    <span class="badge badge-lg badge-success mb-5 rounded">Disetujui Dir. Akademik</span>
-                                                                @elseif($wisuda->approved == 97)
-                                                                    <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Koor. Prodi</span>
-                                                                @elseif($wisuda->approved == 98)
-                                                                    <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Fakultas</span>
-                                                                @elseif($wisuda->approved == 99)
-                                                                    <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Dir. Akademik</span>
-                                                                @endif
-                                                            @elseif($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
-                                                                <span class="badge badge-lg bg-danger mb-5 rounded">
-                                                                    Ditangguhkan
-                                                                </span>
-                                                                <p class="text-danger">
-                                                                    <strong>
-                                                                        Anda belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
-                                                                    </strong>
-                                                                </p>
-                                                            @elseif($bebas_pustaka && !$bebas_pustaka->link_repo)
-                                                                <span class="badge badge-lg bg-danger mb-5 rounded">
-                                                                    Ditangguhkan
-                                                                </span>
-                                                                <p class="text-danger">
-                                                                    <strong>
-                                                                        Anda belum Upload Repository!
-                                                                    </strong>
-                                                                </p>
-                                                            @else
-                                                                <span class="badge badge-lg bg-danger mb-5 rounded">
-                                                                    Persyaratan Wisuda Belum Lengkap
-                                                                </span>
-                                                            @endif
-
-                                                            
-                                                        </td>
-                                                    </tr>
-                                                    
-                                                    <tr>
-                                                        <td class="text-left" style="width: 30%;">Berkas Registrasi Wisuda</td>
-                                                        <td class="text-center" style="width: 5%;">:</td>
-                                                        <td class="text-left align-middle">
-                                                            @if($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
-                                                                <span class="badge badge-lg bg-danger mb-5">
-                                                                    Berkas Registrasi Ditangguhkan
-                                                                </span>
-                                                            @elseif($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
-                                                                <span class="badge badge-lg bg-danger mb-5">
-                                                                    Berkas Registrasi Ditangguhkan
-                                                                </span>
-                                                            @elseif($wisuda->approved >= 2 && $wisuda->approved < 90)
-                                                                <a class="btn btn-sm btn-primary my-5"
-                                                                href="{{ route('mahasiswa.wisuda.formulir', ['id' => $wisuda->id]) }}"
-                                                                target="_blank">
-                                                                    <i class="fa fa-file me-2"></i> Unduh Berkas Registrasi
-                                                                </a>
-                                                            @else
-                                                                <span class="badge badge-lg bg-danger">
-                                                                    Berkas Registrasi Belum Tersedia
-                                                                </span>
-                                                            @endif
-                                                        </td>
-                                                    </tr>                                            
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>                  
-                </div>
-                <div class="box box-body mb-0">
-                </div>
-            </div>
-            @endif
+            </div>     
+            @endif             
         </div>
     </div>    
 </section>

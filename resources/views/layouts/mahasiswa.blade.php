@@ -21,6 +21,7 @@
     <!-- Style-->
     <link rel="stylesheet" href="{{asset('assets/css/style.css')}}">
     <link rel="stylesheet" href="{{asset('assets/css/skin_color.css')}}">
+    <link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
 
     <style>
         .centered {
