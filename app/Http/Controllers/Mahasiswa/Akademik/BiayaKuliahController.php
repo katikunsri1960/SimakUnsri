@@ -29,7 +29,7 @@ class BiayaKuliahController extends Controller
                     ->first();
                     
         try {
-            $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+            $id_test = Registrasi::where('rm_nim', $nim)
                         ->pluck('rm_no_test')
                         ->first();
         } catch (\Exception $e) {

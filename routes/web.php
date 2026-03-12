@@ -250,6 +250,23 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'usept'])->name('bak.wisuda.usept.index');
                 });
             });
+
+            Route::prefix('skpi')->group(function () {
+                Route::get('bidang', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'index'])->name('bak.skpi-bidang.index');
+                Route::get('bidang/create', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'create'])->name('bak.skpi-bidang.create');
+                Route::post('bidang/store', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'store'])->name('bak.skpi-bidang.store');
+                Route::get('bidang/edit/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'edit'])->name('bak.skpi-bidang.edit');
+                Route::put('bidang/update/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'update'])->name('bak.skpi-bidang.update');
+                Route::delete('bidang/delete/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'destroy'])->name('bak.skpi-bidang.destroy');
+
+                Route::get('jenis', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'index'])->name('bak.skpi-jenis.index');
+                Route::get('jenis/create', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'create'])->name('bak.skpi-jenis.create');
+                Route::post('jenis/store', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'store'])->name('bak.skpi-jenis.store');
+                Route::get('jenis/edit/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'edit'])->name('bak.skpi-jenis.edit');
+                Route::put('jenis/update/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'update'])->name('bak.skpi-jenis.update');
+                Route::delete('jenis/delete/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'destroy'])->name('bak.skpi-jenis.destroy');
+
+            });
         });
     });
 
@@ -588,7 +605,26 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('pendaftaran-yudisium')->group(function () {
                 Route::get('/', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'index'])->name('mahasiswa.wisuda.index');
                 Route::get('/tambah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'tambah'])->name('mahasiswa.wisuda.tambah');
+                Route::get('/data-induk', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_induk'])->name('mahasiswa.wisuda.pendaftaran.data-induk');
+                Route::get('/data-akademik', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_akademik'])->name('mahasiswa.wisuda.pendaftaran.data-akademik');
+                Route::get('/data-tugas-akhir', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_tugas_akhir'])->name('mahasiswa.wisuda.pendaftaran.data-tugas-akhir');
+                Route::get('/data-wisuda', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_wisuda'])->name('mahasiswa.wisuda.pendaftaran.data-wisuda');
+                Route::get('/data-skpi', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_skpi'])->name('mahasiswa.wisuda.pendaftaran.data-skpi');
                 Route::post('/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'store'])->name('mahasiswa.wisuda.store');
+                Route::post('/store-data-induk', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_induk_store'])->name('mahasiswa.wisuda.pendaftaran.data-induk-store');
+                Route::post('/store-data-akademik', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_akademik_store'])->name('mahasiswa.wisuda.pendaftaran.data-akademik-store');
+                Route::post('/store-data-tugas-akhir', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_tugas_akhir_store'])->name('mahasiswa.wisuda.pendaftaran.data-tugas-akhir-store');
+                Route::post('/store-data-wisuda', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_wisuda_store'])->name('mahasiswa.wisuda.pendaftaran.data-wisuda-store');
+
+                Route::post('/store-data-skpi', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'skpi_store'])->name('mahasiswa.wisuda.pendaftaran.data-skpi-store');
+                Route::post('/data-skpi/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_skpi_store'])->name('mahasiswa.wisuda.pendaftaran.data-skpi.store');
+                Route::put('/data-skpi/update/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_skpi_update'])->name('mahasiswa.wisuda.pendaftaran.data-skpi.update');
+                Route::delete('/data-skpi/delete/{id}',[App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_skpi_delete'])->name('mahasiswa.wisuda.pendaftaran.data-skpi-delete');
+
+
+                Route::get('/resume-yudisium', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'resume_yudisium'])->name('mahasiswa.wisuda.pendaftaran.resume.index');
+                Route::post('/resume-yudisium/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'finalisasi_data'])->name('mahasiswa.wisuda.pendaftaran.finalisasi');
+                
                 Route::get('/transkrip', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'transkrip_mahasiswa'])->name('mahasiswa.wisuda.transkrip');
                 Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'peserta_formulir'])->name('mahasiswa.wisuda.formulir');
                 Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'delete'])->name('mahasiswa.wisuda.delete');
@@ -1028,6 +1064,15 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::post('/update/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'update_detail_mahasiswa'])->name('prodi.data-lulusan.detail.update');
                 Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
                 Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
+            });
+
+            //Route for Lulusan
+            Route::prefix('data-skpi')->group(function(){
+                Route::get('/', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'index'])->name('prodi.data-skpi.index');
+                Route::get('/detail/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'detail_skpi_mahasiswa'])->name('prodi.data-skpi.detail');
+                Route::put('/update/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'update_detail_skpi'])->name('prodi.data-skpi.detail.update');
+                Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
+                Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
             });
 
             //Route for Report

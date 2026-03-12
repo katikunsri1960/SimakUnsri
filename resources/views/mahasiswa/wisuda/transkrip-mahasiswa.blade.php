@@ -88,7 +88,6 @@ Transkrip Mahasiswa
 
                                                     <td colspan="3"></td>
                                                     <td class="text-center align-middle"><strong>{{ $bobot }}</strong></td>
-                                                    <td class="text-center align-middle"></td>
                                                 </tr>
                                                 <tr>
                                                     <td class="text-start align-middle" colspan="3"><strong>INDEKS PRESTASI KUMULATIF</strong></td>

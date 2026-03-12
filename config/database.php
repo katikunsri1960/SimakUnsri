@@ -60,7 +60,7 @@ return [
         'reg_con' => [
             'driver' => 'mysql',
             'host' => env('DB_HOST_REG'),
-            'port' => '3306',
+            'port' => env('DB_PORT_REG', 3306),
             'database' => env('DB_DATABASE_REG'),
             'username' => env('DB_USERNAME_REG'),
             'password' => env('DB_PASSWORD_REG'),

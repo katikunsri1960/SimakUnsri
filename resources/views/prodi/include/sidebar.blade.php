@@ -145,7 +145,26 @@
                     <li class="{{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*')
                                 ? 'active' : ''}}">
                         <a href="{{route('prodi.data-lulusan.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i> 
-                        Wisuda</a>
+                        Yudisum</a>
+                    </li>
+                    <li class="treeview {{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*') 
+                                ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-file-text-o"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Yudisum</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('prodi.data-lulusan.index') ? 'active' : ''}}"><a href="{{route('prodi.data-lulusan.index')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Ajuan Yudisum</a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-skpi.*') ? 'active' : ''}}"><a href="{{route('prodi.data-skpi.index')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Ajuan SKPI</a>
+                            </li>
+                        </ul>
                     </li>
                     <li class="header">Report & Monitoring</li>
                     <li class="treeview {{request()->routeIs('prodi.report.*') ? 'active menu-open' : ''}}">

@@ -22,52 +22,8 @@ class Wisuda extends Model
     protected $table = 'data_wisuda';
     protected $appends = ['id_tanggal_sk_yudisium', 'approved_text'];
 
-    // App\Models\Wisuda.php
-    protected $fillable = [
-        'id_perguruan_tinggi',
-        'id_registrasi_mahasiswa',
-        'id_prodi',
-        'id_file_fakultas',
-        'id_gelar_lulusan',
-        'tgl_masuk',
-        'tgl_keluar',
-        'lama_studi',
-        'no_peserta_ujian',
-        'sks_diakui',
-        'ipk',
-        'no_ijazah',
-        'wisuda_ke',
-        'no_sk_yudisium',
-        'tgl_sk_yudisium',
-        'sk_yudisium_file',
-        'id_aktivitas',
-        'keterangan',
-        'angkatan',
-        'nim',
-        'nama_mahasiswa',
-        'alamat_orang_tua',
-        'kosentrasi',
-        'pas_foto',
-        'lokasi_kuliah',
-        'tgl_sk_pembimbing',
-        'no_sk_pembimbing',
-        'judul_eng',
-        'abstrak_ta',
-        'abstrak_file',
-        'abstrak_file_eng',
-        'ijazah_terakhir_file',
-        'id_bku_prodi',
-        'id_predikat_kelulusan',
-        'approved',
-        'alasan_pembatalan',
-        'no_urut',
-        // KOLOM SEMENTARA
-        'bebas_pustaka',
-        'useptData',
-
-
-    ];
-
+    protected $guarded = ['id'];
+    
     public function file_fakultas()
     {
         return $this->belongsTo(FileFakultas::class, 'id_file_fakultas', 'id');

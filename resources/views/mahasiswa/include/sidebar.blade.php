@@ -64,12 +64,67 @@
                         </a>
                     </li>
                     
-                    <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
+                    <!-- <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.wisuda.index')}}">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Yudisium</span>
                         </a>
+                    </li> -->
+
+                    <li class="treeview {{ request()->routeIs('mahasiswa.wisuda.*') ? 'active menu-open' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-graduation-cap"></i>
+                            <span>Yudisium</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('mahasiswa.wisuda.index') || request()->routeIs('mahasiswa.wisuda.transkrip') ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.wisuda.index')}}">
+                                    <i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>
+                                    Pendaftaran</a>
+                            </li>
+                            <li class="header">PENDAFTARAN</li>
+                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-induk') ? 'active' : ''}}">
+                                <a href="#"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                    Data Induk Mhs
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-akademik') ? 'active' : ''}}">
+                                <a href="#"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                    Data Akademik Mhs
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-tugas-akhir') ? 'active' : ''}}">
+                                <a href="#"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                    Data Tugas Akhir
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-wisuda') ? 'active' : ''}}">
+                                <a href="#"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                    Data Wisuda
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-skpi') ? 'active' : ''}}">
+                                <a href="#"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                    Data SKPI
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.resume.index') ? 'active' : ''}}">
+                                <a href="#"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                    Resume Pendaftaran
+                                </a>
+                            </li>
+                        </ul>
                     </li>
                     
                     
