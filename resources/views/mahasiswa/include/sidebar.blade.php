@@ -87,41 +87,41 @@
                                         class="path1"></span><span class="path2"></span></i>
                                     Pendaftaran</a>
                             </li>
-                            <li class="header">PENDAFTARAN</li>
+                            <li class="header">TAHAP PENDAFTARAN :</li>
                             <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-induk') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    Data Induk Mhs
+                                    1. Data Induk Mhs
                                 </a>
                             </li>
                             <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-akademik') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    Data Akademik Mhs
+                                    2. Data Akademik Mhs
                                 </a>
                             </li>
                             <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-tugas-akhir') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    Data Tugas Akhir
+                                    3. Data Tugas Akhir
                                 </a>
                             </li>
                             <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-wisuda') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    Data Wisuda
+                                    4. Data Wisuda
                                 </a>
                             </li>
                             <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-skpi') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    Data SKPI
+                                    5. Data SKPI
                                 </a>
                             </li>
                             <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.resume.index') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    Resume Pendaftaran
+                                    6. Finalisasi Data
                                 </a>
                             </li>
                         </ul>
