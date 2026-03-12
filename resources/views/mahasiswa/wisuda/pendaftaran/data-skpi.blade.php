@@ -35,6 +35,21 @@ Pendaftaran Yudisium Mahasiswa
 <section class="content">
     <div class="row">
         <div class="col-12">
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-body">
+                    <div>
+                        <h4 class="text-danger m-2">Catatan :</h4>
+                    </div>
+                    <ul>
+                        <li>Pengisian Data SKPI bersifat <b>tidak wajib</b>.</li>
+                        <li>Mahasiswa hanya perlu menginput Data SKPI apabila membutuhkan <b>Surat Keterangan Pendamping Ijazah (SKPI)</b>.</li>
+                        <li>Apabila mahasiswa <b>tidak membutuhkan SKPI</b>, silakan langsung <b>mencentang pernyataan</b> yang tersedia dan menekan tombol <b>Simpan</b> untuk melanjutkan proses.</li>
+                        <li>Pastikan seluruh data kegiatan yang diinput <b>benar, valid, dan dilengkapi dengan dokumen pendukung</b>.</li>
+                        <li>Data SKPI yang telah disubmit akan melalui proses <b>verifikasi oleh Program Studi</b>.</li>
+                        <li>Data yang telah <b>difinalisasi</b> tidak dapat diubah kembali.</li>
+                    </ul>
+                </div>
+            </div>
             @foreach($skpi_bidang as $bidang)
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between align-items-center mx-20">
