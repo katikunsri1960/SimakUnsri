@@ -35,6 +35,10 @@ Pendaftaran Yudisium Mahasiswa
                 <form class="form" action="{{route('mahasiswa.wisuda.pendaftaran.data-tugas-akhir-store')}}" id="data-ta" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="box-body">
+                        @php
+                            $disabled = ($wisuda && $wisuda->finalisasi_data == 1) ? 'disabled' : '';
+                        @endphp
+
                         {{-- DATA AKTIVITAS TUGAS AKHIR --}}
                         <h4 class="text-primary mb-0" style="padding-top: 40px;"><i class="fa fa-book"></i> Data {{ $aktivitas->nama_jenis_aktivitas }} Mahasiswa</h4>
                         <hr class="my-15">
@@ -48,24 +52,25 @@ Pendaftaran Yudisium Mahasiswa
                                         </textarea>
                                     </div>
                                     
-                                    @if($wisuda && $wisuda->verified_ta == 1)
                                     <div class="col-lg-12 mb-3">
-                                        <label for="judul_eng" class="form-label">Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris</label><span class="text-danger"> *</span>
-                                        <textarea type="text" class="form-control" name="judul_eng" id="judul_eng" aria-describedby="helpId"
-                                            placeholder="Masukkan Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris" disabled>{{$wisuda->judul_eng}}</textarea>
+                                        <label for="judul_eng" class="form-label">
+                                            Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris
+                                        </label>
+                                        <span class="text-danger"> *</span>
+
+                                        <textarea 
+                                            class="form-control"
+                                            name="judul_eng"
+                                            id="judul_eng"
+                                            placeholder="Masukkan Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris"
+                                            required {{$disabled}}
+                                        >{{ old('judul_eng', $wisuda->judul_eng ?? '') }}</textarea>
                                     </div>
-                                    @else
-                                    <div class="col-lg-12 mb-3">
-                                        <label for="judul_eng" class="form-label">Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris</label><span class="text-danger"> *</span>
-                                        <textarea type="text" class="form-control" name="judul_eng" id="judul_eng" aria-describedby="helpId"
-                                            placeholder="Masukkan Judul {{$aktivitas->nama_jenis_aktivitas}} dalam Bahasa Inggris" required></textarea>
-                                    </div>
-                                    @endif
 
                                     @if($aktivitas->prodi->bku_pada_ijazah == 1)  
                                     <div class="col-lg-12 mb-3">
                                         <label for="bku_prodi" class="form-label">BKU Program Studi</label><span class="text-danger"> *</span>
-                                        <select id="bku_prodi" name="bku_prodi" class="form-select" required>
+                                        <select id="bku_prodi" name="bku_prodi" class="form-select" required {{$disabled}}>
                                             <option value="">-- BKU Program Studi --</option>
                                             @foreach ($bku_prodi as $bku)
                                                 <option value="{{ $bku->id }}">
@@ -89,14 +94,34 @@ Pendaftaran Yudisium Mahasiswa
                                 </div>
                                 <h4 class="text-primary mb-10 mt-10">Abstrak {{$aktivitas->nama_jenis_aktivitas}}</h4>
                                 <div class="data-wisuda-field row">
-                                    @if($wisuda && $wisuda->verified_ta == 1)
+
+                                    {{-- ABSTRAK TEXT --}}
                                     <div class="col-lg-12 mb-3">
-                                        <label class="form-label">Teks Abstrak</label>
-                                        <textarea class="form-control" rows="6" disabled>{{ trim($wisuda->abstrak_ta) }}</textarea>
+                                        <label for="abstrak_ta" class="form-label">
+                                            Teks Abstrak {{$aktivitas->nama_jenis_aktivitas}}
+                                        </label>
+                                        <span class="text-danger"> *</span>
+
+                                        <textarea 
+                                            class="form-control"
+                                            name="abstrak_ta"
+                                            id="abstrak_ta"
+                                            placeholder="Masukkan Abstrak {{$aktivitas->nama_jenis_aktivitas}}"
+                                            {{$disabled}}
+                                        >{{ old('abstrak_ta', $wisuda->abstrak_ta ?? '') }}</textarea>
+
+                                        <small class="form-text text-danger">
+                                            Maksimal 500 kata.
+                                        </small>
                                     </div>
 
+
+                                    {{-- PREVIEW FILE JIKA ADA --}}
+                                    @if($wisuda && $wisuda->abstrak_file)
                                     <div class="col-lg-12 mb-3">
-                                        <label class="form-label">Preview File Abstrak {{ $aktivitas->nama_jenis_aktivitas }}</label>
+                                        <label class="form-label">
+                                            Preview File Abstrak {{$aktivitas->nama_jenis_aktivitas}}
+                                        </label>
 
                                         <div class="border rounded p-2">
                                             <iframe 
@@ -113,24 +138,33 @@ Pendaftaran Yudisium Mahasiswa
                                             </a>
                                         </div>
                                     </div>
-                                    @else
-                                    <div class=" col-lg-12 mb-3">
-                                        <label for="abstrak_ta" class="form-label">Abstrak {{$aktivitas->nama_jenis_aktivitas}}</label><span class="text-danger"> *</span>
-                                        <textarea type="text" class="form-control" name="abstrak_ta" id="abstrak_ta" aria-describedby="helpId"
-                                        placeholder="Masukkan Abstrak {{$aktivitas->nama_jenis_aktivitas}}" required></textarea>
-                                        <small id="helpId" class="form-text text-danger">
-                                            Maksimal 500 kata.
-                                        </small>
-                                    </div>
-                                    <div class="col-lg-12 mb-3">
-                                        <label for="abstrak_file" class="form-label">Bahasa Indonesia(.pdf)</label><span class="text-danger"> *</span>
-                                        <input type="file" class="form-control" name="abstrak_file" id="abstrak_file"
-                                            aria-describedby="fileHelpId" accept=".pdf" required />
-                                        <small id="fileHelpId" class="form-text text-danger">
-                                            Maksimal ukuran file <strong>1 MB</strong>.
-                                        </small>
-                                    </div>
                                     @endif
+
+
+                                    {{-- INPUT FILE --}}
+                                    <div class="col-lg-12 mb-3">
+                                        <label for="abstrak_file" class="form-label">
+                                            File Abstrak Bahasa Indonesia (.pdf)
+                                        </label>
+                                        <span class="text-danger"> *</span>
+
+                                        <input 
+                                            type="file"
+                                            class="form-control"
+                                            name="abstrak_file"
+                                            id="abstrak_file"
+                                            accept=".pdf"
+                                            {{$disabled}}
+                                        />
+
+                                        <small class="form-text text-danger">
+                                            Maksimal ukuran file <strong>500 KB</strong>.
+                                            @if($wisuda && $wisuda->abstrak_file)
+                                                Kosongkan jika tidak ingin mengganti file.
+                                            @endif
+                                        </small>
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -170,7 +204,7 @@ Pendaftaran Yudisium Mahasiswa
                         </div>
                     </div>
                     <div class="box-footer">
-                        @if($wisuda && $wisuda->verified_ta == 1)
+                        @if($wisuda && $wisuda->finalisasi_data == 1)
                             <div class="checkbox p-3 border border-success rounded bg-light-success">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data" checked disabled>
                                 <label for="pernyataan_data" class="text-success fw-bold">
@@ -186,12 +220,12 @@ Pendaftaran Yudisium Mahasiswa
                                 </a>
                             </div>
                         @else
-                            <div class="checkbox">
+                            {{-- <div class="checkbox">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data">
                                 <label for="pernyataan_data">
-                                    Dengan ini saya menyatakan bahwa Data {{$aktivitas->nama_jenis_aktivitas}} saya telah sesuai, dan saya bersedia menggunakan data tersebut untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah dan Transkrip.
+                                    Dengan ini saya menyatakan bahwa <b>Data {{$aktivitas->nama_jenis_aktivitas}}</b> saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah dan Transkrip.
                                 </label>
-                            </div>
+                            </div>--}}
                             <div class="form-group mt-20">
                                 <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-akademik')}}" class="btn btn-danger waves-effect waves-light">
                                     Kembali
@@ -213,30 +247,34 @@ Pendaftaran Yudisium Mahasiswa
 <script>
 $(document).ready(function () {
 
+    $('#judul_eng').on('blur', function(){
+        $(this).val($(this).val().trim());
+    });
+
     // VALIDASI SUBMIT
     $('#data-ta').on('submit', function (e) {
         e.preventDefault();
 
-        let pernyataan = $('#pernyataan_data').is(':checked');
+        // let pernyataan = $('#pernyataan_data').is(':checked');
 
         // VALIDASI CHECKBOX PERNYATAAN
-        if (!pernyataan) {
-            swal({
-                title: 'Pernyataan Belum Dicentang',
-                text: 'Silakan centang pernyataan bahwa data akademik sudah benar sebelum menyimpan.',
-                type: 'warning',
-                confirmButtonText: 'OK'
-            });
+        // if (!pernyataan) {
+        //     swal({
+        //         title: 'Pernyataan Belum Dicentang',
+        //         text: 'Silakan centang pernyataan bahwa data akademik sudah benar sebelum menyimpan.',
+        //         type: 'warning',
+        //         confirmButtonText: 'OK'
+        //     });
 
-            $('#pernyataan_data').focus();
+        //     $('#pernyataan_data').focus();
 
-            return false;
-        }
+        //     return false;
+        // }
 
         // KONFIRMASI SIMPAN
         swal({
             title: 'Persertujuan',
-            text: 'Dengan ini saya menyatakan bahwa Data {{$aktivitas->nama_jenis_aktivitas}} saya telah sesuai dengan ijazah terakhir yang saya miliki, dan saya bersedia menggunakan data tersebut untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip',
+            text: 'Dengan ini saya menyatakan bahwa Data {{$aktivitas->nama_jenis_aktivitas}} saya telah sesuai, dan saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

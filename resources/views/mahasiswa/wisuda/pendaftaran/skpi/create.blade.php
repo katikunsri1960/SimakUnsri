@@ -37,6 +37,17 @@
                     </div>
 
                     <div class="mb-3">
+                        <label class="form-label">Tahun Kegiatan</label>
+
+                        <select name="tahun_kegiatan" class="form-control" required>
+                            <option value="">Pilih Tahun</option>
+                            @for($i = date('Y'); $i >= 2000; $i--)
+                                <option value="{{ $i }}">{{ $i }}</option>
+                            @endfor
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
 
                         <label class="form-label">Jenis Kegiatan</label>
 

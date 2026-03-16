@@ -142,11 +142,11 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="{{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*')
+                    {{--<li class="{{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*')
                                 ? 'active' : ''}}">
                         <a href="{{route('prodi.data-lulusan.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i> 
                         Yudisum</a>
-                    </li>
+                    </li>--}}
                     <li class="treeview {{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*') 
                                 ? 'active menu-open' : ''}}">
                         <a href="#">

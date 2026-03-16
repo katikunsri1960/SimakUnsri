@@ -34,6 +34,7 @@ Ajuan Yudisium Mahasiswa
                                     <th class="text-center align-middle">NAMA MAHASISWA</th>
                                     <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">ANGKATAN</th>
+                                    <th class="text-center align-middle">PERIODE WISUDA</th>
                                     <th class="text-center align-middle">JUDUL SKRIPSI</th>
                                     <th class="text-center align-middle">TANGGAL SIDANG</th>
                                     <th class="text-center align-middle">SKS DIAKUI</th>
@@ -154,6 +155,7 @@ Ajuan Yudisium Mahasiswa
                                     </td>
 
                                         <td class="text-center align-middle">{{ $d->angkatan }}</td>
+                                        <td class="text-center align-middle">{{ $d->periode_wisuda[0]->periode }}</td>
                                         <td class="text-start align-middle">{{ $d->aktivitas_mahasiswa->judul }}</td>
                                         <td class="text-center align-middle">{{ $d->aktivitas_mahasiswa->tanggal_selesai }}</td>
                                         <td class="text-center align-middle">{{ $d->aktivitas_kuliah_sum_sks_semester }}</td>

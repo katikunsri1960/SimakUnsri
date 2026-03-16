@@ -33,12 +33,12 @@ Pendaftaran Wisuda Mahasiswa
                                         <th style="width:80px">Abstrak</th>
                                         <th style="width:80px">Foto</th>
                                         <th style="width:80px">SKPI</th>
-                                        <th style="width:80px">PISN</th>
                                         <th style="width:80px">Ver Mahasiswa</th>
-                                        <th style="width:80px">Ver Pembimbing TA</th>
+                                        <!-- <th style="width:80px">Ver Pembimbing TA</th> -->
                                         <th style="width:80px">Ver Koor. Prodi</th>
                                         <th style="width:80px">Ver Fakultas</th>
                                         <th style="width:80px">Ver Dir. Akad</th>
+                                        <th style="width:80px">PISN</th>
                                         <th style="width:80px">Persyaratan Lengkap</th>
                                     </tr>
                                 </thead>
@@ -126,23 +126,18 @@ Pendaftaran Wisuda Mahasiswa
                                             </a>
                                         </td>
 
-                                        <td class="p-0"><!--PISN-->
-                                            <button class="btn btn-sm {{ $wisuda->pisn ? 'btn-success' : 'btn-danger' }}">
-                                                <i class="fas {{ $wisuda->pisn ? 'fa-check' : 'fa-times' }}"></i>
-                                            </button>
-                                        </td>
-
                                         <td class="p-0"><!--Verifikasi Mahasiswa-->
-                                            <button class="btn btn-sm {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data == 1 ? 'btn-success' : 'btn-danger' }}">
+                                            <a href="{{ route('mahasiswa.wisuda.pendaftaran.resume.index') }}"
+                                                class="btn btn-sm {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data == 1 ? 'btn-success' : 'btn-danger' }}">
                                                 <i class="fas {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data == 1 ? 'fa-check' : 'fa-times' }}"></i>
-                                            </button>
+                                            </a>
                                         </td>
 
-                                        <td class="p-0"><!--Verifikasi Pembimbing TA-->
+                                        {{--<td class="p-0"><!--Verifikasi Pembimbing TA-->
                                             <button class="btn btn-sm {{ $wisuda->approved > 0 && $wisuda->approved < 96 ? 'btn-success' : 'btn-danger' }}">
                                                 <i class="fas {{ $wisuda->approved > 0 && $wisuda->approved < 96 ? 'fa-check' : 'fa-times' }}"></i>
                                             </button>
-                                        </td>
+                                        </td>--}}
 
                                         <td class="p-0"><!--Verifikasi Koor. Prodi-->
                                             <button class="btn btn-sm {{ $wisuda->approved > 0 && $wisuda->approved < 4 ? 'btn-success' : 'btn-danger' }}">
@@ -162,16 +157,22 @@ Pendaftaran Wisuda Mahasiswa
                                             </button>
                                         </td>
 
+                                        <td class="p-0"><!--PISN-->
+                                            <button class="btn btn-sm {{ $wisuda->pisn ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->pisn ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
                                         <td class="p-0"><!--Persyaratan Lengkap-->
                                             <button class="btn btn-sm {{ 
                                                     $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
                                                     $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
-                                                    $wisuda->approved == 3 
+                                                    $wisuda->pisn && $wisuda->approved == 3 
                                                     ? 'btn-success' : 'btn-danger' }}">
                                                 <i class="fas {{ 
                                                         $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
                                                         $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
-                                                    $wisuda->approved == 3 
+                                                        $wisuda->pisn && $wisuda->approved == 3 
                                                         ? 'fa-check' : 'fa-times' }}"></i>
                                             </button>
                                         </td>
@@ -320,8 +321,7 @@ Pendaftaran Wisuda Mahasiswa
                                                         </a>
                                                     @endif
                                                 </td>
-                                            </tr>
-                                            
+                                            </tr>    
                                             <tr>
                                                 <td class="text-left" style="width: 30%;">Berkas Registrasi Wisuda</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
@@ -335,7 +335,7 @@ Pendaftaran Wisuda Mahasiswa
                                                             Berkas Registrasi Ditangguhkan
                                                         </span>
                                                     @elseif($wisuda->finalisasi_data == 0)
-                                                        <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-induk')}}" class="btn btn-sm btn-danger waves-effect waves-light"
+                                                        <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.resume.index')}}" class="btn btn-sm btn-danger waves-effect waves-light"
                                                             title="Anda harus melakukan finalisasi data terlebih dahulu untuk dapat mengunduh berkas registrasi">
                                                             Belum Finalisasi Data
                                                         </a>
@@ -351,7 +351,7 @@ Pendaftaran Wisuda Mahasiswa
                                                         </span>
                                                     @endif
                                                 </td>
-                                            </tr>                                            
+                                            </tr>                                        
                                         </table>
                                     </div>
                                 </div>
@@ -365,8 +365,8 @@ Pendaftaran Wisuda Mahasiswa
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between mx-20">
                     <div class="d-flex justify-content-start">
-                        <h4 class="text-primary mb-0"><i class="fa fa-university"></i> Data Akademik Mahasiswa
-                                {{-- Aktivitas {{$aktivitas->nama_jenis_aktivitas}} --}}
+                        <h4 class="text-primary mb-0"><i class="fa fa-university"></i> 
+                            DATA AKADEMIK MAHASISWA
                         </h4>
                     </div>                  
                 </div>
@@ -416,8 +416,8 @@ Pendaftaran Wisuda Mahasiswa
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between mx-20">
                     <div class="d-flex justify-content-start">
-                        <h4 class="text-primary mb-0"><i class="fa fa-university"></i> BIODATA MAHASISWA
-                                {{-- Aktivitas {{$aktivitas->nama_jenis_aktivitas}} --}}
+                        <h4 class="text-primary mb-0"><i class="fa fa-university"></i> 
+                            DATA INDUK MAHASISWA
                         </h4>
                     </div>                  
                 </div>
@@ -464,6 +464,9 @@ Pendaftaran Wisuda Mahasiswa
                                     </li>
                                     <li>
                                         Data biodata diambil dari data yang diinputkan pada saat registrasi mahasiswa baru. Jika terdapat kesalahan data, silakan menghubungi Direktorat Akademik untuk melakukan perbaikan data.
+                                    </li>
+                                    <li>
+                                        Silahkan melakukan Pendaftaran Yudisium jika Data Induk anda telah sesuai.
                                     </li>
                                 </ul>
                             </small>

@@ -1,20 +1,20 @@
-@foreach($skpi_data->where('bidang_id',$bidang->id) as $row)
+@foreach($data as $row)
 
-<div class="modal fade" id="modalSkpi{{$bidang->id}}-{{$row->id}}" tabindex="-1">
-    <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+<div class="modal fade" id="modalSkpiApprove{{$bidang->id}}-{{$row->id}}" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable modal-dialog-centered">
         <div class="modal-content">
 
             <div class="modal-header">
                 <h5 class="modal-title">
-                    Edit SKPI - {{$bidang->nama_bidang}}
+                    Approve SKPI
                 </h5>
 
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
-            <form action="{{route('mahasiswa.wisuda.pendaftaran.data-skpi.update',$row->id)}}"
-                method="POST"
-                enctype="multipart/form-data">
+            <form action="{{route('prodi.data-skpi.approve',$row->id)}}"
+                    method="POST"
+                    enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
@@ -30,21 +30,17 @@
                             name="nama_kegiatan"
                             class="form-control"
                             value="{{$row->nama_kegiatan}}"
-                            required>
+                            required disabled>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Tahun Kegiatan</label>
 
-                        <select name="tahun_kegiatan" class="form-control" required>
-                            <option value="">Pilih Tahun</option>
-                            @for($i = date('Y'); $i >= 2000; $i--)
-                                <option value="{{ $i }}" 
-                                    {{ $row->tahun == $i ? 'selected' : '' }}>
-                                    {{ $i }}
-                                </option>
-                            @endfor
-                        </select>
+                        <input type="text"
+                            name="tahun_kegiatan"
+                            class="form-control"
+                            value="{{$row->tahun}}"
+                            required disabled>
                     </div>
 
                     <div class="mb-3">
@@ -67,6 +63,9 @@
                             @endforeach
 
                         </select>
+                        <small class="text-danger">Ubah jika tidak sesuai
+
+                        </small>
 
                     </div>
 
@@ -92,27 +91,18 @@
                             </div>
                         </div>
                         @endif
-                        <input type="file"
-                            name="file_pendukung"
-                            class="form-control"
-                            accept="application/pdf"
-                            onchange="validateFileSize(this)">
-
-                        <small class="text-danger">
-                            Kosongkan jika tidak ingin mengganti file
-                        </small>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button"
                         class="btn btn-secondary"
                         data-bs-dismiss="modal">
-                        Batal
+                        Cancel
                     </button>
 
                     <button type="submit"
                         class="btn btn-primary">
-                        Update
+                        Approve
                     </button>
 
                 </div>

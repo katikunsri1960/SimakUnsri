@@ -81,7 +81,8 @@ class Wisuda extends Model
 
     public function periode_wisuda()
     {
-        return $this->hasMany(PeriodeWisuda::class, 'periode', 'wisuda_ke');
+        return $this->hasMany(PeriodeWisuda::class, 'periode', 'wisuda_ke')
+                    ->where('is_active', 1);
     }
 
     public function bku_prodi()
@@ -108,16 +109,16 @@ class Wisuda extends Model
     public function getApprovedTextAttribute()
     {
         $status = [
-            '0' => 'Belum Diapproved',
-            '1' => 'Disetujui Prodi',
-            '2' => 'Disetujui Fakultas',
-            '3' => 'Disetujui Dir. Akademik',
-            '97' => 'Ditolak Prodi',
-            '98' => 'Ditolak Fakultas',
-            '99' => 'Ditolak Dir. Akademik',
+            0 => 'Belum Diapproved',
+            1 => 'Disetujui Prodi',
+            2 => 'Disetujui Fakultas',
+            3 => 'Disetujui Dir. Akademik',
+            97 => 'Ditolak Prodi',
+            98 => 'Ditolak Fakultas',
+            99 => 'Ditolak Dir. Akademik',
         ];
 
-        return $status[$this->approved];
+        return $status[$this->approved] ?? 'Belum Diproses';
     }
 
     public function getMasaStudiLamaAttribute()

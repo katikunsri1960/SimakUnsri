@@ -305,7 +305,7 @@ class KrsController extends Controller
         try {
             $tagihan = Tagihan::with('pembayaran')
                 ->whereIn('nomor_pembayaran', [
-                    // $id_test, 
+                    $id_test, 
                 $riwayat_pendidikan->nim
                 ])
                 ->where('kode_periode', (substr($semester_select, -1) == 3)
