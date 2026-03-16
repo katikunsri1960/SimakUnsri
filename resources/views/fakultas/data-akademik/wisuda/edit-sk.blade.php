@@ -118,7 +118,7 @@ $(document).on("click", ".btn-edit-sk", function () {
     let tglYudisium = $(this).data("tglyudisium");
     let fileUrl = $(this).data("file");
 
-    let action = `{{ url('fakultas/pendaftaran-wisuda/edit-sk-yudisium') }}/${id}`;
+    let action = `{{ url('fakultas/yudisium/edit-sk-yudisium') }}/${id}`;
     $("#editSkForm").attr("action", action);
 
     $("#edit_no_sk").val(noSk);

@@ -35,6 +35,21 @@ Pendaftaran Yudisium Mahasiswa
 <section class="content">
     <div class="row">
         <div class="col-12">
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-body">
+                    <div>
+                        <h4 class="text-danger m-2">Catatan :</h4>
+                    </div>
+                    <ul>
+                        <li>Pengisian Data SKPI bersifat <b>tidak wajib</b>.</li>
+                        <li>Mahasiswa hanya perlu menginput Data SKPI apabila membutuhkan <b>Surat Keterangan Pendamping Ijazah (SKPI)</b>.</li>
+                        <li>Apabila mahasiswa <b>tidak membutuhkan SKPI</b>, silakan langsung <b>mencentang pernyataan</b> yang tersedia dan menekan tombol <b>Simpan</b> untuk melanjutkan proses.</li>
+                        <li>Pastikan seluruh data kegiatan yang diinput <b>benar, valid, dan dilengkapi dengan dokumen pendukung</b>.</li>
+                        <li>Data SKPI yang telah disubmit akan melalui proses verifikasi oleh <b>Program Studi</b>, .</li>
+                        <li>Data yang telah <b>difinalisasi</b> tidak dapat diubah kembali.</li>
+                    </ul>
+                </div>
+            </div>
             @foreach($skpi_bidang as $bidang)
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between align-items-center mx-20">
@@ -45,7 +60,7 @@ Pendaftaran Yudisium Mahasiswa
                     </div>
 
                     <div>
-                        @if(!$wisuda || $wisuda->verified_skpi == 0)
+                        @if(!$wisuda || $wisuda->finalisasi_data == 0)
                         <button type="button"
                             class="btn btn-sm btn-success"
                             data-bs-toggle="modal"
@@ -62,6 +77,7 @@ Pendaftaran Yudisium Mahasiswa
                                 <tr>
                                     <th class="text-center" width="20">No</th>
                                     <th class="text-center" width="200">Nama Kegiatan</th>
+                                    <th class="text-center" width="200">Tahun Kegiatan</th>
                                     <th class="text-center" width="200">Jenis</th>
                                     <th class="text-center" width="200">Kategori</th>
                                     <th class="text-center" width="100">File Pendukung</th>
@@ -75,6 +91,7 @@ Pendaftaran Yudisium Mahasiswa
                                 <tr>
                                     <td class="text-center">{{ $index+1 }}</td>
                                     <td class="text-start">{{ $row->nama_kegiatan }}</td>
+                                    <td class="text-center">{{ $row->tahun ? $row->tahun:'Tidak diisi'}}</td>
                                     <td class="text-start">{{ $row->nama_jenis_skpi }}</td>
                                     <td class="text-start">{{ $row->kriteria }}</td>
                                     <td class="text-center">
@@ -97,11 +114,11 @@ Pendaftaran Yudisium Mahasiswa
                                                 @elseif($row->approved == 3)
                                                     <span class="badge badge-lg badge-success mb-5">Disetujui Dir. Akademik</span>
                                                 @elseif($row->approved == 97)
-                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
+                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi <br> Alasan pembatalan : {{$row->alasan_pembatalan}}</span>
                                                 @elseif($row->approved == 98)
-                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
+                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas <br> Alasan pembatalan : {{$row->alasan_pembatalan}}</span>
                                                 @elseif($row->approved == 99)
-                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Dir. Akademik <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
+                                                    <span class="badge badge-lg badge-danger mb-5">Ditolak Dir. Akademik <br> Alasan pembatalan : {{$row->alasan_pembatalan}}</span>
                                                 @endif
                                             @else
                                                 <span class="badge badge-lg badge-danger">Belum Finalisasi Data</span>
@@ -110,7 +127,7 @@ Pendaftaran Yudisium Mahasiswa
                                     </td>
                                     <td class="text-center align-middle">
                                         @php
-                                            $disabled = ($wisuda && $wisuda->verified_skpi == 1) ? 'disabled' : '';
+                                            $disabled = ($wisuda && $wisuda->finalisasi_data == 1) ? 'disabled' : '';
                                         @endphp
 
                                         @if($row->approved == 0)
@@ -154,11 +171,11 @@ Pendaftaran Yudisium Mahasiswa
                 <div class="box-footer">
                     <form action="{{route('mahasiswa.wisuda.pendaftaran.data-skpi-store')}}" method="POST" id="data-skpi" >
                         @csrf
-                        @if($wisuda && $wisuda->verified_skpi == 1)
+                        @if($wisuda && $wisuda->finalisasi_data == 1)
                         <div class="checkbox p-3 border border-success rounded bg-light-success">
                             <input type="checkbox" id="pernyataan_data" name="pernyataan_data" checked disabled>
                             <label for="pernyataan_data" class="text-success fw-bold">
-                                Data SKPI telah diverifikasi. Perubahan data tidak diperbolehkan.
+                                Data SKPI telah difinalisasi. Perubahan data tidak diperbolehkan.
                             </label>
                         </div>
                         <div class="form-group mt-20">
@@ -170,12 +187,12 @@ Pendaftaran Yudisium Mahasiswa
                             </a>
                         </div>
                         @else
-                        <div class="checkbox">
+                        {{-- <div class="checkbox">
                             <input type="checkbox" id="pernyataan_data" name="pernyataan_data">
                             <label for="pernyataan_data">
-                                Dengan ini saya menyatakan bahwa Data SKPI saya telah sesuai, dan saya bersedia menggunakan data tersebut untuk keperluan Pencetakan SKPI.
+                                Dengan ini saya menyatakan bahwa <b>Data SKPI</b> saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Pencetakan SKPI.
                             </label>
-                        </div>
+                        </div> --}}
                         <div class="form-group mt-20">
                             <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-wisuda')}}" class="btn btn-danger waves-effect waves-light">
                                 Kembali
@@ -209,26 +226,26 @@ Pendaftaran Yudisium Mahasiswa
         $('#data-skpi').on('submit', function (e) {
             e.preventDefault();
 
-            let pernyataan = $('#pernyataan_data').is(':checked');
+            // let pernyataan = $('#pernyataan_data').is(':checked');
 
             // VALIDASI CHECKBOX PERNYATAAN
-            if (!pernyataan) {
-                swal({
-                    title: 'Pernyataan Belum Dicentang',
-                    text: 'Silakan centang pernyataan bahwa data akademik sudah benar sebelum menyimpan.',
-                    type: 'warning',
-                    confirmButtonText: 'OK'
-                });
+            // if (!pernyataan) {
+            //     swal({
+            //         title: 'Pernyataan Belum Dicentang',
+            //         text: 'Silakan centang pernyataan bahwa data akademik sudah benar sebelum menyimpan.',
+            //         type: 'warning',
+            //         confirmButtonText: 'OK'
+            //     });
 
-                $('#pernyataan_data').focus();
+            //     $('#pernyataan_data').focus();
 
-                return false;
-            }
+            //     return false;
+            // }
 
             // KONFIRMASI SIMPAN
             swal({
                 title: 'Persertujuan',
-                text: 'Dengan ini saya menyatakan bahwa Data SKPI saya telah sesuai, dan saya bersedia menggunakan data tersebut untuk keperluan Pencetakan SKPI.',
+                text: 'Dengan ini saya menyatakan bahwa Data SKPI saya telah sesuai, dan saya mengizinkan data tersebut digunakan untuk keperluan Pencetakan SKPI.',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

@@ -63,18 +63,22 @@ class MahasiswaEligibleController extends Controller
                 'prodi', // Assuming 'prodi' contains 'jenjang_pendidikan'
                 'aktivitas_mahasiswa.nilai_konversi',
                 'aktivitas_mahasiswa.semester',
-                'bebas_pustaka'
+                'bebas_pustaka',
+                'periode_wisuda'
             ])
             ->where('id_prodi', $prodi_id)
             ->whereHas('aktivitas_mahasiswa.nilai_konversi', function ($query) {
                 $query->where('nilai_angka', '!=', 0);
+            })
+            ->whereHas('periode_wisuda', function ($query) {
+                $query->where('is_active', '=', 1);
             })
             ->withSum('transkrip_mahasiswa', 'sks_mata_kuliah')
             ->withSum('aktivitas_kuliah', 'sks_semester')
             ->orderBy('nim', 'ASC')
             ->get();
 
-            // dd($data);
+            // dd($data[0]->periode_wisuda[0]->periode);
         // Add eligibility status to each student
         foreach ($data as $d) {
             $jenjang = $d->prodi->nama_jenjang_pendidikan ?? 'Unknown'; // Get jenjang from prodi
@@ -394,6 +398,7 @@ class MahasiswaEligibleController extends Controller
 
     public function decline_ajuan(Request $request, $id)
     {
+        // dd($request);
         $data = $request->validate([
             'alasan_pembatalan' => 'required'
         ]);

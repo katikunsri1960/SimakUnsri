@@ -66,7 +66,7 @@ Pendaftaran Yudisium Mahasiswa
                                         <select id="lokasi_kuliah"
                                                 name="lokasi_kuliah"
                                                 class="form-select"
-                                                @disabled($wisuda && $wisuda->verified_akademik == 1)
+                                                @disabled($wisuda && $wisuda->finalisasi_data == 1)
                                                 required>
 
                                             <option value="">-- Pilih Lokasi Kuliah --</option>
@@ -292,11 +292,11 @@ Pendaftaran Yudisium Mahasiswa
                         </div>
                     </div>
                     <div class="box-footer">
-                        @if($wisuda && $wisuda->verified_akademik == 1)
+                        @if($wisuda && $wisuda->finalisasi_data == 1)
                             <div class="checkbox p-3 border border-success rounded bg-light-success">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data" checked disabled>
                                 <label for="pernyataan_data" class="text-success fw-bold">
-                                    Data Akademik telah diverifikasi. Perubahan data tidak diperbolehkan.
+                                    Data Akademik telah difinalisasi. Perubahan data tidak diperbolehkan.
                                 </label>
                             </div>
                             <div class="form-group mt-20">
@@ -308,12 +308,12 @@ Pendaftaran Yudisium Mahasiswa
                                 </a>
                             </div>
                         @else
-                            <div class="checkbox">
+                            {{-- <div class="checkbox">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data">
                                 <label for="pernyataan_data">
-                                    Dengan ini saya menyatakan bahwa Data Akademik saya telah sesuai, dan saya bersedia menggunakan data tersebut untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip.
+                                    Dengan ini saya menyatakan bahwa <b>Data Akademik</b> saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip.
                                 </label>
-                            </div>
+                            </div>--}}
                             <div class="form-group mt-20">
                                 <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-induk')}}" class="btn btn-danger waves-effect waves-light">
                                     Kembali
@@ -339,26 +339,26 @@ $(document).ready(function () {
     $('#data-akademik').on('submit', function (e) {
         e.preventDefault();
 
-        let pernyataan = $('#pernyataan_data').is(':checked');
+        // let pernyataan = $('#pernyataan_data').is(':checked');
 
         // VALIDASI CHECKBOX PERNYATAAN
-        if (!pernyataan) {
-            swal({
-                title: 'Pernyataan Belum Dicentang',
-                text: 'Silakan centang pernyataan bahwa data akademik sudah benar sebelum menyimpan.',
-                type: 'warning',
-                confirmButtonText: 'OK'
-            });
+        // if (!pernyataan) {
+        //     swal({
+        //         title: 'Pernyataan Belum Dicentang',
+        //         text: 'Silakan centang pernyataan bahwa data akademik sudah benar sebelum menyimpan.',
+        //         type: 'warning',
+        //         confirmButtonText: 'OK'
+        //     });
 
-            $('#pernyataan_data').focus();
+        //     $('#pernyataan_data').focus();
 
-            return false;
-        }
+        //     return false;
+        // }
 
         // KONFIRMASI SIMPAN
         swal({
             title: 'Persertujuan',
-            text: 'Dengan ini saya menyatakan bahwa Data Induk saya telah sesuai dengan ijazah terakhir yang saya miliki, dan saya bersedia menggunakan data tersebut untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip',
+            text: 'Dengan ini saya menyatakan bahwa Data Akademik saya telah sesuai, dan saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

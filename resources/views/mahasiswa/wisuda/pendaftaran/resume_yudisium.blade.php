@@ -901,7 +901,7 @@ class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arr
                             <div class="checkbox">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data">
                                 <label for="pernyataan_data">
-                                    Dengan ini saya menyatakan bahwa Data Wisuda telah lengkap, dan saya bersedia data pendaftaran saya dilanjutkan keproses selanjutnya.
+                                    Dengan ini saya menyatakan bahwa <b>Data Pendaftaran Yudisium</b> saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, Transkrip dan SKPI.
                                 </label>
                             </div>
                             <div class="form-group mt-20">
@@ -948,7 +948,7 @@ class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arr
             // KONFIRMASI SIMPAN
             swal({
                 title: 'Persertujuan',
-                text: 'Dengan ini saya menyatakan bahwa Data Wisuda telah lengkap, dan saya bersedia data pendaftaran saya dilanjutkan keproses selanjutnya',
+                text: 'Dengan ini saya menyatakan bahwa Data Pendaftaran Yudisium saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, Transkrip dan SKPI',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',

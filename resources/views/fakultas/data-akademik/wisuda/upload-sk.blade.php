@@ -120,7 +120,7 @@ $(document).on('click', '.pilihSkBtn', function(e){
     resetUploadModal();
 
     let id = $(this).data('id');
-    let action = `{{ url('fakultas/pendaftaran-wisuda/upload-sk-yudisium') }}/${id}`;
+    let action = `{{ url('fakultas/yudisium/upload-sk-yudisium') }}/${id}`;
     $('#uploadForm').attr('action', action);
 
     $('#uploadModal').modal('show');

@@ -8,6 +8,7 @@ use App\Models\Wisuda;
 use App\Models\SKPI;
 use App\Models\SKPIJenisKegiatan;
 use App\Models\SKPIBidangKegiatan;
+use Illuminate\Support\Facades\DB;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,12 +21,6 @@ class SKPIController extends Controller
     {
         $prodi_id = auth()->user()->fk_id;
 
-        $skpi = SKPI::with(['wisuda','jenisSkpi'])
-            ->where('id_prodi', $prodi_id)
-            ->select('id_registrasi_mahasiswa')
-            ->distinct()
-            ->get();
-
         $data = Wisuda::with(['periode_wisuda', 'bebas_pustaka'])
                 ->whereHas('periode_wisuda', function ($query) {
                     $query->where('is_active', '=', 1);
@@ -33,8 +28,31 @@ class SKPIController extends Controller
                 ->where('id_prodi', $prodi_id)
                 ->get();
 
-        // dd($data);
-        return view('prodi.data-skpi.index', ['data' => $data, 'skpi' => $skpi ]);
+        foreach($data as $d){
+                $skpi = SKPI::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
+                ->select(
+                    'data_wisuda.id',
+                    'data_wisuda.nim',
+                    'data_wisuda.nama_mahasiswa',
+                    'p.nama_program_studi as nama_prodi',
+                    'p.nama_jenjang_pendidikan as jenjang',
+
+                    DB::raw("
+                        CASE
+                            WHEN MAX(skpi.approved) = 3 AND MIN(skpi.approved) = 3 THEN 'Disetujui Dir Akademik'
+                            WHEN MAX(skpi.approved) = 2 AND MIN(skpi.approved) = 2 THEN 'Disetujui Fakultas'
+                            WHEN MAX(skpi.approved) = 1 AND MIN(skpi.approved) = 1 THEN 'Disetujui Koor Prodi'
+                            ELSE 'Belum Disetujui'
+                        END as approved
+                    ")
+                )
+                ->where('approved', '=', 1);
+
+
+                $total_skor= $skpi->sum('skor');                
+        }
+        // dd($skpi);
+        return view('prodi.data-skpi.index', ['data' => $data, 'total_skor' => $total_skor ]);
     }
 
     public function detail_skpi_mahasiswa($id)
@@ -55,6 +73,7 @@ class SKPIController extends Controller
                     ->orderBy('id_semester', 'ASC')
                     ->get();
         
+        $total_skor = $data->sum('skor');
         // if ($data->approved > 0) {
         //     return redirect()->back()->with('error', 'Data telah difinalisasi, perubahan data tidak diperbolehkan');
         // }
@@ -65,10 +84,10 @@ class SKPIController extends Controller
         // dd($skpi_data);
         $skpi_jenis_kegiatan = SKPIJenisKegiatan::all();
                     // dd($skpi_jenis_kegiatan);
-        return view('prodi.data-skpi.detail-mahasiswa', ['wisuda' => $wisuda, 'skpi_bidang' => $skpi_bidang, 'data' => $data, 'skpi_jenis_kegiatan' => $skpi_jenis_kegiatan]);
+        return view('prodi.data-skpi.detail', ['wisuda' => $wisuda, 'skpi_bidang' => $skpi_bidang, 'data' => $data, 'skpi_jenis_kegiatan' => $skpi_jenis_kegiatan, 'total_skor' => $total_skor]);
     }
 
-    public function update_detail_skpi(Request $request,$id)
+    public function approved_ajuan(Request $request,$id)
     {
         $request->validate([
             'id_jenis_skpi' => 'required|exists:skpi_jenis_kegiatan,id',
@@ -98,6 +117,31 @@ class SKPIController extends Controller
         } catch (\Exception $e) {
 
             return back()->with('error','Gagal approve data');
+
+        }
+    }
+
+    public function decline_ajuan(Request $request,$id)
+    {
+        $request->validate([
+            'alasan_pembatalan' => 'required',
+        ]);
+
+        $data = SKPI::findOrFail($id);
+
+        try {
+
+            $data->update([
+                
+                'approved' => 97,
+                'alasan_pembatalan' => $request->alasan_pembatalan
+            ]);
+
+            return back()->with('success','Data SKPI berhasil didecline');
+
+        } catch (\Exception $e) {
+
+            return back()->with('error','Gagal decline data');
 
         }
     }

@@ -36,7 +36,7 @@ Pendaftaran Yudisium Mahasiswa
                     @csrf
                     <div class="box-body">
                         @php
-                            $disabled = ($wisuda && $wisuda->verified_induk == 1) ? 'disabled' : '';
+                            $disabled = ($wisuda && $wisuda->finalisasi_data == 1) ? 'disabled' : '';
                         @endphp
                         {{-- MAHASISWA --}}
                         <h4 class="text-primary mb-0"><i class="fa fa-user"></i> Data Diri Mahasiswa</h4>
@@ -90,7 +90,14 @@ Pendaftaran Yudisium Mahasiswa
                                 <label for="id_wilayah" class="form-label">
                                     Wilayah <span class="text-danger">*</span>
                                 </label>
-                                <select id="id_wilayah" name="id_wilayah" style="width:100%" {{$disabled}}></select>
+                                <select name="id_wilayah" id="id_wilayah" class="form-control" {{$disabled}} style="height:32.99">
+                                    @if(!empty($kecamatan))
+                                        <option value="{{ $kecamatan->id_wilayah }}" selected>
+                                            {{ $kecamatan->nama_wilayah }}, {{ $kecamatan->kab_kota->nama_wilayah }}
+                                        </option>
+                                    @endif
+                                </select>
+                                
                             </div>
 
                             <div class=" col-lg-6 mb-3">
@@ -223,11 +230,12 @@ Pendaftaran Yudisium Mahasiswa
                                 </div>
                             @endif
 
-                            @if($wisuda && $wisuda->verified_induk == 1)
                             <div class="col-lg-12 mb-3">
                                 <label class="form-label">File Ijazah Terakhir</label>
 
-                                <div class="border rounded p-2">
+                                {{-- Preview file jika ada --}}
+                                @if($wisuda && $wisuda->ijazah_terakhir_file)
+                                <div class="border rounded p-2 mb-3">
                                     <iframe 
                                         src="{{ asset($wisuda->ijazah_terakhir_file) }}" 
                                         width="100%" 
@@ -236,41 +244,34 @@ Pendaftaran Yudisium Mahasiswa
                                     </iframe>
                                 </div>
 
-                                <div class="mt-2">
+                                <div class="mb-2">
                                     <a href="{{ asset($wisuda->ijazah_terakhir_file) }}" target="_blank" class="btn btn-success btn-sm">
                                         <i class="fa fa-download"></i> Download File
                                     </a>
                                 </div>
+                                @endif
+
+                                {{-- Input upload tetap tampil --}}
+                                <input type="file"
+                                    class="form-control"
+                                    name="ijazah_terakhir_file"
+                                    id="ijazah_terakhir_file"
+                                    accept=".pdf" {{$disabled}}
+                                />
+
+                                <small class="form-text text-danger">
+                                    Maksimal ukuran file <strong>500 KB</strong>. @if($wisuda && $wisuda->ijazah_terakhir_file) Kosongkan jika tidak ingin mengganti file. @endif
+                                </small>
+
                             </div>
-                            @else
-                            <div id="data-sekolah-fields">
-                                <h4 class="text-primary mb-0">File Ijazah Terakhir</h4>
-                                <div class="data-sekolah-field row" style="margin-left: 10px;">
-                                    <div class="col-lg-6 mb-3">
-                                        <label for="ijazah_terakhir_file" class="form-label">Upload Ijazah Terakhir (.pdf)</label><span class="text-danger"> *</span>
-                                        <input type="file"
-                                            class="form-control"
-                                            name="ijazah_terakhir_file"
-                                            id="ijazah_terakhir_file"
-                                            aria-describedby="fileHelpId"
-                                            accept=".pdf"
-                                            required
-                                        />
-                                        <small id="fileHelpId" class="form-text text-danger">
-                                            Maksimal ukuran file <strong>500 KB</strong>.
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                            @endif
                         </div>
                     </div>
                     <div class="box-footer">
-                        @if($wisuda && $wisuda->verified_induk == 1)
+                        @if($wisuda && $wisuda->finalisasi_data == 1)
                             <div class="checkbox p-3 border border-success rounded bg-light-success">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data" checked disabled>
                                 <label for="pernyataan_data" class="text-success fw-bold">
-                                    Data Induk telah diverifikasi. Perubahan data tidak diperbolehkan.
+                                    Data Induk telah difinalisasi. Perubahan data tidak diperbolehkan.
                                 </label>
                             </div>
                             <div class="form-group mt-20">
@@ -282,12 +283,12 @@ Pendaftaran Yudisium Mahasiswa
                                 </a>
                             </div>
                         @else
-                            <div class="checkbox">
+                            {{-- <div class="checkbox">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data">
                                 <label for="pernyataan_data">
-                                    Dengan ini saya menyatakan bahwa Data Induk saya telah sesuai dengan ijazah terakhir yang saya miliki, dan saya bersedia menggunakan data tersebut untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip.
+                                    Dengan ini saya menyatakan bahwa <b>Data Induk</b> saya telah sesuai dengan ijazah terakhir saya, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip.
                                 </label>
-                            </div>
+                            </div>--}}
                             <div class="form-group mt-20">
                                 <a type="button" href="{{route('mahasiswa.wisuda.index')}}" class="btn btn-danger waves-effect waves-light">
                                     Batal
@@ -342,7 +343,7 @@ $(document).ready(function () {
         e.preventDefault();
 
         let wilayah = $('#id_wilayah').val();
-        let pernyataan = $('#pernyataan_data').is(':checked');
+        // let pernyataan = $('#pernyataan_data').is(':checked');
 
         // VALIDASI WILAYAH
         if (!wilayah) {
@@ -360,24 +361,24 @@ $(document).ready(function () {
             return false;
         }
 
-        // VALIDASI CHECKBOX PERNYATAAN
-        if (!pernyataan) {
-            swal({
-                title: 'Pernyataan Belum Dicentang',
-                text: 'Silakan centang pernyataan bahwa data induk sudah benar sebelum menyimpan.',
-                type: 'warning',
-                confirmButtonText: 'OK'
-            });
+        // // VALIDASI CHECKBOX PERNYATAAN
+        // if (!pernyataan) {
+        //     swal({
+        //         title: 'Pernyataan Belum Dicentang',
+        //         text: 'Silakan centang pernyataan bahwa data induk sudah benar sebelum menyimpan.',
+        //         type: 'warning',
+        //         confirmButtonText: 'OK'
+        //     });
 
-            $('#pernyataan_data').focus();
+        //     $('#pernyataan_data').focus();
 
-            return false;
-        }
+        //     return false;
+        // }
 
         // KONFIRMASI SIMPAN
         swal({
             title: 'Persertujuan',
-            text: 'Dengan ini saya menyatakan bahwa Data Induk saya telah sesuai dengan ijazah terakhir yang saya miliki, dan saya bersedia menggunakan data tersebut untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip',
+            text: 'Dengan ini saya menyatakan bahwa Data Induk saya telah sesuai dengan ijazah terakhir yang saya miliki, dan saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

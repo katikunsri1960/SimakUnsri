@@ -17,6 +17,7 @@ use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\ProgramStudi;
+use App\Models\SKPI;
 use App\Models\SemesterAktif;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -123,6 +124,11 @@ class RiwayatPendidikan extends Model
     public function transkrip_mahasiswa()
     {
         return $this->hasMany(TranskripMahasiswa::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
+    }
+
+    public function skpi()
+    {
+        return $this->hasMany(SKPI::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa');
     }
 
     public function set_kurikulum_angkatan($tahun_angkatan, $id_kurikulum, $prodi)

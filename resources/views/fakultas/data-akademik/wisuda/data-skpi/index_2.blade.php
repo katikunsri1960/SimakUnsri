@@ -1,4 +1,4 @@
-@extends('layouts.prodi')
+@extends('layouts.fakultas')
 @section('title')
 Ajuan SKPI Mahasiswa
 @endsection
@@ -32,8 +32,7 @@ Ajuan SKPI Mahasiswa
                                     <th class="text-center align-middle">NO</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">NAMA MAHASISWA</th>
-                                    <th class="text-center align-middle">PERIODE WISUDA</th>
-                                    <th class="text-center align-middle">SKOR</th>
+                                    <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -47,8 +46,7 @@ Ajuan SKPI Mahasiswa
                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                         <td class="text-start align-middle">{{ $d->nim }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_mahasiswa }}</td>
-                                        <td class="text-center align-middle">{{ $d->wisuda_ke }}</td>
-                                        {{--<td class="text-center align-middle">
+                                        <td class="text-center align-middle">
                                             <div class="row">
                                                 @if($d->finalisasi_data == 1)
                                                     @if($d->approved == 0)
@@ -70,13 +68,15 @@ Ajuan SKPI Mahasiswa
                                                     <span class="badge badge-lg badge-danger">Belum Finalisasi Data</span>
                                                 @endif
                                             </div>
-                                        </td>--}}
-                                        <td class="text-center align-middle">{{ $total_skor }}</td>
+                                        </td>
+                                        
+
+                                        
                                         <td class="text-center align-middle">
                                             @if($d->finalisasi_data == 1 && $d->bebas_pustaka->file_bebas_pustaka && $d->bebas_pustaka->link_repo)
                                                 <div class="row d-flex justify-content-center">
-                                                    <a href="{{route('prodi.data-skpi.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-eye"></i> Detail</a>
-                                                    {{--<a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Wisuda" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>--}}
+                                                    <a href="{{route('prodi.data-skpi.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
+                                                    <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Wisuda" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
                                                 </div>
                                             @elseif(optional($d->bebas_pustaka)->file_bebas_pustaka)
                                                 <span class="badge badge-lg bg-danger mb-5 rounded">

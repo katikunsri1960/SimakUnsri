@@ -452,7 +452,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             
 
-            Route::prefix('pendaftaran-wisuda')->group(function () {
+            Route::prefix('yudisium')->group(function () {
                 // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
                 Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
                 Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'peserta_data'])->name('fakultas.wisuda.peserta.data');
@@ -468,7 +468,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::delete('/hapus-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'deleteSkYudisium'])->name('fakultas.wisuda.hapus-sk-yudisium');
 
                 Route::get('/khs', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_index'])->name('fakultas.wisuda.khs-index');   
-                Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_transkrip_data'])->name('fakultas.wisuda.khs-transkrip-data');   
+                Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_transkrip_data'])->name('fakultas.wisuda.khs-transkrip-data');                   
                 
                 Route::prefix('sk-yudisium')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
@@ -476,7 +476,26 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.wisuda.sk-yudisium.update');
                     Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.wisuda.sk-yudisium.delete');
                 });
+
+                //Route for SKPI
+                Route::prefix('skpi')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.skpi.index');
+                    Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'skpi_data'])->name('fakultas.wisuda.skpi.data');
+                    
+                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.wisuda.skpi.index');
+                    Route::get('/detail/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'detail_skpi_mahasiswa'])->name('fakultas.wisuda.skpi.detail');
+                    Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'approve_skpi'])->name('fakultas.wisuda.skpi.approve');
+                    Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'decline_skpi'])->name('fakultas.wisuda.skpi.decline');
+
+
+                    
+                    Route::put('/update/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'update_detail_skpi'])->name('fakultas.wisuda.skpi.detail.update');
+                    Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'approved_ajuan'])->name('fakultas.wisuda.data-skpi.approved');
+                    Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'decline_ajuan'])->name('fakultas.wisuda.data-skpi.decline');
+                });
             });
+
+            
 
             //ROUTE BANTUAN
             Route::prefix('bantuan')->group(function () {
@@ -1070,9 +1089,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('data-skpi')->group(function(){
                 Route::get('/', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'index'])->name('prodi.data-skpi.index');
                 Route::get('/detail/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'detail_skpi_mahasiswa'])->name('prodi.data-skpi.detail');
-                Route::put('/update/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'update_detail_skpi'])->name('prodi.data-skpi.detail.update');
-                Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
-                Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
+                Route::put('/approved-skpi/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'approved_ajuan'])->name('prodi.data-skpi.approve');
+                Route::post('/decline-skpi/{id}', [App\Http\Controllers\Prodi\Lulusan\SKPIController::class, 'decline_ajuan'])->name('prodi.data-skpi.decline');
             });
 
             //Route for Report
