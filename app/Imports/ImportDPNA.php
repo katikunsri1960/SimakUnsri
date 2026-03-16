@@ -51,7 +51,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
             }
 
             $isValid = KelasKuliah::where('id_kelas_kuliah', $this->kelas)
-                ->whereHas('mataKuliah', function ($q) use ($row) {
+                ->whereHas('matkul', function ($q) use ($row) {
                     $q->where('kode_mata_kuliah', $row['kode_mata_kuliah']);
                 })
                 ->exists();
