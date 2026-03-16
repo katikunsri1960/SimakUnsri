@@ -470,12 +470,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/khs', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_index'])->name('fakultas.wisuda.khs-index');   
                 Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_transkrip_data'])->name('fakultas.wisuda.khs-transkrip-data');                   
                 
-                Route::prefix('sk-yudisium')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
-                    Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.wisuda.sk-yudisium.store');
-                    Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.wisuda.sk-yudisium.update');
-                    Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.wisuda.sk-yudisium.delete');
-                });
+                // Route::prefix('sk-yudisium')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
+                //     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.wisuda.sk-yudisium.store');
+                //     Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.wisuda.sk-yudisium.update');
+                //     Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.wisuda.sk-yudisium.delete');
+                // });
 
                 //Route for SKPI
                 Route::prefix('skpi')->group(function(){
