@@ -222,7 +222,7 @@ Dashboard
                         @elseif($data->status_ipk != 1)
                             <span class="badge badge-lg badge-danger">IPK pada transkrip nilai tidak memenuhi syarat minimum kelulusan</span>
                         @elseif($data->status_masa_studi != 1)
-                            <span class="badge badge-lg badge-danger">Masa studi melebihi syarat kelulusan</span>
+                            <span class="badge badge-lg badge-danger">Masa studi melebihi syarat kelulusan / Fakultas Belum Menginput SK Yudisium</span>
                         @elseif ($data->status_semester_pendek != 1)
                             <span class="badge badge-lg badge-danger">Jumlah SKS pada semester pendek melebihi batas maksimum yang di izinkan.</span>       
                         @elseif ($data->sks_transkrip_akm != 1)
