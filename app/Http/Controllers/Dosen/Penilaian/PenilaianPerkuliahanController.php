@@ -193,10 +193,17 @@ class PenilaianPerkuliahanController extends Controller
         }
 
         // If everything is valid, process the file import
-        $file = $request->file('file');
-        Excel::import(new ImportDPNA($kelas, $matkul), $file);
+        try {
+            $file = $request->file('file');
+            Excel::import(new ImportDPNA($kelas, $matkul), $file);
 
-        return redirect()->back()->with('success', "Data successfully imported!");
+            return redirect()->back()->with('success', "Data successfully imported!");
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()->with('error', $e->getMessage());
+
+        }
     }
 
     private function checkSkalaNilai($id_prodi)
