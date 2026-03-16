@@ -39,7 +39,7 @@ class ImportDPNA implements ToCollection, WithHeadingRow, WithCalculatedFormulas
         // $nilai_perkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $this->kelas)->get();
 
         foreach ($rows as $index => $row) {
-            // dd($row);
+            dd($row);
 
             try {
                 $mahasiswa_kelas = PesertaKelasKuliah::where('nim', $row['nim'])->where('id_kelas_kuliah', $this->kelas)->first();
