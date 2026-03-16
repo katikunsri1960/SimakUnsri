@@ -113,6 +113,18 @@ Pendaftaran Wisuda Fakultas
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
 
+function formatTanggal(tanggal) {
+    if (!tanggal) return '-';
+
+    let d = new Date(tanggal);
+
+    let day = String(d.getDate()).padStart(2, '0');
+    let month = String(d.getMonth() + 1).padStart(2, '0');
+    let year = d.getFullYear();
+
+    return `${day}-${month}-${year}`;
+}
+
 function getData()
 {
     // var fakultas = $('#fakultas').val();
@@ -368,16 +380,16 @@ function getData()
                         item.lokasi_kuliah,
                         item.jalur_masuk,
                         item.tempat_lahir,
-                        item.tanggal_lahir,
+                        formatTanggal(item.tanggal_lahir),
                         item.ipk ?? '-',
                         alamat,
                         item.handphone,
                         item.email,
                         namaOrtu,
                         item.alamat_orang_tua ?? '-',
-                        item.tanggal_daftar,
-                        item.tgl_sk_yudisium ?? spanStatus,
-                        item.sk_tgl_kegiatan ?? spanStatus,
+                        formatTanggal(item.tgl_masuk),
+                        formatTanggal(item.tgl_sk_yudisium ?? spanStatus),
+                        formatTanggal(item.sk_tgl_kegiatan ?? spanStatus),
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
                         useptData,

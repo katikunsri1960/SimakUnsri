@@ -1025,7 +1025,6 @@ class WisudaController extends Controller
             ]);
 
             return back()->with('success','Data SKPI berhasil diperbarui');
-
         } 
         // catch (\Exception $e) {
 

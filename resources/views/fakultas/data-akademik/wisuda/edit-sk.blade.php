@@ -31,7 +31,7 @@
 
                         {{-- tanggal Yudisium --}}
                         <div class="col-md-6 mb-3">
-                            <label class="form-label">Tanggal Yudisium</label>
+                            <label class="form-label">Tanggal Upacara Pelepasan Fakultas</label>
                             <input type="date" class="form-control" id="edit_tgl_yudisium" name="tgl_yudisium" required>
                         </div>
 
