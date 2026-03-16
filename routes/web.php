@@ -246,25 +246,40 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/download-pdf', [App\Http\Controllers\Bak\WisudaController::class, 'album_download_pdf'])->name('bak.wisuda.album.download-pdf');
                 });
 
+                Route::prefix('skpi')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\SKPIController::class, 'index'])->name('bak.skpi.data.index');
+                    Route::get('/data', [App\Http\Controllers\Bak\SKPIController::class, 'skpi_data'])->name('bak.skpi.data.get-data');
+                    Route::get('/detail/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'detail_skpi_mahasiswa'])->name('bak.skpi.data.detail');
+                    Route::post('/approve/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'approve_skpi'])->name('bak.skpi.data.approve');
+                    Route::post('/decline/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'decline_skpi'])->name('bak.skpi.data.decline');
+                });
+
                 Route::prefix('usept')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'usept'])->name('bak.wisuda.usept.index');
                 });
             });
 
             Route::prefix('skpi')->group(function () {
-                Route::get('bidang', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'index'])->name('bak.skpi-bidang.index');
-                Route::get('bidang/create', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'create'])->name('bak.skpi-bidang.create');
-                Route::post('bidang/store', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'store'])->name('bak.skpi-bidang.store');
-                Route::get('bidang/edit/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'edit'])->name('bak.skpi-bidang.edit');
-                Route::put('bidang/update/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'update'])->name('bak.skpi-bidang.update');
-                Route::delete('bidang/delete/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'destroy'])->name('bak.skpi-bidang.destroy');
+                Route::get('bidang', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'index'])->name('bak.skpi.bidang.index');
+                Route::get('bidang/create', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'create'])->name('bak.skpi.bidang.create');
+                Route::post('bidang/store', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'store'])->name('bak.skpi.bidang.store');
+                Route::get('bidang/edit/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'edit'])->name('bak.skpi.bidang.edit');
+                Route::put('bidang/update/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'update'])->name('bak.skpi.bidang.update');
+                Route::delete('bidang/delete/{id}', [App\Http\Controllers\Bak\SKPIBidangKegiatanController::class,'destroy'])->name('bak.skpi.bidang.destroy');
 
-                Route::get('jenis', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'index'])->name('bak.skpi-jenis.index');
-                Route::get('jenis/create', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'create'])->name('bak.skpi-jenis.create');
-                Route::post('jenis/store', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'store'])->name('bak.skpi-jenis.store');
-                Route::get('jenis/edit/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'edit'])->name('bak.skpi-jenis.edit');
-                Route::put('jenis/update/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'update'])->name('bak.skpi-jenis.update');
-                Route::delete('jenis/delete/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'destroy'])->name('bak.skpi-jenis.destroy');
+                Route::get('jenis', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'index'])->name('bak.skpi.jenis.index');
+                Route::get('jenis/create', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'create'])->name('bak.skpi.jenis.create');
+                Route::post('jenis/store', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'store'])->name('bak.skpi.jenis.store');
+                Route::get('jenis/edit/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'edit'])->name('bak.skpi.jenis.edit');
+                Route::put('jenis/update/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'update'])->name('bak.skpi.jenis.update');
+                Route::delete('jenis/delete/{id}', [App\Http\Controllers\Bak\SKPIJenisKegiatanController::class,'destroy'])->name('bak.skpi.jenis.destroy');
+
+                // Route::get('/', [App\Http\Controllers\Bak\SKPIController::class, 'index'])->name('bak.skpi.data.index');
+                // Route::get('/data', [App\Http\Controllers\Bak\SKPIController::class, 'skpi_data'])->name('bak.skpi.data.get-data');
+                // Route::get('/detail/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'detail_skpi_mahasiswa'])->name('bak.skpi.data.detail');
+                // Route::put('/update/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'update_detail_skpi'])->name('bak.skpi.data.detail.update');
+                // Route::post('/approve/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'approve_skpi'])->name('bak.skpi.data.approve');
+                // Route::post('/decline/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'decline_skpi'])->name('bak.skpi.data.decline');
 
             });
         });
@@ -479,19 +494,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 //Route for SKPI
                 Route::prefix('skpi')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.skpi.index');
-                    Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'skpi_data'])->name('fakultas.wisuda.skpi.data');
+                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.skpi.data.index');
+                    Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'skpi_data'])->name('fakultas.skpi.data.get-data');
                     
-                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.wisuda.skpi.index');
-                    Route::get('/detail/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'detail_skpi_mahasiswa'])->name('fakultas.wisuda.skpi.detail');
-                    Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'approve_skpi'])->name('fakultas.wisuda.skpi.approve');
-                    Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'decline_skpi'])->name('fakultas.wisuda.skpi.decline');
-
-
-                    
-                    Route::put('/update/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'update_detail_skpi'])->name('fakultas.wisuda.skpi.detail.update');
-                    Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'approved_ajuan'])->name('fakultas.wisuda.data-skpi.approved');
-                    Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'decline_ajuan'])->name('fakultas.wisuda.data-skpi.decline');
+                    Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.skpi.data.index');
+                    Route::get('/detail/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'detail_skpi_mahasiswa'])->name('fakultas.skpi.data.detail');
+                    Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'approve_skpi'])->name('fakultas.skpi.data.approve');
+                    Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'decline_skpi'])->name('fakultas.skpi.data.decline');
                 });
             });
 

@@ -142,8 +142,8 @@
                                 <a href="{{route('fakultas.wisuda.index')}}"><i class="icon-Commit"><span class="path1"></span>
                                 <span class="path2"></span></i>Ajuan Yudisium</a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.wisuda.skpi.index') || request()->routeIs('fakultas.wisuda.skpi.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.wisuda.skpi.index')}}"><i class="icon-Commit"><span class="path1"></span>
+                            <li class="{{request()->routeIs('fakultas.skpi.data.index') || request()->routeIs('fakultas.skpi.data.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.skpi.data.index')}}"><i class="icon-Commit"><span class="path1"></span>
                                 <span class="path2"></span></i>Ajuan SKPI</a>
                             </li>
                             <li class="{{request()->routeIs('fakultas.wisuda.khs-index') || request()->routeIs('fakultas.wisuda.khs-index.*') ? 'active' : ''}}">

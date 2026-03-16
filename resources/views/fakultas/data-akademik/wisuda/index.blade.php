@@ -191,7 +191,6 @@ function getData()
                                 >
                                     <i class="fa fa-edit"></i> Edit
                                 </button>
-
                                 
                                 <button type="button" class="btn btn-danger btn-sm my-2 btn-hapus-sk" data-id="${item.id}">
                                     <i class="fa fa-trash"></i> Hapus

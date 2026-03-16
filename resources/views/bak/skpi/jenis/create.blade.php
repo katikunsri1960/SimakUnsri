@@ -6,7 +6,7 @@
 
 <h4>Tambah Jenis Kegiatan</h4>
 
-<form action="{{route('bak.skpi-jenis.store')}}" method="POST">
+<form action="{{route('bak.skpi.jenis.store')}}" method="POST">
 
 @csrf
 
@@ -43,7 +43,7 @@
 
 <button class="btn btn-success">Simpan</button>
 
-<a href="{{route('bak.skpi-jenis.index')}}" class="btn btn-secondary">
+<a href="{{route('bak.skpi.jenis.index')}}" class="btn btn-secondary">
 Kembali
 </a>
 

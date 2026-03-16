@@ -26,7 +26,7 @@ Data Ajuan SKPI
         </div>
     </div>
     <div class="d-flex justify-content-between my-10">
-        <a href="{{route('fakultas.skpi.data.index')}}" class="btn btn-warning btn-sm btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+        <a href="{{route('fakultas.wisuda.skpi.index')}}" class="btn btn-warning btn-sm btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
         <!-- <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light"><i class="fa fa-edit"></i> Update Detail Ajuan</button> -->
     </div>
 </div>
@@ -114,7 +114,7 @@ Data Ajuan SKPI
                                         @endif
 
                                         @if( $d->approved == 1 || $d->approved == 2)
-                                        <form action="{{route('fakultas.skpi.data.decline',$d->id)}}" method="POST" class="form-decline">
+                                        <form action="{{route('fakultas.wisuda.skpi.decline',$d->id)}}" method="POST" class="form-decline">
                                             @csrf
                                             <input type="hidden" name="alasan_pembatalan" class="alasan-input">
 

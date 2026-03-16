@@ -1,6 +1,6 @@
-@extends('layouts.fakultas')
+@extends('layouts.bak')
 @section('title')
-Pendaftaran Wisuda Fakultas
+Data SKPI Mahasiswa
 @endsection
 @section('content')
 @include('swal')
@@ -113,7 +113,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{ route('fakultas.skpi.data.get-data') }}`,
+        url: `{{ route('bak.skpi.data.get-data') }}`,
         type: 'GET',
         data: {
             prodi: prodi,
@@ -139,7 +139,7 @@ function getData()
                         // `<div class="text-start">${item.skor}</div>`,
                         `
                         <div class="text-center">
-                            <a href="{{ route('fakultas.skpi.data.detail', ':id') }}"
+                            <a href="{{ route('bak.skpi.data.detail', ':id') }}"
                                 class="btn btn-sm btn-primary"
                                 target="_self"
                                 onclick="this.href=this.href.replace(':id','${item.id}')"><i class="fa fa-eye"></i> 
@@ -174,7 +174,7 @@ function getData()
 function showDetail(id)
 {
     $.ajax({
-        url: `{{ route('fakultas.skpi.data.detail', ['id' => 'ID']) }}`.replace('ID', id),
+        url: `{{ route('bak.skpi.data.detail', ['id' => 'ID']) }}`.replace('ID', id),
         type: 'GET',
 
         success: function(response){

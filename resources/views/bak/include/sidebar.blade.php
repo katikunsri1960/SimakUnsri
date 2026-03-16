@@ -173,6 +173,11 @@
                             <li class="{{request()->routeIs('bak.wisuda.album.index') || request()->routeIs('bak.wisuda.album.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.album.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Album Wisudawan</a>
                             </li>
+
+                            <li class="{{request()->routeIs('bak.skpi.data.index') || request()->routeIs('bak.skpi.data.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.skpi.data.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>SKPI Wisudawan</a>
+                            </li>
+
                             <li class="{{request()->routeIs('bak.wisuda.usept.index') || request()->routeIs('bak.wisuda.usept.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.usept.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai USEPT</a>
                             </li>
@@ -180,43 +185,28 @@
                     </li>
                     <li class="treeview {{request()->routeIs('bak.skpi*') ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i class="fa fa-user-graduate"></i>
+                            <i class="fa fa-file"></i>
                             <span>SKPI</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
-
                         <ul class="treeview-menu">
-
-                            <li class="treeview {{request()->routeIs('bak.skpi*') ? 'active menu-open' : ''}}">
-                                <a href="#">
-                                    <i class="fa fa-edit"></i>
-                                    <span>Input Data SKPI</span>
-                                    <span class="pull-right-container">
-                                        <i class="fa fa-angle-right pull-right"></i>
-                                    </span>
+                            <li class="{{request()->routeIs('bak.skpi.bidang.index') || request()->routeIs('bak.skpi.bidang.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.skpi.bidang.index')}}">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Bidang SKPI
                                 </a>
-
-                                <ul class="treeview-menu">
-
-                                    <li class="{{request()->routeIs('bak.skpi-bidang.*') ? 'active' : ''}}">
-                                        <a href="{{route('bak.skpi-bidang.index')}}">
-                                            <i class="fa fa-circle-o"></i> Bidang Kegiatan
-                                        </a>
-                                    </li>
-
-                                    <li class="{{request()->routeIs('bak.skpi-jenis.*') ? 'active' : ''}}">
-                                        <a href="{{route('bak.skpi-jenis.index')}}">
-                                            <i class="fa fa-circle-o"></i> Jenis Kegiatan
-                                        </a>
-                                    </li>
-
-                                </ul>
                             </li>
-
+                            <li class="{{request()->routeIs('bak.skpi.jenis.index') || request()->routeIs('bak.skpi.jenis.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.skpi.jenis.index')}}">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Jenis SKPI
+                                </a>
+                            </li>
                         </ul>
                     </li>
+                    
                     {{-- <li class="treeview {{request()->routeIs('dosen.profile.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-user"><span class="path1"></span><span
