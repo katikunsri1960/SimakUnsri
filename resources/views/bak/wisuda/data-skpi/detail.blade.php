@@ -1,4 +1,4 @@
-@extends('layouts.fakultas')
+@extends('layouts.bak')
 @section('title')
 Data Ajuan SKPI
 @endsection
@@ -26,7 +26,7 @@ Data Ajuan SKPI
         </div>
     </div>
     <div class="d-flex justify-content-between my-10">
-        <a href="{{route('fakultas.wisuda.skpi.index')}}" class="btn btn-warning btn-sm btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+        <a href="{{route('bak.skpi.data.index')}}" class="btn btn-warning btn-sm btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
         <!-- <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light"><i class="fa fa-edit"></i> Update Detail Ajuan</button> -->
     </div>
 </div>
@@ -104,7 +104,7 @@ Data Ajuan SKPI
                                             $disabled = ($mahasiswa && $mahasiswa->approved > 1) ? 'disabled' : '';
                                         @endphp -->
 
-                                        @if($d->approved == 1 && $mahasiswa->finalisasi_data == 1)
+                                        @if($d->approved == 2 && $mahasiswa->finalisasi_data == 1)
                                         <button 
                                             type="button"
                                             class="btn btn-success btn-sm my-1 btn-approve"
@@ -113,8 +113,8 @@ Data Ajuan SKPI
                                         </button>
                                         @endif
 
-                                        @if( $d->approved == 1 || $d->approved == 2)
-                                        <form action="{{route('fakultas.wisuda.skpi.decline',$d->id)}}" method="POST" class="form-decline">
+                                        @if( $d->approved == 2 || $d->approved == 3)
+                                        <form action="{{route('bak.skpi.data.decline',$d->id)}}" method="POST" class="form-decline">
                                             @csrf
                                             <input type="hidden" name="alasan_pembatalan" class="alasan-input">
 
@@ -181,7 +181,7 @@ $(document).on('click','.btn-approve',function(){
     }, function(isConfirm){
         if(isConfirm){
             $.ajax({
-                url: "{{ url('fakultas/yudisium/skpi/approve') }}/"+id,
+                url: "{{ url('bak/wisuda/skpi/approve') }}/"+id,
                 type: "POST",
                 data:{
                     _token: "{{ csrf_token() }}"

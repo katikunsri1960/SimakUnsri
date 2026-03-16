@@ -13,8 +13,8 @@ Data SKPI Mahasiswa
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Pendaftaran Wisuda Fakultas</h2>
-								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
+								<h2 class="mb-10">Data SKPI Wisudawan</h2>
+								<!-- <p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p> -->
 							</div>
 						</div>
 					<div>
@@ -27,6 +27,17 @@ Data SKPI Mahasiswa
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
+                    <div class="form-group row">
+                        <label class="col-form-label col-md-2">Fakultas</label>
+                        <div class="col-md-8">
+                            <select name="fakultas" id="fakultas" required class="form-select" onchange="filterProdi()">
+                                <option value="*">-- Semua Fakultas --</option>
+                                @foreach ($fakultas as $f)
+                                <option value="{{$f->id}}">{{$f->nama_fakultas}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                     <div class="form-group row">
                         <label class="col-form-label col-md-2">Prodi</label>
                         <div class="col-md-8">
@@ -86,29 +97,26 @@ Data SKPI Mahasiswa
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
-$(document).ready(function () {
 
-    // INIT DATATABLE
-    var table = $('#data').DataTable({
-        paging: true,
-        lengthChange: true,
-        searching: true,
-        ordering: true,
-        info: true,
-        autoWidth: false
-    });
+$(function () {
+    // "use strict";
+    $('#data').DataTable();
 
+    $('#fakultas').select2();
+    $('#prodi').select2();
+    $('#periode').select2();
 });
 
 
 // FUNCTION AMBIL DATA
 function getData()
 {
+    var fakultas = $('#fakultas').val();
     var prodi = $('#prodi').val();
     var periode = $('#periode').val();
 
-    if (prodi == '' || periode == '') {
-        swal('Peringatan', 'Silahkan pilih prodi dan periode terlebih dahulu', 'warning');
+    if (fakultas == '' || prodi == '' || periode == '') {
+        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
         return;
     }
 
@@ -116,12 +124,13 @@ function getData()
         url: `{{ route('bak.skpi.data.get-data') }}`,
         type: 'GET',
         data: {
+            fakultas: fakultas,
             prodi: prodi,
             periode: periode
         },
 
         success: function (response) {
-            // console.log(response.data)
+            console.log(response.data)
 
             if (response.status === 'success') {
 
@@ -169,6 +178,32 @@ function getData()
     });
 }
 
+function filterProdi()
+{
+    var prodi = @json($prodi);
+    var fakultas = $('#fakultas').val();
+
+    if (fakultas == '*') {
+        $('#prodi').empty();
+        $('#prodi').append('<option value="*">-- Semua Prodi --</option>');
+        $.each(prodi, function (i, p) {
+            $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
+        });
+        return;
+
+    }
+
+    var filteredProdi = prodi.filter(function (p) {
+        return p.fakultas_id == fakultas;
+    });
+
+    $('#prodi').empty();
+
+    $('#prodi').append('<option value="*">-- Semua Prodi --</option>');
+    $.each(filteredProdi, function (i, p) {
+        $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
+    });
+}
 
 // FUNCTION TAMPILKAN DETAIL MAHASISWA
 function showDetail(id)
