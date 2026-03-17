@@ -53,7 +53,7 @@ class KrsController extends Controller
             ->select('id_jenis_keluar', 'nama_jenis_keluar', 'id_periode_keluar')
             ->first();
 
-        if (!empty($riwayat_pendidikan->id_jenis_keluar)) {
+        if (!empty($riwayat_pendidikan->id_jenis_keluar )) {
             return redirect()->back()->with(
                 'error',
                 'Anda tidak diizinkan mengakses halaman KRS!\n status anda telah ' . $riwayat_pendidikan->keterangan_keluar.'!'

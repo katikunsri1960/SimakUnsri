@@ -6,7 +6,7 @@
 
 <h4>Edit Jenis Kegiatan</h4>
 
-<form action="{{route('bak.skpi-jenis.update',$data->id)}}" method="POST">
+<form action="{{route('bak.skpi.jenis.update',$data->id)}}" method="POST">
 
 @csrf
 @method('PUT')
@@ -51,7 +51,7 @@ class="form-control">
 
 <button class="btn btn-success">Update</button>
 
-<a href="{{route('bak.skpi-jenis.index')}}" class="btn btn-secondary">
+<a href="{{route('bak.skpi.jenis.index')}}" class="btn btn-secondary">
 Kembali
 </a>
 

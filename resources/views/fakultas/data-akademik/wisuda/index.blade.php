@@ -191,7 +191,6 @@ function getData()
                                 >
                                     <i class="fa fa-edit"></i> Edit
                                 </button>
-
                                 
                                 <button type="button" class="btn btn-danger btn-sm my-2 btn-hapus-sk" data-id="${item.id}">
                                     <i class="fa fa-trash"></i> Hapus
@@ -380,16 +379,16 @@ function getData()
                         item.lokasi_kuliah,
                         item.jalur_masuk,
                         item.tempat_lahir,
-                        formatTanggal(item.tanggal_lahir),
+                        item.tanggal_lahir,
                         item.ipk ?? '-',
                         alamat,
                         item.handphone,
                         item.email,
                         namaOrtu,
                         item.alamat_orang_tua ?? '-',
-                        formatTanggal(item.tgl_masuk),
-                        formatTanggal(item.tgl_sk_yudisium ?? spanStatus),
-                        formatTanggal(item.sk_tgl_kegiatan ?? spanStatus),
+                        item.tgl_masuk,
+                        item.tgl_sk_yudisium ?? spanStatus,
+                        item.sk_tgl_kegiatan ?? spanStatus,
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
                         useptData,

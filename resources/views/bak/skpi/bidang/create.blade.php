@@ -6,7 +6,7 @@
 
 <h4>Tambah Bidang Kegiatan</h4>
 
-<form action="{{route('bak.skpi-bidang.store')}}" method="POST">
+<form action="{{route('bak.skpi.bidang.store')}}" method="POST">
 @csrf
 
 <div class="mb-3">
@@ -21,7 +21,7 @@
 
 <button class="btn btn-success">Simpan</button>
 
-<a href="{{route('bak.skpi-bidang.index')}}" class="btn btn-secondary">
+<a href="{{route('bak.skpi.bidang.index')}}" class="btn btn-secondary">
 Kembali
 </a>
 

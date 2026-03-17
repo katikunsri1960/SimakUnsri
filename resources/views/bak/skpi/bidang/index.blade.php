@@ -6,7 +6,7 @@
 
 <h4>Master Bidang Kegiatan SKPI</h4>
 
-<a href="{{route('bak.skpi-bidang.create')}}" class="btn btn-primary mb-3">
+<a href="{{route('bak.skpi.bidang.create')}}" class="btn btn-primary mb-3">
 Tambah Data
 </a>
 
@@ -31,11 +31,11 @@ Tambah Data
 
 <td>
 
-<a href="{{route('bak.skpi-bidang.edit',$row->id)}}" class="btn btn-warning btn-sm">
+<a href="{{route('bak.skpi.bidang.edit',$row->id)}}" class="btn btn-warning btn-sm">
 Edit
 </a>
 
-<form action="{{route('bak.skpi-bidang.destroy',$row->id)}}" method="POST" style="display:inline">
+<form action="{{route('bak.skpi.bidang.destroy',$row->id)}}" method="POST" style="display:inline">
 @csrf
 @method('DELETE')
 
