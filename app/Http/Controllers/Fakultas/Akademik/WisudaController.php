@@ -207,12 +207,18 @@ class WisudaController extends Controller
                     // Tambahkan data file SK Yudisium
                     'ff.nama_file as sk_nama_file',
                     'ff.tgl_surat as sk_tgl_surat',
-                    'ff.tgl_kegiatan as sk_tgl_kegiatan',
+                    // 'ff.tgl_kegiatan as sk_tgl_kegiatan',
                     'ff.dir_file as sk_file_path',
 
                     // Tambahkan data bebas pustaka
                     'bp.file_bebas_pustaka as file_bebas_pustaka',
                     'bp.link_repo as link_repo',
+
+                    //DATA TANGGAL
+                    DB::raw("DATE_FORMAT(data_wisuda.tgl_masuk, '%d-%m-%Y') as tgl_masuk"),
+                    DB::raw("DATE_FORMAT(data_wisuda.tgl_keluar, '%d-%m-%Y') as tgl_keluar"),
+                    DB::raw("DATE_FORMAT(data_wisuda.tgl_sk_yudisium, '%d-%m-%Y') as tgl_sk_yudisium"),
+                    DB::raw("DATE_FORMAT(ff.tgl_kegiatan, '%d-%m-%Y') as sk_tgl_kegiatan"),
                 );
 
         if ($req['prodi'] != "*") {
@@ -336,8 +342,8 @@ class WisudaController extends Controller
             $wisuda->update([
                 'approved'         => 2,
                 // 'no_urut'          => $request->no_urut,
-                'lama_studi'      => $lama_studi,
-                'tgl_keluar'      => $lulus ? $lulus->tgl_keluar : null,
+                // 'lama_studi'      => $lama_studi,
+                // 'tgl_keluar'      => $lulus ? $lulus->tgl_keluar : null,
                 'id_gelar_lulusan' => $request->gelar,
                 'id_predikat_kelulusan' => $request->predikat,
             ]);
