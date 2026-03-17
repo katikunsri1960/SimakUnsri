@@ -117,11 +117,6 @@
                                     Sidang Mahasiswa
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.data-akademik.yudisium-mahasiswa') || request()->routeIs('fakultas.data-akademik.yudisium-fakultas.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.data-akademik.yudisium-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    Yudisium Mahasiswa
-                                </a>
-                            </li>
                             <li class="{{request()->routeIs('fakultas.data-akademik.transkrip-nilai') || request()->routeIs('fakultas.data-akademik.transkrip-nilai.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.data-akademik.transkrip-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     Daftar Transkrip Nilai
