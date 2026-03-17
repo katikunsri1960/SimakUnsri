@@ -34,6 +34,7 @@ Ajuan SKPI Mahasiswa
                                     <th class="text-center align-middle">NAMA MAHASISWA</th>
                                     <th class="text-center align-middle">PERIODE WISUDA</th>
                                     <th class="text-center align-middle">SKOR</th>
+                                    <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -48,7 +49,8 @@ Ajuan SKPI Mahasiswa
                                         <td class="text-start align-middle">{{ $d->nim }}</td>
                                         <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_mahasiswa }}</td>
                                         <td class="text-center align-middle">{{ $d->wisuda_ke }}</td>
-                                        {{--<td class="text-center align-middle">
+                                        <td class="text-center align-middle">{{ $d->total_skor }}</td>
+                                        <td class="text-center align-middle">
                                             <div class="row">
                                                 @if($d->finalisasi_data == 1)
                                                     @if($d->approved == 0)
@@ -60,23 +62,21 @@ Ajuan SKPI Mahasiswa
                                                     @elseif($d->approved == 3)
                                                         <span class="badge badge-lg badge-success mb-5">Disetujui Dir. Akademik</span>
                                                     @elseif($d->approved == 97)
-                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Koor. Prodi</span>
                                                     @elseif($d->approved == 98)
-                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Fakultas</span>
                                                     @elseif($d->approved == 99)
-                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Dir. Akademik <br> Alasan pembatalan : {{$d->alasan_pembatalan}}</span>
+                                                        <span class="badge badge-lg badge-danger mb-5">Ditolak Dir. Akademik</span>
                                                     @endif
                                                 @else
                                                     <span class="badge badge-lg badge-danger">Belum Finalisasi Data</span>
                                                 @endif
                                             </div>
-                                        </td>--}}
-                                        <td class="text-center align-middle">{{ $total_skor }}</td>
+                                        </td>
                                         <td class="text-center align-middle">
                                             @if($d->finalisasi_data == 1 && $d->bebas_pustaka->file_bebas_pustaka && $d->bebas_pustaka->link_repo)
                                                 <div class="row d-flex justify-content-center">
                                                     <a href="{{route('prodi.data-skpi.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-eye"></i> Detail</a>
-                                                    {{--<a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Wisuda" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>--}}
                                                 </div>
                                             @elseif(optional($d->bebas_pustaka)->file_bebas_pustaka)
                                                 <span class="badge badge-lg bg-danger mb-5 rounded">
@@ -98,7 +98,6 @@ Ajuan SKPI Mahasiswa
                                                 </p>
                                             @endif
                                         </td>
-                                        
                                     </tr>     
                                 @endforeach
                             </tbody>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Prodi\Lulusan;
 
+use DateTime;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Wisuda;
@@ -11,8 +12,6 @@ use App\Models\SKPIBidangKegiatan;
 use Illuminate\Support\Facades\DB;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Support\Facades\Storage;
-
-use DateTime;
 use PHPUnit\Metadata\Group;
 
 class SKPIController extends Controller
@@ -21,38 +20,79 @@ class SKPIController extends Controller
     {
         $prodi_id = auth()->user()->fk_id;
 
-        $data = Wisuda::with(['periode_wisuda', 'bebas_pustaka'])
-                ->whereHas('periode_wisuda', function ($query) {
-                    $query->where('is_active', '=', 1);
-                })
-                ->where('id_prodi', $prodi_id)
-                ->get();
+        $data = Wisuda::with([
+                'periode_wisuda',
+                'riwayat_pendidikan.skpi',
+                'bebas_pustaka'
+            ])
+            ->whereHas('periode_wisuda', function ($query) {
+                $query->where('is_active', 1);
+            })
+            ->whereHas('riwayat_pendidikan.skpi')
+            ->where('id_prodi', $prodi_id)
+            ->get();
 
-        foreach($data as $d){
-                $skpi = SKPI::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)
-                ->select(
-                    'data_wisuda.id',
-                    'data_wisuda.nim',
-                    'data_wisuda.nama_mahasiswa',
-                    'p.nama_program_studi as nama_prodi',
-                    'p.nama_jenjang_pendidikan as jenjang',
+        $data->map(function ($d) {
 
-                    DB::raw("
-                        CASE
-                            WHEN MAX(skpi.approved) = 3 AND MIN(skpi.approved) = 3 THEN 'Disetujui Dir Akademik'
-                            WHEN MAX(skpi.approved) = 2 AND MIN(skpi.approved) = 2 THEN 'Disetujui Fakultas'
-                            WHEN MAX(skpi.approved) = 1 AND MIN(skpi.approved) = 1 THEN 'Disetujui Koor Prodi'
-                            ELSE 'Belum Disetujui'
-                        END as approved
-                    ")
-                )
-                ->where('approved', '=', 1);
+            $total = 0;
+            $approved_list = [];
 
+            $riwayat = $d->riwayat_pendidikan;
 
-                $total_skor= $skpi->sum('skor');                
-        }
-        // dd($skpi);
-        return view('prodi.data-skpi.index', ['data' => $data, 'total_skor' => $total_skor ]);
+            if (!$riwayat instanceof \Illuminate\Support\Collection) {
+                $riwayat = collect([$riwayat]);
+            }
+
+            foreach ($riwayat as $rp) {
+                foreach (($rp->skpi ?? []) as $skpi) {
+
+                    // ✅ hanya hitung skor valid
+                    if (!in_array($skpi->approved, [0, 97, 98, 99])) {
+                        $total += $skpi->skor ?? 0;
+                    }
+
+                    $approved_list[] = $skpi->approved;
+                }
+            }
+
+            // ========================
+            // HITUNG STATUS APPROVED
+            // ========================
+            $approved_list = collect($approved_list)->filter(function ($v) {
+                return !is_null($v);
+            });
+
+            if ($approved_list->isEmpty()) {
+                $status = 'Belum Ada Data';
+            } elseif ($approved_list->contains(99)) {
+                $status = 99;
+            } elseif ($approved_list->contains(98)) {
+                $status = 98;
+            } elseif ($approved_list->contains(97)) {
+                $status = 97;
+            } elseif ($approved_list->every(fn($v) => $v == 3)) {
+                $status = 3;
+            } elseif ($approved_list->every(fn($v) => $v == 2)) {
+                $status = 2;
+            } elseif ($approved_list->every(fn($v) => $v == 1)) {
+                $status = 1;
+            } elseif ($approved_list->every(fn($v) => $v == 0)) {
+                $status = 0;
+            } else {
+                $status = 'Proses / Parsial';
+            }
+
+            $d->total_skor = $total;
+            $d->approved = $status;
+
+            return $d;
+        });
+
+        // dd($data);
+
+        return view('prodi.data-skpi.index', [
+            'data' => $data
+        ]);
     }
 
     public function detail_skpi_mahasiswa($id)
@@ -81,7 +121,7 @@ class SKPIController extends Controller
         // dd($wisuda, $data);
         $skpi_bidang = SKPIBidangKegiatan::all();
 
-        // dd($skpi_data);
+        // dd($data);
         $skpi_jenis_kegiatan = SKPIJenisKegiatan::all();
                     // dd($skpi_jenis_kegiatan);
         return view('prodi.data-skpi.detail', ['wisuda' => $wisuda, 'skpi_bidang' => $skpi_bidang, 'data' => $data, 'skpi_jenis_kegiatan' => $skpi_jenis_kegiatan, 'total_skor' => $total_skor]);
