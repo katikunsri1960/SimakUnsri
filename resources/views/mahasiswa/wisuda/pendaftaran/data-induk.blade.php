@@ -256,7 +256,7 @@ Pendaftaran Yudisium Mahasiswa
                                     class="form-control"
                                     name="ijazah_terakhir_file"
                                     id="ijazah_terakhir_file"
-                                    accept=".pdf" {{$disabled}} required
+                                    accept=".pdf" {{$disabled}}
                                 />
 
                                 <small class="form-text text-danger">
@@ -338,12 +338,13 @@ $(document).ready(function () {
         }
     });
 
-    // VALIDASI SUBMIT
+    let ijazahLama = "{{ $wisuda->ijazah_terakhir_file ?? '' }}";
+
     $('#data-induk').on('submit', function (e) {
         e.preventDefault();
 
         let wilayah = $('#id_wilayah').val();
-        // let pernyataan = $('#pernyataan_data').is(':checked');
+        let ijazah = $('#ijazah_terakhir_file').val();
 
         // VALIDASI WILAYAH
         if (!wilayah) {
@@ -361,28 +362,25 @@ $(document).ready(function () {
             return false;
         }
 
-        // // VALIDASI CHECKBOX PERNYATAAN
-        // if (!pernyataan) {
-        //     swal({
-        //         title: 'Pernyataan Belum Dicentang',
-        //         text: 'Silakan centang pernyataan bahwa data induk sudah benar sebelum menyimpan.',
-        //         type: 'warning',
-        //         confirmButtonText: 'OK'
-        //     });
+        // ✅ VALIDASI IJAZAH (FIXED)
+        if (!ijazah && !ijazahLama) {
+            swal({
+                title: 'Ijazah belum diunggah',
+                text: 'Silakan unggah ijazah terlebih dahulu.',
+                type: 'error',
+                confirmButtonText: 'OK'
+            });
 
-        //     $('#pernyataan_data').focus();
+            $('#ijazah_terakhir_file').css('border', '1px solid red');
 
-        //     return false;
-        // }
+            return false;
+        }
 
-        // KONFIRMASI SIMPAN
         swal({
             title: 'Persertujuan',
             text: 'Dengan ini saya menyatakan bahwa Data Induk saya telah sesuai dengan ijazah terakhir yang saya miliki, dan saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip',
             type: 'warning',
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
             confirmButtonText: 'Setujui',
             cancelButtonText: 'Batal'
         }, function (isConfirmed) {

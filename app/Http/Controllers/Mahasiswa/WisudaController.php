@@ -335,16 +335,6 @@ class WisudaController extends Controller
 
     public function data_induk_store(Request $request)
     {
-        $request->validate([
-            'no_hp_ayah' => 'required|regex:/^[0-9]+$/',
-            'no_hp_ibu' => 'required|regex:/^[0-9]+$/',
-            'nama_ayah' => 'required|regex:/^[a-zA-Z\s]+$/',
-            'nik' => 'required',
-            'id_wilayah' => 'required',
-            'ijazah_terakhir_file' => 'nullable|file|mimes:pdf|max:1024',
-            'alamat_orang_tua' => 'required',
-        ]);
-
         $perguruan_tinggi = ProfilPt::first();
         $id_reg = auth()->user()->fk_id;
 
@@ -354,6 +344,22 @@ class WisudaController extends Controller
 
         $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
+        $request->validate([
+            'no_hp_ayah' => 'required|regex:/^[0-9]+$/',
+            'no_hp_ibu' => 'required|regex:/^[0-9]+$/',
+            'nama_ayah' => 'required|regex:/^[a-zA-Z\s]+$/',
+            'nik' => 'required',
+            'id_wilayah' => 'required',
+            'ijazah_terakhir_file' => [
+                $wisuda && $wisuda->ijazah_terakhir_file ? 'nullable' : 'required',
+                'file',
+                'mimes:pdf',
+                'max:512' // 500 KB
+            ],
+            'alamat_orang_tua' => 'required',
+        ]);
+
+        
         if ($request->id_wilayah) {
             $wilayah = Wilayah::where('id_wilayah', $request->id_wilayah)->first();
         } else {
