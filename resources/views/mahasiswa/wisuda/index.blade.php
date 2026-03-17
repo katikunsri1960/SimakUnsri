@@ -639,8 +639,8 @@ Pendaftaran Wisuda Mahasiswa
         e.preventDefault();
         var url = $(this).attr('href');
         swal({
-            title: 'Daftar Wisuda',
-            text: "Apakah anda yakin ingin mendaftar wisuda?",
+            title: 'Daftar Yudisium',
+            text: "Apakah anda yakin ingin mendaftar Yudisium?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

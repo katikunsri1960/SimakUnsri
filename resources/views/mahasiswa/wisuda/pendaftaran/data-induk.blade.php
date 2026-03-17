@@ -231,7 +231,7 @@ Pendaftaran Yudisium Mahasiswa
                             @endif
 
                             <div class="col-lg-12 mb-3">
-                                <label class="form-label">File Ijazah Terakhir</label>
+                                <label class="form-label">File Ijazah Terakhir <span class="text-danger">*</span></label>
 
                                 {{-- Preview file jika ada --}}
                                 @if($wisuda && $wisuda->ijazah_terakhir_file)
@@ -256,7 +256,7 @@ Pendaftaran Yudisium Mahasiswa
                                     class="form-control"
                                     name="ijazah_terakhir_file"
                                     id="ijazah_terakhir_file"
-                                    accept=".pdf" {{$disabled}}
+                                    accept=".pdf" {{$disabled}} required
                                 />
 
                                 <small class="form-text text-danger">
