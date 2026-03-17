@@ -211,14 +211,14 @@ Pendaftaran Wisuda Mahasiswa
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <tr>
-                                                <td class="text-left" style="width: 30%;">Judul {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-left" style="width: 30%;">Judul {{$wisuda->aktivitas_mahasiswa ? $wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas : 'Tugas Akhir'}}</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
-                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->aktivitas_mahasiswa->judul}}</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->aktivitas_mahasiswa ? $wisuda->aktivitas_mahasiswa->judul : 'Belum diisi'}}</td>
                                             </tr>
                                             <tr>
                                                 <td class="text-left" style="width: 30%;">Wisuda Ke-</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
-                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->wisuda_ke}}</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->wisuda_ke ? $wisuda->wisuda_ke : 'Belum diisi'}}</td>
                                             </tr>
                                             @if($wisuda->prodi->bku_pada_ijazah == 1)                        
                                                 <tr>
@@ -228,12 +228,12 @@ Pendaftaran Wisuda Mahasiswa
                                                 </tr>
                                             @endif
                                             <tr>
-                                                <td class="text-left" style="width: 30%;">Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-left" style="width: 30%;">Abstrak {{$wisuda->aktivitas_mahasiswa ? $wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas : 'Tugas Akhir'}}</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
-                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->abstrak_ta}}</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->abstrak_ta ? $wisuda->abstrak_ta : 'Belum diisi'}}</td>
                                             </tr>
                                             <tr>
-                                                <td class="text-left" style="width: 30%;">File Abstrak {{$wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas}}</td>
+                                                <td class="text-left" style="width: 30%;">File Abstrak {{$wisuda->aktivitas_mahasiswa ? $wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas : 'Tugas Akhir'}}</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
                                                 {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
                                                 <td class="text-left" style="width: 65%; text-align: justify;">
@@ -351,11 +351,25 @@ Pendaftaran Wisuda Mahasiswa
                                                         </span>
                                                     @endif
                                                 </td>
-                                            </tr>                                        
+                                            </tr>                                         
                                         </table>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                    </div>
+                    <div class="row mb-5 mt-30">
+                        <div class="col-xl-12 col-lg-12 text-center">
+                            <div class="d-flex justify-content-center">
+                                @if($wisuda && $wisuda->finalisasi_data==0)
+                                <a class="btn bg-primary" 
+                                    href="{{ route('mahasiswa.wisuda.pendaftaran.data-induk') }}"
+                                    id="lanjut-wisuda-btn" title="Pastikan semua syarat sudah terpenuhi sebelum mendaftar!">
+                                    <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i> 
+                                    LANJUTKAN PENDAFTARAAN YUDISIUM
+                                </a>
+                                @endif
+                            </div>  
                         </div>
                     </div>
                 </div>

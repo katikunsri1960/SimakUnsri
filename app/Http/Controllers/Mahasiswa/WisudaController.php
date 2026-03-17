@@ -94,9 +94,7 @@ class WisudaController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
-        if (!$aktivitas) {
-            return redirect()->route('mahasiswa.dashboard')->with('error', 'Aktivitas Tugas Akhir Anda tidak ditemukan, Silahkan hubungi Koor. Prodi untuk melapor ke Admin Universitas');
-        }
+        // if()
         // dd($aktivitas);
 
         // 2 SYARAT AKTIVITAS
@@ -366,6 +364,23 @@ class WisudaController extends Controller
             $wilayah = Wilayah::where('id_wilayah', $riwayat_pendidikan->biodata->id_wilayah)->first();
         }
 
+        $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
+                ->whereHas('bimbing_mahasiswa', function ($query) {
+                    $query->whereNotNull('id_bimbing_mahasiswa');
+                })
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                        ->where('nim', $riwayat_pendidikan->nim);
+                })
+                ->whereHas('nilai_konversi', function ($query) {
+                    $query->where('nilai_indeks', '>', 0.00);
+                })
+                // ->where('id_semester', $semester_aktif)
+                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+                ->first();
+
+                // dd($aktivitas);
         DB::beginTransaction();
 
         try {
@@ -408,22 +423,25 @@ class WisudaController extends Controller
 
             } else {
 
-                $wisuda = Wisuda::create([
-                    'id_perguruan_tinggi' => $perguruan_tinggi->id_perguruan_tinggi,
-                    'id_registrasi_mahasiswa' => $id_reg,
-                    'id_prodi' => $riwayat_pendidikan->id_prodi,
-                    'tgl_masuk' => $riwayat_pendidikan->tanggal_daftar,
-                    'nim' => $riwayat_pendidikan->nim,
-                    'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
-                    'ijazah_terakhir_file' => $ijazah_terakhir_file,
-                    'approved' => 0,
-                    'verified_induk' => 1,
-                    'verified_akademik' => 0,
-                    'verified_ta' => 0,
-                    'verified_wisuda' => 0,
-                    'verified_skpi' => 0,
-                    'finalisasi_data' => 0,
-                ]);
+                $wisuda = Wisuda::updateOrCreate(
+                    ['id_registrasi_mahasiswa' => $id_reg],
+                    [
+                        'id_perguruan_tinggi' => $perguruan_tinggi->id_perguruan_tinggi,
+                        'id_prodi' => $riwayat_pendidikan->id_prodi,
+                        'tgl_masuk' => $riwayat_pendidikan->tanggal_daftar,
+                        'nim' => $riwayat_pendidikan->nim,
+                        'id_aktivitas' => $aktivitas->id_aktivitas ?? null,
+                        'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
+                        'ijazah_terakhir_file' => $ijazah_terakhir_file,
+                        'approved' => 0,
+                        'verified_induk' => 1,
+                        'verified_akademik' => 0,
+                        'verified_ta' => 0,
+                        'verified_wisuda' => 0,
+                        'verified_skpi' => 0,
+                        'finalisasi_data' => 0,
+                    ]
+                );
             }
 
             /*
