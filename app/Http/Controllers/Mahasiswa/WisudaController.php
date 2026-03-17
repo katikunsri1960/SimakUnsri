@@ -94,6 +94,9 @@ class WisudaController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
+        if (!$aktivitas) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Aktivitas Tugas Akhir Anda tidak ditemukan, Silahkan hubungi Koor. Prodi untuk melapor ke Admin Universitas');
+        }
         // dd($aktivitas);
 
         // 2 SYARAT AKTIVITAS
