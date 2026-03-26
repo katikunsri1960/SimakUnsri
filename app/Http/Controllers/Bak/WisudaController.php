@@ -514,10 +514,7 @@ class WisudaController extends Controller
 
     public function approve(Request $request, $id)
     {
-        // $request->validate([
-        //     'no_urut' => 'required|integer',
-        // ]);
-
+        
         $wisuda = Wisuda::with('aktivitas_mahasiswa')->findOrFail($id);
 
         // dd($wisuda);
