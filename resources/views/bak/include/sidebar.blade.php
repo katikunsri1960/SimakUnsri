@@ -158,9 +158,11 @@
                                 <a href="{{route('bak.wisuda.registrasi-ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Registrasi Ijazah</a>
                             </li>
                             
+                            {{--
                             <li class="{{request()->routeIs('bak.wisuda.perbaikan-data') || request()->routeIs('bak.perbaikan-data.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.perbaikan-data')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Perbaikan Data</a>
                             </li>
+                            --}}
                             
                             <li class="{{request()->routeIs('bak.wisuda.ijazah.index') || request()->routeIs('bak.wisuda.ijazah.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.wisuda.ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Ijazah</a>
