@@ -386,7 +386,7 @@
                     <tr class="{{$rowStyle}}">
                         <td>TANGGAL WISUDA <em>(CONVOCATION DATE)</em></td>
                         <td width="1%">:</td>
-                        <td>{{ idDate($d->periode_wisuda->first()->tanggal_wisuda)}} (<em>{!! enDate($d->periode_wisuda->first()->tanggal_wisuda)!!}</em>)</td>
+                        <td>{{ idDate($d->periode_wisuda_all->first()->tanggal_wisuda)}} (<em>{!! enDate($d->periode_wisuda_all->first()->tanggal_wisuda)!!}</em>)</td>
                     </tr>
                     <tr class="text-upper {{$rowStyle}}">
                         <td>MASA STUDI <em>(LENGTH OF STUDY)</em></td> 
@@ -646,8 +646,8 @@
                         <td width="38%"></td>
                         <td width="24%"></td>
                         <td width="38%" style="padding-bottom:5px">
-                            INDRALAYA, {{ idDate($d->periode_wisuda->first()->tanggal_wisuda)}} 
-                            (<em>{!! enDate($d->periode_wisuda->first()->tanggal_wisuda) !!}</em>)
+                            INDRALAYA, {{ idDate($d->periode_wisuda_all->first()->tanggal_wisuda)}} 
+                            (<em>{!! enDate($d->periode_wisuda_all->first()->tanggal_wisuda) !!}</em>)
                         </td>
                     </tr>
 

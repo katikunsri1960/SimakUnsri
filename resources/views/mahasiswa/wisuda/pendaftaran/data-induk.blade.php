@@ -90,10 +90,10 @@ Pendaftaran Yudisium Mahasiswa
                                 <label for="id_wilayah" class="form-label">
                                     Wilayah <span class="text-danger">*</span>
                                 </label>
-                                <select name="id_wilayah" id="id_wilayah" class="form-control" {{$disabled}} style="height:32.99">
+                                <select name="id_wilayah" id="id_wilayah" class="form-select" {{$disabled}}>
                                     @if(!empty($kecamatan))
                                         <option value="{{ $kecamatan->id_wilayah }}" selected>
-                                            {{ $kecamatan->nama_wilayah }}, {{ $kecamatan->kab_kota->nama_wilayah }}
+                                            {{ $kecamatan->nama_wilayah }}{{ $kecamatan->kab_kota ? ', '.$kecamatan->kab_kota->nama_wilayah : '' }}
                                         </option>
                                     @endif
                                 </select>
@@ -390,6 +390,49 @@ $(document).ready(function () {
             }
         });
     });
+
+    /* 🔥 SAMAKAN DENGAN INPUT */
+    setTimeout(function () {
+
+        let select2 = $('#id_wilayah').next('.select2-container').find('.select2-selection');
+
+        // Ambil style dari input lain
+        let input = $('.form-control').first();
+
+        select2.css({
+            'border-radius': input.css('border-radius'),
+            'border-color': input.css('border-color'),
+            'box-shadow': input.css('box-shadow'),
+            'height': input.outerHeight() + 'px',
+            'padding': input.css('padding'),
+            'display': 'flex',
+            'align-items': 'center'
+        });
+
+        // text di dalam select
+        select2.find('.select2-selection__rendered').css({
+            'line-height': input.css('line-height'),
+            'padding-left': '0'
+        });
+
+        // arrow
+        select2.find('.select2-selection__arrow').css({
+            'height': input.outerHeight() + 'px'
+        });
+
+    }, 100);
+
+    @if($disabled)
+    setTimeout(function () {
+        $('#id_wilayah').next('.select2-container')
+            .find('.select2-selection')
+            .css({
+                'background-color': '#e9ecef',
+                'opacity': '1',
+                'cursor': 'not-allowed'
+            });
+    }, 100);
+    @endif
 
     // Hilangkan border merah saat dipilih
     $('#id_wilayah').on('change', function () {
