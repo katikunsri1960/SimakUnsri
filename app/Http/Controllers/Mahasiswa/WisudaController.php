@@ -333,6 +333,7 @@ class WisudaController extends Controller
 
     public function data_induk_store(Request $request)
     {
+        // dd($request->all());
         $perguruan_tinggi = ProfilPt::first();
         $id_reg = auth()->user()->fk_id;
 
@@ -419,6 +420,7 @@ class WisudaController extends Controller
                 $wisuda->update([
                     'ijazah_terakhir_file' => $ijazah_terakhir_file,
                     'approved' => 0,
+                    'verified_induk' => 1,
                 ]);
 
             } else {
@@ -1292,15 +1294,35 @@ class WisudaController extends Controller
 
     public function finalisasi_data(Request $request)
     {
+        $id_reg = auth()->user()->fk_id;
+
+        $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
+
+        if(!$wisuda){
+            return back()->with('error','Data wisuda tidak ditemukan');
+        }
+
+        if($wisuda->verified_induk == 0){
+            return redirect()->route('mahasiswa.wisuda.pendaftaran.data-induk')->with('error', 'Silahkan Pastikan Data Induk telah disimpan!');
+        }
+
+        if($wisuda->verified_akademik == 0){
+            return redirect()->route('mahasiswa.wisuda.pendaftaran.data-akademik')->with('error', 'Silahkan Pastikan Data Akademik telah disimpan!');
+        }
+
+        if($wisuda->verified_ta == 0){
+            return redirect()->route('mahasiswa.wisuda.pendaftaran.data-tugas-akhir')->with('error', 'Silahkan Pastikan Tugas Akhir telah disimpan!');
+        }
+
+        if($wisuda->verified_wisuda == 0){
+            return redirect()->route('mahasiswa.wisuda.pendaftaran.data-wisuda')->with('error', 'Silahkan Pastikan Data Wisuda telah disimpan!');
+        }
+
+        if($wisuda->verified_skpi == 0 ){
+            return redirect()->route('mahasiswa.wisuda.pendaftaran.data-skpi')->with('error', 'Silahkan Pastikan Data SKPI telah disimpan!');
+        }
+
         try {
-
-            $id_reg = auth()->user()->fk_id;
-
-            $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
-
-            if(!$wisuda){
-                return back()->with('error','Data wisuda tidak ditemukan');
-            }
 
             $wisuda->update([
                 'finalisasi_data' => 1
