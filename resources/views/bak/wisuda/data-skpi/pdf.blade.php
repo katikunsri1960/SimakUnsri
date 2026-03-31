@@ -178,7 +178,7 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
 <div class="ttd">
     <table>
         <tr>
-            <td width="48%"></td>
+            <td width="44%"></td>
             <td>
                 Indralaya, 
                 {{ \Carbon\Carbon::parse($d->tanggal_wisuda)->translatedFormat('d F Y') }}
@@ -188,7 +188,7 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
         <tr><td></td><td>{{ $wr1->jabatan }}</td></tr>
         <tr>
             <td></td>
-            <td style="padding-top: 60px;">
+            <td style="padding-top: 70px;">
                     {{ $wr1->gelar_depan }} {{ $wr1->nama }}
                     {{ $wr1->gelar_belakang ? ', '.$wr1->gelar_belakang : '' }}
                 <br>
