@@ -1001,6 +1001,7 @@ class WisudaController extends Controller
         if ($prodi != null) {
             $data->where('r.id_prodi', $prodi);
         }
+        
         $data = $data->orderBy('r.nim', 'ASC')
                     ->orderBy('jenjang', 'ASC')
                     ->get();

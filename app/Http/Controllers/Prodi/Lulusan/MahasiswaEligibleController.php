@@ -78,7 +78,7 @@ class MahasiswaEligibleController extends Controller
             ->orderBy('nim', 'ASC')
             ->get();
 
-            // dd($data[0]->periode_wisuda[0]->periode);
+            // dd($data);
         // Add eligibility status to each student
         foreach ($data as $d) {
             $jenjang = $d->prodi->nama_jenjang_pendidikan ?? 'Unknown'; // Get jenjang from prodi

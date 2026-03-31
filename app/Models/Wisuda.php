@@ -85,6 +85,12 @@ class Wisuda extends Model
                     ->where('is_active', 1);
     }
 
+    public function skpi()
+    {
+        return $this->hasMany(SKPI::class, 'id_registrasi_mahasiswa', 'id_registrasi_mahasiswa')
+                    ->where('approved', 3);
+    }
+
     public function periode_wisuda_all()
     {
         return $this->hasMany(PeriodeWisuda::class, 'periode', 'wisuda_ke');
