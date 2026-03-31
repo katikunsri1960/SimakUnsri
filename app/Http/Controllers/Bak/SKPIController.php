@@ -351,14 +351,12 @@ class SKPIController extends Controller
         |--------------------------------------------------------------------------
         */
         $wr1 = PejabatUniversitas::join('pejabat_universitas_jabatans as j', 'j.id', 'pejabat_universitas.jabatan_id')
-            ->where('j.id', 2)
-            ->select(
-                'pejabat_universitas.nama',
-                'pejabat_universitas.gelar_depan',
-                'pejabat_universitas.gelar_belakang',
-                'pejabat_universitas.nip'
-            )
-            ->first();
+                                    ->where('j.id', 2)
+                                    ->select('pejabat_universitas.nama as nama', 'pejabat_universitas.gelar_depan as gelar_depan',
+                                    'pejabat_universitas.gelar_belakang as gelar_belakang', 'pejabat_universitas.nip as nip', 'j.nama as jabatan')
+                                    ->first();
+
+            // dd($wr1);
 
         /*
         |--------------------------------------------------------------------------

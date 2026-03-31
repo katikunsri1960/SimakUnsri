@@ -161,7 +161,7 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
     @endphp
 
     @if($rows->count())
-        <div style="margin:10px 0px 10px 0px; font-weight:bold;">
+        <div style="margin:15px 0px 5px 0px; font-weight:bold;">
             {{ $bidang->nama_bidang }}
         </div>
 
@@ -203,12 +203,12 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
 
 <table>
     <tr>
-        <td width="30%" class="bold">Total Skor SKPI</td>
+        <td width="30%" class="bold text-upper">Total Skor SKPI</td>
         <td width="2%">: </td>
         <td width="68%" class="bold">{{ $total }}</td>
     </tr>
     <tr>
-        <td width="30%" class="bold">Predikat</td>
+        <td width="30%" class="bold text-upper">Predikat</td>
         <td width="2%">: </td>
         <td width="68%" class="bold">
             @php
@@ -224,7 +224,7 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
 <div class="ttd">
     <table>
         <tr>
-            <td width="45%"></td>
+            <td width="32%"></td>
             <td>Indralaya, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</td>
         </tr>
         <tr>
@@ -233,13 +233,13 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
         </tr>
         <tr>
             <td></td>
-            <td>Wakil Rektor Bidang Akademik</td>
+            <td>{{$wr1->jabatan}}</td>
         </tr>
         <tr>
             <td></td>
             <td style="padding-top: 60px;">
-                <strong>Prof. Dr. Ir. Rujito Agus Suwignyo, M.Agr.</strong><br>
-                NIP 196209091985031006
+                <strong>{{ $wr1->gelar_depan }} {{ strtoupper($wr1->nama) }}{{ $wr1->gelar_belakang ? ', '.$wr1->gelar_belakang : '' }}</strong><br>
+                NIP {{ strtoupper($wr1->nip) }}
             </td>
         </tr>
     </table>
