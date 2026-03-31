@@ -78,7 +78,7 @@ Ajuan SKPI Mahasiswa
                                                 <div class="row d-flex justify-content-center">
                                                     <a href="{{route('prodi.data-skpi.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-eye"></i> Detail</a>
                                                 </div>
-                                            @elseif(optional($d->bebas_pustaka)->file_bebas_pustaka)
+                                            @elseif($d->finalisasi_data == 1 && optional($d->bebas_pustaka)->file_bebas_pustaka)
                                                 <span class="badge badge-lg bg-danger mb-5 rounded">
                                                     Ditangguhkan
                                                 </span>
@@ -87,13 +87,22 @@ Ajuan SKPI Mahasiswa
                                                         Mahasiswa belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
                                                     </strong>
                                                 </p>
-                                            @elseif(optional($d->bebas_pustaka)->link_repo)
+                                            @elseif($d->finalisasi_data == 1 && optional($d->bebas_pustaka)->link_repo)
                                                 <span class="badge badge-lg bg-danger mb-5 rounded">
                                                     Ditangguhkan
                                                 </span>
                                                 <p class="text-danger">
                                                     <strong>
                                                         Mahasiswa belum Upload Repository!
+                                                    </strong>
+                                                </p>
+                                            @else
+                                                <span class="badge badge-lg bg-warning mb-5 rounded">
+                                                    Belum Finalisasi
+                                                </span>
+                                                <p class="text-warning">
+                                                    <strong>
+                                                        Mahasiswa belum Finalisasi Data!
                                                     </strong>
                                                 </p>
                                             @endif

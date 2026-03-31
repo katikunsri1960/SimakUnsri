@@ -8,10 +8,10 @@ use App\Models\ProgramStudi;
 use App\Models\PeriodeWisuda;
 use App\Models\Wisuda;
 use App\Models\Fakultas;
-use App\Models\Mahasiswa\RiwayatPendidikan;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\SKPI;
-use App\Models\SKPIJenisKegiatan;
 use App\Models\SKPIBidangKegiatan;
+use App\Models\Referensi\PejabatUniversitas;
 use Illuminate\Support\Facades\DB;
 use DateTime;
 
@@ -239,6 +239,140 @@ class SKPIController extends Controller
 
         return view('bak.wisuda.data-skpi.detail', 
             compact('mahasiswa', 'bidang','data', 'total_skor'));
+    }
+
+
+    public function skpi_download_pdf(Request $request)
+    {
+        // dd($request->all());
+        $fakultas = $request->input('fakultas');
+
+        if ($fakultas == null) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Fakultas tidak boleh kosong',
+            ]);
+        }
+
+        $periode = $request->input('periode');
+
+        if ($periode == null) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Periode tidak boleh kosong',
+            ]);
+        }
+
+        $prodi = $request->input('prodi');
+
+        if ($prodi == '*') {
+            $prodi = null;
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | QUERY DATA SKPI
+        |--------------------------------------------------------------------------
+        */
+        $data = Wisuda::with('skpi', 'skpi.jenisSkpi')
+            ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
+            ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
+            ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
+            ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
+            ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
+            ->leftJoin('pisn_mahasiswas as pisn', 'pisn.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
+            // ->leftJoin('skpi_data as skpi', 'skpi.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
+            ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
+                
+
+            ->select(
+                'data_wisuda.*',
+
+                'r.nama_mahasiswa',
+                'r.nim',
+
+                'p.nama_program_studi as nama_prodi',
+                'p.kode_program_studi as kode_prodi',
+                'p.nama_jenjang_pendidikan as jenjang',
+
+                'f.nama_fakultas',
+                'b.tempat_lahir',
+                'b.tanggal_lahir',
+
+                'pw.tanggal_wisuda',
+                'pisn.penomoran_ijazah_nasional as no_ijazah',
+                'g.gelar as gelar'
+            )
+
+            ->where('data_wisuda.wisuda_ke', $periode)
+            ->where('f.id', $fakultas);
+
+        if ($prodi != null) {
+            $data->where('r.id_prodi', $prodi);
+        }
+
+        $data = $data->orderBy('r.nim', 'ASC')
+                    ->orderBy('jenjang', 'ASC')
+                    ->get();
+
+        // dd($data);
+        /*
+        |--------------------------------------------------------------------------
+        | VALIDASI DATA
+        |--------------------------------------------------------------------------
+        */
+        if ($data->isEmpty()) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan',
+            ]);
+        }
+
+        // dd($data);
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL SKPI BIDANG
+        |--------------------------------------------------------------------------
+        */
+        $skpi_bidang = SKPIBidangKegiatan::all();
+
+
+        /*
+        |--------------------------------------------------------------------------
+        | AMBIL NAMA FAKULTAS
+        |--------------------------------------------------------------------------
+        */
+        $nama_fakultas = Fakultas::where('id', $fakultas)->value('nama_fakultas');
+        $nama_fakultas = str_replace('Fakultas ', '', $nama_fakultas);
+
+        /*
+        |--------------------------------------------------------------------------
+        | PEJABAT TTD
+        |--------------------------------------------------------------------------
+        */
+        $wr1 = PejabatUniversitas::join('pejabat_universitas_jabatans as j', 'j.id', 'pejabat_universitas.jabatan_id')
+            ->where('j.id', 2)
+            ->select(
+                'pejabat_universitas.nama',
+                'pejabat_universitas.gelar_depan',
+                'pejabat_universitas.gelar_belakang',
+                'pejabat_universitas.nip'
+            )
+            ->first();
+
+        /*
+        |--------------------------------------------------------------------------
+        | GENERATE PDF
+        |--------------------------------------------------------------------------
+        */
+        $pdf = PDF::loadView('bak.wisuda.data-skpi.pdf', [
+            'data' => $data, 'skpi_bidang' => $skpi_bidang,
+            'fakultas' => $nama_fakultas,
+            'wr1' => $wr1
+        ])
+        ->setPaper('A4', 'portrait');
+
+        return $pdf->stream('SKPI-'.$fakultas-$periode.'.pdf');
     }
 
 }

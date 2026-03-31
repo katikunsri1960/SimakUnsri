@@ -31,7 +31,7 @@ Data SKPI Mahasiswa
                         <label class="col-form-label col-md-2">Fakultas</label>
                         <div class="col-md-8">
                             <select name="fakultas" id="fakultas" required class="form-select" onchange="filterProdi()">
-                                <option value="*">-- Semua Fakultas --</option>
+                                <!-- <option value="*">-- Semua Fakultas --</option> -->
                                 @foreach ($fakultas as $f)
                                 <option value="{{$f->id}}">{{$f->nama_fakultas}}</option>
                                 @endforeach
@@ -70,6 +70,9 @@ Data SKPI Mahasiswa
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
+                        <div class="mb-3">
+                            <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD SKPI (PDF)</button>
+                        </div>
                         <table id="data" class="table table-bordered table-striped ">
                             <thead>
                                 <tr>
@@ -183,15 +186,15 @@ function filterProdi()
     var prodi = @json($prodi);
     var fakultas = $('#fakultas').val();
 
-    if (fakultas == '*') {
-        $('#prodi').empty();
-        $('#prodi').append('<option value="*">-- Semua Prodi --</option>');
-        $.each(prodi, function (i, p) {
-            $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
-        });
-        return;
+    // if (fakultas == '*') {
+    //     $('#prodi').empty();
+    //     $('#prodi').append('<option value="*">-- Semua Prodi --</option>');
+    //     $.each(prodi, function (i, p) {
+    //         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
+    //     });
+    //     return;
 
-    }
+    // }
 
     var filteredProdi = prodi.filter(function (p) {
         return p.fakultas_id == fakultas;
@@ -203,6 +206,27 @@ function filterProdi()
     $.each(filteredProdi, function (i, p) {
         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
     });
+}
+
+function downloadPdf()
+{
+
+    var fakultas = $('#fakultas').val();
+    var prodi = $('#prodi').val();
+    var p_wisuda = $('#periode').val();
+
+    if (fakultas == '' || prodi == '' || p_wisuda == '') {
+
+        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
+        return;
+    }
+
+    var baseUrl = '{{ route('bak.skpi.download-pdf') }}';
+    var url = baseUrl + '?fakultas=' + encodeURIComponent(fakultas) +
+            '&prodi=' + encodeURIComponent(prodi) +
+            '&periode=' + encodeURIComponent(p_wisuda);
+    window.open(url, '_blank');
+    // console.log(url);
 }
 
 // FUNCTION TAMPILKAN DETAIL MAHASISWA

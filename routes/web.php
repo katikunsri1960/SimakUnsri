@@ -249,6 +249,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('skpi')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\SKPIController::class, 'index'])->name('bak.skpi.data.index');
                     Route::get('/data', [App\Http\Controllers\Bak\SKPIController::class, 'skpi_data'])->name('bak.skpi.data.get-data');
+                    Route::get('/download-pdf', [App\Http\Controllers\Bak\SKPIController::class, 'skpi_download_pdf'])->name('bak.skpi.download-pdf');
                     Route::get('/detail/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'detail_skpi_mahasiswa'])->name('bak.skpi.data.detail');
                     Route::post('/approve/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'approve_skpi'])->name('bak.skpi.data.approve');
                     Route::post('/decline/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'decline_skpi'])->name('bak.skpi.data.decline');

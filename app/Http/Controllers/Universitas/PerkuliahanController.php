@@ -903,7 +903,7 @@ class PerkuliahanController extends Controller
 
             $prodi = ProgramStudi::pluck('id_prodi')->toArray();
             $semester_aktif = SemesterAktif::first()->id_semester;
-            // whereNotIn('id_semester', ['20251','20243'])
+            // whereNotIn('id_semester', ['20251','20252'])
             $semester = Semester::whereNotIn('id_semester', [$semester_aktif-1, $semester_aktif])->pluck('id_semester')->toArray();
             $semester = array_chunk($semester, 3);
             $semester = array_map(function ($value) {

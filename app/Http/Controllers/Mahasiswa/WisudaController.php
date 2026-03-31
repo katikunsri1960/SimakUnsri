@@ -419,7 +419,6 @@ class WisudaController extends Controller
 
                 $wisuda->update([
                     'ijazah_terakhir_file' => $ijazah_terakhir_file,
-                    'approved' => 0,
                     'verified_induk' => 1,
                 ]);
 
@@ -1264,15 +1263,15 @@ class WisudaController extends Controller
         //DATA TUGAS AKHIR END
 
 
-        //DATA WISUDA END
+        //DATA WISUDA START
         $wisuda_ke = PeriodeWisuda::where('tanggal_mulai_daftar', '<=', $today)
                     ->where('tanggal_akhir_daftar', '>=', $today)
                     ->where('is_active', '1')
                     ->first();
-        //DATA WISUDA START
+        //DATA WISUDA END
 
 
-        //DATA SKPI END
+        //DATA SKPI START
         $skpi_bidang = SKPIBidangKegiatan::all();
 
         $skpi_data = SKPI::leftJoin('skpi_jenis_kegiatan', 'skpi_jenis_kegiatan.id', 'skpi_data.id_jenis_skpi')
@@ -1281,7 +1280,7 @@ class WisudaController extends Controller
                     ->get();
 
         $skpi_jenis_kegiatan = SKPIJenisKegiatan::all();
-        //DATA SKPI START
+        //DATA SKPI END
 
 
         return view('mahasiswa.wisuda.pendaftaran.resume_yudisium', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 
