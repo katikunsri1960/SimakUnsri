@@ -77,7 +77,10 @@
     .text-td{
         font-family: "Times New Roman", serif;
         font-size: 10pt;
+    }
 
+    .bold {
+        font-weight: bold;
     }
 
     .ttd {
@@ -158,7 +161,7 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
     @endphp
 
     @if($rows->count())
-        <div style="margin-top:10px; font-weight:bold;">
+        <div style="margin:10px 0px 10px 0px; font-weight:bold;">
             {{ $bidang->nama_bidang }}
         </div>
 
@@ -197,22 +200,31 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
 @endforeach
 
 <br>
-<strong>TOTAL SKOR SKPI : {{ $total }}</strong><br>
 
-<strong>
-PREDIKAT :
-@php
-    if($total >= 100) echo 'ISTIMEWA';
-    elseif($total >= 80) echo 'SANGAT BAIK';
-    elseif($total >= 60) echo 'BAIK';
-    else echo 'CUKUP';
-@endphp
-</strong>
+<table>
+    <tr>
+        <td width="30%" class="bold">Total Skor SKPI</td>
+        <td width="2%">: </td>
+        <td width="68%" class="bold">{{ $total }}</td>
+    </tr>
+    <tr>
+        <td width="30%" class="bold">Predikat</td>
+        <td width="2%">: </td>
+        <td width="68%" class="bold">
+            @php
+                if($total >= 100) echo 'ISTIMEWA';
+                elseif($total >= 80) echo 'SANGAT BAIK';
+                elseif($total >= 60) echo 'BAIK';
+                else echo 'CUKUP';
+            @endphp
+        </td>
+    </tr>
+</table>
 
 <div class="ttd">
     <table>
         <tr>
-            <td width="60%"></td>
+            <td width="45%"></td>
             <td>Indralaya, {{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}</td>
         </tr>
         <tr>
