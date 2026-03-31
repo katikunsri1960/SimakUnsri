@@ -301,7 +301,8 @@ class SKPIController extends Controller
 
                 'pw.tanggal_wisuda',
                 'pisn.penomoran_ijazah_nasional as no_ijazah',
-                'g.gelar as gelar'
+                'g.gelar',
+                'g.gelar_panjang',
             )
 
             ->where('data_wisuda.wisuda_ke', $periode)
@@ -315,7 +316,7 @@ class SKPIController extends Controller
                     ->orderBy('jenjang', 'ASC')
                     ->get();
 
-        // dd($data);
+        // dd($data[0]->skpi->jenisSkpi);
         /*
         |--------------------------------------------------------------------------
         | VALIDASI DATA
