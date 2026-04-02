@@ -631,26 +631,15 @@ class WisudaController extends Controller
 
         $today = Carbon::now()->toDateString();
 
+        $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
+
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
-                ->whereHas('bimbing_mahasiswa', function ($query) {
-                        $query->whereNotNull('id_bimbing_mahasiswa');
-                    })
-                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-                        $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                        // ->where('nim', $riwayat_pendidikan->nim)
-                        ;
-                    })
-                ->whereHas('nilai_konversi', function ($query) {
-                        $query->where('nilai_indeks', '>', 0.00);
-                    })
-                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+                ->where('id_aktivitas', $wisuda->id_aktivitas)
                 ->orderByDesc('id_semester') // aktivitas terakhir
                 ->first();
 
         // dd($aktivitas);
-        $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
-
+        
         return view('mahasiswa.wisuda.pendaftaran.data-tugas-akhir', [
                     'riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 
                     'wisuda' => $wisuda, 'aktivitas' => $aktivitas, 'bku_prodi'=> $bku_prodi]);
@@ -684,22 +673,12 @@ class WisudaController extends Controller
             ->where('id_registrasi_mahasiswa', $id_reg)
             ->first();
 
-        $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal','bimbing_mahasiswa','nilai_konversi'])
-            ->whereHas('bimbing_mahasiswa', function ($query) {
-                $query->whereNotNull('id_bimbing_mahasiswa');
-            })
-            ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-                $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                    // ->where('nim', $riwayat_pendidikan->nim)
-                    ;
-            })
-            ->whereHas('nilai_konversi', function ($query) {
-                $query->where('nilai_indeks', '>', 2.00);
-            })
-            ->where('id_prodi', $riwayat_pendidikan->id_prodi)
-            ->whereIn('id_jenis_aktivitas', ['1','3','4','22'])
-            ->orderBy('id_semester','desc')
-            ->first();
+        $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
+
+        $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
+                ->where('id_aktivitas', $wisuda->id_aktivitas)
+                ->orderByDesc('id_semester') // aktivitas terakhir
+                ->first();
 
         DB::beginTransaction();
 
