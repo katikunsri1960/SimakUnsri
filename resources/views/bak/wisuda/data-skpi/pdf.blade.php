@@ -65,7 +65,21 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
 
     <tr>
         <td>5. Jenjang Kualifikasi Sesuai KKNI</td>
-        <td>: </td>
+        <td>: 
+
+            @if($d->jenjang == 'D3')
+                5
+            @elseif($d->jenjang == 'D4' || $d->jenjang == 'S1')
+                6
+            @elseif($d->jenjang == 'Profesi')
+                7
+            @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-1')
+                8
+            @elseif($d->jenjang == 'S3' || $d->jenjang == 'Sp-2')
+                9
+            @endif
+
+        </td>
     </tr>
 
     <tr>
@@ -75,12 +89,12 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
     
     <tr>    
         <td>7. Bahasa Pengantar Kuliah</td>
-        <td>:</td>
+        <td>: </td>
     </tr>
 
     <tr>
         <td>8. Sistem Penilaian</td>
-        <td>:</td>
+        <td>: </td>
     </tr>
 
     <tr>

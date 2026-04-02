@@ -257,7 +257,9 @@ class PesertaKelasKuliah extends Model
                 'status' => 'error',
                 'message' => 'Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
             ];
-        }
+        }elseif($riwayat_pendidikan->id_periode_masuk + 1 == $semester_aktif->id_semester){
+            
+        
 
         $aktivitas = $db_akt->with('anggota_aktivitas_personal', 'konversi')
                     ->whereHas('anggota_aktivitas_personal', function($query) use ($id_reg) {
