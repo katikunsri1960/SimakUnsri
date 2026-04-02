@@ -301,7 +301,8 @@ class SKPIController extends Controller
 
                 'pw.tanggal_wisuda',
                 'pisn.penomoran_ijazah_nasional as no_ijazah',
-                'g.gelar as gelar'
+                'g.gelar',
+                'g.gelar_panjang',
             )
 
             ->where('data_wisuda.wisuda_ke', $periode)
@@ -315,7 +316,7 @@ class SKPIController extends Controller
                     ->orderBy('jenjang', 'ASC')
                     ->get();
 
-        // dd($data);
+        // dd($data[0]->skpi->jenisSkpi);
         /*
         |--------------------------------------------------------------------------
         | VALIDASI DATA
@@ -343,7 +344,6 @@ class SKPIController extends Controller
         |--------------------------------------------------------------------------
         */
         $nama_fakultas = Fakultas::where('id', $fakultas)->value('nama_fakultas');
-        $nama_fakultas = str_replace('Fakultas ', '', $nama_fakultas);
 
         /*
         |--------------------------------------------------------------------------
@@ -356,7 +356,7 @@ class SKPIController extends Controller
                                     'pejabat_universitas.gelar_belakang as gelar_belakang', 'pejabat_universitas.nip as nip', 'j.nama as jabatan')
                                     ->first();
 
-            // dd($wr1);
+            // dd($nama_fakultas);
 
         /*
         |--------------------------------------------------------------------------
@@ -370,7 +370,7 @@ class SKPIController extends Controller
         ])
         ->setPaper('A4', 'portrait');
 
-        return $pdf->stream('SKPI-'.$fakultas-$periode.'.pdf');
+        return $pdf->stream('SKPI-'.$nama_fakultas.'-'.$periode.'.pdf');
     }
 
 }

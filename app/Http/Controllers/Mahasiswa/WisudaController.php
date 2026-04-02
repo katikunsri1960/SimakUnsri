@@ -659,6 +659,7 @@ class WisudaController extends Controller
     public function data_tugas_akhir_store(Request $request)
     {
         $request->validate([
+            'judul_eng' => 'required',
             'abstrak_ta' => 'required',
             'bku_prodi' => 'nullable',
             'abstrak_file' => 'nullable|file|mimes:pdf|max:500',
@@ -760,19 +761,19 @@ class WisudaController extends Controller
                 ->with('success','Data Berhasil disimpan, Silahkan lanjut ke Data Wisuda!');
 
         } 
-        catch (\Exception $e) {
+        // catch (\Exception $e) {
 
-            DB::rollBack();
-
-            \Log::error('Wisuda store error: '.$e->getMessage());
-
-            return redirect()->back()->with('error','Terjadi kesalahan saat menyimpan data!');
-        }
-
-        //         catch (\Exception $e) {
         //     DB::rollBack();
-        //     dd($e->getMessage(), $e->getLine(), $e->getFile());
+
+        //     \Log::error('Wisuda store error: '.$e->getMessage());
+
+        //     return redirect()->back()->with('error','Terjadi kesalahan saat menyimpan data!');
         // }
+
+                catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage(), $e->getLine(), $e->getFile());
+        }
     }
 
 

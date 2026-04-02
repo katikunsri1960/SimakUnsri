@@ -26,7 +26,7 @@ Mahasiswa
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    <div class="d-flex justify-content-end">
+                    {{--<div class="d-flex justify-content-end">
                         <form action="{{route('univ.mahasiswa.sync')}}" method="get" id="sync-form">
                             <button class="btn btn-primary waves-effect waves-light" type="submit"><i
                                     class="fa fa-refresh"></i> Sinkronisasi</button>
@@ -36,7 +36,7 @@ Mahasiswa
                             <button class="btn btn-success waves-effect waves-light" type="submit"><i
                                     class="fa fa-refresh"></i> Sinkronisasi Prestasi</button>
                         </form>
-                    </div>
+                    </div>--}}
                 </div>
                 <div class="box-body">
                     <div class="table-responsive">
