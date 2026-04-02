@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Bak;
 
 use App\Http\Controllers\Controller;
+use App\Models\CPLKurikulum;
 use Illuminate\Http\Request;
 use App\Models\ProgramStudi;
 use App\Models\PeriodeWisuda;
@@ -290,6 +291,7 @@ class SKPIController extends Controller
 
                 'r.nama_mahasiswa',
                 'r.nim',
+                'r.id_kurikulum',
 
                 'p.nama_program_studi as nama_prodi',
                 'p.kode_program_studi as kode_prodi',
@@ -347,6 +349,14 @@ class SKPIController extends Controller
 
         /*
         |--------------------------------------------------------------------------
+        | AMBIL DATA CPL KURIKULUM
+        |--------------------------------------------------------------------------
+        */
+        $cpl = CPLKurikulum::whereIn('id_kurikulum', $data->pluck('id_kurikulum')->unique())
+                    ->get()
+                    ->groupBy('id_kurikulum');
+        /*
+        |--------------------------------------------------------------------------
         | PEJABAT TTD
         |--------------------------------------------------------------------------
         */
@@ -364,9 +374,11 @@ class SKPIController extends Controller
         |--------------------------------------------------------------------------
         */
         $pdf = PDF::loadView('bak.wisuda.data-skpi.pdf', [
-            'data' => $data, 'skpi_bidang' => $skpi_bidang,
+            'data' => $data,
+            'skpi_bidang' => $skpi_bidang,
             'fakultas' => $nama_fakultas,
-            'wr1' => $wr1
+            'wr1' => $wr1,
+            'cpl' => $cpl // ⬅️ WAJIB TAMBAH INI
         ])
         ->setPaper('A4', 'portrait');
 

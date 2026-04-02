@@ -110,9 +110,16 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
 
 <div class="section-title">C. Informasi tentang Kualifikasi dan Hasil yang Dicapai Capaian Pembelajaran Lulusan</div>
 <table style="margin: 0px 0px 0px 15px;">
-    <tr><td>1. CPL-1</td><td>: ...................................................</td></tr>
-    <tr><td>2. CPL-2</td><td>: ...................................................</td></tr>
-    <tr><td>3. CPL-3</td><td>: ...................................................</td></tr>
+    @php
+        $cpl_list = $cpl[$d->id_kurikulum] ?? collect();
+    @endphp
+
+    @foreach($cpl_list as $index => $item)
+    <tr>
+        <td width="10%">CPL-{{ $index + 1 }}</td>
+        <td>: {{ $item->nama_cpl }}</td>
+    </tr>
+    @endforeach
 </table>
 
 <div class="page-break"></div>

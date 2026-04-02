@@ -5,9 +5,19 @@ namespace App\Http\Controllers\Prodi;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CPLKurikulum;
+use App\Models\Perkuliahan\ListKurikulum;
 
 class CPLKurikulumController extends Controller
 {
+    // public function list_kurikulum()
+    // {
+    //     $data = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
+    //     return view('prodi.data-master.capaian-pembelajaran.index',
+    //     [
+    //         'data' => $data
+    //     ]);
+    // }
+
     /*
     |--------------------------------------------------------------------------
     | GET ALL DATA
@@ -15,23 +25,18 @@ class CPLKurikulumController extends Controller
     */
     public function index(Request $request)
     {
-        $query = CPLKurikulum::query();
+        $list_kurikulum = ListKurikulum::where('id_prodi', auth()->user()->fk_id)->where('is_active', 1)->get();
 
-        // filter id_kurikulum
-        if ($request->id_kurikulum) {
-            $query->where('id_kurikulum', $request->id_kurikulum);
-        }
+        $data = CPLKurikulum::with('kurikulum')
+            ->whereHas('kurikulum', function($q) {
+                $q->where('id_prodi', auth()->user()->fk_id);
+            })
+            ->get();
 
-        // search nama_cpl
-        if ($request->search) {
-            $query->where('nama_cpl', 'like', '%' . $request->search . '%');
-        }
-
-        $data = $query->orderBy('id', 'DESC')->get();
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $data
+        return view('prodi.data-master.capaian-pembelajaran.index',
+        [
+            'data' => $data,
+            'list_kurikulum' => $list_kurikulum
         ]);
     }
 
@@ -42,8 +47,9 @@ class CPLKurikulumController extends Controller
     */
     public function store(Request $request)
     {
+        // dd($request->all());
         $request->validate([
-            'id_kurikulum' => 'required|integer',
+            'id_kurikulum' => 'required',
             'nama_cpl' => 'required|string'
         ]);
 
@@ -53,18 +59,10 @@ class CPLKurikulumController extends Controller
                 'nama_cpl' => $request->nama_cpl
             ]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil disimpan',
-                'data' => $data
-            ]);
+            return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal menyimpan data',
-                'error' => $e->getMessage()
-            ]);
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan');
         }
     }
 
@@ -117,18 +115,10 @@ class CPLKurikulumController extends Controller
                 'nama_cpl' => $request->nama_cpl
             ]);
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil diupdate',
-                'data' => $data
-            ]);
+            return redirect()->back()->with('success', 'Data Berhasil di Diubah');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal update data',
-                'error' => $e->getMessage()
-            ]);
+            return redirect()->back()->with('error', 'Data Gagal di Diubah');
         }
     }
 
@@ -151,17 +141,10 @@ class CPLKurikulumController extends Controller
         try {
             $data->delete();
 
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Data berhasil dihapus'
-            ]);
+            return redirect()->back()->with('success', 'Data Berhasil di Dihapus');
 
         } catch (\Exception $e) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Gagal hapus data',
-                'error' => $e->getMessage()
-            ]);
+            return redirect()->back()->with('error', 'Data Gagal di Dihapus');
         }
     }
 }
