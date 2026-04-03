@@ -918,15 +918,16 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::prefix('kurikulum')->group(function(){
                     Route::get('/', [App\Http\Controllers\Prodi\DataMasterController::class, 'kurikulum'])->name('prodi.data-master.kurikulum');
-                    Route::get('/detail/{kurikulum}', [App\Http\Controllers\Prodi\DataMasterController::class, 'detail_kurikulum'])->name('prodi.data-master.kurikulum.detail');
+                    Route::get('/detail/{kurikulum}', [App\Http\Controllers\Prodi\DataMasterController::class, 'detail_kurikulum'])->name('prodi.data-master.kurikulum.detail');                    
+                });
 
-                    Route::prefix('cpl')->group(function () {
-                        Route::get('/', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'index'])->name('prodi.data-master.kurikulum.cpl.index');
-                        Route::post('/store', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'store'])->name('prodi.data-master.kurikulum.cpl.store');
-                        Route::get('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'show'])->name('prodi.data-master.kurikulum.cpl.show');
-                        Route::put('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'update'])->name('prodi.data-master.kurikulum.cpl.update');
-                        Route::delete('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'destroy'])->name('prodi.data-master.kurikulum.cpl.delete');
-                    });
+                Route::prefix('cpl')->group(function () {
+                    Route::get('/kurikulum', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'list_kurikulum'])->name('prodi.data-master.cpl.index-kurikulum');
+                    Route::get('/', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'index'])->name('prodi.data-master.cpl.index');
+                    Route::post('/store', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'store'])->name('prodi.data-master.cpl.store');
+                    Route::get('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'show'])->name('prodi.data-master.cpl.show');
+                    Route::put('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'update'])->name('prodi.data-master.cpl.update');
+                    Route::delete('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'destroy'])->name('prodi.data-master.cpl.delete');
                 });
 
                 Route::prefix('detail-prodi')->group(function(){
@@ -1239,7 +1240,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::prefix('stop-out')->group(function(){
                 Route::get('/', [App\Http\Controllers\Universitas\CutiManualController::class, 'index'])->name('univ.cuti-manual');
                 Route::post('/store', [App\Http\Controllers\Universitas\CutiManualController::class, 'store'])->name('univ.cuti-manual.store');
-                Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\CutiManualController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
+                // Route::get('/get-mahasiswa', [App\Http\Controllers\Universitas\CutiManualController::class, 'get_mahasiswa'])->name('univ.pengaturan.akun.get-mahasiswa');
                 Route::get('/get-data-mahasiswa/{id_registrasi_mahasiswa}', [App\Http\Controllers\Universitas\CutiManualController::class, 'getMahasiswaData'])->name('univ.cuti-manual.get-data');
                 Route::delete('/hapus-cuti/{id_cuti}', [App\Http\Controllers\Universitas\CutiManualController::class, 'delete'])->name('univ.cuti-manual.delete');
             });
@@ -1372,6 +1373,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                         Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'lulus_mahasiswa'])->name('univ.feeder-upload.mahasiswa.lulus-mahasiswa');
                         Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'lulus_mahasiswa_upload'])->name('univ.feeder-upload.mahasiswa.lulus-mahasiswa.upload');
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'lulus_mahasiswa_data'])->name('univ.feeder-upload.mahasiswa.lulus-mahasiswa.data');
+                    });
+                    
+                    Route::prefix('biodata-mahasiswa')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'biodata_mahasiswa'])->name('univ.feeder-upload.mahasiswa.biodata-mahasiswa');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'biodata_mahasiswa_upload'])->name('univ.feeder-upload.mahasiswa.biodata-mahasiswa.upload');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'biodata_mahasiswa_data'])->name('univ.feeder-upload.mahasiswa.biodata-mahasiswa.data');
                     });
                 });
 

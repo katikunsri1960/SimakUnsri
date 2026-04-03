@@ -10,13 +10,13 @@ return new class extends Migration
     {
         Schema::create('cpl_kurikulums', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('id_kurikulum');
-            $table->text('nama_cpl');
+            $table->string('id_kurikulum')->required();
+            $table->text('nama_cpl')->required();
             $table->timestamps();
 
             // optional relasi (jika ada tabel kurikulum)
             $table->foreign('id_kurikulum')
-                  ->references('id')
+                  ->references('id_kurikulum')
                   ->on('list_kurikulums')
                   ->onDelete('cascade');
         });

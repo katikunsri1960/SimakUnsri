@@ -1,12 +1,12 @@
 @extends('layouts.universitas')
 @section('title')
-FEEDER UPLOAD - LULUS MAHASISWA
+FEEDER UPLOAD - BIODATA MAHASISWA
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">FEEDER UPLOAD - LULUS MAHASISWA</h3>
+            <h3 class="page-title">FEEDER UPLOAD - BIODATA MAHASISWA</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
@@ -14,7 +14,7 @@ FEEDER UPLOAD - LULUS MAHASISWA
                         </li>
                         <li class="breadcrumb-item" aria-current="page">Feeder Upload</li>
                         <li class="breadcrumb-item" aria-current="page">Mahasiswa</li>
-                        <li class="breadcrumb-item active" aria-current="page">Lulus Mahasiswa</li>
+                        <li class="breadcrumb-item active" aria-current="page">Biodata Mahasiswa</li>
                     </ol>
                 </nav>
             </div>
@@ -35,10 +35,12 @@ FEEDER UPLOAD - LULUS MAHASISWA
                                 <input type="hidden" name="id_prodi" id="form_id_prodi" required>
                                 <input type="hidden" name="id_semester" id="form_id_semester" required>
                                 <div class="col-md-6">
+                                    {{--
                                     <div class="row">
                                         <button type="submit" class="btn btn-primary btn-sm" disabled id="buttonSubmitForm"> <i
-                                                class="fa fa-upload me-3"></i>Upload Lulus Mahasiswa</button>
+                                                class="fa fa-upload me-3"></i>Upload Biodata Mahasiswa</button>
                                     </div>
+                                    --}}
                                 </div>
                             </form>
                             <div class="row mt-3">
@@ -73,7 +75,7 @@ FEEDER UPLOAD - LULUS MAHASISWA
 
                             </div>
                         </div>
-                        <div class="form-group row">
+                        {{--<div class="form-group row">
                             <label for="example-search-input" class="col-sm-2 col-form-label">Periode Keluar</label>
                             <div class="col-sm-4">
                                 <select class="form-select" name="id_semester" id="id_semester">
@@ -86,7 +88,7 @@ FEEDER UPLOAD - LULUS MAHASISWA
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
+                        </div>--}}
                         <div class="form-group row">
                             <label for="example-search-input" class="col-sm-2 col-form-label">&nbsp;</label>
                             <div class="col-sm-4">
@@ -103,20 +105,27 @@ FEEDER UPLOAD - LULUS MAHASISWA
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Status Sync</th>
-                                    <th class="text-center align-middle">Semester</th>
+                                    <th class="text-center align-middle">Angkatan</th>
                                     <th class="text-center align-middle">Nama Prodi</th>
-                                    <th class="text-center align-middle">Periode Wisuda</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama Mahasiswa</th>
-                                    <th class="text-center align-middle">No SK Yudisium</th>
-                                    <th class="text-center align-middle">Tgl SK Yudisium</th>
-                                    <th class="text-center align-middle">Jenis Keluar</th>
-                                    <th class="text-center align-middle">Tgl Keluar</th>
-                                    <th class="text-center align-middle">IPK</th>
-                                    <th class="text-center align-middle">No Ijazah/Sert Prof</th>
-                                    <th class="text-center align-middle">Judul Skripsi</th>
-                                    <th class="text-center align-middle">Bln Awal Bimbingan</th>
-                                    <th class="text-center align-middle">Bln Akhir Bimbingan</th>
+
+                                    <th class="text-center align-middle">Jalan</th>
+                                    <th class="text-center align-middle">Dusun</th>
+                                    <th class="text-center align-middle">RT</th>
+                                    <th class="text-center align-middle">RW</th>
+                                    <th class="text-center align-middle">Kelurahan</th>
+                                    <th class="text-center align-middle">Kecamatan</th>
+
+                                    <th class="text-center align-middle">Handphone</th>
+                                    <th class="text-center align-middle">Email</th>
+
+                                    <th class="text-center align-middle">Nama Ayah</th>
+                                    <th class="text-center align-middle">No HP Ayah</th>
+                                    <th class="text-center align-middle">Nama Ibu</th>
+                                    <th class="text-center align-middle">No HP Ibu</th>
+
+                                    <th class="text-center align-middle">Alamat Orang Tua</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -149,7 +158,7 @@ FEEDER UPLOAD - LULUS MAHASISWA
         $('#dataAkm').DataTable().destroy();
 
         $.ajax({
-            url: "{{ route('univ.feeder-upload.mahasiswa.lulus-mahasiswa.data') }}",
+            url: "{{ route('univ.feeder-upload.mahasiswa.biodata-mahasiswa.data') }}",
             type: 'GET',
             data: {
                 id_prodi: id_prodi,
@@ -173,24 +182,33 @@ FEEDER UPLOAD - LULUS MAHASISWA
 
                 $.each(data, function(i, item) {
                     var status = item.status_sync ?? "belum upload";
+
                     html += '<tr>';
                     html += '<td class="text-center">' + no + '</td>';
                     html += '<td>' + status + '</td>';
-                    html += '<td class="text-center">' + item.id_periode_keluar + '</td>';
+                    html += '<td class="text-center">' + item.angkatan + '</td>';
                     html += '<td class="text-center">' + item.prodi + '</td>';
-                    html += '<td class="text-center">' + item.keterangan + '</td>';
                     html += '<td class="text-center">' + item.nim + '</td>';
                     html += '<td class="text-start">' + item.nama_mahasiswa + '</td>';
-                    html += '<td class="text-center">' + item.sk_yudisium + '</td>';
-                    html += '<td class="text-center">' + item.tgl_sk_yudisium + '</td>';
-                    html += '<td class="text-center">' + item.nama_jenis_keluar + '</td>';
-                    html += '<td class="text-center">' + item.tanggal_keluar + '</td>';
-                    html += '<td class="text-center">' + item.ipk + '</td>';
-                    html += '<td class="text-center">' + item.no_seri_ijazah + '</td>';
-                    html += '<td class="text-center">' + item.judul_skripsi + '</td>';
-                    html += '<td class="text-center">' + item.bln_awal_bimbingan + '</td>';
-                    html += '<td class="text-center">' + item.bln_akhir_bimbingan + '</td>';
+
+                    // alamat utama
+                    html += '<td>' + (item.jalan ?? '-') + '</td>';
+                    html += '<td>' + (item.dusun ?? '-') + '</td>';
+                    html += '<td>' + (item.rt ?? '-') + '</td>';
+                    html += '<td>' + (item.rw ?? '-') + '</td>';
+                    html += '<td>' + (item.kelurahan ?? '-') + '</td>';
+                    html += '<td>' + (item.kecamatan ?? '-') + '</td>';
+
+                    html += '<td class="text-center">' + (item.handphone ?? '-') + '</td>';
+                    html += '<td class="text-center">' + (item.email ?? '-') + '</td>';
+                    html += '<td class="text-center">' + item.nama_ayah + '</td>';
+                    html += '<td class="text-center">' + (item.no_hp_ayah ?? '-') + '</td>';
+                    html += '<td class="text-center">' + item.nama_ibu_kandung + '</td>';
+                    html += '<td class="text-center">' + (item.no_hp_ibu ?? '-') + '</td>';
+                    html += '<td class="text-center">' + (item.alamat_orang_tua ?? '-') + '</td>';
+
                     html += '</tr>';
+
                     no++;
                 });
 
@@ -302,6 +320,8 @@ FEEDER UPLOAD - LULUS MAHASISWA
                 }
             });
         });
+
+
     });
 </script>
 @endpush

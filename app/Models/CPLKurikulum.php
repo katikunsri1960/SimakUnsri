@@ -14,6 +14,6 @@ class CPLKurikulum extends Model
     // relasi ke kurikulum (optional)
     public function kurikulum()
     {
-        return $this->belongsTo(ListKurikulum::class, 'id_kurikulum');
+        return $this->belongsTo(ListKurikulum::class, 'id_kurikulum', 'id_kurikulum');
     }
 }
