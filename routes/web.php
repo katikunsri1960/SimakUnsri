@@ -1377,7 +1377,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     
                     Route::prefix('biodata-mahasiswa')->group(function(){
                         Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'biodata_mahasiswa'])->name('univ.feeder-upload.mahasiswa.biodata-mahasiswa');
-                        // Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'biodata_mahasiswa_upload'])->name('univ.feeder-upload.mahasiswa.biodata-mahasiswa.upload');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'biodata_mahasiswa_upload'])->name('univ.feeder-upload.mahasiswa.biodata-mahasiswa.upload');
                         Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'biodata_mahasiswa_data'])->name('univ.feeder-upload.mahasiswa.biodata-mahasiswa.data');
                     });
                 });
