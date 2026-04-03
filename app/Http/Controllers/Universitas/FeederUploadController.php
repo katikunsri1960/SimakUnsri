@@ -13,6 +13,7 @@ use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
 use App\Models\Mahasiswa\LulusDo;
 use App\Models\Mahasiswa\AktivitasMagang;
+use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Models\Mahasiswa\PrestasiMahasiswa;
 use App\Models\Perkuliahan\BimbingMahasiswa;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
@@ -1859,11 +1860,10 @@ class FeederUploadController extends Controller
         $data = LulusDo::where('id_periode_keluar', $semester)
                     ->where('id_prodi', $prodi)
                     ->where('feeder', 0)
-                    ->where('nim', '09012682226017')
                     ->get();
 
         $totalData = $data->count();
-        dd($data);
+        // dd($data);
         if ($totalData == 0) {
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
         }
@@ -1935,6 +1935,153 @@ class FeederUploadController extends Controller
     //     return response()->json(['message' => 'Upload started']);
     // }
 
+    // START FEEDER UPLOAD BIODATA MAHASISWA
+    public function biodata_mahasiswa()
+    {
+        $semesterAktif = SemesterAktif::first();
+        $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        // $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
+
+        return view('universitas.feeder-upload.mahasiswa.biodata-mahasiswa', [
+            'prodi' => $prodi,
+            // 'semester' => $semester,
+            'semesterAktif' => $semesterAktif,
+        ]);
+    }
+
+    public function biodata_mahasiswa_data(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        
+        $sub = DB::table('riwayat_pendidikans')
+            ->select(
+                'id_mahasiswa',
+                DB::raw('MAX(LEFT(id_periode_masuk,4)) as max_angkatan')
+            )
+            ->groupBy('id_mahasiswa');
+
+        $data = BiodataMahasiswa::
+            join('riwayat_pendidikans as rp', function ($join) use ($sub) {
+                $join->on('rp.id_mahasiswa', '=', 'biodata_mahasiswas.id_mahasiswa')
+                    ->joinSub($sub, 'latest', function ($joinSub) {
+                        $joinSub->on('rp.id_mahasiswa', '=', 'latest.id_mahasiswa')
+                                ->whereRaw('LEFT(rp.id_periode_masuk,4) = latest.max_angkatan');
+                    });
+            })
+            // ->join('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'rp.id_registrasi_mahasiswa')
+            ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
+            ->where('rp.id_prodi', $prodi)
+            ->where('biodata_mahasiswas.feeder', 0)
+            ->select(
+                'biodata_mahasiswas.*',
+                'rp.id_registrasi_mahasiswa',
+                'rp.nim',
+                DB::raw('LEFT(rp.id_periode_masuk, 4) as angkatan'),
+                DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi')
+            )
+            ->get();
+
+        return response()->json($data);
+    }
+
+    public function biodata_mahasiswa_upload(Request $request)
+    {
+        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+        
+        $sub = DB::table('riwayat_pendidikans')
+            ->select(
+                'id_mahasiswa',
+                DB::raw('MAX(LEFT(id_periode_masuk,4)) as max_angkatan')
+            )
+            ->groupBy('id_mahasiswa');
+
+        $data = BiodataMahasiswa::
+            join('riwayat_pendidikans as rp', function ($join) use ($sub) {
+                $join->on('rp.id_mahasiswa', '=', 'biodata_mahasiswas.id_mahasiswa')
+                    ->joinSub($sub, 'latest', function ($joinSub) {
+                        $joinSub->on('rp.id_mahasiswa', '=', 'latest.id_mahasiswa')
+                                ->whereRaw('LEFT(rp.id_periode_masuk,4) = latest.max_angkatan');
+                    });
+            })
+            ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
+            ->where('rp.id_prodi', $prodi)
+            ->where('biodata_mahasiswas.feeder', 0)
+            ->select(
+                'biodata_mahasiswas.*',
+                'rp.id_registrasi_mahasiswa',
+                'rp.nim',
+                DB::raw('LEFT(rp.id_periode_masuk, 4) as angkatan'),
+                DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi')
+            )
+            ->get();
+
+        $totalData = $data->count();
+        // dd($data);
+        if ($totalData == 0) {
+            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+        }
+
+        $act = 'InsertBiodataMahasiswa';
+        $actGet = 'GetBiodataMahasiswa';
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+            foreach ($data as $index => $d) {
+
+                $record = [
+                    'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
+                    'id_jenis_keluar' => $d->id_jenis_keluar,
+                    'tanggal_keluar' => $d->tgl_keluar,
+                    'keterangan' => $d->keterangan,
+                    'nomor_sk_yudisium' => $d->sk_yudisium,
+                    'tanggal_sk_yudisium' => $d->tgl_sk_yudisium,
+                    'ipk' => round($d->ipk, 2),
+                    'nomor_ijazah' => '',
+                    'jalur_skripsi' => NULL,
+                    'judul_skripsi' => $d->judul_skripsi,
+                    'bulan_awal_bimbingan' => date('yyyy-mm-dd', $d->bln_awal_bimbingan),
+                    'bulan_akhir_bimbingan' => date('yyyy-mm-dd', $d->bln_awal_bimbingan)
+                ];
+
+                $recordGet = "id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
+
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+
+                $result = $req->uploadLulusMahasiswa();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    $d->update([
+                        'id_registrasi_mahasiswa' => $result['data']['id_registrasi_mahasiswa'],
+                        'feeder' => 1
+                    ]);
+
+                    $dataBerhasil++;
+                } else {
+                    $d->update(
+                            [
+                                'status_sync' => $result['error_desc'],
+                            ]);
+                    $dataGagal++;
+                }
+
+                // Send progress update
+                $progress = ($index + 1) / $totalData * 100;
+                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
+
+    //END FEEDER UPLOAD BIODATA MAHASISWA
 
 
     private function convert_ascii($string)

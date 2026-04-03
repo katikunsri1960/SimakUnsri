@@ -278,6 +278,10 @@
                                     <li class="{{request()->routeIs('univ.feeder-upload.mahasiswa.lulus-mahasiswa') ? 'active' : ''}}">
                                         <a href="{{route('univ.feeder-upload.mahasiswa.lulus-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Lulus Mahasiswa</a>
                                     </li>
+                                
+                                    <li class="{{request()->routeIs('univ.feeder-upload.mahasiswa.biodata-mahasiswa') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.mahasiswa.biodata-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Biodata Mahasiswa</a>
+                                    </li>
                                 </ul>
                             </li>
                             <li class="treeview {{request()->routeIs('univ.feeder-upload.kelas') | request()->routeIs('univ.feeder-upload.perkuliahan.*') ? 'active menu-open' : ''}}">
