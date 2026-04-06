@@ -338,7 +338,7 @@ class MahasiswaEligibleController extends Controller
         $predikat_kelulusan = PredikatKelulusan::orderBy('id')->get();
         $bku = BkuProgramStudi::orderBy('id')->where('id_prodi', $prodi_id)->get();
 
-        // dd($data);
+        dd($data);
 
         return view('prodi.data-lulusan.detail-mahasiswa', ['data' => $data, 'bku' => $bku, 'predikat_kelulusan' => $predikat_kelulusan, 'nilai_usept' => $nilai_usept_final, 'status_usept' => $status_usept]);
     }
