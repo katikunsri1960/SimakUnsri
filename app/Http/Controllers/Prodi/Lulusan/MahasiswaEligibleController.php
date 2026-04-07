@@ -191,7 +191,7 @@ class MahasiswaEligibleController extends Controller
 
         // Define required Masa Studi for each "jenjang_pendidikan"
         $requiredMasaStudi = [
-            'D3'  => 4,
+            'D3'  => 5,
             'S1'  => 7,
             'S2'  => 4,
             'S3'  => 6,
