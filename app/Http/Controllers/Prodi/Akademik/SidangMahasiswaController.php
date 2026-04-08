@@ -200,6 +200,7 @@ class SidangMahasiswaController extends Controller
                     'nama_kategori_kegiatan' => $nama_kategori_kegiatan,
                     'id_dosen' => $dosen->id_dosen,
                     'nidn' => $dosen->nidn,
+                    'nuptk' => $dosen->nuptk,
                     'nama_dosen' => $dosen->nama_dosen,
                     'penguji_ke' => $request->penguji_ke[$i],
                     'status_uji_mahasiswa' => 0,
@@ -270,7 +271,7 @@ class SidangMahasiswaController extends Controller
                 // dd($kategori);
 
                 //Store data to table tanpa substansi kuliah
-                UjiMahasiswa::where('id', $uji)->update(['id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nama_dosen' => $dosen->nama_dosen, 'penguji_ke' => $request->penguji_ke[$i], 'status_uji_mahasiswa' => 0]);
+                UjiMahasiswa::where('id', $uji)->update(['id_kategori_kegiatan' => $kategori->id_kategori_kegiatan, 'nama_kategori_kegiatan' => $kategori->nama_kategori_kegiatan, 'id_dosen'=> $dosen->id_dosen, 'nidn' => $dosen->nidn, 'nuptk' => $dosen->nuptk, 'nama_dosen' => $dosen->nama_dosen, 'penguji_ke' => $request->penguji_ke[$i], 'status_uji_mahasiswa' => 0]);
 
             }
 
