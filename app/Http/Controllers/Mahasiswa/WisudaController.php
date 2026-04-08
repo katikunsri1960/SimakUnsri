@@ -310,6 +310,26 @@ class WisudaController extends Controller
             return redirect()->back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
         }
 
+        $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
+                ->whereHas('bimbing_mahasiswa', function ($query) {
+                    $query->whereNotNull('id_bimbing_mahasiswa');
+                })
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                        ->where('nim', $riwayat_pendidikan->nim);
+                })
+                ->whereHas('nilai_konversi', function ($query) {
+                    $query->where('nilai_indeks', '>', 0.00);
+                })
+                // ->where('id_semester', $semester_aktif)
+                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+                ->first();
+
+        if (!$aktivitas) {
+            return redirect()->back()->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi !');
+        }
+
         try {
             $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
                     ->select('reg_master.rm_pddk_sd_nama','reg_master.rm_pddk_sd_lokasi', 'reg_master.rm_pddk_sd_thn_lulus',
@@ -380,6 +400,10 @@ class WisudaController extends Controller
                 ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
+
+        if (!$aktivitas) {
+            return redirect()->back()->with('error', 'Anda tidak dapat melakukan pendaftaran Yudisium, Silahkan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi !');
+        }
 
                 // dd($aktivitas);
         DB::beginTransaction();
