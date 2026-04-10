@@ -298,16 +298,56 @@ class WisudaController extends Controller
             return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->keterangan_keluar . '!');
         }
 
-        if (!$bebas_pustaka) {
-            return redirect()->back()->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
+        $prodi_profesi = [
+                    //'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
+                    //'91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
+                    //'98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
+                    'c9f5b196-dd7e-4788-a6e8-724046a1c344', //Profesi Akuntan
+                    //'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
+                    //'7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
+        ];
+
+        // $prodi_profesi=ProgramStudi::where('id_jenjang_pendidikan', '31')->where('status', 'A')->get()->pluck('id_prodi');
+
+        // $prodi_profesi = $prodi_profesi->toArray();
+
+        if (!empty($riwayat_pendidikan->id_prodi) &&
+            !in_array($riwayat_pendidikan->id_prodi, $prodi_profesi)) 
+        {
+            // WAJIB cek bebas pustaka (karena bukan profesi)
+            
+            if (!$bebas_pustaka) {
+                return back()->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
+            }
+
+            if (empty($bebas_pustaka->file_bebas_pustaka)) {
+                return back()->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
+            }
+
+            if (empty($bebas_pustaka->link_repo)) {
+                return back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
+            }
         }
 
-        if (empty($bebas_pustaka->file_bebas_pustaka)) {
-            return redirect()->back()->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
-        }
 
-        if (empty($bebas_pustaka->link_repo)) {
-            return redirect()->back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
+        $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
+                ->whereHas('bimbing_mahasiswa', function ($query) {
+                    $query->whereNotNull('id_bimbing_mahasiswa');
+                })
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                        ->where('nim', $riwayat_pendidikan->nim);
+                })
+                ->whereHas('nilai_konversi', function ($query) {
+                    $query->where('nilai_indeks', '>', 0.00);
+                })
+                // ->where('id_semester', $semester_aktif)
+                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+                ->first();
+
+        if (!$aktivitas) {
+            return redirect()->back()->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi !');
         }
 
         try {
@@ -381,6 +421,10 @@ class WisudaController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
+        if (!$aktivitas) {
+            return redirect()->back()->with('error', 'Anda tidak dapat melakukan pendaftaran Yudisium, Silahkan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi !');
+        }
+
                 // dd($aktivitas);
         DB::beginTransaction();
 
@@ -431,7 +475,7 @@ class WisudaController extends Controller
                         'id_prodi' => $riwayat_pendidikan->id_prodi,
                         'tgl_masuk' => $riwayat_pendidikan->tanggal_daftar,
                         'nim' => $riwayat_pendidikan->nim,
-                        'id_aktivitas' => $aktivitas->id_aktivitas ?? null,
+                        'id_aktivitas' => $aktivitas->id_aktivitas,
                         'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
                         'ijazah_terakhir_file' => $ijazah_terakhir_file,
                         'approved' => 0,
@@ -1160,16 +1204,35 @@ class WisudaController extends Controller
             return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->keterangan_keluar . '!');
         }
 
-        if (!$bebas_pustaka) {
-            return redirect()->back()->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
-        }
+        $prodi_profesi = [
+                    //'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
+                    //'91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
+                    //'98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
+                    'c9f5b196-dd7e-4788-a6e8-724046a1c344', //Profesi Akuntan
+                    //'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
+                    //'7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
+        ];
 
-        if (empty($bebas_pustaka->file_bebas_pustaka)) {
-            return redirect()->back()->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
-        }
+        // $prodi_profesi=ProgramStudi::where('id_jenjang_pendidikan', '31')->where('status', 'A')->get()->pluck('id_prodi');
 
-        if (empty($bebas_pustaka->link_repo)) {
-            return redirect()->back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
+        // $prodi_profesi = $prodi_profesi->toArray();
+
+        if (!empty($riwayat_pendidikan->id_prodi) &&
+            !in_array($riwayat_pendidikan->id_prodi, $prodi_profesi)) 
+        {
+            // WAJIB cek bebas pustaka (karena bukan profesi)
+            
+            if (!$bebas_pustaka) {
+                return back()->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
+            }
+
+            if (empty($bebas_pustaka->file_bebas_pustaka)) {
+                return back()->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
+            }
+
+            if (empty($bebas_pustaka->link_repo)) {
+                return back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
+            }
         }
 
         try {
