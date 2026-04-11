@@ -299,12 +299,12 @@ class WisudaController extends Controller
         }
 
         $prodi_profesi = [
-                    //'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
-                    //'91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
-                    //'98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
+                    'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
+                    '91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
+                    '98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
                     'c9f5b196-dd7e-4788-a6e8-724046a1c344', //Profesi Akuntan
-                    //'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
-                    //'7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
+                    'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
+                    '7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
         ];
 
         // $prodi_profesi=ProgramStudi::where('id_jenjang_pendidikan', '31')->where('status', 'A')->get()->pluck('id_prodi');
@@ -1205,12 +1205,12 @@ class WisudaController extends Controller
         }
 
         $prodi_profesi = [
-                    //'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
-                    //'91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
-                    //'98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
+                    'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
+                    '91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
+                    '98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
                     'c9f5b196-dd7e-4788-a6e8-724046a1c344', //Profesi Akuntan
-                    //'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
-                    //'7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
+                    'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
+                    '7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
         ];
 
         // $prodi_profesi=ProgramStudi::where('id_jenjang_pendidikan', '31')->where('status', 'A')->get()->pluck('id_prodi');
