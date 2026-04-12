@@ -1876,21 +1876,6 @@ class FeederUploadController extends Controller
         $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
             foreach ($data as $index => $d) {
 
-                // $record = [
-                //     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                //     'id_jenis_keluar' => $d->id_jns_keluar,
-                //     'tanggal_keluar' => $d->tgl_keluar,
-                //     'keterangan' => $d->keterangan,
-                //     'nomor_sk_yudisium' => $d->sk_yudisium,
-                //     'tanggal_sk_yudisium' => $d->tgl_sk_yudisium,
-                //     'ipk' => round($d->ipk, 2),
-                //     'nomor_ijazah' => '',
-                //     'jalur_skripsi' => NULL,
-                //     'judul_skripsi' => $d->judul_skripsi,
-                //     'bulan_awal_bimbingan' => NULL,
-                //     'bulan_akhir_bimbingan' => NULL
-                // ];
-
                 $record = [
                     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
                     'id_jenis_keluar' => $d->id_jenis_keluar,
@@ -1899,7 +1884,7 @@ class FeederUploadController extends Controller
                     'keterangan' => $d->keterangan,
                     'nomor_sk_yudisium' => $d->sk_yudisium,
                     'tanggal_sk_yudisium' => $d->tgl_sk_yudisium,
-                    'ipk' => round($d->ipk, 2),
+                    'ipk' => round($d->ipk, 2)
                 ];
 
                 $recordGet = "id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
