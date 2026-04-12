@@ -1893,8 +1893,9 @@ class FeederUploadController extends Controller
 
                 $record = [
                     'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                    'id_jenis_keluar' => $d->id_jns_keluar,
-                    'tanggal_keluar' => $d->tgl_keluar,
+                    'id_jenis_keluar' => $d->id_jenis_keluar,
+                    'tanggal_keluar' => $d->tanggal_keluar,
+                    'id_periode_keluar' => $d->id_periode_keluar,
                     'keterangan' => $d->keterangan,
                     'nomor_sk_yudisium' => $d->sk_yudisium,
                     'tanggal_sk_yudisium' => $d->tgl_sk_yudisium,
