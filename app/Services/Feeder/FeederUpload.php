@@ -1226,7 +1226,7 @@ class FeederUpload {
 
             $result = json_decode($response,true);
 
-            dd($result);
+            // dd($result);
 
             if ($result['error_code'] == 0 && count($result['data']) > 0) {
 
