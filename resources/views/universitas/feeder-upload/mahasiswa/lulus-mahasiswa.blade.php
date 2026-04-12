@@ -255,7 +255,7 @@ FEEDER UPLOAD - LULUS MAHASISWA
                             var id_prodi = $('#id_prodi').val();
                             var id_semester = $('#id_semester').val();
 
-                            var eventSourceUrl = "{{ route('univ.feeder-upload.perkuliahan.dosen-ajar.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
+                            var eventSourceUrl = "{{ route('univ.feeder-upload.mahasiswa.lulus-mahasiswa.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
                             // console.log('EventSource URL:', eventSourceUrl);
 
                             // Initialize the EventSource with the constructed URL
