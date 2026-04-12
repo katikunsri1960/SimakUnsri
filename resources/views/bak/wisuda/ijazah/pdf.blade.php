@@ -166,7 +166,15 @@
                     @if($d->tmpt_perbaikan)
                         <td style="width: 340px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
                     @else
-                        <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                        @if($d->tempat_lahir == 'OKU TIMUR')
+                            <td style="width: 340px; margin-right:30px">OKU Timur</td>
+                        @elseif($d->tempat_lahir == 'OKI')
+                            <td style="width: 340px; margin-right:30px">OKI</td>
+                        @elseif($d->tempat_lahir == 'OKU')
+                            <td style="width: 340px; margin-right:30px">OKU</td>
+                        @else
+                            <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                        @endif
                     @endif
                     <td style="width: 235px">Tanggal Lulus</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
@@ -343,9 +351,17 @@
                         <td style="width:70px">Lahir di</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         @if($d->tmpt_perbaikan)
-                            <td style="width: 280px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
+                            <td style="width: 340px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
                         @else
-                            <td style="width: 280px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                            @if($d->tempat_lahir == 'OKU TIMUR')
+                                <td style="width: 340px; margin-right:30px">OKU Timur</td>
+                            @elseif($d->tempat_lahir == 'OKI')
+                                <td style="width: 340px; margin-right:30px">OKI</td>
+                            @elseif($d->tempat_lahir == 'OKU')
+                                <td style="width: 340px; margin-right:30px">OKU</td>
+                            @else
+                                <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                            @endif
                         @endif
                         <td style="width: 235px">Tanggal Lulus</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
@@ -411,7 +427,15 @@
                         @if($d->tmpt_perbaikan)
                             <td style="width: 340px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
                         @else
-                            <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                            @if($d->tempat_lahir == 'OKU TIMUR')
+                                <td style="width: 340px; margin-right:30px">OKU Timur</td>
+                            @elseif($d->tempat_lahir == 'OKI')
+                                <td style="width: 340px; margin-right:30px">OKI</td>
+                            @elseif($d->tempat_lahir == 'OKU')
+                                <td style="width: 340px; margin-right:30px">OKU</td>
+                            @else
+                                <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                            @endif
                         @endif
                         <td style="width: 235px">Tanggal Lulus</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
