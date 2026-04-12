@@ -1887,8 +1887,8 @@ class FeederUploadController extends Controller
                     'nomor_ijazah' => '',
                     'jalur_skripsi' => NULL,
                     'judul_skripsi' => $d->judul_skripsi,
-                    'bulan_awal_bimbingan' => date('yyyy-mm-dd', $d->bln_awal_bimbingan),
-                    'bulan_akhir_bimbingan' => date('yyyy-mm-dd', $d->bln_awal_bimbingan)
+                    'bulan_awal_bimbingan' => NULL,
+                    'bulan_akhir_bimbingan' => NULL
                 ];
 
                 $recordGet = "id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
