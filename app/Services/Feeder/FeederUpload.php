@@ -1256,8 +1256,6 @@ class FeederUpload {
                 $result = json_decode($response,true);
             } else {
 
-                unset($this->record['id_registrasi_mahasiswa']);
-
                 $params = [
                     "token" => $token,
                     "act"   => $this->act,
