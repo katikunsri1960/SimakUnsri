@@ -669,7 +669,7 @@
                             @if($d->nama_fakultas == 'Sekolah Pascasarjana')
                                 VICE DIRECTOR FOR ACADEMIC, RESEARCH, INNOVATION, DOWNSTREAM, COMMUNITY
                             @else
-                                VICE DEAN OF ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS
+                                VICE DEAN FOR ACADEMIC, STUDENT AND QUALITY ASSURANCE AFFAIRS
                             @endif
                         </td>
                         <td width="35%" rowspan="10" style="text-align:center; vertical-align:top;
