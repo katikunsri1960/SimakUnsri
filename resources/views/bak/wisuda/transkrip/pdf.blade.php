@@ -197,11 +197,15 @@
         // Sp-1 Ilmu Kesehatan Anak
     ){ 
         $MAX_ROWS_LEFT = 47;
-    } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf' || $d->id_prodi == 'bb06fc41-9e48-443e-aa02-df83da6bb467' 
+    } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf'
         // Sp-1 Ilmu Penyakit Kulit dan Kelamin
     ){ 
+        $MAX_ROWS_LEFT = 54;
+    } elseif( $d->id_prodi == 'bb06fc41-9e48-443e-aa02-df83da6bb467' 
+        // Sp-1 Ilmu Penyakit Mata
+    ){ 
         $MAX_ROWS_LEFT = 50;
-    } elseif($rowStyle == 'mk-large'){
+    }elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } else{
         $MAX_ROWS_LEFT = 53;
