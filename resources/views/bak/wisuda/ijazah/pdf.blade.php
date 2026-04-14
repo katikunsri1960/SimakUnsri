@@ -43,11 +43,20 @@
         margin-right: auto;
     }
 
-    #no_sertifikat {
+    #no_sertifikat_1 {
         display: flex;
         justify-content: flex-end;
         width: 100%;
         margin-top: 20px;
+        margin-left: 57%;
+        font-size: 10pt;
+    }
+
+    #no_sertifikat_2 {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin-top: 5px;
         margin-left: 57%;
         font-size: 10pt;
     }
@@ -102,7 +111,7 @@
                 $d->id_prodi == 'be779246-fe70-4e66-8fa2-8929d97779a2' ||
                 $d->id_prodi == '91360393-8632-4240-bed0-bfc707406efa' 
             )
-            <div id="no_sertifikat">
+            <div id="no_sertifikat_1">
                 <table>
                     <tr>
                         <td>No. Sertifikat Nasional</td>
@@ -121,7 +130,7 @@
                 </table>
             </div>
         @else
-            <div id="no_sertifikat">
+            <div id="no_sertifikat_2">
                 <table>
                     <tr>
                         <td>No. Sertifikat Nasional</td>
