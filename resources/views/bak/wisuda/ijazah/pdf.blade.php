@@ -280,15 +280,15 @@
             </center>
         </div>
         <!-- END PROFESI DOKTER, DOKTER GIGI, & NERS -->
-            
+
         <!-- START PROFESI APOTEKER -->
         @elseif($d->id_prodi == '7666b6f4-1d8c-48ea-a0d7-aed989d44b02')
-        <div class="mid-word" style="margin: 10px 0px 0px 0px">
+        <div class="mid-word" style="margin: 20px 0px 0px 0px">
             <center>
                 Telah memenuhi semua persyaratan penyelesaian program profesi apoteker, dan lulus Uji Kompetensi Apoteker Indonesia. 
                 Kepadanya diberikan sebutan profesi
             </center>
-            <div class="gelar" style="padding-top: 2px; padding-bottom: 2px;">
+            <div class="gelar" style="margin-top: 5px; margin-bottom: 5px;">
                 {{ $d->gelar_panjang}} ({{ $d->gelar}})         
             </div>
             <center>
