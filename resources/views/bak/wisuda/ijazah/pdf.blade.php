@@ -332,16 +332,16 @@
             </table>
         </div>
 
-        @if($d->nama_fakultas == 'Fakultas Keguruan Dan Ilmu Pendidikan')
-            <div class="data-diri">
+        @if($d->nama_fakultas == 'Fakultas Keguruan Dan Ilmu Pendidikan') 
+             <div class="data-diri">
                 <table>
                     <tr>
                         <td style="width:70px">Nama</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         @if($d->nama_perbaikan)
-                            <td style="width: 280px; margin-right:30px">{{$d->nama_perbaikan}}</td>
+                            <td style="width: 310px; margin-right:30px">{{$d->nama_perbaikan}}</td>
                         @else
-                            <td style="width: 280px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                            <td style="width: 310px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
                         @endif
                         <td style="width: 235px">No. Induk Mahasiswa</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
@@ -351,16 +351,16 @@
                         <td style="width:70px">Lahir di</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
                         @if($d->tmpt_perbaikan)
-                            <td style="width: 340px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
+                            <td style="width: 310px; margin-right:30px">{{$d->tmpt_perbaikan}}</td>
                         @else
                             @if($d->tempat_lahir == 'OKU TIMUR')
-                                <td style="width: 340px; margin-right:30px">OKU Timur</td>
+                                <td style="width: 310px; margin-right:30px">OKU Timur</td>
                             @elseif($d->tempat_lahir == 'OKI')
-                                <td style="width: 340px; margin-right:30px">OKI</td>
+                                <td style="width: 310px; margin-right:30px">OKI</td>
                             @elseif($d->tempat_lahir == 'OKU')
-                                <td style="width: 340px; margin-right:30px">OKU</td>
+                                <td style="width: 310px; margin-right:30px">OKU</td>
                             @else
-                                <td style="width: 340px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
+                                <td style="width: 310px; margin-right:30px">{{Str::title($d->tempat_lahir)}}</td>
                             @endif
                         @endif
                         <td style="width: 235px">Tanggal Lulus</td>
@@ -371,13 +371,13 @@
                     </tr>
                     <tr>
                         <td style="width:70px">Tanggal</td>
-                        <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
+                        <td style="max-width: 15px;padding-left:2px;padding-right:8px">:</td>
                         @if($d->tgl_perbaikan)
-                            <td style="width: 280px; margin-right:30px">
+                            <td style="width: 310px; margin-right:30px">
                                 {{ \Carbon\Carbon::parse($d->tgl_perbaikan)->locale('id')->translatedFormat('d F Y') }}
                             </td>
                         @else
-                            <td style="width: 280px; margin-right:30px">
+                            <td style="width: 310px; margin-right:30px">
                                 {{ \Carbon\Carbon::parse($d->tanggal_lahir)->locale('id')->translatedFormat('d F Y') }}
                             </td>
                         @endif
