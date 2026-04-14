@@ -196,7 +196,7 @@
     }elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff'  
         // Sp-1 Ilmu Kesehatan Anak
     ){ 
-        $MAX_ROWS_LEFT = 47;
+        $MAX_ROWS_LEFT = 44;
     } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf' || $d->id_prodi == 'bb06fc41-9e48-443e-aa02-df83da6bb467' 
         // Sp-1 Ilmu Penyakit Kulit dan Kelamin
     ){ 
