@@ -175,7 +175,9 @@
 
     // margin dinamis tabel
     //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
-    if ($jumlahMK <= 33) {
+    if ($d->id_prodi == 'b3dce9a8-25b8-4f27-96cc-2abe5e0d9fa9') {
+        $rowStyle = 'mk-medium';
+    } elseif ($jumlahMK <= 33) {
         $rowStyle = 'mk-small';
     } elseif ($jumlahMK > 33 && $jumlahMK <= 50) {
         $rowStyle = 'mk-medium';
