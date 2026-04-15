@@ -306,7 +306,7 @@ class SKPIController extends Controller
                 'g.gelar',
                 'g.gelar_panjang',
             )
-
+            ->whereIn('jenjang', ['D3', 'S1'])
             ->where('data_wisuda.wisuda_ke', $periode)
             ->where('f.id', $fakultas);
 

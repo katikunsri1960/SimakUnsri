@@ -186,97 +186,162 @@ function getData()
                     var alamat = 'RT ' + item.rt + ' RW ' + item.rw + ', ' + item.dusun + ', ' + item.kelurahan + ', ' + item.jalan + ', ' + item.nama_wilayah;
                     
                     var foto = item.pas_foto ? `
-                    <td class="text-center align-middle text-nowrap">
+                        <td class="text-center align-middle text-nowrap">
 
-                        <!-- Thumbnail -->
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal${item.id}">
-                            <img src="{{ asset('storage') }}/${item.pas_foto}"
-                                alt="Pas Foto"
-                                style="width: 120px; cursor:pointer"
-                                class="rounded mb-1"
-                                title="Lihat Foto">
-                        </a>
+                            <!-- Thumbnail -->
+                            <a href="#" data-bs-toggle="modal" data-bs-target="#fotoModal${item.id}">
+                                <img src="{{ asset('storage') }}/${item.pas_foto}"
+                                    alt="Pas Foto"
+                                    style="width: 120px; cursor:pointer"
+                                    class="rounded mb-1"
+                                    title="Lihat Foto">
+                            </a>
 
-                        <!-- Tombol Edit -->
-                        <div class="mt-1">
-                            <button class="btn btn-sm btn-warning"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#editFotoModal${item.id}">
-                                <i class="fa fa-edit"></i> Edit
-                            </button>
-                        </div>
-
-                        <!-- Modal Lihat Foto -->
-                        <div class="modal fade" id="fotoModal${item.id}" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered modal-lg">
-                                <div class="modal-content rounded-3">
-                                    <div class="modal-header">
-                                        <h5 class="modal-title">FOTO ${item.nama_mahasiswa}</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                    </div>
-                                    <div class="modal-body text-center">
-                                        <img src="{{ asset('storage') }}/${item.pas_foto}"
-                                            class="img-fluid rounded">
-                                    </div>
-                                </div>
+                            <!-- Tombol Edit -->
+                            <div class="mt-1">
+                                <button class="btn btn-sm btn-warning"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#editFotoModal${item.id}">
+                                    <i class="fa fa-edit"></i> Edit
+                                </button>
                             </div>
-                        </div>
 
-                        <!-- Modal Edit Foto -->
-                        <div class="modal fade" id="editFotoModal${item.id}" tabindex="-1">
-                            <div class="modal-dialog modal-dialog-centered">
-                                <div class="modal-content rounded-3">
-                                    <form method="POST"
-                                        action="{{ route('bak.wisuda.peserta.update-foto') }}"
-                                        enctype="multipart/form-data">
-                                        @csrf
-
-                                        <input type="hidden" name="id" value="${item.id}">
-
+                            <!-- Modal Lihat Foto -->
+                            <div class="modal fade" id="fotoModal${item.id}" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered modal-lg">
+                                    <div class="modal-content rounded-3">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">Upload Ulang Foto</h5>
+                                            <h5 class="modal-title">FOTO ${item.nama_mahasiswa}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
-
-                                        <div class="modal-body">
-                                            <div class="text-center mb-3">
-                                                <img src="{{ asset('storage') }}/${item.pas_foto}"
-                                                    class="img-fluid rounded"
-                                                    style="max-width:200px">
-                                                <small class="d-block mt-2 text-muted">
-                                                    Foto lama
-                                                </small>
-                                            </div>
-
-                                            <div class="mb-3">
-                                                <label class="form-label">Pas Foto Baru</label>
-                                                <input type="file"
-                                                    name="pas_foto"
-                                                    class="form-control"
-                                                    accept="image/*"
-                                                    required>
-                                            </div>
+                                        <div class="modal-body text-center">
+                                            <img src="{{ asset('storage') }}/${item.pas_foto}"
+                                                class="img-fluid rounded">
                                         </div>
-
-                                        <div class="modal-footer">
-                                            <button type="button"
-                                                    class="btn btn-secondary"
-                                                    data-bs-dismiss="modal">
-                                                Batal
-                                            </button>
-                                            <button type="submit"
-                                                    class="btn btn-primary">
-                                                <i class="fa fa-upload"></i> Simpan
-                                            </button>
-                                        </div>
-                                    </form>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </td>
-                    ` : '-';
+                            <!-- Modal Edit Foto -->
+                            <div class="modal fade" id="editFotoModal${item.id}" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content rounded-3">
+                                        <form method="POST"
+                                            action="{{ route('bak.wisuda.peserta.update-foto') }}"
+                                            enctype="multipart/form-data">
+                                            @csrf
 
+                                            <input type="hidden" name="id" value="${item.id}">
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Upload Ulang Foto</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+                                                <div class="text-center mb-3">
+                                                    <img src="{{ asset('storage') }}/${item.pas_foto}"
+                                                        class="img-fluid rounded"
+                                                        style="max-width:200px">
+                                                    <small class="d-block mt-2 text-muted">
+                                                        Foto lama
+                                                    </small>
+                                                </div>
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Pas Foto Baru</label>
+                                                    <input type="file"
+                                                        name="pas_foto"
+                                                        class="form-control"
+                                                        accept="image/*"
+                                                        required>
+                                                </div>
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Batal
+                                                </button>
+                                                <button type="submit"
+                                                        class="btn btn-primary">
+                                                    <i class="fa fa-upload"></i> Simpan
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                        ` : '-';
+
+                    var predikat = item.predikat_kelulusan ? `
+                        <td class="text-center align-middle text-nowrap">
+
+                            ${item.predikat_kelulusan}
+
+                            <!-- Tombol Edit -->
+                            <button class="btn btn-sm btn-warning"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#editPredikatModal${item.id}">
+                                <i class="fa fa-edit"></i> Edit
+                            </button>
+
+                            <!-- Modal Edit Predikat -->
+                            <div class="modal fade" id="editPredikatModal${item.id}" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content rounded-3">
+
+                                        <form method="POST"
+                                            action="{{ route('bak.wisuda.peserta.update-predikat') }}">
+                                            @csrf
+
+                                            <input type="hidden" name="id" value="${item.id}">
+
+                                            <div class="modal-header">
+                                                <h5 class="modal-title">Ubah Predikat Lulusan</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <div class="modal-body">
+
+                                                <div class="mb-3">
+                                                    <label class="form-label">Predikat Lulusan</label>
+                                                    <select class="form-select" name="predikat" required>
+                                                        <option value="">-- Pilih Predikat --</option>
+                                                        @foreach($predikat_lulusan as $p)
+                                                            <option value="{{ $p->id }}"
+                                                                ${item.id_predikat_kelulusan == {{ $p->id }} ? 'selected' : ''}>
+                                                                {{ $p->indonesia }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+
+                                            </div>
+
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Batal
+                                                </button>
+                                                <button type="submit"
+                                                        class="btn btn-success">
+                                                    <i class="fa fa-save"></i> Simpan
+                                                </button>
+                                            </div>
+
+                                        </form>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </td>
+                        ` : '-';
 
 
                     var aksi = `
@@ -347,17 +412,42 @@ function getData()
                                             </div>
                                         `
                                     )
-                                    : (
-                                        item.approved == 3
-                                        ? `
+                                    : 
+                                    item.approved == 3
+                                    ? (
+                                        `
                                             <button onclick="showDeclineModal(${item.id})"
                                                     class="btn btn-danger btn-sm my-2"
                                                     title="Tolak Pengajuan">
                                                 <i class="fa fa-ban"></i> Decline
                                             </button>
+                                            <div class="modal fade" id="declineModal${item.id}" tabindex="-1">
+                                                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Alasan Penolakan</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label class="form-label">Alasan Penolakan</label>
+                                                                <input class="form-control"
+                                                                    id="alasan_pembatalan${item.id}"
+                                                                    placeholder="Masukkan alasan penolakan">
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                                            <button class="btn btn-danger" onclick="submitDecline(${item.id})">
+                                                                Tolak
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         `
-                                        : ''
                                     )
+                                    :''
                                 }
 
                             </div>
@@ -390,7 +480,8 @@ function getData()
                         index + 1,
                         item.wisuda_ke,
                         spanStatus,
-                        item.predikat_kelulusan ?? '-',
+                        // item.predikat_kelulusan ?? '-',
+                        predikat,
                         ijazahButton,
                         skYudisiumButton,
                         berkasButton,
@@ -459,6 +550,70 @@ function filterProdi()
     });
 }
 
+//TOMBOL APPROVE
+function showPredikatModal(id) {
+    $('#predikatModal' + id).modal('show');
+}
+
+function submitPredikat(id) {
+    let predikat  = $('#predikat_' + id).val();
+    // let noUrut = $('#no_urut_' + id).val();
+
+    if (!predikat) {
+        swal("Peringatan", "Predikat wajib diisi", "warning");
+        return;
+    }
+
+    swal({
+        title: "Konfirmasi",
+        text: "Ubah Predikat Kelulusan Peserta ini?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Ubah",
+        cancelButtonText: "Batal"
+    }, function (isConfirm) {
+
+        if (!isConfirm) return;
+
+        $.ajax({
+            url: `{{ route('bak.wisuda.peserta.update-predikat', ['id' => 'ID']) }}`.replace('ID', id),
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                // no_urut: noUrut,
+                gelar: gelar
+                , predikat: predikat
+            },
+            success: function (response) {
+
+                const modalId = '#approveModal' + id;
+
+                $(modalId).one('hidden.bs.modal', function () {
+                    swal({
+                        title: "Berhasil",
+                        text: response.message,
+                        type: "success"
+                    }, function () {
+                        getData(); // 🔄 reload tabel AJAX
+                    });
+                });
+
+                $(modalId).modal('hide');
+            },
+            error: function (xhr) {
+
+                let message = "Terjadi kesalahan sistem.";
+
+                if (xhr.responseJSON?.message) {
+                    message = xhr.responseJSON.message;
+                }
+
+                swal("Gagal", message, "error");
+            }
+        });
+
+    });
+}
 
 function approvePeserta(id) {
     swal({
@@ -506,8 +661,6 @@ function approvePeserta(id) {
         }
     });
 }
-
-
 
 
 // Tambahkan fungsi berikut agar tombol Decline berfungsi
