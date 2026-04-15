@@ -71,12 +71,14 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
                 5
             @elseif($d->jenjang == 'D4' || $d->jenjang == 'S1')
                 6
+        {{--
             @elseif($d->jenjang == 'Profesi')
                 7
             @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-1')
                 8
             @elseif($d->jenjang == 'S3' || $d->jenjang == 'Sp-2')
                 9
+        --}}
             @endif
 
         </td>
@@ -84,27 +86,41 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
 
     <tr>
         <td>6. Persyaratan Penerimaan</td>
-        <td>: </td>
+        <td>: Lulusan SMA/SMK/Sederajat</td>
     </tr>
     
     <tr>    
         <td>7. Bahasa Pengantar Kuliah</td>
-        <td>: </td>
+        <td>: Bahasa Indonesia</td>
     </tr>
 
     <tr>
         <td>8. Sistem Penilaian</td>
-        <td>: </td>
+        <td>: Skala 0-4: A=4, B=3, C=2, D=1, E=0.</td>
     </tr>
 
     <tr>
         <td>9. Lama Studi Reguler</td>
-        <td>: {{$d->lama_studi}} Bulan</td>
+        <td>: 
+            @if($d->jenjang == 'D3')
+                3 Tahun
+            @elseif($d->jenjang == 'S1')
+                4 Tahun
+            @endif
+        </td>
     </tr>
 
     <tr>
         <td>10. Jenis dan Jenjang Pendidikan Lanjutan</td>
-        <td>: </td>
+        <td>: 
+            @if($d->jenjang == 'D3')
+                Sarjana / Diploma Empat / Sederajat
+
+            @elseif($d->jenjang == 'S1')
+                Profesi / Magister / Sederajat
+
+            @endif
+        </td>
     </tr>
 </table>
 

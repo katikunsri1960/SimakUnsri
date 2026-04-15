@@ -483,7 +483,7 @@ class WisudaController extends Controller
                         'verified_akademik' => 0,
                         'verified_ta' => 0,
                         'verified_wisuda' => 0,
-                        'verified_skpi' => 0,
+                        'verified_skpi' => in_array($riwayat_pendidikan->nama_jenjang_pendidikan, ['D3','S1']) ? 0 : 1,
                         'finalisasi_data' => 0,
                     ]
                 );

@@ -307,18 +307,18 @@ class WisudaController extends Controller
                 'predikat' => 'required|exists:predikat_kelulusans,id'
             ]);
 
-            $lulus=LulusDo::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)
-                        ->where('id_jenis_keluar', 1)
-                        ->first();
+            // $lulus=LulusDo::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)
+            //             ->where('id_jenis_keluar', 1)
+            //             ->first();
 
-            $lama_studi = null;
+            // $lama_studi = null;
             
-            if ($lulus) {
-                $hari = Carbon::parse($lulus->tgl_keluar)
-                    ->diffInDays(Carbon::parse($lulus->tgl_masuk_sp));
+            // if ($lulus) {
+            //     $hari = Carbon::parse($lulus->tgl_keluar)
+            //         ->diffInDays(Carbon::parse($lulus->tgl_masuk_sp));
 
-                $lama_studi = (int) ceil($hari / 30);
-            }
+            //     $lama_studi = (int) ceil($hari / 30);
+            // }
 
 
             // dd($lama_studi,$lulus);

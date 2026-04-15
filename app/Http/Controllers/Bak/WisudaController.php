@@ -32,6 +32,7 @@ use App\Exports\IjazahExport;
 use App\Imports\PisnMahasiswaImport;
 use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Models\Mahasiswa\PerbaikanDataPokok;
+use App\Models\Referensi\PredikatKelulusan;
 use Maatwebsite\Excel\Facades\Excel;
 use setasign\Fpdi\Fpdi;
 use Illuminate\Database\QueryException;
@@ -143,10 +144,13 @@ class WisudaController extends Controller
                     ->get();
         $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
         
+        $predikat_lulusan = PredikatKelulusan::get();
+
         return view('bak.wisuda.peserta.index', [
             'fakultas' => $fakultas,
             'prodi' => $prodi,
             'periode' => $periode,
+            'predikat_lulusan' => $predikat_lulusan,
         ]);
     }
 
@@ -1333,6 +1337,25 @@ class WisudaController extends Controller
         ]);
 
         return back()->with('success', 'Foto berhasil diperbarui');
+    }
+
+    public function update_predikat(Request $request)
+    {
+        // dd($request->all());
+
+        $request->validate([
+            'id' => 'required',
+            'predikat' => 'required|exists:predikat_kelulusans,id',
+        ]);
+
+        $wisuda = Wisuda::findOrFail($request->id);
+
+        // Update DB
+        $wisuda->update([
+            'id_predikat_kelulusan' => $request->predikat,
+        ]);
+
+        return back()->with('success', 'Predikat berhasil diperbarui');
     }
 
 
