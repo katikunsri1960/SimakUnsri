@@ -217,6 +217,10 @@ Ajuan Yudisium Mahasiswa
                                                         </strong>
                                                     </p>
                                                 @endif
+                                            @else
+                                                <div class="row d-flex justify-content-center">
+                                                    <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
+                                                </div>
                                             @endif
                                         </td>
                                     </tr>     
