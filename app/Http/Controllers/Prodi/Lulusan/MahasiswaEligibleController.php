@@ -370,11 +370,20 @@ class MahasiswaEligibleController extends Controller
 
     public function approved_ajuan(Request $request, $id)
     {
+
         // dd($request->all());
         $data = $request->validate([
             'agreement' => 'required',
             // 'predikat_mhs' => 'required'
         ]);
+
+        $data = Wisuda::where('id', $id)->first();
+
+        if($data->approved == 2) {
+            return redirect()->route('prodi.data-lulusan.detail', $id)->with('error', 'Ajuan telah di Fakultas, Perbaikan tidak diizinkan.');
+        }else if($data->approved == 3){
+            return redirect()->route('prodi.data-lulusan.detail', $id)->with('error', 'Ajuan telah di Setujui Dir. Akademik, Perbaikan tidak diizinkan.');
+        }
 
         // dd($request->agreement);
         try {
