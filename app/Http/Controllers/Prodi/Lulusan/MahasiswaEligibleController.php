@@ -186,7 +186,7 @@ class MahasiswaEligibleController extends Controller
             'S3'  => 42,
             'Profesi' => 24,
             'Sp-1' => 86,
-            'Sp-2' => 70
+            'Sp-2' => 42
         ];
 
         // Define required Masa Studi for each "jenjang_pendidikan"

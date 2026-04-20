@@ -211,7 +211,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/data_approved_transkrip', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data_approved_transkrip'])->name('bak.wisuda.peserta.data_approved_transkrip');
                     Route::get('/formulir/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_formulir'])->name('bak.wisuda.peserta.formulir');
                     Route::get('/ijazah/{id}', [App\Http\Controllers\Bak\WisudaController::class, 'ijazah_terakhir'])->name('bak.wisuda.peserta.ijazah');
-                    
+
                     Route::post('/update-foto', [App\Http\Controllers\Bak\WisudaController::class, 'update_foto'])->name('bak.wisuda.peserta.update-foto');
                     Route::post('/update-predikat', [App\Http\Controllers\Bak\WisudaController::class, 'update_predikat'])->name('bak.wisuda.peserta.update-predikat');
                 });
@@ -925,11 +925,13 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
                 Route::prefix('cpl')->group(function () {
                     Route::get('/kurikulum', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'list_kurikulum'])->name('prodi.data-master.cpl.index-kurikulum');
+                    
+                    Route::get('get-last-kode', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'getLastKode'])->name('prodi.data-master.cpl.get-last-kode');
                     Route::get('/', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'index'])->name('prodi.data-master.cpl.index');
                     Route::post('/store', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'store'])->name('prodi.data-master.cpl.store');
                     Route::get('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'show'])->name('prodi.data-master.cpl.show');
                     Route::put('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'update'])->name('prodi.data-master.cpl.update');
-                    Route::delete('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'destroy'])->name('prodi.data-master.cpl.delete');
+                    Route::delete('/{id}', [App\Http\Controllers\Prodi\CPLKurikulumController::class, 'destroy'])->name('prodi.data-master.cpl.delete');                   
                 });
 
                 Route::prefix('detail-prodi')->group(function(){
