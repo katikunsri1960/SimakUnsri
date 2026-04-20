@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\CPLKurikulum;
 use App\Models\Perkuliahan\ListKurikulum;
+use Illuminate\Support\Facades\DB;
 
 class CPLKurikulumController extends Controller
 {
@@ -81,8 +82,13 @@ class CPLKurikulumController extends Controller
 
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
 
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Data Gagal di Tambahkan');
+        } 
+        // catch (\Exception $e) {
+        //     return redirect()->back()->with('error', 'Data Gagal di Tambahkan');
+        // }
+                catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage(), $e->getLine(), $e->getFile());
         }
     }
 
