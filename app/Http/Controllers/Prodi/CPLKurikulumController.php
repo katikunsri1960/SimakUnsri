@@ -83,13 +83,13 @@ class CPLKurikulumController extends Controller
             return redirect()->back()->with('success', 'Data Berhasil di Tambahkan');
 
         } 
-        // catch (\Exception $e) {
-        //     return redirect()->back()->with('error', 'Data Gagal di Tambahkan');
-        // }
-                catch (\Exception $e) {
-            DB::rollBack();
-            dd($e->getMessage(), $e->getLine(), $e->getFile());
+        catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Data Gagal di Tambahkan');
         }
+        //         catch (\Exception $e) {
+        //     DB::rollBack();
+        //     dd($e->getMessage(), $e->getLine(), $e->getFile());
+        // }
     }
 
     public function getLastKode(Request $request)
