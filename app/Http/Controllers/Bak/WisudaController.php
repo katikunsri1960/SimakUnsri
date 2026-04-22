@@ -927,7 +927,7 @@ class WisudaController extends Controller
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->leftJoin('perbaikan_data_pokok as pdp','pdp.id_registrasi_mahasiswa','r.id_registrasi_mahasiswa')
 
-                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
+                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa as nama_riwayat', 'r.nim',
                         'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat',
                         'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
                 ->where('data_wisuda.wisuda_ke', $periode)
@@ -994,7 +994,7 @@ class WisudaController extends Controller
                 ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 ->leftJoin('perbaikan_data_pokok as pdp','pdp.id_registrasi_mahasiswa','r.id_registrasi_mahasiswa')
-                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
+                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa as nama_riwayat', 'r.nim',
                         'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'p.peminatan_pada_transkrip as is_peminatan', 'bku.bku_prodi_id as bku_prodi_id', 'bku.bku_prodi_en as bku_prodi_en',
                         'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat', 'pw.tanggal_wisuda as tanggal_wisuda',
                         'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
@@ -1138,7 +1138,7 @@ class WisudaController extends Controller
                 // ->leftJoin('mata_kuliahs as mk', 'mk.id_matkul', 'data_wisuda.id_matkul')
                 ->leftJoin('perbaikan_data_pokok as pdp','pdp.id_registrasi_mahasiswa','r.id_registrasi_mahasiswa')
                 // ->leftJoin('transkrip_mahasiswas as t', 't.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
-                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_program_studi_en as nama_prodi_en', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
+                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_program_studi_en as nama_prodi_en', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa as nama_riwayat', 'r.nim',
                         'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'p.peminatan_pada_transkrip as is_peminatan', 'bku.bku_prodi_id as bku_prodi_id', 'bku.bku_prodi_en as bku_prodi_en',
                         'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat',
                         'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
@@ -1269,7 +1269,7 @@ class WisudaController extends Controller
                 ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 // ->leftJoin('transkrip_mahasiswas as t', 't.id_registrasi_mahasiswa', 'r.id_registrasi_mahasiswa')
-                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_program_studi_en as nama_prodi_en', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa', 'r.nim',
+                ->select('data_wisuda.*', 'f.nama_fakultas', 'p.nama_program_studi as nama_prodi', 'p.nama_program_studi_en as nama_prodi_en', 'p.kode_program_studi as kode_prodi', 'p.nama_jenjang_pendidikan as jenjang', 'r.nama_mahasiswa as nama_riwayat', 'r.nim',
                         'b.tempat_lahir', 'b.tanggal_lahir', 'p.bku_pada_ijazah as is_bku', 'bku.bku_prodi_id as bku_prodi_id', 'g.gelar', 'g.gelar_panjang', 
                         'l.no_seri_ijazah as no_ijazah', 'l.sert_prof as no_sertifikat')
                 ->where('data_wisuda.wisuda_ke', $periode)

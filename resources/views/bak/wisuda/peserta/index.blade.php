@@ -211,7 +211,7 @@ function getData()
                                 <div class="modal-dialog modal-dialog-centered modal-lg">
                                     <div class="modal-content rounded-3">
                                         <div class="modal-header">
-                                            <h5 class="modal-title">FOTO ${item.nama_mahasiswa}</h5>
+                                            <h5 class="modal-title">FOTO ${item.nama_riwayat}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
                                         <div class="modal-body text-center">
@@ -491,7 +491,7 @@ function getData()
                         item.nama_prodi,
                         item.jenjang,
                         item.nim,
-                        item.nama_mahasiswa,
+                        item.nama_riwayat,
                         item.nik,
                         item.lokasi_kuliah,
                         item.jalur_masuk,
