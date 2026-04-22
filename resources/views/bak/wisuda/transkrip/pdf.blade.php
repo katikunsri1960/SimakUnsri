@@ -303,7 +303,7 @@
                         @if($d->nama_perbaikan)
                             <td> {{ strtoupper($d->nama_perbaikan) }}</td>
                         @else
-                            <td> {{ strtoupper($d->nama_mahasiswa) }}</td>
+                            <td> {{ strtoupper($d->nama_riwayat) }}</td>
                         @endif
                     </tr>
                     <tr class="{{$rowStyle}}">

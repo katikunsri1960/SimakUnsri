@@ -170,7 +170,7 @@ function getData()
                         nomor_ijazah ?? '-',
                         item.wisuda_ke,
                         item.nim,
-                        item.nama_mahasiswa,
+                        item.nama_riwayat,
                         item.nik,
                         item.tempat_lahir,
                         item.tanggal_lahir,

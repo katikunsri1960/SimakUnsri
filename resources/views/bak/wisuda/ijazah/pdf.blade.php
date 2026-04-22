@@ -163,7 +163,7 @@
                     @if($d->nama_perbaikan)
                         <td style="width: 340px; margin-right:30px">{{$d->nama_perbaikan}}</td>
                     @else
-                        <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                        <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_riwayat)}}</td>
                     @endif
                     <td style="width: 235px">No. Induk Mahasiswa</td>
                     <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
@@ -350,7 +350,7 @@
                         @if($d->nama_perbaikan)
                             <td style="width: 310px; margin-right:30px">{{$d->nama_perbaikan}}</td>
                         @else
-                            <td style="width: 310px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                            <td style="width: 310px; margin-right:30px">{{Str::title($d->nama_riwayat)}}</td>
                         @endif
                         <td style="width: 235px">No. Induk Mahasiswa</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
@@ -424,7 +424,7 @@
                         @if($d->nama_perbaikan)
                             <td style="width: 340px; margin-right:30px">{{$d->nama_perbaikan}}</td>
                         @else
-                            <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_mahasiswa)}}</td>
+                            <td style="width: 340px; margin-right:30px">{{Str::title($d->nama_riwayat)}}</td>
                         @endif
                         <td style="width: 235px">No. Induk Mahasiswa</td>
                         <td style="max-width: 15px;padding-left:10px;padding-right:8px">:</td>
