@@ -89,7 +89,11 @@ class MahasiswaEligibleController extends Controller
             $akm_terakhir = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $d->id_registrasi_mahasiswa)->orderBy('id_semester', 'desc')->first();
             $temp = 0;
 
-            if($d->riwayat_pendidikan->id_jenis_daftar == 16 || $d->riwayat_pendidikan->id_jenis_daftar == 2 || $d->riwayat_pendidikan->id_jenis_daftar == 8){
+            if($d->riwayat_pendidikan->id_jenis_daftar == 16 || // RPL Transfer SKS
+                $d->riwayat_pendidikan->id_jenis_daftar == 2 || // Pindahan
+                $d->riwayat_pendidikan->id_jenis_daftar == 8 || // Pindahan Alih Bentuk
+                $d->riwayat_pendidikan->id_jenis_daftar == 11   // Alih Jenjang
+            ){
                 $kampus_merdeka = $d->aktivitas_kuliah->where('id_status_mahasiswa', 'M')->first();
 
                 if($kampus_merdeka){
