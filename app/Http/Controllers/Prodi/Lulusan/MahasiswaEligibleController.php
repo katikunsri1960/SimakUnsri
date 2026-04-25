@@ -287,7 +287,11 @@ class MahasiswaEligibleController extends Controller
 
 
 
-        if($data->riwayat_pendidikan->id_jenis_daftar == 16 || $data->riwayat_pendidikan->id_jenis_daftar == 2 || $data->riwayat_pendidikan->id_jenis_daftar == 8){
+        if($data->riwayat_pendidikan->id_jenis_daftar == 16 || // RPL Transfer SKS
+                $data->riwayat_pendidikan->id_jenis_daftar == 2 || // Pindahan
+                $data->riwayat_pendidikan->id_jenis_daftar == 8 || // Pindahan Alih Bentuk
+                $data->riwayat_pendidikan->id_jenis_daftar == 11   // Alih Jenjang
+            ){
             $kampus_merdeka = $data->aktivitas_kuliah->where('id_status_mahasiswa', 'M')->first();
 
             if($kampus_merdeka){
