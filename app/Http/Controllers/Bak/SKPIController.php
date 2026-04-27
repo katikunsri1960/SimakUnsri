@@ -306,7 +306,7 @@ class SKPIController extends Controller
                 'g.gelar',
                 'g.gelar_panjang',
             )
-            ->whereIn('jenjang', ['D3', 'S1'])
+            ->whereIn('nama_jenjang_pendidikan', ['D3', 'S1'])
             ->where('data_wisuda.wisuda_ke', $periode)
             ->where('f.id', $fakultas);
 
@@ -315,10 +315,12 @@ class SKPIController extends Controller
         }
 
         $data = $data->orderBy('r.nim', 'ASC')
-                    ->orderBy('jenjang', 'ASC')
+                    ->orderBy('nama_jenjang_pendidikan', 'ASC')
                     ->get();
 
-        // dd($data[0]->skpi->jenisSkpi);
+        
+        // dd($data->get());
+        
         /*
         |--------------------------------------------------------------------------
         | VALIDASI DATA

@@ -12,6 +12,6 @@ class SKPIBidangKegiatan extends Model
 
     public function jenis()
     {
-        return $this->hasMany(SkpiJenisKegiatan::class, 'bidang_id');
+        return $this->hasMany(SKPIJenisKegiatan::class, 'bidang_id');
     }
 }

@@ -101,13 +101,15 @@ Data SKPI Mahasiswa
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
 
-$(function () {
-    // "use strict";
+$(document).ready(function(){
     $('#data').DataTable();
 
     $('#fakultas').select2();
     $('#prodi').select2();
     $('#periode').select2();
+
+    // 🔥 TAMBAHAN INI
+    filterProdi();
 });
 
 
@@ -133,7 +135,7 @@ function getData()
         },
 
         success: function (response) {
-            console.log(response.data)
+            // console.log(response.data)
 
             if (response.status === 'success') {
 

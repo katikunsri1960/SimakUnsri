@@ -4,13 +4,13 @@ namespace App\Http\Controllers\Bak;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\SkpiBidangKegiatan;
+use App\Models\SKPIBidangKegiatan;
 
 class SKPIBidangKegiatanController extends Controller
 {
     public function index()
     {
-        $data = SKPIBidangKegiatan::orderBy('created_at', 'ASC')
+        $data = SKPIBidangKegiatan::orderBy('nama_bidang', 'ASC')
             ->get();
         return view('bak.skpi.bidang.index', compact('data'));
     }
@@ -32,14 +32,14 @@ class SKPIBidangKegiatanController extends Controller
             'nama_kegiatan' => $request->nama_kegiatan,
         ]);
 
-        return redirect()->route('bak.skpi-bidang.index')
+        return redirect()->route('bak.skpi.bidang.index')
             ->with('success','Data berhasil ditambahkan');
     }
 
     public function edit($id)
     {
         $data = SKPIBidangKegiatan::findOrFail($id);
-        return view('skpi_bidang.edit', compact('data'));
+        return view('bak.skpi.bidang.edit', compact('data'));
     }
 
     public function update(Request $request, $id)
@@ -56,7 +56,7 @@ class SKPIBidangKegiatanController extends Controller
             'nama_kegiatan' => $request->nama_kegiatan,
         ]);
 
-        return redirect()->route('bak.skpi-bidang.index')
+        return redirect()->route('bak.skpi.bidang.index')
             ->with('success','Data berhasil diupdate');
     }
 
@@ -65,7 +65,7 @@ class SKPIBidangKegiatanController extends Controller
         $data = SKPIBidangKegiatan::findOrFail($id);
         $data->delete();
 
-        return redirect()->route('bak.skpi-bidang.index')
+        return redirect()->route('bak.skpi.bidang.index')
             ->with('success','Data berhasil dihapus');
     }
 }
