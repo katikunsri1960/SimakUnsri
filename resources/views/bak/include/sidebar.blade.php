@@ -137,6 +137,12 @@
                             <li class="{{request()->routeIs('bak.monitoring.pengisian-nilai') || request()->routeIs('bak.monitoring.pengisian-nilai.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.monitoring.pengisian-nilai')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pengisian Nilai</a>
                             </li>
+                            <li class="{{request()->routeIs('bak.monitoring.cpl-kurikulum') || request()->routeIs('bak.monitoring.cpl-kurikulum.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.monitoring.cpl-kurikulum')}}">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    CPL Kurikulum
+                                </a>
+                            </li>
                         </ul>
                     </li>
                     <li class="treeview {{request()->routeIs('bak.wisuda.*') ? 'active menu-open' : ''}}">

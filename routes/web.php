@@ -185,6 +185,11 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/data', [App\Http\Controllers\Bak\MonitoringController::class, 'status_ukt_data'])->name('bak.monitoring.status-ukt.data');
                     Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\Universitas\MonitoringController::class, 'getProdi'])->name('bak.monitoring.status-ukt.getProdi');
                 });
+
+                Route::prefix('cpl-kurikulum')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\MonitoringController::class, 'cpl'])->name('bak.monitoring.cpl-kurikulum');
+                    Route::get('/detail', [App\Http\Controllers\Bak\MonitoringController::class, 'detail_cpl'])->name('bak.monitoring.cpl-kurikulum.detail');
+                });
             });
 
             Route::prefix('usept-prodi')->group(function(){

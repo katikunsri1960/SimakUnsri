@@ -67,7 +67,7 @@ Pembukaan Wisuda
                                         <td class="text-center align-middle">
                                             <button type="button" data-bs-toggle="modal"
                                                 data-bs-target="#editModal" onclick="edit({{$d}})"
-                                                class="btn btn-warning btn-sm waves-effect waves-light">
+                                                class="btn btn-warning btn-sm waves-effect waves-light mb-1">
                                                 <i class="fa fa-edit mr-1"></i>
                                             </button>
 
