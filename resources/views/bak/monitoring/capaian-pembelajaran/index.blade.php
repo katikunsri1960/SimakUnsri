@@ -54,18 +54,31 @@ Monitoring CPL Kurikulum
                             </td>
 
                             {{-- PUNYA CPL --}}
-                            <td class="text-center">
-                                <a href="{{ route('bak.monitoring.cpl-kurikulum.detail', ['prodi'=>$d->id_prodi, 'mode'=>'punya']) }}">
+                            @if($d->punya_cpl > 0)
+                                <td class="text-center">
+                                    <a href="{{ route('bak.monitoring.cpl-kurikulum.detail', ['prodi'=>$d->id_prodi, 'mode'=>'punya']) }}">
+                                        <strong>{{ $d->punya_cpl }}</strong>
+                                    </a>
+                                </td>
+                            @else
+                                <td class="text-center">
                                     {{ $d->punya_cpl }}
-                                </a>
-                            </td>
+                                </td>
+                            @endif
 
                             {{-- TANPA CPL --}}
-                            <td class="text-center">
-                                <a href="{{ route('bak.monitoring.cpl-kurikulum.detail', ['prodi'=>$d->id_prodi, 'mode'=>'tidak']) }}">
+                            @if($d->tanpa_cpl > 0)
+                                <td class="text-center">
+                                    <a href="{{ route('bak.monitoring.cpl-kurikulum.detail', ['prodi'=>$d->id_prodi, 'mode'=>'tidak']) }}">
+                                        <strong>{{ $d->tanpa_cpl }}</strong>
+                                    </a>
+                                </td>
+                            @else
+                                <td class="text-center">
                                     {{ $d->tanpa_cpl }}
-                                </a>
-                            </td>
+                                </td>
+                            @endif
+                            
 
                         </tr>
                         @endforeach
