@@ -1,54 +1,53 @@
-@extends('layouts.bak')
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-@section('content')
+            <form action="{{route('bak.skpi.jenis.store')}}" method="POST" class="form-create">
+                @csrf
 
-<div class="container">
+                <div class="modal-header">
+                    <h5 class="modal-title">Tambah Jenis Kegiatan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-<h4>Tambah Jenis Kegiatan</h4>
+                <div class="modal-body">
 
-<form action="{{route('bak.skpi.jenis.store')}}" method="POST">
+                    <div class="mb-3">
+                        <label>Bidang Kegiatan</label>
+                        <select name="bidang_id" class="form-control" required>
+                            <option value="">-- Pilih Bidang --</option>
+                            @foreach($bidang as $b)
+                                <option value="{{$b->id}}">
+                                    {{$b->nama_bidang}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-@csrf
+                    <div class="mb-3">
+                        <label>Nama Jenis</label>
+                        <input type="text" name="nama_jenis" class="form-control" required>
+                    </div>
 
-<div class="mb-3">
+                    <div class="mb-3">
+                        <label>Kriteria</label>
+                        <textarea name="kriteria" class="form-control" rows="3"></textarea>
+                    </div>
 
-<label>Bidang Kegiatan</label>
+                    <div class="mb-3">
+                        <label>Skor</label>
+                        <input type="number" name="skor" class="form-control" required>
+                    </div>
 
-<select name="bidang_id" class="form-control">
+                </div>
 
-@foreach($bidang as $b)
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </div>
 
-<option value="{{$b->id}}">{{$b->nama_bidang}}</option>
+            </form>
 
-@endforeach
-
-</select>
-
+        </div>
+    </div>
 </div>
-
-<div class="mb-3">
-<label>Nama Jenis</label>
-<input type="text" name="nama_jenis" class="form-control">
-</div>
-
-<div class="mb-3">
-<label>Kriteria</label>
-<textarea name="kriteria" class="form-control"></textarea>
-</div>
-
-<div class="mb-3">
-<label>Skor</label>
-<input type="number" name="skor" class="form-control">
-</div>
-
-<button class="btn btn-success">Simpan</button>
-
-<a href="{{route('bak.skpi.jenis.index')}}" class="btn btn-secondary">
-Kembali
-</a>
-
-</form>
-
-</div>
-
-@endsection

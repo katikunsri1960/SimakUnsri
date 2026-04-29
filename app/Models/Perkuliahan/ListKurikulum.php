@@ -5,6 +5,7 @@ namespace App\Models\Perkuliahan;
 use App\Models\ProgramStudi;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\CPLKurikulum;
 
 class ListKurikulum extends Model
 {
@@ -31,6 +32,11 @@ class ListKurikulum extends Model
             'id_kurikulum', // Local key on ListKurikulum table...
             'id_matkul' // Local key on MatkulKurikulum table...
         );
+    }
+
+    public function cpl()
+    {
+        return $this->hasMany(CPLKurikulum::class, 'id_kurikulum', 'id_kurikulum');
     }
 
 }

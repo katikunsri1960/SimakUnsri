@@ -21,6 +21,7 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Monitoring\MonevStatusMahasiswa;
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
 use App\Models\Monitoring\MonevStatusMahasiswaDetail;
+use App\Models\Perkuliahan\ListKurikulum;
 
 class MonitoringController extends Controller
 {
@@ -578,5 +579,76 @@ class MonitoringController extends Controller
         }
 
         return response()->json($data);
+    }
+
+    public function cpl(Request $request)
+    {
+        $data = ProgramStudi::leftJoin('fakultas as f', 'f.id', '=', 'program_studis.fakultas_id')
+            ->leftJoin('list_kurikulums as k', function ($join) {
+                $join->on('k.id_prodi', '=', 'program_studis.id_prodi')
+                    ->where('k.is_active', 1);
+            })
+            ->leftJoin('cpl_kurikulums as c', 'c.id_kurikulum', '=', 'k.id_kurikulum')
+            ->select(
+                'program_studis.id_prodi',
+                'program_studis.nama_program_studi',
+                'program_studis.nama_jenjang_pendidikan',
+                'f.nama_fakultas',
+
+                DB::raw('COUNT(DISTINCT k.id) as total_kurikulum'),
+                DB::raw('COUNT(DISTINCT c.id_kurikulum) as punya_cpl'),
+                DB::raw('(COUNT(DISTINCT k.id) - COUNT(DISTINCT c.id_kurikulum)) as tanpa_cpl')
+            )
+            ->groupBy(
+                'program_studis.id_prodi',
+                'program_studis.nama_program_studi',
+                'program_studis.nama_jenjang_pendidikan',
+                'f.nama_fakultas'
+            )
+            ->where('program_studis.status', 'A')
+            ->orderBy('f.id', 'ASC')
+            ->orderBy('program_studis.nama_jenjang_pendidikan', 'ASC')
+            ->orderBy('program_studis.nama_program_studi', 'ASC')
+            ->get();
+
+        return view('bak.monitoring.capaian-pembelajaran.index', compact('data'));
+    }
+
+    public function detail_cpl(Request $request)
+    {
+        // dd($request->all());
+        $prodi_id = $request->prodi;
+        $mode = $request->mode;
+
+        $prodi = ProgramStudi::with('fakultas')
+            ->where('id_prodi', $prodi_id)
+            ->firstOrFail();
+
+        $query = ListKurikulum::where('id_prodi', $prodi_id)
+            ->where('is_active', 1);
+
+        if ($mode == 'punya') {
+            $query->whereIn('id_kurikulum', function ($q) {
+                $q->select('id_kurikulum')->from('cpl_kurikulums');
+            });
+            $title = 'KURIKULUM DENGAN CPL';
+        } elseif ($mode == 'tidak') {
+            $query->whereNotIn('id_kurikulum', function ($q) {
+                $q->select('id_kurikulum')->from('cpl_kurikulums');
+            });
+            $title = 'KURIKULUM TANPA CPL';
+        } else {
+            $title = 'SEMUA KURIKULUM';
+        }
+
+        $data = $query->withCount('cpl') // pastikan ada relasi cpl di model
+            ->orderBy('nama_kurikulum')
+            ->get();
+
+        return view('bak.monitoring.capaian-pembelajaran.detail', compact(
+            'data',
+            'prodi',
+            'title'
+        ));
     }
 }

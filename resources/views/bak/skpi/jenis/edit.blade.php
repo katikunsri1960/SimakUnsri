@@ -1,62 +1,62 @@
-@extends('layouts.bak')
+@foreach($data as $d)
+<div class="modal fade" id="modalEdit{{ $d->id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-@section('content')
+            <form action="{{route('bak.skpi.jenis.update',$d->id)}}" method="POST" class="form-edit">
+                @csrf
+                @method('PUT')
 
-<div class="container">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Jenis Kegiatan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-<h4>Edit Jenis Kegiatan</h4>
+                <div class="modal-body">
 
-<form action="{{route('bak.skpi.jenis.update',$data->id)}}" method="POST">
+                    <div class="mb-3">
+                        <label>Bidang</label>
+                        <select name="bidang_id" class="form-control" required>
+                            @foreach($bidang as $b)
+                                <option value="{{$b->id}}"
+                                    {{$d->bidang_id == $b->id ? 'selected' : ''}}>
+                                    {{$b->nama_bidang}}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
 
-@csrf
-@method('PUT')
+                    <div class="mb-3">
+                        <label>Nama Jenis</label>
+                        <input type="text" name="nama_jenis"
+                               value="{{$d->nama_jenis}}"
+                               class="form-control" required>
+                    </div>
 
-<div class="mb-3">
+                    <div class="mb-3">
+                        <label>Kriteria</label>
+                        <textarea name="kriteria" class="form-control" rows="3">
+{{$d->kriteria}}
+                        </textarea>
+                    </div>
 
-<label>Bidang</label>
+                    <div class="mb-3">
+                        <label>Skor</label>
+                        <input type="number" name="skor"
+                               value="{{$d->skor}}"
+                               class="form-control" required>
+                    </div>
 
-<select name="bidang_id" class="form-control">
+                </div>
 
-@foreach($bidang as $b)
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-warning">Update</button>
+                </div>
 
-<option value="{{$b->id}}"
-{{$data->bidang_id == $b->id ? 'selected' : ''}}>
-{{$b->nama_bidang}}
-</option>
+            </form>
 
+        </div>
+    </div>
+</div>
 @endforeach
-
-</select>
-
-</div>
-
-<div class="mb-3">
-<label>Nama Jenis</label>
-<input type="text" name="nama_jenis"
-value="{{$data->nama_jenis}}"
-class="form-control">
-</div>
-
-<div class="mb-3">
-<label>Kriteria</label>
-<textarea name="kriteria" class="form-control">{{$data->kriteria}}</textarea>
-</div>
-
-<div class="mb-3">
-<label>Skor</label>
-<input type="number" name="skor"
-value="{{$data->skor}}"
-class="form-control">
-</div>
-
-<button class="btn btn-success">Update</button>
-
-<a href="{{route('bak.skpi.jenis.index')}}" class="btn btn-secondary">
-Kembali
-</a>
-
-</form>
-
-</div>
-
-@endsection

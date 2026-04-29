@@ -108,7 +108,14 @@ Daftar Ijazah Wisudawan
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
 
-$(document).ready(function () {
+$(document).ready(function(){
+    $('#data').DataTable();
+
+    $('#fakultas').select2();
+    $('#prodi').select2();
+    $('#periode').select2();
+
+    // 🔥 TAMBAHAN INI
     filterProdi();
 });
 
@@ -238,13 +245,5 @@ function filterProdi()
 
 }
 
-$(function () {
-    // "use strict";
-    $('#data').DataTable();
-
-    $('#fakultas').select2();
-    $('#prodi').select2();
-    $('#periode').select2();
-});
 </script>
 @endpush

@@ -1,38 +1,43 @@
-@extends('layouts.bak')
+<div class="modal fade" id="modalEdit{{ $d->id }}" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-@section('content')
+            <form action="{{ route('bak.skpi.bidang.update', $d->id) }}" method="POST" class="form-edit">
+                @csrf
+                @method('PUT')
 
-<div class="container">
+                <div class="modal-header">
+                    <h5 class="modal-title">Edit Bidang Kegiatan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
 
-<h4>Edit Bidang Kegiatan</h4>
+                <div class="modal-body">
 
-<form action="{{route('bak.skpi.bidang.update',$data->id)}}" method="POST">
+                    <div class="mb-3">
+                        <label>Nama Bidang</label>
+                        <input type="text" name="nama_bidang"
+                            value="{{ $d->nama_bidang }}"
+                            class="form-control" required>
+                    </div>
 
-@csrf
-@method('PUT')
+                    <div class="mb-3">
+                        <label>Nama Kegiatan</label>
+                        <input type="text" name="nama_kegiatan"
+                            value="{{ $d->nama_kegiatan }}"
+                            class="form-control" required>
+                    </div>
 
-<div class="mb-3">
-<label>Nama Bidang</label>
-<input type="text" name="nama_bidang"
-value="{{$data->nama_bidang}}"
-class="form-control">
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-success">Update</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Batal
+                    </button>
+                </div>
+
+            </form>
+
+        </div>
+    </div>
 </div>
-
-<div class="mb-3">
-<label>Nama Kegiatan</label>
-<input type="text" name="nama_kegiatan"
-value="{{$data->nama_kegiatan}}"
-class="form-control">
-</div>
-
-<button class="btn btn-success">Update</button>
-
-<a href="{{route('bak.skpi.bidang.index')}}" class="btn btn-secondary">
-Kembali
-</a>
-
-</form>
-
-</div>
-
-@endsection

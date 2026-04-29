@@ -7,6 +7,7 @@ use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Referensi\GelarLulusan;
+use App\Models\Perkuliahan\ListKurikulum;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -43,5 +44,10 @@ class ProgramStudi extends Model
     public function aktivitas_kuliah()
     {
         return $this->hasMany(AktivitasKuliahMahasiswa::class, 'id_prodi', 'id_prodi');
+    }
+
+    public function kurikulum()
+    {
+        return $this->hasMany(ListKurikulum::class, 'id_prodi', 'id_prodi');
     }
 }
