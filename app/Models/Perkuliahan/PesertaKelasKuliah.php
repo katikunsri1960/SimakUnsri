@@ -252,7 +252,7 @@ class PesertaKelasKuliah extends Model
                     ->groupBy('id_registrasi_mahasiswa')
                     ->first();
 
-        if ((!$transkrip || $transkrip->ipk === null) && ($riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester || $riwayat_pendidikan->id_periode_masuk + 1 != $semester_aktif->id_semester)) {
+        if ((!$transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester && $riwayat_pendidikan->id_periode_masuk + 1 != $semester_aktif->id_semester) {
             return [
                 'status' => 'error',
                 'message' => 'Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
@@ -1012,7 +1012,7 @@ class PesertaKelasKuliah extends Model
                     ->groupBy('id_registrasi_mahasiswa')
                     ->first();
 
-        if ((!$transkrip || $transkrip->ipk === null) && ($riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester || $riwayat_pendidikan->id_periode_masuk + 1 != $semester_aktif->id_semester)) {
+        if ((!$transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester && $riwayat_pendidikan->id_periode_masuk + 1 != $semester_aktif->id_semester) {
             return [
                 'status' => 'error',
                 'message' => 'Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
@@ -1563,7 +1563,7 @@ class PesertaKelasKuliah extends Model
                 ->groupBy('id_registrasi_mahasiswa')
                 ->first();
 
-        if ((!$transkrip || $transkrip->ipk === null) && ($riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester || $riwayat_pendidikan->id_periode_masuk + 1 != $semester_aktif->id_semester)) {
+        if ((!$transkrip || $transkrip->ipk === null) && $riwayat_pendidikan->id_periode_masuk != $semester_aktif->id_semester && $riwayat_pendidikan->id_periode_masuk + 1 != $semester_aktif->id_semester) {
             return [
                 'status' => 'error',
                 'message' => 'Transkrip Mahasiswa ini belum di cheklist!! Harap menghubungi Admin Program Studi untuk melakukan perbaikan data!!',
