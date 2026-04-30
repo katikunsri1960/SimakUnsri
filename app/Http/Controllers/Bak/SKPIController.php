@@ -276,6 +276,9 @@ class SKPIController extends Controller
         |--------------------------------------------------------------------------
         */
         $data = Wisuda::with('skpi', 'skpi.jenisSkpi')
+            ->whereHas('skpi' , function($query) {
+                $query->whereNotNull('id_registrasi_mahasiswa');
+            })
             ->join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
             ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
             ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
@@ -319,7 +322,7 @@ class SKPIController extends Controller
                     ->get();
 
         
-        // dd($data->get());
+        // dd($data);
         
         /*
         |--------------------------------------------------------------------------
