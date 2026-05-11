@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="modalLabel">
-                    Pembatalan Ajuan Wisuda
+                    Pembatalan Ajuan Yudisium
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -35,7 +35,7 @@
     $('#decline-ajuan-{{$d->id}}').submit(function(e){
         e.preventDefault();
         swal({
-            title: 'Pembatalan Ajuan Wisuda Mahasiswa',
+            title: 'Pembatalan Ajuan Yudisium Mahasiswa',
             text: "Apakah anda yakin ingin?",
             type: 'warning',
             showCancelButton: true,

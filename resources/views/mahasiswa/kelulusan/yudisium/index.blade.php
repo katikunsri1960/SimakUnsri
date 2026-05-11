@@ -1,0 +1,662 @@
+@extends('layouts.mahasiswa')
+@section('title')
+Pendaftaran Yudisium Mahasiswa
+@endsection
+@section('content')
+@include('swal')
+<div class="content-header">
+    <div class="d-flex align-items-center">
+        <div class="me-auto">
+            <h3 class="page-title">Pendaftaran Yudisium Mahasiswa</h3>
+            <div class="d-inline-block align-items-center">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{route('mahasiswa.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item" aria-current="page">Yudisium</li>
+                        <li class="breadcrumb-item active" aria-current="page">Pendaftaran</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
+<section class="content bg-white text-uppercase">
+    <div class="row">
+        <div class="col-xxl-12">
+            {{-- DATA YUDISIUM --}}
+            @if($wisuda)
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-header with-border d-flex justify-content-between mx-20">
+                    <div class="d-flex justify-content-start">
+                        <h4 class="text-primary mb-0"><i class="fa-solid fa-list-check"></i> Status Persyaratan Pendaftaran</h4>
+                    </div>                  
+                </div>
+                <div class="box box-body mb-0">
+                    <div class="col-lg-12 mb-3">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover text-center align-middle">
+                                <thead class="table-success">
+                                    <tr>
+                                        <th>Nama di Ijazah</th>
+                                        <th style="width:80px">Data Induk</th>
+                                        <th style="width:80px">IPK</th>
+                                        <th style="width:80px">SKS Lulus</th>
+                                        <th style="width:80px">Daftar Semester</th>
+                                        <th style="width:80px">Transkrip</th>
+                                        <th style="width:80px">Data TA</th>
+                                        <th style="width:80px">Data Pembimbing</th>
+                                        <th style="width:80px">Abstrak</th>
+                                        <th style="width:80px">Ver Mahasiswa</th>
+                                        <!-- <th style="width:80px">Ver Pembimbing TA</th> -->
+                                        <th style="width:80px">Ver Koor. Prodi</th>
+                                        <th style="width:80px">Ver Fakultas</th>
+                                        <th style="width:80px">Ver Dir. Akad</th>
+                                        <th style="width:80px">PISN</th>
+                                        <th style="width:80px">Persyaratan Lengkap</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-start text-nowrap">
+                                            {{ $riwayat_pendidikan->biodata->nama_mahasiswa }}
+                                        </td>
+
+                                        <td class="p-0"><!--Data Induk-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.data-induk') }}"
+                                            class="btn btn-sm {{$wisuda->verified_induk == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_induk == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--IPK-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.data-akademik') }}"
+                                            class="btn btn-sm {{$wisuda->verified_akademik == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_akademik == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--SKS-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.data-akademik') }}"
+                                            class="btn btn-sm {{$wisuda->verified_akademik == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_akademik == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--AKM-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.data-akademik') }}"
+                                            class="btn btn-sm {{$wisuda->verified_akademik == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_akademik == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--Transkrip-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.data-akademik') }}"
+                                            class="btn btn-sm {{$wisuda->verified_akademik == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_akademik == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--TA-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.data-tugas-akhir') }}"
+                                            class="btn btn-sm {{$wisuda->verified_ta == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_ta == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--Pembimbing-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.data-tugas-akhir') }}"
+                                            class="btn btn-sm {{$wisuda->verified_ta == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_ta == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--Abstrak-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.data-tugas-akhir') }}"
+                                            class="btn btn-sm {{$wisuda->verified_ta == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_ta == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        <td class="p-0"><!--Verifikasi Mahasiswa-->
+                                            <a href="{{ route('mahasiswa.kelulusan.yudisium.resume.index') }}"
+                                                class="btn btn-sm {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->finalisasi_data == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->finalisasi_data == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </a>
+                                        </td>
+
+                                        {{--<td class="p-0"><!--Verifikasi Pembimbing TA-->
+                                            <button class="btn btn-sm {{ $wisuda->approved > 0 && $wisuda->approved < 96 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->approved > 0 && $wisuda->approved < 96 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>--}}
+
+                                        <td class="p-0"><!--Verifikasi Koor. Prodi-->
+                                            <button class="btn btn-sm {{ $wisuda->approved > 0 && $wisuda->approved < 4 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->approved > 0 && $wisuda->approved < 4 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Verifikasi Fakultas-->
+                                            <button class="btn btn-sm {{ $wisuda->approved > 1 && $wisuda->approved < 4 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->approved > 1 && $wisuda->approved < 4 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Verifikasi Dir. Akad-->
+                                            <button class="btn btn-sm {{ $wisuda->approved == 3 ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->approved == 3 ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--PISN-->
+                                            <button class="btn btn-sm {{ $wisuda->pisn ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ $wisuda->pisn ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+
+                                        <td class="p-0"><!--Persyaratan Lengkap-->
+                                            <button class="btn btn-sm {{ 
+                                                    $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
+                                                    $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
+                                                    $wisuda->pisn && $wisuda->approved == 3 
+                                                    ? 'btn-success' : 'btn-danger' }}">
+                                                <i class="fas {{ 
+                                                        $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
+                                                        $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
+                                                        $wisuda->pisn && $wisuda->approved == 3 
+                                                        ? 'fa-check' : 'fa-times' }}"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box box-outline-success bs-3 border-success">    
+                <div class="box-header with-border d-flex justify-content-between mx-20">
+                    <div class="d-flex justify-content-start">
+                        <h4 class="text-primary mb-0"><i class="fa fa-graduation-cap"></i> Detail Pendaftaran Yudisium</h4>
+                    </div>                  
+                </div>
+                <div class="box box-body mb-0">
+                    <div class="row mx-20">
+                        <div class="col-12">
+                            <div class="box">
+                                <div class="box-body">
+                                    <div class="row text-center mb-20">
+                                        <div class="widget-user-image">
+                                            @php
+                                                $imagePath = public_path('storage/' . $wisuda->pas_foto);
+                                            @endphp
+
+                                            <img class="rounded bg-success"
+                                                src="{{ (!empty($wisuda->pas_foto) && file_exists($imagePath))
+                                                        ? asset('storage/' . $wisuda->pas_foto)
+                                                        : asset('images/images/avatar/avatar-15.png') }}"
+                                                alt="User Avatar"
+                                                style="width: 250px;">
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-striped">
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Judul {{$wisuda->aktivitas_mahasiswa ? $wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas : 'Tugas Akhir'}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->aktivitas_mahasiswa ? $wisuda->aktivitas_mahasiswa->judul : 'Belum diisi'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Abstrak {{$wisuda->aktivitas_mahasiswa ? $wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas : 'Tugas Akhir'}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left" style="width: 65%; text-align: justify;">{{$wisuda->abstrak_ta ? $wisuda->abstrak_ta : 'Belum diisi'}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">File Abstrak {{$wisuda->aktivitas_mahasiswa ? $wisuda->aktivitas_mahasiswa->nama_jenis_aktivitas : 'Tugas Akhir'}}</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
+                                                <td class="text-left" style="width: 65%; text-align: justify;">
+                                                    @if($wisuda->abstrak_file)
+                                                        <a class="btn btn-sm btn-success my-5" href="{{ asset($wisuda->abstrak_file) }}" type="button" target="_blank">Lihat Abstrak Indonesia</a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger mb-5">Abstrak Indonesia Tidak Diupload</span>
+                                                    @endif
+                                                    <!-- @if($wisuda->abstrak_file_eng)
+                                                        <a class="btn btn-sm btn-success  my-5" href="{{ asset($wisuda->abstrak_file_eng) }}" type="button" target="_blank">Lihat Abstrak Inggris</a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger mb-5">Abstrak Inggris Tidak Diupload</span>
+                                                    @endif -->
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">File Ijazah Terakhir</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                {{-- <td class="text-left" style="text-align: justify">{{$wisuda->abstrak_file}}</td> --}}
+                                                <td class="text-left" style="width: 65%; text-align: justify;">
+                                                    @if($wisuda->abstrak_file)
+                                                        <a class="btn btn-sm btn-success" href="{{ asset($wisuda->ijazah_terakhir_file) }}" type="button" target="_blank">Lihat Ijazah Terakhir</a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger">Ijazah Terakhir Tidak Diupload</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Status Pendaftaran Yudisium</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left align-middle" style="width:10%">
+                                                    {{-- KONDISI PERSYARATAN--}}
+                                                    @if($wisuda->finalisasi_data == 1)
+                                                        
+                                                        {{-- KONDISI BEBAS PUSTAKA--}}
+                                                        @if($bebas_pustaka && $bebas_pustaka->file_bebas_pustaka && $bebas_pustaka->link_repo)
+                                                            
+                                                            {{-- KONDISI APPROVED--}}
+                                                            @if($wisuda->approved == 0)
+                                                                <span class="badge badge-lg badge-warning mb-5 rounded">Belum Disetujui Koor. Prodi</span>
+                                                            @elseif($wisuda->approved == 11)
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Dosen Pembimbing TA</span>
+                                                            @elseif($wisuda->approved == 1)
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Koor. Prodi</span>
+                                                            @elseif($wisuda->approved == 2)
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Fakultas</span>
+                                                            @elseif($wisuda->approved == 3)
+                                                                <span class="badge badge-lg badge-success mb-5 rounded">Disetujui Dir. Akademik</span>
+                                                            @endif
+                                                        @elseif($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
+                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                Ditangguhkan
+                                                            </span>
+                                                            <p class="text-danger">
+                                                                <strong>
+                                                                    Anda belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
+                                                                </strong>
+                                                            </p>
+                                                        @elseif($bebas_pustaka && !$bebas_pustaka->link_repo)
+                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                Ditangguhkan
+                                                            </span>
+                                                            <p class="text-danger">
+                                                                <strong>
+                                                                    Anda belum Upload Repository!
+                                                                </strong>
+                                                            </p>
+                                                        @else
+                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                Persyaratan Yudisium Belum Lengkap
+                                                            </span>
+                                                        @endif
+                                                    @elseif($wisuda->finalisasi_data == 0 && $wisuda->approved > 3)
+                                                        {{-- KONDISI APPROVED--}}
+                                                        @if($wisuda->approved == 97)
+                                                            <span class="badge fw-bold badge-lg badge-danger mb-5 rounded">Dibatalkan Koordinator Prodi</span>
+                                                        @elseif($wisuda->approved == 98)
+                                                            <span class="badge badge-lg badge-danger mb-5 rounded">Dibatalkan Fakultas</span>
+                                                        @elseif($wisuda->approved == 99)
+                                                            <span class="badge fw-bold badge-lg badge-danger mb-5 rounded">Dibatalkan Direktorat Akademik</span>
+                                                        @endif
+                                                        
+                                                    @else
+                                                        <a type="button" href="{{route('mahasiswa.kelulusan.yudisium.data-induk')}}" class="btn btn-sm btn-danger waves-effect waves-light"
+                                                            title="Anda harus melakukan finalisasi data terlebih dahulu">
+                                                            Belum Finalisasi Data
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>   
+                                            @if($wisuda->approved > 3 && $wisuda->alasan_pembatalan)
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Alasan Pembatalan</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left align-middle" style="width:10%">
+                                                    {{-- KONDISI PERSYARATAN--}}
+                                                    <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                        {{ $wisuda->alasan_pembatalan }}
+                                                    </span>
+                                                </td>
+                                            </tr>     
+                                            @endif                       
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-5 mt-30">
+                        <div class="col-xl-12 col-lg-12">
+
+                            <div class="d-flex justify-content-center gap-2 flex-wrap">
+
+                                {{-- CEK ELIGIBLE --}}
+                                @if(
+                                    $wisuda &&
+                                    $wisuda->finalisasi_data == 0
+                                )
+                                    <a class="btn bg-primary"
+                                    href="{{ route('mahasiswa.kelulusan.yudisium.data-induk') }}"
+                                    title="Pastikan semua syarat sudah terpenuhi sebelum mendaftar!">
+
+                                        <i class="fa fa-file me-1"></i>
+                                        LANJUTKAN CEK ELIGIBLE YUDISIUM
+                                    </a>
+                                @endif
+
+
+                                {{-- DAFTAR YUDISIUM --}}
+                                @if(
+                                    $wisuda &&
+                                    $wisuda->verified_induk == 1 &&
+                                    $wisuda->verified_akademik == 1 &&
+                                    $wisuda->verified_ta == 1 &&
+                                    $wisuda->finalisasi_data == 0
+                                )
+                                    <a class="btn btn-success"
+                                    href="{{ route('mahasiswa.kelulusan.yudisium.resume.index') }}"
+                                    title="Seluruh syarat telah terpenuhi">
+
+                                        <i class="fa fa-graduation-cap me-1"></i>
+                                        DAFTAR YUDISIUM
+                                    </a>
+                                @endif
+
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @else
+            {{-- DATA AKADEMIK --}}
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-header with-border d-flex justify-content-between mx-20">
+                    <div class="d-flex justify-content-start">
+                        <h4 class="text-primary mb-0"><i class="fa fa-university"></i> 
+                            DATA AKADEMIK MAHASISWA
+                        </h4>
+                    </div>                  
+                </div>
+                <div class="box box-body mb-0">
+                    <div class="row mx-20">
+                        <div class="table-responsive
+                        {{-- d-flex justify-content-between --}}
+                        ">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td class="text-left" width="30%">Nama</td>
+                                    <td class="text-center" width="5%">:</td>
+                                    <td class="text-left" width="65%" style="text-align: justify">{{$riwayat_pendidikan->nama_mahasiswa}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">NIM</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->nim}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Jenjang Pendidikan</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->prodi->nama_jenjang_pendidikan}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Program Studi</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->prodi->nama_program_studi}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Jurusan</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->prodi->jurusan->nama_jurusan_id}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Fakultas</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->prodi->fakultas->nama_fakultas}}</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- BIODATA --}}
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-header with-border d-flex justify-content-between mx-20">
+                    <div class="d-flex justify-content-start">
+                        <h4 class="text-primary mb-0"><i class="fa fa-university"></i> 
+                            DATA INDUK MAHASISWA
+                        </h4>
+                    </div>                  
+                </div>
+                <div class="box box-body mb-0">
+                    <div class="row mx-20">
+                        <div class="table-responsive
+                        {{-- d-flex justify-content-between --}}
+                        ">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td class="text-left" width="30%">NIK</td>
+                                    <td class="text-center" width="5%">:</td>
+                                    <td class="text-left" width="65%" style="text-align: justify">{{$riwayat_pendidikan->biodata->nik}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Nama</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->biodata->nama_mahasiswa}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Tempat Lahir</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->biodata->tempat_lahir}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Tanggal Lahir</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->biodata->tanggal_lahir}}</td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Nama Ibu Kandung</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">{{$riwayat_pendidikan->biodata->nama_ibu_kandung}}</td>
+                                </tr>
+                            </table>
+                            <small>
+                                <strong class="text-danger">Catatan:</strong>
+                                <ul>
+                                    <li>
+                                        Pastikan data biodata Anda sudah benar dan sesuai dengan Ijazah anda sebelumnya. 
+                                    </li>
+                                    <li>
+                                        Data biodata ini akan digunakan untuk keperluan administrasi yudisium, pencetakan ijazah, dan Transkrip.
+                                    </li>
+                                    <li>
+                                        Data biodata diambil dari data yang diinputkan pada saat registrasi mahasiswa baru. Jika terdapat kesalahan data, silakan menghubungi Direktorat Akademik untuk melakukan perbaikan data.
+                                    </li>
+                                    <li>
+                                        Silahkan melakukan Pendaftaran Yudisium jika Data Induk anda telah sesuai.
+                                    </li>
+                                </ul>
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {{-- SYARAT --}}
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-header with-border d-flex justify-content-between mx-20">
+                    <div class="d-flex justify-content-start">
+                        <h4 class="text-primary mb-0">
+                            <i class="fa fa-graduation-cap"></i> 
+                            Syarat Pendaftaran Yudisium Mahasiswa
+                        </h4>
+                    </div>                  
+                </div>
+                <div class="box box-body mb-0">
+                    <div class="row mx-20">
+                        <div class="table-responsive
+                        {{-- d-flex justify-content-between --}}
+                        ">
+                            <table class="table table-striped">
+                                <tr>
+                                    <td class="text-left text-nowrap" width="30%">Nilai Usept
+                                        <br><small class="text-primary">(SYARAT 1)</small>
+                                    </td>
+                                    <td class="text-center" width="5%">:</td>
+                                    <td class="text-left" style="text-align: justify" width="65%">
+                                        @if($riwayat_pendidikan->id_kurikulum === NULL)
+                                            <span class="badge bg-warning rounded" style="padding: 7px">Kurikulum Belum Diatur</span>
+                                        @elseif($usept)
+                                            <strong>{{ isset($usept['score']) ? $usept['score'] : 0 }}</strong><br>
+                                            <span class="badge bg-{{$usept['class']}} rounded" style="padding: 7px">  
+                                                ({{$usept['status'] ?? 'N/A'}})
+                                            </span>
+                                        @endif
+                                    </td>                                                                               
+                                </tr>
+                                <tr>
+                                    <td class="text-left text-nowrap">Total SKS
+                                        <br><small class="text-primary">(SYARAT 2)</small>
+                                    </td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">
+                                        <strong>{{$aktivitas_kuliah->sks_total}} SKS</strong><br>
+                                        @if ($aktivitas_kuliah->sks_total >= $kurikulum->jumlah_sks_lulus)
+                                            <span class="badge rounded bg-success mb-5" style="padding: 7px"> (Memenuhi Syarat)</span>
+                                        @else
+                                            <span class="badge rounded bg-danger mb-5" style="padding: 7px"> (Tidak Memenuhi Syarat SKS Lulus)</span>
+                                        @endif
+
+                                        <p class="text-muted small mb-0">SYARAT SKS LULUS: {{$kurikulum->jumlah_sks_lulus}} SKS</p>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Bebas Pustaka
+                                        <br><small class="text-primary">(SYARAT 3)</small>
+                                    </td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">
+                                        @if(!$bebas_pustaka || !$bebas_pustaka->file_bebas_pustaka)
+                                            <span class="badge bg-danger">Belum Bebas Pustaka</span>
+                                        @else
+                                            <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$bebas_pustaka->file_bebas_pustaka}}" type="button" target="_blank">Lihat Bebas Pustaka</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left">Link Repository
+                                        <br><small class="text-primary">(SYARAT 4)</small>
+                                    </td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">
+                                        @if(!$bebas_pustaka || !$bebas_pustaka->link_repo)
+                                            <span class="badge bg-danger">Belum Upload Repositroy</span>
+                                        @else
+                                            <a class="btn btn-sm btn-success" href="{{$bebas_pustaka->link_repo}}" type="button" target="_blank">Lihat Repository</a>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left text-nowrap">Status Mahasiswa
+                                        <br><small class="text-primary">(SYARAT 5)</small>
+                                    </td>
+                                    <td class="text-center">:</td>
+                                    @php
+                                        $statusKeluar = $riwayat_pendidikan->lulus_do?->nama_jenis_keluar 
+                                            ?? $riwayat_pendidikan->keterangan_keluar;
+
+                                        $idJenisKeluar = $riwayat_pendidikan->lulus_do?->id_jenis_keluar 
+                                            ?? $riwayat_pendidikan->id_jenis_keluar;
+                                    @endphp
+
+                                    <td class="text-left" style="text-align: justify">
+                                        <strong>
+                                            {{ $statusKeluar ?? 'Aktif' }}
+                                        </strong>
+                                        <br>
+
+                                        @if(!$idJenisKeluar)
+                                            <span class="badge rounded bg-success" style="padding: 7px">
+                                                (Memenuhi Syarat)
+                                            </span>
+                                        @else
+                                            <span class="badge rounded bg-danger" style="padding: 7px">
+                                                (Anda telah dinyatakan {{ $statusKeluar ?? '-' }})
+                                            </span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-left text-nowrap">IPK</td>
+                                    <td class="text-center">:</td>
+                                    <td class="text-left" style="text-align: justify">
+                                        <strong>{{$aktivitas_kuliah->ipk}}</strong>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="row mb-5 mt-30">
+                        <div class="col-xl-12 col-lg-12 text-center">
+                            <div class="d-flex justify-content-center">
+                                <a href="{{ route('mahasiswa.kelulusan.yudisium.transkrip') }}"
+                                    class="btn bg-success mx-3"
+                                    title="Periksa Transkrip Nilai!">
+                                        <i class="fa-solid fa-scroll"></i>
+                                        TRANSKRIP NILAI
+                                </a>
+                                @if(!$wisuda)
+                                <a class="btn bg-primary" 
+                                    href="{{ route('mahasiswa.kelulusan.yudisium.data-induk') }}"
+                                    id="daftar-wisuda-btn" title="Pastikan semua syarat sudah terpenuhi sebelum mendaftar!">
+                                    <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i> 
+                                    CEK ELIGIBLE YUDISIUM
+                                </a>
+                                @endif
+                            </div>  
+                        </div>
+                    </div>
+                </div>
+            </div>     
+            @endif             
+        </div>
+    </div>    
+</section>
+@endsection
+@push('css')
+<link rel="stylesheet" href="{{asset('assets/vendor_components/select2/dist/css/select2.min.css')}}">
+@endpush
+@push('js')
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
+<script>
+    $(document).ready(function() {        
+        $('.select2').select2();
+
+        $('#data').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": true,
+        });
+    });
+    
+    $('#daftar-wisuda-btn').click(function(e) {
+        e.preventDefault();
+        var url = $(this).attr('href');
+        swal({
+            title: 'Daftar Yudisium',
+            text: "Apakah anda yakin ingin mendaftar Yudisium?",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Lanjutkan',
+            cancelButtonText: 'Batal'
+        }, function(isConfirm){
+            if (isConfirm) {
+                window.location.href = url;
+            }
+        });
+    });
+
+</script>
+@endpush

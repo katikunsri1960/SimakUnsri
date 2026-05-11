@@ -476,28 +476,28 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             
 
             Route::prefix('yudisium')->group(function () {
-                // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
-                Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
-                Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'peserta_data'])->name('fakultas.wisuda.peserta.data');
-                Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'approve'])->name('fakultas.wisuda.peserta.approve');
-                // Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
-                Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.peserta.decline');
-                Route::get('/tambah', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
-                Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
+                // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.yudisium.index');
+                Route::get('/', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'index'])->name('fakultas.yudisium.index');
+                Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'peserta_data'])->name('fakultas.yudisium.peserta.data');
+                Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'approve'])->name('fakultas.yudisium.peserta.approve');
+                // Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'decline'])->name('fakultas.yudisium.decline');
+                Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'decline'])->name('fakultas.yudisium.peserta.decline');
+                Route::get('/tambah', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'tambah'])->name('fakultas.yudisium.tambah');
+                Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'store'])->name('fakultas.yudisium.store');
                 
-                Route::get('/search', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'search'])->name('fakultas.wisuda.search-sk-yudisium');
-                Route::post('/upload-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'uploadSkYudisium'])->name('fakultas.wisuda.upload-sk-yudisium');
-                Route::put('/edit-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'editSkYudisium'])->name('fakultas.wisuda.edit-sk-yudisium');
-                Route::delete('/hapus-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'deleteSkYudisium'])->name('fakultas.wisuda.hapus-sk-yudisium');
+                Route::get('/search', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'search'])->name('fakultas.yudisium.search-sk-yudisium');
+                Route::post('/upload-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'uploadSkYudisium'])->name('fakultas.yudisium.upload-sk-yudisium');
+                Route::put('/edit-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'editSkYudisium'])->name('fakultas.yudisium.edit-sk-yudisium');
+                Route::delete('/hapus-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'deleteSkYudisium'])->name('fakultas.yudisium.hapus-sk-yudisium');
 
-                Route::get('/khs', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_index'])->name('fakultas.wisuda.khs-index');   
-                Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_transkrip_data'])->name('fakultas.wisuda.khs-transkrip-data');                   
+                Route::get('/khs', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'khs_index'])->name('fakultas.yudisium.khs-index');   
+                Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\YudisiumController::class, 'khs_transkrip_data'])->name('fakultas.yudisium.khs-transkrip-data');                   
                 
                 // Route::prefix('sk-yudisium')->group(function(){
-                //     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
-                //     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.wisuda.sk-yudisium.store');
-                //     Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.wisuda.sk-yudisium.update');
-                //     Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.wisuda.sk-yudisium.delete');
+                //     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.yudisium.sk-yudisium.index');
+                //     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.yudisium.sk-yudisium.store');
+                //     Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.yudisium.sk-yudisium.update');
+                //     Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.yudisium.sk-yudisium.delete');
                 // });
 
                 //Route for SKPI
@@ -513,6 +513,43 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             });
 
             
+
+            // Route::prefix('yudisium')->group(function () {
+            //     // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
+            //     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
+            //     Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'peserta_data'])->name('fakultas.wisuda.peserta.data');
+            //     Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'approve'])->name('fakultas.wisuda.peserta.approve');
+            //     // Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
+            //     Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.peserta.decline');
+            //     Route::get('/tambah', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
+            //     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
+                
+            //     Route::get('/search', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'search'])->name('fakultas.wisuda.search-sk-yudisium');
+            //     Route::post('/upload-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'uploadSkYudisium'])->name('fakultas.wisuda.upload-sk-yudisium');
+            //     Route::put('/edit-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'editSkYudisium'])->name('fakultas.wisuda.edit-sk-yudisium');
+            //     Route::delete('/hapus-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'deleteSkYudisium'])->name('fakultas.wisuda.hapus-sk-yudisium');
+
+            //     Route::get('/khs', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_index'])->name('fakultas.wisuda.khs-index');   
+            //     Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_transkrip_data'])->name('fakultas.wisuda.khs-transkrip-data');                   
+                
+            //     // Route::prefix('sk-yudisium')->group(function(){
+            //     //     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
+            //     //     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.wisuda.sk-yudisium.store');
+            //     //     Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.wisuda.sk-yudisium.update');
+            //     //     Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.wisuda.sk-yudisium.delete');
+            //     // });
+
+            //     //Route for SKPI
+            //     Route::prefix('skpi')->group(function(){
+            //         Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.skpi.data.index');
+            //         Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'skpi_data'])->name('fakultas.skpi.data.get-data');
+                    
+            //         Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.skpi.data.index');
+            //         Route::get('/detail/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'detail_skpi_mahasiswa'])->name('fakultas.skpi.data.detail');
+            //         Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'approve_skpi'])->name('fakultas.skpi.data.approve');
+            //         Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'decline_skpi'])->name('fakultas.skpi.data.decline');
+            //     });
+            // });
 
             //ROUTE BANTUAN
             Route::prefix('bantuan')->group(function () {
@@ -638,35 +675,90 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\Pengajuan\PenundaanBayarController::class, 'delete'])->name('mahasiswa.penundaan-bayar.delete');
             });
 
-            Route::prefix('pendaftaran-yudisium')->group(function () {
-                Route::get('/', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'index'])->name('mahasiswa.wisuda.index');
-                Route::get('/tambah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'tambah'])->name('mahasiswa.wisuda.tambah');
-                Route::get('/data-induk', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_induk'])->name('mahasiswa.wisuda.pendaftaran.data-induk');
-                Route::get('/data-akademik', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_akademik'])->name('mahasiswa.wisuda.pendaftaran.data-akademik');
-                Route::get('/data-tugas-akhir', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_tugas_akhir'])->name('mahasiswa.wisuda.pendaftaran.data-tugas-akhir');
-                Route::get('/data-wisuda', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_wisuda'])->name('mahasiswa.wisuda.pendaftaran.data-wisuda');
-                Route::get('/data-skpi', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_skpi'])->name('mahasiswa.wisuda.pendaftaran.data-skpi');
-                Route::post('/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'store'])->name('mahasiswa.wisuda.store');
-                Route::post('/store-data-induk', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_induk_store'])->name('mahasiswa.wisuda.pendaftaran.data-induk-store');
-                Route::post('/store-data-akademik', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_akademik_store'])->name('mahasiswa.wisuda.pendaftaran.data-akademik-store');
-                Route::post('/store-data-tugas-akhir', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_tugas_akhir_store'])->name('mahasiswa.wisuda.pendaftaran.data-tugas-akhir-store');
-                Route::post('/store-data-wisuda', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_wisuda_store'])->name('mahasiswa.wisuda.pendaftaran.data-wisuda-store');
 
-                Route::post('/store-data-skpi', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'skpi_store'])->name('mahasiswa.wisuda.pendaftaran.data-skpi-store');
-                Route::post('/data-skpi/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_skpi_store'])->name('mahasiswa.wisuda.pendaftaran.data-skpi.store');
-                Route::put('/data-skpi/update/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_skpi_update'])->name('mahasiswa.wisuda.pendaftaran.data-skpi.update');
-                Route::delete('/data-skpi/delete/{id}',[App\Http\Controllers\Mahasiswa\WisudaController::class, 'data_skpi_delete'])->name('mahasiswa.wisuda.pendaftaran.data-skpi-delete');
+            Route::prefix('kelulusan')->group(function () {
+                Route::prefix('eligible')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Mahasiswa\Kelulusan\EligibleController::class, 'index'])->name('mahasiswa.kelulusan.eligible.index');
+                    // Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'tambah'])->name('mahasiswa.kelulusan.wisuda.tambah');
+                    // Route::get('/data-induk', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_induk'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-induk');
+                    // Route::get('/data-akademik', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_akademik'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-akademik');
+                    // Route::get('/data-tugas-akhir', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_tugas_akhir'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-tugas-akhir');
+                    // Route::get('/data-wisuda', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_wisuda'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-wisuda');
+                    // Route::get('/data-skpi', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_skpi'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-skpi');
+                    // Route::post('/store', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'store'])->name('mahasiswa.kelulusan.wisuda.store');
+                    // Route::post('/store-data-induk', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_induk_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-induk-store');
+                    // Route::post('/store-data-akademik', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_akademik_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-akademik-store');
+                    // Route::post('/store-data-tugas-akhir', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_tugas_akhir_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-tugas-akhir-store');
+                    // Route::post('/store-data-wisuda', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_wisuda_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-wisuda-store');
 
+                    // Route::post('/store-data-skpi', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'skpi_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-skpi-store');
+                    // Route::post('/data-skpi/store', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_skpi_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-skpi.store');
+                    // Route::put('/data-skpi/update/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_skpi_update'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-skpi.update');
+                    // Route::delete('/data-skpi/delete/{id}',[App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_skpi_delete'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-skpi-delete');
 
-                Route::get('/resume-yudisium', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'resume_yudisium'])->name('mahasiswa.wisuda.pendaftaran.resume.index');
-                Route::post('/resume-yudisium/store', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'finalisasi_data'])->name('mahasiswa.wisuda.pendaftaran.finalisasi');
-                
-                Route::get('/transkrip', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'transkrip_mahasiswa'])->name('mahasiswa.wisuda.transkrip');
-                Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'peserta_formulir'])->name('mahasiswa.wisuda.formulir');
-                Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'delete'])->name('mahasiswa.wisuda.delete');
-                Route::get('/get-wilayah', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'get_wilayah'])->name('mahasiswa.wisuda.get-wilayah');
-                Route::get('/get-kecamatan', [App\Http\Controllers\Mahasiswa\WisudaController::class, 'get_kecamatan'])->name('mahasiswa.wisuda.get-kecamatan');
+                    // Route::get('/resume-yudisium', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'resume_yudisium'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.resume.index');
+                    // Route::post('/resume-yudisium/store', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'finalisasi_data'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.finalisasi');
+                    
+                    // Route::get('/transkrip', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'transkrip_mahasiswa'])->name('mahasiswa.kelulusan.wisuda.transkrip');
+                    // Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'peserta_formulir'])->name('mahasiswa.kelulusan.wisuda.formulir');
+                    // Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'delete'])->name('mahasiswa.kelulusan.wisuda.delete');
+                    // Route::get('/get-wilayah', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'get_wilayah'])->name('mahasiswa.kelulusan.wisuda.get-wilayah');
+                    // Route::get('/get-kecamatan', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'get_kecamatan'])->name('mahasiswa.kelulusan.wisuda.get-kecamatan');
+                });
+
+                Route::prefix('pendaftaran-yudisium')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'index'])->name('mahasiswa.kelulusan.yudisium.index');
+                    Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'tambah'])->name('mahasiswa.kelulusan.yudisium.tambah');
+                    Route::get('/data-induk', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_induk'])->name('mahasiswa.kelulusan.yudisium.data-induk');
+                    Route::get('/data-akademik', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_akademik'])->name('mahasiswa.kelulusan.yudisium.data-akademik');
+                    Route::get('/data-tugas-akhir', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_tugas_akhir'])->name('mahasiswa.kelulusan.yudisium.data-tugas-akhir');
+                    Route::post('/store', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'store'])->name('mahasiswa.kelulusan.yudisium.store');
+                    Route::post('/store-data-induk', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_induk_store'])->name('mahasiswa.kelulusan.yudisium.data-induk-store');
+                    Route::post('/store-data-akademik', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_akademik_store'])->name('mahasiswa.kelulusan.yudisium.data-akademik-store');
+                    Route::post('/store-data-tugas-akhir', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'data_tugas_akhir_store'])->name('mahasiswa.kelulusan.yudisium.data-tugas-akhir-store');
+
+                    Route::get('/resume-yudisium', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'resume_yudisium'])->name('mahasiswa.kelulusan.yudisium.resume.index');
+                    Route::post('/resume-yudisium/save', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'simpan_data'])->name('mahasiswa.kelulusan.yudisium.simpan');
+                    Route::post('/resume-yudisium/store', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'finalisasi_data'])->name('mahasiswa.kelulusan.yudisium.finalisasi');
+
+                    
+                    Route::get('/transkrip', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'transkrip_mahasiswa'])->name('mahasiswa.kelulusan.yudisium.transkrip');
+                    Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'peserta_formulir'])->name('mahasiswa.kelulusan.yudisium.formulir');
+                    Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'delete'])->name('mahasiswa.kelulusan.yudisium.delete');
+                    Route::get('/get-wilayah', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'get_wilayah'])->name('mahasiswa.kelulusan.yudisium.get-wilayah');
+                    Route::get('/get-kecamatan', [App\Http\Controllers\Mahasiswa\Kelulusan\YudisiumController::class, 'get_kecamatan'])->name('mahasiswa.kelulusan.yudisium.get-kecamatan');
+                });
+
+                Route::prefix('wisuda')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'index'])->name('mahasiswa.kelulusan.wisuda.index');
+                    Route::get('/tambah', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'tambah'])->name('mahasiswa.kelulusan.wisuda.tambah');
+                    // Route::get('/data-induk', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_induk'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-induk');
+                    // Route::get('/data-akademik', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_akademik'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-akademik');
+                    // Route::get('/data-tugas-akhir', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_tugas_akhir'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-tugas-akhir');
+                    Route::get('/data-wisuda', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_wisuda'])->name('mahasiswa.kelulusan.wisuda.data-wisuda');
+                    Route::get('/data-skpi', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_skpi'])->name('mahasiswa.kelulusan.wisuda.data-skpi');
+                    // Route::post('/store', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'store'])->name('mahasiswa.kelulusan.wisuda.store');
+                    // Route::post('/store-data-induk', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_induk_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-induk-store');
+                    // Route::post('/store-data-akademik', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_akademik_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-akademik-store');
+                    // Route::post('/store-data-tugas-akhir', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_tugas_akhir_store'])->name('mahasiswa.kelulusan.wisuda.pendaftaran.data-tugas-akhir-store');
+                    Route::post('/store-data-wisuda', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_wisuda_store'])->name('mahasiswa.kelulusan.wisuda.data-wisuda-store');
+
+                    Route::post('/store-data-skpi', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'skpi_store'])->name('mahasiswa.kelulusan.wisuda.data-skpi-store');
+                    Route::post('/data-skpi/store', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_skpi_store'])->name('mahasiswa.kelulusan.wisuda.data-skpi.store');
+                    Route::put('/data-skpi/update/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_skpi_update'])->name('mahasiswa.kelulusan.wisuda.data-skpi.update');
+                    Route::delete('/data-skpi/delete/{id}',[App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'data_skpi_delete'])->name('mahasiswa.kelulusan.wisuda.data-skpi-delete');
+
+                    Route::get('/resume-yudisium', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'resume_yudisium'])->name('mahasiswa.kelulusan.wisuda.resume.index');
+                    Route::post('/resume-yudisium/store', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'finalisasi_data'])->name('mahasiswa.kelulusan.wisuda.finalisasi');
+                    
+                    // Route::get('/transkrip', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'transkrip_mahasiswa'])->name('mahasiswa.kelulusan.wisuda.transkrip');
+                    // Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'peserta_formulir'])->name('mahasiswa.kelulusan.wisuda.formulir');
+                    // Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'delete'])->name('mahasiswa.kelulusan.wisuda.delete');
+                    // Route::get('/get-wilayah', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'get_wilayah'])->name('mahasiswa.kelulusan.wisuda.get-wilayah');
+                    // Route::get('/get-kecamatan', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'get_kecamatan'])->name('mahasiswa.kelulusan.wisuda.get-kecamatan');
+                });
             });
+            
 
             // Route::get('/nilai-suliet', [App\Http\Controllers\Mahasiswa\SKPIController::class, 'index'])->name('mahasiswa.nilai-suliet');
             Route::get('/kegiatan-akademik', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'akademik'])->name('mahasiswa.akademik');

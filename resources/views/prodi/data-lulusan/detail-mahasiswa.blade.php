@@ -9,13 +9,13 @@ Dashboard
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
-                    <form class="form" action="{{route('prodi.data-lulusan.detail.update', $data->id)}}" id="update-detail-wisuda" method="POST">
+                    <form class="form" action="{{route('prodi.data-lulusan.detail.update', $data->id)}}" id="update-detail-yudisium" method="POST">
                         @csrf
                         <div class="d-flex justify-content-between">
                             <a href="{{route('prodi.data-lulusan.index')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
                             <button type="submit" class="btn btn-success btn-rounded waves-effect waves-light"><i class="fa fa-edit"></i> Update Detail Ajuan</button>
                         </div>
-                        <h3 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Detail Ajuan Wisuda Mahasiswa</h3>
+                        <h3 class="text-info mb-0 mt-40"><i class="fa fa-user"></i> Detail Ajuan Yudisium Mahasiswa</h3>
                         <hr class="my-15">
                         <div class="row">
                             <div class="col-lg-6">
@@ -319,7 +319,7 @@ Dashboard
                 </div>
                 <div class="box-footer text-end">
                     <form action="{{route('prodi.data-lulusan.approved', $data->id)}}"
-                        method="post" id="approve-ajuan-wisuda">
+                        method="post" id="approve-ajuan-yudisium">
                         @csrf
                         <!-- Checkbox Agreement -->
                         <div class="row">
@@ -353,7 +353,7 @@ Dashboard
 <script>
 
     $(document).ready(function () {
-        $('#approve-ajuan-wisuda').submit(function (e) {
+        $('#approve-ajuan-yudisium').submit(function (e) {
             e.preventDefault(); // Prevent form submission
 
             let checkbox = document.getElementById("agreement");
@@ -368,7 +368,7 @@ Dashboard
 
             // SweetAlert v1 Confirmation
             swal({
-                title: 'Persetujuan Ajuan Wisuda Mahasiswa',
+                title: 'Persetujuan Ajuan Yudisium Mahasiswa',
                 text: "Apakah anda yakin ingin melanjutkan?",
                 type: 'warning',
                 showCancelButton: true,
@@ -379,17 +379,17 @@ Dashboard
                 closeOnConfirm: false
             }, function (isConfirmed) {
                 if (isConfirmed) {
-                    $('#approve-ajuan-wisuda').off('submit').submit();
+                    $('#approve-ajuan-yudisium').off('submit').submit();
                     $('#spinner').show(); // Show spinner (if applicable)
                 }
             });
         });
 
-        $('#update-detail-wisuda').submit(function (e) {
+        $('#update-detail-yudisium').submit(function (e) {
             e.preventDefault(); // Prevent form submission
 
             swal({
-                title: 'Perubahan Data Detail Ajuan Wisuda Mahasiswa',
+                title: 'Perubahan Data Detail Ajuan Yudisium Mahasiswa',
                 text: "Apakah anda yakin ingin melanjutkan?",
                 type: 'warning',
                 showCancelButton: true,
@@ -400,7 +400,7 @@ Dashboard
                 closeOnConfirm: false
             }, function (isConfirmed) {
                 if (isConfirmed) {
-                    $('#update-detail-wisuda').off('submit').submit();
+                    $('#update-detail-yudisium').off('submit').submit();
                     $('#spinner').show(); // Show spinner (if applicable)
                 }
             });

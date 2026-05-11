@@ -1,6 +1,6 @@
 @extends('layouts.fakultas')
 @section('title')
-Pendaftaran Wisuda Fakultas
+Pendaftaran Yudisium Fakultas
 @endsection
 @section('content')
 @include('swal')
@@ -13,7 +13,7 @@ Pendaftaran Wisuda Fakultas
 						<div class="d-lg-flex align-items-center mb-30 mb-xl-0 w-p100">
 			    			<img src="{{asset('images/images/svg-icon/color-svg/custom-14.svg')}}" class="img-fluid max-w-250" alt="" />
 							<div class="ms-30">
-								<h2 class="mb-10">Pendaftaran Wisuda Fakultas</h2>
+								<h2 class="mb-10">Pendaftaran Yudisium Fakultas</h2>
 								<p class="mb-0 text-fade fs-18">Universitas Sriwijaya</p>
 							</div>
 						</div>
@@ -22,8 +22,8 @@ Pendaftaran Wisuda Fakultas
 			</div>							
 		</div>
     </div>
-    @include('fakultas.data-akademik.wisuda.upload-sk')
-    @include('fakultas.data-akademik.wisuda.edit-sk')
+    @include('fakultas.data-akademik.yudisium.upload-sk')
+    @include('fakultas.data-akademik.yudisium.edit-sk')
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
@@ -39,6 +39,7 @@ Pendaftaran Wisuda Fakultas
                             </select>
                         </div>
                     </div>
+                    {{--
                     <div class="form-group row">
                         <label class="col-form-label col-md-2">Periode</label>
                         <div class="col-md-3">
@@ -49,6 +50,7 @@ Pendaftaran Wisuda Fakultas
                             </select>
                         </div>
                     </div>
+                    --}}
                    <div class="form-group row">
                         <label class="col-form-label col-md-2">&nbsp;</label>
                         <div class="col-md-8">
@@ -64,14 +66,14 @@ Pendaftaran Wisuda Fakultas
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">NO</th>
-                                    <th class="text-center align-middle">PERIODE</th>
+                                    <!-- <th class="text-center align-middle">PERIODE</th> -->
                                     <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">PREDIKAT KELULUSAN</th>
                                     <th class="text-center align-middle">IJAZAH TERAKHIR</th>
                                     <th class="text-center align-middle">SK YUDISIUM</th>
                                     <!-- <th class="text-center align-middle">BERKAS REGISTRASI WISUDA</th> -->
                                     <th class="text-center align-middle">NOMOR REGISTRASI</th>
-                                    <th class="text-center align-middle">FOTO</th>
+                                    <!-- <th class="text-center align-middle">FOTO</th> -->
                                     <th class="text-center align-middle">JENJANG</th>
                                     <th class="text-center align-middle">PROGRAM STUDI</th>
                                     <th class="text-center align-middle">GELAR</th>
@@ -129,12 +131,14 @@ function getData()
 {
     // var fakultas = $('#fakultas').val();
     var prodi = $('#prodi').val();
-    var periode = $('#periode').val();
+    // var periode = $('#periode').val();
 
     // console.log(fakultas, prodi, periode);
 
-    if (prodi == '' || periode == '') {
-        swal('Peringatan', 'Silahkan pilih prodi, dan periode wisuda terlebih dahulu', 'warning');
+    if (prodi == '' 
+    // || periode == ''
+) {
+        swal('Peringatan', 'Silahkan pilih prodi terlebih dahulu', 'warning');
         return;
 
     }
@@ -144,7 +148,7 @@ function getData()
         type: 'GET',
         data: {
             prodi: prodi,
-            periode: periode
+            // periode: periode
         },
         success: function (response) {
 
@@ -332,7 +336,7 @@ function getData()
                                                 <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Pembatalan Pendafataran Yudisium</h5>
+                                                            <h5 class="modal-title">Pembatalan Pendaftaran Yudisium</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
@@ -366,15 +370,15 @@ function getData()
                                                 <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title">Alasan Penolakan</h5>
+                                                            <h5 class="modal-title">Pembatalan Pendafataran Yudisium</h5>
                                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="mb-3">
-                                                                <label class="form-label">Alasan Penolakan</label>
+                                                                <label class="form-label">Alasan Pembatalan</label>
                                                                 <input class="form-control"
                                                                     id="alasan_pembatalan${item.id}"
-                                                                    placeholder="Masukkan alasan penolakan">
+                                                                    placeholder="Masukkan alasan pembatalan">
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">
@@ -416,14 +420,14 @@ function getData()
 
                     table.row.add([
                         index + 1,
-                        item.wisuda_ke,
+                        // item.wisuda_ke,
                         spanStatus,
                         item.predikat_kelulusan ?? '-',
                         ijazahButton,
                         skYudisiumButton, 
                         // skYudisium,
                         item.nomor_registrasi ?? '-',
-                        foto,
+                        // foto,
                         item.jenjang,
                         item.nama_prodi,
                         item.gelar ?? '-',
@@ -452,7 +456,7 @@ function getData()
             } else if(response.status === 'error') {
                 swal('Error', response.message, 'error');
             } else {
-                swal('Error', 'Gagal mengambil data peserta wisuda', 'error');
+                swal('Error', 'Gagal mengambil data peserta Yudisium', 'error');
             }
 
         }
@@ -563,7 +567,7 @@ function submitApprove(id) {
 
     swal({
         title: "Konfirmasi",
-        text: "Setujui peserta wisuda ini?",
+        text: "Setujui peserta Yudisium ini?",
         type: "warning",
         showCancelButton: true,
         confirmButtonText: "Ya, Setujui",
@@ -625,13 +629,13 @@ function submitDecline(id) {
     var alasan = $('#alasan_pembatalan' + id).val();
 
     if (!alasan) {
-        swal('Peringatan', 'Silakan isikan alasan penolakan.', 'warning');
+        swal('Peringatan', 'Silakan isikan alasan pembatalan.', 'warning');
         return;
     }
 
     swal({
-        title: "Konfirmasi Penolakan",
-        text: "Apakah Anda yakin ingin menolak peserta ini?",
+        title: "Konfirmasi Pembatalan",
+        text: "Apakah Anda yakin ingin membatalkan pendaftaran peserta ini?",
         type: "warning",
         showCancelButton: true,
         confirmButtonColor: '#d33',
