@@ -64,64 +64,100 @@
                         </a>
                     </li>
                     
-                    <!-- <li class="{{request()->routeIs('mahasiswa.wisuda.index') | request()->routeIs('mahasiswa.wisuda.*') ? 'active' : ''}}">
-                        <a href="{{route('mahasiswa.wisuda.index')}}">
+                    <!-- <li class="{{request()->routeIs('mahasiswa.kelulusan.yudisium.index') | request()->routeIs('mahasiswa.kelulusan.yudisium.*') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.kelulusan.yudisium.index')}}">
                             <i class="fa fa-graduation-cap"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Yudisium</span>
                         </a>
                     </li> -->
 
-                    <li class="treeview {{ request()->routeIs('mahasiswa.wisuda.*') ? 'active menu-open' : '' }}">
+
+                    <li class="header">KELULUSAN</li>
+                    {{--<li class="{{request()->routeIs('mahasiswa.kelulusan.eligible.index') ? 'active' : ''}}">
                         <a href="#">
-                            <i class="fa fa-graduation-cap"></i>
+                    {{--
+                        <a href="{{route('mahasiswa.kelulusan.eligible.index')}}">
+                        --}}
+                            <i class="fa fa-line-chart"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Cek Eligible Kelulusan</span>
+                        </a>
+                    </li>--}}
+                    <li class="treeview {{ request()->routeIs('mahasiswa.kelulusan.yudisium.*') ? 'active menu-open' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-file-lines"></i>
                             <span>Yudisium</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('mahasiswa.wisuda.index') || request()->routeIs('mahasiswa.wisuda.transkrip') ? 'active' : ''}}">
-                                <a href="{{route('mahasiswa.wisuda.index')}}">
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.yudisium.index') || request()->routeIs('mahasiswa.kelulusan.yudisium.transkrip') ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.kelulusan.yudisium.index')}}">
                                     <i class="icon-Commit"><span
                                         class="path1"></span><span class="path2"></span></i>
-                                    Pendaftaran</a>
+                                    Cek Eligible Yudisium</a>
                             </li>
                             <li class="header">TAHAP PENDAFTARAN :</li>
-                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-induk') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.yudisium.data-induk') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
                                     1. Data Induk Mhs
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-akademik') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.yudisium.data-akademik') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
                                     2. Data Akademik Mhs
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-tugas-akhir') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.yudisium.data-tugas-akhir') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
                                     3. Data Tugas Akhir
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-wisuda') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.yudisium.resume.index') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    4. Data Wisuda
+                                    4. Finalisasi Data
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.data-skpi') ? 'active' : ''}}">
+                        </ul>
+                    </li>
+                    <li class="treeview {{ request()->routeIs('mahasiswa.kelulusan.wisuda.*') ? 'active menu-open' : '' }}">
+                        <a href="#">
+                            <i class="fa fa-graduation-cap"></i>
+                            <span>Wisuda</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.wisuda.index') || request()->routeIs('mahasiswa.kelulusan.wisuda.transkrip') ? 'active' : ''}}">
+                                <a href="{{route('mahasiswa.kelulusan.wisuda.index')}}">
+                                    <i class="icon-Commit"><span
+                                        class="path1"></span><span class="path2"></span></i>
+                                    Pendaftaran</a>
+                            </li>
+                            <li class="header">TAHAP PENDAFTARAN :</li>
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.wisuda.pendaftaran.data-wisuda') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    5. Data SKPI
+                                    1. Data Wisuda
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('mahasiswa.wisuda.pendaftaran.resume.index') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.wisuda.pendaftaran.data-skpi') ? 'active' : ''}}">
                                 <a href="#"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>
-                                    6. Finalisasi Data
+                                    2. Data SKPI
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('mahasiswa.kelulusan.wisuda.pendaftaran.resume.index') ? 'active' : ''}}">
+                                <a href="#"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>
+                                    3. Finalisasi Data
                                 </a>
                             </li>
                         </ul>

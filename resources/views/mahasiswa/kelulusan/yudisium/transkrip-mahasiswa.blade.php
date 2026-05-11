@@ -4,6 +4,22 @@ Transkrip Mahasiswa
 @endsection
 @section('content')
 @include('swal')
+<div class="content-header">
+    <div class="d-flex align-items-center">
+        <div class="me-auto">
+            <h3 class="page-title">Data Transkrip Mahasiswa</h3>
+            <div class="d-inline-block align-items-center">
+                <nav>
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{route('mahasiswa.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item" aria-current="page">Yudisium</li>
+                        <li class="breadcrumb-item active" aria-current="page">Data Transkrip Mahasiswa</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</div>
 <section class="content bg-white text-uppercase">
     <div class="row mt-10">
         <div class="col-lg-12 col-xl-12 mt-0">
@@ -104,7 +120,7 @@ Transkrip Mahasiswa
                     <div class="box-footer">
                         <div class="row mb-3">
                             <div class="col-12 text-start">
-                                <a href="{{ route('mahasiswa.wisuda.index') }}" 
+                                <a href="{{ route('mahasiswa.kelulusan.yudisium.index') }}" 
                                 class="btn btn-warning btn-sm">
                                     <i class="fa fa-arrow-left"></i> Kembali
                                 </a>

@@ -133,22 +133,22 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('fakultas.wisuda.index') || request()->routeIs('fakultas.wisuda.index.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.wisuda.index')}}"><i class="icon-Commit"><span class="path1"></span>
+                            <li class="{{request()->routeIs('fakultas.yudisium.index') || request()->routeIs('fakultas.yudisium.index.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.yudisium.index')}}"><i class="icon-Commit"><span class="path1"></span>
                                 <span class="path2"></span></i>Ajuan Yudisium</a>
                             </li>
                             <li class="{{request()->routeIs('fakultas.skpi.data.index') || request()->routeIs('fakultas.skpi.data.*') ? 'active' : ''}}">
                                 <a href="{{route('fakultas.skpi.data.index')}}"><i class="icon-Commit"><span class="path1"></span>
                                 <span class="path2"></span></i>Ajuan SKPI</a>
                             </li>
-                            <li class="{{request()->routeIs('fakultas.wisuda.khs-index') || request()->routeIs('fakultas.wisuda.khs-index.*') ? 'active' : ''}}">
-                                <a href="{{route('fakultas.wisuda.khs-index')}}"><i class="icon-Commit"><span class="path1"></span>
+                            <li class="{{request()->routeIs('fakultas.yudisium.khs-index') || request()->routeIs('fakultas.yudisium.khs-index.*') ? 'active' : ''}}">
+                                <a href="{{route('fakultas.yudisium.khs-index')}}"><i class="icon-Commit"><span class="path1"></span>
                                 <span class="path2"></span></i>Daftar MK Mahasiswa</a>
                             </li>
                         </ul>
                     </li>
-                    <!-- <li class="{{request()->routeIs('fakultas.wisuda.index') | request()->routeIs('fakultas.wisuda.*') ? 'active' : ''}}">
-                        <a href="{{route('fakultas.wisuda.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><spanclass="path2"></spanclass=></i>
+                    <!-- <li class="{{request()->routeIs('fakultas.yudisium.index') | request()->routeIs('fakultas.yudisium.*') ? 'active' : ''}}">
+                        <a href="{{route('fakultas.yudisium.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><spanclass="path2"></spanclass=></i>
                             <span>Wisuda</span>
                         </a>
                     </li> -->

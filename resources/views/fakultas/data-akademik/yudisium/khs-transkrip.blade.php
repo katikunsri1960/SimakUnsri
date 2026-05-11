@@ -12,7 +12,7 @@ KHS Mahasiswa
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i
                                     class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Wisuda</li>
+                        <li class="breadcrumb-item" aria-current="page">Yudisium</li>
                         <li class="breadcrumb-item active" aria-current="page">Daftar Mata Kuliah Mahasiswa</li>
                     </ol>
                 </nav>

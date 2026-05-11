@@ -70,11 +70,13 @@ class MahasiswaEligibleController extends Controller
             ->whereHas('aktivitas_mahasiswa.nilai_konversi', function ($query) {
                 $query->where('nilai_angka', '!=', 0);
             })
-            ->whereHas('periode_wisuda', function ($query) {
-                $query->where('is_active', '=', 1);
-            })
+            // ->whereHas('periode_wisuda', function ($query) {
+            //     $query->where('is_active', '=', 1);
+            // })
             ->withSum('transkrip_mahasiswa', 'sks_mata_kuliah')
             ->withSum('aktivitas_kuliah', 'sks_semester')
+            ->where('finalisasi_data', 1)
+            ->whereNot('approved_wisuda', 3)
             ->orderBy('nim', 'ASC')
             ->get();
 
@@ -422,6 +424,7 @@ class MahasiswaEligibleController extends Controller
 
         Wisuda::where('id',$id)->update([
             'approved' => 97,
+            'finalisasi_data' => 0,
             'alasan_pembatalan' => $request->alasan_pembatalan
         ]);
 
