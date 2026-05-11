@@ -241,10 +241,10 @@ class YudisiumController extends Controller
                     ->where('is_active', '1')
                     ->first();
         
-        if(!$wisuda_ke) {
-            return redirect()->back()->with('error',
-                'Tidak ada periode Wisuda yang tersedia !!');
-        }
+        // if(!$wisuda_ke) {
+        //     return redirect()->back()->with('error',
+        //         'Tidak ada periode Wisuda yang tersedia !!');
+        // }
 
         // Cek apakah file berhasil diupload
         // if ($wisuda) {
@@ -628,10 +628,10 @@ class YudisiumController extends Controller
         $ipk = $sks_total ? round($ipk_total / $sks_total, 2) : 0;
 
         // dd($sks_total, $ipk_total, $ipk);
-        if($request->wisuda_ke == '0') {
-            return redirect()->back()->with('error',
-                'Tidak ada periode Wisuda yang tersedia !!');
-        }
+        // if($request->wisuda_ke == '0') {
+        //     return redirect()->back()->with('error',
+        //         'Tidak ada periode Wisuda yang tersedia !!');
+        // }
 
         $sks_total_akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)
                 ->orderBy('id_semester', 'desc')
@@ -829,10 +829,10 @@ class YudisiumController extends Controller
                     ->where('is_active', '1')
                     ->first();
         
-        if(!$wisuda_ke) {
-            return redirect()->back()->with('error',
-                'Tidak ada periode Wisuda yang tersedia !!');
-        }
+        // if(!$wisuda_ke) {
+        //     return redirect()->back()->with('error',
+        //         'Tidak ada periode Wisuda yang tersedia !!');
+        // }
 
         // Cek apakah file berhasil diupload
         // if ($wisuda) {
