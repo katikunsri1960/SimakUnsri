@@ -170,7 +170,7 @@ class WisudaController extends Controller
                     ->get();
 
         if(!$riwayat_pendidikan->id_kurikulum ) {
-            return redirect()->route('mahasiswa.wisuda.index')->with('error', 'Kurikulum Belum diatur, Silahkan hubungi Koor. Prodi!');
+            return redirect()->route('mahasiswa.kelulusan.wisuda.index')->with('error', 'Kurikulum Belum diatur, Silahkan hubungi Koor. Prodi!');
         }else{
             $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
         }
@@ -385,7 +385,7 @@ class WisudaController extends Controller
             ]);
 
             return redirect()
-                ->route('mahasiswa.wisuda.resume.index')
+                ->route('mahasiswa.kelulusan.wisuda.resume.index')
                 ->with('success', 'Data SKPI Berhasil difinalisasi');
 
         } catch (\Exception $e) {
@@ -447,7 +447,7 @@ class WisudaController extends Controller
             ]);
 
             return redirect()
-                ->route('mahasiswa.wisuda.data-skpi')
+                ->route('mahasiswa.kelulusan.wisuda.data-skpi')
                 ->with('success', 'Data SKPI Berhasil ditambahkan');
 
         } catch (\Exception $e) {
@@ -631,9 +631,9 @@ class WisudaController extends Controller
 
         // dd($riwayat_pendidikan->lulus_do, $wisuda, $riwayat_pendidikan->id_jenis_keluar);
         
-        if ($riwayat_pendidikan->lulus_do) {
+        if ($riwayat_pendidikan->lulus_do->id_jenis_keluar != 1) {
             return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->lulus_do->nama_jenis_keluar . '!');
-        }elseif (!empty($riwayat_pendidikan->id_jenis_keluar)) {
+        }elseif (!empty($riwayat_pendidikan->id_jenis_keluar) && $riwayat_pendidikan->id_jenis_keluar != 1) {
             return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->keterangan_keluar . '!');
         }
 
@@ -759,7 +759,7 @@ class WisudaController extends Controller
         //DATA SKPI END
 
 
-        return view('mahasiswa.kelulusan.wisuda.resume_yudisium', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 
+        return view('mahasiswa.kelulusan.wisuda.resume_wisuda', ['riwayat_pendidikan' => $riwayat_pendidikan, 'semester_aktif' => $semester_aktif, 
                     'kecamatan'=> $kecamatan, 'usept' => $useptData, 'bebas_pustaka' => $bebas_pustaka, 'asal_sekolah' => $asal_sekolah, 'wisuda' => $wisuda,
                     'aktivitas_kuliah' => $aktivitas_kuliah, 'transkrip' => $transkrip_mahasiswa, 'total_sks_transkrip'=>$total_sks_transkrip, 
                     'bobot'=>$bobot,'ipk'=>$ipk, 'statusSync' => $statusSync, 'id_batch' => $id_batch, 'aktivitas' => $aktivitas, 'bku_prodi'=> $bku_prodi, 
@@ -777,34 +777,22 @@ class WisudaController extends Controller
             return back()->with('error','Data wisuda tidak ditemukan');
         }
 
-        if($wisuda->verified_induk == 0){
-            return redirect()->route('mahasiswa.wisuda.data-induk')->with('error', 'Silahkan Pastikan Data Induk telah disimpan!');
-        }
-
-        if($wisuda->verified_akademik == 0){
-            return redirect()->route('mahasiswa.wisuda.data-akademik')->with('error', 'Silahkan Pastikan Data Akademik telah disimpan!');
-        }
-
-        if($wisuda->verified_ta == 0){
-            return redirect()->route('mahasiswa.wisuda.data-tugas-akhir')->with('error', 'Silahkan Pastikan Tugas Akhir telah disimpan!');
-        }
-
         if($wisuda->verified_wisuda == 0){
-            return redirect()->route('mahasiswa.wisuda.data-wisuda')->with('error', 'Silahkan Pastikan Data Wisuda telah disimpan!');
+            return redirect()->route('mahasiswa.kelulusan.wisuda.data-wisuda')->with('error', 'Silahkan Pastikan Data Wisuda telah disimpan!');
         }
 
         if($wisuda->verified_skpi == 0 ){
-            return redirect()->route('mahasiswa.wisuda.data-skpi')->with('error', 'Silahkan Pastikan Data SKPI telah disimpan!');
+            return redirect()->route('mahasiswa.kelulusan.wisuda.data-skpi')->with('error', 'Silahkan Pastikan Data SKPI telah disimpan!');
         }
 
         try {
 
             $wisuda->update([
-                'finalisasi_data' => 1
+                'finalisasi_wisuda' => 1
             ]);
 
             return redirect()
-                ->route('mahasiswa.wisuda.index')
+                ->route('mahasiswa.kelulusan.wisuda.index')
                 ->with('success', 'Data Pendaftaran Berhasil difinalisasi');
 
         } catch (\Exception $e) {
