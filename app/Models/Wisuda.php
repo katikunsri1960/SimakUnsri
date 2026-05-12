@@ -149,6 +149,120 @@ class Wisuda extends Model
 
     public function getMasaStudiLamaAttribute()
     {
+        try {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Ambil tanggal daftar
+            |--------------------------------------------------------------------------
+            */
+            if (!$this->riwayat_pendidikan?->tanggal_daftar) {
+                return '-';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Prioritas tanggal akhir:
+            | 1. tgl_sk_yudisium
+            | 2. lulus_do->tgl_keluar
+            |--------------------------------------------------------------------------
+            */
+            $tanggalAkhir = null;
+
+            if (!empty($this->tgl_sk_yudisium) && $this->tgl_sk_yudisium !== '-') {
+                $tanggalAkhir = $this->tgl_sk_yudisium;
+            } elseif (!empty($this->lulus_do?->tgl_keluar)) {
+                $tanggalAkhir = $this->lulus_do->tgl_keluar;
+            }
+
+            if (!$tanggalAkhir) {
+                return '-';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Parse tanggal fleksibel
+            |--------------------------------------------------------------------------
+            */
+            $tgl_daftar = Carbon::parse($this->riwayat_pendidikan->tanggal_daftar);
+            $tgl_akhir = Carbon::parse($tanggalAkhir);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Hitung masa studi
+            |--------------------------------------------------------------------------
+            */
+            $masa_studi = $tgl_daftar->diffInMonths($tgl_akhir);
+
+            $tahun = floor($masa_studi / 12);
+            $bulan = $masa_studi % 12;
+
+            return $tahun . ' tahun, ' . $bulan . ' bulan';
+
+        } catch (\Exception $e) {
+            return '-';
+        }
+    }
+
+    public function getMasaStudiEnLamaAttribute()
+    {
+        try {
+
+            /*
+            |--------------------------------------------------------------------------
+            | Ambil tanggal daftar
+            |--------------------------------------------------------------------------
+            */
+            if (!$this->riwayat_pendidikan?->tanggal_daftar) {
+                return '-';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Prioritas tanggal akhir:
+            | 1. tgl_sk_yudisium
+            | 2. lulus_do->tgl_keluar
+            |--------------------------------------------------------------------------
+            */
+            $tanggalAkhir = null;
+
+            if (!empty($this->tgl_sk_yudisium) && $this->tgl_sk_yudisium !== '-') {
+                $tanggalAkhir = $this->tgl_sk_yudisium;
+            } elseif (!empty($this->lulus_do?->tgl_keluar)) {
+                $tanggalAkhir = $this->lulus_do->tgl_keluar;
+            }
+
+            if (!$tanggalAkhir) {
+                return '-';
+            }
+
+            /*
+            |--------------------------------------------------------------------------
+            | Parse tanggal fleksibel
+            |--------------------------------------------------------------------------
+            */
+            $tgl_daftar = Carbon::parse($this->riwayat_pendidikan->tanggal_daftar);
+            $tgl_akhir = Carbon::parse($tanggalAkhir);
+
+            /*
+            |--------------------------------------------------------------------------
+            | Hitung masa studi
+            |--------------------------------------------------------------------------
+            */
+            $masa_studi = $tgl_daftar->diffInMonths($tgl_akhir);
+
+            $tahun = floor($masa_studi / 12);
+            $bulan = $masa_studi % 12;
+
+            return $tahun . ' years, ' . $bulan . ' months';
+
+        } catch (\Exception $e) {
+            return '-';
+        }
+    }
+
+    public function getMasaStudiLamaaAttribute()
+    {
         // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
         $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
         $tgl_yudisium = Carbon::createFromFormat('Y-m-d', $this->tgl_sk_yudisium);
@@ -159,7 +273,7 @@ class Wisuda extends Model
         return $tahun . ' tahun, ' . $bulan . ' bulan';
     }
 
-    public function getMasaStudiEnLamaAttribute()
+    public function getMasaStudiEnLamaaAttribute()
     {
         // buat ... tahun, ... bulan dari riwayat_pendidikan->tanggal_daftar sampai this->tanggal_sk_yudisium
         $tgl_daftar = Carbon::createFromFormat('Y-m-d', $this->riwayat_pendidikan->tanggal_daftar);
