@@ -70,7 +70,7 @@ class WisudaController extends Controller
         $predikat_lulusan = PredikatKelulusan::get();
         // dd($gelar_lulusan);
 
-        return view('fakultas.data-akademik.yudisium.index', [
+        return view('fakultas.data-akademik.wisuda.index', [
             'prodi' => $prodi,
             'periode' => $periode,
             'gelar_lulusan' => $gelar_lulusan,
@@ -151,8 +151,10 @@ class WisudaController extends Controller
 
     public function peserta_data (Request $request)
     {
+        // dd($request->all());
         // Validasi
         $req = $request->validate([
+            'periode' => 'required',
             'prodi' => [
                 'required',
                 function ($attribute, $value, $fail) {
@@ -169,6 +171,7 @@ class WisudaController extends Controller
                 ->leftJoin('jalur_masuks as jm', 'jm.id_jalur_masuk', 'r.id_jalur_daftar')
                 ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
                 ->leftJoin('predikat_kelulusans as pk', 'pk.id', 'data_wisuda.id_predikat_kelulusan')
+                ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
                 ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
                 
                 // ✅ JOIN BARU : file_fakultas
@@ -176,6 +179,9 @@ class WisudaController extends Controller
                 ->leftJoin('bebas_pustakas as bp','bp.id_registrasi_mahasiswa','data_wisuda.id_registrasi_mahasiswa')
 
                 ->where('p.fakultas_id', auth()->user()->fk_id)
+                ->where('pw.periode', $req['periode'])
+                ->where('data_wisuda.finalisasi_wisuda', 1)
+                ->where('data_wisuda.approved', 3)
                 ->select(
                     'data_wisuda.*',
                     'p.nama_program_studi as nama_prodi',
@@ -312,6 +318,8 @@ class WisudaController extends Controller
 
                 ->where('pw.periode', $req['periode'])
                 ->where('p.fakultas_id', auth()->user()->fk_id)
+                ->where('data_wisuda.finalisasi_wisuda', 1)
+                ->where('data_wisuda.approved', 3)
                 ->select(
                     'data_wisuda.*',
                     'p.nama_program_studi as nama_prodi',

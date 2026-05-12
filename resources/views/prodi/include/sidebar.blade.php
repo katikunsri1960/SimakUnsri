@@ -152,6 +152,7 @@
                         <a href="{{route('prodi.data-lulusan.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i> 
                         Yudisum</a>
                     </li>--}}
+                    <li class="header">Kelulusan</li>
                     <li class="treeview {{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*') 
                                 ? 'active menu-open' : ''}}">
                         <a href="#">
@@ -163,7 +164,7 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('prodi.data-lulusan.index') ? 'active' : ''}}"><a href="{{route('prodi.data-lulusan.index')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('prodi.data-lulusan.index') ||  request()->routeIs('prodi.data-lulusan.*') ? 'active' : ''}}"><a href="{{route('prodi.data-lulusan.index')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Ajuan Yudisum</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-skpi.*') ? 'active' : ''}}"><a href="{{route('prodi.data-skpi.index')}}"><i class="icon-Commit"><span

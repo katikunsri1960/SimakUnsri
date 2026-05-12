@@ -556,6 +556,34 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 //     Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.yudisium.sk-yudisium.update');
                 //     Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.yudisium.sk-yudisium.delete');
                 // });
+            });
+
+            
+
+            Route::prefix('wisuda')->group(function () {
+                // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
+                Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
+                Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'peserta_data'])->name('fakultas.wisuda.peserta.data');
+                // Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'approve'])->name('fakultas.wisuda.peserta.approve');
+                // Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
+                // Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.peserta.decline');
+                // Route::get('/tambah', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
+                // Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
+                
+                // Route::get('/search', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'search'])->name('fakultas.wisuda.search-sk-yudisium');
+                // Route::post('/upload-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'uploadSkYudisium'])->name('fakultas.wisuda.upload-sk-yudisium');
+                // Route::put('/edit-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'editSkYudisium'])->name('fakultas.wisuda.edit-sk-yudisium');
+                // Route::delete('/hapus-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'deleteSkYudisium'])->name('fakultas.wisuda.hapus-sk-yudisium');
+
+                // Route::get('/khs', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_index'])->name('fakultas.wisuda.khs-index');   
+                // Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_transkrip_data'])->name('fakultas.wisuda.khs-transkrip-data');                   
+                
+                // Route::prefix('sk-yudisium')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
+                //     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.wisuda.sk-yudisium.store');
+                //     Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.wisuda.sk-yudisium.update');
+                //     Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.wisuda.sk-yudisium.delete');
+                // });
 
                 //Route for SKPI
                 Route::prefix('skpi')->group(function(){
@@ -568,45 +596,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'decline_skpi'])->name('fakultas.skpi.data.decline');
                 });
             });
-
-            
-
-            // Route::prefix('yudisium')->group(function () {
-            //     // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
-            //     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
-            //     Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'peserta_data'])->name('fakultas.wisuda.peserta.data');
-            //     Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'approve'])->name('fakultas.wisuda.peserta.approve');
-            //     // Route::post('/decline/{wisuda}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.decline');
-            //     Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'decline'])->name('fakultas.wisuda.peserta.decline');
-            //     Route::get('/tambah', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'tambah'])->name('fakultas.wisuda.tambah');
-            //     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'store'])->name('fakultas.wisuda.store');
-                
-            //     Route::get('/search', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'search'])->name('fakultas.wisuda.search-sk-yudisium');
-            //     Route::post('/upload-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'uploadSkYudisium'])->name('fakultas.wisuda.upload-sk-yudisium');
-            //     Route::put('/edit-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'editSkYudisium'])->name('fakultas.wisuda.edit-sk-yudisium');
-            //     Route::delete('/hapus-sk-yudisium/{id}', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'deleteSkYudisium'])->name('fakultas.wisuda.hapus-sk-yudisium');
-
-            //     Route::get('/khs', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_index'])->name('fakultas.wisuda.khs-index');   
-            //     Route::get('/khs-transkrip-data', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'khs_transkrip_data'])->name('fakultas.wisuda.khs-transkrip-data');                   
-                
-            //     // Route::prefix('sk-yudisium')->group(function(){
-            //     //     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'index'])->name('fakultas.wisuda.sk-yudisium.index');
-            //     //     Route::post('/store', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'store'])->name('fakultas.wisuda.sk-yudisium.store');
-            //     //     Route::put('/update/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'update'])->name('fakultas.wisuda.sk-yudisium.update');
-            //     //     Route::delete('/delete/{id_sk}', [App\Http\Controllers\Fakultas\Akademik\SKYudisiumController::class, 'destroy'])->name('fakultas.wisuda.sk-yudisium.delete');
-            //     // });
-
-            //     //Route for SKPI
-            //     Route::prefix('skpi')->group(function(){
-            //         Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.skpi.data.index');
-            //         Route::get('/data', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'skpi_data'])->name('fakultas.skpi.data.get-data');
-                    
-            //         Route::get('/', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'index'])->name('fakultas.skpi.data.index');
-            //         Route::get('/detail/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'detail_skpi_mahasiswa'])->name('fakultas.skpi.data.detail');
-            //         Route::post('/approve/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'approve_skpi'])->name('fakultas.skpi.data.approve');
-            //         Route::post('/decline/{id}', [App\Http\Controllers\Fakultas\Akademik\SKPIController::class, 'decline_skpi'])->name('fakultas.skpi.data.decline');
-            //     });
-            // });
 
             //ROUTE BANTUAN
             Route::prefix('bantuan')->group(function () {
@@ -809,7 +798,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/resume-yudisium/store', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'finalisasi_data'])->name('mahasiswa.kelulusan.wisuda.finalisasi');
                     
                     // Route::get('/transkrip', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'transkrip_mahasiswa'])->name('mahasiswa.kelulusan.wisuda.transkrip');
-                    // Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'peserta_formulir'])->name('mahasiswa.kelulusan.wisuda.formulir');
+                    Route::get('/formulir/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'peserta_formulir'])->name('mahasiswa.kelulusan.wisuda.formulir');
                     // Route::delete('/hapus/{id}', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'delete'])->name('mahasiswa.kelulusan.wisuda.delete');
                     // Route::get('/get-wilayah', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'get_wilayah'])->name('mahasiswa.kelulusan.wisuda.get-wilayah');
                     // Route::get('/get-kecamatan', [App\Http\Controllers\Mahasiswa\Kelulusan\WisudaController::class, 'get_kecamatan'])->name('mahasiswa.kelulusan.wisuda.get-kecamatan');

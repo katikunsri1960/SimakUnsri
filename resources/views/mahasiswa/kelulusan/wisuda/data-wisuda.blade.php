@@ -18,8 +18,9 @@ class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arr
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('mahasiswa.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Yudisium</li>
-                        <li class="breadcrumb-item active" aria-current="page">Pendaftaran</li>
+                        <li class="breadcrumb-item" aria-current="page">Kelulusan</li>
+                        <li class="breadcrumb-item" aria-current="page">Wisuda</li>
+                        <li class="breadcrumb-item" aria-current="page">Pendaftaran</li>
                         <li class="breadcrumb-item active" aria-current="page">Data Wisuda Mahasiswa</li>
                     </ol>
                 </nav>

@@ -747,6 +747,15 @@ $(document).on('click', '.btn-hapus-sk', function () {
     });
 });
 
+$(function () {
+    // "use strict";
+    // $('#data').DataTable();
+
+    // $('#fakultas').select2();
+    $('#prodi').select2();
+    // $('#periode').select2();
+});
+
 </script>
 
 @endpush

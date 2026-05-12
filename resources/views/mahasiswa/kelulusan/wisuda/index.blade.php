@@ -108,14 +108,12 @@ Pendaftaran Wisuda Mahasiswa
 
                                             <td class="p-0"><!--Persyaratan Lengkap-->
                                                 <button class="btn btn-sm {{ 
-                                                        $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
-                                                        $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
-                                                        $wisuda->pisn && $wisuda->approved == 3 
+                                                        $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_wisuda ==1 &&
+                                                        $wisuda->approved_wisuda == 3 
                                                         ? 'btn-success' : 'btn-danger' }}">
                                                     <i class="fas {{ 
-                                                            $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
-                                                            $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
-                                                            $wisuda->pisn && $wisuda->approved == 3 
+                                                            $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_wisuda ==1 &&
+                                                            $wisuda->approved_wisuda == 3 
                                                             ? 'fa-check' : 'fa-times' }}"></i>
                                                 </button>
                                             </td>
@@ -303,7 +301,37 @@ Pendaftaran Wisuda Mahasiswa
                                                     </span>
                                                 </td>
                                             </tr>     
-                                            @endif                                  
+                                            @endif   
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Berkas Registrasi Wisuda</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left align-middle">
+                                                    @if($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
+                                                        <span class="badge badge-lg bg-danger mb-5">
+                                                            Berkas Registrasi Ditangguhkan
+                                                        </span>
+                                                    @elseif(!$bebas_pustaka && $bebas_pustaka->file_bebas_pustaka)
+                                                        <span class="badge badge-lg bg-danger mb-5">
+                                                            Berkas Registrasi Ditangguhkan
+                                                        </span>
+                                                    @elseif($wisuda->finalisasi_data == 0)
+                                                        <a type="button" href="{{route('mahasiswa.wisuda.resume.index')}}" class="btn btn-sm btn-danger waves-effect waves-light"
+                                                            title="Anda harus melakukan finalisasi data terlebih dahulu untuk dapat mengunduh berkas registrasi">
+                                                            Belum Finalisasi Data
+                                                        </a>
+                                                    @elseif($wisuda->id_file_fakultas && $wisuda->tgl_keluar)
+                                                        <a class="btn btn-sm btn-primary my-5"
+                                                            href="{{ route('mahasiswa.kelulusan.wisuda.formulir', ['id' => $wisuda->id]) }}"
+                                                            target="_blank">
+                                                            <i class="fa fa-file me-2"></i> Unduh Berkas Registrasi Wisuda
+                                                        </a>
+                                                    @else
+                                                        <span class="badge badge-lg bg-danger">
+                                                            SK Yudisium Belum Diupload Oleh Fakultas
+                                                        </span>
+                                                    @endif
+                                                </td>
+                                            </tr>                                   
                                         </table>
                                     </div>
                                 </div>
@@ -313,7 +341,7 @@ Pendaftaran Wisuda Mahasiswa
                     <div class="row mb-5 mt-30">
                         <div class="col-xl-12 col-lg-12 text-center">
                             <div class="d-flex justify-content-center">
-                                @if($wisuda && $wisuda->finalisasi_data == 1 && $wisuda->approved == 3)
+                                @if($wisuda && $wisuda->finalisasi_data == 1 && $wisuda->approved == 3 and $wisuda->finalisasi_wisuda == 0)
                                 <a class="btn bg-primary" 
                                     href="{{ route('mahasiswa.kelulusan.wisuda.data-wisuda') }}"
                                     id="lanjut-wisuda-btn" title="Pastikan semua syarat sudah terpenuhi sebelum mendaftar!">
