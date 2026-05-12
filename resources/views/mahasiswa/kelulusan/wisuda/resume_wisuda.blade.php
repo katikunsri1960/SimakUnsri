@@ -1,24 +1,20 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Pendaftaran Yudisium Mahasiswa
+Pendaftaran Wisuda Mahasiswa
 @endsection
 @section('content')
-{{-- @push('header')
-<div class="mx-4">
-    <a href="{{route('mahasiswa.wisuda.index')}}"
-class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
-</div>
-@endpush --}}
+
 @include('swal')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Resume Data Pendaftaran Yudisium</h3>
+            <h3 class="page-title">Resume Data Pendaftaran Wisuda</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Yudisium</li>
+                        <li class="breadcrumb-item" aria-current="page">Kelulusan</li>
+                        <li class="breadcrumb-item" aria-current="page">Wisuda</li>
                         <li class="breadcrumb-item" aria-current="page">Pendaftaran</li>
                         <li class="breadcrumb-item active" aria-current="page">Resume Data Pendaftaran Yudisium</li>
                     </ol>
@@ -878,11 +874,11 @@ class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arr
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <!-- <div class="box-header with-border d-flex justify-content-between align-items-center mx-20"> -->
-                <form class="form" action="{{route('mahasiswa.wisuda.pendaftaran.finalisasi')}}" id="finalisasi-data" method="POST" enctype="multipart/form-data">
+                <form class="form" action="{{route('mahasiswa.kelulusan.wisuda.finalisasi')}}" id="finalisasi-data" method="POST" enctype="multipart/form-data">
                     @csrf
                     
                     <div class="box-footer">
-                        @if($wisuda && $wisuda->finalisasi_data == 1)
+                        @if($wisuda && $wisuda->finalisasi_wisuda == 1)
                             <div class="checkbox p-3 border border-success rounded bg-light-success">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data" checked disabled>
                                 <label for="pernyataan_data" class="text-success fw-bold">
@@ -890,10 +886,10 @@ class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arr
                                 </label>
                             </div>
                             <div class="form-group mt-20">
-                                <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-skpi')}}" class="btn btn-danger waves-effect waves-light">
+                                <a type="button" href="{{route('mahasiswa.kelulusan.wisuda.data-skpi')}}" class="btn btn-danger waves-effect waves-light">
                                     Kembali
                                 </a>
-                                <a type="button" href="{{route('mahasiswa.wisuda.index')}}" class="btn btn-primary waves-effect waves-light">
+                                <a type="button" href="{{route('mahasiswa.kelulusan.wisuda.index')}}" class="btn btn-primary waves-effect waves-light">
                                     Selesai
                                 </a>
                             </div>
@@ -905,7 +901,7 @@ class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arr
                                 </label>
                             </div>
                             <div class="form-group mt-20">
-                                <a type="button" href="{{route('mahasiswa.wisuda.pendaftaran.data-skpi')}}" class="btn btn-danger waves-effect waves-light">
+                                <a type="button" href="{{route('mahasiswa.kelulusan.wisuda.data-skpi')}}" class="btn btn-danger waves-effect waves-light">
                                     Kembali
                                 </a>
                                 <button type="submit" id="submit-button" class="btn btn-primary waves-effect waves-light">Finalisasi</button>

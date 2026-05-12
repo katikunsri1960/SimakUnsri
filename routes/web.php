@@ -197,6 +197,67 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::post('/store/{kurikulum}', [App\Http\Controllers\Bak\UseptController::class, 'store'])->name('bak.usept-prodi.store');
             });
 
+            Route::prefix('yudisium')->group(function(){
+
+                // Route::prefix('pengaturan')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\Bak\YudisiumController::class, 'pengaturan'])->name('bak.yudisium.pengaturan');
+                //     Route::post('/store', [App\Http\Controllers\Bak\YudisiumController::class, 'pengaturan_store'])->name('bak.yudisium.pengaturan.store');
+                //     Route::patch('/update/{periodeWisuda}', [App\Http\Controllers\Bak\YudisiumController::class, 'pengaturan_update'])->name('bak.yudisium.pengaturan.update');
+                //     Route::delete('/delete/{periodeWisuda}', [App\Http\Controllers\Bak\YudisiumController::class, 'pengaturan_delete'])->name('bak.yudisium.pengaturan.delete');
+                // });
+
+                Route::prefix('peserta')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\YudisiumController::class, 'peserta'])->name('bak.yudisium.peserta');
+                    // Route::post('/approve/{id}', [App\Http\Controllers\Bak\YudisiumController::class, 'approve'])->name('bak.wisuda.peserta.approve');
+                    Route::post('/approve/{id}', [App\Http\Controllers\Bak\YudisiumController::class, 'approve'])->name('bak.yudisium.peserta.approve');
+                    Route::post('/decline/{id}', [App\Http\Controllers\Bak\YudisiumController::class, 'decline'])->name('bak.yudisium.peserta.decline');
+                    Route::get('/data', [App\Http\Controllers\Bak\YudisiumController::class, 'peserta_data'])->name('bak.yudisium.peserta.data');
+                    Route::get('/data_approved', [App\Http\Controllers\Bak\YudisiumController::class, 'peserta_data_approved'])->name('bak.yudisium.peserta.data_approved');
+                    Route::get('/data_approved_transkrip', [App\Http\Controllers\Bak\YudisiumController::class, 'peserta_data_approved_transkrip'])->name('bak.yudisium.peserta.data_approved_transkrip');
+                    Route::get('/formulir/{id}', [App\Http\Controllers\Bak\YudisiumController::class, 'peserta_formulir'])->name('bak.yudisium.peserta.formulir');
+                    Route::get('/ijazah/{id}', [App\Http\Controllers\Bak\YudisiumController::class, 'ijazah_terakhir'])->name('bak.yudisium.peserta.ijazah');
+
+                    Route::post('/update-foto', [App\Http\Controllers\Bak\YudisiumController::class, 'update_foto'])->name('bak.yudisium.peserta.update-foto');
+                    Route::post('/update-predikat', [App\Http\Controllers\Bak\YudisiumController::class, 'update_predikat'])->name('bak.yudisium.peserta.update-predikat');
+                });
+
+                Route::prefix('registrasi-ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\YudisiumController::class, 'registrasi_ijazah'])->name('bak.yudisium.registrasi-ijazah.index');
+                    Route::post('/upload', [App\Http\Controllers\Bak\YudisiumController::class, 'registrasi_ijazah_upload'])->name('bak.yudisium.registrasi-ijazah.upload');
+                    Route::post('/store', [App\Http\Controllers\Bak\YudisiumController::class, 'registrasi_ijazah_store'])->name('bak.yudisium.registrasi-ijazah.store');
+                    Route::patch('/update/{idmanual}', [App\Http\Controllers\Bak\YudisiumController::class, 'registrasi_ijazah_update'])->name('bak.yudisium.registrasi-ijazah.update');
+                    Route::delete('/delete/{idmanual}', [App\Http\Controllers\Bak\YudisiumController::class, 'registrasi_ijazah_destroy'])->name('bak.yudisium.registrasi-ijazah.delete');
+                    Route::get('/get-mahasiswa', [App\Http\Controllers\Bak\YudisiumController::class, 'get_mahasiswa'])->name('bak.yudisium.registrasi-ijazah.get-mahasiswa');
+                });
+
+                Route::prefix('perbaikan-data')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\YudisiumController::class, 'perbaikan_data'])->name('bak.yudisium.perbaikan-data');
+                    Route::get('/search', [App\Http\Controllers\Bak\YudisiumController::class, 'search_perbaikan_data'])->name('bak.yudisium.perbaikan-data.search');
+                    Route::get('/get-perbaikan-data', [App\Http\Controllers\Bak\YudisiumController::class, 'data_perbaikan_data'])->name('bak.yudisium.perbaikan-data.get');
+                    Route::post('/store', [App\Http\Controllers\Bak\YudisiumController::class, 'store_perbaikan_data'])->name('bak.yudisium.perbaikan-data.store');
+                });
+
+                Route::prefix('ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\YudisiumController::class, 'ijazah'])->name('bak.yudisium.ijazah.index');
+                    Route::get('/download-excel', [App\Http\Controllers\Bak\YudisiumController::class, 'ijazah_download_excel'])->name('bak.yudisium.ijazah.download-excel');
+                    Route::get('/download-pdf', [App\Http\Controllers\Bak\YudisiumController::class, 'ijazah_download_pdf'])->name('bak.yudisium.ijazah.download-pdf');
+                });
+
+                Route::prefix('transkrip')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\YudisiumController::class, 'transkrip'])->name('bak.yudisium.transkrip.index');
+                    Route::get('/download-pdf', [App\Http\Controllers\Bak\YudisiumController::class, 'transkrip_download_pdf'])->name('bak.yudisium.transkrip.download-pdf');
+                });
+
+                Route::prefix('album')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\YudisiumController::class, 'album'])->name('bak.yudisium.album.index');
+                    Route::get('/download-pdf', [App\Http\Controllers\Bak\YudisiumController::class, 'album_download_pdf'])->name('bak.yudisium.album.download-pdf');
+                });
+
+                Route::prefix('usept')->group(function(){
+                    Route::get('/', [App\Http\Controllers\Bak\YudisiumController::class, 'usept'])->name('bak.yudisium.usept.index');
+                });
+            });
+
             Route::prefix('wisuda')->group(function(){
 
                 Route::prefix('pengaturan')->group(function(){
@@ -260,10 +321,6 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/detail/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'detail_skpi_mahasiswa'])->name('bak.skpi.data.detail');
                     Route::post('/approve/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'approve_skpi'])->name('bak.skpi.data.approve');
                     Route::post('/decline/{id}', [App\Http\Controllers\Bak\SKPIController::class, 'decline_skpi'])->name('bak.skpi.data.decline');
-                });
-
-                Route::prefix('usept')->group(function(){
-                    Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'usept'])->name('bak.wisuda.usept.index');
                 });
             });
 

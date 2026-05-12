@@ -58,10 +58,10 @@ Pendaftaran Wisuda Mahasiswa
                                             <th style="width:80px">SKPI</th>
                                             <th style="width:80px">Ver Mahasiswa</th>
                                             <!-- <th style="width:80px">Ver Pembimbing TA</th> -->
-                                            <th style="width:80px">Ver Koor. Prodi</th>
-                                            <th style="width:80px">Ver Fakultas</th>
+                                            <!-- <th style="width:80px">Ver Koor. Prodi</th> -->
+                                            <!-- <th style="width:80px">Ver Fakultas</th> -->
                                             <th style="width:80px">Ver Dir. Akad</th>
-                                            <th style="width:80px">PISN</th>
+                                            <!-- <th style="width:80px">PISN</th> -->
                                             <th style="width:80px">Persyaratan Lengkap</th>
                                         </tr>
                                     </thead>
@@ -95,32 +95,14 @@ Pendaftaran Wisuda Mahasiswa
 
                                             <td class="p-0"><!--Verifikasi Mahasiswa-->
                                                 <a href="{{ route('mahasiswa.kelulusan.wisuda.resume.index') }}"
-                                                    class="btn btn-sm {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data == 1 ? 'btn-success' : 'btn-danger' }}">
-                                                    <i class="fas {{ $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data == 1 ? 'fa-check' : 'fa-times' }}"></i>
+                                                    class="btn btn-sm {{ $wisuda->finalisasi_wisuda == 1 ? 'btn-success' : 'btn-danger' }}">
+                                                    <i class="fas {{ $wisuda->finalisasi_wisuda == 1 ? 'fa-check' : 'fa-times' }}"></i>
                                                 </a>
                                             </td>
 
-                                            <td class="p-0"><!--Verifikasi Koor. Prodi-->
-                                                <button class="btn btn-sm {{ $wisuda->approved > 0 && $wisuda->approved < 4 ? 'btn-success' : 'btn-danger' }}">
-                                                    <i class="fas {{ $wisuda->approved > 0 && $wisuda->approved < 4 ? 'fa-check' : 'fa-times' }}"></i>
-                                                </button>
-                                            </td>
-
-                                            <td class="p-0"><!--Verifikasi Fakultas-->
-                                                <button class="btn btn-sm {{ $wisuda->approved > 1 && $wisuda->approved < 4 ? 'btn-success' : 'btn-danger' }}">
-                                                    <i class="fas {{ $wisuda->approved > 1 && $wisuda->approved < 4 ? 'fa-check' : 'fa-times' }}"></i>
-                                                </button>
-                                            </td>
-
                                             <td class="p-0"><!--Verifikasi Dir. Akad-->
-                                                <button class="btn btn-sm {{ $wisuda->approved == 3 ? 'btn-success' : 'btn-danger' }}">
-                                                    <i class="fas {{ $wisuda->approved == 3 ? 'fa-check' : 'fa-times' }}"></i>
-                                                </button>
-                                            </td>
-
-                                            <td class="p-0"><!--PISN-->
-                                                <button class="btn btn-sm {{ $wisuda->pisn ? 'btn-success' : 'btn-danger' }}">
-                                                    <i class="fas {{ $wisuda->pisn ? 'fa-check' : 'fa-times' }}"></i>
+                                                <button class="btn btn-sm {{ $wisuda->approved_wisuda == 3 ? 'btn-success' : 'btn-danger' }}">
+                                                    <i class="fas {{ $wisuda->approved_wisuda == 3 ? 'fa-check' : 'fa-times' }}"></i>
                                                 </button>
                                             </td>
 
@@ -285,7 +267,43 @@ Pendaftaran Wisuda Mahasiswa
                                                         </a>
                                                     @endif
                                                 </td>
-                                            </tr>                                   
+                                            </tr>     
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Status Pendaftaran Wisuda</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left align-middle" style="width:10%">
+                                                    {{-- KONDISI PERSYARATAN--}}
+                                                    @if($wisuda->finalisasi_wisuda == 1)
+                                                        
+                                                        {{-- KONDISI APPROVED--}}
+                                                        @if($wisuda->approved_wisuda == 0)
+                                                            <span class="badge badge-lg badge-warning mb-5 rounded">Belum Diapproved</span>
+                                                        @elseif($wisuda->approved_wisuda == 3)
+                                                            <span class="badge badge-lg badge-success mb-5 rounded">Disetujui Dir. Akademik</span>
+                                                        @elseif($wisuda->approved_wisuda == 99)
+                                                            <span class="badge badge-lg badge-danger mb-5 rounded">Ditolak Dir. Akademik</span>
+                                                        @endif
+                                                    
+                                                    @else
+                                                        <a type="button" href="{{route('mahasiswa.kelulusan.wisuda.data-wisuda')}}" class="btn btn-sm btn-danger waves-effect waves-light"
+                                                            title="Anda harus melakukan finalisasi data terlebih dahulu">
+                                                            Belum Finalisasi Data
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>  
+                                            @if($wisuda->approved_wisuda > 3 && $wisuda->alasan_pembatalan)
+                                            <tr>
+                                                <td class="text-left" style="width: 30%;">Alasan Pembatalan</td>
+                                                <td class="text-center" style="width: 5%;">:</td>
+                                                <td class="text-left align-middle" style="width:10%">
+                                                    {{-- KONDISI PERSYARATAN--}}
+                                                    <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                        {{ $wisuda->alasan_pembatalan }}
+                                                    </span>
+                                                </td>
+                                            </tr>     
+                                            @endif                                  
                                         </table>
                                     </div>
                                 </div>
@@ -295,12 +313,12 @@ Pendaftaran Wisuda Mahasiswa
                     <div class="row mb-5 mt-30">
                         <div class="col-xl-12 col-lg-12 text-center">
                             <div class="d-flex justify-content-center">
-                                @if($wisuda && $wisuda->verified_wisuda == 0 && $wisuda->finalisasi_wisuda == 0)
+                                @if($wisuda && $wisuda->finalisasi_data == 1 && $wisuda->approved == 3)
                                 <a class="btn bg-primary" 
                                     href="{{ route('mahasiswa.kelulusan.wisuda.data-wisuda') }}"
                                     id="lanjut-wisuda-btn" title="Pastikan semua syarat sudah terpenuhi sebelum mendaftar!">
                                     <i class="fa fa-graduation-cap"><span class="path1"></span><span class="path2"></span></i> 
-                                    LANJUTKAN PENDAFTARAAN WISUDA
+                                    DAFTAR WISUDA
                                 </a>
                                 @endif
                             </div>  

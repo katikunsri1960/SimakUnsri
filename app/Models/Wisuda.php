@@ -20,7 +20,7 @@ class Wisuda extends Model
 {
     use HasFactory;
     protected $table = 'data_wisuda';
-    protected $appends = ['id_tanggal_sk_yudisium', 'approved_text'];
+    protected $appends = ['id_tanggal_sk_yudisium', 'approved_text', 'approved_wisuda_text', 'masa_studi_lama', 'masa_studi_en_lama', 'masa_studi', 'masa_studi_en'];
 
     protected $guarded = ['id'];
     
@@ -130,6 +130,21 @@ class Wisuda extends Model
         ];
 
         return $status[$this->approved] ?? 'Belum Diproses';
+    }
+
+    public function getApprovedWisudaTextAttribute()
+    {
+        $status = [
+            0 => 'Belum Diapproved',
+            // 1 => 'Disetujui Prodi',
+            // 2 => 'Disetujui Fakultas',
+            3 => 'Disetujui Dir. Akademik',
+            // 97 => 'Ditolak Prodi',
+            // 98 => 'Ditolak Fakultas',
+            99 => 'Ditolak Dir. Akademik',
+        ];
+
+        return $status[$this->approved_wisuda] ?? 'Belum Diproses';
     }
 
     public function getMasaStudiLamaAttribute()

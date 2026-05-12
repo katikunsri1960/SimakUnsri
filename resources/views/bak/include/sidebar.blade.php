@@ -83,6 +83,8 @@
                             </span>
                         </a>
                     </li>
+
+                    <li class="header">Pengajuan</li>
                     <li class="{{request()->routeIs('bak.beasiswa') ? 'active' : ''}}">
                         <a href="{{route('bak.beasiswa')}}">
                             <i class="fa fa-book"><span class="path1"></span><span
@@ -113,6 +115,128 @@
                             </span>
                         </a>
                     </li>
+                    
+
+                    <li class="header">Kelulusan</li>
+                    <li class="treeview {{request()->routeIs('bak.yudisium.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-file-lines"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Yudisium</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            {{--
+                            <li class="{{request()->routeIs('bak.yudisium.pengaturan') || request()->routeIs('bak.yudisium.pengaturan.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.yudisium.pengaturan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembukaan yudisium</a>
+                            </li>
+                            --}}
+
+                            <li class="{{request()->routeIs('bak.yudisium.peserta') || request()->routeIs('bak.yudisium.peserta.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.yudisium.peserta')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Calon Peserta yudisium</a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.yudisium.registrasi-ijazah.index') || request()->routeIs('bak.yudisium.registrasi-ijazah.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.yudisium.registrasi-ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Registrasi Ijazah</a>
+                            </li>
+                            
+                            {{--
+                            <li class="{{request()->routeIs('bak.yudisium.perbaikan-data') || request()->routeIs('bak.perbaikan-data.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.yudisium.perbaikan-data')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Perbaikan Data</a>
+                            </li>
+                            
+                            
+                            <li class="{{request()->routeIs('bak.yudisium.ijazah.index') || request()->routeIs('bak.yudisium.ijazah.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.yudisium.ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Ijazah</a>
+                            </li>
+                            
+                            <li class="{{request()->routeIs('bak.yudisium.transkrip.index') || request()->routeIs('bak.yudisium.transkrip.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.yudisium.transkrip.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Transkrip yudisiumwan</a>
+                            </li>
+
+                            <li class="{{request()->routeIs('bak.yudisium.album.index') || request()->routeIs('bak.yudisium.album.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.yudisium.album.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Album yudisiumwan</a>
+                            </li>
+
+                            <li class="{{request()->routeIs('bak.skpi.data.index') || request()->routeIs('bak.skpi.data.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.skpi.data.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>SKPI yudisiumwan</a>
+                            </li>
+
+                            <li class="{{request()->routeIs('bak.yudisium.usept.index') || request()->routeIs('bak.yudisium.usept.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.yudisium.usept.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai USEPT</a>
+                            </li>
+                            --}}
+                        </ul>
+                    </li>
+
+                    <li class="treeview {{request()->routeIs('bak.wisuda.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Wisuda</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('bak.wisuda.pengaturan') || request()->routeIs('bak.wisuda.pengaturan.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.pengaturan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembukaan Wisuda</a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.wisuda.peserta') || request()->routeIs('bak.wisuda.peserta.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.peserta')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Calon Peserta Wisuda</a>
+                            </li>
+
+                            {{--
+                            <li class="{{request()->routeIs('bak.wisuda.registrasi-ijazah.index') || request()->routeIs('bak.wisuda.registrasi-ijazah.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.registrasi-ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Registrasi Ijazah</a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.wisuda.perbaikan-data') || request()->routeIs('bak.perbaikan-data.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.perbaikan-data')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Perbaikan Data</a>
+                            </li>
+                            --}}
+                            
+                            <li class="{{request()->routeIs('bak.wisuda.ijazah.index') || request()->routeIs('bak.wisuda.ijazah.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Ijazah</a>
+                            </li>
+                            
+                            <li class="{{request()->routeIs('bak.wisuda.transkrip.index') || request()->routeIs('bak.wisuda.transkrip.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.transkrip.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Transkrip Wisudawan</a>
+                            </li>
+
+                            <li class="{{request()->routeIs('bak.wisuda.album.index') || request()->routeIs('bak.wisuda.album.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.wisuda.album.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Album Wisudawan</a>
+                            </li>
+
+                            <li class="{{request()->routeIs('bak.skpi.data.index') || request()->routeIs('bak.skpi.data.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.skpi.data.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>SKPI Wisudawan</a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="treeview {{request()->routeIs('bak.skpi*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i class="fa fa-file"></i>
+                            <span>SKPI</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('bak.skpi.bidang.index') || request()->routeIs('bak.skpi.bidang.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.skpi.bidang.index')}}">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Bidang SKPI
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('bak.skpi.jenis.index') || request()->routeIs('bak.skpi.jenis.*') ? 'active' : ''}}">
+                                <a href="{{route('bak.skpi.jenis.index')}}">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Jenis SKPI
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li class="header">Monitoring</li>
                     <li class="treeview {{request()->routeIs('bak.monitoring.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-television"><span class="path1"></span><span class="path2"></span></i>
@@ -141,75 +265,6 @@
                                 <a href="{{route('bak.monitoring.cpl-kurikulum')}}">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
                                     CPL Kurikulum
-                                </a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="treeview {{request()->routeIs('bak.wisuda.*') ? 'active menu-open' : ''}}">
-                        <a href="#">
-                            <i span class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Wisuda</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('bak.wisuda.pengaturan') || request()->routeIs('bak.wisuda.pengaturan.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.pengaturan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pembukaan Wisuda</a>
-                            </li>
-                            <li class="{{request()->routeIs('bak.wisuda.peserta') || request()->routeIs('bak.wisuda.peserta.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.peserta')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Calon Peserta Wisuda</a>
-                            </li>
-                            <li class="{{request()->routeIs('bak.wisuda.registrasi-ijazah.index') || request()->routeIs('bak.wisuda.registrasi-ijazah.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.registrasi-ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Registrasi Ijazah</a>
-                            </li>
-                            
-                            {{--
-                            <li class="{{request()->routeIs('bak.wisuda.perbaikan-data') || request()->routeIs('bak.perbaikan-data.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.perbaikan-data')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Perbaikan Data</a>
-                            </li>
-                            --}}
-                            
-                            <li class="{{request()->routeIs('bak.wisuda.ijazah.index') || request()->routeIs('bak.wisuda.ijazah.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.ijazah.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Daftar Ijazah</a>
-                            </li>
-                            
-                            <li class="{{request()->routeIs('bak.wisuda.transkrip.index') || request()->routeIs('bak.wisuda.transkrip.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.transkrip.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Transkrip Wisudawan</a>
-                            </li>
-
-                            <li class="{{request()->routeIs('bak.wisuda.album.index') || request()->routeIs('bak.wisuda.album.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.album.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Album Wisudawan</a>
-                            </li>
-
-                            <li class="{{request()->routeIs('bak.skpi.data.index') || request()->routeIs('bak.skpi.data.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.skpi.data.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>SKPI Wisudawan</a>
-                            </li>
-
-                            <li class="{{request()->routeIs('bak.wisuda.usept.index') || request()->routeIs('bak.wisuda.usept.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.wisuda.usept.index')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Nilai USEPT</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li class="treeview {{request()->routeIs('bak.skpi*') ? 'active menu-open' : ''}}">
-                        <a href="#">
-                            <i class="fa fa-file"></i>
-                            <span>SKPI</span>
-                            <span class="pull-right-container">
-                                <i class="fa fa-angle-right pull-right"></i>
-                            </span>
-                        </a>
-                        <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('bak.skpi.bidang.index') || request()->routeIs('bak.skpi.bidang.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.skpi.bidang.index')}}">
-                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    Bidang SKPI
-                                </a>
-                            </li>
-                            <li class="{{request()->routeIs('bak.skpi.jenis.index') || request()->routeIs('bak.skpi.jenis.*') ? 'active' : ''}}">
-                                <a href="{{route('bak.skpi.jenis.index')}}">
-                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    Jenis SKPI
                                 </a>
                             </li>
                         </ul>

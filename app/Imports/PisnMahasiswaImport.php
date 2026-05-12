@@ -36,13 +36,13 @@ class PisnMahasiswaImport implements ToCollection, WithHeadingRow
                     throw new \Exception("Mahasiswa dengan NIM {$row['nim']} tidak ditemukan");
                 }
 
-                $periode = PeriodeWisuda::where('periode', $row['periode_wisuda'])
-                    ->where('is_active', 1)
-                    ->first();
+                // $periode = PeriodeWisuda::where('periode', $row['periode_wisuda'])
+                //     ->where('is_active', 1)
+                //     ->first();
 
-                if (!$periode) {
-                    throw new \Exception("Periode wisuda {$row['periode_wisuda']} tidak aktif");
-                }
+                // if (!$periode) {
+                //     throw new \Exception("Periode wisuda {$row['periode_wisuda']} tidak aktif");
+                // }
 
                 PisnMahasiswa::updateOrCreate(
                     [
