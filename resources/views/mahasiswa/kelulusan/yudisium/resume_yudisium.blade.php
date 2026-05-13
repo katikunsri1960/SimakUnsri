@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Pendaftaran Yudisium Mahasiswa
+Yudisium Mahasiswa
 @endsection
 @section('content')
 {{-- @push('header')
@@ -13,14 +13,13 @@ class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arr
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Resume Data Pendaftaran Yudisium</h3>
+            <h3 class="page-title">Resume Data Yudisium</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('mahasiswa.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Kelulusan</li>
                         <li class="breadcrumb-item" aria-current="page">Yudisium</li>
-                        <li class="breadcrumb-item" aria-current="page">Pendaftaran</li>
                         <li class="breadcrumb-item active" aria-current="page">Resume Data Pendaftaran Yudisium</li>
                     </ol>
                 </nav>
@@ -758,7 +757,7 @@ class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arr
                                             id="submit-button"
                                             formaction="{{route('mahasiswa.kelulusan.yudisium.finalisasi')}}"
                                             class="btn btn-success waves-effect waves-light">
-                                        <i class="fa fa-check"></i> Finalisasi
+                                        <i class="fa fa-check"></i> Daftar Yudisium
                                     </button>
 
                                 </div>

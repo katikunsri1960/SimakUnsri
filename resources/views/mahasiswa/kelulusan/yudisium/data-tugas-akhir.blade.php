@@ -1,6 +1,6 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Pendaftaran Yudisium Mahasiswa
+Yudisium Mahasiswa
 @endsection
 @section('content')
 {{-- @push('header')
@@ -17,7 +17,7 @@ Pendaftaran Yudisium Mahasiswa
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('mahasiswa.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Kelulusan</li>
                         <li class="breadcrumb-item" aria-current="page">Yudisium</li>
                         <li class="breadcrumb-item active" aria-current="page">Data Tugas Akhir Mahasiswa</li>
@@ -107,7 +107,7 @@ Pendaftaran Yudisium Mahasiswa
                                             name="abstrak_ta"
                                             id="abstrak_ta"
                                             placeholder="Masukkan Abstrak {{$aktivitas->nama_jenis_aktivitas}}"
-                                            {{$disabled}}
+                                            {{$disabled}} required
                                         >{{ old('abstrak_ta', $wisuda->abstrak_ta ?? '') }}</textarea>
 
                                         <small class="form-text text-danger">
@@ -154,7 +154,7 @@ Pendaftaran Yudisium Mahasiswa
                                             name="abstrak_file"
                                             id="abstrak_file"
                                             accept=".pdf"
-                                            {{$disabled}}
+                                            {{$disabled}} required
                                         />
 
                                         <small class="form-text text-danger">

@@ -94,7 +94,7 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">MASA STUDI</th>
                                     <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
                                     <th class="text-center align-middle">SKOR USEPT</th>
-                                    <th class="text-center align-middle">AKSI</th>
+                                    <!-- <th class="text-center align-middle">AKSI</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -140,7 +140,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{route('fakultas.yudisium.peserta.data')}}`,
+        url: `{{route('fakultas.wisuda.peserta.data')}}`,
         type: 'GET',
         data: {
             prodi: prodi,
@@ -166,51 +166,21 @@ function getData()
 
                     var jsonData = encodeURIComponent(JSON.stringify(response.data).replace(/'/g, '&#39;'));
                     var url_sk_yudisium = item.sk_yudisium_file ? '{{ asset('') }}' + item.sk_yudisium_file : null;
-                    var skYudisiumButton = '';
-                    if (!item.sk_yudisium_file) {
-                        skYudisiumButton = `
-                            <td class="text-center align-middle">
-                                <button class="btn btn-warning btn-sm pilihSkBtn" data-id="${item.id}">
-                                    <i class="fa fa-upload"></i> Pilih SK Yudisium
-                                </button>
-                            </td>
-                        `;
-                    } else {
-                        skYudisiumButton = `
-                            <td class="text-center align-middle">
-                                <a href="{{ asset('') }}${item.sk_yudisium_file}" target="_blank" class="btn btn-success btn-sm my-2">
-                                    <i class="fa fa-file"></i> Lihat
-                                </a>
-                                <button type="button" 
-                                    class="btn btn-primary btn-sm my-2 btn-edit-sk"
-                                    data-id="${item.id}"
-                                    data-nosk="${item.sk_nama_file ?? 'Belum Diisi'}"
-                                    data-tglsk="${item.sk_tgl_surat ?? 'Belum Diisi'}"
-                                    data-tglyudisium="${item.sk_tgl_kegiatan ?? 'Belum Diisi'}"
-                                    data-file="{{ asset('') }}${item.sk_yudisium_file}"
-                                >
-                                    <i class="fa fa-edit"></i> Edit
-                                </button>
-                                
-                                <button type="button" class="btn btn-danger btn-sm my-2 btn-hapus-sk" data-id="${item.id}">
-                                    <i class="fa fa-trash"></i> Hapus
-                                </button>
-                                <form id="form-hapus-sk-${item.id}" action="{{ route('fakultas.yudisium.hapus-sk-yudisium', '') }}/${item.id}" method="POST" style="display:none;">
-                                    @csrf
-                                    @method('DELETE')
-                                </form>
-                            </td>
-                        `;
-                    }
+                    var skYudisiumButton = url_sk_yudisium ? 
+                        '<a class="btn btn-sm btn-success" href="' + url_sk_yudisium + '" target="_blank"><i class="fa fa-file me-2"></i>Lihat SK Yudisium</a>' : 
+                        '<span class="badge badge-warning text-center"><i class="fa fa-exclamation-circle me-1"></i>Belum Upload<br>SK Yudisium</span>';
+
 
                     var spanStatus = '';
-                    if (item.approved === 0 || item.approved > 3) {
+                    if (item.approved_wisuda === 0 ) {
+                        spanStatus = '<span class="badge badge-warning text-center d-block">' + item.approved_wisuda_text + '</span>';
+                    } else if (item.approved_wisuda > 3) {
                         let alasan = item.alasan_pembatalan ? '<span class="badge badge-danger mt-2">Alasan ditolak :<br>' + item.alasan_pembatalan + '</span>' : '';
-                        spanStatus = '<span class="badge badge-danger text-center d-block">' + item.approved_text + '</span>' + alasan;
-                    } else if (item.approved > 0 && item.approved < 3) {
-                        spanStatus = '<span class="badge badge-primary text-center d-block">' + item.approved_text + '</span>';
+                        spanStatus = '<span class="badge badge-danger text-center d-block">' + item.approved_wisuda_text + '</span>' + alasan;
+                    } else if (item.approved_wisuda > 0 && item.approved_wisuda < 3) {
+                        spanStatus = '<span class="badge badge-primary text-center d-block">' + item.approved_wisuda_text + '</span>';
                     } else {
-                        spanStatus = '<span class="badge badge-success text-center d-block">' + item.approved_text + '</span>';
+                        spanStatus = '<span class="badge badge-success text-center d-block">' + item.approved_wisuda_text + '</span>';
                     };
 
                     var namaOrtu = '';
@@ -446,7 +416,7 @@ function getData()
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
                         useptData,
-                        aksi,
+                        // aksi,
                     ]).draw(false);
                 });
             } else if(response.status === 'error') {
@@ -741,6 +711,16 @@ $(document).on('click', '.btn-hapus-sk', function () {
             }
         });
     });
+});
+
+
+$(function () {
+    // "use strict";
+    // $('#data').DataTable();
+
+    // $('#fakultas').select2();
+    $('#prodi').select2();
+    // $('#periode').select2();
 });
 
 </script>

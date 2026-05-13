@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Fakultas\Akademik;
+namespace App\Http\Controllers\Prodi\Lulusan;
 
 use Carbon\Carbon;
 use Ramsey\Uuid\Uuid;
@@ -44,7 +44,7 @@ class WisudaController extends Controller
 {
     public function index()
     {
-        $id_fak = auth()->user()->fk_id;
+        $id_prodi = auth()->user()->fk_id;
         
         $prodi = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
             ->orderBy('id_jenjang_pendidikan')
@@ -70,7 +70,7 @@ class WisudaController extends Controller
         $predikat_lulusan = PredikatKelulusan::get();
         // dd($gelar_lulusan);
 
-        return view('fakultas.data-akademik.wisuda.index', [
+        return view('prodi.data-lulusan.wisuda', [
             'prodi' => $prodi,
             'periode' => $periode,
             'gelar_lulusan' => $gelar_lulusan,
@@ -88,13 +88,13 @@ class WisudaController extends Controller
             
     //     $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
         
-    //     $id_fak = auth()->user()->fk_id;
+    //     $id_prodi = auth()->user()->fk_id;
 
     //     $semester_aktif = SemesterAktif::first();
 
     //     $data = Wisuda::with('prodi', 'prodi.fakultas', 'prodi.jurusan', 'riwayat_pendidikan')
-    //             ->whereHas('prodi', function ($query) use ($id_fak) {
-    //                 $query->where('fakultas_id', $id_fak);
+    //             ->whereHas('prodi', function ($query) use ($id_prodi) {
+    //                 $query->where('fakultas_id', $id_prodi);
     //             })
     //             ->get();
 
@@ -140,7 +140,7 @@ class WisudaController extends Controller
     //     }
     //     // dd($data, $useptData);
 
-    //     return view('fakultas.data-akademik.yudisium.index', [
+    //     return view('prodi.data-lulusan.yudisium.index', [
     //         'data' => $data,
     //         'prodi' => $prodi_fak,
     //         'periode' => $periode,
@@ -154,15 +154,7 @@ class WisudaController extends Controller
         // dd($request->all());
         // Validasi
         $req = $request->validate([
-            'periode' => 'required',
-            'prodi' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if ($value !== '*' && !ProgramStudi::where('id_prodi', $value)->exists()) {
-                        $fail('Program Studi tidak valid.');
-                    }
-                },
-            ],
+            'periode' => 'required'
         ]);
 
         $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
@@ -178,7 +170,7 @@ class WisudaController extends Controller
                 ->leftJoin('file_fakultas as ff','ff.id','data_wisuda.id_file_fakultas')
                 ->leftJoin('bebas_pustakas as bp','bp.id_registrasi_mahasiswa','data_wisuda.id_registrasi_mahasiswa')
 
-                ->where('p.fakultas_id', auth()->user()->fk_id)
+                ->where('r.id_prodi', auth()->user()->fk_id)
                 ->where('pw.periode', $req['periode'])
                 ->where('data_wisuda.finalisasi_wisuda', 1)
                 ->where('data_wisuda.approved', 3)
@@ -224,9 +216,9 @@ class WisudaController extends Controller
                     DB::raw("DATE_FORMAT(ff.tgl_kegiatan, '%d-%m-%Y') as sk_tgl_kegiatan"),
                 );
 
-        if ($req['prodi'] != "*") {
-            $data->where('r.id_prodi', $req['prodi']);
-        }
+        // if ($req['prodi'] != "*") {
+        //     $data->where('r.id_prodi', $req['prodi']);
+        // }
 
         $data = $data->get();
 
@@ -287,152 +279,6 @@ class WisudaController extends Controller
             'data' => $data,
         ]);
     }
-
-    public function peserta_data_wisuda (Request $request)
-    {
-        // Validasi
-        $req = $request->validate([
-            'periode' => 'required',
-            'prodi' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if ($value !== '*' && !ProgramStudi::where('id_prodi', $value)->exists()) {
-                        $fail('Program Studi tidak valid.');
-                    }
-                },
-            ],
-        ]);
-
-        $data = Wisuda::join('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
-                ->leftJoin('aktivitas_mahasiswas as akt', 'akt.id_aktivitas', 'data_wisuda.id_aktivitas')
-                ->leftJoin('program_studis as p', 'p.id_prodi', 'r.id_prodi')
-                ->leftJoin('jalur_masuks as jm', 'jm.id_jalur_masuk', 'r.id_jalur_daftar')
-                ->leftJoin('gelar_lulusans as g', 'g.id', 'data_wisuda.id_gelar_lulusan')
-                ->leftJoin('predikat_kelulusans as pk', 'pk.id', 'data_wisuda.id_predikat_kelulusan')
-                ->leftJoin('biodata_mahasiswas as b', 'b.id_mahasiswa', 'r.id_mahasiswa')
-                ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
-
-                // ✅ JOIN BARU : file_fakultas
-                ->leftJoin('file_fakultas as ff','ff.id','data_wisuda.id_file_fakultas')
-                ->leftJoin('bebas_pustakas as bp','bp.id_registrasi_mahasiswa','data_wisuda.id_registrasi_mahasiswa')
-
-                ->where('pw.periode', $req['periode'])
-                ->where('p.fakultas_id', auth()->user()->fk_id)
-                ->where('data_wisuda.finalisasi_wisuda', 1)
-                ->where('data_wisuda.approved', 3)
-                ->select(
-                    'data_wisuda.*',
-                    'p.nama_program_studi as nama_prodi',
-                    'p.nama_jenjang_pendidikan as jenjang',
-                    'g.gelar',
-                    'g.gelar_panjang',
-                    'pk.indonesia as predikat_kelulusan',
-                    'b.nik as nik',
-                    'akt.judul',
-                    'b.tempat_lahir',
-                    'jm.nama_jalur_masuk as jalur_masuk',
-                    'b.tanggal_lahir',
-                    'b.rt',
-                    'b.rw',
-                    'b.jalan',
-                    'b.dusun',
-                    'b.kelurahan',
-                    'b.id_wilayah',
-                    'b.nama_wilayah',
-                    'b.handphone',
-                    'b.email',
-                    'b.nama_ayah',
-                    'b.nama_ibu_kandung',
-                    'b.alamat_orang_tua',
-
-                    // Tambahkan data file SK Yudisium
-                    'ff.nama_file as sk_nama_file',
-                    'ff.tgl_surat as sk_tgl_surat',
-                    // 'ff.tgl_kegiatan as sk_tgl_kegiatan',
-                    'ff.dir_file as sk_file_path',
-
-                    // Tambahkan data bebas pustaka
-                    'bp.file_bebas_pustaka as file_bebas_pustaka',
-                    'bp.link_repo as link_repo',
-
-                    //DATA TANGGAL
-                    DB::raw("DATE_FORMAT(data_wisuda.tgl_masuk, '%d-%m-%Y') as tgl_masuk"),
-                    DB::raw("DATE_FORMAT(data_wisuda.tgl_keluar, '%d-%m-%Y') as tgl_keluar"),
-                    DB::raw("DATE_FORMAT(data_wisuda.tgl_sk_yudisium, '%d-%m-%Y') as tgl_sk_yudisium"),
-                    DB::raw("DATE_FORMAT(ff.tgl_kegiatan, '%d-%m-%Y') as sk_tgl_kegiatan"),
-                );
-
-        if ($req['prodi'] != "*") {
-            $data->where('r.id_prodi', $req['prodi']);
-        }
-
-        $data = $data->get();
-
-        if ($data->isEmpty()) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data tidak ditemukan',
-                'data' => [],
-            ]);
-        }
-
-        $nimList = $data->pluck('nim')->filter()->unique();
-        $nikList = $data->pluck('nik')->filter()->unique();
-
-        $useptScores = Usept::whereIn('nim', $nimList->merge($nikList))
-            ->pluck('score', 'nim');
-
-        $courseScores = CourseUsept::whereIn('nim', $nimList->merge($nikList))
-            ->get()
-            ->groupBy('nim')
-            ->map(fn ($items) => $items->max('konversi'));
-
-        $kurikulumUsept = ListKurikulum::pluck('nilai_usept', 'id_kurikulum');
-
-        $data->transform(function ($item) use (
-            $useptScores,
-            $courseScores,
-            $kurikulumUsept
-        ) {
-
-            // Ambil semua kemungkinan skor USEPT
-            $scores = collect([
-                $useptScores[$item->nim] ?? null,
-                $useptScores[$item->nik] ?? null,
-                $courseScores[$item->nim] ?? null,
-                $courseScores[$item->nik] ?? null,
-            ])->filter();
-
-            $nilaiUsept = $scores->max() ?? 0;
-
-            // Ambil batas minimal USEPT prodi
-            $batasUsept = $kurikulumUsept[$item->id_kurikulum] ?? 0;
-
-            $item->useptdata = [
-                'score'  => $nilaiUsept,
-                'class'  => $nilaiUsept >= $batasUsept ? 'success' : 'danger',
-                'status' => $nilaiUsept >= $batasUsept
-                    ? 'Memenuhi Syarat'
-                    : 'Tidak Memenuhi Syarat',
-            ];
-
-            return $item;
-        });
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Data berhasil diambil',
-            'data' => $data,
-        ]);
-    }
-
-    // public function approve(Request $request, $id)
-    // {
-    //      dd($id);
-    //         dd($request->all());
-    // }
-
-
 
     public function approve(Request $request, $id)
     {
@@ -506,129 +352,6 @@ class WisudaController extends Controller
             ], 500);
         }
     }
-
-    public function khs_index(Request $request)
-    {
-        $semesters = Semester::orderBy('id_semester', 'desc')->get();
-        $semesterAktif = SemesterAktif::with('semester')->first();
-        return view('fakultas.data-akademik.yudisium.khs-transkrip',[
-            'semesters' => $semesters,
-            'semesterAktif' => $semesterAktif,
-        ]);
-    }
-
-    public function khs_transkrip_data(Request $request)
-    {
-        $id_prodi_fak = ProgramStudi::where('fakultas_id', auth()->user()->fk_id)
-                    ->pluck('id_prodi');
-
-                    // dd($id_prodi_fak);
-        // $semester = $request->semester;
-        $nim = $request->nim;
-
-        $riwayat = RiwayatPendidikan::with('dosen_pa','prodi', 'prodi.jurusan', 'prodi.fakultas')
-                    ->whereHas('prodi', function($query) {
-                            $query->where('status', 'A');
-                        })
-                    ->where('nim', $nim)
-                    ->whereIn('id_prodi', $id_prodi_fak)
-                    ->first();
-
-        // dd($riwayat);
-        if (!$riwayat) {
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Data mahasiswa tidak ditemukan',
-            ]);
-        }
-
-        $nilai = NilaiPerkuliahan::with('semester')
-                ->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                ->orderBy('kode_mata_kuliah', 'desc')
-                ->orderBy('nama_kelas_kuliah')
-                ->orderBy('id_semester')
-                ->get();
-
-        $konversi = KonversiAktivitas::with(['matkul', 'semester'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
-                    // ->where('id_semester', $semester)
-                    ->where('ang.id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                    ->get();
-
-        $transfer = NilaiTransferPendidikan::with('semester')->where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                    // ->where('id_semester', $semester)
-                    ->get();
-
-        $akm = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
-                // ->where('id_semester', $semester)
-                ->orderBy('id_semester', 'desc')
-                ->get();
-
-        if($nilai->isEmpty() && $konversi->isEmpty() && $transfer->isEmpty()) {
-            $response = [
-                'status' => 'error',
-                'message' => 'Data KHS tidak ditemukan!',
-            ];
-            return response()->json($response);
-        }
-
-        $response = [
-            'status' => 'success',
-            'message' => 'Data KRS berhasil diambil',
-            'nilai' => $nilai,
-            'transfer' => $transfer,
-            'konversi' => $konversi,
-            'riwayat' => $riwayat,
-            'akm' => $akm,
-        ];
-
-
-        return response()->json($response);
-    }
-
-
-    public function decline(Request $request, $id)
-    {
-        // dd($request->all(), $id);
-        $request->validate([
-            'alasan' => 'required|string',
-        ]);
-
-        DB::beginTransaction();
-        try {
-            $wisuda = Wisuda::findOrFail($id);
-
-            $wisuda->update([
-                'approved' => 98,
-                'finalisasi_data' => 0,
-                'alasan_pembatalan' => $request->input('alasan'),
-            ]);
-
-            DB::commit();
-
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Pendaftaran Wisuda berhasil ditolak.',
-            ]);
-            // return redirect()->back()->with('success', 'SK Yudisium berhasil diupload.');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return response()->json([
-                'status' => 'error',
-                'message' => 'Terjadi kesalahan saat membatalkan pendaftaran wisuda!',
-            ]);
-        }
-    }
-
-    // public function search(Request $request)
-    // {
-    //     $data = FileFakultas::with('fakultas')
-    //             ->select('*')
-    //             ->where('nama_file', 'like', '%'.$request->q.'%')
-    //             // ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
-    //             ->get();
-
-    //     return response()->json($data);
-    // }
 
     public function search(Request $request)
     {

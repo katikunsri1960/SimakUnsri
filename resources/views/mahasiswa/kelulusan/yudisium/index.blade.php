@@ -1,19 +1,19 @@
 @extends('layouts.mahasiswa')
 @section('title')
-Pendaftaran Yudisium Mahasiswa
+Yudisium Mahasiswa
 @endsection
 @section('content')
 @include('swal')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Pendaftaran Yudisium Mahasiswa</h3>
+            <h3 class="page-title">Yudisium Mahasiswa</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('mahasiswa.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Yudisium</li>
-                        <li class="breadcrumb-item active" aria-current="page">Pendaftaran</li>
+                        <li class="breadcrumb-item" aria-current="page">Kelulusan</li>
+                        <li class="breadcrumb-item active" aria-current="page">Yudisium</li>
                     </ol>
                 </nav>
             </div>

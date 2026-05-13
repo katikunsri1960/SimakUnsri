@@ -152,21 +152,32 @@
                         <a href="{{route('prodi.data-lulusan.index')}}"><i class="fa fa-user-graduate"><span class="path1"></span><span class="path2"></span></i> 
                         Yudisum</a>
                     </li>--}}
-                    <li class="treeview {{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*') 
+                    <li class="header">Kelulusan</li>
+                    <li class="{{request()->routeIs('prodi.data-lulusan.index') || request()->routeIs('prodi.data-lulusan.*') 
+                        ? 'active menu-open' : ''}}">
+                        <li class="{{request()->routeIs('prodi.data-lulusan.index') ? 'active' : ''}}">
+                            <a href="{{route('prodi.data-lulusan.index')}}"><i class="fa fa-file-text-o"><span
+                            class="path1"></span><span class="path2"></span></i>Calon Peserta Yudisium</a>
+                        </li>
+                    </li>
+                    <li class="treeview {{request()->routeIs('prodi.data-lulusan.wisuda.index') || 
+                                request()->routeIs('prodi.data-lulusan.wisuda.*') || request()->routeIs('prodi.data-skpi.*') 
                                 ? 'active menu-open' : ''}}">
                         <a href="#">
-                            <i span class="fa fa-file-text-o"><span class="path1"></span><span
+                            <i span class="fa fa-user-graduate"><span class="path1"></span><span
                                     class="path2"></span></i>
-                            <span>Yudisum</span>
+                            <span>Wisuda</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('prodi.data-lulusan.index') ? 'active' : ''}}"><a href="{{route('prodi.data-lulusan.index')}}"><i class="icon-Commit"><span
-                                class="path1"></span><span class="path2"></span></i>Ajuan Yudisum</a>
+                            <li class="{{request()->routeIs('prodi.data-lulusan.wisuda.index') ||  request()->routeIs('prodi.data-lulusan.wisuda.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-lulusan.wisuda.index')}}"><i class="icon-Commit"><span
+                                class="path1"></span><span class="path2"></span></i>Calon Peserta Wisuda</a>
                             </li>
-                            <li class="{{request()->routeIs('prodi.data-skpi.*') ? 'active' : ''}}"><a href="{{route('prodi.data-skpi.index')}}"><i class="icon-Commit"><span
+                            <li class="{{request()->routeIs('prodi.data-skpi.*') ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-skpi.index')}}"><i class="icon-Commit"><span
                                 class="path1"></span><span class="path2"></span></i>Ajuan SKPI</a>
                             </li>
                         </ul>
