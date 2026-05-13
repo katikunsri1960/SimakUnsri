@@ -128,7 +128,7 @@
                     </li>
                     <li class="treeview {{ request()->routeIs('mahasiswa.kelulusan.wisuda.*') ? 'active menu-open' : '' }}">
                         <a href="#">
-                            <i class="fa fa-graduation-cap"></i>
+                            <i class="fa fa-user-graduate"></i>
                             <span>Wisuda</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>

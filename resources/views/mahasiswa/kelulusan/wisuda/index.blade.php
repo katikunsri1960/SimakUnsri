@@ -314,11 +314,16 @@ Pendaftaran Wisuda Mahasiswa
                                                         <span class="badge badge-lg bg-danger mb-5">
                                                             Berkas Registrasi Ditangguhkan
                                                         </span>
-                                                    @elseif($wisuda->finalisasi_data == 0)
-                                                        <a type="button" href="{{route('mahasiswa.wisuda.resume.index')}}" class="btn btn-sm btn-danger waves-effect waves-light"
-                                                            title="Anda harus melakukan finalisasi data terlebih dahulu untuk dapat mengunduh berkas registrasi">
+                                                    @elseif($wisuda->finalisasi_wisuda == 0)
+                                                        <span class="badge badge-lg bg-danger mb-5">
                                                             Belum Finalisasi Data
-                                                        </a>
+                                                        </span>
+                                                    {{--
+                                                    @elseif($wisuda->pas_foto == null)
+                                                        <span class="badge badge-lg bg-danger mb-5">
+                                                            Belum Upload Pas Foto
+                                                        </span>
+                                                    --}}
                                                     @elseif($wisuda->id_file_fakultas && $wisuda->tgl_keluar)
                                                         <a class="btn btn-sm btn-primary my-5"
                                                             href="{{ route('mahasiswa.kelulusan.wisuda.formulir', ['id' => $wisuda->id]) }}"

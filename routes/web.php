@@ -1249,6 +1249,12 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::post('/update/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'update_detail_mahasiswa'])->name('prodi.data-lulusan.detail.update');
                 Route::post('/approved-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'approved_ajuan'])->name('prodi.data-lulusan.approved');
                 Route::post('/decline-ajuan/{id}', [App\Http\Controllers\Prodi\Lulusan\MahasiswaEligibleController::class, 'decline_ajuan'])->name('prodi.data-lulusan.decline');
+
+                Route::prefix('wisuda')->group(function () {
+                    // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
+                    Route::get('/', [App\Http\Controllers\Prodi\Lulusan\WisudaController::class, 'index'])->name('prodi.data-lulusan.wisuda.index');
+                    Route::get('/data', [App\Http\Controllers\Prodi\Lulusan\WisudaController::class, 'peserta_data'])->name('prodi.data-lulusan.wisuda.peserta.data');
+                });
             });
 
             //Route for Lulusan
