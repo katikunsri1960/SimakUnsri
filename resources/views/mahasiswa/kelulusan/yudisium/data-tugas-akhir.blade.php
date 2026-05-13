@@ -107,7 +107,7 @@ Yudisium Mahasiswa
                                             name="abstrak_ta"
                                             id="abstrak_ta"
                                             placeholder="Masukkan Abstrak {{$aktivitas->nama_jenis_aktivitas}}"
-                                            {{$disabled}}
+                                            {{$disabled}} required
                                         >{{ old('abstrak_ta', $wisuda->abstrak_ta ?? '') }}</textarea>
 
                                         <small class="form-text text-danger">
@@ -154,7 +154,7 @@ Yudisium Mahasiswa
                                             name="abstrak_file"
                                             id="abstrak_file"
                                             accept=".pdf"
-                                            {{$disabled}}
+                                            {{$disabled}} required
                                         />
 
                                         <small class="form-text text-danger">
