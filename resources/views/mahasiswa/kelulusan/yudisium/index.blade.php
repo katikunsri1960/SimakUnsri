@@ -527,32 +527,71 @@ Yudisium Mahasiswa
                                         <p class="text-muted small mb-0">SYARAT SKS LULUS: {{$kurikulum->jumlah_sks_lulus}} SKS</p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="text-left">Bebas Pustaka
-                                        <br><small class="text-primary">(SYARAT 3)</small>
-                                    </td>
-                                    <td class="text-center">:</td>
-                                    <td class="text-left" style="text-align: justify">
-                                        @if(!$bebas_pustaka || !$bebas_pustaka->file_bebas_pustaka)
-                                            <span class="badge bg-danger">Belum Bebas Pustaka</span>
-                                        @else
-                                            <a class="btn btn-sm btn-success" href="{{ asset('storage') }}/{{$bebas_pustaka->file_bebas_pustaka}}" type="button" target="_blank">Lihat Bebas Pustaka</a>
-                                        @endif
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="text-left">Link Repository
-                                        <br><small class="text-primary">(SYARAT 4)</small>
-                                    </td>
-                                    <td class="text-center">:</td>
-                                    <td class="text-left" style="text-align: justify">
-                                        @if(!$bebas_pustaka || !$bebas_pustaka->link_repo)
-                                            <span class="badge bg-danger">Belum Upload Repositroy</span>
-                                        @else
-                                            <a class="btn btn-sm btn-success" href="{{$bebas_pustaka->link_repo}}" type="button" target="_blank">Lihat Repository</a>
-                                        @endif
-                                    </td>
-                                </tr>
+                                @if(!$isProfesi)
+
+                                    {{-- BEBAS PUSTAKA --}}
+                                    <tr>
+                                        <td class="text-left">
+                                            Bebas Pustaka
+                                            <br>
+                                            <small class="text-primary">(SYARAT 3)</small>
+                                        </td>
+
+                                        <td class="text-center">:</td>
+
+                                        <td class="text-left" style="text-align: justify">
+
+                                            @if(!$bebas_pustaka || !$bebas_pustaka->file_bebas_pustaka)
+
+                                                <span class="badge bg-danger">
+                                                    Belum Bebas Pustaka
+                                                </span>
+
+                                            @else
+
+                                                <a class="btn btn-sm btn-success"
+                                                href="{{ asset('storage') }}/{{$bebas_pustaka->file_bebas_pustaka}}"
+                                                target="_blank">
+                                                    Lihat Bebas Pustaka
+                                                </a>
+
+                                            @endif
+
+                                        </td>
+                                    </tr>
+
+                                    {{-- REPOSITORY --}}
+                                    <tr>
+                                        <td class="text-left">
+                                            Link Repository
+                                            <br>
+                                            <small class="text-primary">(SYARAT 4)</small>
+                                        </td>
+
+                                        <td class="text-center">:</td>
+
+                                        <td class="text-left" style="text-align: justify">
+
+                                            @if(!$bebas_pustaka || !$bebas_pustaka->link_repo)
+
+                                                <span class="badge bg-danger">
+                                                    Belum Upload Repository
+                                                </span>
+
+                                            @else
+
+                                                <a class="btn btn-sm btn-success"
+                                                href="{{$bebas_pustaka->link_repo}}"
+                                                target="_blank">
+                                                    Lihat Repository
+                                                </a>
+
+                                            @endif
+
+                                        </td>
+                                    </tr>
+
+                                @endif
                                 <tr>
                                     <td class="text-left text-nowrap">Status Mahasiswa
                                         <br><small class="text-primary">(SYARAT 5)</small>
@@ -643,8 +682,8 @@ Yudisium Mahasiswa
         e.preventDefault();
         var url = $(this).attr('href');
         swal({
-            title: 'Daftar Yudisium',
-            text: "Apakah anda yakin ingin mendaftar Yudisium?",
+            title: 'Cek Eligible Yudisium',
+            text: "Apakah anda ingin melakukan pengecekan Eligible Yudisium?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
