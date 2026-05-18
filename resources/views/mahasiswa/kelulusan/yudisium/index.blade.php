@@ -156,13 +156,11 @@ Yudisium Mahasiswa
 
                                         <td class="p-0"><!--Persyaratan Lengkap-->
                                             <button class="btn btn-sm {{ 
-                                                    $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
-                                                    $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
+                                                    $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->finalisasi_data ==1 &&
                                                     $wisuda->pisn && $wisuda->approved == 3 
                                                     ? 'btn-success' : 'btn-danger' }}">
                                                 <i class="fas {{ 
-                                                        $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 &&
-                                                        $wisuda->verified_wisuda == 1 && $wisuda->verified_skpi == 1 && $wisuda->finalisasi_data ==1 &&
+                                                        $wisuda->verified_induk == 1 && $wisuda->verified_akademik == 1 && $wisuda->verified_ta == 1 && $wisuda->finalisasi_data ==1 &&
                                                         $wisuda->pisn && $wisuda->approved == 3 
                                                         ? 'fa-check' : 'fa-times' }}"></i>
                                             </button>
