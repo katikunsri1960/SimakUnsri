@@ -154,11 +154,14 @@ Yudisium Mahasiswa
                                             name="abstrak_file"
                                             id="abstrak_file"
                                             accept=".pdf"
-                                            {{$disabled}} required
+                                            {{$disabled}}
+
+                                            {{ (!$wisuda || !$wisuda->abstrak_file) ? 'required' : '' }}
                                         />
 
                                         <small class="form-text text-danger">
                                             Maksimal ukuran file <strong>500 KB</strong>.
+
                                             @if($wisuda && $wisuda->abstrak_file)
                                                 Kosongkan jika tidak ingin mengganti file.
                                             @endif

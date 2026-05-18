@@ -131,8 +131,35 @@ class YudisiumController extends Controller
         //     return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '.$riwayat_pendidikan->lulus_do->nama_jenis_keluar.'!');
         // }
 
-        $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
+        $prodi_profesi = [
+            'be779246-fe70-4e66-8fa2-8929d97779a2', // Profesi Dokter Gigi
+            '91360393-8632-4240-bed0-bfc707406efa', // Profesi Ners
+            '98223413-b27d-4afe-a2b8-d0d80173506e', // Profesi Dokter
+            'c9f5b196-dd7e-4788-a6e8-724046a1c344', // Profesi Akuntan
+            'b68efc34-c0f0-4334-9970-e02d769e3f49', // Program Profesi Insinyur
+            '7666b6f4-1d8c-48ea-a0d7-aed989d44b02', // Pendidikan Profesi Apoteker
+        ];
 
+        // cek apakah mahasiswa termasuk profesi
+        $isProfesi = in_array(
+            $riwayat_pendidikan->id_prodi ?? null,
+            $prodi_profesi
+        );
+
+        // jika bukan profesi → wajib bebas pustaka
+        if (!$isProfesi) {
+
+            $bebas_pustaka = BebasPustaka::where(
+                'id_registrasi_mahasiswa',
+                $id_reg
+            )->first();
+
+        } else {
+
+            // profesi tidak wajib bebas pustaka
+            $bebas_pustaka = null;
+        }
+        
         // 5 SYARAT BEBAS PUSTAKA
         // if (!$bebas_pustaka) {
         //     return redirect()
@@ -200,7 +227,8 @@ class YudisiumController extends Controller
             'usept' => $useptData,
             'riwayat_pendidikan' => $riwayat_pendidikan,
             'kurikulum' => $kurikulum,
-            'skpi_data' => $skpi_data
+            'skpi_data' => $skpi_data,
+            'isProfesi' => $isProfesi
         ]);
     }
 
@@ -284,50 +312,7 @@ class YudisiumController extends Controller
             ];
         }
 
-        if($useptData['class'] == 'danger') {
-            return redirect()->back()->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
-        }
-
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
-
-        // dd($riwayat_pendidikan->lulus_do, $wisuda, $riwayat_pendidikan->id_jenis_keluar);
-        
-        if ($riwayat_pendidikan->lulus_do) {
-            return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->lulus_do->nama_jenis_keluar . '!');
-        }elseif (!empty($riwayat_pendidikan->id_jenis_keluar)) {
-            return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->keterangan_keluar . '!');
-        }
-
-        $prodi_profesi = [
-                    'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
-                    '91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
-                    '98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
-                    'c9f5b196-dd7e-4788-a6e8-724046a1c344', //Profesi Akuntan
-                    'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
-                    '7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
-        ];
-
-        // $prodi_profesi=ProgramStudi::where('id_jenjang_pendidikan', '31')->where('status', 'A')->get()->pluck('id_prodi');
-
-        // $prodi_profesi = $prodi_profesi->toArray();
-
-        if (!empty($riwayat_pendidikan->id_prodi) &&
-            !in_array($riwayat_pendidikan->id_prodi, $prodi_profesi)) 
-        {
-            // WAJIB cek bebas pustaka (karena bukan profesi)
-            
-            if (!$bebas_pustaka) {
-                return back()->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
-            }
-
-            if (empty($bebas_pustaka->file_bebas_pustaka)) {
-                return back()->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
-            }
-
-            if (empty($bebas_pustaka->link_repo)) {
-                return back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
-            }
-        }
 
         $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
                 ->whereHas('bimbing_mahasiswa', function ($query) {
@@ -872,9 +857,9 @@ class YudisiumController extends Controller
             ];
         }
 
-        if($useptData['class'] == 'danger') {
-            return redirect()->back()->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
-        }
+        // if($useptData['class'] == 'danger') {
+        //     return redirect()->back()->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
+        // }
 
         $bebas_pustaka = BebasPustaka::where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -886,36 +871,36 @@ class YudisiumController extends Controller
             return redirect()->back()->with('error','Anda tidak diizinkan mengakses halaman wisuda, status mahasiswa Anda adalah '. $riwayat_pendidikan->keterangan_keluar . '!');
         }
 
-        $prodi_profesi = [
-                    'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
-                    '91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
-                    '98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
-                    'c9f5b196-dd7e-4788-a6e8-724046a1c344', //Profesi Akuntan
-                    'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
-                    '7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
-        ];
+        // $prodi_profesi = [
+        //             'be779246-fe70-4e66-8fa2-8929d97779a2', //Profesi Dokter Gigi
+        //             '91360393-8632-4240-bed0-bfc707406efa', //Profesi Ners
+        //             '98223413-b27d-4afe-a2b8-d0d80173506e', //Profesi Dokter
+        //             'c9f5b196-dd7e-4788-a6e8-724046a1c344', //Profesi Akuntan
+        //             'b68efc34-c0f0-4334-9970-e02d769e3f49', //Program Profesi Insinyur
+        //             '7666b6f4-1d8c-48ea-a0d7-aed989d44b02', //Pendidikan Profesi Apoteker
+        // ];
 
         // $prodi_profesi=ProgramStudi::where('id_jenjang_pendidikan', '31')->where('status', 'A')->get()->pluck('id_prodi');
 
         // $prodi_profesi = $prodi_profesi->toArray();
 
-        if (!empty($riwayat_pendidikan->id_prodi) &&
-            !in_array($riwayat_pendidikan->id_prodi, $prodi_profesi)) 
-        {
-            // WAJIB cek bebas pustaka (karena bukan profesi)
+        // if (!empty($riwayat_pendidikan->id_prodi) &&
+        //     !in_array($riwayat_pendidikan->id_prodi, $prodi_profesi)) 
+        // {
+        //     // WAJIB cek bebas pustaka (karena bukan profesi)
             
-            if (!$bebas_pustaka) {
-                return back()->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
-            }
+        //     if (!$bebas_pustaka) {
+        //         return back()->with('error', 'Anda belum melakukan upload repository dan bebas pustaka, silakan menghubungi Admin Perpustakaan.');
+        //     }
 
-            if (empty($bebas_pustaka->file_bebas_pustaka)) {
-                return back()->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
-            }
+        //     if (empty($bebas_pustaka->file_bebas_pustaka)) {
+        //         return back()->with('error', 'File bebas pustaka belum diupload, silakan menghubungi Admin Perpustakaan.');
+        //     }
 
-            if (empty($bebas_pustaka->link_repo)) {
-                return back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
-            }
-        }
+        //     if (empty($bebas_pustaka->link_repo)) {
+        //         return back()->with('error', 'Link repository belum diisi, silakan menghubungi Admin Perpustakaan.');
+        //     }
+        // }
 
         try {
             $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
@@ -1045,39 +1030,228 @@ class YudisiumController extends Controller
     {
         $id_reg = auth()->user()->fk_id;
 
+        $semester_aktif = SemesterAktif::first();
+
+        // =========================
+        // DATA WISUDA
+        // =========================
         $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-        if(!$wisuda){
-            return back()->with('error','Data wisuda tidak ditemukan');
+        if (!$wisuda) {
+            return back()->with('error', 'Data wisuda tidak ditemukan');
         }
 
-        if($wisuda->verified_induk == 0){
-            return redirect()->route('mahasiswa.kelulusan.yudisium.data-induk')->with('error', 'Silahkan Pastikan Data Induk telah disimpan!');
+        // =========================
+        // RIWAYAT PENDIDIKAN
+        // =========================
+        $riwayat_pendidikan = RiwayatPendidikan::where(
+            'id_registrasi_mahasiswa',
+            $id_reg
+        )->first();
+
+        if (!$riwayat_pendidikan) {
+            return back()->with('error', 'Data riwayat pendidikan tidak ditemukan');
         }
 
-        if($wisuda->verified_akademik == 0){
-            return redirect()->route('mahasiswa.kelulusan.yudisium.data-akademik')->with('error', 'Silahkan Pastikan Data Akademik telah disimpan!');
+        // =========================
+        // LIST PRODI PROFESI
+        // =========================
+        $prodi_profesi = [
+            'be779246-fe70-4e66-8fa2-8929d97779a2', // Profesi Dokter Gigi
+            '91360393-8632-4240-bed0-bfc707406efa', // Profesi Ners
+            '98223413-b27d-4afe-a2b8-d0d80173506e', // Profesi Dokter
+            'c9f5b196-dd7e-4788-a6e8-724046a1c344', // Profesi Akuntan
+            'b68efc34-c0f0-4334-9970-e02d769e3f49', // Program Profesi Insinyur
+            '7666b6f4-1d8c-48ea-a0d7-aed989d44b02', // Pendidikan Profesi Apoteker
+        ];
+
+        // =========================
+        // CEK APAKAH WAJIB BEBAS PUSTAKA
+        // =========================
+        $is_profesi = in_array(
+            $riwayat_pendidikan->id_prodi,
+            $prodi_profesi
+        );
+
+        // =========================
+        // JIKA BUKAN PROFESI
+        // WAJIB CEK BEBAS PUSTAKA
+        // =========================
+        if (!$is_profesi) {
+
+            $bebas_pustaka = BebasPustaka::where(
+                'id_registrasi_mahasiswa',
+                $id_reg
+            )->first();
+
+            if (!$bebas_pustaka) {
+                return redirect()->back()->with('error', 
+                        'Anda belum upload bebas pustaka dan repository.'
+                    );
+            }
+
+            if (empty($bebas_pustaka->file_bebas_pustaka)) {
+                return back()->with(
+                    'error',
+                    'File bebas pustaka belum diupload.'
+                );
+            }
+
+            if (empty($bebas_pustaka->link_repo)) {
+                return back()->with(
+                    'error',
+                    'Link repository belum diisi.'
+                );
+            }
         }
 
-        if($wisuda->verified_ta == 0){
-            return redirect()->route('mahasiswa.kelulusan.yudisium.data-tugas-akhir')->with('error', 'Silahkan Pastikan Tugas Akhir telah disimpan!');
+
+        // =========================
+        // VALIDASI SKS
+        // =========================
+        $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_semester', $semester_aktif->id_semester)
+                ->orderBy('id_semester', 'desc')
+                ->first();
+
+        if (!$aktivitas_kuliah) {
+            $aktivitas_kuliah = AktivitasKuliahMahasiswa::with('pembiayaan')->where('id_registrasi_mahasiswa', $id_reg)
+                ->orderBy('id_semester', 'desc')
+                ->first();
         }
 
+        $kurikulum = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
+
+        if (!$kurikulum) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Kurikulum Anda tidak ditemukan, Silahkan hubungi Koor. Prodi!');
+        }
+
+        // 1 SYARAT SKS LULUS
+        if ($aktivitas_kuliah->sks_total < $kurikulum->jumlah_sks_lulus) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan minimal '.$kurikulum->jumlah_sks_lulus.' sks!');
+        }
+
+
+        // ===============================
+        // VALIDASI AKTIVITAS TUGAS AKHIR
+        // ===============================
+
+        $aktivitas = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa', 'nilai_konversi'])
+                ->whereHas('bimbing_mahasiswa', function ($query) {
+                    $query->whereNotNull('id_bimbing_mahasiswa');
+                })
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
+                    $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
+                        ->where('nim', $riwayat_pendidikan->nim);
+                })
+                ->whereHas('nilai_konversi', function ($query) {
+                    $query->where('nilai_indeks', '>', 0.00);
+                })
+                // ->where('id_semester', $semester_aktif)
+                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
+                ->first();
+
+
+        // 2 SYARAT AKTIVITAS
+        if (!$aktivitas) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Aktivitas Tugas Akhir!');
+        }
+
+
+        // =========================
+        // VALIDASI USEPT
+        // =========================
+        if(!$riwayat_pendidikan->id_kurikulum ) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Kurikulum Mahasiswa Belum Diatur!!',
+            ]);
+        }else{
+            $nilai_usept_prodi = ListKurikulum::where('id_kurikulum', $riwayat_pendidikan->id_kurikulum)->first();
+        }
+
+        try {
+            set_time_limit(10);
+
+            $nilai_usept_mhs = Usept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->pluck('score');
+            $nilai_course = CourseUsept::whereIn('nim', [$riwayat_pendidikan->nim, $riwayat_pendidikan->biodata->nik])->get()->pluck('konversi');
+
+            $all_scores = $nilai_usept_mhs->merge($nilai_course);
+            $usept = $all_scores->max();
+
+            $useptData = [
+                'score' => $usept,
+                'class' => $usept < $nilai_usept_prodi->nilai_usept ? 'danger' : 'success',
+                'status' => $usept < $nilai_usept_prodi->nilai_usept ? 'Tidak memenuhi Syarat' : 'Memenuhi Syarat',
+            ];
+
+        } catch (\Throwable $th) {
+            //throw $th;
+            $useptData = [
+                'score' => 0,
+                'class' => 'danger',
+                'status' => 'Database USEPT tidak bisa diakses, silahkan hubungi pengelola USEPT.',
+            ];
+        }
+
+        if($useptData['class'] == 'danger') {
+            return redirect()->back()->with('error', 'Nilai USEPT Anda belum memenuhi syarat, Silahkan lakukan ujian ulang!');
+        }
+
+        // =========================
+        // VALIDASI STEP YUDISIUM
+        // =========================
+        if ($wisuda->verified_induk == 0) {
+            return redirect()
+                ->route('mahasiswa.kelulusan.yudisium.data-induk')
+                ->with(
+                    'error',
+                    'Silahkan pastikan Data Induk telah disimpan!'
+                );
+        }
+
+        if ($wisuda->verified_akademik == 0) {
+            return redirect()
+                ->route('mahasiswa.kelulusan.yudisium.data-akademik')
+                ->with(
+                    'error',
+                    'Silahkan pastikan Data Akademik telah disimpan!'
+                );
+        }
+
+        if ($wisuda->verified_ta == 0) {
+            return redirect()
+                ->route('mahasiswa.kelulusan.yudisium.data-tugas-akhir')
+                ->with(
+                    'error',
+                    'Silahkan pastikan Tugas Akhir telah disimpan!'
+                );
+        }
+
+        // =========================
+        // FINALISASI
+        // =========================
         try {
 
             $wisuda->update([
                 'finalisasi_data' => 1,
                 'approved' => 0,
-
             ]);
 
             return redirect()
                 ->route('mahasiswa.kelulusan.yudisium.index')
-                ->with('success', 'Data Pendaftaran Berhasil difinalisasi');
+                ->with(
+                    'success',
+                    'Data pendaftaran berhasil difinalisasi'
+                );
 
         } catch (\Exception $e) {
 
-            return back()->with('error','Gagal finalisasi data SKPI');
+            return back()->with(
+                'error',
+                'Gagal finalisasi data'
+            );
 
         }
     }
