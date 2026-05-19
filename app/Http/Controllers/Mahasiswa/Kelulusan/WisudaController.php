@@ -130,8 +130,9 @@ class WisudaController extends Controller
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman Wisuda, Status Pendaftaran Yudisium Anda belum disetujui Direktorat Akademik!');
         }
 
+        // dd($wisuda->pisn);
         //PISN BELUM TERDAFTAR
-        if ($wisuda && $wisuda-> pisn) {
+        if ($wisuda && !$wisuda-> pisn) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman Wisuda, Penomoran Ijazah Nasional Anda belum terdaftar!');
         }
                 // dd($wisuda);

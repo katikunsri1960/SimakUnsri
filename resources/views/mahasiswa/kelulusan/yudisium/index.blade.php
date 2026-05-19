@@ -356,6 +356,25 @@ Yudisium Mahasiswa
                                     </a>
                                 @endif
 
+                                {{-- DAFTAR YUDISIUM --}}
+                                @if(
+                                    $wisuda &&
+                                    $wisuda->verified_induk == 1 &&
+                                    $wisuda->verified_akademik == 1 &&
+                                    $wisuda->verified_ta == 1 &&
+                                    $wisuda->finalisasi_data == 1 &&
+                                    $wisuda->pisn &&
+                                    $wisuda->approved == 3
+                                )
+                                    <a class="btn btn-primary"
+                                    href="{{ route('mahasiswa.kelulusan.wisuda.data-wisuda') }}"
+                                    title="Seluruh syarat telah terpenuhi">
+
+                                        <i class="fa fa-graduation-cap me-1"></i>
+                                        DAFTAR WISUDA
+                                    </a>
+                                @endif
+
                             </div>
 
                         </div>
