@@ -126,8 +126,13 @@ class WisudaController extends Controller
         }
 
         //YUDISIUM BELUM DIAPPROVE DIREKTORAT AKADEMIK
-        if ($wisuda && $wisuda->approved != 3) {
+        if ($wisuda && $wisuda->approved != 3 && $wisuda-> pisn) {
             return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman Wisuda, Status Pendaftaran Yudisium Anda belum disetujui Direktorat Akademik!');
+        }
+
+        //PISN BELUM TERDAFTAR
+        if ($wisuda && $wisuda-> pisn) {
+            return redirect()->route('mahasiswa.dashboard')->with('error', 'Anda tidak diizinkan mengakses halaman Wisuda, Penomoran Ijazah Nasional Anda belum terdaftar!');
         }
                 // dd($wisuda);
         // 3 SYARAT STATUS KELUAR 
