@@ -615,6 +615,7 @@ class WisudaController extends Controller
 
             $wisuda->update([
                 'approved_wisuda' => 99,
+                'finalisasi_wisuda' => 0,
                 'alasan_pembatalan' => $request->input('alasan'),
             ]);
 

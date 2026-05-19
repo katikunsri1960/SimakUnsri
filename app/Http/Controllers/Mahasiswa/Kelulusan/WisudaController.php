@@ -794,7 +794,8 @@ class WisudaController extends Controller
         try {
 
             $wisuda->update([
-                'finalisasi_wisuda' => 1
+                'finalisasi_wisuda' => 1,
+                'approved_wisuda' => 0
             ]);
 
             return redirect()
