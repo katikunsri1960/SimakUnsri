@@ -330,9 +330,9 @@ class YudisiumController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
-        if (!$aktivitas) {
-            return redirect()->back()->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi !');
-        }
+        // if (!$aktivitas) {
+        //     return redirect()->back()->with('error', 'Anda tidak dapat melakukan pendaftaran wisuda, Silahkan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi !');
+        // }
 
         try {
             $asal_sekolah = Registrasi::leftJoin('data_sekolah', 'data_sekolah.npsn', 'reg_master.rm_pddk_slta_kode')
@@ -405,9 +405,9 @@ class YudisiumController extends Controller
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->first();
 
-        if (!$aktivitas) {
-            return redirect()->back()->with('error', 'Anda tidak dapat melakukan pendaftaran Yudisium, Silahkan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi !');
-        }
+        // if (!$aktivitas) {
+        //     return redirect()->back()->with('error', 'Anda tidak dapat melakukan pendaftaran Yudisium, Silahkan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi !');
+        // }
 
                 // dd($aktivitas);
         DB::beginTransaction();
@@ -459,7 +459,7 @@ class YudisiumController extends Controller
                         'id_prodi' => $riwayat_pendidikan->id_prodi,
                         'tgl_masuk' => $riwayat_pendidikan->tanggal_daftar,
                         'nim' => $riwayat_pendidikan->nim,
-                        'id_aktivitas' => $aktivitas->id_aktivitas,
+                        'id_aktivitas' => $aktivitas ? $aktivitas->id_aktivitas : null,
                         'nama_mahasiswa' => $riwayat_pendidikan->nama_mahasiswa,
                         'ijazah_terakhir_file' => $ijazah_terakhir_file,
                         'approved' => 0,
@@ -508,19 +508,19 @@ class YudisiumController extends Controller
                 ->with('success', 'Data Induk berhasil disimpan, silakan lanjut ke Data Akademik!');
 
         } 
-        catch (\Exception $e) {
+        // catch (\Exception $e) {
 
-            DB::rollBack();
-
-            \Log::error('Wisuda store error: '.$e->getMessage());
-
-            return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data!');
-        }
-
-        //         catch (\Exception $e) {
         //     DB::rollBack();
-        //     dd($e->getMessage(), $e->getLine(), $e->getFile());
+
+        //     \Log::error('Wisuda store error: '.$e->getMessage());
+
+        //     return redirect()->back()->with('error', 'Terjadi kesalahan saat menyimpan data!');
         // }
+
+                catch (\Exception $e) {
+            DB::rollBack();
+            dd($e->getMessage(), $e->getLine(), $e->getFile());
+        }
     }
 
     //DATA AKADEMIK

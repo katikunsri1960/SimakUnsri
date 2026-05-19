@@ -24,7 +24,7 @@ Yudisium Mahasiswa
     <div class="row">
         <div class="col-xxl-12">
             {{-- DATA YUDISIUM --}}
-            @if($wisuda)
+            @if($wisuda && $wisuda->id_aktivitas)
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between mx-20">
                     <div class="d-flex justify-content-start">
@@ -183,7 +183,7 @@ Yudisium Mahasiswa
                         <div class="col-12">
                             <div class="box">
                                 <div class="box-body">
-                                    <div class="row text-center mb-20">
+                                    <!-- <div class="row text-center mb-20">
                                         <div class="widget-user-image">
                                             @php
                                                 $imagePath = public_path('storage/' . $wisuda->pas_foto);
@@ -196,7 +196,7 @@ Yudisium Mahasiswa
                                                 alt="User Avatar"
                                                 style="width: 250px;">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <tr>
@@ -353,6 +353,25 @@ Yudisium Mahasiswa
 
                                         <i class="fa fa-graduation-cap me-1"></i>
                                         DAFTAR YUDISIUM
+                                    </a>
+                                @endif
+
+                                {{-- DAFTAR YUDISIUM --}}
+                                @if(
+                                    $wisuda &&
+                                    $wisuda->verified_induk == 1 &&
+                                    $wisuda->verified_akademik == 1 &&
+                                    $wisuda->verified_ta == 1 &&
+                                    $wisuda->finalisasi_data == 1 &&
+                                    $wisuda->pisn &&
+                                    $wisuda->approved == 3
+                                )
+                                    <a class="btn btn-primary"
+                                    href="{{ route('mahasiswa.kelulusan.wisuda.data-wisuda') }}"
+                                    title="Seluruh syarat telah terpenuhi">
+
+                                        <i class="fa fa-graduation-cap me-1"></i>
+                                        DAFTAR WISUDA
                                     </a>
                                 @endif
 
@@ -639,7 +658,7 @@ Yudisium Mahasiswa
                                         <i class="fa-solid fa-scroll"></i>
                                         TRANSKRIP NILAI
                                 </a>
-                                @if(!$wisuda)
+                                @if(!$wisuda || ($wisuda && !$wisuda->id_aktivitas))
                                 <a class="btn bg-primary" 
                                     href="{{ route('mahasiswa.kelulusan.yudisium.data-induk') }}"
                                     id="daftar-wisuda-btn" title="Pastikan semua syarat sudah terpenuhi sebelum mendaftar!">

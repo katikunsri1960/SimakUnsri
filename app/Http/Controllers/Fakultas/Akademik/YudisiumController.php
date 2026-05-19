@@ -92,6 +92,7 @@ class YudisiumController extends Controller
                 ->leftJoin('bebas_pustakas as bp','bp.id_registrasi_mahasiswa','data_wisuda.id_registrasi_mahasiswa')
 
                 ->where('p.fakultas_id', auth()->user()->fk_id)
+                ->where('finalisasi_data', 1)
                 ->whereNot('approved_wisuda', 3)
                 ->select(
                     'data_wisuda.*',
