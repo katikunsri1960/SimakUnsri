@@ -24,7 +24,7 @@ Yudisium Mahasiswa
     <div class="row">
         <div class="col-xxl-12">
             {{-- DATA YUDISIUM --}}
-            @if($wisuda)
+            @if($wisuda && $wisuda->id_aktivitas)
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border d-flex justify-content-between mx-20">
                     <div class="d-flex justify-content-start">
@@ -639,7 +639,7 @@ Yudisium Mahasiswa
                                         <i class="fa-solid fa-scroll"></i>
                                         TRANSKRIP NILAI
                                 </a>
-                                @if(!$wisuda)
+                                @if(!$wisuda || ($wisuda && !$wisuda->id_aktivitas))
                                 <a class="btn bg-primary" 
                                     href="{{ route('mahasiswa.kelulusan.yudisium.data-induk') }}"
                                     id="daftar-wisuda-btn" title="Pastikan semua syarat sudah terpenuhi sebelum mendaftar!">

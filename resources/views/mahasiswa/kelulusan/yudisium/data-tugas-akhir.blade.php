@@ -31,6 +31,30 @@ Yudisium Mahasiswa
 <section class="content">
     <div class="row">
         <div class="col-12">
+            @if(!$aktivitas)
+
+            
+
+            <div class="box box-outline-success bs-3 border-success">
+                <div class="box-body">
+                    <div class="alert alert-danger mb-0" role="alert">
+                        <h4 class="alert-heading"><i class="fa fa-exclamation-triangle"></i> Data Tugas Akhir Belum Tersedia</h4>
+                        <p>Anda belum menyelesaikan aktivitas tugas akhir yang diperlukan untuk pendaftaran Yudisium. Silakan selesaikan Laporan Akhir Studi / Skripsi / Tesis / Disertasi Anda terlebih dahulu, kemudian kembali ke halaman ini untuk mengisi data tugas akhir.</p>
+                    </div>
+                </div>
+                <div class="box-footer">
+                    <div class="form-group mt-20">
+                        <a type="button" href="{{route('mahasiswa.kelulusan.yudisium.data-akademik')}}" class="btn btn-danger waves-effect waves-light">
+                            Kembali
+                        </a>
+                        <a type="button" href="{{route('mahasiswa.kelulusan.yudisium.index')}}" class="btn btn-primary waves-effect waves-light">
+                            Selesai
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            @else
             <div class="box box-outline-success bs-3 border-success">
                 <form class="form" action="{{route('mahasiswa.kelulusan.yudisium.data-tugas-akhir-store')}}" id="data-ta" method="POST" enctype="multipart/form-data">
                     @csrf
@@ -239,6 +263,8 @@ Yudisium Mahasiswa
                     </div>
                 </form>
             </div>
+            @endif
+                    
         </div>
     </div>
 </section>
@@ -277,7 +303,7 @@ $(document).ready(function () {
         // KONFIRMASI SIMPAN
         swal({
             title: 'Persertujuan',
-            text: 'Dengan ini saya menyatakan bahwa Data {{$aktivitas->nama_jenis_aktivitas}} saya telah sesuai, dan saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip',
+            text: '{{ $aktivitas ? "Dengan ini saya menyatakan bahwa Data ".$aktivitas->nama_jenis_aktivitas." saya telah sesuai, dan saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip" : "Dengan ini saya menyatakan bahwa Data Tugas Akhir saya telah sesuai, dan saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, dan Transkrip" }}',
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
