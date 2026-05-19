@@ -183,7 +183,7 @@ Yudisium Mahasiswa
                         <div class="col-12">
                             <div class="box">
                                 <div class="box-body">
-                                    <div class="row text-center mb-20">
+                                    <!-- <div class="row text-center mb-20">
                                         <div class="widget-user-image">
                                             @php
                                                 $imagePath = public_path('storage/' . $wisuda->pas_foto);
@@ -196,7 +196,7 @@ Yudisium Mahasiswa
                                                 alt="User Avatar"
                                                 style="width: 250px;">
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="table-responsive">
                                         <table class="table table-striped">
                                             <tr>
