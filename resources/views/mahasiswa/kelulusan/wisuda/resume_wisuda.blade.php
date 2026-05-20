@@ -16,7 +16,7 @@ Pendaftaran Wisuda Mahasiswa
                         <li class="breadcrumb-item" aria-current="page">Kelulusan</li>
                         <li class="breadcrumb-item" aria-current="page">Wisuda</li>
                         <li class="breadcrumb-item" aria-current="page">Pendaftaran</li>
-                        <li class="breadcrumb-item active" aria-current="page">Resume Data Pendaftaran Yudisium</li>
+                        <li class="breadcrumb-item active" aria-current="page">Resume Data Pendaftaran Wisuda</li>
                     </ol>
                 </nav>
             </div>
@@ -241,7 +241,7 @@ Pendaftaran Wisuda Mahasiswa
                             <div class="checkbox p-3 border border-success rounded bg-light-success">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data" checked disabled>
                                 <label for="pernyataan_data" class="text-success fw-bold">
-                                    Data Pendaftaran Yudisium telah difinalisasi. Perubahan data tidak diperbolehkan.
+                                    Data Pendaftaran Wisuda telah difinalisasi. Perubahan data tidak diperbolehkan.
                                 </label>
                             </div>
                             <div class="form-group mt-20">
@@ -256,7 +256,7 @@ Pendaftaran Wisuda Mahasiswa
                             <div class="checkbox">
                                 <input type="checkbox" id="pernyataan_data" name="pernyataan_data">
                                 <label for="pernyataan_data">
-                                    Dengan ini saya menyatakan bahwa <b>Data Pendaftaran Yudisium</b> saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, Transkrip dan SKPI.
+                                    Dengan ini saya menyatakan bahwa <b>Data Pendaftaran Wisuda</b> saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, Transkrip dan SKPI.
                                 </label>
                             </div>
                             <div class="form-group mt-20">
@@ -303,7 +303,7 @@ Pendaftaran Wisuda Mahasiswa
             // KONFIRMASI SIMPAN
             swal({
                 title: 'Persertujuan',
-                text: 'Dengan ini saya menyatakan bahwa Data Pendaftaran Yudisium saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, Transkrip dan SKPI',
+                text: 'Dengan ini saya menyatakan bahwa Data Pendaftaran Wisuda saya telah sesuai, dan tidak akan melakukan perubahan, serta saya mengizinkan data tersebut digunakan untuk keperluan Administrasi Yudisium, Wisuda, Pencetakan Ijazah, Transkrip dan SKPI',
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
