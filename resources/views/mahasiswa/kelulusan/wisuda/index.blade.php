@@ -301,7 +301,9 @@ Pendaftaran Wisuda Mahasiswa
                                                     </span>
                                                 </td>
                                             </tr>     
-                                            @endif   
+                                            @endif  
+                                            
+                                            @if($wisuda->finalisasi_wisuda == 1)
                                             <tr>
                                                 <td class="text-left" style="width: 30%;">Berkas Registrasi Wisuda</td>
                                                 <td class="text-center" style="width: 5%;">:</td>
@@ -324,7 +326,7 @@ Pendaftaran Wisuda Mahasiswa
                                                             Belum Upload Pas Foto
                                                         </span>
                                                     --}}
-                                                    @elseif($wisuda->id_file_fakultas && $wisuda->tgl_keluar)
+                                                    @elseif($wisuda->id_file_fakultas && $wisuda->tgl_keluar && $wisuda->pisn)
                                                         <a class="btn btn-sm btn-primary my-5"
                                                             href="{{ route('mahasiswa.kelulusan.wisuda.formulir', ['id' => $wisuda->id]) }}"
                                                             target="_blank">
@@ -335,8 +337,10 @@ Pendaftaran Wisuda Mahasiswa
                                                             SK Yudisium Belum Diupload Oleh Fakultas
                                                         </span>
                                                     @endif
+                                                
                                                 </td>
-                                            </tr>                                   
+                                            </tr> 
+                                            @endif                                  
                                         </table>
                                     </div>
                                 </div>
