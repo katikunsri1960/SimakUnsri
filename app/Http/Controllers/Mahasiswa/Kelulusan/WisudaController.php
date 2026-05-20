@@ -423,7 +423,7 @@ class WisudaController extends Controller
 
             $wisuda = Wisuda::where('id_registrasi_mahasiswa', $id_reg)->first();
 
-            if ($wisuda->finalisasi_data == 1) {
+            if ($wisuda->finalisasi_wisuda == 1) {
                 return redirect()->back()->with('error', 'Data telah difinalisasi, perubahan data tidak diperbolehkan');
             }
             
