@@ -206,22 +206,52 @@ Yudisium Mahasiswa
                                 </div>
                                 <div id="data-sekolah-fields">
                                     <h4 class="text-primary mb-0">Sekolah Menengah Atas</h4>
+
                                     <div class="data-sekolah-field row" style="margin-left: 10px;">
-                                        <div class=" col-lg-4 mb-3">
+
+                                        {{-- NAMA SEKOLAH --}}
+                                        <div class="col-lg-4 mb-3">
                                             <label for="nama_slta" class="form-label">Nama Sekolah</label>
-                                            <input type="text" class="form-control" name="nama_slta" id="nama_slta" aria-describedby="helpId"
-                                                value="{{$asal_sekolah->nama_sekolah ?? '-' }}" disabled required/>
+
+                                            <input type="text"
+                                                class="form-control"
+                                                name="nama_slta"
+                                                id="nama_slta"
+                                                value="{{ $asal_sekolah->rm_pddk_slta_kode == 0 
+                                                    ? $asal_sekolah->rm_pddk_slta_nama 
+                                                    : $asal_sekolah->nama_sekolah }}"
+                                                disabled
+                                                required>
                                         </div>
-                                        <div class=" col-lg-6 mb-3">
+
+                                        {{-- ALAMAT SEKOLAH --}}
+                                        <div class="col-lg-6 mb-3">
                                             <label for="lokasi_slta" class="form-label">Alamat Sekolah</label>
-                                            <input type="text"class="form-control" name="lokasi_slta" id="lokasi_slta" aria-describedby="helpId"
-                                                value="{{strtoupper($asal_sekolah->nama_kabupaten ?? '-') }}, {{strtoupper($asal_sekolah->nama_provinsi ?? '-')}}" disabled required/>
+
+                                            <input type="text"
+                                                class="form-control"
+                                                name="lokasi_slta"
+                                                id="lokasi_slta"
+                                                value="{{ $asal_sekolah->rm_pddk_slta_kode == 0
+                                                    ? $asal_sekolah->rm_pddk_slta_lokasi
+                                                    : strtoupper($asal_sekolah->nama_kabupaten . ', ' . $asal_sekolah->nama_provinsi) }}"
+                                                disabled
+                                                required>
                                         </div>
+
+                                        {{-- TAHUN LULUS --}}
                                         <div class="col-lg-2 mb-3">
                                             <label for="lulus_slta" class="form-label">Tahun Lulus</label>
-                                            <input type="text"class="form-control" name="lulus_slta" id="lulus_slta" aria-describedby="helpId"
-                                                value="{{$asal_sekolah->rm_pddk_slta_thn_lulus ?? '-' }}" disabled required/>
+
+                                            <input type="text"
+                                                class="form-control"
+                                                name="lulus_slta"
+                                                id="lulus_slta"
+                                                value="{{ $asal_sekolah->rm_pddk_slta_thn_lulus ?? '-' }}"
+                                                disabled
+                                                required>
                                         </div>
+
                                     </div>
                                 </div>
                             @else
