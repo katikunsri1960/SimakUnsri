@@ -1280,6 +1280,101 @@ class FeederUpload {
         }
     }
 
+    public function uploadBiodataMahasiswa()
+    {
+        $client = new Client();
+        $params = [
+            "act" => "GetToken",
+            "username" => $this->username,
+            "password" => $this->password,
+        ];
+
+        $req = $client->post( $this->url, [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'Accept' => 'application/json',
+            ],
+            'body' => json_encode($params)
+        ]);
+
+        $response = $req->getBody();
+        $result = json_decode($response,true);
+
+        if($result['error_code'] == 0) {
+
+            $token = $result['data']['token'];
+            $paramsGet = [
+                "token" => $token,
+                "act"   => $this->actGet,
+                "filter" => $this->recordGet
+            ];
+
+            $req = $client->post( $this->url, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                    'Accept' => 'application/json',
+                ],
+                'body' => json_encode($paramsGet)
+            ]);
+
+            $response = $req->getBody();
+
+            $result = json_decode($response,true);
+
+            // dd($result);
+
+            if ($result['error_code'] == 0 && count($result['data']) > 0) {
+
+                $updateRecord = $this->record;
+
+                unset($updateRecord['id_mahasiswa']);
+
+                $paramsUpdate = [
+                    "token" => $token,
+                    "act"   => "UpdateBiodataMahasiswa",
+                    "key" => [
+                        "id_mahasiswa" => $this->record['id_mahasiswa']
+                    ],
+                    "record" => $updateRecord
+                ];
+
+                $req = $client->post( $this->url, [
+                        'headers' => [
+                            'Content-Type' => 'application/json',
+                            'Accept' => 'application/json',
+                        ],
+                        'body' => json_encode($paramsUpdate)
+                    ]);
+
+                $response = $req->getBody();
+
+                $result = json_decode($response,true);
+            } else {
+
+                $params = [
+                    "token" => $token,
+                    "act"   => $this->act,
+                    "record" => $this->record
+                ];
+
+                $req = $client->post( $this->url, [
+                    'headers' => [
+                        'Content-Type' => 'application/json',
+                        'Accept' => 'application/json',
+                    ],
+                    'body' => json_encode($params)
+                ]);
+
+                $response = $req->getBody();
+
+                $result = json_decode($response,true);
+            }
+
+            return $result;
+
+        }
+    }
+
     private function get_token()
     {
         $client = new Client();

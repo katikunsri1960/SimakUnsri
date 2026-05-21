@@ -1982,8 +1982,8 @@ class FeederUploadController extends Controller
 
     public function biodata_mahasiswa_upload(Request $request)
     {
-        $prodi = ProgramStudi::find($request->prodi)->id_prodi;
-        
+        // $prodi = ProgramStudi::find($request->prodi)->id_prodi;
+
         $sub = DB::table('riwayat_pendidikans')
             ->select(
                 'id_mahasiswa',
@@ -1991,80 +1991,186 @@ class FeederUploadController extends Controller
             )
             ->groupBy('id_mahasiswa');
 
-        $data = BiodataMahasiswa::
-            join('riwayat_pendidikans as rp', function ($join) use ($sub) {
+        $data = BiodataMahasiswa::join('riwayat_pendidikans as rp', function ($join) use ($sub) {
                 $join->on('rp.id_mahasiswa', '=', 'biodata_mahasiswas.id_mahasiswa')
                     ->joinSub($sub, 'latest', function ($joinSub) {
                         $joinSub->on('rp.id_mahasiswa', '=', 'latest.id_mahasiswa')
-                                ->whereRaw('LEFT(rp.id_periode_masuk,4) = latest.max_angkatan');
+                            ->whereRaw('LEFT(rp.id_periode_masuk,4) = latest.max_angkatan');
                     });
             })
-            ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
-            ->where('rp.id_prodi', $prodi)
-            ->where('biodata_mahasiswas.feeder', 0)
+            // ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
+            ->where('biodata_mahasiswas.id_mahasiswa', '8ba87259-4e55-4910-a20b-8041534feefb' )
             ->select(
                 'biodata_mahasiswas.*',
                 'rp.id_registrasi_mahasiswa',
-                'rp.nim',
-                DB::raw('LEFT(rp.id_periode_masuk, 4) as angkatan'),
-                DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi')
+                'rp.nim', 'rp.nama_program_studi',
+                DB::raw('LEFT(rp.id_periode_masuk, 4) as angkatan'), 
             )
             ->get();
 
         $totalData = $data->count();
-        // dd($data);
+
         if ($totalData == 0) {
-            return response()->json(['error' => 'Data tidak ditemukan'], 404);
+            return response()->json([
+                'error' => 'Data tidak ditemukan'
+            ], 404);
         }
 
         $act = 'InsertBiodataMahasiswa';
         $actGet = 'GetBiodataMahasiswa';
+
         $dataGagal = 0;
         $dataBerhasil = 0;
 
-        $response = new StreamedResponse(function () use ($data, $totalData, $act, $actGet, &$dataGagal, &$dataBerhasil) {
+        $response = new StreamedResponse(function () use (
+            $data, $totalData, $act,$actGet, 
+            &$dataGagal, &$dataBerhasil )
+        {
+
             foreach ($data as $index => $d) {
 
                 $record = [
-                    'id_registrasi_mahasiswa' => $d->id_registrasi_mahasiswa,
-                    'id_jenis_keluar' => $d->id_jenis_keluar,
-                    'tanggal_keluar' => $d->tgl_keluar,
-                    'keterangan' => $d->keterangan,
-                    'nomor_sk_yudisium' => $d->sk_yudisium,
-                    'tanggal_sk_yudisium' => $d->tgl_sk_yudisium,
-                    'ipk' => round($d->ipk, 2),
-                    'nomor_ijazah' => '',
-                    'jalur_skripsi' => NULL,
-                    'judul_skripsi' => $d->judul_skripsi,
-                    'bulan_awal_bimbingan' => date('yyyy-mm-dd', $d->bln_awal_bimbingan),
-                    'bulan_akhir_bimbingan' => date('yyyy-mm-dd', $d->bln_awal_bimbingan)
+
+                    'nama_mahasiswa' => strtoupper($d->nama_mahasiswa),
+
+                    'jenis_kelamin' => $d->jenis_kelamin,
+
+                    'tempat_lahir' => strtoupper($d->tempat_lahir),
+
+                    'tanggal_lahir' => $d->tanggal_lahir
+                        ? $d->tanggal_lahir
+                        : null,
+
+                    'id_agama' => $d->id_agama,
+
+                    'nik' => $d->nik,
+
+                    'nisn' => $d->nisn,
+
+                    'npwp' => $d->npwp,
+
+                    'kewarganegaraan' => $d->kewarganegaraan,
+
+                    'jalan' => $d->jalan,
+
+                    'dusun' => $d->dusun,
+
+                    'rt' => $d->rt,
+
+                    'rw' => $d->rw,
+
+                    'kelurahan' => $d->kelurahan,
+
+                    'kode_pos' => $d->kode_pos,
+
+                    'id_wilayah' => $d->id_wilayah,
+
+                    'id_jenis_tinggal' => $d->id_jenis_tinggal,
+
+                    'id_alat_transportasi' => $d->id_alat_transportasi,
+
+                    'telepon' => $d->telepon,
+
+                    'handphone' => $d->handphone,
+
+                    'email' => $d->email,
+
+                    'penerima_kps' => $d->penerima_kps ?? 0,
+
+                    'nomor_kps' => $d->nomor_kps,
+
+                    'nik_ayah' => $d->nik_ayah,
+
+                    'nama_ayah' => $d->nama_ayah,
+
+                    'tanggal_lahir_ayah' => $d->tanggal_lahir_ayah
+                        ? $d->tanggal_lahir_ayah
+                        : null,
+
+                    'id_pendidikan_ayah' => $d->id_pendidikan_ayah,
+
+                    'id_pekerjaan_ayah' => $d->id_pekerjaan_ayah,
+
+                    'id_penghasilan_ayah' => $d->id_penghasilan_ayah,
+
+                    'nik_ibu' => $d->nik_ibu,
+
+                    'nama_ibu_kandung' => $d->nama_ibu_kandung,
+
+                    'tanggal_lahir_ibu' => $d->tanggal_lahir_ibu
+                        ? $d->tanggal_lahir_ibu
+                        : null,
+
+                    'id_pendidikan_ibu' => $d->id_pendidikan_ibu,
+
+                    'id_pekerjaan_ibu' => $d->id_pekerjaan_ibu,
+
+                    'id_penghasilan_ibu' => $d->id_penghasilan_ibu,
+
+                    'nama_wali' => $d->nama_wali,
+
+                    'tanggal_lahir_wali' => $d->tanggal_lahir_wali
+                        ? $d->tanggal_lahir_wali
+                        : null,
+
+                    'id_pendidikan_wali' => $d->id_pendidikan_wali,
+
+                    'id_pekerjaan_wali' => $d->id_pekerjaan_wali,
+
+                    'id_penghasilan_wali' => $d->id_penghasilan_wali,
+
+                    'id_kebutuhan_khusus_mahasiswa' =>
+                        $d->id_kebutuhan_khusus_mahasiswa ?? 0,
+
+                    'id_kebutuhan_khusus_ayah' =>
+                        $d->id_kebutuhan_khusus_ayah ?? 0,
+
+                    'id_kebutuhan_khusus_ibu' =>
+                        $d->id_kebutuhan_khusus_ibu ?? 0,
                 ];
 
-                $recordGet = "id_registrasi_mahasiswa = '".$d->id_registrasi_mahasiswa."'" ;
+                $recordGet = "id_mahasiswa = '".$d->id_mahasiswa."'" ;
 
                 $req = new FeederUpload($act, $record, $actGet, $recordGet);
 
-                $result = $req->uploadLulusMahasiswa();
+                $result = $req->uploadBiodataMahasiswa();
+
+                // dd($result);
 
                 if (isset($result['error_code']) && $result['error_code'] == 0) {
 
                     $d->update([
-                        'id_registrasi_mahasiswa' => $result['data']['id_registrasi_mahasiswa'],
-                        'feeder' => 1
+                        'feeder' => 1,
+                        'status_sync' => 'Berhasil sync'
                     ]);
 
                     $dataBerhasil++;
+
                 } else {
-                    $d->update(
-                            [
-                                'status_sync' => $result['error_desc'],
-                            ]);
+
+                    // $d->update([
+                    //     'status_sync' => $result['error_desc'] ?? 'Gagal sync'
+                    // ]);
+
+                    // $d->update([
+                    //     'status_sync' => json_encode($result)
+                    // ]);
+
+                    $d->update([
+                        'status_sync' => ($result['error_desc'] ?? 'Unknown Error')
+                    ]);
+
                     $dataGagal++;
                 }
 
-                // Send progress update
                 $progress = ($index + 1) / $totalData * 100;
-                echo "data: " . json_encode(['progress' => $progress, 'dataBerhasil' => $dataBerhasil, 'dataGagal' => $dataGagal]) . "\n\n";
+
+                echo "data: " . json_encode([
+                    'progress' => $progress,
+                    'dataBerhasil' => $dataBerhasil,
+                    'dataGagal' => $dataGagal
+                ]) . "\n\n";
+
                 ob_flush();
                 flush();
             }
