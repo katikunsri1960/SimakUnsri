@@ -2030,6 +2030,7 @@ class FeederUploadController extends Controller
             foreach ($data as $index => $d) {
 
                 $record = [
+                    'id_mahasiswa' => $d->id_mahasiswa,
 
                     'nama_mahasiswa' => strtoupper($d->nama_mahasiswa),
 
