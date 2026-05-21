@@ -2050,7 +2050,7 @@ class FeederUploadController extends Controller
 
                     'npwp' => $d->npwp,
 
-                    'kewarganegaraan' => $d->kewarganegaraan,
+                    'kewarganegaraan' => $d->id_negara,
 
                     'jalan' => $d->jalan,
 
