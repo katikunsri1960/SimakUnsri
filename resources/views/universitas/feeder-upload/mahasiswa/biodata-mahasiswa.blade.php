@@ -35,12 +35,10 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                                 <input type="hidden" name="id_prodi" id="form_id_prodi" required>
                                 <input type="hidden" name="id_semester" id="form_id_semester" required>
                                 <div class="col-md-6">
-                                    {{--
                                     <div class="row">
                                         <button type="submit" class="btn btn-primary btn-sm" disabled id="buttonSubmitForm"> <i
                                                 class="fa fa-upload me-3"></i>Upload Biodata Mahasiswa</button>
                                     </div>
-                                    --}}
                                 </div>
                             </form>
                             <div class="row mt-3">
@@ -169,7 +167,7 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                 var data = response;
                 var html = '';
                 var no = 1;
-                // console.log(data);
+                console.log(data);
                 if (response.length > 0) {
                     $('#buttonSubmitForm').prop('disabled', false);
                     $('#form_id_prodi').val(id_prodi);
@@ -273,7 +271,7 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                             var id_prodi = $('#id_prodi').val();
                             var id_semester = $('#id_semester').val();
 
-                            var eventSourceUrl = "{{ route('univ.feeder-upload.perkuliahan.dosen-ajar.upload') }}" + "?prodi=" + id_prodi + "&semester=" + id_semester;
+                            var eventSourceUrl = "{{ route('univ.feeder-upload.mahasiswa.biodata-mahasiswa.upload') }}";
                             // console.log('EventSource URL:', eventSourceUrl);
 
                             // Initialize the EventSource with the constructed URL
