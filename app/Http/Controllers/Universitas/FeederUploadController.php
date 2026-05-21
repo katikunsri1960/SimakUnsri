@@ -2034,7 +2034,7 @@ class FeederUploadController extends Controller
 
                     'nama_mahasiswa' => strtoupper($d->nama_mahasiswa),
 
-                    'jenis_kelamin' => $d->jenis_kelamin,
+                    'jenis_kelamin' => $d->getRawOriginal('jenis_kelamin'),
 
                     'tempat_lahir' => strtoupper($d->tempat_lahir),
 
