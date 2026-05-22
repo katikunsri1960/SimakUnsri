@@ -1950,8 +1950,8 @@ class FeederUploadController extends Controller
 
     public function biodata_mahasiswa_data(Request $request)
     {
-        // $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
-        $fakultas = Fakultas::find($request->id_fakultas)->id;
+        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        // $fakultas = Fakultas::find($request->id_fakultas)->id;
         
         $sub = DB::table('riwayat_pendidikans')
             ->select(
@@ -1970,7 +1970,8 @@ class FeederUploadController extends Controller
             })
             // ->join('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'rp.id_registrasi_mahasiswa')
             ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
-            ->where('p.fakultas_id', $fakultas)
+            // ->where('p.fakultas_id', $fakultas)
+            ->where('rp.id_prodi', $prodi)
             ->where('biodata_mahasiswas.feeder', 0)
             ->select(
                 'biodata_mahasiswas.*',
@@ -2002,8 +2003,8 @@ class FeederUploadController extends Controller
                             ->whereRaw('LEFT(rp.id_periode_masuk,4) = latest.max_angkatan');
                     });
             })
-            // ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
-            // ->where('biodata_mahasiswas.id_mahasiswa', '8ba87259-4e55-4910-a20b-8041534feefb' )
+            ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
+            ->where('biodata_mahasiswas.id_mahasiswa', '8ba87259-4e55-4910-a20b-8041534feefb' )
             ->select(
                 'biodata_mahasiswas.*',
                 'rp.id_registrasi_mahasiswa',
