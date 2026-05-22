@@ -175,7 +175,10 @@
 
     // margin dinamis tabel
     //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
-    if ($d->id_prodi == 'b3dce9a8-25b8-4f27-96cc-2abe5e0d9fa9') {
+    if ($d->id_prodi == 'b3dce9a8-25b8-4f27-96cc-2abe5e0d9fa9' || 
+            $d->id_prodi == 'a69ad991-0518-42f8-8f0c-7b0c62ccd7b9' 
+            // Sp-2 Obgyn dan ginekologi
+    ) {
         $rowStyle = 'mk-medium';
     } elseif ($jumlahMK <= 33) {
         $rowStyle = 'mk-small';
@@ -189,8 +192,7 @@
 
     if($rowStyle == 'mk-small'){
         $MAX_ROWS_LEFT = 15;
-    } elseif($rowStyle == 'mk-medium' || 
-            $d->id_prodi == 'a69ad991-0518-42f8-8f0c-7b0c62ccd7b9' // Sp-2 Obgyn dan ginekologi
+    } elseif($rowStyle == 'mk-medium'
     ){
         $MAX_ROWS_LEFT = 28;
     } elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' && $d->angkatan == '2018'  
