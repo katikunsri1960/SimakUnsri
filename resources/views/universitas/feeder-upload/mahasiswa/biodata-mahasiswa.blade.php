@@ -234,7 +234,7 @@ FEEDER UPLOAD - BIODATA MAHASISWA
 
 
         $('#id_fakultas').select2({
-            placeholder: 'Pilih Program Studi',
+            placeholder: 'Pilih Fakultas',
             allowClear: true,
             width: '100%',
         });
