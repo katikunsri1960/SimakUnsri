@@ -189,7 +189,9 @@
 
     if($rowStyle == 'mk-small'){
         $MAX_ROWS_LEFT = 15;
-    } elseif($rowStyle == 'mk-medium'){
+    } elseif($rowStyle == 'mk-medium' || 
+            $d->id_prodi == 'a69ad991-0518-42f8-8f0c-7b0c62ccd7b9' // Sp-2 Obgyn dan ginekologi
+    ){
         $MAX_ROWS_LEFT = 28;
     } elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' && $d->angkatan == '2018'  
         // Sp-1 Ilmu Kesehatan Anak angkatan 2018

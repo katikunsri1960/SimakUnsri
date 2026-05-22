@@ -32,8 +32,8 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                         <div class="col-md-12 mb-5">
                             <form id="uploadAkmForm">
                                 @csrf
-                                <input type="hidden" name="id_prodi" id="form_id_prodi" required>
-                                <input type="hidden" name="id_semester" id="form_id_semester" required>
+                                <input type="hidden" name="id_fakultas" id="form_id_fakultas" required>
+                                <!-- <input type="hidden" name="id_semester" id="form_id_semester" required> -->
                                 <div class="col-md-6">
                                     <div class="row">
                                         <button type="submit" class="btn btn-primary btn-sm" disabled id="buttonSubmitForm"> <i
@@ -58,15 +58,21 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                 <div class="box-body">
                     <div class="row">
                         <div class="form-group row">
-                            <label for="example-text-input" class="col-sm-2 col-form-label">Program Studi</label>
+                            <label for="example-text-input" class="col-sm-2 col-form-label">Fakultas</label>
                             <div class="col-sm-10">
 
-                                <select class="form-select" name="id_prodi" id="id_prodi">
+                                <select class="form-select" name="id_fakultas" id="id_fakultas">
                                     <option value="" selected>Select one</option>
-                                    @foreach ($prodi as $p)
+                                    {{--@foreach ($prodi as $p)
                                     <option value="{{$p->id}}">
                                         {{$p->kode_program_studi}} - {{$p->nama_program_studi}}
                                         ({{$p->nama_jenjang_pendidikan}})
+                                    </option>
+                                    @endforeach--}}
+
+                                    @foreach ($fakultas as $f)
+                                    <option value="{{$f->id}}">
+                                        {{$f->nama_fakultas}}
                                     </option>
                                     @endforeach
                                 </select>
@@ -104,7 +110,7 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Status Sync</th>
                                     <th class="text-center align-middle">Angkatan</th>
-                                    <th class="text-center align-middle">Nama Prodi</th>
+                                    <th class="text-center align-middle">Nama Fakultas</th>
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama Mahasiswa</th>
 
@@ -148,8 +154,8 @@ FEEDER UPLOAD - BIODATA MAHASISWA
 <script src="{{asset('assets/js/flatpickr/flatpickr.js')}}"></script>
 <script>
     function getData(){
-        var id_prodi = $('#id_prodi').val();
-        var id_semester = $('#id_semester').val();
+        var id_fakultas = $('#id_fakultas').val();
+        // var id_semester = $('#id_semester').val();
 
         // remove existing rows
         $('#dataAkm tbody').html('');
@@ -159,23 +165,23 @@ FEEDER UPLOAD - BIODATA MAHASISWA
             url: "{{ route('univ.feeder-upload.mahasiswa.biodata-mahasiswa.data') }}",
             type: 'GET',
             data: {
-                id_prodi: id_prodi,
-                id_semester: id_semester
+                id_fakultas: id_fakultas,
+                // id_semester: id_semester
             },
             success: function(response) {
 
                 var data = response;
                 var html = '';
                 var no = 1;
-                console.log(data);
+                // console.log(data);
                 if (response.length > 0) {
                     $('#buttonSubmitForm').prop('disabled', false);
-                    $('#form_id_prodi').val(id_prodi);
-                    $('#form_id_semester').val(id_semester);
+                    $('#form_id_fakultas').val(id_fakultas);
+                    // $('#form_id_semester').val(id_semester);
                 } else {
                     $('#buttonSubmitForm').prop('disabled', true);
-                    $('#form_id_prodi').val('');
-                    $('#form_id_semester').val('');
+                    $('#form_id_fakultas').val('');
+                    // $('#form_id_semester').val('');
                 }
 
                 $.each(data, function(i, item) {
@@ -227,18 +233,18 @@ FEEDER UPLOAD - BIODATA MAHASISWA
         $('#data').DataTable();
 
 
-        $('#id_prodi').select2({
-            placeholder: 'Pilih Program Studi',
+        $('#id_fakultas').select2({
+            placeholder: 'Pilih Fakultas',
             allowClear: true,
             width: '100%',
         });
 
 
-        $('#id_semester').select2({
-            placeholder: 'Pilih Semester',
-            allowClear: true,
-            width: '100%',
-        });
+        // $('#id_semester').select2({
+        //     placeholder: 'Pilih Semester',
+        //     allowClear: true,
+        //     width: '100%',
+        // });
 
         $('#uploadAkmForm').on('submit', function(e) {
             e.preventDefault();
@@ -268,8 +274,8 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                         type: 'POST',
                         data: formData,
                         success: function(response) {
-                            var id_prodi = $('#id_prodi').val();
-                            var id_semester = $('#id_semester').val();
+                            var id_fakultas = $('#id_fakultas').val();
+                            // var id_semester = $('#id_semester').val();
 
                             var eventSourceUrl = "{{ route('univ.feeder-upload.mahasiswa.biodata-mahasiswa.upload') }}";
                             // console.log('EventSource URL:', eventSourceUrl);

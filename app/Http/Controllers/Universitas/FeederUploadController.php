@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Models\Semester;
 use App\Models\ProgramStudi;
+use App\Models\Fakultas;
 use Illuminate\Http\Request;
 use App\Models\SemesterAktif;
 use Illuminate\Support\Facades\DB;
@@ -1936,10 +1937,12 @@ class FeederUploadController extends Controller
     {
         $semesterAktif = SemesterAktif::first();
         $prodi = ProgramStudi::where('status', 'A')->orderBy('kode_program_studi')->get();
+        $fakultas = Fakultas::orderBy('id')->get();
         // $semester = Semester::select('nama_semester', 'id_semester')->where('id_semester', '<=', $semesterAktif->id_semester)->orderBy('id_semester', 'desc')->get();
 
         return view('universitas.feeder-upload.mahasiswa.biodata-mahasiswa', [
             'prodi' => $prodi,
+            'fakultas' => $fakultas,
             // 'semester' => $semester,
             'semesterAktif' => $semesterAktif,
         ]);
@@ -1947,7 +1950,8 @@ class FeederUploadController extends Controller
 
     public function biodata_mahasiswa_data(Request $request)
     {
-        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        // $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
+        $fakultas = Fakultas::find($request->id_fakultas)->id;
         
         $sub = DB::table('riwayat_pendidikans')
             ->select(
@@ -1966,7 +1970,7 @@ class FeederUploadController extends Controller
             })
             // ->join('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'rp.id_registrasi_mahasiswa')
             ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
-            ->where('rp.id_prodi', $prodi)
+            ->where('p.fakultas_id', $fakultas)
             ->where('biodata_mahasiswas.feeder', 0)
             ->select(
                 'biodata_mahasiswas.*',
