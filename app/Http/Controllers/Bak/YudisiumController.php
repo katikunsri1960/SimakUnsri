@@ -364,10 +364,7 @@ class YudisiumController extends Controller
             ->where('id_aktivitas', $wisuda->id_aktivitas)
             ->first();
 
-        // $semester_aktif = SemesterAktif::first();
-        $semester_aktif = SemesterAktif::first()->id_semester == 3
-                            ? SemesterAktif::first()->id_semester - 1
-                            : SemesterAktif::first()->id_semester;
+        $semester_aktif = SemesterAktif::first();        
 
         if (!$riwayatPendidikan || !$aktivitasMahasiswa || !$semester_aktif) {
             DB::rollBack();
@@ -393,6 +390,8 @@ class YudisiumController extends Controller
                 'message' => 'Mahasiswa ini sudah memiliki data Lulus DO.',
             ], 422);
         }
+
+        
 
         try {
             DB::beginTransaction();
@@ -449,11 +448,15 @@ class YudisiumController extends Controller
                 'id_jenis_keluar' => 1,
                 'nama_jenis_keluar' => 'Lulus',
                 'tanggal_keluar' => $wisuda->tgl_sk_yudisium,
-                'id_periode_keluar' => $semester_aktif->id_semester,
+                'id_periode_keluar' => substr($semester_aktif->id_semester, -1) == '3'
+                                        ? $semester_aktif->id_semester - 1
+                                        : $semester_aktif->id_semester,
                 'keterangan' => 'WISUDA KE-' . $wisuda->wisuda_ke,
                 'no_sertifikat_profesi' => $riwayatPendidikan->prodi->id_jenjang_pendidikan === '31' ? NULL : NULL, // Conditional logic //PERLU DIUBAH
                 'status_sync' => 'belum sync',
             ]);
+
+            // dd(LulusDo::where('id_registrasi_mahasiswa', $wisuda->id_registrasi_mahasiswa)->first());
 
             DB::commit();
 
@@ -572,6 +575,8 @@ class YudisiumController extends Controller
             'penomoran_ijazah_nasional' => 'required'
         ]);
 //  dd($data);
+        $semesterAktif = SemesterAktif::first();
+
         $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
 
         if (!$check) {
@@ -586,10 +591,10 @@ class YudisiumController extends Controller
         // dd($request->tanggal_pembayaran);
         $data['id_registrasi_mahasiswa'] = $check->id_registrasi_mahasiswa;
         $data['nim'] = $check->nim;
-        // $data['id_semester'] = SemesterAktif::first()->id_semester;
-        $data['id_semester'] = SemesterAktif::first()->id_semester == 3
-                                ? SemesterAktif::first()->id_semester - 1
-                                : SemesterAktif::first()->id_semester;
+
+        $data['id_semester'] = substr($semesterAktif->id_semester, -1) == '3'
+                                ? $semesterAktif->id_semester - 1
+                                : $semesterAktif->id_semester;
         $data['periode_wisuda'] = $check_wisuda->wisuda_ke;
         $data['penomoran_ijazah_nasional'] = $request->penomoran_ijazah_nasional;
 

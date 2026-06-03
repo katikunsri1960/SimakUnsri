@@ -650,6 +650,8 @@ class WisudaController extends Controller
             'id_registrasi_mahasiswa' => 'required|exists:riwayat_pendidikans,id_registrasi_mahasiswa',
             'penomoran_ijazah_nasional' => 'required'
         ]);
+
+        $semesterAktif = SemesterAktif::first();
 //  dd($data);
         $check = LulusDo::where('id_registrasi_mahasiswa', $data['id_registrasi_mahasiswa'])->first();
 
@@ -666,9 +668,11 @@ class WisudaController extends Controller
         $data['id_registrasi_mahasiswa'] = $check->id_registrasi_mahasiswa;
         $data['nim'] = $check->nim;
         // $data['id_semester'] = SemesterAktif::first()->id_semester;
-        $data['id_semester'] = SemesterAktif::first()->id_semester == 3
-                                ? SemesterAktif::first()->id_semester - 1
-                                : SemesterAktif::first()->id_semester;
+        
+        $data['id_semester'] = $semesterAktif->id_semester == 3
+                                ? $semesterAktif->id_semester - 1
+                                : $semesterAktif->id_semester;
+                                
         $data['periode_wisuda'] = $check_wisuda->wisuda_ke;
         $data['penomoran_ijazah_nasional'] = $request->penomoran_ijazah_nasional;
 

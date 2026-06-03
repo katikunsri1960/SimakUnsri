@@ -181,11 +181,11 @@ class MataKuliah extends Model
         $non_gelar = $riwayat_pendidikan->id_jenis_daftar == '14' ? 1 : 0;
 
         //  dd($non_gelar);
-        // dd($semester_ke);
+        // dd($semester_ke, $ips_value, $akm_sebelum, $akm_cuti, $id_semester);
 
 
-        if (substr($id_semester, -1) == 3) {
-            if ($semester_ke == 3 || $non_gelar > 0) {
+        if (substr($id_semester, -1) === '3') {
+            if ($semester_ke == 3 || $semester_ke == 2 || $non_gelar > 0) {
                 // dd($ips_value);
                 $sks_max = 20;
             }else{
