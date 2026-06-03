@@ -665,7 +665,10 @@ class WisudaController extends Controller
         // dd($request->tanggal_pembayaran);
         $data['id_registrasi_mahasiswa'] = $check->id_registrasi_mahasiswa;
         $data['nim'] = $check->nim;
-        $data['id_semester'] = SemesterAktif::first()->id_semester;
+        // $data['id_semester'] = SemesterAktif::first()->id_semester;
+        $data['id_semester'] = SemesterAktif::first()->id_semester == 3
+                                ? SemesterAktif::first()->id_semester - 1
+                                : SemesterAktif::first()->id_semester;
         $data['periode_wisuda'] = $check_wisuda->wisuda_ke;
         $data['penomoran_ijazah_nasional'] = $request->penomoran_ijazah_nasional;
 
