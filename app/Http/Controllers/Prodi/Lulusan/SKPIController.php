@@ -23,6 +23,7 @@ class SKPIController extends Controller
         $data = Wisuda::with([
                 'periode_wisuda',
                 'riwayat_pendidikan.skpi',
+                'riwayat_pendidikan',
                 'bebas_pustaka'
             ])
             ->whereHas('periode_wisuda', function ($query) {
@@ -100,7 +101,7 @@ class SKPIController extends Controller
         
         $prodi_id = auth()->user()->fk_id;
 
-        $wisuda = Wisuda::with(['periode_wisuda'])
+        $wisuda = Wisuda::with(['periode_wisuda', 'riwayat_pendidikan'])
                 ->whereHas('periode_wisuda', function ($query) {
                     $query->where('is_active', '=', 1);
                 })

@@ -9,7 +9,7 @@
                                 <h3 class="fw-500 text-dark mt-0 mb-20">Riwayat Pembayaran</h3>
                             </div>
                         </div>
-                        @if(!empty($tagihan))
+                        @if($pembayaran)
                             <div class="row">
                                 <div class="col-xxl-12">
                                     <div class="box box-body mb-0 bg-white">

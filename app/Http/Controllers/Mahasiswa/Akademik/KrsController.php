@@ -727,8 +727,16 @@ class KrsController extends Controller
 
             // dd($krs_aktivitas_mbkm);
             // Pengecekan apakah SKS maksimum telah tercapai
-            if ($sks_max == 0  && $non_gelar == 0) {
-                return response()->json(['message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.', 'sks_max' => $sks_max], 400);
+            if ($sks_max == 0 && (int) substr($semester_aktif->id_semester, -1) === 3) {
+                return response()->json([
+                    'message' => 'SKS maksimum yang bisa anda ambil adalah 0 SKS, karena Kuota SKS anda telah habis di semester Genap.',
+                    'sks_max' => $sks_max
+                ], 400);
+            } elseif ($sks_max == 0 && $non_gelar == 0) {
+                return response()->json([
+                    'message' => 'Data AKM Anda Tidak Ditemukan, Silahkan Hubungi Admin Program Studi.',
+                    'sks_max' => $sks_max
+                ], 400);
             }
 
             $sisa_sks = $sks_max-$total_sks;

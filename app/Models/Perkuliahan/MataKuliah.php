@@ -184,11 +184,13 @@ class MataKuliah extends Model
         // dd($semester_ke, $ips_value, $akm_sebelum, $akm_cuti, $id_semester);
 
 
-        if (substr($id_semester, -1) === '3') {
+        if (
+            substr($id_semester, -1) === '3' &&
+            !in_array($riwayat_pendidikan->id_prodi, $prodi_fk, true)
+        ) {
             if ($semester_ke == 3 || $semester_ke == 2 || $non_gelar > 0) {
-                // dd($ips_value);
                 $sks_max = 20;
-            }else{
+            } else {
                 $sks_max = 24;
             }
         }else{

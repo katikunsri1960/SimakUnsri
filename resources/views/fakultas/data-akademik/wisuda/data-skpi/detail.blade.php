@@ -7,7 +7,7 @@ Data Ajuan SKPI
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Data Ajuan SKPI : {{$mahasiswa->nama_mahasiswa}}</h3>
+            <h3 class="page-title">Data Ajuan SKPI : {{$mahasiswa->riwayat_pendidikan->nama_mahasiswa}}</h3>
 
             <div class="d-inline-block align-items-center">
                 <nav>
