@@ -47,7 +47,7 @@ Ajuan SKPI Mahasiswa
                                     <tr>
                                         <td class="text-center align-middle">{{ $no_a++ }}</td>
                                         <td class="text-start align-middle">{{ $d->nim }}</td>
-                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->nama_mahasiswa }}</td>
+                                        <td class="text-start align-middle" style="white-space: nowrap;">{{ $d->riwayat_pendidikan->nama_mahasiswa ?? 'N/A' }}</td>
                                         <td class="text-center align-middle">{{ $d->wisuda_ke }}</td>
                                         <td class="text-center align-middle">{{ $d->total_skor }}</td>
                                         <td class="text-center align-middle">

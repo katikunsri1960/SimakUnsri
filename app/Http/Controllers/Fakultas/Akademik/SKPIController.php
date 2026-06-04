@@ -53,6 +53,7 @@ class SKPIController extends Controller
 
         $data = Wisuda::leftJoin('program_studis as p', 'p.id_prodi', 'data_wisuda.id_prodi')
                 ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
+                ->leftJoin('riwayat_pendidikans as r', 'r.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
                 ->leftJoin('skpi_data as skpi', 'skpi.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
 
                 ->where('pw.periode', $req['periode'])
@@ -62,7 +63,7 @@ class SKPIController extends Controller
                     'data_wisuda.id',
                     'data_wisuda.id_registrasi_mahasiswa',
                     'data_wisuda.nim',
-                    'data_wisuda.nama_mahasiswa',
+                    'r.nama_mahasiswa',
                     'p.nama_program_studi',
                     'p.nama_jenjang_pendidikan'
                 )
@@ -70,7 +71,7 @@ class SKPIController extends Controller
                 ->select(
                     'data_wisuda.id',
                     'data_wisuda.nim',
-                    'data_wisuda.nama_mahasiswa',
+                    'r.nama_mahasiswa',
                     'p.nama_program_studi as nama_prodi',
                     'p.nama_jenjang_pendidikan as jenjang',
 
@@ -156,7 +157,8 @@ class SKPIController extends Controller
     public function detail_skpi_mahasiswa($id)
     {
         // dd($id);
-        $mahasiswa = Wisuda::leftJoin('program_studis as p', 'p.id_prodi', '=', 'data_wisuda.id_prodi')
+        $mahasiswa = Wisuda::with('riwayat_pendidikan')
+            ->leftJoin('program_studis as p', 'p.id_prodi', '=', 'data_wisuda.id_prodi')
             ->where('data_wisuda.id', $id)
             // ->select(
             //     'data_wisuda.id_registrasi_mahasiswa',

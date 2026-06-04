@@ -189,7 +189,7 @@ function getData()
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content rounded-3">
                                         <div class="modal-header">
-                                            <h5 class="modal-title" id="fotoModalLabel${item.id}">FOTO ${item.nama_mahasiswa}</h5>
+                                            <h5 class="modal-title" id="fotoModalLabel${item.id}">FOTO ${item.nama_riwayat}</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                         </div>
                                         <div class="modal-body text-center m-20">
@@ -385,7 +385,7 @@ function getData()
                         item.nama_prodi,
                         item.gelar ?? '-',
                         item.nim,
-                        item.nama_mahasiswa,
+                        item.nama_riwayat,
                         item.nik,
                         item.lokasi_kuliah,
                         item.jalur_masuk,

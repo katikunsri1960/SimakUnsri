@@ -103,6 +103,8 @@ class YudisiumController extends Controller
                     'pk.indonesia as predikat_kelulusan',
                     'b.nik as nik',
                     'akt.judul',
+                    'r.jenis_kelamin',
+                    'r.nama_mahasiswa as nama_riwayat',
                     'b.tempat_lahir',
                     'jm.nama_jalur_masuk as jalur_masuk',
                     'b.tanggal_lahir',
