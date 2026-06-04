@@ -69,8 +69,9 @@ class BiayaKuliahController extends Controller
                 $item->pembayaran->waktu_transaksi = Carbon::parse($item->pembayaran->waktu_transaksi)->translatedFormat('d F Y');
             }
         }
+        // $pembayaran=NULL;
 
-        // dd($pembayaran);
+        // dd( $pembayaran);
         
         return view('mahasiswa.biaya-kuliah.index', ['tagihan' => $tagihan, 'pembayaran'=> $pembayaran, 'beasiswa'=> $beasiswa]);
     }
