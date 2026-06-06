@@ -312,6 +312,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('album')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'album'])->name('bak.wisuda.album.index');
                     Route::get('/download-pdf', [App\Http\Controllers\Bak\WisudaController::class, 'album_download_pdf'])->name('bak.wisuda.album.download-pdf');
+                    // Route::get('/peserta-dp', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data_album_dp'])->name('bak.wisuda.peserta.data_album_dp');
+                    Route::get('/peserta-non-dp', [App\Http\Controllers\Bak\WisudaController::class, 'peserta_data_album'])->name('bak.wisuda.album.peserta');
                     Route::post('/wisuda/update-no-urut', [App\Http\Controllers\Bak\WisudaController::class, 'updateNoUrut'])->name('bak.wisuda.album.update-no-urut');
                 });
 

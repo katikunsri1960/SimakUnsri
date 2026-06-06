@@ -101,14 +101,19 @@
 
 <div class="page-break"></div>
 
-<div class="sub-header text-upper" >
+<div class="sub-header text-upper">
     <div style="margin:250px 110px 0px 110px; font-size: 30pt;">
-        {{ $fakultas -> nama_fakultas }}
+        {{ $fakultas->nama_fakultas }}
     </div>
-    <div style="margin:10px 110px 0px 110px; font-size: 20pt;">
-        PROGRAM STUDI {{ $prodi->nama_program_studi }} ({{ $prodi->nama_jenjang_pendidikan }})
-    </div>
+
+    @if($predikat == 12)
+        <div style="margin:10px 110px 0px 110px; font-size: 20pt;">
+            PROGRAM STUDI {{ $prodi->nama_program_studi }}
+            ({{ $prodi->nama_jenjang_pendidikan }})
+        </div>
+    @endif
 </div>
+
 <div class="page-break"></div>
 
 @foreach($data as $d)
