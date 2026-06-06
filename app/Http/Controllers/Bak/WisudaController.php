@@ -893,7 +893,7 @@ class WisudaController extends Controller
                         'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas)
-                ->where('approved', 3); // hanya yang sudah disetujui
+                ->where('data_wisuda.approved_wisuda', 3); // hanya yang sudah disetujui 
 
         if (!empty($prodi)) {
             $query->where('p.id_prodi', $prodi);
@@ -961,7 +961,7 @@ class WisudaController extends Controller
                         'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas)
-                ->where('approved', 3); // hanya yang sudah disetujui
+                ->where('data_wisuda.approved_wisuda', 3); // hanya yang sudah disetujui
 
         if ($prodi != null) {
             $data->where('r.id_prodi', $prodi);
