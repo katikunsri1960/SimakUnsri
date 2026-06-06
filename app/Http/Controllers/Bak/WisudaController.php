@@ -1372,8 +1372,8 @@ class WisudaController extends Controller
         }
 
         $data = $data
-            ->orderBy('p.nama_program_studi')
-            ->orderBy('data_wisuda.no_urut')
+            ->orderBy('p.nim', 'ASC')
+            ->orderBy('data_wisuda.no_urut', 'ASC')
             ->get();
 
         if ($data->isEmpty()) {
