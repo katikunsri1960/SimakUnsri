@@ -1372,8 +1372,8 @@ class WisudaController extends Controller
         }
 
         $data = $data
-            ->orderBy('data_wisuda.no_urut', 'asc')
-            ->orderBy('r.nim', 'asc')
+            ->orderBy('p.nama_program_studi')
+            ->orderBy('data_wisuda.no_urut')
             ->get();
 
         if ($data->isEmpty()) {
@@ -1411,6 +1411,8 @@ class WisudaController extends Controller
                 $request->prodi
             )->first();
         }
+
+        // dd($data);
 
         $pdf = PDF::loadView('bak.wisuda.album.pdf', [
             'data' => $data,
