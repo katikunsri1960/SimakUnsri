@@ -26,21 +26,35 @@ Daftar Album Wisudawan
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="form-group row">
+                        <label class="col-form-label col-md-2">Predikat Kelulusan</label>
+                        <div class="col-md-6">
+                            <select name="predikat" id="predikat" class="form-select">
+                                <option value="12">Non Dengan Pujian</option>
+                                <option value="3">Dengan Pujian</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group row">
                         <label class="col-form-label col-md-2">Fakultas</label>
                         <div class="col-md-8">
-                            <select name="fakultas" id="fakultas" required class="form-select" onchange="filterProdi()">
+                            <select name="fakultas" id="fakultas" required class="form-select" onchange="filterProdi()" >
                                 @foreach ($fakultas as $f)
                                 <option value="{{$f->id}}">{{$f->nama_fakultas}}</option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
-                    <div class="form-group row">
+                    <div class="form-group row" id="rowProdi">
                         <label class="col-form-label col-md-2">Prodi</label>
                         <div class="col-md-8">
-                            <select name="prodi" id="prodi" required class="form-select">
+                            <select name="prodi" id="prodi" class="form-select">
+                                <option value="">-- Pilih Prodi --</option>
                                 @foreach ($prodi as $p)
-                                <option value="{{$p->id_prodi}}">({{$p->kode_program_studi}}) - {{$p->nama_jenjang_pendidikan}} {{$p->nama_program_studi}}</option>
+                                    <option value="{{$p->id_prodi}}">
+                                        ({{$p->kode_program_studi}}) -
+                                        {{$p->nama_jenjang_pendidikan}}
+                                        {{$p->nama_program_studi}}
+                                    </option>
                                 @endforeach
                             </select>
                         </div>
@@ -76,6 +90,7 @@ Daftar Album Wisudawan
                                 <tr>
                                     <th class="text-center align-middle">NO</th>
                                     <th class="text-center align-middle">NO URUT</th>
+                                    <th class="text-center align-middle">PREDIKAT KELULUSAN</th>
                                     <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">NOMOR IJAZAH NASIONAL</th>
                                     <th class="text-center align-middle">PERIODE</th>
@@ -149,37 +164,63 @@ Daftar Album Wisudawan
 
 $(document).ready(function () {
     filterProdi();
+    toggleProdi();
 });
+
+$('#predikat').on('change', function () {
+    toggleProdi();
+});
+
+function toggleProdi()
+{
+    var predikat = $('#predikat').val();
+
+    if (predikat == '3') {
+        $('#rowProdi').hide();
+        $('#prodi').val('').trigger('change');
+    } else {
+        $('#rowProdi').show();
+    }
+}
 
 function getData()
 {
     var fakultas = $('#fakultas').val();
+    var predikat = $('#predikat').val();
     var prodi = $('#prodi').val();
     var periode = $('#periode').val();
 
-    if (fakultas == '' ) {
+    if (fakultas == '') {
         swal('Peringatan', 'Silahkan pilih fakultas terlebih dahulu', 'warning');
         return;
     }
 
-    if (prodi == '' ) {
-        swal('Peringatan', 'Silahkan pilih prodi terlebih dahulu', 'warning');
+    if (predikat == '') {
+        swal('Peringatan', 'Silahkan pilih predikat kelulusan terlebih dahulu', 'warning');
         return;
     }
 
-    if (periode == '' ) {
+    // Non DP wajib pilih prodi
+    if (predikat == '12' && prodi == '') {
+        swal('Peringatan', 'Silahkan pilih program studi terlebih dahulu', 'warning');
+        return;
+    }
+
+    if (periode == '') {
         swal('Peringatan', 'Silahkan pilih periode wisuda terlebih dahulu', 'warning');
         return;
     }
 
     $.ajax({
-        url: `{{route('bak.wisuda.peserta.data_approved')}}`,
+        url: '{{ route("bak.wisuda.album.peserta") }}',
         type: 'GET',
         data: {
             fakultas: fakultas,
+            predikat: predikat,
             prodi: prodi,
             periode: periode
         },
+
         success: function (response) {
 
             if (response.status === 'success') {
@@ -224,6 +265,7 @@ function getData()
                     table.row.add([
                         index + 1,
                         noUrutButton,
+                        item.nama_predikat_kelulusan,
                         foto,
                         nomor_ijazah ,
                         item.wisuda_ke,
@@ -252,23 +294,38 @@ function getData()
 
 function downloadPdf()
 {
-
     var fakultas = $('#fakultas').val();
+    var predikat = $('#predikat').val();
     var prodi = $('#prodi').val();
-    var p_wisuda = $('#periode').val();
+    var periode = $('#periode').val();
 
-    if (fakultas == '' || prodi == '' || p_wisuda == '') {
-
-        swal('Peringatan', 'Silahkan pilih fakultas, prodi, dan periode wisuda terlebih dahulu', 'warning');
+    if (!fakultas || !predikat || !periode) {
+        swal(
+            'Peringatan',
+            'Silahkan pilih fakultas, predikat dan periode wisuda terlebih dahulu',
+            'warning'
+        );
         return;
     }
 
-    var baseUrl = '{{ route('bak.wisuda.album.download-pdf') }}';
-    var url = baseUrl + '?fakultas=' + encodeURIComponent(fakultas) +
-            '&prodi=' + encodeURIComponent(prodi) +
-            '&periode=' + encodeURIComponent(p_wisuda);
+    if (predikat == '12' && prodi == '') {
+        swal(
+            'Peringatan',
+            'Silahkan pilih program studi terlebih dahulu',
+            'warning'
+        );
+        return;
+    }
+
+    var baseUrl = '{{ route("bak.wisuda.album.download-pdf") }}';
+
+    var url = baseUrl +
+    '?fakultas=' + encodeURIComponent(fakultas) +
+    '&predikat=' + encodeURIComponent(predikat) +
+    '&prodi=' + encodeURIComponent(prodi) +
+    '&periode=' + encodeURIComponent(periode);
+
     window.open(url, '_blank');
-    // console.log(url);
 }
 
 function filterProdi()
@@ -336,6 +393,7 @@ $(function () {
     $('#data').DataTable();
 
     $('#fakultas').select2();
+    $('#predikat').select2();
     $('#prodi').select2();
     $('#periode').select2();
 });
