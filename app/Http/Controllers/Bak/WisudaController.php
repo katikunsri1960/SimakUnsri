@@ -898,7 +898,7 @@ class WisudaController extends Controller
                 ->where('f.id', $fakultas)
                 ->where('data_wisuda.approved_wisuda', 3)
                 ->orderBy('data_wisuda.no_urut', 'asc')
-                ->orderBy('r.nim', 'asc');; // hanya yang sudah disetujui
+                ->orderBy('r.nim', 'asc'); // hanya yang sudah disetujui
 
         if (!empty($prodi)) {
             $query->where('p.id_prodi', $prodi);
