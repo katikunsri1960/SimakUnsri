@@ -120,7 +120,7 @@
         </div>
 
         <div style="font-weight:bold; font-size:25pt; margin-bottom:20px">
-            {{ $d->nama_mahasiswa }}
+            {{ $d->no_urut }}. {{ $d->nama_riwayat }}
         </div>
 
         <table class="info-mahasiswa" style="font-size:15pt; margin-bottom:50px;">

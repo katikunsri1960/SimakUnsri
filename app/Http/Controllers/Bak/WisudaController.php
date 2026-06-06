@@ -250,8 +250,9 @@ class WisudaController extends Controller
                         'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat', DB::raw("DATE_FORMAT(pw.tanggal_wisuda, '%d-%m-%Y') as tanggal_wisuda"),
                         'b.tempat_lahir', 'jm.nama_jalur_masuk as jalur_masuk', 'b.tanggal_lahir', 'b.rt', 'b.rw', 'b.jalan', 'b.dusun', 'b.kelurahan', 'b.id_wilayah', 'b.nama_wilayah', 'b.handphone',
                         'b.email', 'b.nama_ayah', 'b.nama_ibu_kandung', 'b.alamat_orang_tua', DB::raw("DATE_FORMAT(tanggal_daftar, '%d-%m-%Y') as tanggal_daftar"), 
-                        'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan');
-
+                        'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
+                ->orderBy('data_wisuda.no_urut', 'asc')
+                ->orderBy('r.nim', 'asc');
         if ($req['prodi'] != "*") {
             $data->where('r.id_prodi', $req['prodi']);
         }
@@ -325,7 +326,9 @@ class WisudaController extends Controller
                         'g.gelar', 'g.gelar_panjang', 'pisn.penomoran_ijazah_nasional as no_ijazah', 'l.sert_prof as no_sertifikat', DB::raw("DATE_FORMAT(pw.tanggal_wisuda, '%d-%m-%Y') as tanggal_wisuda"),
                         'b.tempat_lahir', 'jm.nama_jalur_masuk as jalur_masuk', 'b.tanggal_lahir', 'b.rt', 'b.rw', 'b.jalan', 'b.dusun', 'b.kelurahan', 'b.id_wilayah', 'b.nama_wilayah', 'b.handphone',
                         'b.email', 'b.nama_ayah', 'b.nama_ibu_kandung', 'b.alamat_orang_tua', DB::raw("DATE_FORMAT(tanggal_daftar, '%d-%m-%Y') as tanggal_daftar"), 
-                        'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan');
+                        'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
+                ->orderBy('data_wisuda.no_urut', 'asc')
+                ->orderBy('r.nim', 'asc');
 
         if ($req['prodi'] != "*") {
             $data->where('r.id_prodi', $req['prodi']);
@@ -893,7 +896,9 @@ class WisudaController extends Controller
                         'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas)
-                ->where('data_wisuda.approved_wisuda', 3); // hanya yang sudah disetujui 
+                ->where('data_wisuda.approved_wisuda', 3)
+                ->orderBy('data_wisuda.no_urut', 'asc')
+                ->orderBy('r.nim', 'asc'); // hanya yang sudah disetujui
 
         if (!empty($prodi)) {
             $query->where('p.id_prodi', $prodi);
@@ -1105,7 +1110,7 @@ class WisudaController extends Controller
                         'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas)
-                ->where('approved', 3); // hanya yang sudah disetujui
+                ->where('data_wisuda.approved_wisuda', 3); // hanya yang sudah disetujui
 
         if ($prodi != null) {
             $data->where('r.id_prodi', $prodi);
@@ -1197,6 +1202,23 @@ class WisudaController extends Controller
         ]);
     }
 
+    public function updateNoUrut(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'no_urut' => 'required|integer|min:1'
+        ]);
+
+        Wisuda::where('id', $request->id)
+            ->update([
+                'no_urut' => $request->no_urut
+            ]);
+
+        return response()->json([
+            'status' => 'success'
+        ]);
+    }
+
     public function album_download_pdf(Request $request)
     {
         $fakultas = $request->input('fakultas');
@@ -1235,7 +1257,9 @@ class WisudaController extends Controller
                         'l.no_seri_ijazah as no_ijazah', 'l.sert_prof as no_sertifikat')
                 ->where('data_wisuda.wisuda_ke', $periode)
                 ->where('f.id', $fakultas)
-                ->where('approved', 3); // hanya yang sudah disetujui
+                ->where('data_wisuda.approved_wisuda', 3)
+                ->orderBy('data_wisuda.no_urut', 'asc')
+                ->orderBy('r.nim', 'asc'); // hanya yang sudah disetujui
         if ($id_prodi != null) {
             $data->where('r.id_prodi', $id_prodi);
         }

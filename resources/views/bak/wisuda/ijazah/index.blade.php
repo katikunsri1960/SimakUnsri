@@ -159,13 +159,13 @@ function getData()
                     // KONDISI KHUSUS NO IJAZAH
                     // ===============================
                     var nomor_ijazah = item.jenjang === 'Profesi'
-                        ? (item.no_sertifikat ?? item.no_ijazah)
+                        ? (item.no_ijazah ?? item.no_sertifikat ?? '-')
                         : (item.no_ijazah ?? '-');
 
                     table.row.add([
                         index + 1,
                         foto,
-                        nomor_ijazah ?? '-',
+                        nomor_ijazah,
                         item.wisuda_ke,
                         item.nim,
                         item.nama_riwayat,

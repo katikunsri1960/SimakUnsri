@@ -75,6 +75,7 @@ Daftar Album Wisudawan
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">NO</th>
+                                    <th class="text-center align-middle">NO URUT</th>
                                     <th class="text-center align-middle">FOTO</th>
                                     <th class="text-center align-middle">NOMOR IJAZAH NASIONAL</th>
                                     <th class="text-center align-middle">PERIODE</th>
@@ -96,6 +97,45 @@ Daftar Album Wisudawan
                         </table>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalNoUrut" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalNoUrutTitle">
+                        Input Nomor Urut Album
+                    </h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="wisuda_id">
+
+                    <div class="form-group">
+                        <label>Nomor Urut</label>
+                        <input
+                            type="number"
+                            min="1"
+                            class="form-control"
+                            id="no_urut"
+                            placeholder="Masukkan nomor urut">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="simpanNoUrut()">
+                        Simpan
+                    </button>
+                </div>
+
             </div>
         </div>
     </div>
@@ -159,13 +199,33 @@ function getData()
                     // KONDISI KHUSUS NO IJAZAH
                     // ===============================
                     var nomor_ijazah = item.jenjang === 'Profesi'
-                        ? (item.no_sertifikat ?? '-')
+                        ? (item.no_ijazah ?? item.no_sertifikat ?? '-')
                         : (item.no_ijazah ?? '-');
+
+                    var noUrutButton = `
+                            <div class="text-center">
+                                <div class="fw-bold mb-1">
+                                    ${item.no_urut ?? '-'}
+                                </div>
+
+                                <button
+                                    type="button"
+                                    class="btn btn-sm ${item.no_urut ? 'btn-info' : 'btn-warning'}"
+                                    onclick="editNoUrut(
+                                        '${item.id}',
+                                        '${item.no_urut ?? ''}',
+                                        '${item.nama_mahasiswa}'
+                                    )">
+                                    ${item.no_urut ? 'Edit' : 'Input'}
+                                </button>
+                            </div>
+                        `;
 
                     table.row.add([
                         index + 1,
+                        noUrutButton,
                         foto,
-                        nomor_ijazah ?? '-',
+                        nomor_ijazah ,
                         item.wisuda_ke,
                         item.nim,
                         item.nama_mahasiswa,
@@ -229,6 +289,46 @@ function filterProdi()
         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
     });
 
+}
+
+function editNoUrut(id, noUrut)
+{
+    $('#wisuda_id').val(id);
+    $('#no_urut').val(noUrut);
+
+    $('#modalNoUrut').modal('show');
+}
+
+function simpanNoUrut()
+{
+    $.ajax({
+        url: '{{ route("bak.wisuda.album.update-no-urut") }}',
+        type: 'POST',
+        data: {
+            _token: '{{ csrf_token() }}',
+            id: $('#wisuda_id').val(),
+            no_urut: $('#no_urut').val()
+        },
+        success: function(response){
+
+            if(response.status == 'success')
+            {
+                $('#modalNoUrut').modal('hide');
+
+                swal(
+                    'Berhasil',
+                    'Nomor urut berhasil disimpan',
+                    'success'
+                );
+
+                getData();
+            }
+            else
+            {
+                swal('Error', response.message, 'error');
+            }
+        }
+    });
 }
 
 $(function () {

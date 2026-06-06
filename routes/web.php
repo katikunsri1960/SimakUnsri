@@ -312,6 +312,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('album')->group(function(){
                     Route::get('/', [App\Http\Controllers\Bak\WisudaController::class, 'album'])->name('bak.wisuda.album.index');
                     Route::get('/download-pdf', [App\Http\Controllers\Bak\WisudaController::class, 'album_download_pdf'])->name('bak.wisuda.album.download-pdf');
+                    Route::post('/wisuda/update-no-urut', [App\Http\Controllers\Bak\WisudaController::class, 'updateNoUrut'])->name('bak.wisuda.album.update-no-urut');
                 });
 
                 Route::prefix('skpi')->group(function(){
@@ -462,7 +463,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/detail/{aktivitas}', [App\Http\Controllers\Fakultas\Akademik\SidangMahasiswaController::class, 'detail_sidang'])->name('fakultas.data-akademik.sidang-mahasiswa.detail');
                 });
 
-                Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('fakultas.data-akademik.yudisium-mahasiswa');
+                // Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Fakultas\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('fakultas.data-akademik.yudisium-mahasiswa');
 
                 Route::prefix('transkrip-nilai')->group(function(){
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'index'])->name('fakultas.data-akademik.transkrip-nilai');

@@ -47,6 +47,8 @@ class PesertaKelasKuliah extends Model
 
         $today = Carbon::now()->toDateString();
 
+        // dd($today, $semester_aktif->krs_mulai, $semester_aktif->krs_selesai, $semester_aktif->tanggal_mulai_kprs, $semester_aktif->tanggal_akhir_kprs);
+
         if ($today < $semester_aktif->krs_mulai) {
             return [
                 'status' => 'error',
@@ -61,7 +63,7 @@ class PesertaKelasKuliah extends Model
             ];
         }
 
-        if ($today > $semester_aktif->tanggal_akhir_kprs) {
+        if ($today > $semester_aktif->krs_selesai && $today > $semester_aktif->tanggal_akhir_kprs) {
             return [
                 'status' => 'error',
                 'message' => 'Masa Pengisian KRS dan KPRS Telah Berakhir!!',
