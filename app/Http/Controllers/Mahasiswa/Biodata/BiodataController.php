@@ -36,7 +36,7 @@ class BiodataController extends Controller
                 $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
 
 
-                $data = BiodataMahasiswa::with(['riwayat_pendidikan', 'riwayat_pendidikan.jalur_masuk'])
+                $data = BiodataMahasiswa::with(['riwayat_pendidikan', 'riwayat_pendidikan.jalur_masuk', 'riwayat_pendidikan.lulus_do'])
                         ->leftJoin('wilayahs','wilayahs.id_wilayah','=','biodata_mahasiswas.id_wilayah')
                         ->where('id_mahasiswa', $bio)//Default
                         // ->where('id_mahasiswa', '3cc994cf-5c0d-4c03-a585-0ba1ea0ef1dd')//PT Asal

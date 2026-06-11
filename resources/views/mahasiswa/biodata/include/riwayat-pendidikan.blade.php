@@ -24,7 +24,7 @@
                                                     <th class="text-center">Bidang Minat</th>
                                                     <th class="text-center">Status</th>
                                                     <th class="text-center">Tanggal Keluar</th>
-                                                    <th class="text-center">SKS Diakui</th>
+                                                    <!-- <th class="text-center">SKS Diakui</th> -->
                                                     <th class="text-center">IPK Lulus</th>
                                                     {{-- <th class="text-center">Action</th> --}}
                                                 </tr>
@@ -50,10 +50,12 @@
                                                         <td class="text-center">
                                                             {{$data->id_jenis_keluar == Null ? '-' : date_format(new DateTime($data->tanggal_keluar), "d-m-Y") }}
                                                         </td>
+                                                        {{-- <td class="text-center">
+                                                            {{$data->riwayat_pendidikan->lulus_do == Null ? 'Tidak Diisi' : $data->riwayat_pendidikan->lulus_do->sks_diakui }}
+                                                        </td> --}}
                                                         <td class="text-center">
-                                                            {{$data->sks_diakui == Null ? 'Tidak Diisi' : $data->sks_diakui }}
+                                                            {{$data->riwayat_pendidikan->lulus_do == Null ? 'Tidak Diisi' : $data->riwayat_pendidikan->lulus_do->ipk }}
                                                         </td>
-                                                        <td class="text-center"></td>
                                                     </tr>
                                                 @endforeach
                                             </tbody>
