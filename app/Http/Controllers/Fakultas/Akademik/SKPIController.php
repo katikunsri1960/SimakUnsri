@@ -58,6 +58,7 @@ class SKPIController extends Controller
 
                 ->where('pw.periode', $req['periode'])
                 ->where('p.fakultas_id', auth()->user()->fk_id)
+                ->whereNotNull('skpi.id_registrasi_mahasiswa')
 
                 ->groupBy(
                     'data_wisuda.id',

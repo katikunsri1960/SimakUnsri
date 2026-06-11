@@ -181,7 +181,7 @@ $(document).on('click','.btn-approve',function(){
     }, function(isConfirm){
         if(isConfirm){
             $.ajax({
-                url: "{{ url('fakultas/yudisium/skpi/approve') }}/"+id,
+                url: "{{ url('fakultas/wisuda/skpi/approve') }}/"+id,
                 type: "POST",
                 data:{
                     _token: "{{ csrf_token() }}"
