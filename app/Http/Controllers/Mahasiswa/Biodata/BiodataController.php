@@ -156,6 +156,8 @@ class BiodataController extends Controller
                         $id_test = null;
                 }
 
+                $riwayat_pendidikan_terbaru = $riwayat_pendidikan->sortByDesc('tanggal_daftar')->first();
+
                 $beasiswa = BeasiswaMahasiswa::with('jenis_beasiswa')
                         ->where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -168,6 +170,6 @@ class BiodataController extends Controller
                 // dd($data, $beasiswa);
                 // dd($data->tagihan->pembayaran->total_nilai_pembayaran);
 
-                return view('mahasiswa.biodata.index', compact('data', 'provinsi', 'riwayat_pendidikan', 'id_kab_kota', 'kab_kota','beasiswa', 'tagihan'));
+                return view('mahasiswa.biodata.index', compact('data', 'provinsi', 'riwayat_pendidikan', 'riwayat_pendidikan_terbaru', 'id_kab_kota', 'kab_kota','beasiswa', 'tagihan'));
         }
 }
