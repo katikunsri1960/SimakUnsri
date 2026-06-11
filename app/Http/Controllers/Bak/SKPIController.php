@@ -59,45 +59,6 @@ class SKPIController extends Controller
             ],
         ]);
 
-        // $data = Wisuda::with('riwayat_pendidikan.skpi')
-        //         ->whereHas('riwayat_pendidikan.skpi' , function($query) {
-        //                 $query->whereNotNull('id_registrasi_mahasiswa');
-        //             })
-        //         ->leftJoin('program_studis as p', 'p.id_prodi', 'data_wisuda.id_prodi')
-        //         ->leftJoin('periode_wisudas as pw', 'pw.periode', 'data_wisuda.wisuda_ke')
-        //         // ->leftJoin('skpi_data as skpi', 'skpi.id_registrasi_mahasiswa', 'data_wisuda.id_registrasi_mahasiswa')
-        //         ->leftJoin('fakultas as f', 'f.id', 'p.fakultas_id')
-        //         ->where('pw.periode', $req['periode'])
-        //         // ->where('p.fakultas_id', auth()->user()->fk_id)
-
-        //         ->groupBy(
-        //             'data_wisuda.id',
-        //             'data_wisuda.id_registrasi_mahasiswa',
-        //             'data_wisuda.nim',
-        //             'data_wisuda.nama_mahasiswa',
-        //             'p.nama_program_studi',
-        //             'p.nama_jenjang_pendidikan',
-        //             'f.nama_fakultas'
-        //         )
-
-        //         ->select(
-        //             'data_wisuda.id',
-        //             'data_wisuda.nim',
-        //             'data_wisuda.nama_mahasiswa',
-        //             'p.nama_program_studi as nama_prodi',
-        //             'p.nama_jenjang_pendidikan as jenjang',
-        //             'f.nama_fakultas',
-
-        //             DB::raw("
-        //                 CASE
-        //                     WHEN MAX(riwayat_pendidikan.skpi.approved) = 3 AND MIN(riwayat_pendidikan.skpi.approved) = 3 THEN 'Disetujui Dir Akademik'
-        //                     WHEN MAX(riwayat_pendidikan.skpi.approved) = 2 AND MIN(riwayat_pendidikan.skpi.approved) = 2 THEN 'Disetujui Fakultas'
-        //                     WHEN MAX(riwayat_pendidikan.skpi.approved) = 1 AND MIN(riwayat_pendidikan.skpi.approved) = 1 THEN 'Disetujui Koor Prodi'
-        //                     ELSE 'Belum Disetujui'
-        //                 END as approved
-        //             ")
-        //         );
-
         $data = Wisuda::query()
             ->leftJoin('program_studis as p', 'p.id_prodi', '=', 'data_wisuda.id_prodi')
             ->leftJoin('periode_wisudas as pw', 'pw.periode', '=', 'data_wisuda.wisuda_ke')
