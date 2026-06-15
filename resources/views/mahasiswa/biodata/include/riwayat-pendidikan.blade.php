@@ -54,7 +54,11 @@
                                                             {{$data->riwayat_pendidikan->lulus_do == Null ? 'Tidak Diisi' : $data->riwayat_pendidikan->lulus_do->sks_diakui }}
                                                         </td> --}}
                                                         <td class="text-center">
-                                                            {{$data->riwayat_pendidikan->lulus_do == Null ? 'Tidak Diisi' : $data->riwayat_pendidikan->lulus_do->ipk }}
+                                                            @if($data->riwayat_pendidikan && $data->riwayat_pendidikan->lulus_do)
+                                                                {{ $data->riwayat_pendidikan->lulus_do->ipk }}
+                                                            @else
+                                                                Tidak Diisi
+                                                            @endif
                                                         </td>
                                                     </tr>
                                                 @endforeach
