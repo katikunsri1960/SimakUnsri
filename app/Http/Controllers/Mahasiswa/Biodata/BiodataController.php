@@ -167,8 +167,8 @@ class BiodataController extends Controller
                         ->first();
 
                 // Debugging jika diperlukan
-                // dd($data, $beasiswa);
-                // dd($data->tagihan->pembayaran->total_nilai_pembayaran);
+                // dd($data, $semesterAktif, $tagihan);
+                // dd($riwayat_pendidikan_terbaru);
 
                 return view('mahasiswa.biodata.index', compact('data', 'provinsi', 'riwayat_pendidikan', 'riwayat_pendidikan_terbaru', 'id_kab_kota', 'kab_kota','beasiswa', 'tagihan'));
         }
