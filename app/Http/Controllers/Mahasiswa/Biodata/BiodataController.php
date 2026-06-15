@@ -36,7 +36,7 @@ class BiodataController extends Controller
                 $semester_ke = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->count();
 
 
-                $data = BiodataMahasiswa::with(['riwayat_pendidikan', 'riwayat_pendidikan.jalur_masuk'])
+                $data = BiodataMahasiswa::with(['riwayat_pendidikan', 'riwayat_pendidikan.jalur_masuk', 'riwayat_pendidikan.lulus_do'])
                         ->leftJoin('wilayahs','wilayahs.id_wilayah','=','biodata_mahasiswas.id_wilayah')
                         ->where('id_mahasiswa', $bio)//Default
                         // ->where('id_mahasiswa', '3cc994cf-5c0d-4c03-a585-0ba1ea0ef1dd')//PT Asal
@@ -156,6 +156,8 @@ class BiodataController extends Controller
                         $id_test = null;
                 }
 
+                $riwayat_pendidikan_terbaru = $riwayat_pendidikan->sortByDesc('tanggal_daftar')->first();
+
                 $beasiswa = BeasiswaMahasiswa::with('jenis_beasiswa')
                         ->where('id_registrasi_mahasiswa', $id_reg)->first();
 
@@ -168,6 +170,6 @@ class BiodataController extends Controller
                 // dd($data, $beasiswa);
                 // dd($data->tagihan->pembayaran->total_nilai_pembayaran);
 
-                return view('mahasiswa.biodata.index', compact('data', 'provinsi', 'riwayat_pendidikan', 'id_kab_kota', 'kab_kota','beasiswa', 'tagihan'));
+                return view('mahasiswa.biodata.index', compact('data', 'provinsi', 'riwayat_pendidikan', 'riwayat_pendidikan_terbaru', 'id_kab_kota', 'kab_kota','beasiswa', 'tagihan'));
         }
 }
