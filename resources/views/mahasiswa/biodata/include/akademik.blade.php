@@ -10,13 +10,13 @@
                                     <h3 class="fw-500 text-dark mt-0 mb-20">Akademik</h3>
                                 </div>                             
                             </div>
-                            @foreach ($riwayat_pendidikan as $data)
+                            @foreach ($data as $d)
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Perguruan Tinggi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_perguruan_tinggi}}">
+                                            value="{{$d->nama_perguruan_tinggi}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
@@ -26,28 +26,28 @@
                                             type="text" 
                                             class="form-control" 
                                             disabled
-                                            value="{{ isset($data->pembimbing_akademik->nama_dosen) ? $data->pembimbing_akademik->nama_dosen : 'Tidak diisi' }}">
+                                            value="{{ isset($d->pembimbing_akademik->nama_dosen) ? $d->pembimbing_akademik->nama_dosen : 'Tidak diisi' }}">
                                     </div>
                                 </div>                                                              
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>NIM</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nim}}">
+                                            value="{{$d->nim}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jenis Pendaftaran</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_jenis_daftar}}">
+                                            value="{{$d->nama_jenis_daftar}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Program Studi</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_program_studi}}">
+                                            value="{{$d->nama_program_studi}}">
                                     </div>
                                 </div>
 
@@ -55,12 +55,12 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Jalur Pendaftaran</label>
-                                        @if($data->jalur_masuk == Null)
+                                        @if($d->jalur_masuk == Null)
                                         <input type="name" class="form-control" disabled
                                             value="Tidak diisi">
                                         @else
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->jalur_masuk->nama_jalur_masuk}}">
+                                            value="{{$d->jalur_masuk->nama_jalur_masuk}}">
                                         @endif
                                     </div>
                                 </div>
@@ -85,14 +85,14 @@
                                     <div class="form-group">
                                         <label>Angkatan</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->angkatan}}">
+                                            value="{{$d->angkatan}}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Gelombang Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->gelombang_masuk}}">
+                                            value="{{$d->gelombang_masuk}}">
                                     </div>
                                 </div>
                                 
@@ -100,12 +100,12 @@
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Status</label>
-                                        @if ($data->keterangan_keluar == Null)
+                                        @if ($d->keterangan_keluar == Null)
                                             <input type="name" class="form-control" disabled
                                                 value="Aktif">
                                         @else
                                             <input type="name" class="form-control" disabled
-                                                value="{{$data->keterangan_keluar}}">
+                                                value="{{$d->keterangan_keluar}}">
                                         @endif
                                     </div>
                                 </div>
@@ -115,14 +115,14 @@
                                     <div class="form-group">
                                         <label>Tanggal Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{date_format(new DateTime($data->tanggal_daftar), 'd-m-Y') }}">
+                                            value="{{date_format(new DateTime($d->tanggal_daftar), 'd-m-Y') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6">
                                     <div class="form-group">
                                         <label>Periode Masuk</label>
                                         <input type="name" class="form-control" disabled
-                                            value="{{$data->nama_periode_masuk}}">
+                                            value="{{$d->nama_periode_masuk}}">
                                     </div>
                                 </div>
                             </div>
