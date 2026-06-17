@@ -254,8 +254,7 @@ function getData()
                                     class="btn btn-sm ${item.no_urut ? 'btn-info' : 'btn-warning'}"
                                     onclick="editNoUrut(
                                         '${item.id}',
-                                        '${item.no_urut ?? ''}',
-                                        '${item.nama_mahasiswa}'
+                                        '${item.no_urut ?? ''}'
                                     )">
                                     ${item.no_urut ? 'Edit' : 'Input'}
                                 </button>
