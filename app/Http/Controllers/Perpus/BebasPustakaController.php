@@ -25,7 +25,10 @@ class BebasPustakaController extends Controller
 
     public function getData(Request $request)
     {
-        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])->where('nim', $request->nim)->orderBy('id_periode_masuk', 'desc')->first();
+        $riwayat = RiwayatPendidikan::with(['prodi.fakultas', 'prodi.jurusan', 'pembimbing_akademik'])
+                ->where('nim', $request->nim)->orderBy('id_periode_masuk', 'desc')
+                ->where('id_jenis_keluar', null)
+                ->first();
 
         $check = BebasPustaka::where('id_registrasi_mahasiswa', $riwayat->id_registrasi_mahasiswa)
             ->whereNotNull('file_bebas_pustaka')

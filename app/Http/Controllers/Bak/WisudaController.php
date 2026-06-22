@@ -1248,8 +1248,8 @@ class WisudaController extends Controller
                         'b.tempat_lahir', 'jm.nama_jalur_masuk as jalur_masuk', 'b.tanggal_lahir', 'b.rt', 'b.rw', 'b.jalan', 'b.dusun', 'b.kelurahan', 'b.id_wilayah', 'b.nama_wilayah', 'b.handphone',
                         'b.email', 'b.nama_ayah', 'b.nama_ibu_kandung', 'b.alamat_orang_tua', DB::raw("DATE_FORMAT(tanggal_daftar, '%d-%m-%Y') as tanggal_daftar"), 
                         'pdp.nama_perbaikan', 'pdp.tmpt_perbaikan', 'pdp.tgl_perbaikan', 'data_wisuda.id_predikat_kelulusan', 'pk.indonesia as nama_predikat_kelulusan')
-                ->orderBy('r.nim', 'asc')
-                ->orderBy('data_wisuda.no_urut', 'asc');
+                ->orderBy('data_wisuda.no_urut', 'asc')
+                ->orderBy('r.nim', 'asc');
         // if ($req['prodi'] != "*") {
         //     $data->where('r.id_prodi', $req['prodi']);
         // }
@@ -1372,8 +1372,8 @@ class WisudaController extends Controller
         }
 
         $data = $data
-            ->orderBy('r.nim', 'ASC')
             ->orderBy('data_wisuda.no_urut', 'ASC')
+            ->orderBy('r.nim', 'ASC')
             ->get();
 
         if ($data->isEmpty()) {
