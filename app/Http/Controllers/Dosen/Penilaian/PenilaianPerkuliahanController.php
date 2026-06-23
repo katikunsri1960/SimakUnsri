@@ -28,7 +28,7 @@ class PenilaianPerkuliahanController extends Controller
         $data = $db->dosen_pengajar_kelas(auth()->user()->fk_id);
 
         // List of program codes not requiring scheduling checks
-        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
+        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716'];
 
         // dd($data);
 
@@ -53,7 +53,7 @@ class PenilaianPerkuliahanController extends Controller
         $semester_aktif = SemesterAktif::first();
 
          // List of program codes not requiring scheduling checks
-         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
+         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716'];
 
          // Check the schedule for inputting grades
          $hari_proses = date('Y-m-d');
@@ -131,7 +131,7 @@ class PenilaianPerkuliahanController extends Controller
         }
 
         // List of program codes not requiring scheduling checks
-        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
+        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716'];
 
         // Check the schedule for inputting grades
         $hari_proses = date('Y-m-d');
@@ -173,7 +173,7 @@ class PenilaianPerkuliahanController extends Controller
         ]);
 
         // List of program codes not requiring scheduling checks
-        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901'];
+        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716'];
 
         // Fetch data for the specific class and its associated program
         $data_prodi = KelasKuliah::with('prodi')->where('id_kelas_kuliah', $kelas)->first();
