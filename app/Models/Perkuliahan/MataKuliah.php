@@ -96,7 +96,7 @@ class MataKuliah extends Model
                     //'857cd112-bb6c-4ea9-9fe7-6782290c61e0', //S1 Ilmu Keperawatan
                     //'a8d4f70f-406c-43f6-95ee-15f8ad836db3', //S1 Psikologi
                     //'33a06776-e6aa-41e0-be5b-593d52ddff7f', //S1 Ilmu Biomedik
-                    '9965f1cf-563f-4671-9dca-4874e8c5d075', //Sp-1 Ilmu Penyakit THT
+                    '9965f1cf-563f-4671-9dca-4874e8c5d075', //Sp-1 Ilmu Penyakit THT - PRODI LAMA
                     'a77fda16-ec5a-4d73-b076-51bac9b88ae4', //Sp-1 Ilmu Bedah
                     '947760c7-8b9b-40d2-af81-cdd141fddadb', //Sp-1 Anestesiologi Dan Reanimasi
                     'e2f2ac47-8844-456b-b525-482db9da0abf', //Sp-1 Ilmu Penyakit Kulit Dan Kelamin
@@ -108,6 +108,11 @@ class MataKuliah extends Model
                     '90c23123-fb1e-48ee-9bdc-f923e799cd2a', //Sp-1 Bedah Toraks, Kardiak, dan Vaskular
                     '95290672-5f13-4776-9c0e-9c84ff0611ed', //Sp-1 Ilmu Penyakit Dalam
                     '67c6cb06-f882-48c2-8a8f-33ab9457d1a6', //Sp-1 Ilmu Patologi Anatomi
+                    
+                    // PRODI BARU
+                    '8f010c53-7124-48b3-8347-390ec156c603', //Sp-1 Ilmu Kesehatan Telinga Hidung Tenggorok, Bedah Kepala dan Leher
+                    '5a885c42-0108-4691-a5f7-acbdef2a92fc', //SP-1 Obstetri dan Ginekologi
+                    
                     // S2, S3, Dan Sp-2 tidak mengunakan sistem Blok (24 SKS)
         ];
 
