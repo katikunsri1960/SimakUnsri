@@ -211,7 +211,8 @@
         // Sp-1 Ilmu Penyakit Mata
     ){ 
         $MAX_ROWS_LEFT = 50;
-    }elseif($rowStyle == 'mk-large'){
+    }elseif(($rowStyle == 'mk-large') || ($d->id_prodi == '947760c7-8b9b-40d2-af81-cdd141fddadb' && $d->angkatan == '2021')){
+        // Sp-1 Anestesiologi Dan Reanimasi
         $MAX_ROWS_LEFT = 37;
     } else{
         $MAX_ROWS_LEFT = 53;
