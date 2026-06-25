@@ -40,6 +40,10 @@ Biodata
                 </ul>
                 <!-- Tab panes -->
                 <div class="tab-content tabcontent">
+                    @php
+                        $ptAsal = $riwayat_pendidikan->where('id_jenis_daftar', '!=', 1);
+                        $pesertaDidikBaru = $riwayat_pendidikan->where('id_jenis_daftar', 1);
+                    @endphp
                     @include('mahasiswa.biodata.include.data-diri')
                     @include('mahasiswa.biodata.include.akademik')
                     @include('mahasiswa.biodata.include.alamat')
