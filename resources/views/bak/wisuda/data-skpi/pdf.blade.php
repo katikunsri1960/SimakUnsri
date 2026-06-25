@@ -18,7 +18,7 @@
     UNIVERSITAS SRIWIJAYA<br>
     {{ strtoupper($d->nama_fakultas ?? '-') }}<br>
     SURAT KETERANGAN PENDAMPING IJAZAH (SKPI)<br>
-    NOMOR : {{ $d->no_skpi ?? '........ / ........ / ........ / 2026' }}
+    NOMOR : {{ $d->nomor_surat_skpi ?? '........ / ........ / ........ / 2026' }}
 </div>
 
 <p style="text-align: justify; text-indent: 25px;">

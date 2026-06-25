@@ -72,6 +72,7 @@ class SKPIController extends Controller
                 'data_wisuda.id',
                 'data_wisuda.nim',
                 'data_wisuda.nama_mahasiswa',
+                'data_wisuda.nomor_surat_skpi',
                 'p.nama_program_studi as nama_prodi',
                 'p.nama_jenjang_pendidikan as jenjang',
                 'f.nama_fakultas',
@@ -90,6 +91,7 @@ class SKPIController extends Controller
                 'data_wisuda.id',
                 'data_wisuda.nim',
                 'data_wisuda.nama_mahasiswa',
+                'data_wisuda.nomor_surat_skpi',
                 'p.nama_program_studi',
                 'p.nama_jenjang_pendidikan',
                 'f.nama_fakultas');
@@ -116,6 +118,30 @@ class SKPIController extends Controller
             'status' => 'success',
             'message' => 'Data berhasil diambil',
             'data' => $data,
+        ]);
+    }
+
+    public function update_nomor_surat(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'nomor_surat' => 'required'
+        ]);
+
+        $wisuda = Wisuda::find($request->id);
+
+        if (!$wisuda) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Data tidak ditemukan'
+            ]);
+        }
+
+        $wisuda->nomor_surat_skpi = $request->nomor_surat;
+        $wisuda->save();
+
+        return response()->json([
+            'status' => 'success'
         ]);
     }
 
