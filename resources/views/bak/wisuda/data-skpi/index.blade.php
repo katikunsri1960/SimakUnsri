@@ -81,7 +81,7 @@ Data SKPI Mahasiswa
                                     <th class="text-center align-middle">NAMA</th>
                                     <th class="text-center align-middle">JENJANG</th>
                                     <th class="text-center align-middle">PROGRAM STUDI</th>
-                                    <!-- <th class="text-center align-middle">STATUS</th> -->
+                                    <th class="text-center align-middle">NOMOR SURAT</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
@@ -93,6 +93,53 @@ Data SKPI Mahasiswa
             </div>
         </div>
     </div>			
+    <div class="modal fade" id="modalNomorSurat" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-3">
+
+                <div class="modal-header">
+                    <h4 class="modal-title">
+                        Input Nomor Surat SKPI
+                    </h4>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="wisuda_id">
+
+                    <div class="form-group">
+                        <label>Nomor Surat</label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="nomor_surat"
+                            placeholder="Masukkan nomor surat">
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+                        Batal
+                    </button>
+                    <button type="button"
+                            class="btn btn-success" onclick="simpanNomorSurat()">
+                        <i class="fa fa-save"></i> Simpan
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </section>
 @endsection
 @push('js')
@@ -144,15 +191,30 @@ function getData()
 
                 $.each(response.data, function (index, item) {
 
+                    var nomorSuratButton = `
+                        <div class="text-center">
+                            <div class="fw-bold mb-1">
+                                ${item.nomor_surat_skpi ?? '-'}
+                            </div>
+
+                            <button
+                                type="button"
+                                class="btn btn-sm ${item.nomor_surat_skpi ? 'btn-info' : 'btn-warning'} btn-edit-surat"
+                                data-id="${item.id}"
+                                data-nomor="${item.nomor_surat_skpi ?? ''}">
+                                ${item.nomor_surat_skpi ? 'Edit' : 'Input'}
+                            </button>
+                        </div>
+                    `;
+
                     table.row.add([
                         `<div class="text-center">${index + 1}</div>`,
                         `<div class="text-center">${item.nim}</div>`,
                         `<div class="text-start">${item.nama_mahasiswa}</div>`,
                         `<div class="text-center">${item.jenjang}</div>`,
                         `<div class="text-start">${item.nama_prodi}</div>`,
-                        // `<div class="text-start">${item.skor}</div>`,
-                        `
-                        <div class="text-center">
+                        nomorSuratButton,
+                        `<div class="text-center">
                             <a href="{{ route('bak.skpi.data.detail', ':id') }}"
                                 class="btn btn-sm btn-primary"
                                 target="_self"
@@ -207,6 +269,145 @@ function filterProdi()
     $('#prodi').append('<option value="*">-- Semua Prodi --</option>');
     $.each(filteredProdi, function (i, p) {
         $('#prodi').append('<option value="'+p.id_prodi+'">('+p.kode_program_studi+') - '+p.nama_jenjang_pendidikan+' '+p.nama_program_studi+'</option>');
+    });
+}
+
+$(document).on('click', '.btn-edit-surat', function () {
+
+    $('#wisuda_id').val($(this).data('id'));
+    $('#nomor_surat').val($(this).data('nomor'));
+
+    $('#modalNomorSurat').modal('show');
+
+});
+
+function simpanNomorSurat()
+{
+    swal({
+        title: "Konfirmasi",
+        text: "Apakah Anda yakin ingin menyimpan nomor surat ini?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, Simpan",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false
+    }, function(isConfirm) {
+
+        if (!isConfirm) {
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route("bak.skpi.update-nomor-surat") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: $('#wisuda_id').val(),
+                nomor_surat: $('#nomor_surat').val()
+            },
+
+            success: function(response){
+
+                if(response.status == 'success')
+                {
+                    $('#modalNomorSurat').modal('hide');
+
+                    swal(
+                        'Berhasil',
+                        'Nomor surat berhasil disimpan',
+                        'success'
+                    );
+
+                    getData();
+                }
+                else
+                {
+                    swal(
+                        'Error',
+                        response.message,
+                        'error'
+                    );
+                }
+            },
+
+            error: function(xhr){
+                console.log(xhr.responseText);
+
+                swal(
+                    'Error',
+                    'Gagal menyimpan data',
+                    'error'
+                );
+            }
+        });
+
+    });
+}
+
+function simpanNomorSurat()
+{
+    swal({
+        title: "Konfirmasi",
+        text: "Apakah Anda yakin ingin menyimpan nomor surat ini?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Ya, Simpan",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false
+    }, function(isConfirm) {
+
+        if (!isConfirm) {
+            return;
+        }
+
+        $.ajax({
+            url: '{{ route("bak.skpi.update-nomor-surat") }}',
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}',
+                id: $('#wisuda_id').val(),
+                nomor_surat: $('#nomor_surat').val()
+            },
+
+            success: function(response){
+
+                if(response.status == 'success')
+                {
+                    $('#modalNomorSurat').modal('hide');
+
+                    swal(
+                        'Berhasil',
+                        'Nomor surat berhasil disimpan',
+                        'success'
+                    );
+
+                    getData();
+                }
+                else
+                {
+                    swal(
+                        'Error',
+                        response.message,
+                        'error'
+                    );
+                }
+            },
+
+            error: function(xhr){
+                console.log(xhr.responseText);
+
+                swal(
+                    'Error',
+                    'Gagal menyimpan data',
+                    'error'
+                );
+            }
+        });
+
     });
 }
 

@@ -129,6 +129,30 @@
                     </tr>
                 </table>
             </div>
+        @elseif($d->id_prodi == 'c9f5b196-dd7e-4788-a6e8-724046a1c344')
+            <div id="no_sertifikat_2">
+                <table>
+                    <tr>
+                        <td>No. Sertifikat Nasional</td>
+                        <td style="padding-left: 5px; padding-right: 5px">:</td>
+                        @if($d->no_sertifikat)
+                            <td>{{$d->no_sertifikat}}</td>
+                        @else
+                            <td>{{$d->no_ijazah}}</td>
+                        @endif
+                    </tr>
+                    <tr>
+                        <td>Kode Universitas</td>
+                        <td style="padding-left: 5px; padding-right: 5px">:</td>
+                        <td>{{$kode_univ}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="judul">SERTIFIKAT</div>
+            
+            <div style="text-align: center; font-size: 13pt; font-weight: bold;">
+                Diberikan kepada:
+            </div>
         @else
             <div id="no_sertifikat_2">
                 <table>
@@ -242,11 +266,12 @@
         <!-- START PROFESI AKUNTAN -->
         @if ($d->id_prodi == 'c9f5b196-dd7e-4788-a6e8-724046a1c344')
         <div class="mid-word" >
-            <center>Telah memenuhi semua persyaratan pendidikan Profesi pada Program Studi Program Profesi Akuntan.<br>
-            Kepadanya diberikan sertifikat, dan yang bersangkutan berhak menggunakan gelar dan sebutan:</center>
-            <div class="gelar">
+            <center>Telah memenuhi semua persyaratan pendidikan Profesi pada <br>
+            Program Studi Program Profesi Akuntan.<br>
+            Kepadanya diberikan sertifikat telah menyelesaikan pendidikan.</center>
+            {{-- <div class="gelar">
                 {{ $d->gelar_panjang}} ({{ $d->gelar}})         
-            </div>
+            </div> --}}
         </div>
         <!-- END PROFESI AKUNTAN -->
 

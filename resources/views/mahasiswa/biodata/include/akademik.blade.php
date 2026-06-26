@@ -10,7 +10,7 @@
                                     <h3 class="fw-500 text-dark mt-0 mb-20">Akademik</h3>
                                 </div>                             
                             </div>
-                            <!-- @foreach ($riwayat_pendidikan as $riwayat_pendidikan_terbaru) -->
+                            {{-- @foreach ($riwayat_pendidikan as $riwayat_pendidikan_terbaru) --}}
                             <div class="row">
                                 <div class="col-lg-6">
                                     <div class="form-group">
@@ -126,7 +126,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- @endforeach -->
+                            {{-- @endforeach --}}
                         </div>
                     </div>
                 </div>  
