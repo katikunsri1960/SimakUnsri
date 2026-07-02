@@ -180,6 +180,10 @@
             // Sp-2 Obgyn dan ginekologi
     ) {
         $rowStyle = 'mk-medium';
+    } elseif ($d->id_prodi == '947760c7-8b9b-40d2-af81-cdd141fddadb'
+            // Sp-1 Anestesiologi Dan Reanimasi
+    ) {
+        $rowStyle = 'mk-large';
     } elseif ($jumlahMK <= 33) {
         $rowStyle = 'mk-small';
     } elseif ($jumlahMK > 33 && $jumlahMK <= 50) {
@@ -195,11 +199,11 @@
     } elseif($rowStyle == 'mk-medium'
     ){
         $MAX_ROWS_LEFT = 28;
-    } elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' && $d->angkatan == '2018'  
+    } elseif(($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' && $d->angkatan == '2018') 
         // Sp-1 Ilmu Kesehatan Anak angkatan 2018
-    ){ 
+        ){ 
         $MAX_ROWS_LEFT = 42;
-    }elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff'  
+    }elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' 
         // Sp-1 Ilmu Kesehatan Anak
     ){ 
         $MAX_ROWS_LEFT = 47;
@@ -211,8 +215,7 @@
         // Sp-1 Ilmu Penyakit Mata
     ){ 
         $MAX_ROWS_LEFT = 50;
-    }elseif(($rowStyle == 'mk-large') || ($d->id_prodi == '947760c7-8b9b-40d2-af81-cdd141fddadb' && $d->angkatan == '2021')){
-        // Sp-1 Anestesiologi Dan Reanimasi
+    }elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } else{
         $MAX_ROWS_LEFT = 53;

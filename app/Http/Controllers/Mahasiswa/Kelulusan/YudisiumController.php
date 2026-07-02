@@ -960,13 +960,12 @@ class YudisiumController extends Controller
                         $query->whereNotNull('id_bimbing_mahasiswa');
                     })
                 ->whereHas('anggota_aktivitas_personal', function ($query) use ($riwayat_pendidikan) {
-                        $query->where('id_registrasi_mahasiswa', $riwayat_pendidikan->id_registrasi_mahasiswa)
-                        ->where('nim', $riwayat_pendidikan->nim);
+                        $query->where('nim', $riwayat_pendidikan->nim);
                     })
                 ->whereHas('nilai_konversi', function ($query) {
                         $query->where('nilai_indeks', '>', 0.00);
                     })
-                ->where('id_prodi', $riwayat_pendidikan->id_prodi)
+                // ->where('id_prodi', $riwayat_pendidikan->id_prodi)
                 ->whereIn('id_jenis_aktivitas', ['1', '3', '4', '22'])
                 ->orderByDesc('id_semester') // aktivitas terakhir
                 ->first();

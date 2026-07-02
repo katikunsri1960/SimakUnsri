@@ -207,10 +207,12 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
         <td class="bold">PREDIKAT KUALITAS SKPI</td>
         <td class="bold">:</td>
         <td class="bold">
-            @if($total > 2000) ISTIMEWA
-            @elseif($total >= 1500 && $total <= 2000) SANGAT BAIK
-            @elseif($total >= 1000 && $total < 1500) BAIK
-            @else CUKUP
+            @if($total > 500) 
+                ISTIMEWA
+            @elseif($total >= 250 && $total <= 500) 
+                SANGAT BAIK
+            @else 
+                BAIK
             @endif
         </td>
     </tr>
