@@ -512,8 +512,6 @@ class WisudaController extends Controller
             return $item;
         });
 
-
-
         $response = [
             'status' => 'success',
             'message' => 'Data berhasil diambil',

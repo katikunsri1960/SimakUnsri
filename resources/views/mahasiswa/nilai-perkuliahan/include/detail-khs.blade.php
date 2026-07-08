@@ -117,7 +117,8 @@ Dashboard
                                                         </td>
                                                         <td class="text-center align-middle">{{$d->sks_mata_kuliah}}
                                                         </td>
-                                                        @if ($d->kelas_kuliah->q_count_c < $count_kuisoner)
+                                                        {{--@if ($d->kelas_kuliah->q_count_c < $count_kuisoner)--}}
+                                                        @if (($d->kelas_kuliah?->q_count_c ?? 0) < $count_kuisoner)
                                                         <td colspan="3" class="text-center align-middle bg-secondary">
                                                             <div class="row px-3">
                                                                 <a href="{{route('mahasiswa.perkuliahan.nilai-perkuliahan.kuisioner', $d->id_kelas_kuliah)}}"

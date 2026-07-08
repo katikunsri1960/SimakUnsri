@@ -176,8 +176,11 @@
     // margin dinamis tabel
     //dd($jumlahMK, $mkLeft->count(), $mkRight->count());
     if ($d->id_prodi == 'b3dce9a8-25b8-4f27-96cc-2abe5e0d9fa9' || 
-            $d->id_prodi == 'a69ad991-0518-42f8-8f0c-7b0c62ccd7b9' 
+            $d->id_prodi == 'a69ad991-0518-42f8-8f0c-7b0c62ccd7b9' ||
+            $d->id_prodi == '40693f4c-5177-4bd3-b3df-7321320583a6'
+            // sp-1 Neurologi
             // Sp-2 Obgyn dan ginekologi
+            // Sp-2 Ilmu Penyakit Dalam
     ) {
         $rowStyle = 'mk-medium';
     } elseif ($d->id_prodi == '947760c7-8b9b-40d2-af81-cdd141fddadb'
