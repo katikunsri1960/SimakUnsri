@@ -342,11 +342,21 @@ class SidangMahasiswaController extends Controller
         $nilai_pembimbing = 0;
         $nilai_bimbingan = 0;
 
-        foreach($pembimbing as $p){
-            if(!$p->nilai_proses_bimbingan){
+        foreach($pembimbing as $pb){
+            if(!$pb->nilai_proses_bimbingan){
                 return redirect()->back()->with('error', 'Nilai Proses Bimbingan Belum Lengkap.');
             }else{
-                $nilai_bimbingan = $nilai_bimbingan + (($bobot_proses_bimbingan/100)*$p->nilai_proses_bimbingan);
+                $nilai_bimbingan = $nilai_bimbingan + (($bobot_proses_bimbingan/100)*$pb->nilai_proses_bimbingan);
+            }
+
+            if($pb->approved_dosen == 0 || $pb->approved == 0){
+                return redirect()->back()->with('error', 'Pembimbing Belum Menyetujui Pembimbingan Mahasiswa.');
+            }
+        }
+
+        foreach($penguji as $pj){
+            if($pj->status_uji_mahasiswa != 2){
+                return redirect()->back()->with('error', 'Penguji Belum Menyetujui Pengujian Mahasiswa.');
             }
         }
 
