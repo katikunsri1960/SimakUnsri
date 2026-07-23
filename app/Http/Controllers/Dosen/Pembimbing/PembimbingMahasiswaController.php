@@ -431,6 +431,10 @@ class PembimbingMahasiswaController extends Controller
                 return redirect()->back()->with('error', 'Hanya pembimbing utama yang dapat mengajukan.');
             }
 
+            if($pembimbing->approved == 0 || $pembimbing->approved_dosen == 0){
+                return redirect()->back()->with('error', 'Anda Tidak Terdaftar Sebagai Pembimbing Mahasiswa.');
+            }
+
             // coding apabila ajuan sidang tanpa pengecheckan USEPT
 
             // $aktivitasMahasiswa->update(['feeder' => 0, 'judul' => $data['judul'], 'approve_sidang' => 1]);

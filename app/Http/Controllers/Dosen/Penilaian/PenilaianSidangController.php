@@ -65,6 +65,11 @@ class PenilaianSidangController extends Controller
         $data_pelaksanaan_sidang = AktivitasMahasiswa::with(['revisi_sidang', 'notulensi_sidang', 'penilaian_sidang', 'revisi_sidang.dosen', 'penilaian_sidang.dosen'])->where('id', $aktivitas)->first();
         $penguji = UjiMahasiswa::where('id_aktivitas', $data->id_aktivitas)->where('id_dosen', $id_dosen)->first();
         $repository = BebasPustaka::where('id_registrasi_mahasiswa', $data->anggota_aktivitas_personal->id_registrasi_mahasiswa)->first();
+
+        if(!$penguji || $penguji->status_uji_mahasiswa != 2){
+            return redirect()->back()->with('error', 'Anda Tidak Terdaftar Sebagai Penguji Sidang Mahasiswa.');
+        }
+
         // dd($penguji);
         return view('dosen.penilaian.penilaian-sidang.detail-sidang.detail', [
             'data' => $data,
