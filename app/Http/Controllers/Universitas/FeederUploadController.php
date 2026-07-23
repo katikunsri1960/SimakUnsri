@@ -1947,40 +1947,45 @@ class FeederUploadController extends Controller
             'semesterAktif' => $semesterAktif,
         ]);
     }
-
+    
     public function biodata_mahasiswa_data(Request $request)
     {
-        $prodi = ProgramStudi::find($request->id_prodi)->id_prodi;
-        // $fakultas = Fakultas::find($request->id_fakultas)->id;
-        
-        $sub = DB::table('riwayat_pendidikans')
-            ->select(
-                'id_mahasiswa',
-                DB::raw('MAX(LEFT(id_periode_masuk,4)) as max_angkatan')
-            )
-            ->groupBy('id_mahasiswa');
+        $query = BiodataMahasiswa::join('riwayat_pendidikans as rp', function ($join) {
 
-        $data = BiodataMahasiswa::
-            join('riwayat_pendidikans as rp', function ($join) use ($sub) {
-                $join->on('rp.id_mahasiswa', '=', 'biodata_mahasiswas.id_mahasiswa')
-                    ->joinSub($sub, 'latest', function ($joinSub) {
-                        $joinSub->on('rp.id_mahasiswa', '=', 'latest.id_mahasiswa')
-                                ->whereRaw('LEFT(rp.id_periode_masuk,4) = latest.max_angkatan');
-                    });
-            })
-            // ->join('lulus_dos as l', 'l.id_registrasi_mahasiswa', 'rp.id_registrasi_mahasiswa')
-            ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
-            // ->where('p.fakultas_id', $fakultas)
-            ->where('rp.id_prodi', $prodi)
-            ->where('biodata_mahasiswas.feeder', 0)
-            ->select(
-                'biodata_mahasiswas.*',
-                'rp.id_registrasi_mahasiswa',
-                'rp.nim',
-                DB::raw('LEFT(rp.id_periode_masuk, 4) as angkatan'),
-                DB::raw('CONCAT(p.nama_jenjang_pendidikan, " ", p.nama_program_studi) as prodi')
-            )
-            ->get();
+            $sub = DB::table('riwayat_pendidikans')
+                ->select(
+                    'id_mahasiswa',
+                    DB::raw('MAX(LEFT(id_periode_masuk,4)) as max_angkatan')
+                )
+                ->groupBy('id_mahasiswa');
+
+            $join->on('rp.id_mahasiswa','=','biodata_mahasiswas.id_mahasiswa')
+                ->joinSub($sub,'latest',function($joinSub){
+                    $joinSub->on('rp.id_mahasiswa','=','latest.id_mahasiswa')
+                        ->whereRaw('LEFT(rp.id_periode_masuk,4)=latest.max_angkatan');
+                });
+
+        })
+        ->join('program_studis as p','p.id_prodi','=','rp.id_prodi')
+        ->where('biodata_mahasiswas.feeder',0);
+
+        // Filter hanya jika bukan "Semua"
+        if ($request->filled('id_prodi') && $request->id_prodi != 'all') {
+
+            $prodi = ProgramStudi::find($request->id_prodi);
+
+            if ($prodi) {
+                $query->where('rp.id_prodi', $prodi->id_prodi);
+            }
+        }
+
+        $data = $query->select(
+            'biodata_mahasiswas.*',
+            'rp.id_registrasi_mahasiswa',
+            'rp.nim',
+            DB::raw('LEFT(rp.id_periode_masuk,4) as angkatan'),
+            DB::raw('CONCAT(p.nama_jenjang_pendidikan," ",p.nama_program_studi) as prodi')
+        )->get();
 
         return response()->json($data);
     }
@@ -2004,7 +2009,8 @@ class FeederUploadController extends Controller
                     });
             })
             ->join('program_studis as p', 'p.id_prodi', 'rp.id_prodi')
-            ->where('biodata_mahasiswas.id_mahasiswa', '8ba87259-4e55-4910-a20b-8041534feefb' )
+            // ->where('biodata_mahasiswas.id_mahasiswa', '8ba87259-4e55-4910-a20b-8041534feefb' )
+            ->where('biodata_mahasiswas.feeder', 0)
             ->select(
                 'biodata_mahasiswas.*',
                 'rp.id_registrasi_mahasiswa',
@@ -2147,7 +2153,7 @@ class FeederUploadController extends Controller
 
                     $d->update([
                         'feeder' => 1,
-                        'status_sync' => 'Berhasil sync'
+                        'status_sync' => 'Sudah sync'
                     ]);
 
                     $dataBerhasil++;

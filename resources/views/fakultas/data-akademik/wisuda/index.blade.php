@@ -92,7 +92,8 @@ Pendaftaran Wisuda Fakultas
                                     <th class="text-center align-middle">TGL SK YUDISIUM</th>
                                     <th class="text-center align-middle">TGL YUDISIUM</th>
                                     <th class="text-center align-middle">MASA STUDI</th>
-                                    <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
+                                    <th class="text-center align-middle">JUDUL ID TUGAS AKHIR / THESIS / DISERTASI</th>
+                                    <th class="text-center align-middle">JUDUL EN TUGAS AKHIR / THESIS / DISERTASI</th>
                                     <th class="text-center align-middle">SKOR USEPT</th>
                                     <!-- <th class="text-center align-middle">AKSI</th> -->
                                 </tr>
@@ -415,6 +416,7 @@ function getData()
                         item.sk_tgl_kegiatan ?? spanStatus,
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
+                        item.judul_eng,
                         useptData,
                         // aksi,
                     ]).draw(false);

@@ -62,15 +62,19 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                             <div class="col-sm-10">
 
                                 <select class="form-select" name="id_prodi" id="id_prodi">
-                                    <option value="all">Semua Program Studi</option>
-
+                                    <option value="" selected>Select one</option>
                                     @foreach ($prodi as $p)
-                                        <option value="{{ $p->id }}">
-                                            {{ $p->kode_program_studi }} -
-                                            {{ $p->nama_program_studi }}
-                                            ({{ $p->nama_jenjang_pendidikan }})
-                                        </option>
+                                    <option value="{{$p->id}}">
+                                        {{$p->kode_program_studi}} - {{$p->nama_program_studi}}
+                                        ({{$p->nama_jenjang_pendidikan}})
+                                    </option>
                                     @endforeach
+
+                                    {{--@foreach ($fakultas as $f)
+                                    <option value="{{$f->id}}">
+                                        {{$f->nama_fakultas}}
+                                    </option>
+                                    @endforeach--}}
                                 </select>
 
                             </div>
@@ -98,53 +102,41 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                             </div>
                         </div>
                     </div>
+                    <div class="table-responsive mt-5">
+                        <table id="dataAkm" class="table table-bordered table-hover margin-top-10 w-p100"
+                            style="font-size: 10pt">
+                            <thead>
+                                <tr>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">Status Sync</th>
+                                    <th class="text-center align-middle">Angkatan</th>
+                                    <th class="text-center align-middle">Nama Prodi</th>
+                                    <th class="text-center align-middle">NIM</th>
+                                    <th class="text-center align-middle">Nama Mahasiswa</th>
 
-                    <div id="loadingData" class="text-center py-5" style="display:none;">
-                        <div class="spinner-border text-primary" role="status"
-                            style="width:3rem;height:3rem;">
-                            <span class="visually-hidden">Loading...</span>
-                        </div>
+                                    <th class="text-center align-middle">NIK</th>
+                                    <th class="text-center align-middle">Jalan</th>
+                                    <th class="text-center align-middle">Dusun</th>
+                                    <th class="text-center align-middle">RT</th>
+                                    <th class="text-center align-middle">RW</th>
+                                    <th class="text-center align-middle">Kelurahan</th>
+                                    <th class="text-center align-middle">Kecamatan</th>
 
-                        <div class="mt-3">
-                            <strong>Sedang mengambil data...</strong>
-                        </div>
-                    </div>
-                    <div id="tableContainer">
-                        <div class="table-responsive mt-5">
-                            <table id="dataAkm" class="table table-bordered table-hover margin-top-10 w-p100"
-                                style="font-size: 10pt">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center align-middle">No</th>
-                                        <th class="text-center align-middle">Status Sync</th>
-                                        <th class="text-center align-middle">Angkatan</th>
-                                        <th class="text-center align-middle">Nama Prodi</th>
-                                        <th class="text-center align-middle">NIM</th>
-                                        <th class="text-center align-middle">Nama Mahasiswa</th>
+                                    <th class="text-center align-middle">Handphone</th>
+                                    <th class="text-center align-middle">Email</th>
 
-                                        <th class="text-center align-middle">Jalan</th>
-                                        <th class="text-center align-middle">Dusun</th>
-                                        <th class="text-center align-middle">RT</th>
-                                        <th class="text-center align-middle">RW</th>
-                                        <th class="text-center align-middle">Kelurahan</th>
-                                        <th class="text-center align-middle">Kecamatan</th>
+                                    <th class="text-center align-middle">Nama Ayah</th>
+                                    <th class="text-center align-middle">No HP Ayah</th>
+                                    <th class="text-center align-middle">Nama Ibu</th>
+                                    <th class="text-center align-middle">No HP Ibu</th>
 
-                                        <th class="text-center align-middle">Handphone</th>
-                                        <th class="text-center align-middle">Email</th>
+                                    <th class="text-center align-middle">Alamat Orang Tua</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
-                                        <th class="text-center align-middle">Nama Ayah</th>
-                                        <th class="text-center align-middle">No HP Ayah</th>
-                                        <th class="text-center align-middle">Nama Ibu</th>
-                                        <th class="text-center align-middle">No HP Ibu</th>
-
-                                        <th class="text-center align-middle">Alamat Orang Tua</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -166,17 +158,9 @@ FEEDER UPLOAD - BIODATA MAHASISWA
         var id_prodi = $('#id_prodi').val();
         // var id_semester = $('#id_semester').val();
 
-         if ($.fn.DataTable.isDataTable('#dataAkm')) {
-            $('#dataAkm').DataTable().clear().destroy();
-        }
-
-        $('#dataAkm tbody').empty();
-
-        // tampilkan spinner
-        $('#loadingData').show();
-        $('#tableContainer').hide();
-
-        $('#buttonSubmitForm').prop('disabled', true);
+        // remove existing rows
+        $('#dataAkm tbody').html('');
+        $('#dataAkm').DataTable().destroy();
 
         $.ajax({
             url: "{{ route('univ.feeder-upload.mahasiswa.biodata-mahasiswa.data') }}",
@@ -187,19 +171,18 @@ FEEDER UPLOAD - BIODATA MAHASISWA
             },
             success: function(response) {
 
-                $('#loadingData').hide();
-                $('#tableContainer').show();
-
                 var data = response;
                 var html = '';
                 var no = 1;
                 // console.log(data);
-                if(response.length > 0){
+                if (response.length > 0) {
                     $('#buttonSubmitForm').prop('disabled', false);
                     $('#form_id_prodi').val(id_prodi);
-                }else{
+                    // $('#form_id_semester').val(id_semester);
+                } else {
                     $('#buttonSubmitForm').prop('disabled', true);
                     $('#form_id_prodi').val('');
+                    // $('#form_id_semester').val('');
                 }
 
                 $.each(data, function(i, item) {
@@ -214,6 +197,7 @@ FEEDER UPLOAD - BIODATA MAHASISWA
                     html += '<td class="text-start">' + item.nama_mahasiswa + '</td>';
 
                     // alamat utama
+                    html += '<td>' + (item.nik ?? '-') + '</td>';
                     html += '<td>' + (item.jalan ?? '-') + '</td>';
                     html += '<td>' + (item.dusun ?? '-') + '</td>';
                     html += '<td>' + (item.rt ?? '-') + '</td>';
@@ -241,16 +225,7 @@ FEEDER UPLOAD - BIODATA MAHASISWA
 
             },
             error: function(xhr, status, error) {
-                $('#loadingData').hide();
-                $('#tableContainer').show();
-
-                swal(
-                    'Error',
-                    'Terjadi kesalahan saat mengambil data.',
-                    'error'
-                );
-
-                console.log(xhr.responseText);
+                alert('An error occurred: ' + error);
             }
         });
     }

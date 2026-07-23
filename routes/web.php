@@ -1258,6 +1258,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     // Route::get('/', [App\Http\Controllers\Fakultas\Akademik\WisudaController::class, 'index'])->name('fakultas.wisuda.index');
                     Route::get('/', [App\Http\Controllers\Prodi\Lulusan\WisudaController::class, 'index'])->name('prodi.data-lulusan.wisuda.index');
                     Route::get('/data', [App\Http\Controllers\Prodi\Lulusan\WisudaController::class, 'peserta_data'])->name('prodi.data-lulusan.wisuda.peserta.data');
+                    Route::post('/update-judul-eng', [App\Http\Controllers\Prodi\Lulusan\WisudaController::class, 'updateJudulEng'])->name('prodi.data-lulusan.wisuda.update-judul-eng');
                 });
             });
 

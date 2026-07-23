@@ -79,7 +79,9 @@ Pendaftaran Wisuda Program Studi
                                     <th class="text-center align-middle">TGL SK YUDISIUM</th>
                                     <th class="text-center align-middle">TGL YUDISIUM</th>
                                     <th class="text-center align-middle">MASA STUDI</th>
-                                    <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
+                                    <th class="text-center align-middle">JUDUL ID TUGAS AKHIR / THESIS / DISERTASI</th>
+                                    <th class="text-center align-middle">JUDUL EN TUGAS AKHIR / THESIS / DISERTASI</th>
+                                    
                                     <th class="text-center align-middle">SKOR USEPT</th>
                                     <!-- <th class="text-center align-middle">AKSI</th> -->
                                 </tr>
@@ -87,12 +89,53 @@ Pendaftaran Wisuda Program Studi
                             <tbody>
                             </tbody>
 					  </table>
+                      
                     </div>
                 </div>
             </div>
         </div>
     </div>			
 </section>
+<div class="modal fade" id="modalJudulEng" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content rounded-3">
+
+            <div class="modal-header">
+                <h5 class="modal-title">Ubah Judul Bahasa Inggris</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <div class="modal-body">
+
+                <input type="hidden" id="edit_id">
+
+                <div class="mb-3">
+                    <label class="fw-bold">Judul Bahasa Inggris</label>
+
+                    <textarea
+                        class="form-control"
+                        id="edit_judul_eng"
+                        rows="6"></textarea>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Batal
+                </button>
+
+                <button class="btn btn-success"
+                        onclick="updateJudulEng()">
+                    <i class="fa fa-save"></i>
+                    Simpan
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
@@ -352,6 +395,24 @@ function getData()
                         </td>
                         `;
 
+                    var judulEng = `
+                        <div style="min-width:150px">
+                            <div id="judul_eng_${item.id}" class="mb-2">
+                                ${item.judul_eng ?? '-'}
+                            </div>
+
+                            <div class="text-center">
+                                <button
+                                    type="button"
+                                    class="btn btn-warning btn-xs mt-2"
+                                    data-id="${item.id}"
+                                    data-judul="${$('<div>').text(item.judul_eng ?? '').html()}"
+                                    onclick="editJudulEng(this)">
+                                    <i class="fa fa-edit"></i> Edit
+                                </button>
+                            </div>
+                        </div>
+                    `;
 
                     var useptData = item.useptdata
                         ? `
@@ -402,6 +463,7 @@ function getData()
                         item.sk_tgl_kegiatan ?? spanStatus,
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
+                        judulEng,
                         useptData,
                         // aksi,
                     ]).draw(false);
@@ -413,6 +475,86 @@ function getData()
             }
 
         }
+    });
+}
+
+function editJudulEng(btn)
+{
+    let id = $(btn).data('id');
+    let judul = $(btn).data('judul');
+
+    $('#edit_id').val(id);
+
+    $('#edit_judul_eng').val(judul);
+
+    $('#modalJudulEng').modal('show');
+}
+
+function updateJudulEng()
+{
+    let id = $('#edit_id').val();
+    let judul = $('#edit_judul_eng').val();
+
+    if (judul.trim() == '') {
+        swal('Peringatan', 'Judul Bahasa Inggris tidak boleh kosong', 'warning');
+        return;
+    }
+
+    swal({
+        title: "Konfirmasi",
+        text: "Apakah Anda yakin ingin menyimpan perubahan Judul Bahasa Inggris?",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#04a08b",
+        confirmButtonText: "Ya, Simpan",
+        cancelButtonText: "Batal",
+        closeOnConfirm: false
+    }, function () {
+
+        $.ajax({
+            url: "{{ route('prodi.data-lulusan.wisuda.update-judul-eng') }}",
+            type: "POST",
+            data: {
+                _token: "{{ csrf_token() }}",
+                id: id,
+                judul_eng: judul
+            },
+            success: function(response){
+
+                if(response.status == 'success'){
+
+                    $('#judul_eng_' + id).html(judul);
+
+                    $('#modalJudulEng').modal('hide');
+
+                    swal(
+                        "Berhasil",
+                        response.message,
+                        "success"
+                    );
+
+                }else{
+
+                    swal(
+                        "Gagal",
+                        response.message,
+                        "error"
+                    );
+
+                }
+
+            },
+            error:function(){
+
+                swal(
+                    "Error",
+                    "Terjadi kesalahan server.",
+                    "error"
+                );
+
+            }
+        });
+
     });
 }
 

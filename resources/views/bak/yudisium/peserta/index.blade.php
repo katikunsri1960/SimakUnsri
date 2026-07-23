@@ -2,7 +2,36 @@
 @section('title')
 Daftar Peserta Yudisium
 @endsection
+<style>
+.loading-overlay{
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.45);
+    z-index:999999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.loading-content{
+    text-align:center;
+}
+</style>
 @section('content')
+<div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="loading-content">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <div class="mt-3 text-white fw-bold">
+            Memuat data, mohon tunggu...
+        </div>
+    </div>
+</div>
 <section class="content">
     <div class="row align-items-end">
         <div class="col-xl-12 col-12">
@@ -144,6 +173,16 @@ function getData()
             prodi: prodi,
             // periode: periode
         },
+
+        beforeSend: function () {
+
+            $('#loadingOverlay').fadeIn(150);
+
+            $('#btnTampilkan')
+                .prop('disabled', true);
+
+        },
+
         success: function (response) {
 
             if (response.status === 'success') {
@@ -520,7 +559,15 @@ function getData()
                 swal('Error', 'Gagal mengambil data peserta yudisium', 'error');
             }
 
-        }
+        },
+        complete: function () {
+
+            $('#loadingOverlay').fadeOut(150);
+
+            $('#btnTampilkan')
+                .prop('disabled', false);
+
+        },
     });
 }
 

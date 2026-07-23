@@ -282,6 +282,37 @@ class WisudaController extends Controller
         ]);
     }
 
+    public function updateJudulEng(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|integer',
+            'judul_eng' => 'required|string'
+        ]);
+
+        try {
+
+            DB::table('data_wisuda')
+                ->where('id', $request->id)
+                ->update([
+                    'judul_eng' => $request->judul_eng,
+                    'updated_at' => now()
+                ]);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Judul Bahasa Inggris berhasil diperbarui.'
+            ]);
+
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ],500);
+
+        }
+    }
+
     public function approve(Request $request, $id)
     {
         DB::beginTransaction();
