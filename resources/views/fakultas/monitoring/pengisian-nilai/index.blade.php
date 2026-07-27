@@ -50,6 +50,7 @@ Monitoring Pengisian Nilai
                                     <tr>
                                         <th class="text-center align-middle">No</th>
                                         <th class="text-center align-middle">NIDN</th>
+                                        <th class="text-center align-middle">NUPTK</th>
                                         <th class="text-center align-middle">NAMA DOSEN</th>
                                         <th class="text-center align-middle">TOTAL KELAS AJAR</th>
                                         <th class="text-center align-middle">SUDAH DINILAI</th>
@@ -98,7 +99,20 @@ Monitoring Pengisian Nilai
                         destroy: true,
                         columns: [
                             {data: null, className: 'text-center align-middle'}, // Kolom untuk nomor urut
-                            {data: 'nidn', className: 'text-center align-middle'},
+                            {
+                                data: 'nidn',
+                                className: 'text-center align-middle',
+                                render: function(data) {
+                                    return data ? data : '-';
+                                }
+                            },
+                            {
+                                data: 'nuptk',
+                                className: 'text-center align-middle',
+                                render: function(data) {
+                                    return data ? data : '-';
+                                }
+                            },
                             {data: 'nama_dosen', className: 'text-start align-middle'},
                             {
                                 data: 'total_kelas',

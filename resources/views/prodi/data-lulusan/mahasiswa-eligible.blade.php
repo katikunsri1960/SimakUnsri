@@ -196,7 +196,7 @@ Ajuan Yudisium Mahasiswa
                                                     </strong>
                                                 </p>
                                             @elseif($d->finalisasi_data == 1 && $d->approved == 0)
-                                                @if($d->bebas_pustaka && $d->bebas_pustaka->file_bebas_pustaka && $d->bebas_pustaka->link_repo)
+                                                {{-- @if($d->bebas_pustaka && $d->bebas_pustaka->file_bebas_pustaka && $d->bebas_pustaka->link_repo)
                                                     <div class="row d-flex justify-content-center">
                                                         <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
                                                         <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Yudisium" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
@@ -219,7 +219,11 @@ Ajuan Yudisium Mahasiswa
                                                             Mahasiswa belum Upload Repository!
                                                         </strong>
                                                     </p>
-                                                @endif
+                                                @endif --}}
+                                                <div class="row d-flex justify-content-center">
+                                                    <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>
+                                                    <a href="#" class="btn btn-danger btn-sm my-2" title="Tolak Ajuan Yudisium" data-bs-toggle="modal" data-bs-target="#PembatalanAjuanModal{{$d->id}}" style="white-space: nowrap;"><i class="fa fa-ban"></i> Decline</a>
+                                                </div>
                                             @elseif($d->finalisasi_data == 1 && $d->approved == 1)
                                                 <div class="row d-flex justify-content-center">
                                                     <a href="{{route('prodi.data-lulusan.detail', ['id' => $d->id])}}" class="btn btn-primary btn-sm my-2" title="Detail Mahasiswa" style="white-space: nowrap;"><i class="fa fa-edit"></i> Detail</a>

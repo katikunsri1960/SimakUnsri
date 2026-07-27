@@ -32,14 +32,19 @@ Monitoring Pengisian Nilai
                 <div class="box-body">
                     <table>
                         <tr>
-                            <th>NIDN</th>
-                            <th class="px-3">:</th>
-                            <th>{{$dosen->nidn}}</th>
-                        </tr>
-                        <tr>
                             <th>Nama Dosen</th>
                             <th class="px-3">:</th>
                             <th>{{$dosen->nama_dosen}}</th>
+                        </tr>
+                        <tr>
+                            <th>NIDN</th>
+                            <th class="px-3">:</th>
+                            <th>{{$dosen->nidn ? $dosen->nidn : '-'}}</th>
+                        </tr>
+                        <tr>
+                            <th>NUPTK</th>
+                            <th class="px-3">:</th>
+                            <th>{{$dosen->nuptk ? $dosen->nuptk : '-'}}</th>
                         </tr>
                     </table>
                     <hr>
