@@ -66,10 +66,10 @@ List Dosen
                                 @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
+                                    <td class="text-center align-middle">{{$d->nidn ? $d->nidn : '-'}}</td>
+                                    <td class="text-center align-middle">{{$d->nuptk ? $d->nuptk : '-'}}</td>
                                     <td class="text-start align-middle">{{$d->nama_dosen}}</td>
                                     <td class="text-start align-middle">{{$d->prodi}}</td>
-                                    <td class="text-center align-middle">{{$d->nidn}}</td>
-                                    <td class="text-center align-middle">{{$d->nuptk}}</td>
                                     <td class="text-center align-middle">{{$d->jenis_kelamin}}</td>
                                     <td class="text-center align-middle">{{$d->nama_agama}}</td>
                                     <td class="text-center align-middle">{{$d->nama_status_aktif}}</td>
