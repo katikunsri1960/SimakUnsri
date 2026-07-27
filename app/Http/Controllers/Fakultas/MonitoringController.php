@@ -301,7 +301,7 @@ class MonitoringController extends Controller
         $semesterAktif = SemesterAktif::first()->id_semester;
         $id_prodi = ProgramStudi::find($prodi)->id_prodi;
         $biodataDosen = BiodataDosen::where('id_dosen', $dosen)
-                ->select('nidn', 'nama_dosen')
+                ->select('nidn', 'nuptk', 'nama_dosen')
                 ->first();
 
         $db = new DosenPengajarKelasKuliah();
@@ -363,12 +363,12 @@ class MonitoringController extends Controller
             ->whereRaw('EXISTS (SELECT * FROM peserta_kelas_kuliahs WHERE peserta_kelas_kuliahs.id_kelas_kuliah = k.id_kelas_kuliah AND peserta_kelas_kuliahs.approved = 1)')
             ->select(
                 'dosen_pengajar_kelas_kuliahs.id_dosen',
-                'd.nidn',
+                'd.nidn', 'd.nuptk',
                 'd.nama_dosen',
                 DB::raw('COUNT(k.id_kelas_kuliah) as total_kelas'),
                 DB::raw('SUM(CASE WHEN EXISTS (SELECT 1 FROM nilai_perkuliahans WHERE nilai_perkuliahans.id_kelas_kuliah = k.id_kelas_kuliah AND nilai_perkuliahans.nilai_huruf IS NOT NULL) THEN 1 ELSE 0 END) as total_kelas_dinilai')
             )
-            ->groupBy('dosen_pengajar_kelas_kuliahs.id_dosen', 'd.nidn', 'd.nama_dosen')
+            ->groupBy('dosen_pengajar_kelas_kuliahs.id_dosen', 'd.nidn', 'd.nuptk', 'd.nama_dosen')
             ->get();
 
         // Proses data untuk menghitung total kelas yang belum dinilai

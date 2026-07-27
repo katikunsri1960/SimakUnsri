@@ -41,6 +41,7 @@ Monitoring Entry Nilai Dosen
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">NIDN</th>
+                                    <th class="text-center align-middle">NUPTK</th>
                                     <th class="text-center align-middle">NAMA DOSEN</th>
                                     <th class="text-center align-middle">TOTAL KELAS AJAR</th>
                                     <th class="text-center align-middle">SUDAH DINILAI</th>
@@ -48,19 +49,47 @@ Monitoring Entry Nilai Dosen
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as $d)
-                                <tr>
+                               @foreach ($data as $d)
+                                <tr class="{{ $d->total_kelas_belum_dinilai > 0 ? 'row-belum-dinilai' : '' }}">
                                     <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-center align-middle">{{$d->nidn}}</td>
-                                    <td class="text-start align-middle">{{$d->nama_dosen}}</td>
+
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', ['mode' => 1, 'dosen' => $d->id_dosen])}}">{{$d->total_kelas}}</a>
+                                        {{$d->nidn ? $d->nidn : '-'}}
                                     </td>
+
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', ['mode' => 2, 'dosen' => $d->id_dosen])}}">{{$d->total_kelas_dinilai}}</a>
+                                        {{$d->nuptk ? $d->nuptk : '-'}}
                                     </td>
+
+                                    <td class="text-start align-middle">
+                                        {{$d->nama_dosen}}
+                                    </td>
+
                                     <td class="text-center align-middle">
-                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', ['mode' => 3, 'dosen' => $d->id_dosen])}}">{{$d->total_kelas_belum_dinilai}}</a>
+                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', [
+                                            'mode' => 1,
+                                            'dosen' => $d->id_dosen
+                                        ])}}">
+                                            {{$d->total_kelas}}
+                                        </a>
+                                    </td>
+
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', [
+                                            'mode' => 2,
+                                            'dosen' => $d->id_dosen
+                                        ])}}">
+                                            {{$d->total_kelas_dinilai}}
+                                        </a>
+                                    </td>
+
+                                    <td class="text-center align-middle">
+                                        <a href="{{route('prodi.monitoring.entry-nilai.detail', [
+                                            'mode' => 3,
+                                            'dosen' => $d->id_dosen
+                                        ])}}">
+                                            {{$d->total_kelas_belum_dinilai}}
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -75,6 +104,11 @@ Monitoring Entry Nilai Dosen
     </div>
 </section>
 @endsection
+<style>
+    .row-belum-dinilai {
+        background-color: #ffdddd !important;
+    }
+</style>
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
@@ -82,7 +116,15 @@ Monitoring Entry Nilai Dosen
     $(function() {
         "use strict";
 
-        $('#data-monitoring').DataTable();
+        $('#data-monitoring').DataTable({
+            rowCallback: function(row, data, index) {
+
+                // Jika masih ada kelas yang belum dinilai
+                if (parseInt(data[6]) > 0) {
+                    $(row).css('background-color', '#ffdddd');
+                }
+            }
+        });
     });
 </script>
 @endpush

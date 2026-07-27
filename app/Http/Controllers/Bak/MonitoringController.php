@@ -278,7 +278,7 @@ class MonitoringController extends Controller
         $semesterAktif = SemesterAktif::first()->id_semester;
         $id_prodi = ProgramStudi::find($prodi)->id_prodi;
         $biodataDosen = BiodataDosen::where('id_dosen', $dosen)
-                ->select('nidn', 'nama_dosen')
+                ->select('nidn', 'nuptk', 'nama_dosen')
                 ->first();
 
         $db = new DosenPengajarKelasKuliah();

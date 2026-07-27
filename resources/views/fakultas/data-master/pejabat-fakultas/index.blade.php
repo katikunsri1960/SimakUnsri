@@ -40,6 +40,7 @@ Pejabat Fakultas
                                 <th class="text-center align-middle">JABATAN</th>
                                 <th class="text-center align-middle">NAMA</th>
                                 <th class="text-center align-middle">NIDN</th>
+                                <th class="text-center align-middle">NUPTK</th>
                                 <th class="text-center align-middle">GELAR DEPAN</th>
                                 <th class="text-center align-middle">GELAR BELAKANG</th>
                                 <th class="text-center align-middle">PERIODE MENJABAT</th>
@@ -52,7 +53,8 @@ Pejabat Fakultas
                                 <td class="text-center align-middle">{{$loop->iteration}}</td>
                                 <td class="text-center align-middle">{{$d->nama_jabatan}}</td>
                                 <td class="text-start align-middle">{{$d->nama_dosen}}</td>
-                                <td class="text-start align-middle">{{$d->nidn}}</td>
+                                <td class="text-start align-middle">{{$d->nidn ? $d->nidn : '-'}}</td>
+                                <td class="text-start align-middle">{{$d->dosen->nuptk ? $d->dosen->nuptk : '-'}}</td>
                                 <td class="text-center align-middle">{{$d->gelar_depan}}</td>
                                 <td class="text-center align-middle">{{$d->gelar_belakang}}</td>
                                 <td class="text-center align-middle">
