@@ -2,7 +2,36 @@
 @section('title')
 Monitoring Pengisian Nilai
 @endsection
+<style>
+.loading-overlay{
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.45);
+    z-index:999999;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+.loading-content{
+    text-align:center;
+}
+</style>
 @section('content')
+<div id="loadingOverlay" class="loading-overlay" style="display:none;">
+    <div class="loading-content">
+        <div class="spinner-border text-light" role="status">
+            <span class="visually-hidden">Loading...</span>
+        </div>
+
+        <div class="mt-3 text-white fw-bold">
+            Memuat data, mohon tunggu...
+        </div>
+    </div>
+</div>
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
@@ -48,9 +77,16 @@ Monitoring Pengisian Nilai
                         </div>
                         <div class="form-group row">
                             <div class="col-md-10 d-flex justify-content-end">
-                                <button type="button" class="btn btn-primary" onclick="getData()">Proses <i class="fa fa-magnifying-glass ms-1"></i></button>
+                                <!-- <button type="button" class="btn btn-primary" onclick="getData()">Proses <i class="fa fa-magnifying-glass ms-1"></i></button> -->
+                                <button type="button"
+                                        id="btnTampilkan"
+                                        class="btn btn-primary"
+                                        onclick="getData()">
+                                    Proses <i class="fa fa-magnifying-glass ms-1"></i>
+                                </button>
                             </div>
                         </div>
+                        
                         <hr>
                         <div class="mt-3" id="divData" hidden>
                             <table class="table table-bordered table-hover" id="data-monitoring">
@@ -58,6 +94,7 @@ Monitoring Pengisian Nilai
                                     <tr>
                                         <th class="text-center align-middle">No</th>
                                         <th class="text-center align-middle">NIDN</th>
+                                        <th class="text-center align-middle">NUPTK</th>
                                         <th class="text-center align-middle">NAMA DOSEN</th>
                                         <th class="text-center align-middle">TOTAL KELAS AJAR</th>
                                         <th class="text-center align-middle">SUDAH DINILAI</th>
@@ -100,92 +137,222 @@ Monitoring Pengisian Nilai
     }
 
     function getData(){
+
         var prodi = $('#prodi').val();
+
         if(prodi == ''){
-            swal('Peringatan', 'Pilih Prodi terlebih dahulu', 'warning');
+            swal(
+                'Peringatan',
+                'Pilih Prodi terlebih dahulu',
+                'warning'
+            );
             return;
         }
-        // remove table tbody
-        $('#data-monitoring').DataTable().clear().draw();
+
+        // Bersihkan data sebelumnya
+        if ($.fn.DataTable.isDataTable('#data-monitoring')) {
+            $('#data-monitoring').DataTable().clear().draw();
+        }
+
         $.ajax({
-            url: '{{route('bak.monitoring.pengisian-nilai.data')}}',
+
+            url: '{{ route('bak.monitoring.pengisian-nilai.data') }}',
+
             type: 'GET',
+
             data: {
                 prodi: prodi
             },
+
+            // =========================
+            // MULAI LOADING
+            // =========================
+            beforeSend: function () {
+
+                $('#loadingOverlay').fadeIn(150);
+
+                $('#btnTampilkan')
+                    .prop('disabled', true);
+            },
+
+            // =========================
+            // BERHASIL
+            // =========================
             success: function(response){
+
                 if(response.status == 'success'){
+
                     $('#divData').removeAttr('hidden');
 
                     var data = response.data;
-                    var table = $('#data-monitoring').DataTable({
+
+                    $('#data-monitoring').DataTable({
+
                         data: data,
+
                         destroy: true,
+
                         columns: [
-                            {data: null, className: 'text-center align-middle'}, // Kolom untuk nomor urut
-                            {data: 'nidn', className: 'text-center align-middle'},
-                            {data: 'nama_dosen', className: 'text-start align-middle'},
+
+                            {
+                                data: null,
+                                className: 'text-center align-middle'
+                            },
+
+                            {
+                                data: 'nidn',
+                                className: 'text-center align-middle',
+                                render: function(data, type, row) {
+                                    return data ? data : '-';
+                                }
+                            },
+
+                            {
+                                data: 'nuptk',
+                                className: 'text-center align-middle',
+                                render: function(data, type, row) {
+                                    return data ? data : '-';
+                                }
+                            },
+
+                            {
+                                data: 'nama_dosen',
+                                className: 'text-start align-middle'
+                            },
+
                             {
                                 data: 'total_kelas',
                                 className: 'text-center align-middle',
-                                render: function(data, type, row, meta) {
-                                    // Ganti URL dengan URL yang sesuai
 
-                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", ["mode"=> ":mode","dosen" => ":id_dosen", "prodi" => ":prodi"]) }}';
+                                render: function(data, type, row, meta) {
+
+                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", [
+                                        "mode" => ":mode",
+                                        "dosen" => ":id_dosen",
+                                        "prodi" => ":prodi"
+                                    ]) }}';
+
                                     url = url.replace(':id_dosen', row.id_dosen);
                                     url = url.replace(':prodi', prodi);
                                     url = url.replace(':mode', '1');
+
                                     return '<a href="' + url + '">' + data + '</a>';
                                 }
                             },
-                            {
-                                data: 'total_kelas_dinilai', className: 'text-center align-middle',
-                                render: function(data, type, row, meta) {
-                                    // Ganti URL dengan URL yang sesuai
 
-                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", ["mode"=> ":mode","dosen" => ":id_dosen", "prodi" => ":prodi"]) }}';
+                            {
+                                data: 'total_kelas_dinilai',
+                                className: 'text-center align-middle',
+
+                                render: function(data, type, row, meta) {
+
+                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", [
+                                        "mode" => ":mode",
+                                        "dosen" => ":id_dosen",
+                                        "prodi" => ":prodi"
+                                    ]) }}';
+
                                     url = url.replace(':id_dosen', row.id_dosen);
                                     url = url.replace(':prodi', prodi);
                                     url = url.replace(':mode', '2');
+
                                     return '<a href="' + url + '">' + data + '</a>';
                                 }
                             },
-                            {
-                                data: 'total_kelas_belum_dinilai', className: 'text-center align-middle',
-                                render: function(data, type, row, meta) {
-                                    // Ganti URL dengan URL yang sesuai
 
-                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", ["mode"=> ":mode","dosen" => ":id_dosen", "prodi" => ":prodi"]) }}';
+                            {
+                                data: 'total_kelas_belum_dinilai',
+                                className: 'text-center align-middle',
+
+                                render: function(data, type, row, meta) {
+
+                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", [
+                                        "mode" => ":mode",
+                                        "dosen" => ":id_dosen",
+                                        "prodi" => ":prodi"
+                                    ]) }}';
+
                                     url = url.replace(':id_dosen', row.id_dosen);
                                     url = url.replace(':prodi', prodi);
                                     url = url.replace(':mode', '3');
+
                                     return '<a href="' + url + '">' + data + '</a>';
                                 }
-                            },
+                            }
+
                         ],
+
                         columnDefs: [
+
                             {
-                                targets: 0, // Kolom pertama
-                                orderable: false, // Kolom ini tidak bisa diurutkan
-                                searchable: false, // Kolom ini tidak bisa dicari
-                                render: function (data, type, row, meta) {
-                                    return meta.row + 1; // Menambahkan nomor urut
+                                targets: 0,
+
+                                orderable: false,
+
+                                searchable: false,
+
+                                render: function(data, type, row, meta) {
+                                    return meta.row + 1;
                                 }
                             }
+
                         ],
-                        order: [[5, 'desc']], // Mengatur urutan default berdasarkan kolom kedua (nidn)
+
+                        order: [[5, 'desc']],
+
                         rowCallback: function(row, data, index){
-                            // Menambahkan nomor urut yang tetap
+
                             $('td:eq(0)', row).html(index + 1);
 
-                            // Kondisi jika total_kelas_belum_dinilai > 0
-                            if (data.total_kelas_belum_dinilai > 0) {
-                                $(row).css('background-color', '#ffdddd'); // Warna merah muda
+                            if(data.total_kelas_belum_dinilai > 0){
+
+                                $(row).css(
+                                    'background-color',
+                                    '#ffdddd'
+                                );
+
                             }
                         }
+
                     });
+
+                } else {
+
+                    swal(
+                        'Gagal',
+                        response.message ?? 'Gagal mengambil data.',
+                        'error'
+                    );
+
                 }
+            },
+
+            // =========================
+            // ERROR
+            // =========================
+            error: function(xhr){
+
+                console.error(xhr);
+
+                swal(
+                    'Error',
+                    'Terjadi kesalahan saat mengambil data monitoring.',
+                    'error'
+                );
+
+            },
+
+            // =========================
+            // SELESAI AJAX
+            // =========================
+            complete: function(){
+
+                $('#loadingOverlay').fadeOut(150);
+
+                $('#btnTampilkan')
+                    .prop('disabled', false);
             }
+
         });
 
     }
