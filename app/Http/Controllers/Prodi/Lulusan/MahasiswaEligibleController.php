@@ -64,7 +64,8 @@ class MahasiswaEligibleController extends Controller
                 'aktivitas_mahasiswa.nilai_konversi',
                 'aktivitas_mahasiswa.semester',
                 'bebas_pustaka',
-                'periode_wisuda'
+                'periode_wisuda',
+                'file_fakultas'
             ])
             ->where('id_prodi', $prodi_id)
             ->whereHas('aktivitas_mahasiswa.nilai_konversi', function ($query) {
