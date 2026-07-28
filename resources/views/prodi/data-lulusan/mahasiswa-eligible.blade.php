@@ -167,7 +167,7 @@ Ajuan Yudisium Mahasiswa
                                             @if($d->id_file_fakultas)
                                                 <a
                                                     class="btn btn-sm btn-success"
-                                                    href="{{ asset('storage/' . $d->file_fakultas->sk_yudisium_file) }}"
+                                                    href="{{ asset($d->file_fakultas->dir_file) }}"
                                                     target="_blank">
                                                     <i class="fa fa-file me-2"></i>
                                                     Lihat SK Yudisium
