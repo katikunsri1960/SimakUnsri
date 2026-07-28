@@ -38,6 +38,7 @@ Ajuan Yudisium Mahasiswa
                                     <th class="text-center align-middle">JUDUL SKRIPSI</th>
                                     <th class="text-center align-middle">TANGGAL SIDANG</th>
                                     <th class="text-center align-middle">SKS DIAKUI</th>
+                                    <th class="text-center align-middle">SK YUDISIUM</th>
                                     <th class="text-center align-middle">STATUS</th>
                                     <th class="text-center align-middle">AKSI</th>
                                 </tr>
@@ -162,6 +163,23 @@ Ajuan Yudisium Mahasiswa
                                         <td class="text-start align-middle">{{ $d->aktivitas_mahasiswa->judul }}</td>
                                         <td class="text-center align-middle">{{ $d->aktivitas_mahasiswa->tanggal_selesai }}</td>
                                         <td class="text-center align-middle">{{ $d->aktivitas_kuliah_sum_sks_semester }}</td>
+                                        <td class="text-center align-middle">
+                                            @if($d->id_file_fakultas)
+                                                <a
+                                                    class="btn btn-sm btn-success"
+                                                    href="{{ asset('storage/' . $d->file_fakultas->sk_yudisium_file) }}"
+                                                    target="_blank">
+                                                    <i class="fa fa-file me-2"></i>
+                                                    Lihat SK Yudisium
+                                                </a>
+                                            @else
+                                                <span class="badge badge-warning text-center">
+                                                    <i class="fa fa-exclamation-circle me-1"></i>
+                                                    Belum Upload<br>
+                                                    SK Yudisium
+                                                </span>
+                                            @endif
+                                        </td>
                                         <td class="text-center align-middle">
                                             <div class="row">
                                                 @if($d->approved == 0)
