@@ -211,6 +211,16 @@ class KrsController extends Controller
         ->where('id_registrasi_mahasiswa', $id_reg)
             ->first();
 
+        if($riwayat_pendidikan -> id_jenis_daftar == 8){
+            $id_periode_masuk = RiwayatPendidikan::with('pembimbing_akademik')
+                ->select('riwayat_pendidikans.*')
+                ->where('nim', $riwayat_pendidikan->nim)
+                ->where('id_jenis_keluar', 2)
+                ->pluck('id_periode_masuk')
+                ->first();
+        }else{
+            $id_periode_masuk = $riwayat_pendidikan->id_periode_masuk;
+        }
         // dd($riwayat_pendidikan);
         // if ( !$riwayat_pendidikan -> sks_maks_pmm) {
         //     // return response()->json(['message' => 'Anda tidak bisa mengambil Mata Kuliah / Aktivitas, KRS anda telah disetujui Pembimbing Akademik.'], 400);
@@ -231,7 +241,7 @@ class KrsController extends Controller
         list($krs_akt, $data_akt_ids, $mk_akt) = $db_akt->getKrsAkt($id_reg, $semester_select);
 
         $semester = Semester::orderBy('id_semester', 'DESC')
-        ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+            ->whereBetween('id_semester', [$id_periode_masuk, $semester_aktif->id_semester])
             // ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
             ->get();
 
@@ -248,11 +258,11 @@ class KrsController extends Controller
         //             ->get();
 
         $semester_ke = Semester::orderBy('id_semester', 'ASC')
-            ->whereBetween('id_semester', [$riwayat_pendidikan->id_periode_masuk, $semester_aktif->id_semester])
+            ->whereBetween('id_semester', [$id_periode_masuk, $semester_aktif->id_semester])
             ->whereRaw('RIGHT(id_semester, 1) != ?', [3])
             ->count();
 
-        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
+        $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $id_periode_masuk);
 
         $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_select, $data_akt_ids);
             
@@ -623,6 +633,22 @@ class KrsController extends Controller
                     ->leftJoin('biodata_dosens', 'biodata_dosens.id_dosen', '=', 'riwayat_pendidikans.dosen_pa')
                     ->first();
 
+            // $riwayat_pendidikan = RiwayatPendidikan::with('pembimbing_akademik')
+            //     ->select('riwayat_pendidikans.*')
+            //     ->where('id_registrasi_mahasiswa', $id_reg)
+            //     ->first();
+
+            if($riwayat_pendidikan -> id_jenis_daftar == 8){
+                $id_periode_masuk = RiwayatPendidikan::with('pembimbing_akademik')
+                    ->select('riwayat_pendidikans.*')
+                    ->where('nim', $riwayat_pendidikan->nim)
+                    ->where('id_jenis_keluar', 2)
+                    ->pluck('id_periode_masuk')
+                    ->first();
+            }else{
+                $id_periode_masuk = $riwayat_pendidikan->id_periode_masuk;
+            }
+
             $status_keluar = LulusDo::where('id_registrasi_mahasiswa', $id_reg)
                 ->select('id_jenis_keluar', 'nama_jenis_keluar', 'id_periode_keluar')
                 ->first();
@@ -683,7 +709,7 @@ class KrsController extends Controller
 
             list($krs_akt, $data_akt_ids) = $db_akt->getKrsAkt($id_reg, $semester_aktif->id_semester);
 
-            $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_periode_masuk);
+            $sks_max = $db->getSksMax($id_reg, $semester_aktif->id_semester, $id_periode_masuk);
             $krs_regular = $db->getKrsRegular($id_reg, $riwayat_pendidikan, $semester_aktif->id_semester, $data_akt_ids);
             $krs_merdeka = $db->getKrsMerdeka($id_reg, $semester_aktif->id_semester, $riwayat_pendidikan->id_prodi);
 
