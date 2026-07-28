@@ -200,7 +200,7 @@ class MahasiswaEligibleController extends Controller
             'D3'  => 5,
             'S1'  => 7,
             'S2'  => 4,
-            'S3'  => 6,
+            'S3'  => 7,
             'Profesi' => 5,
             'Sp-1' => 7,
             'Sp-2' => 4
