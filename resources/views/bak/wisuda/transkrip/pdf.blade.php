@@ -77,10 +77,16 @@
             padding: 0px 0;
         }
 
-        .dataDiri-table tr td {
+        .dataDiri-table tr td{
             vertical-align: top;
-            font-size: 10px;
-            padding: 0.60px 0px 0.60px 0px;
+            font-size:10px;
+            padding:0.6px 0;
+        }
+
+        .dataDiri-small tr td{
+            vertical-align: top;
+            font-size:9px;
+            padding:0.6px 0;
         }
 
         .transkrip-table th {
@@ -205,7 +211,7 @@
     } elseif(($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' && $d->angkatan == '2018') 
         // Sp-1 Ilmu Kesehatan Anak angkatan 2018
         ){ 
-        $MAX_ROWS_LEFT = 42;
+        $MAX_ROWS_LEFT = 41;
     }elseif($d->id_prodi == '132e62cc-dfdc-437d-9df3-e5317f80a6ff' 
         // Sp-1 Ilmu Kesehatan Anak
     ){ 
@@ -213,11 +219,11 @@
     } elseif($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf'
         // Sp-1 Ilmu Penyakit Kulit dan Kelamin
     ){ 
-        $MAX_ROWS_LEFT = 54;
+        $MAX_ROWS_LEFT = 58;
     } elseif( $d->id_prodi == 'bb06fc41-9e48-443e-aa02-df83da6bb467' 
         // Sp-1 Ilmu Penyakit Mata
     ){ 
-        $MAX_ROWS_LEFT = 50;
+        $MAX_ROWS_LEFT = 53;
     }elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } else{
@@ -263,7 +269,7 @@
 
 @if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf' || $d->id_prodi == 'bb06fc41-9e48-443e-aa02-df83da6bb467') {{-- Sp-1 Ilmu Penyakit Kulit dan Kelamin ||  Sp-1 Ilmu Penyakit Mata --}}
     <style>
-        @page { margin: 1mm 6mm 1mm 4mm; }
+        @page { margin: 1mm 6mm 0 4mm; }
     </style>
 @endif
 
@@ -307,7 +313,15 @@
                 {{-- ========================================================= --}}
                 {{--                        BIODATA                           --}}
                 {{-- ========================================================= --}}
-                <table class="no-border dataDiri-table" style="margin: -10px 0px 15px 0px; @if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf' || $d->id_prodi == 'bb06fc41-9e48-443e-aa02-df83da6bb467') font-size: 7px; @endif">
+                {{-- <table class="no-border dataDiri-table" style="margin: -10px 0px 15px 0px; @if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf' || $d->id_prodi == 'bb06fc41-9e48-443e-aa02-df83da6bb467') font-size: 4px; @endif"> --}}
+                    <table class="no-border dataDiri-table
+                        @if(in_array($d->id_prodi, [
+                            'e2f2ac47-8844-456b-b525-482db9da0abf'
+                        ]))
+                            dataDiri-small
+                        @endif"
+                        style="margin:-10px 0 15px 0;"
+                    >
                     <tr class="{{$rowStyle}}">
                         <td style="margin: -20px 0px -20px 0px;" width="165">NAMA <em>(NAME)</em></td> 
                         <td width="1%">:  </td>

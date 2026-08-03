@@ -74,7 +74,7 @@ class PerkuliahanController extends Controller
         $prodi = ProgramStudi::pluck('id_prodi')->toArray();
         // whereNotIn('id_semester', ['20252'])->
         //QUERY TANPA SEMESTER TERTENTU
-        $semester = Semester::whereNotIn('id_semester', ['20253'])->pluck('id_semester')->toArray();
+        $semester = Semester::whereNotIn('id_semester', [20252, 20253, 20261])->pluck('id_semester')->toArray();
 
         //QUERY TARIK SELURUH SEMESTER
         // $semester = Semester::pluck('id_semester')->toArray();
@@ -683,7 +683,7 @@ class PerkuliahanController extends Controller
     {
         $searchValue = $request->input('search.value');
 
-        $query = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])->leftJoin('program_studis as prodi', 'aktivitas_mahasiswas.id_prodi', 'prodi.id_prodi');
+        $query = AktivitasMahasiswa::with(['anggota_aktivitas_personal', 'bimbing_mahasiswa_approved'])->leftJoin('program_studis as prodi', 'aktivitas_mahasiswas.id_prodi', 'prodi.id_prodi');
 
         if ($searchValue) {
             $query = $query->where(function ($query) use ($searchValue) {
@@ -909,7 +909,7 @@ class PerkuliahanController extends Controller
             $prodi = ProgramStudi::pluck('id_prodi')->toArray();
             $semester_aktif = SemesterAktif::first()->id_semester;
             // whereNotIn('id_semester', ['20251','20252'])
-            $semester = Semester::whereNotIn('id_semester', [$semester_aktif])->pluck('id_semester')->toArray();
+            $semester = Semester::whereNotIn('id_semester', [20252, 20253, 20261])->pluck('id_semester')->toArray();
             $semester = array_chunk($semester, 3);
             $semester = array_map(function ($value) {
                 return "id_semester IN ('" . implode("','", $value) . "')";
