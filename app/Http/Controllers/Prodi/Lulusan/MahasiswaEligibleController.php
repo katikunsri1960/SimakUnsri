@@ -432,19 +432,38 @@ class MahasiswaEligibleController extends Controller
         return redirect()->back()->with('success', 'Data berhasil dibatalkan');
     }
 
-    private function getYearMonthDifference($tanggal_masuk, $tanggal_keluar) {
+    // private function getYearMonthDifference($tanggal_masuk, $tanggal_keluar) {
+    //     $start = new DateTime($tanggal_masuk);
+    //     $end = new DateTime($tanggal_keluar);
+    //     $diff = $start->diff($end);
+
+    //     // Calculate total months
+    //     $totalMonths = ($diff->y * 12) + $diff->m;
+
+    //     // Convert to years and decimal months
+    //     $years = floor($totalMonths / 12);
+    //     $months = $totalMonths % 12;
+    //     $decimalMonths = round($months / 12, 1); // Convert months to decimal
+
+    //     return ($years + $decimalMonths);
+    // }
+
+    private function getYearMonthDifference($tanggal_masuk, $tanggal_keluar)
+    {
         $start = new DateTime($tanggal_masuk);
         $end = new DateTime($tanggal_keluar);
         $diff = $start->diff($end);
 
-        // Calculate total months
         $totalMonths = ($diff->y * 12) + $diff->m;
 
-        // Convert to years and decimal months
+        // Jika ada sisa hari, anggap menjadi 1 bulan
+        if ($diff->d > 0) {
+            $totalMonths++;
+        }
+
         $years = floor($totalMonths / 12);
         $months = $totalMonths % 12;
-        $decimalMonths = round($months / 12, 1); // Convert months to decimal
 
-        return ($years + $decimalMonths);
+        return $years + ($months / 10);
     }
 }
