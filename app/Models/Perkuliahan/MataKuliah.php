@@ -161,12 +161,21 @@ class MataKuliah extends Model
 
         // dd($jenjang_pendidikan);
 
-        $ips = AktivitasKuliahMahasiswa::select('ips')
+        if($riwayat_pendidikan -> id_jenis_daftar == 8){
+            $ips = AktivitasKuliahMahasiswa::select('ips')
+                    ->where('nim', $riwayat_pendidikan->nim)
+                    ->where('id_semester', $akm_sebelum)
+                    ->orderBy('id_semester', 'DESC')
+                    // ->pluck('ips')
+                    ->first();
+        }else{
+            $ips = AktivitasKuliahMahasiswa::select('ips')
                     ->where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $akm_sebelum)
                     ->orderBy('id_semester', 'DESC')
                     // ->pluck('ips')
                     ->first();
+        }
 
                 // dd($ips);
 
