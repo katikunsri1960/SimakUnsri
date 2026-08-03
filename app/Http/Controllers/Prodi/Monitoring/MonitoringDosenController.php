@@ -611,7 +611,16 @@ class MonitoringDosenController extends Controller
 
                 // Hitung masa studi jika tanggal masuk valid
                 if (isset($tanggal_masuk)) {
-                    $masa_studi = floor($tanggal_masuk->diffInMonths($now));
+
+                    $diff = $tanggal_masuk->diff($now);
+
+                    // Total bulan
+                    $masa_studi = ($diff->y * 12) + $diff->m;
+
+                    // Jika masih ada sisa hari, tambah 1 bulan
+                    if ($diff->d > 0) {
+                        $masa_studi++;
+                    }
                 }
             }
 
