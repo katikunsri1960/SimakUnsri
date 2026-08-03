@@ -101,15 +101,20 @@ class GenerateMonevStatus implements ShouldQueue
 
         $countLewat10Semester = 0;
 
+        $countLewatSemesterMinus1 = 0;
+
         foreach ($riwayat as $r) {
             $semester_masuk = $r->id_periode_masuk;
             $semester_sekarang = $this->semester;
             $id_jenjang = $r->prodi->id_jenjang_pendidikan;
 
             if (isset($jenjang[$id_jenjang])) {
+
                 $total_semester = $this->hitung_semester($semester_masuk, $semester_sekarang);
                 $max_semester = $jenjang[$id_jenjang]['max_semester'];
+                $warningSemester = $max_semester - 1;
 
+                // 1. Sudah lewat masa studi
                 if ($total_semester > $max_semester) {
 
                     $monevDetail[] = [
@@ -121,10 +126,25 @@ class GenerateMonevStatus implements ShouldQueue
                     ];
 
                     $countLewatSemester++;
+
                 }
+                // 2. Tinggal 1 semester lagi sebelum lewat masa studi
+                elseif ($total_semester == $warningSemester) {
 
+                    $monevDetail[] = [
+                        'monev_status_mahasiswa_id' => $monev->id,
+                        'status' => 'lewat_semester_minus_1',
+                        'id_registrasi_mahasiswa' => $r->id_registrasi_mahasiswa,
+                        'created_at' => now(),
+                        'updated_at' => now(),
+                    ];
 
-                if ($total_semester > 10 && $id_jenjang == 30) {
+                    $countLewatSemesterMinus1++;
+
+                }
+                // 3. Khusus S1 yang sudah lewat 10 semester
+                elseif ($id_jenjang == 30 && $total_semester > 10) {
+
                     $monevDetail[] = [
                         'monev_status_mahasiswa_id' => $monev->id,
                         'status' => 'lewat_10_semester',
@@ -132,14 +152,57 @@ class GenerateMonevStatus implements ShouldQueue
                         'created_at' => now(),
                         'updated_at' => now(),
                     ];
+
                     $countLewat10Semester++;
                 }
+
+                // if ($total_semester > $max_semester) {
+
+                //     $monevDetail[] = [
+                //         'monev_status_mahasiswa_id' => $monev->id,
+                //         'status' => 'mahasiswa_lewat_semester',
+                //         'id_registrasi_mahasiswa' => $r->id_registrasi_mahasiswa,
+                //         'created_at' => now(),
+                //         'updated_at' => now(),
+                //     ];
+
+                //     $countLewatSemester++;
+                // }
+                
+
+                // if ($total_semester == $warningSemester) {
+
+                //     $monevDetail[] = [
+                //         'monev_status_mahasiswa_id' => $monev->id,
+                //         'status' => 'lewat_semester_minus_1',
+                //         'id_registrasi_mahasiswa' => $r->id_registrasi_mahasiswa,
+                //         'created_at' => now(),
+                //         'updated_at' => now(),
+                //     ];
+
+                //     $countLewatSemesterMinus1++;
+                // }
+
+
+                // if ($total_semester > 10 && $id_jenjang == 30) {
+                //     $monevDetail[] = [
+                //         'monev_status_mahasiswa_id' => $monev->id,
+                //         'status' => 'lewat_10_semester',
+                //         'id_registrasi_mahasiswa' => $r->id_registrasi_mahasiswa,
+                //         'created_at' => now(),
+                //         'updated_at' => now(),
+                //     ];
+                //     $countLewat10Semester++;
+                // }
+
+
             }
         }
 
         $monev->update([
             'mahasiswa_lewat_semester' => $countLewatSemester,
             'lewat_10_semester' => $countLewat10Semester,
+            'lewat_semester_minus_1' => $countLewatSemesterMinus1,
             'updated_at' => now(),
             'created_at' => now(),
         ]);

@@ -39,6 +39,7 @@ Monev Status Mahasiswa
                                     <th class="text-center align-middle">Kode Prodi</th>
                                     <th class="text-center align-middle" >Prodi</th>
                                     <th class="text-center align-middle" >Lewat Masa Studi <br> (10 Semester)</th>
+                                    <th class="text-center align-middle" >1 Semester Menuju DO</th>
                                     <th class="text-center align-middle" >Lewat Masa Studi</th>
                                     <th class="text-center align-middle" >Terakhir Update</th>
                                     <th class="text-center align-middle" >ACT</th>
@@ -77,6 +78,16 @@ Monev Status Mahasiswa
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
+                                        @if ($item->lewat_semester_minus_1 > 0)
+                                        <a
+                                            href="{{route('fakultas.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'lewat_semester_minus_1'])}}">
+                                            {{$item->lewat_semester_minus_1}}
+                                        </a>
+                                        @else
+                                        -
+                                        @endif
+                                    </td>
+                                    <td class="text-center align-middle">
                                         @if ($item->mahasiswa_lewat_semester > 0)
                                         <a
                                             href="{{route('fakultas.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
@@ -104,6 +115,14 @@ Monev Status Mahasiswa
                                         href="{{route('fakultas.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'lewat_10_semester'])}}" target="_blank">
                                         @endif
                                         {{$total_lewat_10}}
+                                    </td>
+                                    <td class="text-center">
+                                        @if ($data->sum('lewat_semester_minus_1') > 0)
+                                        <a target="_blank"
+                                            href="{{route('fakultas.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'lewat_semester_minus_1'])}}">{{$data->sum('lewat_semester_minus_1')}}</a>
+                                        @else
+                                        {{$data->sum('lewat_semester_minus_1')}}
+                                        @endif
                                     </td>
                                     <td class="text-center">
                                         @if ($data->sum('mahasiswa_lewat_semester') > 0)
@@ -159,10 +178,10 @@ Monev Status Mahasiswa
                     "targets": 0, // Kolom pertama
                     "type": "num" // Menentukan tipe data sebagai numerik
                 },
-                {
-                    "targets": 5, // Kolom ke-6
-                    "orderable": false // Menonaktifkan pengurutan pada kolom ini
-                }
+                // {
+                //     "targets": 5, // Kolom ke-6
+                //     "orderable": false // Menonaktifkan pengurutan pada kolom ini
+                // }
             ]
         });
 

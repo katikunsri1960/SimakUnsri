@@ -42,6 +42,7 @@ LIST {{ strtoupper(str_replace('_', ' ', $status)) }}
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100 table-sm">
                             <thead>
                                 <tr>
+                                    <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Prodi</th>
                                     <th class="text-center align-middle">Kode Prodi</th>
                                     <th class="text-center align-middle">Angkatan</th>
@@ -56,6 +57,9 @@ LIST {{ strtoupper(str_replace('_', ' ', $status)) }}
                             <tbody>
                                 @foreach ($data as $item)
                                 <tr>
+                                    <td class="text-center align-middle">
+                                        {{$loop->iteration}}
+                                    </td>
                                     <td class="text-start align-middle">
                                         {{$item->riwayat->prodi->nama_jenjang_pendidikan}} - {{$item->riwayat->prodi->nama_program_studi}}
                                     </td>
