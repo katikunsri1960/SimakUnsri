@@ -74,7 +74,7 @@ Monev Status Mahasiswa
                                             @endphp
                                         </a>
                                         @else
-                                        -
+                                        0
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
@@ -84,7 +84,7 @@ Monev Status Mahasiswa
                                             {{$item->lewat_semester_minus_1}}
                                         </a>
                                         @else
-                                        -
+                                        0
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
