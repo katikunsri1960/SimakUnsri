@@ -46,7 +46,10 @@ class GenerateNilaiLewatMasaPengisian extends Command
             return;
         }
 
-        $prodi = ProgramStudi::where('status', 'A')->get();
+        $prodi = ProgramStudi::where('status', 'A')
+                ->where('id_prodi', '!=', 'f3a08605-43e6-44eb-97eb-aa04dd55623c') // By Case Exclude Prodi Penjas S1
+                ->where('fakultas_id', '!=', 4) // By Case Exclude Prodi Fakultas Kedokteran
+                ->get();
 
         foreach ($prodi as $p) {
             $proses = $this->proses_nilai($p->id_prodi, $semester_aktif['id_semester'], $semester_aktif['nama_semester']);
