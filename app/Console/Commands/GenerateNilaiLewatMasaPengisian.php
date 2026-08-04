@@ -46,7 +46,9 @@ class GenerateNilaiLewatMasaPengisian extends Command
             return;
         }
 
-        $prodi = ProgramStudi::where('status', 'A')->get();
+        $prodi = ProgramStudi::where('status', 'A')
+                ->where('fakultas_id', '!=', 4)
+                ->get();
 
         foreach ($prodi as $p) {
             $proses = $this->proses_nilai($p->id_prodi, $semester_aktif['id_semester'], $semester_aktif['nama_semester']);
