@@ -74,6 +74,11 @@ class KelasKuliah extends Model
         return $this->hasMany(NilaiKomponenEvaluasi::class, 'id_kelas', 'id_kelas_kuliah');
     }
 
+    public function komponen_evaluasi()
+    {
+        return $this->hasMany(KomponenEvaluasiKelas::class, 'id_kelas_kuliah', 'id_kelas_kuliah');
+    }
+
     public function ruang_perkuliahan()
     {
         return $this->belongsTo(RuangPerkuliahan::class, 'ruang_perkuliahan_id', 'id');
