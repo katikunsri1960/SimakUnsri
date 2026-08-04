@@ -73,7 +73,7 @@ class GenerateNilaiLewatMasaPengisian extends Command
 
     private function proses_nilai($prodi, $semester, $nama_semester)
     {
-        $kelas_kuliah = KelasKuliah::with('peserta_kelas_approved')
+        $kelas_kuliah = KelasKuliah::with('peserta_kelas_approved','matkul')
                     ->whereHas('peserta_kelas_approved')
                     ->whereDoesntHave('komponen_evaluasi')
                     ->whereDoesntHave('nilai_komponen')
@@ -148,11 +148,11 @@ class GenerateNilaiLewatMasaPengisian extends Command
                         'urutan' => $komponen->nomor_urut,
                         'id_prodi' => $mk->id_prodi,
                         'nama_program_studi' => $mk->nama_program_studi,
-                        'id_periode' => $k->semester_kelas,
-                        'id_matkul' => $k->matkul,
+                        'id_periode' => $k->id_semester,
+                        'id_matkul' => $mk->id_matkul,
                         'nama_mata_kuliah' => $mk->nama_mata_kuliah,
                         'nama_kelas_kuliah' => $k->nama_kelas_kuliah,
-                        'sks_mata_kuliah' => $k->sks_matkul,
+                        'sks_mata_kuliah' => $k->matkul->sks_mata_kuliah,
                         'nama_mahasiswa' => $mk->nama_mahasiswa,
                         'nim' => $mk->nim,
                         'id_jns_eval' => $komponen->id_jenis_evaluasi,
@@ -174,10 +174,10 @@ class GenerateNilaiLewatMasaPengisian extends Command
                     'nama_program_studi' => $mk->nama_program_studi,
                     'id_semester' => $semester,
                     'nama_semester' => $nama_semester,
-                    'id_matkul' => $k->matkul,
-                    'kode_mata_kuliah' => $k->kode_matkul,
-                    'nama_mata_kuliah' => $k->nama_matkul,
-                    'sks_mata_kuliah' => $k->sks_matkul,
+                    'id_matkul' => $k->matkul->id_matkul,
+                    'kode_mata_kuliah' => $k->matkul->kode_mata_kuliah,
+                    'nama_mata_kuliah' => $k->matkul->nama_mata_kuliah,
+                    'sks_mata_kuliah' => $k->matkul->sks_mata_kuliah,
                     'id_kelas_kuliah' => $k->id_kelas_kuliah,
                     'nama_kelas_kuliah' => $k->nama_kelas_kuliah,
                     'id_registrasi_mahasiswa' => $mk->id_registrasi_mahasiswa,
