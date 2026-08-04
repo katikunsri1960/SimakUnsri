@@ -28,7 +28,7 @@ class PenilaianPerkuliahanController extends Controller
         $data = $db->dosen_pengajar_kelas(auth()->user()->fk_id);
 
         // List of program codes not requiring scheduling checks
-        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716','85103'];
+        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716'];
 
         // dd($data);
 
@@ -52,8 +52,32 @@ class PenilaianPerkuliahanController extends Controller
         $data_komponen = KomponenEvaluasiKelas::where('id_kelas_kuliah', $kelas)->get();
         $semester_aktif = SemesterAktif::first();
 
+        if(!$data_kelas){
+            return redirect()->back()->with('error', 'Data Kelas Kuliah tidak ditemukan');
+        }
+
+        if(!$data_komponen){
+            return redirect()->back()->with('error', 'Data Komponen Evaluasi Kelas tidak ditemukan');
+        }
+
+        if(!$semester_aktif){
+            return redirect()->back()->with('error', 'Data Semester Aktif tidak ditemukan');
+        }
+
+        if(!$data_kelas->matkul){
+            return redirect()->back()->with('error', 'Data Mata Kuliah tidak ditemukan');
+        }
+
+        if(!$data_kelas->prodi){
+            return redirect()->back()->with('error', 'Data Program Studi tidak ditemukan');
+        }
+
+        if($data_kelas->id_semester != $semester_aktif->id_semester){
+            return redirect()->back()->with('error', 'Semester kelas tidak sesuai dengan Semester Aktif');
+        }
+
          // List of program codes not requiring scheduling checks
-         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716','85103'];
+         $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716'];
 
          // Check the schedule for inputting grades
          $hari_proses = date('Y-m-d');
@@ -126,25 +150,47 @@ class PenilaianPerkuliahanController extends Controller
         $id_dosen = auth()->user()->fk_id;
         $data_dosen = DosenPengajarKelasKuliah::where('id_kelas_kuliah', $kelas)->where('id_dosen', $id_dosen)->first();
 
+        if(!$data_kelas){
+            return redirect()->back()->with('error', 'Data Kelas Kuliah tidak ditemukan');
+        }
+
+        if(!$nilai_komponen){
+            return redirect()->back()->with('error', 'Data Komponen Evaluasi Kelas tidak ditemukan');
+        }
+
+        if(!$semester_aktif){
+            return redirect()->back()->with('error', 'Data Semester Aktif tidak ditemukan');
+        }
+
+        if(!$data_kelas->matkul){
+            return redirect()->back()->with('error', 'Data Mata Kuliah kelas tidak ditemukan');
+        }
+
+        if(!$data_kelas->prodi){
+            return redirect()->back()->with('error', 'Data Program Studi kelas tidak ditemukan');
+        }
+
         if($data_dosen->urutan != 1){
             return redirect()->back()->with('error', 'Anda bukan koordinator kelas kuliah.');
         }
 
         // List of program codes not requiring scheduling checks
-        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716','85103'];
+        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716'];
 
         // Check the schedule for inputting grades
-        $hari_proses = date('Y-m-d');
-        $mulai_nilai = $semester_aktif->mulai_isi_nilai;
-        $batas_nilai = $semester_aktif->batas_isi_nilai;
+        if ($data_kelas->id_semester != $semester_aktif->id_semester) {
+            return redirect()->back()->with('error', 'Semester kelas tidak sesuai dengan Semester Aktif');
+        } else {
+            if (!in_array($data_kelas->prodi->kode_program_studi, $prodi_not_scheduled, true)) {
+                $hari_proses = date('Y-m-d');
 
-        // Check if the program is not in the excluded list
-        if (!in_array($data_kelas->prodi->kode_program_studi, $prodi_not_scheduled)) {
+                if ($hari_proses < $semester_aktif->mulai_isi_nilai) {
+                    return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Belum Dimulai!');
+                }
 
-            if ($hari_proses < $mulai_nilai) {
-                return redirect()->back()->with('error', "Jadwal Pengisian Nilai Belum Dimulai!");
-            } elseif ($hari_proses > $batas_nilai) {
-                return redirect()->back()->with('error', "Jadwal Pengisian Nilai Telah Berakhir!");
+                if ($hari_proses > $semester_aktif->batas_isi_nilai) {
+                    return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Telah Berakhir!');
+                }
             }
         }
 
@@ -173,22 +219,24 @@ class PenilaianPerkuliahanController extends Controller
         ]);
 
         // List of program codes not requiring scheduling checks
-        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716','85103'];
+        $prodi_not_scheduled = ['12201','11201','14201','11706', '11707', '11708', '11711', '11718', '11702', '11704', '11701', '11703', '11705', '11728', '11735', '12901', '11901', '14901', '23902', '86904', '48901', '12708', '11716'];
 
         // Fetch data for the specific class and its associated program
         $data_prodi = KelasKuliah::with('prodi')->where('id_kelas_kuliah', $kelas)->first();
 
-        // Check if the program is not in the excluded list
-        if (!in_array($data_prodi->prodi->kode_program_studi, $prodi_not_scheduled)) {
-            // Check the schedule for inputting grades
-            $hari_proses = date('Y-m-d');
-            $mulai_nilai = $semester_aktif->mulai_isi_nilai;
-            $batas_nilai = $semester_aktif->batas_isi_nilai;
+        if ($data_prodi->id_semester != $semester_aktif->id_semester) {
+            return redirect()->back()->with('error', 'Semester kelas tidak sesuai dengan Semester Aktif');
+        } else {
+            if (!in_array($data_prodi->prodi->kode_program_studi, $prodi_not_scheduled, true)) {
+                $hari_proses = date('Y-m-d');
 
-            if ($hari_proses < $mulai_nilai) {
-                return redirect()->back()->with('error', "Jadwal Pengisian Nilai Belum Dimulai!");
-            } elseif ($hari_proses > $batas_nilai) {
-                return redirect()->back()->with('error', "Jadwal Pengisian Nilai Telah Berakhir!");
+                if ($hari_proses < $semester_aktif->mulai_isi_nilai) {
+                    return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Belum Dimulai!');
+                }
+
+                if ($hari_proses > $semester_aktif->batas_isi_nilai) {
+                    return redirect()->back()->with('error', 'Jadwal Pengisian Nilai Telah Berakhir!');
+                }
             }
         }
 
