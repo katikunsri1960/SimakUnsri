@@ -31,6 +31,11 @@ class ProgramStudi extends Model
         return $this->belongsTo(Fakultas::class, 'fakultas_id', 'id');
     }
 
+    public function kelas_kuliah()
+    {
+        return $this->hasMany(KelasKuliah::class, 'id_prodi', 'id_prodi');
+    }
+
     public function peserta_kelas()
     {
         return $this->hasManyThrough(PesertaKelasKuliah::class, KelasKuliah::class, 'id_prodi', 'id_kelas_kuliah', 'id_prodi', 'id_kelas_kuliah');
