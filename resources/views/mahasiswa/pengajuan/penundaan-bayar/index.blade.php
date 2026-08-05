@@ -71,7 +71,7 @@ PENUNDAAN BAYAR
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->semester->nama_semester}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->keterangan ?? '-'}}</td>
-                                        <td class="text-center align-middle" style="white-space:nowrap;">{{$d->batas_bayar ?? '-'}}</td>
+                                        <td class="text-center align-middle" style="white-space:nowrap;">{{$d->batas_bayar ? \Carbon\Carbon::parse($d->batas_bayar)->translatedFormat('d F Y') : '-'}}</td>
                                         <td class= "text-center align-middle text-nowrap">
                                             <a href="{{ $d->file_pendukung ? asset('storage/' . $d->file_pendukung) : '#' }}" target="_blank" class="btn btn-sm p-2 rounded btn-primary mb-5 {{ $d->file_pendukung ? '' : 'd-none' }}">
                                                 <i class="fa fa-file-pdf-o"></i> Lihat File
