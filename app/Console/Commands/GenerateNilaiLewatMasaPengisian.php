@@ -60,6 +60,7 @@ class GenerateNilaiLewatMasaPengisian extends Command
             $proses = $this->proses_nilai($p->id_prodi, $semester_aktif['id_semester'], $semester_aktif['nama_semester']);
 
             $this->info('Prodi: '.$p->nama_jenjang_pendidikan.' '.$p->nama_program_studi);
+            $this->info('Kelas Kuliah Diproses: '.$proses['kelas_kuliah']);
             $this->info('Komponen Evaluasi Diproses: '.$proses['komponen_evaluasi']);
             $this->info('Nilai Komponen Diproses: '.$proses['nilai_komponen']);
             $this->info('Nilai Perkuliahan Diproses: '.$proses['nilai_perkuliahan']);
@@ -85,6 +86,7 @@ class GenerateNilaiLewatMasaPengisian extends Command
         $nilaiIndeks = 4.00;
         $nilaiHuruf = 'A';
 
+        $kelas_kuliah_proses = 0;
         $komponen_evaluasi_proses = 0;
         $nilai_komponen_proses = 0;
         $nilai_perkuliahan_proses = 0;
@@ -129,6 +131,8 @@ class GenerateNilaiLewatMasaPengisian extends Command
 
             //Store data finalterm
             $komponen_evaluasi[] = KomponenEvaluasiKelas::create(['feeder'=> 0, 'id_komponen_evaluasi'=> $id_komp_eval6, 'id_kelas_kuliah'=> $k->id_kelas_kuliah, 'id_jenis_evaluasi'=> 4,  'nama'=> 'UAS', 'nama_inggris'=> 'Finalterm Exam', 'nomor_urut'=> 6, 'bobot_evaluasi'=> $bobot_finalterm]);
+
+            $komponen_evaluasi_proses += 6;
 
 
             //Getting Mahasiswa Kelas Kuliah
@@ -195,10 +199,11 @@ class GenerateNilaiLewatMasaPengisian extends Command
 
             DB::commit();
 
-            $komponen_evaluasi_proses++;
+            $kelas_kuliah_proses++;
         }
 
         return [
+            'kelas_kuliah' => $kelas_kuliah_proses,
             'komponen_evaluasi' => $komponen_evaluasi_proses,
             'nilai_komponen' => $nilai_komponen_proses,
             'nilai_perkuliahan' => $nilai_perkuliahan_proses
