@@ -33,12 +33,23 @@ PENUNDAAN BAYAR
                     </div>
                 </div>
                 <div class="row mb-5">
-                    <div class="col-xl-12 col-lg-12 text-end">
-                        <div class="btn-group">
-                            <a class="btn btn-rounded bg-success " href="{{route('mahasiswa.penundaan-bayar.tambah')}}"><i class="fa fa-plus"><span class="path1"></span><span class="path2"></span></i> Tambah Tunda Bayar</a>
-                        </div>
+                    <div class="col-xl-12 col-lg-12 d-flex justify-content-end gap-2">
+
+                        <a class="btn btn-rounded btn-primary"
+                            href="{{ asset('assets/pdf/formulir-penundaan-pembayaran.pdf') }}"
+                            target="_blank">
+                            <i class="fa fa-download"></i>
+                            Unduh Template Penundaan Bayar
+                        </a>
+
+                        <a class="btn btn-rounded btn-success"
+                            href="{{ route('mahasiswa.penundaan-bayar.tambah') }}">
+                            <i class="fa fa-plus"></i>
+                            Tambah Tunda Bayar
+                        </a>
+
                     </div>
-                </div><br>
+                </div>
                 <div class="row">
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-striped text-center">
@@ -47,6 +58,7 @@ PENUNDAAN BAYAR
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">Semester</th>
                                     <th class="text-center align-middle">Alasan Pengajuan</th>
+                                    <th class="text-center align-middle">Janji Bayar</th>
                                     <th class="text-center align-middle">File Pendukung</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Alasan Ditolak</th>
@@ -59,6 +71,7 @@ PENUNDAAN BAYAR
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->semester->nama_semester}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->keterangan ?? '-'}}</td>
+                                        <td class="text-center align-middle" style="white-space:nowrap;">{{$d->batas_bayar ?? '-'}}</td>
                                         <td class= "text-center align-middle text-nowrap">
                                             <a href="{{ $d->file_pendukung ? asset('storage/' . $d->file_pendukung) : '#' }}" target="_blank" class="btn btn-sm p-2 rounded btn-primary mb-5 {{ $d->file_pendukung ? '' : 'd-none' }}">
                                                 <i class="fa fa-file-pdf-o"></i> Lihat File
