@@ -39,7 +39,9 @@ class GenerateNilaiLewatMasaPengisian extends Command
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '2048M');
 
-        $semester_aktif = ['id_semester' => '20252', 'nama_semester' => '2025/2026 Genap']; //SemesterAktif::first();
+        $semester_aktif = SemesterAktif::first();
+
+        // ['id_semester' => '20252', 'nama_semester' => '2025/2026 Genap']
 
         if (!$semester_aktif) {
             $this->info('Semester aktif tidak ditemukan');
@@ -48,7 +50,7 @@ class GenerateNilaiLewatMasaPengisian extends Command
 
         $prodi = ProgramStudi::where('status', 'A')
                 ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
-                    $query->where('id_semester', $semester_aktif['id_semester'])
+                    $query->where('id_semester', $semester_aktif->id_semester)
                         ->whereHas('peserta_kelas_approved')
                         ->whereDoesntHave('komponen_evaluasi')
                         ->whereDoesntHave('nilai_komponen')
@@ -57,13 +59,14 @@ class GenerateNilaiLewatMasaPengisian extends Command
                 ->get();
 
         foreach ($prodi as $p) {
-            $proses = $this->proses_nilai($p->id_prodi, $semester_aktif['id_semester'], $semester_aktif['nama_semester']);
+            $proses = $this->proses_nilai($p->id_prodi, $semester_aktif->id_semester, $semester_aktif->nama_semester);
 
             $this->info('Prodi: '.$p->nama_jenjang_pendidikan.' '.$p->nama_program_studi);
             $this->info('Kelas Kuliah Diproses: '.$proses['kelas_kuliah']);
             $this->info('Komponen Evaluasi Diproses: '.$proses['komponen_evaluasi']);
             $this->info('Nilai Komponen Diproses: '.$proses['nilai_komponen']);
             $this->info('Nilai Perkuliahan Diproses: '.$proses['nilai_perkuliahan']);
+            $this->info('----------------------------------------');
 
             // return;
         }
