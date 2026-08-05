@@ -72,6 +72,7 @@ PENUNDAAN BAYAR
                                     <th class="text-center align-middle">NIM</th>
                                     <th class="text-center align-middle">Nama Mahasiswa</th>
                                     <th class="text-center align-middle">Alasan</th>
+                                    <th class="text-center align-middle">Janji Bayar</th>
                                     <th class="text-center align-middle">File Pendukung</th>
                                     <th class="text-center align-middle">Status </th>
                                     <th class="text-center align-middle">Alasan Ditolak</th>
@@ -88,6 +89,9 @@ PENUNDAAN BAYAR
                                         <td class="text-start align-middle">{{$d->riwayat->nim}}</td>
                                         <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
                                         <td class="text-start align-middle">{{$d->keterangan}}</td>
+                                        <td class="text-center align-middle" style="white-space:nowrap;">
+                                            {{$d->batas_bayar ? \Carbon\Carbon::parse($d->batas_bayar)->translatedFormat('d F Y') : '-'}}
+                                        </td>
                                         <td class="text-start align-middle">
                                             @if($d->file_pendukung)
                                             <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-sm btn-primary mb-5">

@@ -127,16 +127,36 @@ PENUNDAAN BAYAR
                         <hr class="my-15">
                         <div class="form-group">
                             <div id="penundaan-bayarfields">
-                                <div class="penundaan-bayarfield row">
+                                <div class="penundaan-bayarfield row ">
                                     <div class="col-lg-12 mb-2">
-                                        <label for="alasan" class="form-label">Alasan Penundaan Bayar</label>
+                                        <label for="alasan" class="form-label">
+                                            Alasan Penundaan Bayar  <span class="text-danger">*</span>
+                                        </label>
                                         <input type="text" class="form-control" name="alasan" id="alasan"
                                             aria-describedby="helpId" placeholder="Masukkan Alasan Pengajuan Cuti" required />
                                     </div>
                                 </div>
-                                <div class="penundaan-bayarfield row">
+                                <div class="penundaan-bayarfield row mt-10">
+                                    <div class="col-lg-6 mb-2">
+                                        <label for="batas_bayar" class="form-label">
+                                            Janji Pembayaran <span class="text-danger">*</span>
+                                        </label>
+                                        <input type="date"
+                                            class="form-control"
+                                            name="batas_bayar"
+                                            id="batas_bayar"
+                                            min="{{ date('Y-m-d') }}"
+                                            required>
+                                        <small class="text-muted">
+                                            Pilih tanggal janji pembayaran yang diajukan.
+                                        </small>
+                                    </div>
+                                </div>
+                                <div class="penundaan-bayarfield row mt-10">
                                     <div class="col-md-12 mb-2">
-                                        <label for="file_pendukung" class="form-label">File Pendukung (.pdf)</label>
+                                        <label for="file_pendukung" class="form-label">
+                                            File Pendukung (.pdf) <span class="text-danger">*</span>
+                                        </label>
                                         <input type="file" class="form-control" name="file_pendukung" id="file_pendukung"
                                             aria-describedby="fileHelpId" accept=".pdf" required />
                                     </div>

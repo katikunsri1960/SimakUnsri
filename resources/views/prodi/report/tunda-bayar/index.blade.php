@@ -88,6 +88,7 @@ Daftar Tunda Bayar
                                   <th class="text-center align-middle">NIM</th>
                                   <th class="text-center align-middle">Nama Mahasiswa</th>
                                   <th class="text-center align-middle">Keterangan</th>
+                                  <th class="text-center align-middle">Janji Bayar</th>
                                   <th class="text-center align-middle">Status</th>
                                   <th class="text-center align-middle">Terakhir Update</th>
 
@@ -101,6 +102,9 @@ Daftar Tunda Bayar
                                   <td class="text-center align-middle">{{$d->nim}}</td>
                                   <td class="text-start align-middle">{{$d->riwayat->nama_mahasiswa}}</td>
                                   <td class="text-start align-middle">{{$d->keterangan}}</td>
+                                  <td class="text-center align-middle">
+                                      {{$d->batas_bayar ? \Carbon\Carbon::parse($d->batas_bayar)->translatedFormat('d F Y') : '-'}}
+                                  </td>
                                   <td class="text-center align-middle">
                                       @php
                                       switch ($d->status) {

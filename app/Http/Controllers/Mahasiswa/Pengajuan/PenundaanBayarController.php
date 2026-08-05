@@ -104,12 +104,13 @@ class PenundaanbayarController extends Controller
 
         // Validate request data
         $request->validate([
-            'jalan' => 'required',
-            'kelurahan' => 'required',
-            'nama_wilayah' => 'required',
-            'handphone' => 'required',
-            'alasan' => 'required',
-            'file_pendukung' => 'required|file|mimes:pdf|max:2048',
+            'jalan'            => 'required',
+            'kelurahan'        => 'required',
+            'nama_wilayah'     => 'required',
+            'handphone'        => 'required',
+            'alasan'           => 'required',
+            'batas_bayar'      => 'required|date|after_or_equal:today',
+            'file_pendukung'   => 'required|file|mimes:pdf|max:2048',
         ]);
 
         $id = Uuid::uuid4()->toString();
@@ -135,10 +136,10 @@ class PenundaanbayarController extends Controller
             'id_registrasi_mahasiswa' => $id_reg,
             'nim'=>$riwayat_pendidikan->nim,
             'id_semester' => $semester_aktif->id_semester,
-            // 'id_prodi'=>$riwayat_pendidikan->id_prodi,
-            // 'alamat'=> $alamat,
-            // 'handphone' => $request->handphone,
+
             'keterangan' => $request->alasan,
+            'batas_bayar' => $request->batas_bayar,
+            
             'file_pendukung' => $filePath,
             'status' => 0,
             'status_sync' => 'belum sync',
