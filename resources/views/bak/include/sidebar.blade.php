@@ -246,6 +246,10 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('bak.monitoring.status-aipt')
+                             ? 'active' : ''}}">
+                                <a href="{{route('bak.monitoring.status-aipt')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Akd AIPT</a>
+                            </li>
                             <li class="{{request()->routeIs('bak.monitoring.status-mahasiswa') || request()->routeIs('bak.monitoring.status-mahasiswa.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.monitoring.status-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status Akd Mhs</a>
                             </li>

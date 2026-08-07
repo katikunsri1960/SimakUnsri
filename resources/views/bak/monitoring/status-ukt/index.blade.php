@@ -233,7 +233,20 @@ UKT Mahasiswa
 
                 $('#data tbody').html(html).show();
                 $('#data').DataTable({
-                    order: [[6, 'asc']]
+                    destroy: true,
+                    order: [[6, 'asc']],
+                    dom: 'Bfrtip',
+                    buttons: [
+                        {
+                            extend: 'excelHtml5',
+                            title: 'Monitoring UKT Mahasiswa',
+                            text: '<i class="fa fa-file-excel-o"></i> Export Excel',
+                            className: 'btn btn-success',
+                            exportOptions: {
+                                columns: [0,1,2,3,4,5,6,7,8,9]
+                            }
+                        }
+                    ]
                 });
             },
             complete: function(){

@@ -484,6 +484,21 @@ class MonitoringController extends Controller
         ]);
     }
 
+    public function status_aipt()
+    {
+        // $prodi = ProgramStudi::where('status', 'A')->orderBy('id')->get();
+        // $semesterAktif = SemesterAktif::first()->id_semester;
+
+        // $db = new MonevStatusMahasiswa();
+
+        // $data = $db->with(['prodi.fakultas', 'details', 'semester'])->where('id_semester', $semesterAktif)->get();
+
+        return view('bak.monitoring.status-aipt.devop', [
+            // 'data' => $data,
+            // 'prodi' => $prodi
+        ]);
+    }
+
     public function status_ukt(Request $request)
     {
         $fakultas = Fakultas::all();
