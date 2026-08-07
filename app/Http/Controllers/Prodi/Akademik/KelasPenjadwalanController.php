@@ -289,9 +289,14 @@ class KelasPenjadwalanController extends Controller
         }
 
         $prodi_id = auth()->user()->fk_id;
+        $data_prodi = ProgramStudi::where('id_prodi', $prodi_id)->first();
+
         $kelas = KelasKuliah::where('id_prodi',$prodi_id)->get();
 
         $semester_aktif = $semester;
+        $data_semester = Semester::where('id_semester', $semester_aktif)->first();
+
+        $data_matkul = MataKuliah::where('id_matkul', $id_matkul)->first();
 
         $id_kelas = Uuid::uuid4()->toString();
         $kode_tahun = substr($semester_aktif,-3);
@@ -531,7 +536,7 @@ class KelasPenjadwalanController extends Controller
         // dd($nama_kelas_kuliah);
 
         //Store data to table
-        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'id_semester'=> $semester_aktif, 'id_matkul'=> $id_matkul, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $check_lokasi_ruang->kapasitas_ruang, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
+        KelasKuliah::create(['ruang_perkuliahan_id'=> $request->ruang_kelas, 'feeder' => 0, 'id_kelas_kuliah'=> $id_kelas, 'id_prodi'=> $prodi_id, 'nama_program_studi'=> $data_prodi->nama_program_studi, 'id_semester'=> $semester_aktif, 'nama_semester'=> $data_semester->nama_semester, 'id_matkul'=> $id_matkul, 'kode_mata_kuliah'=> $data_matkul->kode_mata_kuliah, 'nama_mata_kuliah'=> $data_matkul->nama_mata_kuliah, 'nama_kelas_kuliah'=> $nama_kelas_kuliah, 'tanggal_mulai_efektif'=> $tanggal_mulai_kelas, 'tanggal_akhir_efektif'=> $tanggal_akhir_kelas, 'kapasitas'=> $check_lokasi_ruang->kapasitas_ruang, 'mode'=> $request->mode_kelas, 'lingkup'=> $request->lingkup_kelas, 'jadwal_hari'=> $request->jadwal_hari, 'jadwal_jam_mulai'=> $jam_mulai_kelas, 'jadwal_jam_selesai'=> $jam_selesai_kelas]);
 
         return redirect()->route('prodi.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $id_matkul, 'semester' => $semester])->with('success', 'Data Berhasil di Tambahkan');
     }
