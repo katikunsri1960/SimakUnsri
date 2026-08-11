@@ -1,6 +1,6 @@
 @extends('layouts.bak')
 @section('title')
-Dashboard Baak
+Dashboard Direktorat Akademik
 @endsection
 @section('content')
 <section class="content">
@@ -9,7 +9,7 @@ Dashboard Baak
             <div class="box bg-primary-light pull-up">
                 <div class="box-body p-xl-0">
                     <div class="row align-items-center">
-                        <div class="col-12 col-lg-3"><img src="images/images/svg-icon/color-svg/custom-14.svg" alt="">
+                        <div class="col-12 col-lg-3"><img src="{{ asset('images/images/svg-icon/color-svg/custom-14.svg') }}" alt="">
                         </div>
                         <div class="col-12 col-lg-9">
                             <h2>Hello {{auth()->user()->name}}, Welcome Back!</h2>

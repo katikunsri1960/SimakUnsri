@@ -18,12 +18,15 @@ class User extends Authenticatable
 
     public const ADMINISTRATOR = 'admin';
     public const ADMIN_UNIVERSITAS = 'univ';
+    public const PERPUS = 'perpus';
     public const ADMIN_FAKULTAS = 'fakultas';
     public const ADMIN_PRODI = 'prodi';
     public const DOSEN = 'dosen';
     public const MAHASISWA = 'mahasiswa';
-    public const BAAK = 'bak';
-    public const PERPUS = 'perpus';
+
+    public const DIREKTORAT_PPTI = 'dppti';
+    public const DIREKTORAT_AKADEMIK = 'dak';
+    public const DIREKTORAT_KEMAHASISWAAN = 'ditmawa';
     public const DIREKTORAT_PPM = 'dppm';
 
     const ROLE_PRODI = 'prodi';

@@ -17,7 +17,9 @@
                             <select class="form-select" name="role" id="role" required>
                                 <option value="" disabled selected>Select one</option>
                                 <option value="perpus">Perpustakaan</option>
-                                <option value="bak">Bak</option>
+                                <option value="dppti">Direktorat PPTI</option>
+                                <option value="dak">Direktorat Akademik</option>
+                                <option value="ditmawa">Direktorat Kemahasiswaan</option>
                                 <option value="dppm">Direktorat Penjamin Mutu</option>
                             </select>
                         </div>
