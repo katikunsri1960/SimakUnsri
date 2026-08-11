@@ -365,8 +365,9 @@ class SKPIController extends Controller
         | GENERATE PDF
         |--------------------------------------------------------------------------
         */
-        $pdf = PDF::loadView('bak.wisuda.data-skpi.pdf', [
+         $pdf = PDF::loadView('bak.wisuda.data-skpi.pdf', [
             'data' => $data,
+            'cpl_list' => $cpl,
             'skpi_bidang' => $skpi_bidang,
             'fakultas' => $nama_fakultas,
             'wr1' => $wr1,

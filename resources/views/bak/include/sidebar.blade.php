@@ -215,7 +215,7 @@
                     <li class="treeview {{request()->routeIs('bak.skpi*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i class="fa fa-file"></i>
-                            <span>SKPI</span>
+                            <span>Data Isian SKPI</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>

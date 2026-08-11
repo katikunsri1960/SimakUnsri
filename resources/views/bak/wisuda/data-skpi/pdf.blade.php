@@ -6,6 +6,108 @@
 
 @endpush
 
+<style>
+    /* Data wajib */
+    .nomor {
+        width: 20px;
+        padding: 0 !important;
+        text-align: right;
+        white-space: nowrap;
+    }
+
+    .titik {
+        width: 8px;
+        padding: 0 !important;
+        text-align: left;
+    }
+
+    .keterangan {
+        width: 230px;
+        padding: 0 0 0 5px !important;
+    }
+
+    .isi {
+        padding: 0 !important;
+    }
+
+    .peraturan-isi {
+        width: 100%;
+        text-align: left;
+        padding: 0 0 0 5px !important;
+        line-height: 1.25;
+    }
+
+    /* Data CPL */
+    .section-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0;
+    }
+
+    .section-table td {
+        padding: 0;
+        vertical-align: top;
+    }
+
+    .section-number {
+        width: 20px;
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .section-text {
+        font-weight: bold;
+        text-align: left;
+    }
+
+    .sub-section {
+        padding-top: 2px !important;
+        padding-left: 20px;
+        font-weight: bold;
+    }
+
+
+    /* =========================
+    TABEL CPL
+   ========================= */
+
+    .cpl-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-left: 15px;
+        margin-top: 15px;
+    }
+
+    .cpl-table td {
+        padding: 0;
+        vertical-align: top;
+    }
+
+    .cpl-number {
+        width: 55px;
+        white-space: nowrap;
+        text-align: right;
+        padding-right: 5px !important;
+    }
+
+    .cpl-colon {
+        width: 15px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .cpl-content {
+        padding-left: 5px !important;
+        padding-right: 20px !important;
+        text-align: left;
+        line-height: 1.25;
+    }
+
+    /* Jarak setelah tabel */
+    .table-bottom-space {
+        margin-bottom: 100px;
+    }
+</style>
 
 @foreach ($data as $d)
 
@@ -25,83 +127,160 @@
 Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangkan capaian pembelajaran lulusan (CPL) dan prestasi serta aktivitas pemegang Ijazah selama masa studi.
 </p>
 
-<div class="section-title">A. Informasi tentang Identitas Diri Pemegang SKPI</div>
-<table style="margin: 0px 0px 0px 15px;">
-    <tr><td width="50%">1. Nama Lengkap</td><td>: {{ $d->nama_mahasiswa }}</td></tr>
-    <tr><td>2. Tempat, Tanggal Lahir</td><td>: {{ $d->tempat_lahir }}, {{ \Carbon\Carbon::parse($d->tanggal_lahir)->translatedFormat('d F Y') }}</td></tr>
-    <tr><td>3. Nomor Induk Mahasiswa</td><td>: {{ $d->nim }}</td></tr>
-    <tr><td>4. Tahun Masuk</td><td>: {{ \Carbon\Carbon::parse($d->tgl_masuk)->format('Y') }}</td></tr>
-    <tr><td>5. Tahun Lulus</td><td>: {{ \Carbon\Carbon::parse($d->tgl_keluar)->format('Y') }}</td></tr>
-    <tr><td>6. Nomor Ijazah</td><td>: {{ $d->no_ijazah ?? '-' }}</td></tr>
-    <tr><td>7. Gelar dan Singkatan</td><td>: {{ $d->gelar_panjang}} ({{$d->gelar}})</td></tr>
-</table>
-
-<div class="section-title">B. Informasi tentang Identitas Penyelenggara Program</div>
-<table style="margin: 0px 0px 0px 15px;">
+<!-- <div class="section-title">A. Informasi tentang Identitas Diri Pemegang SKPI</div> -->
+<table class="section-table">
     <tr>
-        <td width="50%">1. SK Pendirian Perguruan Tinggi</td>
-        <td>: </td>
+        <td class="section-number">A.</td>
+        <td class="section-text">
+            Informasi tentang Identitas Diri Pemegang SKPI
+        </td>
     </tr>
+</table>
+<table style="margin: 0 0 20px 15px; border-collapse: collapse; width: 100%;">
     <tr>
-        <td colspan="2" style="padding-left: 20px;">
-        Peraturan Pemerintah No.42 Tahun 1960 tanggal 29 Oktober 1960 (Lembaran Negara Tahun 1960 No.135) tentang Pendirian Universitas Sriwijaya
+        <td class="nomor">1</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Nama Lengkap</td>
+        <td class="isi">: {{ $d->nama_mahasiswa }}</td>
+    </tr>
+
+    <tr>
+        <td class="nomor">2</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Tempat, Tanggal Lahir</td>
+        <td class="isi">
+            : {{ $d->tempat_lahir }},
+            {{ \Carbon\Carbon::parse($d->tanggal_lahir)->translatedFormat('d F Y') }}
         </td>
     </tr>
 
     <tr>
-        <td>2. Nama Institusi</td>
-        <td>: Universitas Sriwijaya</td>
-    </tr>
-    
-    <tr>    
-        <td>3. Program Studi</td>
-        <td>: {{ $d->nama_prodi }}</td>
+        <td class="nomor">3</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Nomor Induk Mahasiswa</td>
+        <td class="isi">: {{ $d->nim }}</td>
     </tr>
 
     <tr>
-        <td>4. Jenis dan Jenjang Pendidikan</td>
-        <td>: {{ $d->jenjang }}</td>
+        <td class="nomor">4</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Tahun Masuk</td>
+        <td class="isi">
+            : {{ \Carbon\Carbon::parse($d->tgl_masuk)->format('Y') }}
+        </td>
     </tr>
 
     <tr>
-        <td>5. Jenjang Kualifikasi Sesuai KKNI</td>
-        <td>: 
+        <td class="nomor">5</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Tahun Lulus</td>
+        <td class="isi">
+            : {{ \Carbon\Carbon::parse($d->tgl_keluar)->format('Y') }}
+        </td>
+    </tr>
 
+    <tr>
+        <td class="nomor">6</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Nomor Ijazah</td>
+        <td class="isi">: {{ $d->no_ijazah ?? '-' }}</td>
+    </tr>
+
+    <tr>
+        <td class="nomor">7</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Gelar dan Singkatan</td>
+        <td class="isi">: {{ $d->gelar_panjang }} ({{ $d->gelar }})</td>
+    </tr>
+</table>
+
+<!-- <div class="section-title">B. Informasi tentang Identitas Penyelenggara Program</div> -->
+<table class="section-table">
+    <tr>
+        <td class="section-number">B.</td>
+        <td class="section-text">
+            Informasi tentang Identitas Penyelenggara Program
+        </td>
+    </tr>
+</table>
+<table style="margin: 0px 0px 20px 15px; width: 100%;">
+   <!-- <table class="peraturan-table"> -->
+    <tr>
+        <td class="nomor">1</td>
+        <td class="titik">.</td>
+        <td class="keterangan">SK Pendirian Perguruan Tinggi</td>
+        <td class="isi">: </td>
+    </tr>
+    <tr>
+        <td class="nomor"> </td>
+        <td class="titik"> </td>
+        <td class="keterangan" colspan="2" style="padding-left: 5px;">
+            Peraturan Pemerintah No.42 Tahun 1960 tanggal 29 Oktober 1960 
+            (Lembaran Negara Tahun 1960 No.135) tentang Pendirian Universitas Sriwijaya
+        </td>
+    </tr>
+<!-- </table> -->
+
+    <tr>
+        <td class="nomor">2</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Nama Institusi</td>
+        <td class="isi">: Universitas Sriwijaya</td>
+    </tr>
+
+    <tr>
+        <td class="nomor">3</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Program Studi</td>
+        <td class="isi">: {{ $d->nama_prodi }}</td>
+    </tr>
+
+    <tr>
+        <td class="nomor">4</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Jenis dan Jenjang Pendidikan</td>
+        <td class="isi">: {{ $d->jenjang }}</td>
+    </tr>
+
+    <tr>
+        <td class="nomor">5</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Jenjang Kualifikasi Sesuai KKNI</td>
+        <td class="isi">:
             @if($d->jenjang == 'D3')
                 5
             @elseif($d->jenjang == 'D4' || $d->jenjang == 'S1')
                 6
-        {{--
-            @elseif($d->jenjang == 'Profesi')
-                7
-            @elseif($d->jenjang == 'S2' || $d->jenjang == 'Sp-1')
-                8
-            @elseif($d->jenjang == 'S3' || $d->jenjang == 'Sp-2')
-                9
-        --}}
             @endif
-
         </td>
     </tr>
 
     <tr>
-        <td>6. Persyaratan Penerimaan</td>
-        <td>: Lulusan SMA/SMK/Sederajat</td>
-    </tr>
-    
-    <tr>    
-        <td>7. Bahasa Pengantar Kuliah</td>
-        <td>: Bahasa Indonesia</td>
+        <td class="nomor">6</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Persyaratan Penerimaan</td>
+        <td class="isi">: Lulusan SMA/SMK/Sederajat</td>
     </tr>
 
     <tr>
-        <td>8. Sistem Penilaian</td>
-        <td>: Skala 0-4: A=4, B=3, C=2, D=1, E=0.</td>
+        <td class="nomor">7</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Bahasa Pengantar Kuliah</td>
+        <td class="isi">: Bahasa Indonesia</td>
     </tr>
 
     <tr>
-        <td>9. Lama Studi Reguler</td>
-        <td>: 
+        <td class="nomor">8</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Sistem Penilaian</td>
+        <td class="isi">: Skala 0-4: A=4, B=3, C=2, D=1, E=0.</td>
+    </tr>
+
+    <tr>
+        <td class="nomor">9</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Lama Studi Reguler</td>
+        <td class="isi">:
             @if($d->jenjang == 'D3')
                 3 Tahun
             @elseif($d->jenjang == 'S1')
@@ -111,35 +290,70 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
     </tr>
 
     <tr>
-        <td>10. Jenis dan Jenjang Pendidikan Lanjutan</td>
-        <td>: 
+        <td class="nomor">10</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Jenis dan Jenjang Pendidikan Lanjutan</td>
+        <td class="isi">:
             @if($d->jenjang == 'D3')
                 Sarjana / Diploma Empat / Sederajat
-
             @elseif($d->jenjang == 'S1')
                 Profesi / Magister / Sederajat
-
             @endif
         </td>
     </tr>
 </table>
 
-<div class="section-title">C. Informasi tentang Kualifikasi dan Hasil yang Dicapai Capaian Pembelajaran Lulusan</div>
-<table style="margin: 0px 0px 0px 15px;">
-    @php
-        $cpl_list = $cpl[$d->id_kurikulum] ?? collect();
-    @endphp
+<table class="section-table">
+    <tr>
+        <td class="section-number">C.</td>
+        <td class="section-text">
+            Informasi tentang Kualifikasi dan Hasil yang Dicapai Capaian Pembelajaran
+        </td>
+    </tr>
 
-    @if($cpl_list->isNotEmpty())
-        @foreach($cpl_list as $index => $item)
-        <tr>
-            <td width="10%">CPL-{{ $index + 1 }}</td>
-            <td>: {{ $item->nama_cpl }}</td>
-        </tr>
-        @endforeach
-    @else
-        <tr><td colspan="2">Data CPL Belum Diisi</td></tr>
-    @endif
+    <tr>
+        <td></td>
+        <td class="sub-section">
+            Lulusan
+        </td>
+    </tr>
+</table>
+@php
+    $cpl_mahasiswa = $cpl_list->get($d->id_kurikulum, collect());
+@endphp
+
+<table class="cpl-table"  style="margin: 0px 0px 0px 15px; width: 100%;">
+    <tbody>
+
+        @if($cpl_mahasiswa->isNotEmpty())
+
+            @foreach($cpl_mahasiswa as $index => $item)
+                <tr>
+                    <td class="cpl-number">
+                        CPL-{{ $index + 1 }}
+                    </td>
+
+                    <td class="cpl-colon">
+                        :
+                    </td>
+
+                    <td class="cpl-content">
+                        {{ $item->nama_cpl }}
+                    </td>
+                </tr>
+            @endforeach
+
+        @else
+
+            <tr>
+                <td colspan="3" class="cpl-content">
+                    Data CPL Belum Diisi
+                </td>
+            </tr>
+
+        @endif
+
+    </tbody>
 </table>
 
 <div class="page-break"></div>
@@ -227,7 +441,7 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
                 {{ \Carbon\Carbon::parse($d->tanggal_wisuda)->translatedFormat('d F Y') }}
             </td>
         </tr>
-        <tr><td></td><td>an. Rektor</td></tr>
+        <tr><td></td><td>a.n. Rektor</td></tr>
         <tr><td></td><td>{{ $wr1->jabatan }}</td></tr>
         <tr>
             <td></td>
