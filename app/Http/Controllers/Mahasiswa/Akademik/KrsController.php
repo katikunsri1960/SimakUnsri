@@ -747,6 +747,32 @@ class KrsController extends Controller
                     ->pluck('sks_mata_kuliah')
                     ->first();
 
+
+            // =====================================================
+            // PENGECEKAN: MAHASISWA TIDAK BOLEH MENGAMBIL
+            // LEBIH DARI 1 KELAS PADA MATA KULIAH YANG SAMA
+            // =====================================================
+
+            $id_matkul_kelas = KelasKuliah::where('id_kelas_kuliah', $idKelasKuliah)
+                ->value('id_matkul');
+
+            $sudah_ambil_mk = PesertaKelasKuliah::where('id_registrasi_mahasiswa', $id_reg)
+                ->where('id_matkul', $id_matkul_kelas)
+                ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
+                    $query->where('id_semester', $semester_aktif->id_semester);
+                })
+                ->with('kelas_kuliah')
+                ->first();
+
+            if ($sudah_ambil_mk) {
+                return response()->json([
+                    'message' => 'Anda sudah mengambil mata kuliah ini pada kelas ' .
+                        $sudah_ambil_mk->kelas_kuliah->nama_kelas_kuliah . '. ' .
+                        'Anda tidak dapat mengambil kelas lain pada mata kuliah yang sama.'
+                ], 400);
+            }
+
+
             $non_gelar = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_jenis_daftar', '14')
                     ->count();
