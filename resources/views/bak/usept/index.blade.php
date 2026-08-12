@@ -98,7 +98,7 @@ Daftar Nilai untuk Lulus USEPT Program Studi
         }
 
         // add action form
-        document.getElementById('storeForm').action = '/bak/usept-prodi/store/' + data.id;
+        document.getElementById('storeForm').action = '/dak/usept-prodi/store/' + data.id;
 
     }
 
