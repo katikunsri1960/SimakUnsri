@@ -6,8 +6,8 @@
                 <!-- sidebar menu-->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">Menu Utama</li>
-                    <li class="{{request()->routeIs('bak') ? 'active' : ''}}">
-                        <a href="{{route('bak')}}">
+                    <li class="{{request()->routeIs('dak') ? 'active' : ''}}">
+                        <a href="{{route('dak')}}">
                             <i class="fa fa-th-large"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Dashboard</span>
@@ -215,7 +215,7 @@
                     <li class="treeview {{request()->routeIs('bak.skpi*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i class="fa fa-file"></i>
-                            <span>SKPI</span>
+                            <span>Data Isian SKPI</span>
                             <span class="pull-right-container">
                                 <i class="fa fa-angle-right pull-right"></i>
                             </span>

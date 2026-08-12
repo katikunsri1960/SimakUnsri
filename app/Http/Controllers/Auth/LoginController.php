@@ -70,12 +70,14 @@ class LoginController extends Controller
         $roleToRouteMap = [
             User::ADMINISTRATOR => 'admin.dashboard-admin',
             User::ADMIN_UNIVERSITAS => 'univ',
+            User::PERPUS => 'perpus',
             User::ADMIN_FAKULTAS => 'fakultas',
             User::ADMIN_PRODI => 'prodi',
             User::DOSEN => 'dosen',
             User::MAHASISWA => 'mahasiswa.dashboard',
-            User::BAAK => 'bak',
-            User::PERPUS => 'perpus',
+            User::DIREKTORAT_PPTI => 'dppti',
+            User::DIREKTORAT_AKADEMIK => 'dak',
+            User::DIREKTORAT_KEMAHASISWAAN => 'ditmawa',
             User::DIREKTORAT_PPM => 'dppm.dashboard',
         ];
 

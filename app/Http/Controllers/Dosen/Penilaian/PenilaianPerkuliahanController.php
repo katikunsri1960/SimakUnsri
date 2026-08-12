@@ -197,8 +197,8 @@ class PenilaianPerkuliahanController extends Controller
         return view('dosen.penilaian.penilaian-perkuliahan.upload-dpna', [
             'data' => $nilai_komponen,
             'kelas' => $data_kelas,
-            'mulai_pengisian' => $mulai_nilai,
-            'batas_pengisian' => $batas_nilai,
+            'mulai_pengisian' => $semester_aktif->mulai_isi_nilai,
+            'batas_pengisian' => $semester_aktif->batas_isi_nilai,
             'prodi_bebas_jadwal' => $prodi_not_scheduled
         ]);
     }

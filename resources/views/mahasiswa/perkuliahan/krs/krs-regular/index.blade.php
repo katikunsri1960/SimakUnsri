@@ -269,17 +269,40 @@ Kartu Rencana Studi
                     _token: csrfToken  // Sertakan CSRF token di sini
                 },
                 success: function(data) {
+
                     // Cek apakah data kelas kuliah kosong
                     if (data.length === 0) {
-                        // Jika kelas kuliah kosong, tampilkan pesan peringatan menggunakan SweetAlert
-                        Swal.fire({
+
+                        swal({
                             type: 'warning',
-                            title: 'Kelas Kuliah Kosong',
-                            text: 'Tidak ada kelas kuliah yang tersedia untuk mata kuliah ini.'
+                            title: 'Dosen tidak Ditemukan',
+                            text: 'Kelas untuk mata kuliah ini belum memiliki dosen pengajar.'
                         });
-                    } else {
-                        // Jika ada data kelas kuliah, tampilkan data seperti biasa
-                        displayData(data, resultContainerId);
+
+                        return;
+                    }
+
+                    // Cek kelas yang belum memiliki dosen
+                    var kelasTanpaDosen = data.filter(function(kelas) {
+                        return !kelas.dosen_pengajar || kelas.dosen_pengajar.length === 0;
+                    });
+
+                    // Tampilkan data kelas terlebih dahulu
+                    displayData(data, resultContainerId);
+
+                    // Jika ada kelas yang belum memiliki dosen
+                    if (kelasTanpaDosen.length > 0) {
+
+                        var daftarKelas = kelasTanpaDosen.map(function(kelas) {
+                            return kelas.nama_kelas_kuliah;
+                        }).join(', ');
+
+                        swal({
+                            type: 'warning',
+                            title: 'Dosen Pengajar Belum Diatur',
+                            text: 'Dosen pada kelas ' + daftarKelas + ' belum diatur. Silakan hubungi Program Studi/Admin.',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 },
                 error: function(error) {
@@ -414,21 +437,25 @@ Kartu Rencana Studi
                                     },
                                     success: function(response) {
                                         alert('Berhasil!\n' + response.message);
-                                        // Reload after user closes the alert
+
                                         window.addEventListener('focus', function reloadOnce() {
                                             location.reload();
                                             window.removeEventListener('focus', reloadOnce);
                                         });
                                     },
+
                                     error: function(response) {
-                                        var errorMessage = response.responseJSON.message;
-                                        console.log(errorMessage, response);
-                                        swal({
-                                            title: 'Gagal!',
-                                            text: errorMessage,
-                                            type: 'warning',
-                                            button: 'OK'
-                                        });
+
+                                        var errorMessage = 'Terjadi kesalahan saat mengambil kelas kuliah.';
+
+                                        if (response.responseJSON && response.responseJSON.message) {
+                                            errorMessage = response.responseJSON.message;
+                                        }
+
+                                        console.log('HTTP Status:', response.status);
+                                        console.log('Response:', response.responseJSON);
+
+                                        alert('Gagal!\n' + errorMessage);
                                     }
                                 });
                             }

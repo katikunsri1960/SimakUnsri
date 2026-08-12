@@ -7,7 +7,7 @@
                     class="path3"></span></span>
         </a>
         <!-- Logo -->
-        <a href="{{route('dosen')}}" class="logo">
+        <a href="{{route('dak')}}" class="logo">
             <!-- logo-->
             <div class="logo-lg">
                 <span class="light-logo"><img src="{{asset('images/logo-simak-unsri.png')}}" alt="logo"></span>
@@ -48,7 +48,7 @@
                     </a>
                     <ul class="dropdown-menu animated flipInX">
                         <li class="user-body">
-                            <a class="dropdown-item" href="{{route('dosen.profile.biodata')}}"><i class="ti-user text-muted me-2"></i>
+                            <a class="dropdown-item" href="#"><i class="ti-user text-muted me-2"></i>
                                 Data Diri</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
