@@ -156,7 +156,7 @@
         <div class="page-center">
 
             <div class="img">
-                <img src="storage/{{ $d->pas_foto }}" width="150">
+                <img src="{{ public_path('storage/' . $d->pas_foto) }}" width="150">
             </div>
 
             <div style="font-weight:bold; font-size:25pt; margin-bottom:20px">
@@ -235,7 +235,7 @@
         <div class="page-center">
 
             <div class="img">
-                <img src="storage/{{ $d->pas_foto }}" width="150">
+                <img src="{{ public_path('storage/' . $d->pas_foto) }}" width="150">
             </div>
 
             <div style="font-weight:bold; font-size:25pt; margin-bottom:20px">

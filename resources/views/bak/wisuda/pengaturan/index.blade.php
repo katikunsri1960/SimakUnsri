@@ -105,7 +105,7 @@ Pembukaan Wisuda
         $('#edit_tanggal_mulai_daftar').val(flatpickr.formatDate(new Date(data.tanggal_mulai_daftar), "d-m-Y"));
         $('#edit_tanggal_akhir_daftar').val(flatpickr.formatDate(new Date(data.tanggal_akhir_daftar), "d-m-Y"));
         $('#edit_is_active').val(data.is_active);
-        $('#editForm').attr('action', `{{url('bak/wisuda/pengaturan/update')}}/${data.id}`);
+        $('#editForm').attr('action', `{{url('dak/wisuda/pengaturan/update')}}/${data.id}`);
     }
 
 
