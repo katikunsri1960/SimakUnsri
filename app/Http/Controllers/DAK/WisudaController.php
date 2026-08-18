@@ -1311,6 +1311,10 @@ class WisudaController extends Controller
 
     public function album_download_pdf(Request $request)
     {
+       // set_time_limit(300); // 5 menit, sesuaikan kebutuhan
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+
         $request->validate([
             'fakultas' => 'required',
             'periode' => 'required',
