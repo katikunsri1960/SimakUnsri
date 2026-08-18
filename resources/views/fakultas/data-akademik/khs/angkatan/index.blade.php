@@ -28,7 +28,7 @@ KHS Mahasiswa
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-3">
                                 <label for="semester" class="form-label">Tahun Akademik</label>
                                 <select class="form-select" name="semester" id="semester">
@@ -42,7 +42,7 @@ KHS Mahasiswa
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-3">
                             <div class="mb-3">
                                 <label for="semester" class="form-label">Program Studi</label>
                                 <select class="form-select" name="prodi" id="prodi">
@@ -56,15 +56,28 @@ KHS Mahasiswa
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-4">
-                            <label for="nim" class="form-label">Angkatan</label>
-                            <div class="input-group mb-3">
+                        <div class="col-md-3">
+                            <div class=" mb-3">
+                                <label for="nim" class="form-label">Angkatan</label>
                                 <select class="form-select" name="angkatan" id="angkatan">
                                     <option value="" disabled selected>-- Pilih Angkatan --</option>
                                     @foreach ($angkatan as $a)
                                     <option value="{{$a->angkatan_raw}}" {{request()->angkatan != '' &&
                                         $a->angkatan_raw ==
                                         request()->angkatan ? 'selected' : ''}}>{{$a->angkatan_raw}}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <label for="jalur_masuk" class="form-label">Jalur Masuk</label>
+                            <div class="input-group mb-3">
+                                <select class="form-select" name="jalur_masuk" id="jalur_masuk">
+                                    <option value="">-- Semua Jalur Masuk --</option>
+                                    @foreach ($jalurMasuk as $j)
+                                    <option value="{{$j->id_jalur_masuk}}" {{request()->jalur_masuk == $j->id_jalur_masuk ? 'selected' : ''}}>
+                                        {{$j->nama_jalur_masuk}}
                                     </option>
                                     @endforeach
                                 </select>
@@ -82,6 +95,7 @@ KHS Mahasiswa
                                     <input type="hidden" name="prodi" id="prodiCetak">
                                     <input type="hidden" name="angkatan" id="angkatanCetak">
                                     <input type="hidden" name="semester" id="semesterCetak">
+                                    <input type="hidden" name="jalur_masuk" id="jalurMasukCetak"> {{-- ✅ taruh di sini --}}
                                     <button class="btn btn-success" type="submit"><i class="fa fa-print"></i> Cetak KHS</button>
                                 </form>
                             </div>
@@ -107,6 +121,8 @@ KHS Mahasiswa
         var angkatan = $('#angkatan').val();
         var prodi = $('#prodi').val();
         var semester = $('#semester').val();
+        var jalur_masuk = $('#jalur_masuk').val(); // tetap sama
+
 
         if(angkatan == '' || semester == '' || prodi == ''){
             swal({
@@ -126,7 +142,8 @@ KHS Mahasiswa
                 data: {
                     angkatan: angkatan,
                     prodi: prodi,
-                    semester: semester
+                    semester: semester,
+                    jalur_masuk: jalur_masuk // ✅ BARU
                 },
                 success: function(response){
                     // console.log(angkatan)
@@ -146,6 +163,8 @@ KHS Mahasiswa
                         });
                         return false;
                     }
+                    
+                    //console.log('Jumlah data mahasiswa: ' + response.data.length); // ✅ BARU
 
                     $('#dataKhsDiv').empty();
                     $('#khsDiv').removeAttr('hidden');
@@ -357,6 +376,7 @@ KHS Mahasiswa
                     $('#angkatanCetak').val(angkatan);
                     $('#prodiCetak').val(prodi);
                     $('#semesterCetak').val(semester);
+                    $('#jalurMasukCetak').val(jalur_masuk); // ✅ taruh persis di sini
 
                     return true;
 

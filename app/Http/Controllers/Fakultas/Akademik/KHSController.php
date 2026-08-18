@@ -11,6 +11,7 @@ use App\Models\SemesterAktif;
 use App\Models\PejabatFakultas;
 use App\Models\Perpus\BebasPustaka;
 use App\Http\Controllers\Controller;
+use App\Models\JalurMasuk;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
@@ -19,6 +20,7 @@ use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
+use App\Models\Referensi\JenisDaftar;
 use Illuminate\Support\Facades\DB;
 
 class KHSController extends Controller
@@ -195,16 +197,23 @@ class KHSController extends Controller
                     ->orderBy('angkatan_raw', 'desc')
                     ->get();
 
+        // ✅ BARU: opsi jalur masuk, dari tabel referensi jenis_daftars
+        $jalurMasuk = JalurMasuk::orderBy('id_jalur_masuk', 'ASC')->get();
+
         return view('fakultas.data-akademik.khs.angkatan.index',[
             'semesters' => $semesters,
             'semesterAktif' => $semesterAktif,
             'angkatan' => $angkatan,
             'prodi' => $prodi,
+            'jalurMasuk' => $jalurMasuk, // ✅ BARU
         ]);
     }
 
     public function khs_angkatan_data(Request $request)
     {
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
+
         if($request->semester=='' || $request->angkatan=='' || $request->prodi=='') {
             return response()->json([
                 'status' => 'error',
@@ -225,6 +234,9 @@ class KHSController extends Controller
                     ->select('id_registrasi_mahasiswa', 'nim', 'id_prodi', 'id_periode_masuk', 'dosen_pa', 'nama_mahasiswa')
                     ->where('id_prodi', $request->prodi)
                     ->where(DB::raw('LEFT(id_periode_masuk, 4)'), $request->angkatan)
+                    ->when($request->filled('jalur_masuk'), function ($q) use ($request) { // ✅ BARU
+                        $q->where('id_jalur_daftar', $request->jalur_masuk);
+                    })
                     ->orderBy('nim', 'ASC')
                     ->orderBy('id_periode_masuk', 'desc')
                     ->get();
@@ -282,7 +294,8 @@ class KHSController extends Controller
     public function khs_angkatan_download (Request $request)
     {
         // dd($request->id_semester);
-
+        ini_set('memory_limit', '2048M');
+        set_time_limit(0);
 
         $request->validate([
             'angkatan' => 'required',
@@ -297,6 +310,9 @@ class KHSController extends Controller
                     ->select('id_registrasi_mahasiswa', 'nim', 'id_prodi', 'id_periode_masuk', 'dosen_pa', 'nama_mahasiswa')
                     ->where('id_prodi', $request->prodi)
                     ->where(DB::raw('LEFT(id_periode_masuk, 4)'), $request->angkatan)
+                    ->when($request->filled('jalur_masuk'), function ($q) use ($request) { // ✅ BARU
+                        $q->where('id_jalur_daftar', $request->jalur_masuk);
+                    })
                     ->orderBy('nim', 'ASC')
                     ->orderBy('id_periode_masuk', 'desc')
                     ->get();
