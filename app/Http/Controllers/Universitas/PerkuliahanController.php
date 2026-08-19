@@ -24,6 +24,7 @@ use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
