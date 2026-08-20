@@ -148,10 +148,10 @@ class HitungIpsJob implements ShouldQueue
             // krsData & krsAktivitasData ambil SKS dari relasi matkul
             $totalSksSemester = !$isMaba 
                 ? $krsData->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
-                    + $krsAktivitasData->sum(fn($item) => $item->konversi->matkul->sks_mata_kuliah ?? 0)
+                    + $krsAktivitasData->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0)
                     + $khsTransferData->sum('sks_mata_kuliah_diakui') + $krsMBKMData->sum('sks_aktivitas')
                 : $krsData->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
-                    + $krsAktivitasData->sum(fn($item) => $item->konversi->matkul->sks_mata_kuliah ?? 0);
+                    + $krsAktivitasData->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0);
 
             // Total bobot (hanya dari yang sudah dinilai) — kolom SKS sudah langsung ada di tabel, tidak perlu closure relasi
             $bobot = $khsData->sum(function ($item) {
