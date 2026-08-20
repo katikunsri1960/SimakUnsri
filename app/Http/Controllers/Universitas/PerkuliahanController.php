@@ -629,7 +629,7 @@ class PerkuliahanController extends Controller
 
         $total_sks_dinilai = !$isMaba ? $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah') : $khs->sum('sks_mata_kuliah') + $khs_konversi->sum('sks_mata_kuliah');
 
-        if($total_sks_semester > 0){
+        if($total_sks_dinilai > 0){
             $ips = $total_bobot / $total_sks_dinilai;
         }
 
