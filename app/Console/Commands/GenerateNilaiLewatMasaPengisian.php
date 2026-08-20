@@ -48,13 +48,22 @@ class GenerateNilaiLewatMasaPengisian extends Command
             return;
         }
 
+        // $prodi = ProgramStudi::where('status', 'A')
+        //         ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
+        //             $query->where('id_semester', $semester_aktif['id_semester'])
+        //                 ->whereHas('peserta_kelas_approved')
+        //                 ->whereDoesntHave('komponen_evaluasi')
+        //                 ->whereDoesntHave('nilai_komponen')
+        //                 ->whereDoesntHave('nilai_perkuliahan');
+        //         })
+        //         ->get();
+
         $prodi = ProgramStudi::where('status', 'A')
                 ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
                     $query->where('id_semester', $semester_aktif['id_semester'])
-                        ->whereHas('peserta_kelas_approved')
-                        ->whereDoesntHave('komponen_evaluasi')
-                        ->whereDoesntHave('nilai_komponen')
-                        ->whereDoesntHave('nilai_perkuliahan');
+                        ->whereHas('peserta_kelas_approved', function ($q) {
+                            $q->whereDoesntHave('nilai_perkuliahan');
+                        });
                 })
                 ->get();
 
@@ -93,7 +102,7 @@ class GenerateNilaiLewatMasaPengisian extends Command
         foreach ($kelas_kuliah as $k) {
 
             DB::beginTransaction();
-            
+
             // 1. Komponen evaluasi: reuse kalau sudah ada, generate kalau belum
             if ($k->komponen_evaluasi->isEmpty()) {
                 $bobot_participatory = 10 / 100;
