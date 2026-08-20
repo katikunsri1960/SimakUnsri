@@ -596,10 +596,10 @@ class PerkuliahanController extends Controller
 
         $total_sks_semester = !$isMaba 
                 ? $krs->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
-                    + $krs_aktivitas->sum(fn($item) => $item->konversi->matkul->sks_mata_kuliah ?? 0)
+                    + $krs_aktivitas->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0)
                     + $khs_transfer->sum('sks_mata_kuliah_diakui') + $krs_mbkm->sum('sks_aktivitas')
                 : $krs->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
-                    + $krs_aktivitas->sum(fn($item) => $item->konversi->matkul->sks_mata_kuliah ?? 0);
+                    + $krs_aktivitas->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0);
 
         $bobot = 0;
 
