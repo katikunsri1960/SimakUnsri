@@ -93,118 +93,112 @@ class GenerateNilaiLewatMasaPengisian extends Command
         foreach ($kelas_kuliah as $k) {
 
             DB::beginTransaction();
+            
+            // 1. Komponen evaluasi: reuse kalau sudah ada, generate kalau belum
+            if ($k->komponen_evaluasi->isEmpty()) {
+                $bobot_participatory = 10 / 100;
+                $bobot_project = 20 / 100;
+                $bobot_assignment = 15 / 100;
+                $bobot_quiz = 15 / 100;
+                $bobot_midterm = 20 / 100;
+                $bobot_finalterm = 20 / 100;
 
-            try {
-                // 1. Komponen evaluasi: reuse kalau sudah ada, generate kalau belum
-                if ($k->komponen_evaluasi->isEmpty()) {
-                    $bobot_participatory = 10 / 100;
-                    $bobot_project = 20 / 100;
-                    $bobot_assignment = 15 / 100;
-                    $bobot_quiz = 15 / 100;
-                    $bobot_midterm = 20 / 100;
-                    $bobot_finalterm = 20 / 100;
+                $komponen_evaluasi = collect([
+                    KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>2,'nama'=>'-','nama_inggris'=>'Participatory Activity','nomor_urut'=>1,'bobot_evaluasi'=>$bobot_participatory]),
+                    KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>3,'nama'=>'-','nama_inggris'=>'Project Outcomes','nomor_urut'=>2,'bobot_evaluasi'=>$bobot_project]),
+                    KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>4,'nama'=>'TGS','nama_inggris'=>'Assignment','nomor_urut'=>3,'bobot_evaluasi'=>$bobot_assignment]),
+                    KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>4,'nama'=>'QIZ','nama_inggris'=>'Quiz','nomor_urut'=>4,'bobot_evaluasi'=>$bobot_quiz]),
+                    KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>4,'nama'=>'UTS','nama_inggris'=>'Midterm Exam','nomor_urut'=>5,'bobot_evaluasi'=>$bobot_midterm]),
+                    KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>4,'nama'=>'UAS','nama_inggris'=>'Finalterm Exam','nomor_urut'=>6,'bobot_evaluasi'=>$bobot_finalterm]),
+                ]);
 
-                    $komponen_evaluasi = collect([
-                        KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>2,'nama'=>'-','nama_inggris'=>'Participatory Activity','nomor_urut'=>1,'bobot_evaluasi'=>$bobot_participatory]),
-                        KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>3,'nama'=>'-','nama_inggris'=>'Project Outcomes','nomor_urut'=>2,'bobot_evaluasi'=>$bobot_project]),
-                        KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>4,'nama'=>'TGS','nama_inggris'=>'Assignment','nomor_urut'=>3,'bobot_evaluasi'=>$bobot_assignment]),
-                        KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>4,'nama'=>'QIZ','nama_inggris'=>'Quiz','nomor_urut'=>4,'bobot_evaluasi'=>$bobot_quiz]),
-                        KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>4,'nama'=>'UTS','nama_inggris'=>'Midterm Exam','nomor_urut'=>5,'bobot_evaluasi'=>$bobot_midterm]),
-                        KomponenEvaluasiKelas::create(['feeder'=>0,'id_komponen_evaluasi'=>Uuid::uuid4()->toString(),'id_kelas_kuliah'=>$k->id_kelas_kuliah,'id_jenis_evaluasi'=>4,'nama'=>'UAS','nama_inggris'=>'Finalterm Exam','nomor_urut'=>6,'bobot_evaluasi'=>$bobot_finalterm]),
+                $komponen_evaluasi_proses += $komponen_evaluasi->count();
+            } else {
+                $komponen_evaluasi = $k->komponen_evaluasi;
+            }
+
+            $mahasiswa_kelas = $k->peserta_kelas_approved;
+
+            // 2. Pre-fetch mahasiswa yang SUDAH punya nilai_perkuliahan di kelas ini
+            $sudahAdaNilaiPerkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $k->id_kelas_kuliah)
+                ->pluck('id_registrasi_mahasiswa')
+                ->toArray();
+
+            // 3. Pre-fetch kombinasi (id_komponen_evaluasi + id_registrasi_mahasiswa) yang sudah ada
+            $idKomponenList = $komponen_evaluasi->pluck('id_komponen_evaluasi')->toArray();
+            $sudahAdaNilaiKomponen = NilaiKomponenEvaluasi::whereIn('id_komponen_evaluasi', $idKomponenList)
+                ->get(['id_komponen_evaluasi', 'id_registrasi_mahasiswa'])
+                ->map(fn($row) => $row->id_komponen_evaluasi . '|' . $row->id_registrasi_mahasiswa)
+                ->toArray();
+
+            foreach ($mahasiswa_kelas as $mk) {
+
+                $sudahPunyaNilaiPerkuliahan = in_array($mk->id_registrasi_mahasiswa, $sudahAdaNilaiPerkuliahan);
+
+                foreach ($komponen_evaluasi as $komponen) {
+                    $key = $komponen->id_komponen_evaluasi . '|' . $mk->id_registrasi_mahasiswa;
+
+                    if (in_array($key, $sudahAdaNilaiKomponen)) {
+                        continue; // mahasiswa ini sudah punya nilai komponen ini
+                    }
+
+                    NilaiKomponenEvaluasi::create([
+                        'feeder' => 0,
+                        'id_komponen_evaluasi' => $komponen->id_komponen_evaluasi,
+                        'id_kelas' => $k->id_kelas_kuliah,
+                        'id_registrasi_mahasiswa' => $mk->id_registrasi_mahasiswa,
+                        'urutan' => $komponen->nomor_urut,
+                        'id_prodi' => $mk->id_prodi,
+                        'nama_program_studi' => $mk->nama_program_studi,
+                        'id_periode' => $k->id_semester,
+                        'id_matkul' => $mk->id_matkul,
+                        'nama_mata_kuliah' => $mk->nama_mata_kuliah,
+                        'nama_kelas_kuliah' => $k->nama_kelas_kuliah,
+                        'sks_mata_kuliah' => $k->matkul->sks_mata_kuliah,
+                        'nama_mahasiswa' => $mk->nama_mahasiswa,
+                        'nim' => $mk->nim,
+                        'id_jns_eval' => $komponen->id_jenis_evaluasi,
+                        'nama' => $komponen->nama,
+                        'nama_inggris' => $komponen->nama_inggris,
+                        'bobot' => $komponen->bobot_evaluasi,
+                        'angkatan' => $mk->angkatan,
+                        'status_sync' => 'belum sync',
+                        'nilai_komp_eval' => $nilaiAngka,
                     ]);
 
-                    $komponen_evaluasi_proses += $komponen_evaluasi->count();
-                } else {
-                    $komponen_evaluasi = $k->komponen_evaluasi;
+                    $nilai_komponen_proses++;
                 }
 
-                $mahasiswa_kelas = $k->peserta_kelas_approved;
+                if (!$sudahPunyaNilaiPerkuliahan) {
+                    NilaiPerkuliahan::create([
+                        'feeder' => 0,
+                        'id_prodi' => $mk->id_prodi,
+                        'nama_program_studi' => $mk->nama_program_studi,
+                        'id_semester' => $semester,
+                        'nama_semester' => $nama_semester,
+                        'id_matkul' => $k->matkul->id_matkul,
+                        'kode_mata_kuliah' => $k->matkul->kode_mata_kuliah,
+                        'nama_mata_kuliah' => $k->matkul->nama_mata_kuliah,
+                        'sks_mata_kuliah' => $k->matkul->sks_mata_kuliah,
+                        'id_kelas_kuliah' => $k->id_kelas_kuliah,
+                        'nama_kelas_kuliah' => $k->nama_kelas_kuliah,
+                        'id_registrasi_mahasiswa' => $mk->id_registrasi_mahasiswa,
+                        'id_mahasiswa' => $mk->id_mahasiswa,
+                        'nim' => $mk->nim,
+                        'nama_mahasiswa' => $mk->nama_mahasiswa,
+                        'jurusan' => $mk->nama_program_studi,
+                        'angkatan' => $mk->angkatan,
+                        'nilai_angka' => $nilaiAngka,
+                        'nilai_indeks' => $nilaiIndeks,
+                        'nilai_huruf' => $nilaiHuruf,
+                    ]);
 
-                // 2. Pre-fetch mahasiswa yang SUDAH punya nilai_perkuliahan di kelas ini
-                $sudahAdaNilaiPerkuliahan = NilaiPerkuliahan::where('id_kelas_kuliah', $k->id_kelas_kuliah)
-                    ->pluck('id_registrasi_mahasiswa')
-                    ->toArray();
-
-                // 3. Pre-fetch kombinasi (id_komponen_evaluasi + id_registrasi_mahasiswa) yang sudah ada
-                $idKomponenList = $komponen_evaluasi->pluck('id_komponen_evaluasi')->toArray();
-                $sudahAdaNilaiKomponen = NilaiKomponenEvaluasi::whereIn('id_komponen_evaluasi', $idKomponenList)
-                    ->get(['id_komponen_evaluasi', 'id_registrasi_mahasiswa'])
-                    ->map(fn($row) => $row->id_komponen_evaluasi . '|' . $row->id_registrasi_mahasiswa)
-                    ->toArray();
-
-                foreach ($mahasiswa_kelas as $mk) {
-
-                    $sudahPunyaNilaiPerkuliahan = in_array($mk->id_registrasi_mahasiswa, $sudahAdaNilaiPerkuliahan);
-
-                    foreach ($komponen_evaluasi as $komponen) {
-                        $key = $komponen->id_komponen_evaluasi . '|' . $mk->id_registrasi_mahasiswa;
-
-                        if (in_array($key, $sudahAdaNilaiKomponen)) {
-                            continue; // mahasiswa ini sudah punya nilai komponen ini
-                        }
-
-                        NilaiKomponenEvaluasi::create([
-                            'feeder' => 0,
-                            'id_komponen_evaluasi' => $komponen->id_komponen_evaluasi,
-                            'id_kelas' => $k->id_kelas_kuliah,
-                            'id_registrasi_mahasiswa' => $mk->id_registrasi_mahasiswa,
-                            'urutan' => $komponen->nomor_urut,
-                            'id_prodi' => $mk->id_prodi,
-                            'nama_program_studi' => $mk->nama_program_studi,
-                            'id_periode' => $k->id_semester,
-                            'id_matkul' => $mk->id_matkul,
-                            'nama_mata_kuliah' => $mk->nama_mata_kuliah,
-                            'nama_kelas_kuliah' => $k->nama_kelas_kuliah,
-                            'sks_mata_kuliah' => $k->matkul->sks_mata_kuliah,
-                            'nama_mahasiswa' => $mk->nama_mahasiswa,
-                            'nim' => $mk->nim,
-                            'id_jns_eval' => $komponen->id_jenis_evaluasi,
-                            'nama' => $komponen->nama,
-                            'nama_inggris' => $komponen->nama_inggris,
-                            'bobot' => $komponen->bobot_evaluasi,
-                            'angkatan' => $mk->angkatan,
-                            'status_sync' => 'belum sync',
-                            'nilai_komp_eval' => $nilaiAngka,
-                        ]);
-
-                        $nilai_komponen_proses++;
-                    }
-
-                    if (!$sudahPunyaNilaiPerkuliahan) {
-                        NilaiPerkuliahan::create([
-                            'feeder' => 0,
-                            'id_prodi' => $mk->id_prodi,
-                            'nama_program_studi' => $mk->nama_program_studi,
-                            'id_semester' => $semester,
-                            'nama_semester' => $nama_semester,
-                            'id_matkul' => $k->matkul->id_matkul,
-                            'kode_mata_kuliah' => $k->matkul->kode_mata_kuliah,
-                            'nama_mata_kuliah' => $k->matkul->nama_mata_kuliah,
-                            'sks_mata_kuliah' => $k->matkul->sks_mata_kuliah,
-                            'id_kelas_kuliah' => $k->id_kelas_kuliah,
-                            'nama_kelas_kuliah' => $k->nama_kelas_kuliah,
-                            'id_registrasi_mahasiswa' => $mk->id_registrasi_mahasiswa,
-                            'id_mahasiswa' => $mk->id_mahasiswa,
-                            'nim' => $mk->nim,
-                            'nama_mahasiswa' => $mk->nama_mahasiswa,
-                            'jurusan' => $mk->nama_program_studi,
-                            'angkatan' => $mk->angkatan,
-                            'nilai_angka' => $nilaiAngka,
-                            'nilai_indeks' => $nilaiIndeks,
-                            'nilai_huruf' => $nilaiHuruf,
-                        ]);
-
-                        $nilai_perkuliahan_proses++;
-                    }
+                    $nilai_perkuliahan_proses++;
                 }
-
-                DB::commit();
-                $kelas_kuliah_proses++;
-
-            } catch (\Throwable $e) {
-                DB::rollBack();
-                throw $e; // atau log sesuai kebutuhan, sebelumnya tidak ada rollback sama sekali
             }
+
+            DB::commit();
+            $kelas_kuliah_proses++;
         }
 
         return [
