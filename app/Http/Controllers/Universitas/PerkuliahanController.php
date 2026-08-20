@@ -554,10 +554,12 @@ class PerkuliahanController extends Controller
 
         $isMaba = $riwayat->id_periode_masuk == $id_semester ? 1 : 0;
 
-        $krs = PesertaKelasKuliah::with(['matkul'])
-                ->where('id_semester', $id_semester)
+        $krs = PesertaKelasKuliah::with(['matkul', 'kelas_kuliah'])
                 ->where('id_registrasi_mahasiswa', $id_reg)
                 ->where('approved', 1)
+                ->whereHas('kelas_kuliah', function ($query) use ($id_semester) {
+                    $query->where('id_semester', $id_semester);
+                })
                 ->get();
 
         $krs_aktivitas = AktivitasMahasiswa::with(['konversi', 'anggota_aktivitas_personal'])

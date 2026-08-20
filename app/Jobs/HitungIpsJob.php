@@ -101,10 +101,12 @@ class HitungIpsJob implements ShouldQueue
 
             $isMaba = $riwayat->id_periode_masuk == $semester ? 1 : 0;
 
-            $krsData = PesertaKelasKuliah::with(['matkul'])
-                ->where('id_semester', $semester)
+            $krsData = PesertaKelasKuliah::with(['matkul', 'kelas_kuliah'])
                 ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
                 ->where('approved', 1)
+                ->whereHas('kelas_kuliah', function ($query) use ($semester) {
+                    $query->where('id_semester', $semester);
+                })
                 ->get();
 
             $krsAktivitasData = AktivitasMahasiswa::with(['konversi', 'anggota_aktivitas_personal'])
