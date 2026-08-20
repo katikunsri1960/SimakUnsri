@@ -111,7 +111,7 @@ class HitungIpsJob implements ShouldQueue
 
             $krsAktivitasData = AktivitasMahasiswa::with(['konversi', 'anggota_aktivitas_personal'])
                 ->where('id_semester', $semester)
-                ->where('approved_krs', 1)
+                ->where('approve_krs', 1)
                 ->whereNull('sks_aktivitas') // exclude yang MBKM, biar tidak overlap
                 ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_registrasi_mahasiswa) {
                     $query->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa);
@@ -120,7 +120,7 @@ class HitungIpsJob implements ShouldQueue
             
             $krsMBKMData = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])
                 ->where('id_semester', $semester)
-                ->where('approved_krs', 1)
+                ->where('approve_krs', 1)
                 ->whereNotNull('sks_aktivitas')
                 ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_registrasi_mahasiswa) {
                     $query->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa);

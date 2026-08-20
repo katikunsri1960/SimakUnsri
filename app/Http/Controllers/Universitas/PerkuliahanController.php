@@ -564,7 +564,7 @@ class PerkuliahanController extends Controller
 
         $krs_aktivitas = AktivitasMahasiswa::with(['konversi', 'anggota_aktivitas_personal'])
             ->where('id_semester', $id_semester)
-            ->where('approved_krs', 1)
+            ->where('approve_krs', 1)
             ->whereNull('sks_aktivitas') // exclude yang MBKM, biar tidak overlap
             ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_reg) {
                 $query->where('id_registrasi_mahasiswa', $id_reg);
@@ -573,7 +573,7 @@ class PerkuliahanController extends Controller
         
          $krs_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])
             ->where('id_semester', $id_semester)
-            ->where('approved_krs', 1)
+            ->where('approve_krs', 1)
             ->whereNotNull('sks_aktivitas')
             ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_reg) {
                 $query->where('id_registrasi_mahasiswa', $id_reg);
