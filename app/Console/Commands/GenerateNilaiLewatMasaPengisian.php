@@ -62,7 +62,12 @@ class GenerateNilaiLewatMasaPengisian extends Command
                 ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
                     $query->where('id_semester', $semester_aktif['id_semester'])
                         ->whereHas('peserta_kelas_approved', function ($q) {
-                            $q->whereDoesntHave('nilai_perkuliahan');
+                            $q->whereNotExists(function ($sub) {
+                                $sub->select(DB::raw(1))
+                                    ->from('nilai_perkuliahans')
+                                    ->whereColumn('nilai_perkuliahans.id_kelas_kuliah', 'peserta_kelas_kuliahs.id_kelas_kuliah')
+                                    ->whereColumn('nilai_perkuliahans.id_registrasi_mahasiswa', 'peserta_kelas_kuliahs.id_registrasi_mahasiswa');
+                            });
                         });
                 })
                 ->get();
