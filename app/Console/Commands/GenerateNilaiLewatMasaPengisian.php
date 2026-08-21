@@ -67,6 +67,15 @@ class GenerateNilaiLewatMasaPengisian extends Command
                 })
                 ->get();
 
+        $this->info('Jumlah prodi ditemukan: ' . $prodi->count());
+        $this->info('Semester aktif dipakai: ' . $semester_aktif['id_semester']);
+        $this->info('Database connection: ' . DB::connection()->getDatabaseName());
+
+        if ($prodi->isEmpty()) {
+            $this->info('Tidak ada prodi yang match kondisi.');
+            return;
+        }
+
         foreach ($prodi as $p) {
             $proses = $this->proses_nilai($p->id_prodi, $semester_aktif['id_semester'], $semester_aktif['nama_semester']);
 
