@@ -26,9 +26,9 @@ class KRSController extends Controller
     public function data(Request $request)
     {
         $semester = $request->semester;
-        $nim = $request->nim;
+        $nim = $request->nim; 
 
-        $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')->where('nim', $nim)->orderBy('id_periode_masuk', 'desc')->first();
+        $riwayat = RiwayatPendidikan::with('dosen_pa', 'prodi.jurusan', 'prodi.fakultas')->where('nim', $nim)->where('id_prodi', auth()->user()->fk_id)->orderBy('id_periode_masuk', 'desc')->first();
         // dd($riwayat);
         if (!$riwayat || $riwayat->id_prodi != auth()->user()->fk_id) {
             return response()->json([

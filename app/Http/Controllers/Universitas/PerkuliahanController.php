@@ -24,6 +24,7 @@ use App\Models\Perkuliahan\NilaiPerkuliahan;
 use App\Models\Perkuliahan\KonversiAktivitas;
 use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\TranskripMahasiswa;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\KomponenEvaluasiKelas;
 use App\Models\Referensi\JenisAktivitasMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
@@ -553,6 +554,32 @@ class PerkuliahanController extends Controller
 
         $isMaba = $riwayat->id_periode_masuk == $id_semester ? 1 : 0;
 
+        $krs = PesertaKelasKuliah::with(['matkul', 'kelas_kuliah'])
+                ->where('id_registrasi_mahasiswa', $id_reg)
+                ->where('approved', 1)
+                ->whereHas('kelas_kuliah', function ($query) use ($id_semester) {
+                    $query->where('id_semester', $id_semester);
+                })
+                ->get();
+
+        $krs_aktivitas = AktivitasMahasiswa::with(['konversi', 'anggota_aktivitas_personal'])
+            ->where('id_semester', $id_semester)
+            ->where('approve_krs', 1)
+            ->whereNull('sks_aktivitas') // exclude yang MBKM, biar tidak overlap
+            ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_reg) {
+                $query->where('id_registrasi_mahasiswa', $id_reg);
+            })
+            ->get();
+        
+         $krs_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])
+            ->where('id_semester', $id_semester)
+            ->where('approve_krs', 1)
+            ->whereNotNull('sks_aktivitas')
+            ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_reg) {
+                $query->where('id_registrasi_mahasiswa', $id_reg);
+            })
+            ->get();
+
         $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $id_semester)
                 ->whereNotNull('nilai_huruf')
@@ -567,7 +594,12 @@ class PerkuliahanController extends Controller
                     ->where('id_semester', $id_semester)
                     ->get();
 
-        $total_sks_semester = !$isMaba ? $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah') : $khs->sum('sks_mata_kuliah') + $khs_konversi->sum('sks_mata_kuliah');
+        $total_sks_semester = !$isMaba 
+                ? $krs->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
+                    + $krs_aktivitas->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0)
+                    + $khs_transfer->sum('sks_mata_kuliah_diakui') + $krs_mbkm->sum('sks_aktivitas')
+                : $krs->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
+                    + $krs_aktivitas->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0);
 
         $bobot = 0;
 
@@ -595,8 +627,10 @@ class PerkuliahanController extends Controller
 
         $ips = 0;
 
-        if($total_sks_semester > 0){
-            $ips = $total_bobot / $total_sks_semester;
+        $total_sks_dinilai = !$isMaba ? $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah') : $khs->sum('sks_mata_kuliah') + $khs_konversi->sum('sks_mata_kuliah');
+
+        if($total_sks_dinilai > 0){
+            $ips = $total_bobot / $total_sks_dinilai;
         }
 
         $transkrip = TranskripMahasiswa::select(

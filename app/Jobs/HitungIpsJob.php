@@ -12,7 +12,9 @@ use App\Models\Mahasiswa\RiwayatPendidikan;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use App\Models\Perkuliahan\NilaiPerkuliahan;
+use App\Models\Perkuliahan\AktivitasMahasiswa;
 use App\Models\Perkuliahan\KonversiAktivitas;
+use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\TranskripMahasiswa;
 use App\Models\Perkuliahan\NilaiTransferPendidikan;
 use App\Models\Perkuliahan\AktivitasKuliahMahasiswa;
@@ -40,6 +42,50 @@ class HitungIpsJob implements ShouldQueue
      *
      * @return void
      */
+
+    // $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)->first();
+
+    // $isMaba = $riwayat->id_periode_masuk == $semester ? 1 : 0;
+    
+    // // Ambil semua data KHS, KHS Konversi, dan KHS Transfer secara efisien
+    // $khsData = NilaiPerkuliahan::where('id_semester', $semester)
+    //     ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
+    //     ->where('nilai_huruf', '!=', 'F')
+    //     ->get();
+
+    // $khsKonversiData = KonversiAktivitas::with(['matkul'])
+    //     ->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
+    //     ->where('id_semester', $semester)
+    //     ->where('ang.id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
+    //     ->where('nilai_huruf', '!=', 'F')
+    //     ->get();
+
+    // $khsTransferData = NilaiTransferPendidikan::where('id_semester', $semester)
+    //     ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
+    //     ->where('nilai_huruf_diakui', '!=', 'F')
+    //     ->get();
+        
+    // //SKS SEMESTER
+    // $totalSksSemester = !$isMaba ? $khsData->sum('sks_mata_kuliah')+ $khsKonversiData->sum('sks_mata_kuliah')+ $khsTransferData->sum('sks_mata_kuliah_diakui') : $khsData->sum('sks_mata_kuliah')+ $khsKonversiData->sum('sks_mata_kuliah');
+
+    // // Hitung total bobot
+    // $bobot = $khsData->sum(function ($item) {
+    //     return $item->nilai_indeks * $item->sks_mata_kuliah;
+    // });
+
+    // $bobotTransfer = $khsKonversiData->sum(function ($item) {
+    //     return $item->nilai_indeks * $item->sks_mata_kuliah;
+    // });
+
+    // $bobotKonversi = $khsTransferData->sum(function ($item) {
+    //     return $item->nilai_angka_diakui * $item->sks_mata_kuliah_diakui;
+    // });
+
+    // $totalBobot = $bobot + $bobotTransfer + $bobotKonversi;
+
+    
+    // // Hitung IPS
+    // $ips = $totalSksSemester > 0 ? round($totalBobot / $totalSksSemester, 2) : 0;
     
     public function handle()
     {
@@ -54,8 +100,33 @@ class HitungIpsJob implements ShouldQueue
             $riwayat = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)->first();
 
             $isMaba = $riwayat->id_periode_masuk == $semester ? 1 : 0;
+
+            $krsData = PesertaKelasKuliah::with(['matkul', 'kelas_kuliah'])
+                ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
+                ->where('approved', 1)
+                ->whereHas('kelas_kuliah', function ($query) use ($semester) {
+                    $query->where('id_semester', $semester);
+                })
+                ->get();
+
+            $krsAktivitasData = AktivitasMahasiswa::with(['konversi', 'anggota_aktivitas_personal'])
+                ->where('id_semester', $semester)
+                ->where('approve_krs', 1)
+                ->whereNull('sks_aktivitas') // exclude yang MBKM, biar tidak overlap
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_registrasi_mahasiswa) {
+                    $query->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa);
+                })
+                ->get();
             
-            // Ambil semua data KHS, KHS Konversi, dan KHS Transfer secara efisien
+            $krsMBKMData = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])
+                ->where('id_semester', $semester)
+                ->where('approve_krs', 1)
+                ->whereNotNull('sks_aktivitas')
+                ->whereHas('anggota_aktivitas_personal', function ($query) use ($id_registrasi_mahasiswa) {
+                    $query->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa);
+                })
+                ->get();
+
             $khsData = NilaiPerkuliahan::where('id_semester', $semester)
                 ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
                 ->where('nilai_huruf', '!=', 'F')
@@ -72,30 +143,37 @@ class HitungIpsJob implements ShouldQueue
                 ->where('id_registrasi_mahasiswa', $id_registrasi_mahasiswa)
                 ->where('nilai_huruf_diakui', '!=', 'F')
                 ->get();
-                
-            //SKS SEMESTER
-            $totalSksSemester = !$isMaba ? $khsData->sum('sks_mata_kuliah')+ $khsKonversiData->sum('sks_mata_kuliah')+ $khsTransferData->sum('sks_mata_kuliah_diakui') : $khsData->sum('sks_mata_kuliah')+ $khsKonversiData->sum('sks_mata_kuliah');
 
-            // Hitung total bobot
+            // SKS Semester: total beban KRS (mata kuliah + aktivitas + transfer kalau bukan maba)
+            // krsData & krsAktivitasData ambil SKS dari relasi matkul
+            $totalSksSemester = !$isMaba 
+                ? $krsData->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
+                    + $krsAktivitasData->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0)
+                    + $khsTransferData->sum('sks_mata_kuliah_diakui') + $krsMBKMData->sum('sks_aktivitas')
+                : $krsData->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
+                    + $krsAktivitasData->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0);
+
+            // Total bobot (hanya dari yang sudah dinilai) — kolom SKS sudah langsung ada di tabel, tidak perlu closure relasi
             $bobot = $khsData->sum(function ($item) {
                 return $item->nilai_indeks * $item->sks_mata_kuliah;
             });
 
-            $bobotTransfer = $khsKonversiData->sum(function ($item) {
+            $bobotKonversi = $khsKonversiData->sum(function ($item) {
                 return $item->nilai_indeks * $item->sks_mata_kuliah;
             });
 
-            $bobotKonversi = $khsTransferData->sum(function ($item) {
+            $bobotTransfer = $khsTransferData->sum(function ($item) {
                 return $item->nilai_angka_diakui * $item->sks_mata_kuliah_diakui;
             });
 
-            $totalBobot = $bobot + $bobotTransfer + $bobotKonversi;
+            $totalBobot = $bobot + $bobotKonversi + $bobotTransfer;
 
-            
-            // Hitung IPS
-            $ips = $totalSksSemester > 0 ? round($totalBobot / $totalSksSemester, 2) : 0;
+            // SKS untuk perhitungan IPS: hanya yang sudah ada nilainya, kolom langsung dari tabel
+            $totalSksDinilai = $khsData->sum('sks_mata_kuliah')
+                + $khsKonversiData->sum('sks_mata_kuliah')
+                + $khsTransferData->sum('sks_mata_kuliah_diakui');
 
-
+            $ips = $totalSksDinilai > 0 ? round($totalBobot / $totalSksDinilai, 2) : 0;
 
             //TRANSKRIP
             $transkrip = TranskripMahasiswa::select(
