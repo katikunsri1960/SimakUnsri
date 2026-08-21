@@ -226,6 +226,8 @@
         $MAX_ROWS_LEFT = 53;
     }elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
+    } elseif($rowStyle == 'mk-xlarge'){
+        $MAX_ROWS_LEFT = 60;
     } else{
         $MAX_ROWS_LEFT = 53;
     }
@@ -270,6 +272,10 @@
 @if($d->id_prodi == 'e2f2ac47-8844-456b-b525-482db9da0abf' || $d->id_prodi == 'bb06fc41-9e48-443e-aa02-df83da6bb467') {{-- Sp-1 Ilmu Penyakit Kulit dan Kelamin ||  Sp-1 Ilmu Penyakit Mata --}}
     <style>
         @page { margin: 1mm 6mm 0 4mm; }
+    </style>
+@elseif($d->id_prodi == '5a885c42-0108-4691-a5f7-acbdef2a92fc') {{-- Sp-1 Obstetri dan Ginekologi --}}
+    <style>
+         @page { margin: 8mm 5mm 4mm 5mm; }
     </style>
 @endif
 
