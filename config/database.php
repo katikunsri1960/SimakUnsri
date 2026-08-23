@@ -55,6 +55,9 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
+            'options' => extension_loaded('pdo_mysql') ? [
+                PDO::ATTR_TIMEOUT => 3,
+            ] : [],
         ],
 
         'reg_con' => [
@@ -69,6 +72,9 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
+            'options' => extension_loaded('pdo_mysql') ? [
+                PDO::ATTR_TIMEOUT => 3,
+            ] : [],
         ],
 
         'usept_con' => [
@@ -83,6 +89,9 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
+            'options' => extension_loaded('pdo_mysql') ? [
+                PDO::ATTR_TIMEOUT => 3,
+            ] : [],
         ],
 
         'mysql' => [
