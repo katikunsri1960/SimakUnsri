@@ -543,6 +543,8 @@ class PerkuliahanController extends Controller
         $id_reg = $request->id_reg;
         $id_semester = $request->id_semester;
 
+        dd('1');
+
         $data = AktivitasKuliahMahasiswa::where('id_registrasi_mahasiswa', $id_reg)->where('id_semester', $id_semester)->first();
 
         if(!$data)
@@ -554,6 +556,8 @@ class PerkuliahanController extends Controller
 
         $isMaba = $riwayat->id_periode_masuk == $id_semester ? 1 : 0;
 
+        dd('2');
+
         $krs = PesertaKelasKuliah::with(['matkul', 'kelas_kuliah'])
                 ->where('id_registrasi_mahasiswa', $id_reg)
                 ->where('approved', 1)
@@ -561,6 +565,8 @@ class PerkuliahanController extends Controller
                     $query->where('id_semester', $id_semester);
                 })
                 ->get();
+
+        dd('3');
 
         $krs_aktivitas = AktivitasMahasiswa::with(['konversi', 'anggota_aktivitas_personal'])
             ->where('id_semester', $id_semester)
@@ -570,7 +576,9 @@ class PerkuliahanController extends Controller
                 $query->where('id_registrasi_mahasiswa', $id_reg);
             })
             ->get();
-        
+
+        dd('4');
+
          $krs_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])
             ->where('id_semester', $id_semester)
             ->where('approve_krs', 1)
@@ -579,20 +587,28 @@ class PerkuliahanController extends Controller
                 $query->where('id_registrasi_mahasiswa', $id_reg);
             })
             ->get();
+        
+        dd('5');
 
         $khs = NilaiPerkuliahan::where('id_registrasi_mahasiswa', $id_reg)
                 ->where('id_semester', $id_semester)
                 ->whereNotNull('nilai_huruf')
                 ->get();
 
+        dd('6');
+
         $khs_konversi = KonversiAktivitas::with(['matkul'])->join('anggota_aktivitas_mahasiswas as ang', 'konversi_aktivitas.id_anggota', 'ang.id_anggota')
                     ->where('id_semester', $id_semester)
                     ->where('ang.id_registrasi_mahasiswa', $id_reg)
                     ->get();
+                
+        dd('7');
 
         $khs_transfer = NilaiTransferPendidikan::where('id_registrasi_mahasiswa', $id_reg)
                     ->where('id_semester', $id_semester)
                     ->get();
+                
+        dd('8');
 
         $total_sks_semester = !$isMaba 
                 ? $krs->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
@@ -600,6 +616,8 @@ class PerkuliahanController extends Controller
                     + $khs_transfer->sum('sks_mata_kuliah_diakui') + $krs_mbkm->sum('sks_aktivitas')
                 : $krs->sum(fn($item) => $item->matkul->sks_mata_kuliah ?? 0)
                     + $krs_aktivitas->sum(fn($item) => $item->konversi->sks_mata_kuliah ?? 0);
+        
+        dd('9');
 
         $bobot = 0;
 
@@ -613,27 +631,37 @@ class PerkuliahanController extends Controller
             $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
         }
 
+        dd('10');
+
         if (!$isMaba) {
             foreach ($khs_transfer as $tf) {
                 $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
             }
         }
 
+        dd('11');
+
         foreach ($khs_konversi as $kv) {
             $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
         }
+
+        dd('12');
 
         $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
 
         $ips = 0;
 
+        dd('13');
+
         $total_sks_dinilai = !$isMaba ? $khs->sum('sks_mata_kuliah') + $khs_transfer->sum('sks_mata_kuliah_diakui') + $khs_konversi->sum('sks_mata_kuliah') : $khs->sum('sks_mata_kuliah') + $khs_konversi->sum('sks_mata_kuliah');
+        
+        dd('14');
 
         if($total_sks_dinilai > 0){
             $ips = $total_bobot / $total_sks_dinilai;
         }
 
-        dd($total_sks_semester, $total_bobot, $total_sks_dinilai, $ips);
+        dd('15');
 
         $transkrip = TranskripMahasiswa::select(
                         'sks_mata_kuliah','nilai_indeks'
