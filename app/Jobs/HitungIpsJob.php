@@ -175,6 +175,8 @@ class HitungIpsJob implements ShouldQueue
 
             $ips = $totalSksDinilai > 0 ? round($totalBobot / $totalSksDinilai, 2) : 0;
 
+            dd($totalSksSemester, $totalBobot, $totalSksDinilai, $ips);
+
             //TRANSKRIP
             $transkrip = TranskripMahasiswa::select(
                         'sks_mata_kuliah','nilai_indeks'

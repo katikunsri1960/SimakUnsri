@@ -633,6 +633,8 @@ class PerkuliahanController extends Controller
             $ips = $total_bobot / $total_sks_dinilai;
         }
 
+        dd($total_sks_semester, $total_bobot, $total_sks_dinilai, $ips);
+
         $transkrip = TranskripMahasiswa::select(
                         'sks_mata_kuliah','nilai_indeks'
                     )
