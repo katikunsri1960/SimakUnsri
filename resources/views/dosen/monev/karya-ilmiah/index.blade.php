@@ -57,79 +57,115 @@ Monev Pembimbing Karya Ilmiah
 @push('js')
 <script>
     function getMonev() {
+
         var id_prodi = $('#id_prodi').val();
+
+        if (!id_prodi) {
+            alert('Silakan pilih Program Studi terlebih dahulu.');
+            return;
+        }
+
         $.ajax({
-            url: "{{route('dosen.monev.karya-ilmiah.get-data')}}",
+            url: "{{ route('dosen.monev.karya-ilmiah.get-data') }}",
             type: "GET",
             data: {
                 id_prodi: id_prodi
             },
+
             success: function (data) {
-            //    empty data-div
 
                 $('#data-div').empty();
 
-                if(data.status == 0)
-                {
+                if (data.status == 0) {
+
                     $('#data-div').html(`
                         <div class="alert alert-danger" role="alert">
                             <h4>${data.message}</h4>
                         </div>
                     `);
+
+                    return;
                 }
-                else
-                {
-                    // make table from data and append to data-div
-                    var table = `
-                        <div class="table-responsive">
-                            <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
-                                <thead>
-                                    <tr>
-                                        <th class="text-center align-middle">No</th>
-                                        <th class="text-center align-middle">NIDN</th>
-                                        <th class="text-center align-middle">Dosen</th>
-                                        <th class="text-center align-middle">Jumlah<br>Pembimbing Utama</th>
-                                        <th class="text-center align-middle">Jumlah<br>Pembimbing Pendamping</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                    `;
-                    var baseUrl = "{{ route('dosen.monev.karya-ilmiah.pembimbing-utama', ':id_dosen') }}";
-                    baseUrl = baseUrl.replace(':id_dosen', '');
 
-                    var baseUrlPendamping = " {{ route('dosen.monev.karya-ilmiah.pembimbing-pendamping', ':id_dosen') }}";
-                    baseUrlPendamping = baseUrlPendamping.replace(':id_dosen', '');
+                var table = `
+                    <div class="table-responsive">
+                        <table id="data"
+                            class="table table-hover table-bordered margin-top-10 w-p100">
 
-                    data.data.forEach((d, i) => {
-
-                        table += `
+                            <thead>
                                 <tr>
-                                    <td class="text-center align-middle">${i + 1}</td>
-                                    <td class="text-center align-middle">${d.nidn}</td>
-                                    <td class="text-start align-middle">${d.nama_dosen}</td>
-                                    <td class="text-center align-middle">
-                                       <a href="${baseUrl}${d.id_dosen}">
-                                            ${d.pembimbing_utama}
-                                        </a>
-                                    </td>
-                                    <td class="text-center align-middle">
-                                         <a href="${baseUrlPendamping}${d.id_dosen}">
-                                        ${d.pembimbing_pendamping}
-                                    </td>
+                                    <th class="text-center align-middle">No</th>
+                                    <th class="text-center align-middle">NIDN</th>
+                                    <th class="text-center align-middle">Dosen</th>
+                                    <th class="text-center align-middle">
+                                        Jumlah<br>Pembimbing Utama
+                                    </th>
+                                    <th class="text-center align-middle">
+                                        Jumlah<br>Pembimbing Pendamping
+                                    </th>
                                 </tr>
-                            `;
-                        });
+                            </thead>
+
+                            <tbody>
+                `;
+
+                // URL template
+                var baseUrl = "{{ url('dosen/monev/karya-ilmiah/pembimbing-utama') }}";
+
+                var baseUrlPendamping =
+                    "{{ url('dosen/monev/karya-ilmiah/pembimbing-pendamping') }}";
+
+
+                data.data.forEach((d, i) => {
+
+                    var urlPembimbingUtama =
+                        baseUrl + '/' + d.id_dosen + '/' + id_prodi;
+
+                    var urlPembimbingPendamping =
+                        baseUrlPendamping + '/' + d.id_dosen + '/' + id_prodi;
+
+
                     table += `
-                                </tbody>
-                            </table>
-                        </div>
+                        <tr>
+
+                            <td class="text-center align-middle">
+                                ${i + 1}
+                            </td>
+
+                            <td class="text-center align-middle">
+                                ${d.nidn}
+                            </td>
+
+                            <td class="text-start align-middle">
+                                ${d.nama_dosen}
+                            </td>
+
+                            <td class="text-center align-middle">
+                                <a href="${urlPembimbingUtama}">
+                                    ${d.pembimbing_utama}
+                                </a>
+                            </td>
+
+                            <td class="text-center align-middle">
+                                <a href="${urlPembimbingPendamping}">
+                                    ${d.pembimbing_pendamping}
+                                </a>
+                            </td>
+
+                        </tr>
                     `;
-                    $('#data-div').html(table);
-
-                    $('#data').DataTable();
+                });
 
 
-                }
+                table += `
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+
+                $('#data-div').html(table);
+
+                $('#data').DataTable();
             }
         });
     }
