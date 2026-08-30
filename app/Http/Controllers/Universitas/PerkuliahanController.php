@@ -570,7 +570,7 @@ class PerkuliahanController extends Controller
                 $query->where('id_registrasi_mahasiswa', $id_reg);
             })
             ->get();
-        
+
          $krs_mbkm = AktivitasMahasiswa::with(['anggota_aktivitas_personal'])
             ->where('id_semester', $id_semester)
             ->where('approve_krs', 1)
@@ -610,17 +610,17 @@ class PerkuliahanController extends Controller
 
         // dd($semester, $tahun_ajaran, $prodi);
         foreach ($khs as $t) {
-            $bobot += $t->nilai_indeks * $t->sks_mata_kuliah;
+            $bobot += ($t->nilai_indeks ?? 0) * ($t->sks_mata_kuliah ?? 0);;
         }
 
         if (!$isMaba) {
             foreach ($khs_transfer as $tf) {
-                $bobot_transfer += $tf->nilai_angka_diakui * $tf->sks_mata_kuliah_diakui;
+                $bobot_transfer += ($tf->nilai_angka_diakui ?? 0) * ($tf->sks_mata_kuliah_diakui ?? 0);
             }
         }
 
         foreach ($khs_konversi as $kv) {
-            $bobot_konversi += $kv->nilai_indeks * $kv->sks_mata_kuliah;
+            $bobot_konversi += ($kv->nilai_indeks ?? 0) * ($kv->sks_mata_kuliah ?? 0);
         }
 
         $total_bobot= $bobot + $bobot_transfer + $bobot_konversi;
@@ -644,7 +644,7 @@ class PerkuliahanController extends Controller
         $total_bobot_transkrip = 0;
 
         foreach ($transkrip as $t) {
-            $total_bobot_transkrip += $t->nilai_indeks * $t->sks_mata_kuliah;
+            $total_bobot_transkrip += ($t->nilai_indeks ?? 0) * ($t->sks_mata_kuliah ?? 0);
         }
 
         $ipk = 0;

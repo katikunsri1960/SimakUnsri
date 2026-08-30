@@ -62,10 +62,24 @@ class GenerateNilaiLewatMasaPengisian extends Command
                 ->whereHas('kelas_kuliah', function ($query) use ($semester_aktif) {
                     $query->where('id_semester', $semester_aktif['id_semester'])
                         ->whereHas('peserta_kelas_approved', function ($q) {
-                            $q->whereDoesntHave('nilai_perkuliahan');
+                            $q->whereNotExists(function ($sub) {
+                                $sub->select(DB::raw(1))
+                                    ->from('nilai_perkuliahans')
+                                    ->whereColumn('nilai_perkuliahans.id_kelas_kuliah', 'peserta_kelas_kuliahs.id_kelas_kuliah')
+                                    ->whereColumn('nilai_perkuliahans.id_registrasi_mahasiswa', 'peserta_kelas_kuliahs.id_registrasi_mahasiswa');
+                            });
                         });
                 })
                 ->get();
+
+        $this->info('Jumlah prodi ditemukan: ' . $prodi->count());
+        $this->info('Semester aktif dipakai: ' . $semester_aktif['id_semester']);
+        $this->info('Database connection: ' . DB::connection()->getDatabaseName());
+
+        if ($prodi->isEmpty()) {
+            $this->info('Tidak ada prodi yang match kondisi.');
+            return;
+        }
 
         foreach ($prodi as $p) {
             $proses = $this->proses_nilai($p->id_prodi, $semester_aktif['id_semester'], $semester_aktif['nama_semester']);
@@ -85,10 +99,17 @@ class GenerateNilaiLewatMasaPengisian extends Command
     private function proses_nilai($prodi, $semester, $nama_semester)
     {
         $kelas_kuliah = KelasKuliah::with(['peserta_kelas_approved', 'matkul', 'komponen_evaluasi'])
-                    ->whereHas('peserta_kelas_approved')
-                    ->where('id_prodi', $prodi)
-                    ->where('id_semester', $semester)
-                    ->get();
+                        ->whereHas('peserta_kelas_approved', function ($q) {
+                            $q->whereNotExists(function ($sub) {
+                                $sub->select(DB::raw(1))
+                                    ->from('nilai_perkuliahans')
+                                    ->whereColumn('nilai_perkuliahans.id_kelas_kuliah', 'peserta_kelas_kuliahs.id_kelas_kuliah')
+                                    ->whereColumn('nilai_perkuliahans.id_registrasi_mahasiswa', 'peserta_kelas_kuliahs.id_registrasi_mahasiswa');
+                            });
+                        })
+                        ->where('id_prodi', $prodi)
+                        ->where('id_semester', $semester)
+                        ->get();
 
         $nilaiAngka = 86;
         $nilaiIndeks = 4.00;
