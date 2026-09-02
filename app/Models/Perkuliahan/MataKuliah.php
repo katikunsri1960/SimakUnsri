@@ -111,9 +111,9 @@ class MataKuliah extends Model
                     
                     // PRODI BARU
                     '8f010c53-7124-48b3-8347-390ec156c603', //Sp-1 Ilmu Kesehatan Telinga Hidung Tenggorok, Bedah Kepala dan Leher
-                    '5a885c42-0108-4691-a5f7-acbdef2a92fc', //SP-1 Obstetri dan Ginekologi
+                    '5a885c42-0108-4691-a5f7-acbdef2a92fc' //SP-1 Obstetri dan Ginekologi
                     
-                    '33a16bc2-dd57-4578-8d53-f1d189ce175f' //S2 Pendidikan Jasmani
+                    // '33a16bc2-dd57-4578-8d53-f1d189ce175f' //S2 Pendidikan Jasmani
                     // S2, S3, Dan Sp-2 tidak mengunakan sistem Blok (24 SKS)
         ];
 
