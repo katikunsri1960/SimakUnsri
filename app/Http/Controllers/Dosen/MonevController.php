@@ -119,13 +119,13 @@ class MonevController extends Controller
 
         $rawPembimbingUtama = '(SELECT COUNT(*) from bimbing_mahasiswas as bm
                                 JOIN aktivitas_mahasiswas as am on bm.id_aktivitas = am.id_aktivitas
-                                WHERE id_dosen = biodata_dosens.id_dosen AND am.id_semester = '.$semester.'
+                                WHERE id_dosen = biodata_dosens.id_dosen AND am.id_semester = '.$semester.' AND am.id_prodi = "'.$id_prodi.'"
                                 AND am.id_jenis_aktivitas IN ('.$rawJenis_aktivitas.')
                                 AND bm.id_kategori_kegiatan IN ('.$kategori_pembimbing_utama.')) as pembimbing_utama';
 
         $rawPembimbingPendamping = '(SELECT COUNT(*) from bimbing_mahasiswas as bm
                                 JOIN aktivitas_mahasiswas as am on bm.id_aktivitas = am.id_aktivitas
-                                WHERE id_dosen = biodata_dosens.id_dosen AND am.id_semester = '.$semester.'
+                                WHERE id_dosen = biodata_dosens.id_dosen AND am.id_semester = '.$semester.' AND am.id_prodi = "'.$id_prodi.'"
                                 AND am.id_jenis_aktivitas IN ('.$rawJenis_aktivitas.')
                                 AND bm.id_kategori_kegiatan IN ('.$kategori_pembimbing_pendamping.')) as pembimbing_pendamping';
 
@@ -140,8 +140,12 @@ class MonevController extends Controller
         ]);
     }
 
-    public function karya_ilmiah_pembimbing_utama($dosen)
+    public function karya_ilmiah_pembimbing_utama($dosen, $id_prodi)
     {
+        // dd([
+        //     'dosen' => $dosen,
+        //     'id_prodi' => $id_prodi,
+        // ]);
         $semester = SemesterAktif::first()->id_semester;
         $id_jenis_aktivitas = [3,4,22];
         // $rawJenis_aktivitas = '1,2,3,4,22';
@@ -149,6 +153,7 @@ class MonevController extends Controller
 
         $aktivitas = BimbingMahasiswa::join('aktivitas_mahasiswas as am', 'bimbing_mahasiswas.id_aktivitas', 'am.id_aktivitas')
                                 ->where('bimbing_mahasiswas.id_dosen', $dosen)
+                                ->where('am.id_prodi', $id_prodi)
                                 // ->whereIn('am.id_jenis_aktivitas', $id_jenis_aktivitas)
                                 ->where('am.id_semester', $semester)
                                 ->whereIn('bimbing_mahasiswas.id_kategori_kegiatan', $kategori_pembimbing_utama)
@@ -175,7 +180,7 @@ class MonevController extends Controller
         ]);
     }
 
-    public function karya_ilmiah_pembimbing_pendamping($dosen)
+    public function karya_ilmiah_pembimbing_pendamping($dosen, $id_prodi)
     {
         $semester = SemesterAktif::first()->id_semester;
         $id_jenis_aktivitas = [3,4,22];
@@ -183,6 +188,7 @@ class MonevController extends Controller
 
         $aktivitas = BimbingMahasiswa::join('aktivitas_mahasiswas as am', 'bimbing_mahasiswas.id_aktivitas', 'am.id_aktivitas')
                                 ->where('bimbing_mahasiswas.id_dosen', $dosen)
+                                ->where('am.id_prodi', $id_prodi)
                                 ->whereIn('am.id_jenis_aktivitas', $id_jenis_aktivitas)
                                 ->where('am.id_semester', $semester)
                                 ->whereIn('bimbing_mahasiswas.id_kategori_kegiatan', $kategori_pembimbing_pendamping)

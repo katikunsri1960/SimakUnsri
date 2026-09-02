@@ -118,7 +118,6 @@
 
 <div class="judul">
     UNIVERSITAS SRIWIJAYA<br>
-    {{ strtoupper($d->nama_fakultas ?? '-') }}<br>
     SURAT KETERANGAN PENDAMPING IJAZAH (SKPI)<br>
     NOMOR : {{ $d->nomor_surat_skpi ?? '........ / ........ / ........ / 2026' }}
 </div>
@@ -227,23 +226,30 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
         <td class="keterangan">Nama Institusi</td>
         <td class="isi">: Universitas Sriwijaya</td>
     </tr>
-
+    
     <tr>
         <td class="nomor">3</td>
+        <td class="titik">.</td>
+        <td class="keterangan">Fakultas</td>
+        <td class="isi">: {{str_replace('Fakultas ', '', $d->nama_fakultas ?? '-')}}</td>
+    </tr>
+
+    <tr>
+        <td class="nomor">4</td>
         <td class="titik">.</td>
         <td class="keterangan">Program Studi</td>
         <td class="isi">: {{ $d->nama_prodi }}</td>
     </tr>
 
     <tr>
-        <td class="nomor">4</td>
+        <td class="nomor">5</td>
         <td class="titik">.</td>
         <td class="keterangan">Jenis dan Jenjang Pendidikan</td>
         <td class="isi">: {{ $d->jenjang }}</td>
     </tr>
 
     <tr>
-        <td class="nomor">5</td>
+        <td class="nomor">6</td>
         <td class="titik">.</td>
         <td class="keterangan">Jenjang Kualifikasi Sesuai KKNI</td>
         <td class="isi">:
@@ -256,28 +262,28 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
     </tr>
 
     <tr>
-        <td class="nomor">6</td>
+        <td class="nomor">7</td>
         <td class="titik">.</td>
         <td class="keterangan">Persyaratan Penerimaan</td>
         <td class="isi">: Lulusan SMA/SMK/Sederajat</td>
     </tr>
 
     <tr>
-        <td class="nomor">7</td>
+        <td class="nomor">8</td>
         <td class="titik">.</td>
         <td class="keterangan">Bahasa Pengantar Kuliah</td>
         <td class="isi">: Bahasa Indonesia</td>
     </tr>
 
     <tr>
-        <td class="nomor">8</td>
+        <td class="nomor">9</td>
         <td class="titik">.</td>
         <td class="keterangan">Sistem Penilaian</td>
         <td class="isi">: Skala 0-4: A=4, B=3, C=2, D=1, E=0.</td>
     </tr>
 
     <tr>
-        <td class="nomor">9</td>
+        <td class="nomor">10</td>
         <td class="titik">.</td>
         <td class="keterangan">Lama Studi Reguler</td>
         <td class="isi">:
@@ -290,7 +296,7 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
     </tr>
 
     <tr>
-        <td class="nomor">10</td>
+        <td class="nomor">11</td>
         <td class="titik">.</td>
         <td class="keterangan">Jenis dan Jenjang Pendidikan Lanjutan</td>
         <td class="isi">:
