@@ -13,7 +13,7 @@ class ApiKuisioner extends Controller
         $kuisoner_questions = KuisonerQuestion::select(
             'id',
             'question_indonesia',
-            'question_engish',
+            'question_english',
             'created_at'
         )->paginate(500);
 
