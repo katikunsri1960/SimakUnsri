@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\ApiKehadiranDosen;
 use App\Http\Controllers\API\ApiKehadiranMahasiswa;
+use App\Http\Controllers\API\ApiKuisioner;
 
 
 
@@ -26,6 +27,8 @@ Route::post('/register', [AuthController::class, 'register']);
 Route::middleware(['auth:sanctum', 'role:univ'])->group(function () {
     Route::get('/kehadiran-dosen', [ApiKehadiranDosen::class, 'kehadiran_dosen']);
     Route::get('/kehadiran-mahasiswa', [ApiKehadiranMahasiswa::class, 'kehadiran_mahasiswa']);
+    Route::get('/kuisoner-questions', [ApiKuisioner::class, 'kuisoner_questions']);
+    Route::get('/kuisoner-answers', [ApiKuisioner::class, 'kuisoner_answers']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
 
