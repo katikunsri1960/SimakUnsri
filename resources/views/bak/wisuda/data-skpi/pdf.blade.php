@@ -73,13 +73,15 @@
 
     .cpl-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0 8px; /* jarak antar setiap TR */
         margin-left: 15px;
         margin-top: 15px;
     }
 
     .cpl-table td {
         padding: 0;
+        margin-bottom: 5px;
         vertical-align: top;
     }
 
@@ -99,7 +101,7 @@
     .cpl-content {
         padding-left: 5px !important;
         padding-right: 20px !important;
-        text-align: left;
+        text-align: justify;
         line-height: 1.25;
     }
 
@@ -336,7 +338,8 @@ Surat Keterangan Pendamping Ijazah (SKPI) adalah pelengkap Ijazah yang menerangk
             @foreach($cpl_mahasiswa as $index => $item)
                 <tr>
                     <td class="cpl-number">
-                        CPL-{{ $index + 1 }}
+                        {{-- CPL-{{ $index + 1 }} --}}
+                        {{ $item->kode_cpl }}
                     </td>
 
                     <td class="cpl-colon">
