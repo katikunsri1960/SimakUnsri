@@ -20,7 +20,7 @@
             Yth. Rektor
         </div>
         <div class="">
-            u.p Kepala BAK
+            u.p Direktur Direktorat Akademik
         </div>
         <div class="">
             {{$pt->nama_perguruan_tinggi}}

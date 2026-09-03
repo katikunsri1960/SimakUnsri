@@ -137,16 +137,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
 
                 Route::prefix('status-aipt')->group(function(){
-                    Route::get('/', [App\Http\Controllers\DPPTI\MonitoringController::class, 'status_aipt'])->name('dppti.monitoring.status-aipt');
+                    // Route::get('/', [App\Http\Controllers\DPPTI\MonitoringController::class, 'status_aipt'])->name('dppti.monitoring.status-aipt');
+                    Route::get('/dosen', [App\Http\Controllers\DPPTI\MonitoringAIPTController::class, 'dosen_aipt'])->name('dppti.monitoring.status-aipt.dosen');
+                    Route::get('/mahasiswa', [App\Http\Controllers\DPPTI\MonitoringAIPTController::class, 'mahasiswa_aipt'])->name('dppti.monitoring.status-aipt.mahasiswa');
+                    Route::get('/mahasiswa/data', [App\Http\Controllers\DPPTI\MonitoringAIPTController::class, 'mahasiswa_aipt_data'])->name('dppti.monitoring.status-aipt.mahasiswa.data');
                     // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\DPPTI\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('dppti.monitoring.status-mahasiswa.detail-total');
                     // Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\DPPTI\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('dppti.monitoring.status-mahasiswa.detail-prodi');
                 });
 
-                Route::prefix('status-ukt')->group(function(){
-                    Route::get('/', [App\Http\Controllers\DPPTI\MonitoringController::class, 'status_ukt'])->name('dppti.monitoring.status-ukt');
-                    // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\DPPTI\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('dppti.monitoring.status-ukt.detail-total');
-                    // Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\DPPTI\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('dppti.monitoring.status-ukt.detail-prodi');
-                });
 
                 Route::prefix('status-ukt')->group(function(){
                     Route::get('/', [App\Http\Controllers\DPPTI\MonitoringController::class, 'status_ukt'])->name('dppti.monitoring.status-ukt');
@@ -162,7 +160,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
 
             Route::prefix('usept-prodi')->group(function(){
                 Route::get('/', [App\Http\Controllers\DPPTI\UseptController::class, 'index'])->name('dppti.usept-prodi');
-                Route::post('/store/{kurikulum}', [App\Http\Controllers\DPPTI\UseptController::class, 'store'])->name('dppti.usept-prodi.store');
+                // Route::post('/store/{kurikulum}', [App\Http\Controllers\DPPTI\UseptController::class, 'store'])->name('dppti.usept-prodi.store');
             });
 
             Route::prefix('yudisium')->group(function(){

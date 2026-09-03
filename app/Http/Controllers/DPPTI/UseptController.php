@@ -22,7 +22,7 @@ class UseptController extends Controller
 
         $prodi = ProgramStudi::where('status', 'A')->get();
 
-        return view('dppti.usept.index', [
+        return view('dppti.data-master.usept.index', [
             'data' => $data,
             'prodi' => $prodi,
         ]);

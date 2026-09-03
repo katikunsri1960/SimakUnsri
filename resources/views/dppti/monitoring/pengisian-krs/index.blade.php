@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Monitoring Pengisian KRS
 @endsection
@@ -10,7 +10,7 @@ Monitoring Pengisian KRS
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
                         <li class="breadcrumb-item active" aria-current="page">Pengisian KRS</li>
                     </ol>
@@ -54,19 +54,19 @@ Monitoring Pengisian KRS
                                     <td class="text-start align-middle">{{$d->id}} - {{$d->nama_fakultas}}</td>
                                     <td class="text-start align-middle">{{$d->nama_jenjang_pendidikan}} {{$d->nama_program_studi}}</td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('bak.monitoring.pengisian-krs.detail-mahasiswa-aktif', ['prodi' => $d->prodi->id])}}">
+                                        <a href="{{route('dppti.monitoring.pengisian-krs.detail-mahasiswa-aktif', ['prodi' => $d->prodi->id])}}">
                                             {{$d->mahasiswa_aktif}}
                                         </a>
 
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="{{route('bak.monitoring.pengisian-krs.detail-aktif-min-tujuh', ['prodi' => $d->prodi->id])}}">
+                                        <a href="{{route('dppti.monitoring.pengisian-krs.detail-aktif-min-tujuh', ['prodi' => $d->prodi->id])}}">
                                             {{$d->mahasiswa_aktif_min_7}}
                                         </a>
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->mahasiswa_aktif - $d->mahasiswa_aktif_min_7 > 0)
-                                        <a href="{{route('bak.monitoring.pengisian-krs.mahasiswa-up-tujuh', ['prodi' => $d->prodi->id])}}"  target="_blank">
+                                        <a href="{{route('dppti.monitoring.pengisian-krs.mahasiswa-up-tujuh', ['prodi' => $d->prodi->id])}}"  target="_blank">
                                             {{$d->mahasiswa_aktif - $d->mahasiswa_aktif_min_7}}
                                         </a>
                                         @else
@@ -76,7 +76,7 @@ Monitoring Pengisian KRS
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->isi_krs > 0)
-                                        <a href="{{route('bak.monitoring.pengisian-krs.detail-isi-krs', ['prodi' => $d->prodi->id])}}">
+                                        <a href="{{route('dppti.monitoring.pengisian-krs.detail-isi-krs', ['prodi' => $d->prodi->id])}}">
                                             {{$d->isi_krs}}
                                         </a>
                                         @else
@@ -86,7 +86,7 @@ Monitoring Pengisian KRS
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->mahasiswa_aktif_min_7 - $d->isi_krs > 0)
-                                        <a href="{{route('bak.monitoring.pengisian-krs.tidak-isi-krs', ['prodi' => $d->prodi->id])}}"  target="_blank">
+                                        <a href="{{route('dppti.monitoring.pengisian-krs.tidak-isi-krs', ['prodi' => $d->prodi->id])}}"  target="_blank">
                                             {{$d->mahasiswa_aktif_min_7 - $d->isi_krs}}
                                         </a>
                                         @else
@@ -96,7 +96,7 @@ Monitoring Pengisian KRS
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->krs_approved > 0)
-                                        <a href="{{route('bak.monitoring.pengisian-krs.detail-approved-krs', ['prodi' => $d->prodi->id])}}">
+                                        <a href="{{route('dppti.monitoring.pengisian-krs.detail-approved-krs', ['prodi' => $d->prodi->id])}}">
                                         {{$d->krs_approved}}
                                         </a>
                                         @else
@@ -105,7 +105,7 @@ Monitoring Pengisian KRS
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($d->krs_not_approved > 0)
-                                        <a href="{{route('bak.monitoring.pengisian-krs.detail-not-approved-krs', ['prodi' => $d->prodi->id])}}">
+                                        <a href="{{route('dppti.monitoring.pengisian-krs.detail-not-approved-krs', ['prodi' => $d->prodi->id])}}">
                                             {{$d->krs_not_approved}}
                                             </a>
                                         @else

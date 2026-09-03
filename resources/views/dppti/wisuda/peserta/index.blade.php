@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Daftar Peserta Wisuda
 @endsection
@@ -165,7 +165,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{route('bak.wisuda.peserta.data')}}`,
+        url: `{{route('dppti.wisuda.peserta.data')}}`,
         type: 'GET',
         data: {
             fakultas: fakultas,
@@ -191,7 +191,7 @@ function getData()
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
                     // console.log(item.id);
-                    var url_berkas = '{{route('bak.wisuda.peserta.formulir', ['id' => 'ID'])}}';
+                    var url_berkas = '{{route('dppti.wisuda.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-success" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     

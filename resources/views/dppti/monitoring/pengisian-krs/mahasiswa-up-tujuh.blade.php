@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 List Mahasiswa Aktif > 7 Tahun
 @endsection
@@ -10,9 +10,9 @@ List Mahasiswa Aktif > 7 Tahun
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
-                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('bak.monitoring.pengisian-krs')}}">Pengisian KRS</a></li>
+                        <li class="breadcrumb-item" aria-current="page"><a href="{{route('dppti.monitoring.pengisian-krs')}}">Pengisian KRS</a></li>
                         <li class="breadcrumb-item active" aria-current="page">List Mahasiswa Aktif > 7 Tahun</li>
                     </ol>
                 </nav>

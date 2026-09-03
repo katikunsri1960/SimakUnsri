@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Transkrip Nilai
 @endsection
@@ -62,14 +62,6 @@ Transkrip Nilai
                         <div class="box-body text-center">
                             <div class="">
                                 <div id="krsDiv" hidden>
-                                    <div class="row mb-2">
-                                        <form action="{{route('bak.transkrip-nilai.download')}}" method="get"
-                                            id="cetakForm" target="_blank">
-                                            <input type="hidden" name="nim" id="nimCetak">
-                                            <button class="btn btn-success" type="submit"><i class="fa fa-print"></i>
-                                                Cetak</button>
-                                        </form>
-                                    </div>
                                     <h3 class="text-center">Transkrip Mahasiswa</h3>
                                     <div class="row">
                                         <div class="col-md-2" id="foto">
@@ -259,7 +251,7 @@ Transkrip Nilai
             width: '100%',
             minimumInputLength: 3,
             ajax: {
-                url: "{{route('bak.transkrip-nilai.search')}}",
+                url: "{{route('dppti.transkrip-nilai.search')}}",
                 type: "GET",
                 dataType: 'json',
                 delay: 250,
@@ -287,7 +279,7 @@ Transkrip Nilai
 
         function checkSync(id_batch) {
             $.ajax({
-                url: '{{ route('bak.check-sync') }}',
+                url: '{{ route('dppti.check-sync') }}',
                 type: 'GET',
                 data: {
                     id_batch: id_batch
@@ -331,7 +323,7 @@ Transkrip Nilai
                     swal('Peringatan', 'NIM / Nama tidak boleh kosong', 'warning');
                 } else {
                     $.ajax({
-                        url: '{{route('bak.transkrip-nilai.get')}}',
+                        url: '{{route('dppti.transkrip-nilai.get')}}',
                         type: 'GET',
                         data: {
                             nim: nim
@@ -477,7 +469,7 @@ Transkrip Nilai
                                 `);
 
                                 response.akm.forEach(function (akm, index) {
-                                    var url = '{{ route("bak.transkrip-nilai.khs", ["id_reg" => ":id_reg", "semester" => ":semester"]) }}';
+                                    var url = '{{ route("dppti.transkrip-nilai.khs", ["id_reg" => ":id_reg", "semester" => ":semester"]) }}';
                                     url = url.replace(':id_reg', response.riwayat.id_registrasi_mahasiswa);
                                     url = url.replace(':semester', akm.id_semester);
 

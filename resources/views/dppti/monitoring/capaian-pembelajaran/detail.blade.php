@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Monitoring CPL Kurikulum
 @endsection
@@ -7,7 +7,7 @@ Monitoring CPL Kurikulum
 
 @push('header')
 <div class="mx-4">
-    <a href="{{route('bak.monitoring.cpl-kurikulum')}}" class="btn btn-warning btn-rounded">
+    <a href="{{route('dppti.monitoring.cpl-kurikulum')}}" class="btn btn-warning btn-rounded">
         <i class="fa fa-arrow-left"></i> Kembali
     </a>
 </div>

@@ -1,19 +1,19 @@
 @extends('layouts.dppti')
 @section('title')
-Mahasiswa Lulus DO
+Mahasiswa AIPT
 @endsection
 @section('content')
 <div class="content-header">
     <div class="d-flex align-items-center">
         <div class="me-auto">
-            <h3 class="page-title">Daftar Mahasiswa Lulus DO</h3>
+            <h3 class="page-title">Data Mahasiswa AIPT</h3>
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
-                        <li class="breadcrumb-item active" aria-current="page">Lulus Do</li>
+                        <li class="breadcrumb-item active" aria-current="page">Mahasiswa AIPT</li>
                     </ol>
                 </nav>
             </div>
@@ -32,9 +32,9 @@ Mahasiswa Lulus DO
                             data-bs-target="#filter-button">
                             <i class="fa fa-filter"></i> Filter
                         </button>
-                        @include('dppti.monitoring.kelulusan.filter')
+                        @include('dppti.monitoring.status-aipt.mahasiswa.filter')
                         <span class="divider-line mx-1"></span>
-                        <a href="{{route('dppti.monitoring.lulus-do')}}" class="btn btn-warning waves-effect waves-light" >
+                        <a href="{{route('dppti.monitoring.status-aipt.mahasiswa')}}" class="btn btn-warning waves-effect waves-light" >
                             <i class="fa fa-refresh"></i> Reset Filter
                         </a>
                     </div>
@@ -121,6 +121,13 @@ Mahasiswa Lulus DO
             dropdownParent: $('#filter-button')
         });
 
+        $('#periode_keluar').select2({
+            placeholder: 'Pilih Periode Keluar',
+            allowClear: true,
+            width: '100%',
+            dropdownParent: $('#filter-button')
+        });
+
         $('#data').DataTable({
             // dom: 'Bfrtip',
             // buttons: [
@@ -129,12 +136,13 @@ Mahasiswa Lulus DO
             processing: true,
             serverSide: true,
             ajax: {
-                url: '{{route('dppti.monitoring.lulus-do.data')}}',
+                url: '{{route('dppti.monitoring.status-aipt.mahasiswa.data')}}',
                 type: 'GET',
                 data: function (d) {
                     d.id_prodi = $('#id_prodi').val();
                     d.angkatan = $('#angkatan').val();
                     d.jenis_keluar = $('#jenis_keluar').val();
+                    d.periode_keluar = $('#periode_keluar').val();
                 },
                 error: function (xhr, error, thrown) {
                     alert('An error occurred. ' + thrown);

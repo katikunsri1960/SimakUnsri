@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Monitoring Pengisian Nilai
 @endsection
@@ -39,7 +39,7 @@ Monitoring Pengisian Nilai
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
                         <li class="breadcrumb-item active" aria-current="page">Pengisian Nilai</li>
                     </ol>
@@ -156,7 +156,7 @@ Monitoring Pengisian Nilai
 
         $.ajax({
 
-            url: '{{ route('bak.monitoring.pengisian-nilai.data') }}',
+            url: '{{ route('dppti.monitoring.pengisian-nilai.data') }}',
 
             type: 'GET',
 
@@ -226,7 +226,7 @@ Monitoring Pengisian Nilai
 
                                 render: function(data, type, row, meta) {
 
-                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", [
+                                    var url = '{{ route("dppti.monitoring.pengisian-nilai.detail", [
                                         "mode" => ":mode",
                                         "dosen" => ":id_dosen",
                                         "prodi" => ":prodi"
@@ -246,7 +246,7 @@ Monitoring Pengisian Nilai
 
                                 render: function(data, type, row, meta) {
 
-                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", [
+                                    var url = '{{ route("dppti.monitoring.pengisian-nilai.detail", [
                                         "mode" => ":mode",
                                         "dosen" => ":id_dosen",
                                         "prodi" => ":prodi"
@@ -266,7 +266,7 @@ Monitoring Pengisian Nilai
 
                                 render: function(data, type, row, meta) {
 
-                                    var url = '{{ route("bak.monitoring.pengisian-nilai.detail", [
+                                    var url = '{{ route("dppti.monitoring.pengisian-nilai.detail", [
                                         "mode" => ":mode",
                                         "dosen" => ":id_dosen",
                                         "prodi" => ":prodi"
