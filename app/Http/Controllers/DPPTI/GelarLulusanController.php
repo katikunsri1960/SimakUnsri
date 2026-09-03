@@ -20,21 +20,8 @@ class GelarLulusanController extends Controller
                 ->select('gelar_lulusans.*')
                 ->get();
 
-        return view('dppti.gelar-lulusan.index', compact('data'));
+        return view('dppti.data-master.gelar-lulusan.index', compact('data'));
 
-    }
-
-    public function edit($id_gelar)
-    {
-        // dd($id_gelar);
-
-        $gelar = GelarLulusan::where('id', $id_gelar)->first();
-        $prodi = ProgramStudi::where('id_prodi', $gelar->id_prodi)->first();
-
-        return view('dppti.gelar-lulusan.edit', [
-            'prodi' => $prodi,
-            'gelar' => $gelar
-        ]);
     }
 
     public function get_prodi(Request $request)
@@ -50,47 +37,5 @@ class GelarLulusanController extends Controller
         $data = $query->get();
 
         return response()->json($data);
-    }
-
-    public function update(Request $request)
-    {
-        $data = $request->validate([
-            'id_gelar' => 'required',
-            'gelar' => 'required',
-            'gelar_panjang' => 'required',
-        ]);
-
-        try {
-            GelarLulusan::updateOrCreate(['id' => $data['id_gelar']], [
-                'gelar' => $data['gelar'],
-                'gelar_panjang' => $data['gelar_panjang'],
-            ]);
-        } catch (\Throwable $th) {
-            return redirect()->route('dppti.gelar-lulusan')->with('error', 'Data gelar lulusan gagal disimpan!');
-        }
-
-        return redirect()->route('dppti.gelar-lulusan')->with('success', 'Data gelar lulusan berhasil disimpan!');
-    }
-
-    public function store(Request $request)
-    {
-        // dd($request);
-        $data = $request->validate([
-            'id_prodi' => 'required|exists:program_studis,id_prodi',
-            'gelar_new' => 'required',
-            'gelar_panjang_new' => 'required',
-        ]);
-
-        try {
-            GelarLulusan::create([
-                'id_prodi' => $data['id_prodi'],
-                'gelar' => $data['gelar_new'],
-                'gelar_panjang' => $data['gelar_panjang_new'],
-            ]);
-        } catch (\Throwable $th) {
-            return redirect()->route('dppti.gelar-lulusan')->with('error', 'Data gelar lulusan gagal disimpan!');
-        }
-
-        return redirect()->route('dppti.gelar-lulusan')->with('success', 'Data gelar lulusan berhasil disimpan!');
     }
 }

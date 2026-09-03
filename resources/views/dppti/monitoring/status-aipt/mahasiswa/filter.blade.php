@@ -9,10 +9,10 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('dppti.monitoring.lulus-do')}}" method="get">
+            <form action="{{route('dppti.monitoring.status-aipt.mahasiswa')}}" method="get">
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="mb-3">
                             <label for="id_prodi" class="form-label">Program Studi</label>
                             <select
@@ -29,7 +29,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="mb-3">
                             <label for="angkatan" class="form-label">Angkatan</label>
                             <select
@@ -46,7 +46,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-12">
                         <div class="mb-3">
                             <label for="jenis_keluar" class="form-label">Jenis Keluar</label>
                             <select
@@ -58,6 +58,27 @@
                                 @foreach ($jenis_keluar as $j)
                                 <option value="{{$j->id_jenis_keluar}}" {{ in_array($j->id_jenis_keluar, old('jenis_keluar', request()->get('jenis_keluar', []))) ? 'selected' : '' }}>
                                     {{$j->nama_jenis_keluar}}
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label for="periode_keluar" class="form-label">Periode Keluar</label>
+                            <select
+                                multiple
+                                class="form-select"
+                                name="periode_keluar[]"
+                                id="periode_keluar"
+                            >
+                                @foreach ($periode_keluar as $p)
+                                <option value="{{ $p->id_semester }}"
+                                    {{ in_array(
+                                        $p->id_semester,
+                                        old('periode_keluar', request()->get('periode_keluar', []))
+                                    ) ? 'selected' : '' }}>
+                                    {{ $p->nama_semester }}
                                 </option>
                                 @endforeach
                             </select>

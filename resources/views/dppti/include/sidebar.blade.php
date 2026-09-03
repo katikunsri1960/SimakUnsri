@@ -13,7 +13,9 @@
                             <span>Dashboard</span>
                         </a>
                     </li>
-                    <li class="treeview {{request()->routeIs('dppti.pejabat.*') || request()->routeIs('dppti.gelar-lulusan') || request()->routeIs('dppti.gelar-lulusan.*') || request()->routeIs('dppti.usept-prodi') || request()->routeIs('dppti.usept-prodi.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('dppti.pejabat.*') || request()->routeIs('dppti.gelar-lulusan') || request()->routeIs('dppti.gelar-lulusan.*') 
+                        || request()->routeIs('dppti.usept-prodi') || request()->routeIs('dppti.usept-prodi.*')
+                        || request()->routeIs('dppti.data-master.predikat') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-database"><span class="path1"></span><span
                                     class="path2"></span></i>
@@ -80,7 +82,7 @@
                                     <span>USEPT Prodi</span>
                                 </a>
                             </li>
-                            <li class="{{request()->routeIs('dppti.data-master.predikat.*') ? 'active' : ''}}">
+                            <li class="{{request()->routeIs('dppti.data-master.predikat') ? 'active' : ''}}">
                                 <a href="{{route('dppti.data-master.predikat')}}">
                                     <i class="fa fa-graduation-cap"><span class="path1"></span><span
                                             class="path2"></span></i>
@@ -263,10 +265,41 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
+                            {{--
                             <li class="{{request()->routeIs('dppti.monitoring.status-aipt')
                              ? 'active' : ''}}">
                                 <a href="{{route('dppti.monitoring.status-aipt')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Akd AIPT</a>
                             </li>
+                            --}}
+
+                            <li class="treeview {{ request()->routeIs('dppti.monitoring.status-aipt*') ? 'active' : '' }}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Data Akd AIPT</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+
+                                <ul class="treeview-menu">
+                                    {{-- Dosen --}}
+                                    <li class="{{ request()->routeIs('dppti.monitoring.status-aipt.dosen') ? 'active' : '' }}">
+                                        <a href="{{ route('dppti.monitoring.status-aipt.dosen') }}">
+                                            <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                            <span>Dosen</span>
+                                        </a>
+                                    </li>
+
+                                    {{-- Mahasiswa --}}
+                                    <li class="{{ request()->routeIs('dppti.monitoring.status-aipt.mahasiswa') ? 'active' : '' }}">
+                                        <a href="{{ route('dppti.monitoring.status-aipt.mahasiswa') }}">
+                                            <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                            <span>Mahasiswa</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="{{request()->routeIs('dppti.monitoring.status-mahasiswa') || request()->routeIs('dppti.monitoring.status-mahasiswa.*') ? 'active' : ''}}">
                                 <a href="{{route('dppti.monitoring.status-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status Akd Mhs</a>
                             </li>

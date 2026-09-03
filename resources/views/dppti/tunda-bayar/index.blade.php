@@ -1,9 +1,8 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Daftar Tunda Bayar
 @endsection
 @section('content')
-@include('bak.tunda-bayar.decline')
 <section class="content">
     <div class="row align-items-end">
         <div class="col-xl-12 col-12">
@@ -28,7 +27,7 @@ Daftar Tunda Bayar
                 <div class="box-header with-border d-flex justify-content-between">
                     <div class="d-flex justify-content-start">
                         <!-- Modal trigger button -->
-                        <form action="{{ route('bak.tunda-bayar') }}" method="get" id="semesterForm">
+                        <form action="{{ route('dppti.tunda-bayar') }}" method="get" id="semesterForm">
 
                             <div class="row">
                                 <div class="col-md-3 pt-2">
@@ -113,9 +112,17 @@ Daftar Tunda Bayar
                                         {{$d->batas_bayar ? \Carbon\Carbon::parse($d->batas_bayar)->translatedFormat('d F Y') : '-'}}
                                     </td>
                                     <td class="text-start align-middle">
-                                        <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-sm btn-primary mb-5">
-                                            <i class="fa fa-file-pdf-o"></i> File Pendukung
-                                        </a> 
+                                        @if($d->file_pendukung)
+                                            <a href="{{ asset('storage/' . $d->file_pendukung) }}"
+                                            target="_blank"
+                                            class="btn btn-sm btn-primary mb-5">
+                                                <i class="fa fa-file-pdf-o"></i> File Pendukung
+                                            </a>
+                                        @else
+                                            <span class="badge badge-danger">
+                                                <i class="fa fa-times-circle"></i> Tidak Ada File
+                                            </span>
+                                        @endif
                                     </td>
                                     <td class="text-center align-middle">
                                         @php
@@ -142,7 +149,7 @@ Daftar Tunda Bayar
                                     <td class="text-center align-middle">{{$d->terakhir_update}}</td>
                                     <td class="text-center align-middle text-nowrap">
                                         @if ($d->status == 3)
-                                        <form action="{{route('bak.tunda-bayar.approve', ['tunda_bayar' => $d->id])}}"
+                                        <form action="{{route('dppti.tunda-bayar.approve', ['tunda_bayar' => $d->id])}}"
                                             method="post" class="d-inline approve-form" id="approveForm{{ $d->id }}"
                                             data-id="{{ $d->id }}">
                                             @csrf
@@ -200,7 +207,7 @@ Daftar Tunda Bayar
     });
 
     function tolak(id) {
-        document.getElementById('declineForm').action = '/bak/tunda-bayar/decline/' + id;
+        document.getElementById('declineForm').action = '/dppti/tunda-bayar/decline/' + id;
         document.getElementById('alasan_pembatalan').value = '';
     }
 

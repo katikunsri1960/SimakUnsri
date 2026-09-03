@@ -561,7 +561,11 @@ class YudisiumController extends Controller
     public function registrasi_ijazah(Request $request)
     {
         $data = PisnMahasiswa::with(['semester', 'lulus_do', 'wisuda'])->filter($request)->get();
-        $semester = Semester::orderBy('id_semester', 'desc')->get();
+        $semester_aktif = SemesterAktif::first()->id_semester;
+        $semester = Semester::select('id_semester', 'nama_semester')
+                        ->whereBetween('id_semester', [20241, $semester_aktif])
+                        ->whereNot('semester', 3)
+                        ->orderBy('id_semester', 'desc')->get();
 
         // dd($data[0]->lulus_do);
         return view('dppti.yudisium.registrasi-ijazah.index', compact('data', 'semester'));

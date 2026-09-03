@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Daftar Pengajuan Cuti
 @endsection
@@ -10,7 +10,7 @@ Daftar Pengajuan Cuti
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Pengajuan Cuti</li>
                         <li class="breadcrumb-item active" aria-current="page">Daftar</li>
                     </ol>
@@ -27,7 +27,7 @@ Daftar Pengajuan Cuti
                 <div class="box-header with-border d-flex justify-content-between">
                     <div class="d-flex justify-content-start">
                         <!-- Modal trigger button -->
-                        <form action="{{ route('bak.pengajuan-cuti') }}" method="get" id="semesterForm">
+                        <form action="{{ route('dppti.pengajuan-cuti') }}" method="get" id="semesterForm">
                             <div class="mb-3">
                                 <label for="semester_view" class="form-label">Semester</label>
                                 <select
@@ -64,12 +64,11 @@ Daftar Pengajuan Cuti
                                     <th class="text-center align-middle">Alasan Pengajuan Cuti</th>
                                     <th class="text-center align-middle">Status</th>
                                     <th class="text-center align-middle">Alasan Ditolak</th>
-                                    <th class="text-center align-middle">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($data as $d)
-                                @include('bak.pengajuan-cuti.pembatalan-cuti')
+                                @include('dppti.pengajuan-cuti.pembatalan-cuti')
                                     <tr>
                                         <td>{{$loop->iteration}}</td>
                                         <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_semester}}</td>
@@ -83,34 +82,14 @@ Daftar Pengajuan Cuti
                                             @elseif($d->approved == 1)
                                                 <span class="badge badge-xl badge-warning mb-5">Disetujui Fakultas</span>
                                             @elseif($d->approved == 2)
-                                                <span class="badge badge-xl badge-success mb-5">Disetujui BAK</span>
+                                                <span class="badge badge-xl badge-success mb-5">Disetujui Direktorat Akademik</span>
                                             @elseif($d->approved == 3)
                                                 <span class="badge badge-xl badge-danger mb-5">Ditolak Fakultas</span>
                                             @elseif($d->approved == 4)
-                                                <span class="badge badge-xl badge-danger mb-5">Ditolak BAK</span>
+                                                <span class="badge badge-xl badge-danger mb-5">Ditolak Direktorat Akademik</span>
                                             @endif
                                         </td>
                                         <td class="text-start align-middle">{{$d->alasan_pembatalan}}</td>
-                                        <td class="text-center align-middle text-nowrap">
-                                            <div class="row">
-                                                @if($d->approved == 1)
-                                                <form action="{{route('bak.pengajuan-cuti.approve', $d)}}" method="post" id="approveForm{{$d->id_cuti}}" class="approve-class" data-id='{{$d->id_cuti}}'>
-                                                    @csrf
-                                                    <div class="row  mb-5">
-                                                        <button
-                                                        type="submit"
-                                                        class="btn btn-sm btn-success" title="Setujui Pengajuan Cuti"><i class="fa fa-thumbs-up"></i> Approve</button>
-                                                    </div>
-                                                </form>
-                                                @endif
-                                                @if($d->approved == 1 || $d->approved < 3)
-                                                    <a href="#" class="btn btn-danger btn-sm mb-5" title="Tolak Bimbingan" data-bs-toggle="modal" data-bs-target="#pembatalanModal{{$d->id}}"><i class="fa fa-ban"></i> Decline</a>
-                                                @endif
-                                                <a href="{{ asset('storage/' . $d->file_pendukung) }}" target="_blank" class="btn btn-sm btn-primary mb-5">
-                                                    <i class="fa fa-file-pdf-o"></i> File Pendukung
-                                                </a>
-                                            </div>
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
