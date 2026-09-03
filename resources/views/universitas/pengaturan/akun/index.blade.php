@@ -23,6 +23,7 @@ Pengaturan Akun
 @include('swal')
 @include('universitas.pengaturan.akun.create-fakultas')
 @include('universitas.pengaturan.akun.create-mahasiswa')
+@include('universitas.pengaturan.akun.create-wali')
 @include('universitas.pengaturan.akun.create-prodi')
 @include('universitas.pengaturan.akun.create-dosen')
 @include('universitas.pengaturan.akun.create-lain')

@@ -32,10 +32,18 @@ class RedirectIfAuthenticated
                     return redirect(RouteServiceProvider::PRODI);
                 } elseif (auth()->user()->role === 'mahasiswa') {
                     return redirect(RouteServiceProvider::MAHASISWA);
-                }elseif (auth()->user()->role === 'bak') {
-                    return redirect(RouteServiceProvider::BAAK);
                 }elseif (auth()->user()->role === 'perpus') {
                     return redirect(RouteServiceProvider::PERPUS);
+                } elseif (auth()->user()->role === 'dppti') {
+                    return redirect(RouteServiceProvider::DPPTI);
+                }elseif (auth()->user()->role === 'dak') {
+                    return redirect(RouteServiceProvider::DAK);
+                } elseif (auth()->user()->role === 'ditmawa') {
+                    return redirect(RouteServiceProvider::DITMAWA);
+                } elseif (auth()->user()->role === 'dppm') {
+                    return redirect(RouteServiceProvider::DPPM);
+                } elseif (auth()->user()->role === 'wali') {
+                    return redirect(RouteServiceProvider::WALI);
                 }
 
             }

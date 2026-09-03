@@ -33,6 +33,11 @@
                                 id="tanggal_akhir_daftar" aria-describedby="helpId" placeholder="" required readonly value="{{old('tanggal_akhir_daftar')}}"/>
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label for="no_sk_skpi" class="form-label">No SK SKPI</label>
+                            <input type="text" class="form-control" name="no_sk_skpi"
+                                id="no_sk_skpi" aria-describedby="helpId" placeholder="" required value="{{old('no_sk_skpi')}}"/>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label for="tanggal_akhir_daftar" class="form-label">Aktifkan Periode</label>
                             <select class="form-select" name="is_active" id="is_active" required>
                                 <option selected>-- Pilih Salah Satu --</option>
