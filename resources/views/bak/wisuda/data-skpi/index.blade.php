@@ -213,7 +213,8 @@ function getData()
                         `<div class="text-start">${item.nama_mahasiswa}</div>`,
                         `<div class="text-center">${item.jenjang}</div>`,
                         `<div class="text-start">${item.nama_prodi}</div>`,
-                        nomorSuratButton,
+                        `<div class="text-start">${item.no_sk_skpi ?? '-'}</div>`,
+                        {{-- nomorSuratButton,--}}
                         `<div class="text-center">
                             <a href="{{ route('bak.skpi.data.detail', ':id') }}"
                                 class="btn btn-sm btn-primary"

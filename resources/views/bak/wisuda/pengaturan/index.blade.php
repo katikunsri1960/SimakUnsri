@@ -45,6 +45,7 @@ Pembukaan Wisuda
                                     <th class="text-center align-middle">Tanggal Wisuda</th>
                                     <th class="text-center align-middle">Tanggal Mulai Pendaftaran</th>
                                     <th class="text-center align-middle">Tanggal Akhir Pendaftaran</th>
+                                    <th class="text-center align-middle">No SK SKPI</th>
                                     <th class="text-center align-middle">Apa Aktif</th>
                                     <th class="text-center align-middle">ACT</th>
                                 </tr>
@@ -54,9 +55,10 @@ Pembukaan Wisuda
                                     <tr>
                                         <td class="text-center align-middle">{{$loop->iteration}}</td>
                                         <td class="text-center align-middle">{{$d->periode}}</td>
-                                        <td class="text-center align-middle">{{$d->id_tanggal_wisuda}}</td>
-                                        <td class="text-center align-middle">{{$d->id_tanggal_mulai_daftar}}</td>
-                                        <td class="text-center align-middle">{{$d->id_tanggal_akhir_daftar}}</td>
+                                        <td class="text-center align-middle">{{$d->tanggal_wisuda}}</td>
+                                        <td class="text-center align-middle">{{$d->tanggal_mulai_daftar}}</td>
+                                        <td class="text-center align-middle">{{$d->tanggal_akhir_daftar}}</td>
+                                        <td class="text-center align-middle">{{$d->no_sk_skpi}}</td>
                                         <td class="text-center align-middle">
                                             @if ($d->is_active == 1)
                                                 <i class="fa fa-check text-success" style="font-size: 16pt"></i>

@@ -150,7 +150,7 @@ Pendaftaran Yudisium Mahasiswa
                                 </tr>
                                 @empty
                                 <tr>
-                                    <td colspan="8" class="text-center text-muted">
+                                    <td colspan="9" class="text-center text-muted">
                                         Belum ada data kegiatan
                                     </td>
                                 </tr>
