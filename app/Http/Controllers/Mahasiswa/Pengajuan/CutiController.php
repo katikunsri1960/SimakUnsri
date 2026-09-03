@@ -137,10 +137,9 @@ class CutiController extends Controller
 
         if ($jenjang_pendidikan == 30 || $jenjang_pendidikan == 22 ||
             $jenjang_pendidikan == 31 || $jenjang_pendidikan == 32 ||
-            $jenjang_pendidikan == 37) {
+            $jenjang_pendidikan == 35 || $jenjang_pendidikan == 37) {
             return 1;
-        } elseif ($jenjang_pendidikan == 35 ||
-                    $jenjang_pendidikan == 40) {
+        } elseif ($jenjang_pendidikan == 40) {
             return 2;
         } else {
             return 0;
