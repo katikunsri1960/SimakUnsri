@@ -391,14 +391,14 @@ class YudisiumController extends Controller
             ], 422);
         }
 
-        // periode_keluar
-            $tgl_yudisium = Carbon::parse($wisuda->tgl_sk_yudisium);
+        // PERIODE KELUAR
+        $tgl_yudisium = Carbon::parse($wisuda->tgl_sk_yudisium);
 
-            if ($tgl_yudisium->month >= 1 && $tgl_yudisium->month <= 7) {
-                $id_periode_keluar = ($tgl_yudisium->year - 1) . '2';
-            } else {
-                $id_periode_keluar = $tgl_yudisium->year . '1';
-            }
+        if ($tgl_yudisium->month >= 1 && $tgl_yudisium->month <= 7) {
+            $id_periode_keluar = ($tgl_yudisium->year - 1) . '2';
+        } else {
+            $id_periode_keluar = $tgl_yudisium->year . '1';
+        }
 
         try {
             DB::beginTransaction();
