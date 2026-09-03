@@ -391,7 +391,14 @@ class YudisiumController extends Controller
             ], 422);
         }
 
-        
+        // PERIODE KELUAR
+        $tgl_yudisium = Carbon::parse($wisuda->tgl_sk_yudisium);
+
+        if ($tgl_yudisium->month >= 1 && $tgl_yudisium->month <= 7) {
+            $id_periode_keluar = ($tgl_yudisium->year - 1) . '2';
+        } else {
+            $id_periode_keluar = $tgl_yudisium->year . '1';
+        }
 
         try {
             DB::beginTransaction();
@@ -448,9 +455,10 @@ class YudisiumController extends Controller
                 'id_jenis_keluar' => 1,
                 'nama_jenis_keluar' => 'Lulus',
                 'tanggal_keluar' => $wisuda->tgl_sk_yudisium,
-                'id_periode_keluar' => substr($semester_aktif->id_semester, -1) == '3'
-                                        ? $semester_aktif->id_semester - 1
-                                        : $semester_aktif->id_semester,
+                // 'id_periode_keluar' => substr($semester_aktif->id_semester, -1) == '3'
+                //                         ? $semester_aktif->id_semester - 1
+                //                         : $semester_aktif->id_semester,
+                'id_periode_keluar' => $id_periode_keluar,
                 'keterangan' => 'WISUDA KE-' . $wisuda->wisuda_ke,
                 'no_sertifikat_profesi' => $riwayatPendidikan->prodi->id_jenjang_pendidikan === '31' ? NULL : NULL, // Conditional logic //PERLU DIUBAH
                 'status_sync' => 'belum sync',
