@@ -28,6 +28,7 @@ class User extends Authenticatable
     public const DIREKTORAT_AKADEMIK = 'dak';
     public const DIREKTORAT_KEMAHASISWAAN = 'ditmawa';
     public const DIREKTORAT_PPM = 'dppm';
+    public const WALI = 'wali';
 
     const ROLE_PRODI = 'prodi';
     const ROLE_FAKULTAS = 'fakultas';

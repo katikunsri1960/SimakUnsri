@@ -34,6 +34,11 @@
                                 id="edit_tanggal_akhir_daftar" aria-describedby="helpId" placeholder="" required readonly/>
                         </div>
                         <div class="col-md-6 mb-3">
+                            <label for="no_sk_skpi" class="form-label">No SK SKPI</label>
+                            <input type="text" class="form-control" name="no_sk_skpi"
+                                id="edit_no_sk_skpi" aria-describedby="helpId" placeholder="" required/>
+                        </div>
+                        <div class="col-md-6 mb-3">
                             <label for="tanggal_akhir_daftar" class="form-label">Aktifkan Periode</label>
                             <select class="form-select" name="is_active" id="edit_is_active" required>
                                 <option selected>-- Pilih Salah Satu --</option>

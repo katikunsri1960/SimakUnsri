@@ -73,6 +73,7 @@ class SKPIController extends Controller
                 'data_wisuda.nim',
                 'data_wisuda.nama_mahasiswa',
                 'data_wisuda.nomor_surat_skpi',
+                'pw.no_sk_skpi',
                 'p.nama_program_studi as nama_prodi',
                 'p.nama_jenjang_pendidikan as jenjang',
                 'f.nama_fakultas',
@@ -92,6 +93,7 @@ class SKPIController extends Controller
                 'data_wisuda.nim',
                 'data_wisuda.nama_mahasiswa',
                 'data_wisuda.nomor_surat_skpi',
+                'pw.no_sk_skpi',
                 'p.nama_program_studi',
                 'p.nama_jenjang_pendidikan',
                 'f.nama_fakultas');
@@ -292,6 +294,7 @@ class SKPIController extends Controller
                 'b.tanggal_lahir',
 
                 'pw.tanggal_wisuda',
+                'pw.no_sk_skpi',
                 'pisn.penomoran_ijazah_nasional as no_ijazah',
                 'g.gelar',
                 'g.gelar_panjang',

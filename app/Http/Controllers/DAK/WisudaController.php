@@ -61,6 +61,7 @@ class WisudaController extends Controller
             'tanggal_wisuda' => 'required',
             'tanggal_mulai_daftar' => 'required',
             'tanggal_akhir_daftar' => 'required',
+            'no_sk_skpi' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
 
@@ -98,6 +99,7 @@ class WisudaController extends Controller
             'tanggal_wisuda' => 'required',
             'tanggal_mulai_daftar' => 'required',
             'tanggal_akhir_daftar' => 'required',
+            'no_sk_skpi' => 'nullable|string|max:255',
             'is_active' => 'required|boolean',
         ]);
 
@@ -137,11 +139,13 @@ class WisudaController extends Controller
     public function peserta()
     {
         $fakultas = Fakultas::select('id','nama_fakultas')->get();
+        
         $prodi = ProgramStudi::where('status', 'A')->select('id_prodi', 'kode_program_studi', 'nama_jenjang_pendidikan', 'nama_program_studi', 'fakultas_id')
                     ->orderBy('id_jenjang_pendidikan', 'ASC')
                     ->orderBy('kode_program_studi')
                     ->orderBy('nama_program_studi', 'ASC')
                     ->get();
+
         $periode = PeriodeWisuda::select('periode')->orderBy('periode', 'desc')->get();
         
         $predikat_lulusan = PredikatKelulusan::get();
