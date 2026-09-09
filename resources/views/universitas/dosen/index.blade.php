@@ -41,6 +41,11 @@ List Dosen
                             <button class="btn btn-warning waves-effect waves-light" type="submit"><i
                                     class="fa fa-refresh"></i> Sinkronisasi Riwayat</button>
                         </form>
+                        <span class="divider-line mx-1"></span>
+                        <form action="{{route('univ.dosen.sync-jabatan-fungsional')}}" method="get" id="sync-jabfung">
+                            <button class="btn btn-info waves-effect waves-light" type="submit"><i
+                                    class="fa fa-refresh"></i> Sinkronisasi Jabatan Fungsional</button>
+                        </form>
                         {{-- <button class="btn btn-success waves-effect waves-light" href="#"><i
                                 class="fa fa-plus"></i> Tambah Kurikulum</button> --}}
                     </div>

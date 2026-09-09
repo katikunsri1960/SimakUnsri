@@ -134,4 +134,33 @@ class DosenController extends Controller
 
         return redirect()->back()->with('success', 'Sinkronisasi Nilai Perkuliahan Berhasil!');
     }
+
+    private function count_value_pdunsri(string $method, ...$args)
+    {
+        $api = new \App\Services\PdUnsri\PdUnsriAPI();
+        $response = $api->{$method}(1, 0, ...$args); // limit=1, offset=0, cukup untuk baca totalData
+        return $response['totalData'] ?? 0;
+    }
+
+    public function sync_list_jabatan_fungsional()
+    {
+        $api = new \App\Services\PdUnsri\PdUnsriAPI();
+        $probe = $api->getListJabatanFungsional(1, 0);
+
+        if (!$probe || !isset($probe['totalData'])) {
+            return redirect()->back()->with('error', 'Gagal mengambil data dari API PD Unsri. Silakan coba lagi.');
+        }
+
+        $count = $probe['totalData'];
+        $limit = 100;
+
+        $batch = Bus::batch([])->dispatch();
+
+        for ($i = 0; $i < $count; $i += $limit) {
+            $job = new \App\Jobs\PdUnsri\ListJabatanFungsionalJob($limit, $i);
+            $batch->add($job);
+        }
+
+        return redirect()->back()->with('success', 'Sinkronisasi Jabatan Fungsional Dimulai! Total data: ' . $count);
+    }
 }

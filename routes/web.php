@@ -848,6 +848,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/sync-dosen', [App\Http\Controllers\Universitas\DosenController::class, 'sync_dosen'])->name('univ.dosen.sync');
                 Route::get('/sync-penugasan', [App\Http\Controllers\Universitas\DosenController::class, 'sync_penugasan_dosen'])->name('univ.dosen.sync-penugasan');
                 Route::get('/sync-dosen-all', [App\Http\Controllers\Universitas\DosenController::class, 'sync_dosen_all'])->name('univ.dosen.sync-all');
+
+                Route::get('/sync/list-jabatan-fungsional', [App\Http\Controllers\Universitas\DosenController::class, 'sync_list_jabatan_fungsional'])->name('univ.dosen.sync-jabatan-fungsional');
             });
 
             Route::prefix('referensi')->group(function () {

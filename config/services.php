@@ -13,6 +13,14 @@ return [
     | a conventional file to locate the various service credentials.
     |
     */
+    // config/services.php
+    'api_pd_unsri' => [
+        'base_url' => env('API_PD_UNSRI_URL'),
+        'username' => env('API_PD_UNSRI_USERNAME'),
+        'password' => env('API_PD_UNSRI_PASSWORD'),
+        'timeout' => env('API_PD_UNSRI_TIMEOUT', 5),
+        'connect_timeout' => env('API_PD_UNSRI_CONNECT_TIMEOUT', 3),
+    ],
 
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
