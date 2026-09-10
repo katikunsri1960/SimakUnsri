@@ -63,11 +63,16 @@ Data Dosen AIPT
                                     <th class="text-center align-middle">STATUS<br>PEGAWAI</th>
                                     <th class="text-center align-middle">TANGGAL MULAI</th>
 
-                                    <th class="text-center align-middle">JENJANG<br>PENDIDIKAN</th>
+                                    <th class="text-center align-middle">JENJANG<br>PENDIDIKAN DOSEN</th>
                                     <th class="text-center align-middle">PERGURUAN TINGGI</th>
+                                    <th class="text-center align-middle">TAHUN LULUS</th>
                                 </tr>
                             </thead>
                             <tbody>
+                                @php
+                                    $no = 1;
+                                @endphp
+
                                 @foreach ($data as $d)
                                     @php
                                         $gelar = $d->gelar;
@@ -92,16 +97,12 @@ Data Dosen AIPT
                                     @forelse ($d->jabatan_fungsional as $jabatan)
 
                                         @php
-                                            // Ambil tahun dari tanggal mulai jabatan
                                             $tahunMulaiJabatan = $jabatan->tanggal_mulai
                                                 ? \Carbon\Carbon::parse($jabatan->tanggal_mulai)->year
                                                 : null;
 
-                                            // Cari pendidikan terakhir yang sudah selesai
-                                            // sebelum / pada saat jabatan dimulai
                                             $pendidikanTerakhir = $d->riwayat_pendidikan
                                                 ->filter(function ($pendidikan) use ($tahunMulaiJabatan) {
-
                                                     if (!$tahunMulaiJabatan || !$pendidikan->tahun_lulus) {
                                                         return false;
                                                     }
@@ -114,7 +115,9 @@ Data Dosen AIPT
 
                                         <tr>
                                             {{-- NO --}}
-                                            <td>{{ $loop->iteration }}</td>
+                                            <td class="text-center">
+                                                {{ $no++ }}
+                                            </td>
 
                                             {{-- PROGRAM STUDI HOMEBASE --}}
                                             <td>
@@ -163,7 +166,7 @@ Data Dosen AIPT
 
                                             {{-- STATUS PEGAWAI --}}
                                             <td>
-                                                {{ $jabatan->status_kepegawaian ?? '-' }}
+                                                {{ $jabatan->nm_stat_pegawai ?? '-' }}
                                             </td>
 
                                             {{-- TANGGAL MULAI --}}
@@ -175,17 +178,17 @@ Data Dosen AIPT
 
                                             {{-- JENJANG PENDIDIKAN --}}
                                             <td>
-                                                @if ($pendidikanTerakhir)
-                                                    {{ $pendidikanTerakhir->nama_jenjang_pendidikan }}
-                                                    ({{ $pendidikanTerakhir->tahun_lulus }})
-                                                @else
-                                                    -
-                                                @endif
+                                                {{ $pendidikanTerakhir->nama_jenjang_pendidikan ?? '-' }}
                                             </td>
 
                                             {{-- PERGURUAN TINGGI --}}
                                             <td>
                                                 {{ $pendidikanTerakhir->nama_perguruan_tinggi ?? '-' }}
+                                            </td>
+
+                                            {{-- TAHUN LULUS --}}
+                                            <td>
+                                                {{ $pendidikanTerakhir->tahun_lulus ?? '-' }}
                                             </td>
                                         </tr>
 
@@ -193,15 +196,42 @@ Data Dosen AIPT
 
                                         {{-- Jika dosen tidak mempunyai jabatan fungsional --}}
                                         <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ optional($d->penugasan_terbaru)->a_sp_homebase ?? '-' }}</td>
-                                            <td>{{ $d->nama_dosen }}</td>
-                                            <td>{{ $gelarDepan ?? '-' }}</td>
-                                            <td>{{ $gelarBelakang ?? '-' }}</td>
-                                            <td>{{ $d->nidn ?? '-' }}</td>
-                                            <td>{{ $d->nuptk ?? '-' }}</td>
-                                            <td>{{ $d->nip ?? '-' }}</td>
-                                            <td>{{ $d->email ?? '-' }}</td>
+                                            <td class="text-center">
+                                                {{ $no++ }}
+                                            </td>
+
+                                            <td>
+                                                {{ optional($d->penugasan_terbaru)->a_sp_homebase ?? '-' }}
+                                            </td>
+
+                                            <td>
+                                                {{ $d->nama_dosen }}
+                                            </td>
+
+                                            <td>
+                                                {{ $gelarDepan ?? '-' }}
+                                            </td>
+
+                                            <td>
+                                                {{ $gelarBelakang ?? '-' }}
+                                            </td>
+
+                                            <td>
+                                                {{ $d->nidn ?? '-' }}
+                                            </td>
+
+                                            <td>
+                                                {{ $d->nuptk ?? '-' }}
+                                            </td>
+
+                                            <td>
+                                                {{ $d->nip ?? '-' }}
+                                            </td>
+
+                                            <td>
+                                                {{ $d->email ?? '-' }}
+                                            </td>
+
                                             <td>-</td>
                                             <td>-</td>
                                             <td>-</td>
@@ -211,7 +241,7 @@ Data Dosen AIPT
 
                                     @endforelse
                                 @endforeach
-                                </tbody>
+                            </tbody>
                         </table>
                     </div>
                 </div>
