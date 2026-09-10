@@ -222,7 +222,7 @@ Kuisioner Mata Kuliah
                         label: 'Nilai 1',
                         data: @json($dataNilai1).slice(0,8),
                         backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderColor: 'rgb(198, 0, 43)',
                         borderWidth: 1
                     },
                     {
@@ -263,8 +263,8 @@ Kuisioner Mata Kuliah
                     {
                         label: 'Nilai 7',
                         data: @json($dataNilai7).slice(0,8),
-                        backgroundColor: 'rgba(199, 199, 199, 0.5)',
-                        borderColor: 'rgba(199, 199, 199, 1)',
+                        backgroundColor: 'rgba(1, 119, 35, 0.5)',
+                        borderColor: 'rgb(64, 158, 81)',
                         borderWidth: 1
                     }
                 ]

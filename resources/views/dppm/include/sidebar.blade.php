@@ -26,7 +26,7 @@
                     <li class="{{request()->routeIs('dppm.kuisioner') || request()->routeIs('dppm.kuisioner.*') ? 'active' : ''}}">
                         <a href="{{route('dppm.kuisioner')}}">
                             <i span class="fa fa-pen-square"><span class="path1"></span><span class="path2"></span></i>
-                            <span>Kuisioner</span>
+                            <span>Kuisioner EDOM</span>
                         </a>
                     </li>
                     {{-- <li class="treeview {{request()->routeIs('dppm.kuisioner') || request()->routeIs('dppm.kuisioner.*') ? 'active menu-open' : ''}}">

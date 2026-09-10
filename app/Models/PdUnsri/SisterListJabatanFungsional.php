@@ -3,6 +3,7 @@
 namespace App\Models\PdUnsri;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Dosen\BiodataDosen;
 
 class SisterListJabatanFungsional extends Model
 {
@@ -21,4 +22,9 @@ class SisterListJabatanFungsional extends Model
         'sk',
         'tanggal_mulai',
     ];
+
+    public function dosen()
+    {
+        return $this->belongsTo(BiodataDosen::class, 'id_sdm', 'id_dosen');
+    }
 }
