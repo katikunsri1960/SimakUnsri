@@ -1,6 +1,6 @@
 @extends('layouts.dppti')
 @section('title')
-Data Dosen
+Data Dosen AIPT
 @endsection
 @section('content')
 <div class="content-header">
@@ -11,30 +11,35 @@ Data Dosen
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Data Master</li>
-                        <li class="breadcrumb-item" aria-current="page">Dosen</li>
-                        <li class="breadcrumb-item active" aria-current="page">Gelar Dosen</li>
+                        <li class="breadcrumb-item" aria-current="page">Monitoring</li>
+                        <li class="breadcrumb-item" aria-current="page">Data AIPT</li>
+                        <li class="breadcrumb-item active" aria-current="page">Dosen</li>
                     </ol>
                 </nav>
             </div>
         </div>
     </div>
 </div>
-
+@include('swal')
 <section class="content">
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
                     <div class="d-flex justify-content-start">
-                        <!-- Modal trigger button -->
-                        <button type="button" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
+                        <button type="button"
+                            class="btn btn-success waves-effect waves-light"
+                            data-bs-toggle="modal"
                             data-bs-target="#filter-button">
                             <i class="fa fa-filter"></i> Filter
                         </button>
+
                         @include('dppti.monitoring.status-aipt.dosen.filter')
+
                         <span class="divider-line mx-1"></span>
-                        <a href="{{route('dppti.monitoring.status-aipt.dosen')}}" class="btn btn-warning waves-effect waves-light" >
+
+                        <a href="{{route('dppti.monitoring.status-aipt.dosen')}}"
+                        class="btn btn-warning waves-effect waves-light">
                             <i class="fa fa-refresh"></i> Reset Filter
                         </a>
                     </div>
@@ -42,23 +47,29 @@ Data Dosen
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-hover margin-top-10 w-p100">
-                          <thead>
-                             <tr>
-                                <th class="text-center align-middle">NO</th>
-                                <th class="text-center align-middle">PROGRAM STUDI<br>HOMEBASE</th>
-                                <th class="text-center align-middle">NAMA</th>
-                                <th class="text-center align-middle">GELAR DEPAN</th>
-                                <th class="text-center align-middle">GELAR BELAKANG</th>
-                                <th class="text-center align-middle">NIDK/NIDN</th>
-                                <th class="text-center align-middle">NUPTK</th>
-                                <th class="text-center align-middle">NIP</th>
-                                <th class="text-center align-middle">E-MAIL</th>
-                             </tr>
-                          </thead>
-                          <tbody>
-                            @foreach ($data as $d)
+                            <thead>
                                 <tr>
-                                     @php
+                                    <th class="text-center align-middle">NO</th>
+                                    <th class="text-center align-middle">PROGRAM STUDI<br>HOMEBASE</th>
+                                    <th class="text-center align-middle">NAMA</th>
+                                    <th class="text-center align-middle">GELAR DEPAN</th>
+                                    <th class="text-center align-middle">GELAR BELAKANG</th>
+                                    <th class="text-center align-middle">NIDK/NIDN</th>
+                                    <th class="text-center align-middle">NUPTK</th>
+                                    <th class="text-center align-middle">NIP</th>
+                                    <th class="text-center align-middle">E-MAIL</th>
+
+                                    <th class="text-center align-middle">JABATAN<br>FUNGSIONAL</th>
+                                    <th class="text-center align-middle">STATUS<br>PEGAWAI</th>
+                                    <th class="text-center align-middle">TANGGAL MULAI</th>
+
+                                    <th class="text-center align-middle">JENJANG<br>PENDIDIKAN</th>
+                                    <th class="text-center align-middle">PERGURUAN TINGGI</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($data as $d)
+                                    @php
                                         $gelar = $d->gelar;
 
                                         $gelarDepan = $gelar
@@ -77,36 +88,133 @@ Data Dosen
                                             ])->filter()->implode(' ')
                                             : null;
                                     @endphp
-                                    <td class="text-center align-middle">{{$loop->iteration}}</td>
-                                    <td class="text-start align-middle">
-                                        {{ $d->penugasan_terbaru->a_sp_homebase === '1' ? $d->penugasan_terbaru->nama_program_studi : '-' }}
-                                    </td>
-                                    <td class="text-start align-middle">{{$d->nama_dosen}}</td>
-                                    <td class="text-start align-middle">
-                                        @if($gelarDepan)
-                                            {{$gelarDepan}}
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td class="text-start align-middle">
-                                        @if($gelarBelakang)
-                                            {{$gelarBelakang}}
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
-                                    <td class="text-center align-middle">{{$d->nidn ?? '-'}}</td>
-                                    <td class="text-center align-middle">{{$d->nuptk ?? '-'}}</td>
-                                    <td class="text-center align-middle">{{$d->nip ?? '-'}}</td>
-                                    <td class="text-start align-middle">{{$d->email ?? '-'}}</td>
-                                </tr>
-                            @endforeach
-                          </tbody>
-                      </table>
-                      </div>
-                </div>
 
+                                    @forelse ($d->jabatan_fungsional as $jabatan)
+
+                                        @php
+                                            // Ambil tahun dari tanggal mulai jabatan
+                                            $tahunMulaiJabatan = $jabatan->tanggal_mulai
+                                                ? \Carbon\Carbon::parse($jabatan->tanggal_mulai)->year
+                                                : null;
+
+                                            // Cari pendidikan terakhir yang sudah selesai
+                                            // sebelum / pada saat jabatan dimulai
+                                            $pendidikanTerakhir = $d->riwayat_pendidikan
+                                                ->filter(function ($pendidikan) use ($tahunMulaiJabatan) {
+
+                                                    if (!$tahunMulaiJabatan || !$pendidikan->tahun_lulus) {
+                                                        return false;
+                                                    }
+
+                                                    return (int) $pendidikan->tahun_lulus <= $tahunMulaiJabatan;
+                                                })
+                                                ->sortByDesc('tahun_lulus')
+                                                ->first();
+                                        @endphp
+
+                                        <tr>
+                                            {{-- NO --}}
+                                            <td>{{ $loop->iteration }}</td>
+
+                                            {{-- PROGRAM STUDI HOMEBASE --}}
+                                            <td>
+                                                {{ optional($d->penugasan_terbaru)->a_sp_homebase ?? '-' }}
+                                            </td>
+
+                                            {{-- NAMA --}}
+                                            <td>
+                                                {{ $d->nama_dosen }}
+                                            </td>
+
+                                            {{-- GELAR DEPAN --}}
+                                            <td>
+                                                {{ $gelarDepan ?? '-' }}
+                                            </td>
+
+                                            {{-- GELAR BELAKANG --}}
+                                            <td>
+                                                {{ $gelarBelakang ?? '-' }}
+                                            </td>
+
+                                            {{-- NIDN --}}
+                                            <td>
+                                                {{ $d->nidn ?? '-' }}
+                                            </td>
+
+                                            {{-- NUPTK --}}
+                                            <td>
+                                                {{ $d->nuptk ?? '-' }}
+                                            </td>
+
+                                            {{-- NIP --}}
+                                            <td>
+                                                {{ $d->nip ?? '-' }}
+                                            </td>
+
+                                            {{-- E-MAIL --}}
+                                            <td>
+                                                {{ $d->email ?? '-' }}
+                                            </td>
+
+                                            {{-- JABATAN FUNGSIONAL --}}
+                                            <td>
+                                                {{ $jabatan->jabatan_fungsional ?? '-' }}
+                                            </td>
+
+                                            {{-- STATUS PEGAWAI --}}
+                                            <td>
+                                                {{ $jabatan->status_kepegawaian ?? '-' }}
+                                            </td>
+
+                                            {{-- TANGGAL MULAI --}}
+                                            <td>
+                                                {{ $jabatan->tanggal_mulai
+                                                    ? \Carbon\Carbon::parse($jabatan->tanggal_mulai)->format('d-m-Y')
+                                                    : '-' }}
+                                            </td>
+
+                                            {{-- JENJANG PENDIDIKAN --}}
+                                            <td>
+                                                @if ($pendidikanTerakhir)
+                                                    {{ $pendidikanTerakhir->nama_jenjang_pendidikan }}
+                                                    ({{ $pendidikanTerakhir->tahun_lulus }})
+                                                @else
+                                                    -
+                                                @endif
+                                            </td>
+
+                                            {{-- PERGURUAN TINGGI --}}
+                                            <td>
+                                                {{ $pendidikanTerakhir->nama_perguruan_tinggi ?? '-' }}
+                                            </td>
+                                        </tr>
+
+                                    @empty
+
+                                        {{-- Jika dosen tidak mempunyai jabatan fungsional --}}
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ optional($d->penugasan_terbaru)->a_sp_homebase ?? '-' }}</td>
+                                            <td>{{ $d->nama_dosen }}</td>
+                                            <td>{{ $gelarDepan ?? '-' }}</td>
+                                            <td>{{ $gelarBelakang ?? '-' }}</td>
+                                            <td>{{ $d->nidn ?? '-' }}</td>
+                                            <td>{{ $d->nuptk ?? '-' }}</td>
+                                            <td>{{ $d->nip ?? '-' }}</td>
+                                            <td>{{ $d->email ?? '-' }}</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                            <td>-</td>
+                                        </tr>
+
+                                    @endforelse
+                                @endforeach
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -114,18 +222,70 @@ Data Dosen
 @endsection
 @push('js')
 <script src="{{asset('assets/vendor_components/datatable/datatables.min.js')}}"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
 <script src="{{asset('assets/vendor_components/sweetalert/sweetalert.min.js')}}"></script>
+<script src="{{asset('assets/vendor_components/select2/dist/js/select2.full.min.js')}}"></script>
+
 <script>
     $(function() {
-        "use strict";
+        //"use strict";
+
+        $('#id_prodi, #jenjang_pendidikan, #jabatan_fungsional').select2({
+            dropdownParent: $('#filter-button'),
+            width: '100%'
+        });
 
         $('#data').DataTable({
             paging: false,
             ordering: true,
             searching: true,
-            scrollCollapse: false,
-            // scrollX: true,
-            scrollY: window.innerHeight * 0.6 + "px",
+
+            dom: 'Bfrtip',
+
+            buttons: [
+                {
+                    extend: 'excelHtml5',
+                    text: '<i class="fa fa-file-excel-o"></i> Excel',
+                    title: 'Data Dosen AIPT',
+                    filename: 'Data_Dosen_AIPT',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                return $(node)
+                                    .html()
+                                    .replace(/<hr[^>]*>/gi, '\n')
+                                    .replace(/<br\s*\/?>/gi, '\n')
+                                    .replace(/<[^>]+>/g, '')
+                                    .replace(/&nbsp;/g, ' ')
+                                    .trim();
+                            }
+                        }
+                    }
+                },
+                {
+                    extend: 'csvHtml5',
+                    text: '<i class="fa fa-file-text-o"></i> CSV',
+                    title: 'Data Dosen AIPT',
+                    filename: 'Data_Dosen_AIPT',
+                    exportOptions: {
+                        columns: ':visible',
+                        format: {
+                            body: function (data, row, column, node) {
+                                return $(node)
+                                    .html()
+                                    .replace(/<hr[^>]*>/gi, '\n')
+                                    .replace(/<br\s*\/?>/gi, '\n')
+                                    .replace(/<[^>]+>/g, '')
+                                    .replace(/&nbsp;/g, ' ')
+                                    .trim();
+                            }
+                        }
+                    }
+                }
+            ]
         });
     });
 

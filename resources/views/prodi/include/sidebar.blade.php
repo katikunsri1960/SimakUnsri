@@ -90,7 +90,7 @@
                         </a>
                         <ul class="treeview-menu">
                             <li class="{{request()->routeIs('prodi.data-akademik.kelas-penjadwalan') | request()->routeIs('prodi.data-akademik.kelas-penjadwalan.*') ? 'active' : ''}}">
-                                <a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kelas dan Penjadwalan</a>
+                                <a href="{{route('prodi.data-akademik.kelas-penjadwalan')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i> EDOM & Kelas Penjadwalan</a>
                             </li>
                             <li class="{{request()->routeIs('prodi.data-akademik.krs') || request()->routeIs('prodi.data-akademik.krs.*') ? 'active' : ''}}">
                                 <a href="{{route('prodi.data-akademik.krs')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Kartu Rencana Studi</a>

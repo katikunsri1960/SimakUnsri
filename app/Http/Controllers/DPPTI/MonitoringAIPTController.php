@@ -15,13 +15,8 @@ use App\Models\Connection\Tagihan;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-use App\Models\Connection\Registrasi;
-use App\Models\Perkuliahan\KelasKuliah;
-use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Monitoring\MonevStatusMahasiswa;
-use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
-use App\Models\Monitoring\MonevStatusMahasiswaDetail;
-use App\Models\Perkuliahan\ListKurikulum;
+use App\Models\Dosen\RiwayatPendidikanDosen;
+use App\Models\PdUnsri\SisterListJabatanFungsional;
 
 class MonitoringAIPTController extends Controller
 {
@@ -234,26 +229,126 @@ class MonitoringAIPTController extends Controller
         ]);
     }
 
-    public function dosen_aipt()
+    // public function dosen_aipt()
+    // {
+    //     $semesterAktif = SemesterAktif::first()->id_semester;
+    //     $tahunAjaran = substr($semesterAktif, 0, 4);
+
+    //     $data = BiodataDosen::with(['gelar', 'jabatan_fungsional', 'penugasan_terbaru' => function ($query) use ($tahunAjaran) {
+    //             $query->where('id_tahun_ajaran', $tahunAjaran);
+    //         }])
+    //         ->whereHas('penugasan_terbaru', function ($query) use ($tahunAjaran) {
+    //             $query->where('id_tahun_ajaran', $tahunAjaran);
+    //         })
+    //         ->orderBy('nama_dosen', 'ASC')
+    //         ->limit(10)
+    //         ->get();
+
+    //     // dd($tahunAjaran, $data);
+
+    //     return view('dppti.monitoring.status-aipt.dosen.index', [
+    //         'data' => $data
+    //     ]);
+    // }
+
+    public function dosen_aipt(Request $request)
     {
         $semesterAktif = SemesterAktif::first()->id_semester;
         $tahunAjaran = substr($semesterAktif, 0, 4);
 
-        $data = BiodataDosen::with(['gelar','penugasan_terbaru' => function ($query) use ($tahunAjaran) {
-                $query->where('id_tahun_ajaran', $tahunAjaran);
-            }])
-            ->whereHas('penugasan_terbaru', function ($query) use ($tahunAjaran) {
-                $query->where('id_tahun_ajaran', $tahunAjaran);
+        $query = BiodataDosen::with([
+                'gelar',
+                'jabatan_fungsional' => function ($q) {
+                    $q->orderByRaw("
+                        CASE jabatan_fungsional
+                            WHEN 'Tenaga Pengajar' THEN 1
+                            WHEN 'Asisten Ahli' THEN 2
+                            WHEN 'Lektor' THEN 3
+                            WHEN 'Lektor Kepala' THEN 4
+                            WHEN 'Profesor' THEN 5
+                            ELSE 99
+                        END ASC
+                    ");
+                },
+                'riwayat_pendidikan',
+                'penugasan_terbaru' => function ($q) use ($tahunAjaran) {
+                    $q->where('id_tahun_ajaran', $tahunAjaran);
+                },
+            ])
+            ->whereHas('penugasan_terbaru', function ($q) use ($tahunAjaran, $request) {
+                $q->where('id_tahun_ajaran', $tahunAjaran);
+
+                if ($request->filled('id_prodi')) {
+                    $q->whereIn('id_prodi', $request->id_prodi);
+                }
             })
+            ->where('id_jenis_sdm', 12);
+
+        if ($request->filled('jenjang_pendidikan')) {
+            $query->whereHas('riwayat_pendidikan', function ($q) use ($request) {
+                $q->whereIn(
+                    'id_jenjang_pendidikan',
+                    $request->jenjang_pendidikan
+                );
+            });
+        }
+
+        if ($request->filled('jabatan_fungsional')) {
+            $query->whereHas('jabatan_fungsional', function ($q) use ($request) {
+                $q->whereIn(
+                    'jabatan_fungsional',
+                    $request->jabatan_fungsional
+                );
+            });
+        }
+
+        $data = $query
             ->orderBy('nama_dosen', 'ASC')
-            // ->limit(10)
+            ->limit(10)
             ->get();
 
-        // dd($data[15]->penugasan_terbaru);
+        $prodi = ProgramStudi::orderBy('nama_program_studi')->get();
 
-        return view('dppti.monitoring.status-aipt.dosen.index', [
-            'data' => $data
-        ]);
+        $jenjangPendidikan = RiwayatPendidikanDosen::select(
+                'id_jenjang_pendidikan',
+                'nama_jenjang_pendidikan'
+            )
+            ->leftJoin(
+                'biodata_dosens',
+                'riwayat_pendidikan_dosens.id_dosen',
+                '=',
+                'biodata_dosens.id_dosen'
+            )
+            ->where('id_jenis_sdm', 12)
+            ->whereNotNull('id_jenjang_pendidikan')
+            ->distinct()
+            ->orderBy('nama_jenjang_pendidikan')
+            ->get();
+
+        $jabatanFungsional = SisterListJabatanFungsional::select(
+                'jabatan_fungsional'
+            )
+            ->leftJoin(
+                'biodata_dosens',
+                'sister_list_jabatan_fungsional.id_sdm',
+                '=',
+                'biodata_dosens.id_dosen'
+            )
+            ->where('id_jenis_sdm', 12)
+            ->whereNotNull('jabatan_fungsional')
+            ->distinct()
+            ->orderBy('jabatan_fungsional')
+            ->get();
+
+        return view(
+            'dppti.monitoring.status-aipt.dosen.index',
+            [
+                'data' => $data,
+                'prodi' => $prodi,
+                'jenjangPendidikan' => $jenjangPendidikan,
+                'jabatanFungsional' => $jabatanFungsional,
+            ]
+        );
     }
 
 }

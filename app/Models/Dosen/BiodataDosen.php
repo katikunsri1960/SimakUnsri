@@ -3,6 +3,7 @@
 namespace App\Models\Dosen;
 
 use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
+use App\Models\PdUnsri\SisterListJabatanFungsional;
 use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Perkuliahan\PesertaKelasKuliah;
 use App\Models\Perkuliahan\UjiMahasiswa;
@@ -37,6 +38,16 @@ class BiodataDosen extends Model
     public function gelar()
     {
         return $this->hasOne(GelarDosen::class, 'id_dosen','id_dosen');
+    }
+
+    public function jabatan_fungsional()
+    {
+        return $this->hasMany(SisterListJabatanFungsional::class, 'id_sdm', 'id_dosen');
+    }
+
+    public function riwayat_pendidikan()
+    {
+        return $this->hasMany(\App\Models\Dosen\RiwayatPendidikanDosen::class, 'id_dosen', 'id_dosen');
     }
 
     public function getJenisKelaminAttribute($value)
