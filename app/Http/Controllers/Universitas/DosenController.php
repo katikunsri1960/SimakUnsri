@@ -154,7 +154,9 @@ class DosenController extends Controller
         $count = $probe['totalData'];
         $limit = 100;
 
-        $batch = Bus::batch([])->dispatch();
+        $batch = Bus::batch([])
+                ->name('sister-list-jabatan-fungsional')
+                ->dispatch();
 
         for ($i = 0; $i < $count; $i += $limit) {
             $job = new \App\Jobs\PdUnsri\ListJabatanFungsionalJob($limit, $i);
