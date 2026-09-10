@@ -14,9 +14,20 @@ class PdUnsriAPI
 
     public function __construct()
     {
-        $this->baseUrl = rtrim(config('services.api_pd_unsri.base_url'), '/');
-        $this->timeout = config('services.api_pd_unsri.timeout');
-        $this->connectTimeout = config('services.api_pd_unsri.connect_timeout');
+        $this->baseUrl = rtrim(
+            config('services.api_pd_unsri.base_url', ''),
+            '/'
+        );
+
+        $this->timeout = (int) config(
+            'services.api_pd_unsri.timeout',
+            30
+        );
+
+        $this->connectTimeout = (int) config(
+            'services.api_pd_unsri.connect_timeout',
+            10
+        );
     }
 
     public function getToken(): ?string
