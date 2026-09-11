@@ -10,9 +10,14 @@ Kelas Penjadwalan
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('prodi')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
-                        <li class="breadcrumb-item active" aria-current="page">Kelas dan Penjadwalan</li>
+                        <li class="breadcrumb-item"><a href="{{route('dppm.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item" aria-current="page">Kuisioner EDOM</li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            <a href="{{ route('dppm.kuisioner') }}">
+                                Program Studi
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item active" aria-current="page">Detail Kelas dan Penjadwalan</li>
                     </ol>
                 </nav>
             </div>
@@ -67,7 +72,7 @@ Kelas Penjadwalan
                                     <th class="text-center align-middle">NAMA MATA KULIAH</th>
                                     <th class="text-center align-middle">JUMLAH KELAS</th>
                                     <th class="text-center align-middle">QUISIONER MATKUL</th>
-                                    {{-- <th class="text-center align-middle">AKSI</th> --}}
+                                    <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -93,9 +98,12 @@ Kelas Penjadwalan
                                                 <td class="text-center align-middle">
                                                     <a href="{{route('dppm.kuisioner.kelas-penjadwalan.kuisioner-matkul', ['id_prodi' => $prodi_id, 'id_matkul' => $d->id_matkul, 'semester'=>$semester_pilih])}}" class="btn btn-primary btn-sm btn-rounded waves-effect waves-light"> Lihat <i class="fa fa-circle-question"></i></a>
                                                 </td>
-                                                {{-- <td class="text-center align-middle">
+                                                <td class="text-center align-middle">
                                                     <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('dppm.kuisioner.kelas-penjadwalan.detail', ['id_prodi' => $prodi_id, 'id_matkul' => $d->id_matkul, 'semester' => $semester_view ?? $semester_aktif->id_semester])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
-                                                </td> --}}
+                                                </td>
+                                                {{--<td class="text-center align-middle">
+                                                    <a type="button" class="btn btn-success btn-rounded waves-effect waves-light" href="{{route('dppm.kuisioner.kelas-penjadwalan.detail', ['id_matkul' => $d->id_matkul, 'semester' => $semester_view ?? $semester_aktif->id_semester])}}" title="Lihat Detail"><i class="fa fa-search"></i></a>
+                                                </td>--}}
                                             </tr>
                                             @endif
                                         @endforeach

@@ -11,8 +11,8 @@ KUISIONER
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('dppm.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Daftar Program Studi</li>
-                        <li class="breadcrumb-item active" aria-current="page">Daftar</li>
+                        <li class="breadcrumb-item" aria-current="page">Kuisioner EDOM</li>
+                        <li class="breadcrumb-item active" aria-current="page"> Program Studi</li>
                     </ol>
                 </nav>
             </div>

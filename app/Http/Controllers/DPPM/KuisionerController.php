@@ -101,6 +101,33 @@ class KuisionerController extends Controller
         return response()->json($response);
     }
 
+    public function detail_kelas_penjadwalan($id_prodi, $id_matkul, $semester)
+    {
+        $semester_aktif = SemesterAktif::first();
+
+        $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
+
+        $data = KelasKuliah::with([
+                'peserta_kelas',
+                'dosen_pengajar',
+                'dosen_pengajar.dosen',
+                'ruang_perkuliahan',
+                'semester'
+            ])
+            ->where('id_matkul', $id_matkul)
+            ->where('id_prodi', $id_prodi)
+            ->where('id_semester', $semester)
+            ->get();
+
+        return view('dppm.kuisioner.kelas-penjadwalan.detail', [
+            'data' => $data,
+            'id_prodi' => $id_prodi,
+            'id_matkul' => $id_matkul,
+            'matkul' => $mata_kuliah,
+            'semester' => $semester
+        ]);
+    }
+
     public function kelas_kuliah($id_prodi)
     {
         // $prodi=$id_prodi->get
@@ -179,13 +206,32 @@ class KuisionerController extends Controller
                     ->get()
                     ->groupBy('kuisoner_question_id');
 
+        // $kelas = KelasKuliah::where('id_kelas_kuliah', $id_kelas)
+        //         ->with('matkul', 'dosen_pengajar.dosen', 'semester', 'peserta_kelas')
+        //         ->select('id_kelas_kuliah', 'id_matkul', 'nama_kelas_kuliah', 'id_semester')
+        //         ->withCount(['peserta_kelas' => function ($query) {
+        //             $query->where('approved', 1);
+        //         }])
+        //         ->first();
+
         $kelas = KelasKuliah::where('id_kelas_kuliah', $id_kelas)
-                ->with('matkul', 'dosen_pengajar.dosen', 'semester', 'peserta_kelas')
-                ->select('id_kelas_kuliah', 'id_matkul', 'nama_kelas_kuliah', 'id_semester')
-                ->withCount(['peserta_kelas' => function ($query) {
-                    $query->where('approved', 1);
-                }])
-                ->first();
+        ->with(
+            'matkul',
+            'dosen_pengajar.dosen',
+            'semester',
+            'peserta_kelas'
+        )
+        ->select(
+            'id_kelas_kuliah',
+            'id_prodi',
+            'id_matkul',
+            'nama_kelas_kuliah',
+            'id_semester'
+        )
+        ->withCount(['peserta_kelas' => function ($query) {
+            $query->where('approved', 1);
+        }])
+        ->first();
 
         return view('dppm.kuisioner.kelas-penjadwalan.kuisioner', [
                     'kuisioner' => $kuisioner,
@@ -201,6 +247,11 @@ class KuisionerController extends Controller
                 ->where('id_semester', $semester)
                 ->select('id_kelas_kuliah')
                 ->get()->pluck('id_kelas_kuliah');
+
+        $id_prodi = KelasKuliah::where('id_matkul', $id_matkul)
+                ->where('id_semester', $semester)
+                ->select('id_prodi')
+                ->first()->id_prodi;
 
         $mata_kuliah = MataKuliah::where('id_matkul', $id_matkul)->first();
         $semester = Semester::where('id_semester', $semester)->first();
@@ -221,6 +272,7 @@ class KuisionerController extends Controller
             'nilai_counts' => $nilai_counts,
             'kuisioner' => $kuisioner,
             'mata_kuliah' => $mata_kuliah,
+            'id_prodi' => $id_prodi,
             'semester' => $semester
         ]);
     }

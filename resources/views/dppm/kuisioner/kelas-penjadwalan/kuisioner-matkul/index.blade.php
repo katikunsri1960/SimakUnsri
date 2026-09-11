@@ -12,9 +12,19 @@ Kuisioner Mata Kuliah
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('dppm.dashboard')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item" aria-current="page">Data Akademik</li>
-                        {{-- <li class="breadcrumb-item" aria-current="page"><a href="{{route('dppm.kuisioner.kelas-penjadwalan', ['semester_view' => $semester->id_semester])}}">Kelas dan Penjadwalan</a></li> --}}
-                        {{-- <li class="breadcrumb-item" aria-current="page"><a href="{{route('dppm.data-akademik.kelas-penjadwalan.detail', ['id_matkul' => $kelas->id_matkul, 'semester'=>$kelas->id_semester])}}">Detail Kelas dan Penjadwalan</a></li> --}}
+                        <li class="breadcrumb-item" aria-current="page">Kuisioner EDOM</li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            <a href="{{ route('dppm.kuisioner') }}">
+                                Program Studi
+                            </a>
+                        </li>
+                        <li class="breadcrumb-item" aria-current="page">
+                            <a href="{{ route('dppm.kuisioner.kelas-penjadwalan', [
+                                'id_prodi' => $id_prodi
+                            ]) }}">
+                                Kelas dan Penjadwalan
+                            </a>
+                        </li>
                         <li class="breadcrumb-item active" aria-current="page">Kuisioner Mata Kuliah</li>
                     </ol>
                 </nav>
