@@ -724,8 +724,9 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/', [App\Http\Controllers\DPPM\KuisionerController::class, 'index'])->name('dppm.kuisioner');
                 Route::get('/{id_prodi}', [App\Http\Controllers\DPPM\KuisionerController::class, 'kelas_kuliah'])->name('dppm.kuisioner.kelas-kuliah');
                 Route::get('/prodi/{id_prodi}', [App\Http\Controllers\DPPM\KuisionerController::class, 'kelas_penjadwalan'])->name('dppm.kuisioner.kelas-penjadwalan');
+                Route::get('/{id_kelas}/kuisioner', [App\Http\Controllers\DPPM\KuisionerController::class, 'kuisioner_kelas'])->name('dppm.kuisioner.kelas-penjadwalan.kuisioner');
                 Route::get('/{id_matkul}/{semester}', [App\Http\Controllers\DPPM\KuisionerController::class, 'kuisioner_matkul'])->name('dppm.kuisioner.kelas-penjadwalan.kuisioner-matkul');
-                Route::get('/{id_matkul}/{semester}/detail', [App\Http\Controllers\DPPM\KuisionerController::class, 'detail_kelas_penjadwalan'])->name('dppm.kuisioner.kelas-penjadwalan.detail');
+                Route::get('/{id_prodi}/{id_matkul}/{semester}/detail', [App\Http\Controllers\DPPM\KuisionerController::class, 'detail_kelas_penjadwalan'])->name('dppm.kuisioner.kelas-penjadwalan.detail');
                 
             });
 

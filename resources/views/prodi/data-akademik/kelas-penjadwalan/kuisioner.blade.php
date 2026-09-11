@@ -229,60 +229,53 @@ Kuisioner Kelas Perkuliahan
             data: {
                 labels: @json($labels).slice(0,8),
                 datasets: [
-                    // {
-                    //     label: 'Rata-rata Nilai',
-                    //     data: @json($dataRataRata),
-                    //     backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                    //     borderColor: 'rgba(75, 192, 192, 1)',
-                    //     borderWidth: 1
-                    // },
                     {
                         label: 'Nilai 1',
-                        data: @json($dataNilai1).slice(0,8),
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                        borderColor: 'rgba(255, 99, 132, 1)',
+                        data: @json($dataNilai1).slice(0, 8),
+                        backgroundColor: 'rgba(220, 38, 38, 0.6)',
+                        borderColor: 'rgb(185, 28, 28)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 2',
-                        data: @json($dataNilai2).slice(0,8),
-                        backgroundColor: 'rgba(54, 162, 235, 0.5)',
-                        borderColor: 'rgba(54, 162, 235, 1)',
+                        data: @json($dataNilai2).slice(0, 8),
+                        backgroundColor: 'rgba(239, 68, 68, 0.6)',
+                        borderColor: 'rgb(220, 38, 38)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 3',
-                        data: @json($dataNilai3).slice(0,8),
-                        backgroundColor: 'rgba(255, 206, 86, 0.5)',
-                        borderColor: 'rgba(255, 206, 86, 1)',
+                        data: @json($dataNilai3).slice(0, 8),
+                        backgroundColor: 'rgba(249, 115, 22, 0.6)',
+                        borderColor: 'rgb(234, 88, 12)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 4',
-                        data: @json($dataNilai4).slice(0,8),
-                        backgroundColor: 'rgba(75, 192, 192, 0.5)',
-                        borderColor: 'rgba(75, 192, 192, 1)',
+                        data: @json($dataNilai4).slice(0, 8),
+                        backgroundColor: 'rgba(250, 204, 21, 0.6)',
+                        borderColor: 'rgb(202, 138, 4)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 5',
-                        data: @json($dataNilai5).slice(0,8),
-                        backgroundColor: 'rgba(153, 102, 255, 0.5)',
-                        borderColor: 'rgba(153, 102, 255, 1)',
+                        data: @json($dataNilai5).slice(0, 8),
+                        backgroundColor: 'rgba(132, 204, 22, 0.6)',
+                        borderColor: 'rgb(101, 163, 13)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 6',
-                        data: @json($dataNilai6).slice(0,8),
-                        backgroundColor: 'rgba(255, 159, 64, 0.5)',
-                        borderColor: 'rgba(255, 159, 64, 1)',
+                        data: @json($dataNilai6).slice(0, 8),
+                        backgroundColor: 'rgba(34, 197, 94, 0.6)',
+                        borderColor: 'rgb(22, 163, 74)',
                         borderWidth: 1
                     },
                     {
                         label: 'Nilai 7',
-                        data: @json($dataNilai7).slice(0,8),
-                        backgroundColor: 'rgba(199, 199, 199, 0.5)',
-                        borderColor: 'rgba(199, 199, 199, 1)',
+                        data: @json($dataNilai7).slice(0, 8),
+                        backgroundColor: 'rgba(22, 101, 52, 0.6)',
+                        borderColor: 'rgb(20, 83, 45)',
                         borderWidth: 1
                     }
                 ]
