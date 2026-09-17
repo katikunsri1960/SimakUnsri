@@ -158,6 +158,8 @@ class KuisionerController extends Controller
 
         $semester_view = $request->semester_view ?? null;
 
+        // dd($semester_view);
+
         $semester_aktif = SemesterAktif::first();
 
         // if ($semester_view != null && !in_array($semester_view, $semester_aktif->semester_allow)) {

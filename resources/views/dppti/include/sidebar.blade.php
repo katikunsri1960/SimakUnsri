@@ -275,7 +275,7 @@
                             <li class="treeview {{ request()->routeIs('dppti.monitoring.status-aipt*') ? 'active' : '' }}">
                                 <a href="#">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
-                                    <span>Data Akd AIPT</span>
+                                    <span>Data AIPT</span>
                                     <span class="pull-right-container">
                                         <i class="fa fa-angle-right pull-right"></i>
                                     </span>

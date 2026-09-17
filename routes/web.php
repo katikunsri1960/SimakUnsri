@@ -612,12 +612,24 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'getProdi'])->name('ditmawa.mahasiswa.get-fak-prodi-ang');
 
             Route::prefix('data-master')->group(function(){
+                Route::prefix('dosen')->group(function(){
+                    Route::get('/daftar', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'dosen'])->name('ditmawa.data-master.dosen.index');
+                    Route::get('/gelar', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'gelar_dosen'])->name('ditmawa.data-master.dosen.gelar');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'gelar_dosen_store'])->name('ditmawa.data-master.dosen.gelar.store');
+                });
+
                 Route::prefix('mahasiswa')->group(function () {
                     Route::get('/', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'mahasiswa'])->name('ditmawa.mahasiswa');
                     Route::get('/data', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'mahasiswa_data'])->name('ditmawa.mahasiswa.data');
                 });
-            });
 
+                Route::prefix('predikat')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'predikat'])->name('ditmawa.data-master.predikat');
+                    Route::post('/', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'predikat_store'])->name('ditmawa.data-master.predikat.store');
+                    Route::patch('/{predikat}', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'predikat_update'])->name('ditmawa.data-master.predikat.update');
+                    Route::delete('/{predikat}', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'predikat_delete'])->name('ditmawa.data-master.predikat.delete');
+                });
+            });
             Route::prefix('tunda-bayar')->group(function() {
                 Route::get('/', [App\Http\Controllers\DITMAWA\TundaBayarController::class, 'index'])->name('ditmawa.tunda-bayar');
                 Route::post('/approve/{tunda_bayar}', [App\Http\Controllers\DITMAWA\TundaBayarController::class, 'approve'])->name('ditmawa.tunda-bayar.approve');
@@ -635,6 +647,26 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/get-transkrip-nilai', [App\Http\Controllers\DITMAWA\TranskripController::class, 'data'])->name('ditmawa.transkrip-nilai.get');
                 Route::get('/download', [App\Http\Controllers\DITMAWA\TranskripController::class, 'download'])->name('ditmawa.transkrip-nilai.download');
                 Route::get('/{semester}/{id_reg}/khs', [App\Http\Controllers\DITMAWA\TranskripController::class, 'khs'])->name('ditmawa.transkrip-nilai.khs');
+            });
+
+            Route::prefix('pejabat')->group(function(){
+                Route::prefix('fakultas')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\PejabatController::class, 'pejabat_fakultas'])->name('ditmawa.pejabat.fakultas');
+                });
+
+                Route::prefix('universitas')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\PejabatController::class, 'pejabat_universitas'])->name('ditmawa.pejabat.universitas');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\PejabatController::class, 'pejabat_universitas_store'])->name('ditmawa.pejabat.universitas.store');
+                });
+
+            });
+
+            Route::prefix('gelar-lulusan')->group(function(){
+                Route::get('/', [App\Http\Controllers\DITMAWA\GelarLulusanController::class, 'index'])->name('ditmawa.gelar-lulusan');
+                Route::get('/edit/{id_gelar}', [App\Http\Controllers\DITMAWA\GelarLulusanController::class, 'edit'])->name('ditmawa.gelar-lulusan.edit');
+                Route::get('/get-prodi', [App\Http\Controllers\DITMAWA\GelarLulusanController::class, 'get_prodi'])->name('ditmawa.gelar-lulusan.get-prodi');
+                Route::post('/update', [App\Http\Controllers\DITMAWA\GelarLulusanController::class, 'update'])->name('ditmawa.gelar-lulusan.update');
+                Route::post('/store', [App\Http\Controllers\DITMAWA\GelarLulusanController::class, 'store'])->name('ditmawa.gelar-lulusan.store');
             });
 
             Route::prefix('pengajuan-cuti')->group(function(){
@@ -673,16 +705,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
 
                 Route::prefix('status-aipt')->group(function(){
-                    Route::get('/', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'status_aipt'])->name('ditmawa.monitoring.status-aipt');
+                    // Route::get('/', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'status_aipt'])->name('ditmawa.monitoring.status-aipt');
+                    Route::get('/dosen', [App\Http\Controllers\DITMAWA\MonitoringAIPTController::class, 'dosen_aipt'])->name('ditmawa.monitoring.status-aipt.dosen');
+                    Route::get('/mahasiswa', [App\Http\Controllers\DITMAWA\MonitoringAIPTController::class, 'mahasiswa_aipt'])->name('ditmawa.monitoring.status-aipt.mahasiswa');
+                    Route::get('/mahasiswa/data', [App\Http\Controllers\DITMAWA\MonitoringAIPTController::class, 'mahasiswa_aipt_data'])->name('ditmawa.monitoring.status-aipt.mahasiswa.data');
                     // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('ditmawa.monitoring.status-mahasiswa.detail-total');
                     // Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('ditmawa.monitoring.status-mahasiswa.detail-prodi');
                 });
 
-                Route::prefix('status-ukt')->group(function(){
-                    Route::get('/', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'status_ukt'])->name('ditmawa.monitoring.status-ukt');
-                    // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('ditmawa.monitoring.status-ukt.detail-total');
-                    // Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('ditmawa.monitoring.status-ukt.detail-prodi');
-                });
 
                 Route::prefix('status-ukt')->group(function(){
                     Route::get('/', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'status_ukt'])->name('ditmawa.monitoring.status-ukt');
@@ -693,6 +723,142 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::prefix('cpl-kurikulum')->group(function(){
                     Route::get('/', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'cpl'])->name('ditmawa.monitoring.cpl-kurikulum');
                     Route::get('/detail', [App\Http\Controllers\DITMAWA\MonitoringController::class, 'detail_cpl'])->name('ditmawa.monitoring.cpl-kurikulum.detail');
+                });
+            });
+
+            Route::prefix('usept-prodi')->group(function(){
+                Route::get('/', [App\Http\Controllers\DITMAWA\UseptController::class, 'index'])->name('ditmawa.usept-prodi');
+                // Route::post('/store/{kurikulum}', [App\Http\Controllers\DITMAWA\UseptController::class, 'store'])->name('ditmawa.usept-prodi.store');
+            });
+
+            Route::prefix('yudisium')->group(function(){
+
+                // Route::prefix('pengaturan')->group(function(){
+                //     Route::get('/', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'pengaturan'])->name('ditmawa.yudisium.pengaturan');
+                //     Route::post('/store', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'pengaturan_store'])->name('ditmawa.yudisium.pengaturan.store');
+                //     Route::patch('/update/{periodeWisuda}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'pengaturan_update'])->name('ditmawa.yudisium.pengaturan.update');
+                //     Route::delete('/delete/{periodeWisuda}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'pengaturan_delete'])->name('ditmawa.yudisium.pengaturan.delete');
+                // });
+
+                Route::prefix('peserta')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'peserta'])->name('ditmawa.yudisium.peserta');
+                    // Route::post('/approve/{id}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'approve'])->name('ditmawa.wisuda.peserta.approve');
+                    Route::post('/approve/{id}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'approve'])->name('ditmawa.yudisium.peserta.approve');
+                    Route::post('/decline/{id}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'decline'])->name('ditmawa.yudisium.peserta.decline');
+                    Route::get('/data', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'peserta_data'])->name('ditmawa.yudisium.peserta.data');
+                    Route::get('/data_approved', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'peserta_data_approved'])->name('ditmawa.yudisium.peserta.data_approved');
+                    Route::get('/data_approved_transkrip', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'peserta_data_approved_transkrip'])->name('ditmawa.yudisium.peserta.data_approved_transkrip');
+                    Route::get('/formulir/{id}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'peserta_formulir'])->name('ditmawa.yudisium.peserta.formulir');
+                    Route::get('/ijazah/{id}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'ijazah_terakhir'])->name('ditmawa.yudisium.peserta.ijazah');
+
+                    Route::post('/update-foto', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'update_foto'])->name('ditmawa.yudisium.peserta.update-foto');
+                    Route::post('/update-predikat', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'update_predikat'])->name('ditmawa.yudisium.peserta.update-predikat');
+                });
+
+                Route::prefix('registrasi-ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'registrasi_ijazah'])->name('ditmawa.yudisium.registrasi-ijazah.index');
+                    Route::post('/upload', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'registrasi_ijazah_upload'])->name('ditmawa.yudisium.registrasi-ijazah.upload');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'registrasi_ijazah_store'])->name('ditmawa.yudisium.registrasi-ijazah.store');
+                    Route::patch('/update/{idmanual}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'registrasi_ijazah_update'])->name('ditmawa.yudisium.registrasi-ijazah.update');
+                    Route::delete('/delete/{idmanual}', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'registrasi_ijazah_destroy'])->name('ditmawa.yudisium.registrasi-ijazah.delete');
+                    Route::get('/get-mahasiswa', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'get_mahasiswa'])->name('ditmawa.yudisium.registrasi-ijazah.get-mahasiswa');
+                });
+
+                Route::prefix('perbaikan-data')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'perbaikan_data'])->name('ditmawa.yudisium.perbaikan-data');
+                    Route::get('/search', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'search_perbaikan_data'])->name('ditmawa.yudisium.perbaikan-data.search');
+                    Route::get('/get-perbaikan-data', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'data_perbaikan_data'])->name('ditmawa.yudisium.perbaikan-data.get');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'store_perbaikan_data'])->name('ditmawa.yudisium.perbaikan-data.store');
+                });
+
+                Route::prefix('ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'ijazah'])->name('ditmawa.yudisium.ijazah.index');
+                    Route::get('/download-excel', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'ijazah_download_excel'])->name('ditmawa.yudisium.ijazah.download-excel');
+                    Route::get('/download-pdf', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'ijazah_download_pdf'])->name('ditmawa.yudisium.ijazah.download-pdf');
+                });
+
+                Route::prefix('transkrip')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'transkrip'])->name('ditmawa.yudisium.transkrip.index');
+                    Route::get('/download-pdf', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'transkrip_download_pdf'])->name('ditmawa.yudisium.transkrip.download-pdf');
+                });
+
+                Route::prefix('album')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'album'])->name('ditmawa.yudisium.album.index');
+                    Route::get('/download-pdf', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'album_download_pdf'])->name('ditmawa.yudisium.album.download-pdf');
+                });
+
+                Route::prefix('usept')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\YudisiumController::class, 'usept'])->name('ditmawa.yudisium.usept.index');
+                });
+            });
+
+            Route::prefix('wisuda')->group(function(){
+
+                Route::prefix('pengaturan')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\WisudaController::class, 'pengaturan'])->name('ditmawa.wisuda.pengaturan');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\WisudaController::class, 'pengaturan_store'])->name('ditmawa.wisuda.pengaturan.store');
+                    Route::patch('/update/{periodeWisuda}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'pengaturan_update'])->name('ditmawa.wisuda.pengaturan.update');
+                    Route::delete('/delete/{periodeWisuda}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'pengaturan_delete'])->name('ditmawa.wisuda.pengaturan.delete');
+                });
+
+                Route::prefix('peserta')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\WisudaController::class, 'peserta'])->name('ditmawa.wisuda.peserta');
+                    // Route::post('/approve/{id}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'approve'])->name('ditmawa.wisuda.peserta.approve');
+                    Route::post('/approve/{id}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'approve'])->name('ditmawa.wisuda.peserta.approve');
+                    Route::post('/decline/{id}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'decline'])->name('ditmawa.wisuda.peserta.decline');
+                    Route::get('/data', [App\Http\Controllers\DITMAWA\WisudaController::class, 'peserta_data'])->name('ditmawa.wisuda.peserta.data');
+                    Route::get('/data_approved', [App\Http\Controllers\DITMAWA\WisudaController::class, 'peserta_data_approved'])->name('ditmawa.wisuda.peserta.data_approved');
+                    Route::get('/data_approved_transkrip', [App\Http\Controllers\DITMAWA\WisudaController::class, 'peserta_data_approved_transkrip'])->name('ditmawa.wisuda.peserta.data_approved_transkrip');
+                    Route::get('/formulir/{id}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'peserta_formulir'])->name('ditmawa.wisuda.peserta.formulir');
+                    Route::get('/ijazah/{id}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'ijazah_terakhir'])->name('ditmawa.wisuda.peserta.ijazah');
+
+                    Route::post('/update-foto', [App\Http\Controllers\DITMAWA\WisudaController::class, 'update_foto'])->name('ditmawa.wisuda.peserta.update-foto');
+                    Route::post('/update-predikat', [App\Http\Controllers\DITMAWA\WisudaController::class, 'update_predikat'])->name('ditmawa.wisuda.peserta.update-predikat');
+                });
+
+                Route::prefix('registrasi-ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\WisudaController::class, 'registrasi_ijazah'])->name('ditmawa.wisuda.registrasi-ijazah.index');
+                    Route::post('/upload', [App\Http\Controllers\DITMAWA\WisudaController::class, 'registrasi_ijazah_upload'])->name('ditmawa.wisuda.registrasi-ijazah.upload');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\WisudaController::class, 'registrasi_ijazah_store'])->name('ditmawa.wisuda.registrasi-ijazah.store');
+                    Route::patch('/update/{idmanual}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'registrasi_ijazah_update'])->name('ditmawa.wisuda.registrasi-ijazah.update');
+                    Route::delete('/delete/{idmanual}', [App\Http\Controllers\DITMAWA\WisudaController::class, 'registrasi_ijazah_destroy'])->name('ditmawa.wisuda.registrasi-ijazah.delete');
+                    Route::get('/get-mahasiswa', [App\Http\Controllers\DITMAWA\WisudaController::class, 'get_mahasiswa'])->name('ditmawa.wisuda.registrasi-ijazah.get-mahasiswa');
+                });
+
+                Route::prefix('perbaikan-data')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\WisudaController::class, 'perbaikan_data'])->name('ditmawa.wisuda.perbaikan-data');
+                    Route::get('/search', [App\Http\Controllers\DITMAWA\WisudaController::class, 'search_perbaikan_data'])->name('ditmawa.wisuda.perbaikan-data.search');
+                    Route::get('/get-perbaikan-data', [App\Http\Controllers\DITMAWA\WisudaController::class, 'data_perbaikan_data'])->name('ditmawa.wisuda.perbaikan-data.get');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\WisudaController::class, 'store_perbaikan_data'])->name('ditmawa.wisuda.perbaikan-data.store');
+                });
+
+                Route::prefix('ijazah')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\WisudaController::class, 'ijazah'])->name('ditmawa.wisuda.ijazah.index');
+                    Route::get('/download-excel', [App\Http\Controllers\DITMAWA\WisudaController::class, 'ijazah_download_excel'])->name('ditmawa.wisuda.ijazah.download-excel');
+                    Route::get('/download-pdf', [App\Http\Controllers\DITMAWA\WisudaController::class, 'ijazah_download_pdf'])->name('ditmawa.wisuda.ijazah.download-pdf');
+                });
+
+                Route::prefix('transkrip')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\WisudaController::class, 'transkrip'])->name('ditmawa.wisuda.transkrip.index');
+                    Route::get('/download-pdf', [App\Http\Controllers\DITMAWA\WisudaController::class, 'transkrip_download_pdf'])->name('ditmawa.wisuda.transkrip.download-pdf');
+                });
+
+                Route::prefix('album')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\WisudaController::class, 'album'])->name('ditmawa.wisuda.album.index');
+                    Route::get('/download-pdf', [App\Http\Controllers\DITMAWA\WisudaController::class, 'album_download_pdf'])->name('ditmawa.wisuda.album.download-pdf');
+                    Route::get('/peserta-dp', [App\Http\Controllers\DITMAWA\WisudaController::class, 'peserta_data_album_dp'])->name('ditmawa.wisuda.peserta.data_album_dp');
+                    Route::get('/peserta-non-dp', [App\Http\Controllers\DITMAWA\WisudaController::class, 'peserta_data_album'])->name('ditmawa.wisuda.album.peserta');
+                    Route::post('/wisuda/update-no-urut', [App\Http\Controllers\DITMAWA\WisudaController::class, 'updateNoUrut'])->name('ditmawa.wisuda.album.update-no-urut');
+                });
+
+                Route::prefix('skpi')->group(function(){
+                    Route::get('/', [App\Http\Controllers\DITMAWA\SKPIController::class, 'index'])->name('ditmawa.skpi.data.index');
+                    Route::get('/data', [App\Http\Controllers\DITMAWA\SKPIController::class, 'skpi_data'])->name('ditmawa.skpi.data.get-data');
+                    Route::get('/download-pdf', [App\Http\Controllers\DITMAWA\SKPIController::class, 'skpi_download_pdf'])->name('ditmawa.skpi.download-pdf');
+                    Route::post('/update-nomor-surat',[App\Http\Controllers\DITMAWA\SKPIController::class, 'update_nomor_surat'])->name('ditmawa.skpi.update-nomor-surat');
+                    Route::get('/detail/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'detail_skpi_mahasiswa'])->name('ditmawa.skpi.data.detail');
+                    Route::post('/approve/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'approve_skpi'])->name('ditmawa.skpi.data.approve');
+                    Route::post('/decline/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'decline_skpi'])->name('ditmawa.skpi.data.decline');
                 });
             });
 
@@ -710,6 +876,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('jenis/edit/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'edit'])->name('ditmawa.skpi.jenis.edit');
                 Route::put('jenis/update/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'update'])->name('ditmawa.skpi.jenis.update');
                 Route::delete('jenis/delete/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'destroy'])->name('ditmawa.skpi.jenis.destroy');
+
+                // Route::get('/', [App\Http\Controllers\DITMAWA\SKPIController::class, 'index'])->name('ditmawa.skpi.data.index');
+                // Route::get('/data', [App\Http\Controllers\DITMAWA\SKPIController::class, 'skpi_data'])->name('ditmawa.skpi.data.get-data');
+                // Route::get('/detail/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'detail_skpi_mahasiswa'])->name('ditmawa.skpi.data.detail');
+                // Route::put('/update/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'update_detail_skpi'])->name('ditmawa.skpi.data.detail.update');
+                // Route::post('/approve/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'approve_skpi'])->name('ditmawa.skpi.data.approve');
+                // Route::post('/decline/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'decline_skpi'])->name('ditmawa.skpi.data.decline');
+
             });
         });
     });

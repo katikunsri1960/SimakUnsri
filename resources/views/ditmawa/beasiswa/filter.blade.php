@@ -9,7 +9,7 @@
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form action="{{route('bak.beasiswa')}}" method="get">
+            <form action="{{route('ditmawa.beasiswa')}}" method="get">
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-12 mb-3">

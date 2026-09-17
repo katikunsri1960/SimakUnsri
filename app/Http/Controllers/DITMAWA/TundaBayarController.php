@@ -13,11 +13,12 @@ class TundaBayarController extends Controller
     public function index(Request $request)
     {
         $semester_aktif = SemesterAktif::first()->id_semester;
-        $semester = Semester::select('id_semester', 'nama_semester')
-                    ->where('id_semester', '<=', $semester_aktif)
-                    ->whereNot('semester', 3)
-                    ->orderBy('id_semester', 'desc')->get();
 
+        $semester = Semester::select('id_semester', 'nama_semester')
+                        ->whereBetween('id_semester', [20241, $semester_aktif])
+                        ->whereNot('semester', 3)
+                        ->orderBy('id_semester', 'desc')->get();
+                    
         $db = new PenundaanBayar();
 
         $data = $db->with(['riwayat.prodi'])->filter($request)->get();
@@ -33,7 +34,7 @@ class TundaBayarController extends Controller
             $count[$key]['class'] = $value['class'];
         }
 
-        return view('bak.tunda-bayar.index', [
+        return view('ditmawa.tunda-bayar.index', [
             'data' => $data,
             'semester' => $semester,
             'semester_aktif' => $semester_aktif,

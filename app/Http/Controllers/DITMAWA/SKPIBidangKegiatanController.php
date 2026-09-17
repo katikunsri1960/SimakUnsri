@@ -12,12 +12,12 @@ class SKPIBidangKegiatanController extends Controller
     {
         $data = SKPIBidangKegiatan::orderBy('nama_bidang', 'ASC')
             ->get();
-        return view('bak.skpi.bidang.index', compact('data'));
+        return view('ditmawa.skpi.bidang.index', compact('data'));
     }
 
     public function create()
     {
-        return view('bak.skpi.bidang.create');
+        return view('ditmawa.skpi.bidang.create');
     }
 
     public function store(Request $request)
@@ -32,14 +32,14 @@ class SKPIBidangKegiatanController extends Controller
             'nama_kegiatan' => $request->nama_kegiatan,
         ]);
 
-        return redirect()->route('bak.skpi.bidang.index')
+        return redirect()->route('ditmawa.skpi.bidang.index')
             ->with('success','Data berhasil ditambahkan');
     }
 
     public function edit($id)
     {
         $data = SKPIBidangKegiatan::findOrFail($id);
-        return view('bak.skpi.bidang.edit', compact('data'));
+        return view('ditmawa.skpi.bidang.edit', compact('data'));
     }
 
     public function update(Request $request, $id)
@@ -56,7 +56,7 @@ class SKPIBidangKegiatanController extends Controller
             'nama_kegiatan' => $request->nama_kegiatan,
         ]);
 
-        return redirect()->route('bak.skpi.bidang.index')
+        return redirect()->route('ditmawa.skpi.bidang.index')
             ->with('success','Data berhasil diupdate');
     }
 
@@ -65,7 +65,7 @@ class SKPIBidangKegiatanController extends Controller
         $data = SKPIBidangKegiatan::findOrFail($id);
         $data->delete();
 
-        return redirect()->route('bak.skpi.bidang.index')
+        return redirect()->route('ditmawa.skpi.bidang.index')
             ->with('success','Data berhasil dihapus');
     }
 }

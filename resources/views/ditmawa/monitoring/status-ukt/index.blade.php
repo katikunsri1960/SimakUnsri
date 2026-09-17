@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 UKT Mahasiswa
 @endsection
@@ -10,7 +10,7 @@ UKT Mahasiswa
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
                         <li class="breadcrumb-item active" aria-current="page">Status UKT</li>
                     </ol>
@@ -169,7 +169,7 @@ UKT Mahasiswa
         }
 
         $.ajax({
-            url: "{{ route('bak.monitoring.status-ukt.data') }}",
+            url: "{{ route('dppti.monitoring.status-ukt.data') }}",
             type: 'GET',
             data: { 
                 prodi: prodi, 
@@ -299,7 +299,7 @@ UKT Mahasiswa
 
             if (fakultasId) {
                 $.ajax({
-                    url: "{{ route('bak.monitoring.status-ukt.getProdi', '') }}/" + fakultasId,
+                    url: "{{ route('dppti.monitoring.status-ukt.getProdi', '') }}/" + fakultasId,
                     type: "GET",
                     dataType: "json",
                     success: function (data) {

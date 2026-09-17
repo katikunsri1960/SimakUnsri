@@ -32,7 +32,7 @@ class SKPIController extends Controller
                 ->orderBy('periode', 'desc')
                 ->get();
 
-        return view('bak.wisuda.data-skpi.index', [
+        return view('ditmawa.wisuda.data-skpi.index', [
             'prodi' => $prodi, 'periode' => $periode, 'fakultas' => $fakultas]);
     }
 
@@ -225,7 +225,7 @@ class SKPIController extends Controller
                 ->sum('skor');
             // dd($total_skor);
 
-        return view('bak.wisuda.data-skpi.detail', 
+        return view('ditmawa.wisuda.data-skpi.detail', 
             compact('mahasiswa', 'bidang','data', 'total_skor'));
     }
 
@@ -365,7 +365,7 @@ class SKPIController extends Controller
         | GENERATE PDF
         |--------------------------------------------------------------------------
         */
-         $pdf = PDF::loadView('bak.wisuda.data-skpi.pdf', [
+         $pdf = PDF::loadView('ditmawa.wisuda.data-skpi.pdf', [
             'data' => $data,
             'cpl_list' => $cpl,
             'skpi_bidang' => $skpi_bidang,

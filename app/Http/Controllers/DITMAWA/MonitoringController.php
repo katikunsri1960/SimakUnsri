@@ -35,7 +35,7 @@ class MonitoringController extends Controller
                 ->where('monitoring_isi_krs.id_semester', $semesterAktif)
                 ->get();
 
-        return view('bak.monitoring.pengisian-krs.index', [
+        return view('ditmawa.monitoring.pengisian-krs.index', [
             'data' => $data,
         ]);
     }
@@ -50,7 +50,7 @@ class MonitoringController extends Controller
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
 
-        return view('bak.monitoring.pengisian-krs.detail-mahasiswa-aktif', [
+        return view('ditmawa.monitoring.pengisian-krs.detail-mahasiswa-aktif', [
             'prodi' => $prodi,
             'data' => $data
         ]);
@@ -70,7 +70,7 @@ class MonitoringController extends Controller
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
 
-        return view('bak.monitoring.pengisian-krs.detail-aktif-min-tujuh', [
+        return view('ditmawa.monitoring.pengisian-krs.detail-aktif-min-tujuh', [
             'prodi' => $prodi,
             'data' => $data
         ]);
@@ -85,7 +85,7 @@ class MonitoringController extends Controller
 
         $data = $db->detail_isi_krs($id_prodi, $semesterAktif);
 
-        return view('bak.monitoring.pengisian-krs.detail-isi-krs', [
+        return view('ditmawa.monitoring.pengisian-krs.detail-isi-krs', [
             'prodi' => $prodi,
             'data' => $data
         ]);
@@ -99,7 +99,7 @@ class MonitoringController extends Controller
 
         $data = $db->krs_data($id_prodi, $semesterAktif, 1);
 
-        return view('bak.monitoring.pengisian-krs.approve-krs', [
+        return view('ditmawa.monitoring.pengisian-krs.approve-krs', [
             'prodi' => $prodi,
             'data' => $data
         ]);
@@ -112,7 +112,7 @@ class MonitoringController extends Controller
         $db = new RiwayatPendidikan();
         $data = $db->krs_data($id_prodi, $semesterAktif, 0);
 
-        return view('bak.monitoring.pengisian-krs.not-approve-krs', [
+        return view('ditmawa.monitoring.pengisian-krs.not-approve-krs', [
             'prodi' => $prodi,
             'data' => $data
         ]);
@@ -127,7 +127,7 @@ class MonitoringController extends Controller
         $db = new RiwayatPendidikan();
         $data = $db->tidak_isi_krs($id_prodi, $semesterAktif);
 
-        return view('bak.monitoring.pengisian-krs.tidak-isi-krs', [
+        return view('ditmawa.monitoring.pengisian-krs.tidak-isi-krs', [
             'prodi' => $prodi,
             'data' => $data
         ]);
@@ -147,7 +147,7 @@ class MonitoringController extends Controller
                 ->orderBy('id_periode_masuk', 'ASC')
                 ->get();
 
-        return view('bak.monitoring.pengisian-krs.mahasiswa-up-tujuh', [
+        return view('ditmawa.monitoring.pengisian-krs.mahasiswa-up-tujuh', [
             'prodi' => $prodi,
             'data' => $data
         ]);
@@ -181,7 +181,7 @@ class MonitoringController extends Controller
         $prodi = ProgramStudi::orderBy('kode_program_studi')->get();
         $angkatan = $db->select('angkatan')->distinct()->orderBy('angkatan', 'desc')->get();
 
-        return view('bak.monitoring.kelulusan.index', [
+        return view('ditmawa.monitoring.kelulusan.index', [
             'jenis_keluar' => $jenis_keluar,
             'jenis_keluar_counts' => $jenis_keluar_counts,
             'prodi' => $prodi,
@@ -265,7 +265,7 @@ class MonitoringController extends Controller
         $semesterAktif = SemesterAktif::first()->id_semester;
         $semester = Semester::where('id_semester', '<=', $semesterAktif)->orderBy('id_semester', 'desc')->get();
 
-        return view('bak.monitoring.pengisian-nilai.index', [
+        return view('ditmawa.monitoring.pengisian-nilai.index', [
             'fakultas' => $fakultas,
             'prodi' => $prodi,
             'semester' => $semester,
@@ -315,7 +315,7 @@ class MonitoringController extends Controller
             }])
             ->get();
 
-        return view('bak.monitoring.pengisian-nilai.detail', [
+        return view('ditmawa.monitoring.pengisian-nilai.detail', [
             'title' => $title,
             'data' => $data,
             'dosen' => $biodataDosen,
@@ -373,7 +373,7 @@ class MonitoringController extends Controller
 
         $data = $db->with(['prodi.fakultas', 'details', 'semester'])->where('id_semester', $semesterAktif)->get();
 
-        return view('bak.monitoring.status-mahasiswa.index', [
+        return view('ditmawa.monitoring.status-mahasiswa.index', [
             'data' => $data,
             'prodi' => $prodi
         ]);
@@ -387,7 +387,7 @@ class MonitoringController extends Controller
         })->where('status', $status)->get();
 
 
-        return view('bak.monitoring.status-mahasiswa.detail-total', [
+        return view('ditmawa.monitoring.status-mahasiswa.detail-total', [
             'data' => $data,
             'status' => $status
         ]);
@@ -478,7 +478,7 @@ class MonitoringController extends Controller
 
         }
 
-        return view('bak.monitoring.status-mahasiswa.detail-prodi', [
+        return view('ditmawa.monitoring.status-mahasiswa.detail-prodi', [
             'data' => $data,
             'status' => $status
         ]);
@@ -493,7 +493,7 @@ class MonitoringController extends Controller
 
         // $data = $db->with(['prodi.fakultas', 'details', 'semester'])->where('id_semester', $semesterAktif)->get();
 
-        return view('bak.monitoring.status-aipt.devop', [
+        return view('ditmawa.monitoring.status-aipt.devop', [
             // 'data' => $data,
             // 'prodi' => $prodi
         ]);
@@ -525,7 +525,7 @@ class MonitoringController extends Controller
                     ->orderBy('angkatan_raw', 'desc')
                     ->get();
 
-        return view('bak.monitoring.status-ukt.index', [
+        return view('ditmawa.monitoring.status-ukt.index', [
             'angkatan' => $angkatan,
             'prodi'    => $prodi_fak,
             'fakultas' => $fakultas,
@@ -636,7 +636,7 @@ class MonitoringController extends Controller
             ->orderBy('program_studis.nama_program_studi', 'ASC')
             ->get();
 
-        return view('bak.monitoring.capaian-pembelajaran.index', compact('data'));
+        return view('ditmawa.monitoring.capaian-pembelajaran.index', compact('data'));
     }
 
     public function detail_cpl(Request $request)
@@ -670,7 +670,7 @@ class MonitoringController extends Controller
             ->orderBy('nama_kurikulum')
             ->get();
 
-        return view('bak.monitoring.capaian-pembelajaran.detail', compact(
+        return view('ditmawa.monitoring.capaian-pembelajaran.detail', compact(
             'data',
             'prodi',
             'title'

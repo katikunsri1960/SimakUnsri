@@ -36,7 +36,7 @@ class TranskripController extends Controller
 
         $id_batch = $jobData ? $jobData->id : null;
 
-        return view('bak.transkrip.index', [
+        return view('ditmawa.transkrip.index', [
             'statusSync' => $statusSync,
             'id_batch' => $id_batch,
         ]);
@@ -182,7 +182,7 @@ class TranskripController extends Controller
         $pejabat = PejabatUniversitas::where('jabatan_id', 2)->first();
 
 
-        $pdf = PDF::loadview('bak.transkrip.pdf', [
+        $pdf = PDF::loadview('ditmawa.transkrip.pdf', [
             'today' => $today,
             'transkrip' => $transkrip,
             'riwayat' => $riwayat,
@@ -218,7 +218,7 @@ class TranskripController extends Controller
                         ->where('id_semester', $semester)
                         ->get();
 
-        return view('bak.transkrip.khs', [
+        return view('ditmawa.transkrip.khs', [
             'akm' => $akm,
             'riwayat' => $riwayat,
             'nilai_mahasiswa' => $nilai_mahasiswa,

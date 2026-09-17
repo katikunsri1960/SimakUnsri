@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Daftar Peserta Yudisium
 @endsection
@@ -132,7 +132,6 @@ Daftar Peserta Yudisium
                                     <th class="text-center align-middle">MASA STUDI</th>
                                     <th class="text-center align-middle">JUDUL TUGAS AKHIR / THESIS / DISERTASI</th>
                                     <th class="text-center align-middle">SKOR USEPT</th>
-                                    <th class="text-center align-middle">AKSI</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -166,7 +165,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{route('bak.yudisium.peserta.data')}}`,
+        url: `{{route('dppti.yudisium.peserta.data')}}`,
         type: 'GET',
         data: {
             fakultas: fakultas,
@@ -192,7 +191,7 @@ function getData()
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
                     // console.log(item.id);
-                    var url_berkas = '{{route('bak.yudisium.peserta.formulir', ['id' => 'ID'])}}';
+                    var url_berkas = '{{route('dppti.yudisium.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-success" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     
@@ -268,7 +267,7 @@ function getData()
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content rounded-3">
                                         <form method="POST"
-                                            action="{{ route('bak.yudisium.peserta.update-foto') }}"
+                                            action="{{ route('dppti.yudisium.peserta.update-foto') }}"
                                             enctype="multipart/form-data">
                                             @csrf
 
@@ -336,7 +335,7 @@ function getData()
                                     <div class="modal-content rounded-3">
 
                                         <form method="POST"
-                                            action="{{ route('bak.yudisium.peserta.update-predikat') }}">
+                                            action="{{ route('dppti.yudisium.peserta.update-predikat') }}">
                                             @csrf
 
                                             <input type="hidden" name="id" value="${item.id}">
@@ -384,118 +383,6 @@ function getData()
                         </td>
                         ` : '-';
 
-
-                    var aksi = `
-                        <td class="text-center align-middle text-nowrap">
-                            <div class="row">
-
-                                ${
-                                    item.approved == 2
-                                    ? (
-                                        !item.file_bebas_pustaka
-                                        ? `
-                                            <span class="badge badge-lg bg-danger mb-2 rounded">
-                                                Ditangguhkan
-                                            </span>
-                                            <p class="text-danger mb-0">
-                                                <strong>
-                                                    Mahasiswa belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
-                                                </strong>
-                                            </p>
-                                        `
-                                        : !item.link_repo
-                                        ? `
-                                            <span class="badge badge-lg bg-danger mb-2 rounded">
-                                                Ditangguhkan
-                                            </span>
-                                            <p class="text-danger mb-0">
-                                                <strong>
-                                                    Mahasiswa belum Upload Repository!
-                                                </strong>
-                                            </p>
-                                        `
-                                        : `
-                                            <button onclick="approvePeserta(${item.id})"
-                                                    class="btn btn-success btn-sm my-2"
-                                                    title="Setujui Pengajuan">
-                                                <i class="fa fa-check"></i> Approve
-                                            </button>
-
-                                            <button onclick="showDeclineModal(${item.id})"
-                                                    class="btn btn-danger btn-sm my-2"
-                                                    title="Tolak Pengajuan">
-                                                <i class="fa fa-ban"></i> Decline
-                                            </button>
-
-                                            <div class="modal fade" id="declineModal${item.id}" tabindex="-1">
-                                                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Pembatalan Pendaftaran Yudisium</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Alasan Pembatalan</label>
-                                                                <input class="form-control"
-                                                                    id="alasan_pembatalan${item.id}"
-                                                                    placeholder="Masukkan alasan pembatalan">
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                            <button class="btn btn-danger" onclick="submitDecline(${item.id})">
-                                                                Tolak
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `
-                                    )
-                                    : 
-                                    item.approved == 3
-                                    ? (
-                                        `
-                                            <button onclick="showDeclineModal(${item.id})"
-                                                    class="btn btn-danger btn-sm my-2"
-                                                    title="Tolak Pengajuan">
-                                                <i class="fa fa-ban"></i> Decline
-                                            </button>
-                                            <div class="modal fade" id="declineModal${item.id}" tabindex="-1">
-                                                <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg">
-                                                    <div class="modal-content">
-                                                        <div class="modal-header">
-                                                            <h5 class="modal-title">Pembatalan Pendaftaran Yudisium</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                        </div>
-                                                        <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label class="form-label">Alasan Pembatalan</label>
-                                                                <input class="form-control"
-                                                                    id="alasan_pembatalan${item.id}"
-                                                                    placeholder="Masukkan alasan pembatalan">
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                                                            <button class="btn btn-danger" onclick="submitDecline(${item.id})">
-                                                                Tolak
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        `
-                                    )
-                                    :''
-                                }
-
-                            </div>
-                        </td>
-                        `;
-
-
                     var useptData = item.useptdata
                         ? `
                             <div class="text-center">
@@ -513,8 +400,6 @@ function getData()
                             </div>
                         `
                         : '-';
-
-
 
 
                     table.row.add([
@@ -548,7 +433,6 @@ function getData()
                         item.lama_studi ? item.lama_studi + ' Bulan' : spanStatus,
                         item.judul,
                         useptData,
-                        aksi,
                         
                     ]).draw(false);
                 });
@@ -624,7 +508,7 @@ function submitPredikat(id) {
         if (!isConfirm) return;
 
         $.ajax({
-            url: `{{ route('bak.yudisium.peserta.update-predikat', ['id' => 'ID']) }}`.replace('ID', id),
+            url: `{{ route('dppti.yudisium.peserta.update-predikat', ['id' => 'ID']) }}`.replace('ID', id),
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -678,7 +562,7 @@ function approvePeserta(id) {
     }, function (isConfirm) {
         if (isConfirm) {
             $.ajax({
-                url: `{{ route('bak.yudisium.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
+                url: `{{ route('dppti.yudisium.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
@@ -735,7 +619,7 @@ function submitDecline(id) {
         if (isConfirmed) {
             // console.log('alasan_pembatalan:', alasan);
             $.ajax({
-                url: `{{route('bak.yudisium.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
+                url: `{{route('dppti.yudisium.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',

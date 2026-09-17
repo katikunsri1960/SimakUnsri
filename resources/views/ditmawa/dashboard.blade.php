@@ -1,6 +1,6 @@
 @extends('layouts.ditmawa')
 @section('title')
-Dashboard DITMAWA
+Dashboard Direktorat Kemahasiswaan
 @endsection
 @section('content')
 <section class="content">

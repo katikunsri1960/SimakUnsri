@@ -15,7 +15,7 @@ class BeasiswaController extends Controller
     {
         $prodi = ProgramStudi::all();
         $jenisBeasiswa = JenisBeasiswaMahasiswa::all();
-        return view('bak.beasiswa.index', [
+        return view('ditmawa.beasiswa.index', [
             'prodi' => $prodi,
             'jenisBeasiswa' => $jenisBeasiswa,
         ]);

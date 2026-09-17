@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.ditmawa')
 @section('title')
 Pejabat Fakultas
 @endsection
@@ -12,7 +12,7 @@ Pejabat Fakultas
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="{{route('univ')}}"><i class="mdi mdi-home-outline"></i></a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Batas Isi KRS Manual</li>
+                        <li class="breadcrumb-item active" aria-current="page">Daftar Pejabat Fakultas</li>
                     </ol>
                 </nav>
             </div>

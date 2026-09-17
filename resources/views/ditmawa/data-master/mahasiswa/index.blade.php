@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.ditmawa')
 @section('title')
 Daftar Mahasiswa
 @endsection
@@ -10,7 +10,7 @@ Daftar Mahasiswa
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('ditmawa')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Data Master</li>
                         <li class="breadcrumb-item active" aria-current="page">Mahasiswa</li>
                     </ol>
@@ -174,7 +174,7 @@ Daftar Mahasiswa
         }
 
         $.ajax({
-            url: "{{ route('bak.mahasiswa.data') }}",
+            url: "{{ route('ditmawa.mahasiswa.data') }}",
             type: 'GET',
             data: { 
                 prodi: prodi, 
@@ -312,7 +312,7 @@ Daftar Mahasiswa
 
             if (fakultasId) {
                 $.ajax({
-                    url: "{{ route('bak.mahasiswa.get-fak-prodi-ang', '') }}/" + fakultasId,
+                    url: "{{ route('ditmawa.mahasiswa.get-fak-prodi-ang', '') }}/" + fakultasId,
                     type: "GET",
                     dataType: "json",
                     success: function (data) {
