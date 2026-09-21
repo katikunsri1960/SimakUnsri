@@ -254,36 +254,183 @@ class MonitoringAIPTController extends Controller
     public function dosen_aipt(Request $request)
     {
         $semesterAktif = SemesterAktif::first()->id_semester;
-        $tahunAjaran = substr($semesterAktif, 0, 4);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Semester yang dipilih dari filter
+        |--------------------------------------------------------------------------
+        */
+        $idSemester = $request->input('id_semester', []);
+
+        $idSemester = is_array($idSemester)
+            ? $idSemester
+            : [$idSemester];
+
+        $idSemester = array_values(
+            array_filter($idSemester)
+        );
+
+        /*
+        |--------------------------------------------------------------------------
+        | Jika filter semester tidak diisi,
+        | gunakan semester aktif
+        |--------------------------------------------------------------------------
+        */
+        if (empty($idSemester)) {
+            $idSemester = [$semesterAktif];
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Tentukan tanggal akhir semester
+        |--------------------------------------------------------------------------
+        */
+        $semesterData = collect($idSemester)->map(function ($id) {
+
+            $tahun = (int) substr((string) $id, 0, 4);
+            $semester = substr((string) $id, 4, 1);
+
+            if ($semester == '1') {
+
+                // Semester ganjil
+                $tanggalSelesai = sprintf(
+                    '%04d-12-31',
+                    $tahun
+                );
+
+            } elseif ($semester == '2') {
+
+                // Semester genap
+                $tanggalSelesai = sprintf(
+                    '%04d-07-31',
+                    $tahun + 1
+                );
+
+            } else {
+
+                $tanggalSelesai = null;
+            }
+
+            return [
+                'id_semester'   => $id,
+                'tanggal_mulai' => $tanggalSelesai,
+            ];
+        });
+
+        /*
+        |--------------------------------------------------------------------------
+        | Jika lebih dari satu semester dipilih,
+        | gunakan tanggal akhir semester paling akhir
+        |--------------------------------------------------------------------------
+        */
+        $tanggalSelesaiSemester = $semesterData
+            ->pluck('tanggal_mulai')
+            ->filter()
+            ->max();
+
+        // dd($tanggalSelesaiSemester);
+
+        // dd($idSemester);
+        if (empty($idSemester)) {
+            $idSemester = [$semesterAktif];
+        }
+
+        $tahunAjaran = collect($idSemester)
+            ->map(function ($semester) {
+                return substr((string) $semester, 0, 4);
+            })
+            ->unique()
+            ->values()
+            ->all();
+
+            // dd($tahunAjaran, $idSemester);
 
         $query = BiodataDosen::with([
-                'gelar',
-                'jabatan_fungsional' => function ($q) {
-                    $q->orderByRaw("
-                        CASE jabatan_fungsional
-                            WHEN 'Tenaga Pengajar' THEN 1
-                            WHEN 'Asisten Ahli' THEN 2
-                            WHEN 'Lektor' THEN 3
-                            WHEN 'Lektor Kepala' THEN 4
-                            WHEN 'Profesor' THEN 5
-                            ELSE 99
-                        END ASC
-                    ");
-                },
-                'riwayat_pendidikan',
-                'penugasan_terbaru' => function ($q) use ($tahunAjaran) {
-                    $q->where('id_tahun_ajaran', $tahunAjaran);
-                },
-            ])
-            ->whereHas('penugasan_terbaru', function ($q) use ($tahunAjaran, $request) {
-                $q->where('id_tahun_ajaran', $tahunAjaran);
+            'gelar',
 
-                if ($request->filled('id_prodi')) {
-                    $q->whereIn('id_prodi', $request->id_prodi);
+            'jabatan_fungsional' => function ($q) use (
+                $tanggalSelesaiSemester,
+                $request
+            ) {
+
+                /*
+                |--------------------------------------------------------------------------
+                | Hanya jabatan yang sudah berlaku sampai akhir semester
+                |--------------------------------------------------------------------------
+                */
+                if ($tanggalSelesaiSemester) {
+                    $q->whereDate(
+                        'tanggal_mulai',
+                        '<=',
+                        $tanggalSelesaiSemester
+                    );
                 }
-            })
-            ->where('id_jenis_sdm', 12);
 
+                /*
+                |--------------------------------------------------------------------------
+                | Jika ada filter jabatan, tampilkan hanya jabatan tersebut
+                |--------------------------------------------------------------------------
+                */
+                if ($request->filled('jabatan_fungsional')) {
+                    $q->whereIn(
+                        'jabatan_fungsional',
+                        $request->jabatan_fungsional
+                    );
+                }
+
+                /*
+                |--------------------------------------------------------------------------
+                | Urutkan berdasarkan level jabatan
+                |--------------------------------------------------------------------------
+                */
+                $q->orderByRaw("
+                    CASE jabatan_fungsional
+                        WHEN 'Profesor' THEN 1
+                        WHEN 'Lektor Kepala' THEN 2
+                        WHEN 'Lektor' THEN 3
+                        WHEN 'Asisten Ahli' THEN 4
+                        WHEN 'Tenaga Pengajar' THEN 5
+                        ELSE 99
+                    END ASC
+                ")
+
+                /*
+                |--------------------------------------------------------------------------
+                | Jika level sama, ambil yang tanggal mulai paling baru
+                |--------------------------------------------------------------------------
+                */
+                ->orderByDesc('tanggal_mulai');
+            },
+
+            'riwayat_pendidikan',
+
+            'penugasan_terbaru' => function ($q) use ($tahunAjaran) {
+                $q->whereIn(
+                    'id_tahun_ajaran',
+                    $tahunAjaran
+                );
+            },
+        ])
+
+        ->whereHas('penugasan_terbaru', function ($q) use ($tahunAjaran, $request) {
+
+            $q->where('id_tahun_ajaran', $tahunAjaran);
+
+            if ($request->filled('id_prodi')) {
+                $q->whereIn(
+                    'id_prodi',
+                    $request->id_prodi
+                );
+            }
+        })
+
+        ->where('id_jenis_sdm', 12);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Jenjang Pendidikan
+        |--------------------------------------------------------------------------
+        */
         if ($request->filled('jenjang_pendidikan')) {
             $query->whereHas('riwayat_pendidikan', function ($q) use ($request) {
                 $q->whereIn(
@@ -293,21 +440,79 @@ class MonitoringAIPTController extends Controller
             });
         }
 
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Jabatan Fungsional
+        |--------------------------------------------------------------------------
+        */
         if ($request->filled('jabatan_fungsional')) {
-            $query->whereHas('jabatan_fungsional', function ($q) use ($request) {
-                $q->whereIn(
-                    'jabatan_fungsional',
-                    $request->jabatan_fungsional
-                );
-            });
+
+            $query->whereHas(
+                'jabatan_fungsional',
+                function ($q) use (
+                    $request,
+                    $tanggalSelesaiSemester
+                ) {
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Jabatan sesuai filter
+                    |--------------------------------------------------------------------------
+                    */
+                    $q->whereIn(
+                        'jabatan_fungsional',
+                        $request->jabatan_fungsional
+                    );
+
+                    /*
+                    |--------------------------------------------------------------------------
+                    | Jabatan harus sudah berlaku pada semester tersebut
+                    |--------------------------------------------------------------------------
+                    */
+                    if ($tanggalSelesaiSemester) {
+                        $q->whereDate(
+                            'tanggal_mulai',
+                            '<=',
+                            $tanggalSelesaiSemester
+                        );
+                    }
+                }
+            );
         }
 
         $data = $query
             ->orderBy('nama_dosen', 'ASC')
-            ->limit(10)
+            // ->limit(2)
             ->get();
 
+        $data->each(function ($dosen) {
+
+            $jabatan = $dosen->jabatan_fungsional->first();
+
+            $dosen->setRelation(
+                'jabatan_fungsional',
+                $jabatan
+                    ? collect([$jabatan])
+                    : collect()
+            );
+        });
+            // dd($data[0]->jabatan_fungsional, $tanggalSelesaiSemester);
+        /*
+        |--------------------------------------------------------------------------
+        | Data Filter
+        |--------------------------------------------------------------------------
+        */
+
         $prodi = ProgramStudi::orderBy('nama_program_studi')->get();
+
+        $semester = Semester::select(
+                'id_semester',
+                'nama_semester'
+            )
+            ->where('id_semester', '<=', $semesterAktif)
+            ->where('semester', '!=', 3)
+            ->orderBy('id_semester', 'desc')
+            ->get();
 
         $jenjangPendidikan = RiwayatPendidikanDosen::select(
                 'id_jenjang_pendidikan',
@@ -345,6 +550,8 @@ class MonitoringAIPTController extends Controller
             [
                 'data' => $data,
                 'prodi' => $prodi,
+                'semester' => $semester,
+                'semesterAktif' => $semesterAktif,
                 'jenjangPendidikan' => $jenjangPendidikan,
                 'jabatanFungsional' => $jabatanFungsional,
             ]

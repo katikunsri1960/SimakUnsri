@@ -10,7 +10,7 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('ditmawa.dashboard');
+        return view('dppti.dashboard');
     }
 
     public function check_sync(Request $request)
