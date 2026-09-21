@@ -464,6 +464,6 @@ class MahasiswaEligibleController extends Controller
         $years = floor($totalMonths / 12);
         $months = $totalMonths % 12;
 
-        return $years + ($months / 10);
+        return (float) ($years . '.' . str_pad($months, 2, '0', STR_PAD_LEFT));
     }
 }
