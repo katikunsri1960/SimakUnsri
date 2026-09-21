@@ -51,7 +51,7 @@ class YudisiumController extends Controller
         
         $predikat_lulusan = PredikatKelulusan::get();
 
-        return view('bak.yudisium.peserta.index', [
+        return view('ditmawa.yudisium.peserta.index', [
             'fakultas' => $fakultas,
             'prodi' => $prodi,
             'periode' => $periode,
@@ -85,7 +85,7 @@ class YudisiumController extends Controller
         Carbon::setLocale('id');
         $now = Carbon::now()->translatedFormat('d F Y');
 
-        $pdf = Pdf::loadView('bak.yudisium.peserta.formulir', [
+        $pdf = Pdf::loadView('ditmawa.yudisium.peserta.formulir', [
             'riwayat'    => $riwayat,
             'biodata'    => $biodata,
             'aktivitas'  => $aktivitas,
@@ -561,10 +561,14 @@ class YudisiumController extends Controller
     public function registrasi_ijazah(Request $request)
     {
         $data = PisnMahasiswa::with(['semester', 'lulus_do', 'wisuda'])->filter($request)->get();
-        $semester = Semester::orderBy('id_semester', 'desc')->get();
+        $semester_aktif = SemesterAktif::first()->id_semester;
+        $semester = Semester::select('id_semester', 'nama_semester')
+                        ->whereBetween('id_semester', [20241, $semester_aktif])
+                        ->whereNot('semester', 3)
+                        ->orderBy('id_semester', 'desc')->get();
 
         // dd($data[0]->lulus_do);
-        return view('bak.yudisium.registrasi-ijazah.index', compact('data', 'semester'));
+        return view('ditmawa.yudisium.registrasi-ijazah.index', compact('data', 'semester'));
     }
 
     public function registrasi_ijazah_store(Request $request)
@@ -636,7 +640,7 @@ class YudisiumController extends Controller
 
     public function perbaikan_data()
     {
-        return view('bak.yudisium.perbaikan-data.index');
+        return view('ditmawa.yudisium.perbaikan-data.index');
     }
 
     public function data_perbaikan_data(Request $request)
@@ -749,7 +753,7 @@ class YudisiumController extends Controller
                     ->orderBy('nama_program_studi', 'ASC')
                     ->get();
 
-        return view('bak.yudisium.ijazah.index', [
+        return view('ditmawa.yudisium.ijazah.index', [
             'fakultas' => $fakultas,
             'periode' => $periode,
             'prodi' => $prodi,
@@ -923,7 +927,7 @@ class YudisiumController extends Controller
         // dd($dekan, $rektor);
 
                                 // dd($data[0]->wisuda_ke);
-        $pdf = PDF::loadview('bak.yudisium.ijazah.pdf', [
+        $pdf = PDF::loadview('ditmawa.yudisium.ijazah.pdf', [
             'data' => $data,
             'kode_univ' => $kode_univ,
             'fakultas' => $fakultas,
@@ -939,7 +943,7 @@ class YudisiumController extends Controller
 
     // public function transkrip(Request $request)
     // {
-    //     return view('bak.yudisium.transkrip.index');
+    //     return view('ditmawa.yudisium.transkrip.index');
     // }
 
     public function transkrip(Request $request)
@@ -957,7 +961,7 @@ class YudisiumController extends Controller
                     ->orderBy('angkatan_raw', 'desc')
                     ->get();
 
-        return view('bak.yudisium.transkrip.index', [
+        return view('ditmawa.yudisium.transkrip.index', [
             'fakultas' => $fakultas,
             'periode' => $periode,
             'prodi' => $prodi,
@@ -1072,7 +1076,7 @@ class YudisiumController extends Controller
                                 ->first();
                                 // dd($dekan);
 
-        // $pdf = PDF::loadview('bak.yudisium.transkrip.pdf', [
+        // $pdf = PDF::loadview('ditmawa.yudisium.transkrip.pdf', [
         //     'data' => $data,
         //     'kode_univ' => $kode_univ,
         //     'fakultas' => $fakultas,
@@ -1086,7 +1090,7 @@ class YudisiumController extends Controller
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
 
-        $pdf = PDF::loadView('bak.yudisium.transkrip.pdf', [
+        $pdf = PDF::loadView('ditmawa.yudisium.transkrip.pdf', [
             'data' => $data,
             'kode_univ' => $kode_univ,
             'fakultas' => $fakultas,
@@ -1112,7 +1116,7 @@ class YudisiumController extends Controller
                     ->orderBy('nama_program_studi', 'ASC')
                     ->get();
 
-        return view('bak.yudisium.album.index', [
+        return view('ditmawa.yudisium.album.index', [
             'fakultas' => $fakultas,
             'periode' => $periode,
             'prodi' => $prodi,
@@ -1178,7 +1182,7 @@ class YudisiumController extends Controller
         $fakultas = Fakultas::select('id', 'nama_fakultas', 'nama_fakultas_eng')->where('id', $fakultas)->first();
 
         $periode_wisuda = PeriodeWisuda::where('periode', $periode)->first();
-        $pdf = PDF::loadview('bak.yudisium.album.pdf', [
+        $pdf = PDF::loadview('ditmawa.yudisium.album.pdf', [
             'data' => $data,
             'periode_wisuda' => $periode_wisuda,
             'kode_univ' => $kode_univ,
@@ -1246,6 +1250,6 @@ class YudisiumController extends Controller
 
     public function usept(Request $request)
     {
-        return view('bak.yudisium.usept.index');
+        return view('ditmawa.yudisium.usept.index');
     }
 }

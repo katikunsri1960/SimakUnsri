@@ -48,7 +48,7 @@ class WisudaController extends Controller
         $data = $db->orderBy('periode', 'desc')->get();
         $periode = $db->max('periode') + 1;
 
-        return view('bak.wisuda.pengaturan.index', [
+        return view('ditmawa.wisuda.pengaturan.index', [
             'data' => $data,
             'periode' => $periode,
         ]);
@@ -87,7 +87,7 @@ class WisudaController extends Controller
 
         PeriodeWisuda::create($data);
 
-        return redirect()->route('bak.wisuda.pengaturan')->with('success', 'Data berhasil ditambahkan');
+        return redirect()->route('ditmawa.wisuda.pengaturan')->with('success', 'Data berhasil ditambahkan');
 
     }
 
@@ -124,14 +124,14 @@ class WisudaController extends Controller
 
         $periodeWisuda->update($data);
 
-        return redirect()->route('bak.wisuda.pengaturan')->with('success', 'Data berhasil diubah');
+        return redirect()->route('ditmawa.wisuda.pengaturan')->with('success', 'Data berhasil diubah');
     }
 
     public function pengaturan_delete(PeriodeWisuda $periodeWisuda)
     {
         $periodeWisuda->delete();
 
-        return redirect()->route('bak.wisuda.pengaturan')->with('success', 'Data berhasil dihapus');
+        return redirect()->route('ditmawa.wisuda.pengaturan')->with('success', 'Data berhasil dihapus');
     }
 
     public function peserta()
@@ -146,7 +146,7 @@ class WisudaController extends Controller
         
         $predikat_lulusan = PredikatKelulusan::get();
 
-        return view('bak.wisuda.peserta.index', [
+        return view('ditmawa.wisuda.peserta.index', [
             'fakultas' => $fakultas,
             'prodi' => $prodi,
             'periode' => $periode,
@@ -180,7 +180,7 @@ class WisudaController extends Controller
         Carbon::setLocale('id');
         $now = Carbon::now()->translatedFormat('d F Y');
 
-        $pdf = Pdf::loadView('bak.wisuda.peserta.formulir', [
+        $pdf = Pdf::loadView('ditmawa.wisuda.peserta.formulir', [
             'riwayat'    => $riwayat,
             'biodata'    => $biodata,
             'aktivitas'  => $aktivitas,
@@ -641,7 +641,7 @@ class WisudaController extends Controller
         $semester = Semester::orderBy('id_semester', 'desc')->get();
 
         // dd($data[0]->lulus_do);
-        return view('bak.wisuda.registrasi-ijazah.index', compact('data', 'semester'));
+        return view('ditmawa.wisuda.registrasi-ijazah.index', compact('data', 'semester'));
     }
 
     public function registrasi_ijazah_store(Request $request)
@@ -715,7 +715,7 @@ class WisudaController extends Controller
 
     public function perbaikan_data()
     {
-        return view('bak.wisuda.perbaikan-data.index');
+        return view('ditmawa.wisuda.perbaikan-data.index');
     }
 
     public function data_perbaikan_data(Request $request)
@@ -828,7 +828,7 @@ class WisudaController extends Controller
                     ->orderBy('nama_program_studi', 'ASC')
                     ->get();
 
-        return view('bak.wisuda.ijazah.index', [
+        return view('ditmawa.wisuda.ijazah.index', [
             'fakultas' => $fakultas,
             'periode' => $periode,
             'prodi' => $prodi,
@@ -1004,7 +1004,7 @@ class WisudaController extends Controller
         // dd($dekan, $rektor);
 
                                 // dd($data[0]->wisuda_ke);
-        $pdf = PDF::loadview('bak.wisuda.ijazah.pdf', [
+        $pdf = PDF::loadview('ditmawa.wisuda.ijazah.pdf', [
             'data' => $data,
             'kode_univ' => $kode_univ,
             'fakultas' => $fakultas,
@@ -1020,7 +1020,7 @@ class WisudaController extends Controller
 
     // public function transkrip(Request $request)
     // {
-    //     return view('bak.wisuda.transkrip.index');
+    //     return view('ditmawa.wisuda.transkrip.index');
     // }
 
     public function transkrip(Request $request)
@@ -1038,7 +1038,7 @@ class WisudaController extends Controller
                     ->orderBy('angkatan_raw', 'desc')
                     ->get();
 
-        return view('bak.wisuda.transkrip.index', [
+        return view('ditmawa.wisuda.transkrip.index', [
             'fakultas' => $fakultas,
             'periode' => $periode,
             'prodi' => $prodi,
@@ -1153,7 +1153,7 @@ class WisudaController extends Controller
                                 ->first();
                                 // dd($dekan);
 
-        // $pdf = PDF::loadview('bak.wisuda.transkrip.pdf', [
+        // $pdf = PDF::loadview('ditmawa.wisuda.transkrip.pdf', [
         //     'data' => $data,
         //     'kode_univ' => $kode_univ,
         //     'fakultas' => $fakultas,
@@ -1167,7 +1167,7 @@ class WisudaController extends Controller
         ini_set('memory_limit', '2048M');
         set_time_limit(0);
 
-        $pdf = PDF::loadView('bak.wisuda.transkrip.pdf', [
+        $pdf = PDF::loadView('ditmawa.wisuda.transkrip.pdf', [
             'data' => $data,
             'kode_univ' => $kode_univ,
             'fakultas' => $fakultas,
@@ -1193,7 +1193,7 @@ class WisudaController extends Controller
                     ->orderBy('nama_program_studi', 'ASC')
                     ->get();
 
-        return view('bak.wisuda.album.index', [
+        return view('ditmawa.wisuda.album.index', [
             'fakultas' => $fakultas,
             'periode' => $periode,
             'prodi' => $prodi,
@@ -1412,7 +1412,7 @@ class WisudaController extends Controller
 
         // dd($data);
 
-        $pdf = PDF::loadView('bak.wisuda.album.pdf', [
+        $pdf = PDF::loadView('ditmawa.wisuda.album.pdf', [
             'data' => $data,
             'periode_wisuda' => $periode_wisuda,
             'kode_univ' => $kode_univ,
@@ -1489,6 +1489,6 @@ class WisudaController extends Controller
 
     public function usept(Request $request)
     {
-        return view('bak.wisuda.usept.index');
+        return view('ditmawa.wisuda.usept.index');
     }
 }

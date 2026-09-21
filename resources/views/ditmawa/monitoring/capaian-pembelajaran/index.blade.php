@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Monitoring CPL Kurikulum
 @endsection
@@ -11,7 +11,7 @@ Monitoring CPL Kurikulum
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">SKPI</li>
                         <li class="breadcrumb-item active" aria-current="page">CPL Kurikulum</li>
                     </ol>
@@ -56,7 +56,7 @@ Monitoring CPL Kurikulum
                             {{-- PUNYA CPL --}}
                             @if($d->punya_cpl > 0)
                                 <td class="text-center">
-                                    <a href="{{ route('bak.monitoring.cpl-kurikulum.detail', ['prodi'=>$d->id_prodi, 'mode'=>'punya']) }}">
+                                    <a href="{{ route('dppti.monitoring.cpl-kurikulum.detail', ['prodi'=>$d->id_prodi, 'mode'=>'punya']) }}">
                                         <strong>{{ $d->punya_cpl }}</strong>
                                     </a>
                                 </td>
@@ -69,7 +69,7 @@ Monitoring CPL Kurikulum
                             {{-- TANPA CPL --}}
                             @if($d->tanpa_cpl > 0)
                                 <td class="text-center">
-                                    <a href="{{ route('bak.monitoring.cpl-kurikulum.detail', ['prodi'=>$d->id_prodi, 'mode'=>'tidak']) }}">
+                                    <a href="{{ route('dppti.monitoring.cpl-kurikulum.detail', ['prodi'=>$d->id_prodi, 'mode'=>'tidak']) }}">
                                         <strong>{{ $d->tanpa_cpl }}</strong>
                                     </a>
                                 </td>

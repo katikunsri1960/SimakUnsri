@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.ditmawa')
 @section('title')
 BEASISWA
 @endsection
@@ -10,7 +10,7 @@ BEASISWA
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('ditmawa')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Beasiswa Mahasiswa</li>
                         <li class="breadcrumb-item active" aria-current="page">Daftar</li>
                     </ol>
@@ -33,10 +33,10 @@ BEASISWA
                                 <i class="fa fa-filter"></i> Filter
                             </button>
                             <span class="divider-line mx-1"></span>
-                            <a href="{{route('bak.beasiswa')}}" class="btn btn-warning waves-effect waves-light" >
+                            <a href="{{route('ditmawa.beasiswa')}}" class="btn btn-warning waves-effect waves-light" >
                                 <i class="fa fa-rotate"></i> Reset Filter
                             </a>
-                            @include('bak.beasiswa.filter')
+                            @include('ditmawa.beasiswa.filter')
                         </div>
                     </div>
                 </div>
@@ -91,7 +91,7 @@ BEASISWA
             processing: true,
             serverSide: true,
             ajax: {
-                url: '{{route('bak.beasiswa.data')}}',
+                url: '{{route('ditmawa.beasiswa.data')}}',
                 type: 'GET',
                 data: function (d) {
                     d.prodi = $('#prodi').val();

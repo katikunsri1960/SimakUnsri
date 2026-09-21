@@ -19,7 +19,7 @@ class SKPIJenisKegiatanController extends Controller
 
         // dd($data, $bidang);
 
-        return view('bak.skpi.jenis.index', compact('data','bidang'));
+        return view('ditmawa.skpi.jenis.index', compact('data','bidang'));
     }
 
     public function store(Request $request)

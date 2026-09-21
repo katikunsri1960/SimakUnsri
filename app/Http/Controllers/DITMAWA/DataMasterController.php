@@ -6,26 +6,53 @@ use App\Http\Controllers\Controller;
 use App\Models\Referensi\PredikatKelulusan;
 use Illuminate\Http\Request;
 use App\Models\Fakultas;
-use App\Models\Semester;
 use App\Models\ProgramStudi;
 use App\Models\SemesterAktif;
 use App\Models\PenundaanBayar;
-use App\Models\MonitoringIsiKrs;
-use App\Models\Mahasiswa\LulusDo;
 use App\Models\Connection\Tagihan;
 use App\Models\Dosen\BiodataDosen;
 use Illuminate\Support\Facades\DB;
 use App\Models\Connection\Registrasi;
-use App\Models\Perkuliahan\KelasKuliah;
 use App\Models\Mahasiswa\RiwayatPendidikan;
-use App\Models\Monitoring\MonevStatusMahasiswa;
-use App\Models\Perkuliahan\DosenPengajarKelasKuliah;
-use App\Models\Monitoring\MonevStatusMahasiswaDetail;
 
 class DataMasterController extends Controller
 {
-    
-    //DATA MAHASISWA
+    // DOSEN START
+    public function dosen()
+    {
+        $db = new BiodataDosen();
+        $data = $db->get();
+
+        return view('ditmawa.data-master.dosen.index', [
+            'data' => $data
+        ]);
+    }
+
+    public function gelar_dosen()
+    {
+        $semesterAktif = SemesterAktif::first()->id_semester;
+        $tahunAjaran = substr($semesterAktif, 0, 4);
+
+        $data = BiodataDosen::with(['gelar','penugasan_terbaru' => function ($query) use ($tahunAjaran) {
+                $query->where('id_tahun_ajaran', $tahunAjaran);
+            }])
+            ->whereHas('penugasan_terbaru', function ($query) use ($tahunAjaran) {
+                $query->where('id_tahun_ajaran', $tahunAjaran);
+            })
+            ->orderBy('nama_dosen', 'ASC')
+            // ->limit(10)
+            ->get();
+
+        // dd($data[15]->penugasan_terbaru);
+
+        return view('ditmawa.data-master.dosen.gelar', [
+            'data' => $data
+        ]);
+    }
+    // DOSEN END
+
+
+    // MAHASISWA START
     public function getProdi($fakultas_id)
     {
         $prodi = ProgramStudi::where('status', 'A')
@@ -63,7 +90,7 @@ class DataMasterController extends Controller
                     ->orderBy('angkatan_raw', 'desc')
                     ->get();
 
-        return view('bak.data-master.mahasiswa.index', [
+        return view('ditmawa.data-master.mahasiswa.index', [
             'angkatan' => $angkatan,
             'prodi'    => $prodi_fak,
             'fakultas' => $fakultas,
@@ -138,4 +165,46 @@ class DataMasterController extends Controller
 
         return response()->json($data);
     }
+    // MAHASISWA END
+
+    // PREDIKAT KELULUSAN
+    public function predikat()
+    {
+        $data = PredikatKelulusan::all();
+        return view('ditmawa.data-master.predikat.index', [
+            'data' => $data,
+        ]);
+    }
+
+    public function predikat_store(Request $request)
+    {
+        $data = $request->validate([
+            'indonesia' => 'required',
+            'inggris' => 'required',
+        ]);
+
+        PredikatKelulusan::create($data);
+
+        return redirect()->route('ditmawa.data-master.predikat')->with('success', 'Data berhasil disimpan');
+    }
+
+    public function predikat_update(Request $request, PredikatKelulusan $predikat)
+    {
+        $data = $request->validate([
+            'indonesia' => 'required',
+            'inggris' => 'required',
+        ]);
+
+        $predikat->update($data);
+
+        return redirect()->route('ditmawa.data-master.predikat')->with('success', 'Data berhasil diupdate');
+    }
+
+    public function predikat_delete(PredikatKelulusan $predikat)
+    {
+        $predikat->delete();
+
+        return redirect()->route('ditmawa.data-master.predikat')->with('success', 'Data berhasil dihapus');
+    }
+    // PREDIKAT KELULUSAN END
 }

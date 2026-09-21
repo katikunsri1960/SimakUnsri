@@ -1,11 +1,11 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Monitoring Pengisian Nilai
 @endsection
 @section('content')
 @push('header')
 <div class="mx-4">
-    <a href="{{route('bak.monitoring.pengisian-nilai')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
+    <a href="{{route('dppti.monitoring.pengisian-nilai')}}" class="btn btn-warning btn-rounded waves-effect waves-light"><i class="fa fa-arrow-left"></i> Kembali</a>
 </div>
 @endpush
 <div class="content-header">
@@ -15,7 +15,7 @@ Monitoring Pengisian Nilai
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a></li>
+                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a></li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
                         <li class="breadcrumb-item" aria-current="page">Pengisian Nilai</li>
                         <li class="breadcrumb-item active" aria-current="page">{{$title}}</li>

@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.ditmawa')
 @section('title')
 Pejabat Universitas
 @endsection
@@ -26,16 +26,17 @@ Pejabat Universitas
         <div class="col-lg-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
-                    @include('bak.pejabat.universitas.edit')
                     <div class="table-responsive">
                         <table id="data" class="table table-hover table-bordered margin-top-10 w-p100">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
                                     <th class="text-center align-middle">JABATAN</th>
-                                    <th class="text-center align-middle">NAMA</th>
+                                    <th class="text-center align-middle">NAMA & GELAR</th>
+                                    <!-- <th class="text-center align-middle">NIDN/NIDK</th>
+                                    <th class="text-center align-middle">NUPTK</th> -->
                                     <th class="text-center align-middle">NIP</th>
-                                    <th class="text-center align-middle">ACT</th>
+                                    <!-- <th class="text-center align-middle">ACT</th> -->
                                 </tr>
                             </thead>
                             <tbody>
@@ -45,19 +46,19 @@ Pejabat Universitas
                                     <td class="text-start align-middle">{{$d->nama}}</td>
                                     @if ($d->pejabat)
                                     <td class="text-start align-middle">{{$d->pejabat->gelar_depan}}
-                                        {{$d->pejabat->nama}}, {{$d->pejabat->gelar_belakang}}</td>
-                                    <td class="text-center align-middle">{{$d->pejabat->nip}} </td>
-                                    <td class="text-center align-middle">
+                                        {{$d->pejabat->nama}}, {{$d->pejabat->gelar_belakang}}
+                                    </td>
+                                    <td class="text-center align-middle">{{$d->pejabat->nip ?? '-'}} </td>
+                                    <!-- <td class="text-center align-middle">
                                         <div class="row px-3">
                                             <button class="btn btn-warning btn-sm" type="button" data-bs-toggle="modal"
                                             data-bs-target="#editModal" onclick="edit({{$d}})"><i class="fa fa-pencil"></i> Edit Data</button>
                                         </div>
-                                    </td>
+                                    </td> -->
                                     @else
-                                    <td class="text-center align-middle" colspan="3">
+                                    <td class="text-center align-middle" colspan="2">
                                         <div class="row px-3">
-                                            <button class="btn btn-primary btn-sm" type="button" data-bs-toggle="modal"
-                                            data-bs-target="#editModal" onclick="edit({{$d}})"><i class="fa fa-plus"></i> Isi Data</button>
+                                            <badge class="badge badge-warning badge-lg">Data Pejabat Belum Diisi</badge>
                                         </div>
                                     </td>
                                     @endif

@@ -11,6 +11,30 @@
             <form action="{{route('dppti.monitoring.status-aipt.dosen')}}" method="get">
             <div class="modal-body">
                 <div class="row">
+                    <div class="col-md-12">
+                        <div class="mb-3">
+                            <label for="id_semester" class="form-label">Semester</label>
+
+                            <select
+                                multiple
+                                class="form-select"
+                                name="id_semester[]"
+                                id="id_semester">
+
+                                @foreach ($semester as $s)
+                                    <option
+                                        value="{{ $s->id_semester }}"
+                                        {{ in_array(
+                                            $s->id_semester,
+                                            old('id_semester', request()->get('id_semester', []))
+                                        ) ? 'selected' : '' }}>
+                                        {{ $s->nama_semester }}
+                                    </option>
+                                @endforeach
+
+                            </select>
+                        </div>
+                    </div>
 
                     <div class="col-md-12">
                         <div class="mb-3">

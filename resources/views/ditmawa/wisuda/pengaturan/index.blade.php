@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Pembukaan Wisuda
 @endsection
@@ -24,17 +24,6 @@ Pembukaan Wisuda
     <div class="row">
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
-                <div class="box-header with-border">
-                    <div class="d-flex justify-content-end">
-                        @include('bak.wisuda.pengaturan.create')
-                        @include('bak.wisuda.pengaturan.edit')
-                        <button type="button" class="btn btn-primary waves-effect waves-light" data-bs-toggle="modal"
-                        data-bs-target="#createModal">
-                            <i class="fa fa-plus"></i> Tambah Periode
-                        </button>
-                        <span class="divider-line mx-1"></span>
-                    </div>
-                </div>
                 <div class="box-body">
                     <div class="table-responsive">
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
@@ -46,7 +35,6 @@ Pembukaan Wisuda
                                     <th class="text-center align-middle">Tanggal Mulai Pendaftaran</th>
                                     <th class="text-center align-middle">Tanggal Akhir Pendaftaran</th>
                                     <th class="text-center align-middle">Apa Aktif</th>
-                                    <th class="text-center align-middle">ACT</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -63,19 +51,6 @@ Pembukaan Wisuda
                                             @else
 
                                             @endif
-                                        </td>
-                                        <td class="text-center align-middle">
-                                            <button type="button" data-bs-toggle="modal"
-                                                data-bs-target="#editModal" onclick="edit({{$d}})"
-                                                class="btn btn-warning btn-sm waves-effect waves-light mb-1">
-                                                <i class="fa fa-edit mr-1"></i>
-                                            </button>
-
-                                            <form action="{{ route('bak.wisuda.pengaturan.delete', $d->id) }}" method="post" class="d-inline delete-form" id="deleteForm{{ $d->id }}" data-id="{{ $d->id }}">
-                                                @csrf
-                                                @method('delete')
-                                                <button type="submit" class="btn btn-danger btn-sm"><i class="fa fa-trash"></i></button>
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

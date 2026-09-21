@@ -1,4 +1,4 @@
-@extends('layouts.bak')
+@extends('layouts.dppti')
 @section('title')
 Monev Status Mahasiswa
 @endsection
@@ -10,7 +10,7 @@ Monev Status Mahasiswa
             <div class="d-inline-block align-items-center">
                 <nav>
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{route('bak')}}"><i class="mdi mdi-home-outline"></i></a>
+                        <li class="breadcrumb-item"><a href="{{route('dppti')}}"><i class="mdi mdi-home-outline"></i></a>
                         </li>
                         <li class="breadcrumb-item" aria-current="page">Monitoring</li>
                         <li class="breadcrumb-item active" aria-current="page">Status Mahasiswa</li>
@@ -67,7 +67,7 @@ Monev Status Mahasiswa
                                     <td class="text-center align-middle">
                                         @if ($item->prodi->nama_jenjang_pendidikan == 'S1' && $item->lewat_10_semester > 0)
                                         <a
-                                            href="{{route('bak.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'lewat_10_semester'])}}">
+                                            href="{{route('dppti.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'lewat_10_semester'])}}">
                                             {{$item->lewat_10_semester}}
                                             @php
                                                 $total_lewat_10 += $item->lewat_10_semester;
@@ -80,7 +80,7 @@ Monev Status Mahasiswa
                                     <td class="text-center align-middle">
                                         @if ($item->lewat_semester_minus_1 > 0)
                                         <a
-                                            href="{{route('bak.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'lewat_semester_minus_1'])}}">
+                                            href="{{route('dppti.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'lewat_semester_minus_1'])}}">
                                             {{$item->lewat_semester_minus_1}}
                                         </a>
                                         @else
@@ -90,7 +90,7 @@ Monev Status Mahasiswa
                                     <td class="text-center align-middle">
                                         @if ($item->mahasiswa_lewat_semester > 0)
                                         <a
-                                            href="{{route('bak.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
+                                            href="{{route('dppti.monitoring.status-mahasiswa.detail-prodi', ['id' => $item->id, 'status' => 'mahasiswa_lewat_semester'])}}">
                                             {{$item->mahasiswa_lewat_semester}}
                                         </a>
                                         @else
@@ -112,21 +112,21 @@ Monev Status Mahasiswa
                                     <td class="text-center align-middle">
                                         @if ($total_lewat_10 > 0)
                                         <a
-                                        href="{{route('bak.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'lewat_10_semester'])}}" target="_blank">
+                                        href="{{route('dppti.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'lewat_10_semester'])}}" target="_blank">
                                         @endif
                                         {{$total_lewat_10}}
                                     </td>
                                     <td class="text-center align-middle">
                                         @if ($data->sum('lewat_semester_minus_1') > 0)
                                         <a
-                                        href="{{route('bak.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'lewat_semester_minus_1'])}}" target="_blank">
+                                        href="{{route('dppti.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'lewat_semester_minus_1'])}}" target="_blank">
                                         @endif
                                         {{$data->sum('lewat_semester_minus_1')}}
                                     </td>
                                     <td class="text-center">
                                         @if ($data->sum('mahasiswa_lewat_semester') > 0)
                                         <a target="_blank"
-                                            href="{{route('bak.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'mahasiswa_lewat_semester'])}}">{{$data->sum('mahasiswa_lewat_semester')}}</a>
+                                            href="{{route('dppti.monitoring.status-mahasiswa.detail-total',['semester' => $data->first()->id_semester, 'status' => 'mahasiswa_lewat_semester'])}}">{{$data->sum('mahasiswa_lewat_semester')}}</a>
                                         @else
                                         {{$data->sum('mahasiswa_lewat_semester')}}
                                         @endif

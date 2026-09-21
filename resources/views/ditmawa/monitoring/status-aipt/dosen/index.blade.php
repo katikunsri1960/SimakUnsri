@@ -281,7 +281,7 @@ Data Dosen AIPT
     $(function() {
         //"use strict";
 
-        $('#id_semester, #id_prodi, #jenjang_pendidikan, #jabatan_fungsional').select2({
+        $('#id_prodi, #jenjang_pendidikan, #jabatan_fungsional').select2({
             dropdownParent: $('#filter-button'),
             width: '100%'
         });
