@@ -41,6 +41,7 @@ class SKPIController extends Controller
         | gunakan periode terbaru.
         |
         */
+        // dd($request->input('periode'));
         $periodeFilter = $request->input('periode');
 
         if (empty($periodeFilter)) {
@@ -65,15 +66,15 @@ class SKPIController extends Controller
             | Filter periode wisuda
             |--------------------------------------------------------------------------
             */
-            ->when($periodeFilter, function ($query) use ($periodeFilter) {
+            // ->when($periodeFilter, function ($query) use ($periodeFilter) {
 
-                $query->whereHas('periode_wisuda', function ($q) use ($periodeFilter) {
+            //     $query->whereHas('periode_wisuda', function ($q) use ($periodeFilter) {
 
-                    $q->where('periode', $periodeFilter);
+            //         $q->where('periode_wisuda', $periodeFilter);
 
-                });
+            //     });
 
-            })
+            // })
 
             /*
             |--------------------------------------------------------------------------
@@ -81,6 +82,7 @@ class SKPIController extends Controller
             |--------------------------------------------------------------------------
             */
             ->whereHas('riwayat_pendidikan.skpi')
+            ->where('wisuda_ke', $periodeFilter)
 
             /*
             |--------------------------------------------------------------------------
@@ -233,15 +235,17 @@ class SKPIController extends Controller
 
     public function detail_skpi_mahasiswa($id)
     { 
+        // dd($id);
         
         $prodi_id = auth()->user()->fk_id;
 
         $wisuda = Wisuda::with(['periode_wisuda', 'riwayat_pendidikan'])
-                ->whereHas('periode_wisuda', function ($query) {
-                    $query->where('is_active', '=', 1);
-                })
+                // ->whereHas('periode_wisuda', function ($query) {
+                //     $query->where('is_active', '=', 1);
+                // })
                 ->where('id', $id)
                 ->first();
+                // dd($wisuda);
         
         $data = SKPI::leftJoin('skpi_jenis_kegiatan', 'skpi_jenis_kegiatan.id', 'skpi_data.id_jenis_skpi')
                     ->select('skpi_data.*', 'skpi_jenis_kegiatan.bidang_id', 'skpi_jenis_kegiatan.kriteria')
