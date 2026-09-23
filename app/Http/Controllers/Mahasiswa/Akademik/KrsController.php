@@ -1056,7 +1056,7 @@ class KrsController extends Controller
                             $query->where('id_registrasi_mahasiswa', $id_reg);
                     })
                     ->where('approve_krs', 1)
-                    ->where('id_semester', $semester_aktif->id_semester)
+                    ->where('id_semester', $id_semester)
                     ->whereIn('id_jenis_aktivitas',['13','14','15','16','17','18','19','20', '21'])
                     ->get();
 
