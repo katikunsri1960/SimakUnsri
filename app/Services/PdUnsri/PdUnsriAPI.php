@@ -78,4 +78,67 @@ class PdUnsriAPI
 
         return $response->json();
     }
+
+    /**
+     * Ambil data tagihan dari API PD Unsri
+     */
+    public function getImportTagihan(int $limit = 100, int $offset = 0): ?array
+    {
+        $token = $this->getToken();
+
+        // dd($this->baseUrl, $token, $limit, $offset);
+
+        if (!$token) {
+            return null;
+        }
+
+        $response = Http::timeout($this->timeout)
+            ->connectTimeout($this->connectTimeout)
+            ->withToken($token)
+            ->get("{$this->baseUrl}/v1/import-tagihan", [
+                'limit' => $limit,
+                'offset' => $offset,
+            ]);
+
+        // dd($response->body());
+        if ($response->failed()) {
+            Log::warning('API PD Unsri gagal ambil data tagihan', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+            return null;
+        }
+
+        return $response->json();
+    }
+
+    /**
+     * Ambil data pembayaran dari API PD Unsri
+     */
+    public function getImportPembayaran(int $limit = 100, int $offset = 0): ?array
+    {
+        $token = $this->getToken();
+
+        if (!$token) {
+            return null;
+        }
+
+        $response = Http::timeout($this->timeout)
+            ->connectTimeout($this->connectTimeout)
+            ->withToken($token)
+            ->get("{$this->baseUrl}/v1/import-pembayaran", [
+                'limit' => $limit,
+                'offset' => $offset,
+            ]);
+
+        if ($response->failed()) {
+            Log::warning('API PD Unsri gagal ambil data pembayaran', [
+                'status' => $response->status(),
+                'body' => $response->body(),
+            ]);
+            return null;
+        }
+
+        return $response->json();
+    }
 }

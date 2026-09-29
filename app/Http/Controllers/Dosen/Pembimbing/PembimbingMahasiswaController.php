@@ -367,33 +367,93 @@ class PembimbingMahasiswaController extends Controller
         ]);
 
         $sudah_bayar = 0;
+// QUERY LAMA UNTUK MENGECEK STATUS PEMBAYARAN MAHASISWA
+        // try{
+        //     try {
+        //         $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
+        //                     ->pluck('rm_no_test')
+        //                     ->first();
+        //     } catch (\Exception $e) {
 
-        try{
+        //         // log error
+        //         \Log::error('Koneksi database gagal: '.$e->getMessage());
+
+        //         // nilai default jika gagal
+        //         $id_test = null;
+        //     }
+        //     $tagihan = Tagihan::with('pembayaran')
+        //             ->whereIn('nomor_pembayaran', [$id_test, $data_mahasiswa->nim])
+        //             ->where('kode_periode', $semester_aktif->id_semester)
+        //             ->first();
+
+        //     if (!$tagihan || !$tagihan->pembayaran || empty($tagihan->pembayaran) || is_null($tagihan->total_nilai_tagihan)) {
+        //         $sudah_bayar = 0; // Not paid
+        //     } else {
+        //         $sudah_bayar = 1; // Paid
+        //     }
+
+        // }catch (\Exception $e) {
+        //     return redirect()->back()->with('error', 'Koneksi Database Keuangan Terputus.');
+        // }
+
+// QUERY BARU UNTUK MENGECEK STATUS PEMBAYARAN MAHASISWA
+        try {
+            // 1. Ambil rm_no_test dari Registrasi
             try {
-                $id_test = Registrasi::where('rm_nim', $riwayat_pendidikan->nim)
-                            ->pluck('rm_no_test')
-                            ->first();
+                $id_test = Registrasi::where('rm_nim', $data_mahasiswa->nim)
+                    ->pluck('rm_no_test')
+                    ->first();
             } catch (\Exception $e) {
-
-                // log error
-                \Log::error('Koneksi database gagal: '.$e->getMessage());
-
-                // nilai default jika gagal
+                \Log::error('Gagal mengambil no_test dari registrasi: ' . $e->getMessage());
                 $id_test = null;
             }
-            $tagihan = Tagihan::with('pembayaran')
-                    ->whereIn('nomor_pembayaran', [$id_test, $data_mahasiswa->nim])
-                    ->where('kode_periode', $semester_aktif->id_semester)
+
+            $nomorPembayaranList = array_filter([$id_test, $data_mahasiswa->nim]);
+            $kodePeriode = $semester_aktif->id_semester;
+
+            try {
+                // 2. OPSI UTAMA: Query ke Koneksi Utama (Server Keuangan)
+                $tagihan = Tagihan::with('pembayaran')
+                    ->whereIn('nomor_pembayaran', $nomorPembayaranList)
+                    ->where('kode_periode', $kodePeriode)
                     ->first();
 
-            if (!$tagihan || !$tagihan->pembayaran || empty($tagihan->pembayaran) || is_null($tagihan->total_nilai_tagihan)) {
+                $pembayaran = $tagihan ? $tagihan->pembayaran : null;
+                $totalNilaiTagihan = $tagihan ? $tagihan->total_nilai_tagihan : null;
+
+            } catch (\Illuminate\Database\QueryException $e) {
+                // 3. FALLBACK: Jika Koneksi Keuangan Terputus/Gagal, Gunakan Tabel Import
+                \Log::warning('Koneksi DB Keuangan terputus, beralih ke tabel import local.', [
+                    'error' => $e->getMessage()
+                ]);
+
+                // Query ke tabel import_tagihan
+                $tagihan = DB::table('import_tagihan')
+                    ->whereIn('nomor_pembayaran', $nomorPembayaranList)
+                    ->where('kode_periode', $kodePeriode)
+                    ->first();
+
+                // Query ke tabel import_pembayaran jika tagihan ditemukan
+                $pembayaran = null;
+                if ($tagihan) {
+                    $pembayaran = DB::table('import_pembayaran')
+                        ->where('nomor_pembayaran', $tagihan->nomor_pembayaran)
+                        ->first();
+                }
+
+                $totalNilaiTagihan = $tagihan ? ($tagihan->total_nilai_tagihan ?? null) : null;
+            }
+
+            // 4. Penentuan Status Pembayaran
+            if (!$tagihan || !$pembayaran || empty($pembayaran) || is_null($totalNilaiTagihan)) {
                 $sudah_bayar = 0; // Not paid
             } else {
                 $sudah_bayar = 1; // Paid
             }
 
-        }catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Koneksi Database Keuangan Terputus.');
+        } catch (\Exception $e) {
+            \Log::error('Error pada pengecekan status tagihan: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat memproses data tagihan.');
         }
 
         if ($sudah_bayar == 0) {

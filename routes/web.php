@@ -863,20 +863,34 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             });
 
             Route::prefix('skpi')->group(function () {
-                Route::get('bidang', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'index'])->name('ditmawa.skpi.bidang.index');
-                Route::get('bidang/create', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'create'])->name('ditmawa.skpi.bidang.create');
-                Route::post('bidang/store', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'store'])->name('ditmawa.skpi.bidang.store');
-                Route::get('bidang/edit/{id}', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'edit'])->name('ditmawa.skpi.bidang.edit');
-                Route::put('bidang/update/{id}', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'update'])->name('ditmawa.skpi.bidang.update');
-                Route::delete('bidang/delete/{id}', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'destroy'])->name('ditmawa.skpi.bidang.destroy');
+                Route::prefix('bidang')->group(function () {
+                    Route::get('/', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'index'])->name('ditmawa.skpi.bidang.index');
+                    Route::get('/create', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'create'])->name('ditmawa.skpi.bidang.create');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'store'])->name('ditmawa.skpi.bidang.store');
+                    Route::get('/edit/{id}', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'edit'])->name('ditmawa.skpi.bidang.edit');
+                    Route::put('/update/{id}', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'update'])->name('ditmawa.skpi.bidang.update');
+                    Route::delete('/delete/{id}', [App\Http\Controllers\DITMAWA\SKPIBidangKegiatanController::class,'destroy'])->name('ditmawa.skpi.bidang.destroy');     
+                });
 
-                Route::get('jenis', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'index'])->name('ditmawa.skpi.jenis.index');
-                Route::get('jenis/create', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'create'])->name('ditmawa.skpi.jenis.create');
-                Route::post('jenis/store', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'store'])->name('ditmawa.skpi.jenis.store');
-                Route::get('jenis/edit/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'edit'])->name('ditmawa.skpi.jenis.edit');
-                Route::put('jenis/update/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'update'])->name('ditmawa.skpi.jenis.update');
-                Route::delete('jenis/delete/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'destroy'])->name('ditmawa.skpi.jenis.destroy');
+                Route::prefix('sub-bidang')->group(function () {
+                    Route::get('/', [App\Http\Controllers\DITMAWA\SKPISubBidangKegiatanController::class,'index'])->name('ditmawa.skpi.sub-bidang.index');
+                    Route::get('/create', [App\Http\Controllers\DITMAWA\SKPISubBidangKegiatanController::class,'create'])->name('ditmawa.skpi.sub-bidang.create');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\SKPISubBidangKegiatanController::class,'store'])->name('ditmawa.skpi.sub-bidang.store');
+                    Route::get('/edit/{id}', [App\Http\Controllers\DITMAWA\SKPISubBidangKegiatanController::class,'edit'])->name('ditmawa.skpi.sub-bidang.edit');
+                    Route::put('/update/{id}', [App\Http\Controllers\DITMAWA\SKPISubBidangKegiatanController::class,'update'])->name('ditmawa.skpi.sub-bidang.update');
+                    Route::delete('/delete/{id}', [App\Http\Controllers\DITMAWA\SKPISubBidangKegiatanController::class,'destroy'])->name('ditmawa.skpi.sub-bidang.destroy');     
+                });
 
+                Route::prefix('jenis')->group(function () {
+                    Route::get('/', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'index'])->name('ditmawa.skpi.jenis.index');
+                    Route::get('/create', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'create'])->name('ditmawa.skpi.jenis.create');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'store'])->name('ditmawa.skpi.jenis.store');
+                    Route::get('/edit/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'edit'])->name('ditmawa.skpi.jenis.edit');
+                    Route::put('/update/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'update'])->name('ditmawa.skpi.jenis.update');
+                    Route::delete('/delete/{id}', [App\Http\Controllers\DITMAWA\SKPIJenisKegiatanController::class,'destroy'])->name('ditmawa.skpi.jenis.destroy');
+ 
+                });
+                
                 // Route::get('/', [App\Http\Controllers\DITMAWA\SKPIController::class, 'index'])->name('ditmawa.skpi.data.index');
                 // Route::get('/data', [App\Http\Controllers\DITMAWA\SKPIController::class, 'skpi_data'])->name('ditmawa.skpi.data.get-data');
                 // Route::get('/detail/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'detail_skpi_mahasiswa'])->name('ditmawa.skpi.data.detail');
@@ -2226,6 +2240,17 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/prestasi/{id}/edit', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'edit'])->name('mahasiswa.prestasi.edit');
                 Route::put('/prestasi/{id}', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'update'])->name('mahasiswa.prestasi.update');
                 Route::delete('/{id}', [App\Http\Controllers\Mahasiswa\Prestasi\PrestasiMahasiswaController::class, 'delete_prestasi_mahasiswa'])->name('mahasiswa.prestasi.hapus');
+            });
+
+            // Route for Prestasi SKPI Mahasiswa
+            Route::prefix('prestasi-skpi')->group(function () {
+                Route::get('/', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'prestasi_mahasiswa'])->name('mahasiswa.prestasi-skpi.index');
+                Route::get('/tambah', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'tambah_prestasi_mahasiswa'])->name('mahasiswa.prestasi-skpi.tambah');
+                Route::post('/store', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'store_prestasi_mahasiswa'])->name('mahasiswa.prestasi-skpi.store');
+                Route::get('/{id}/edit', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'edit'])->name('mahasiswa.prestasi-skpi.edit');
+                Route::put('/{id}', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'update'])->name('mahasiswa.prestasi-skpi.update');
+                Route::post('/upload/{id}', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'upload_file'])->name('mahasiswa.prestasi-skpi.upload');
+                Route::delete('/{id}', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'delete_prestasi_mahasiswa'])->name('mahasiswa.prestasi-skpi.hapus');
             });
 
             Route::prefix('bimbingan-tugas-akhir')->group(function(){

@@ -246,6 +246,12 @@
                                     Bidang SKPI
                                 </a>
                             </li>
+                            <li class="{{request()->routeIs('ditmawa.skpi.sub-bidang.index') || request()->routeIs('ditmawa.skpi.bidang.*') ? 'active' : ''}}">
+                                <a href="{{route('ditmawa.skpi.sub-bidang.index')}}">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Sub Bidang SKPI
+                                </a>
+                            </li>
                             <li class="{{request()->routeIs('ditmawa.skpi.jenis.index') || request()->routeIs('ditmawa.skpi.jenis.*') ? 'active' : ''}}">
                                 <a href="{{route('ditmawa.skpi.jenis.index')}}">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>

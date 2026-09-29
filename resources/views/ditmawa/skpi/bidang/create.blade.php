@@ -1,8 +1,9 @@
 <div class="modal fade" id="modalCreateBidang" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Tambahkan rounded-4 dan overflow-hidden di sini -->
+        <div class="modal-content rounded-4 overflow-hidden border-0 shadow">
 
-            <form action="{{ route('bak.skpi.bidang.store') }}" method="POST" class="form-create">
+            <form action="{{ route('ditmawa.skpi.bidang.store') }}" method="POST" class="form-create">
                 @csrf
 
                 <div class="modal-header">

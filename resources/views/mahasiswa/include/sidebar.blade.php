@@ -189,6 +189,12 @@
                             <span>Pelaporan Prestasi</span>
                         </a>
                     </li>
+                    <li class="{{request()->routeIs('mahasiswa.prestasi-skpi.index') || request()->routeIs('mahasiswa.prestasi-skpi.tambah') ? 'active' : ''}}">
+                        <a href="{{route('mahasiswa.prestasi-skpi.index')}}">
+                            <i class="fa fa-trophy"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Pelaporan Prestasi</span>
+                        </a>
+                    </li>
 
                     <li class="header">LAIN-LAIN</li>
                     <li class="treeview {{request()->routeIs('mahasiswa.pengajuan-cuti.index') || request()->routeIs('mahasiswa.pengajuan-cuti.*') ||
