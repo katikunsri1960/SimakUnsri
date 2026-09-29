@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Universitas;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
+use App\Services\PdUnsri\PdUnsriAPI;
 use App\Jobs\Import\TagihanJob;
 use App\Jobs\Import\PembayaranJob;
-
 
 class ImportExternalController extends Controller
 {
@@ -18,18 +19,15 @@ class ImportExternalController extends Controller
         return view('universitas.import.index');
     }
 
-    
     /*
     |--------------------------------------------------------------------------
     | DATA REGISTRASI
     |--------------------------------------------------------------------------
     */
-    //PREVIEW DATA REG
     public function previewReg()
     {
         $data = DB::connection('reg_con')
             ->table('mahasiswa')
-            // ->limit(20)
             ->get();
 
         return view('universitas.import-data.registrasi.preview', [
@@ -38,14 +36,12 @@ class ImportExternalController extends Controller
         ]);
     }
 
-    // IMPORT DATA REG
     public function importReg()
     {
         DB::connection('reg_con')
             ->table('mahasiswa')
             ->orderBy('nim')
             ->chunk(500, function ($rows) {
-
                 foreach ($rows as $row) {
                     DB::table('mahasiswa_simak')->updateOrInsert(
                         ['nim' => $row->nim],
@@ -62,87 +58,117 @@ class ImportExternalController extends Controller
         return back()->with('success', 'Import data REG berhasil');
     }
 
-
     /*
     |--------------------------------------------------------------------------
-    | DATA PEMBAYARAN
+    | DATA PEMBAYARAN (VIA PD UNSRI API)
     |--------------------------------------------------------------------------
     */
-    //PREVIEW DATA PEMBAYARAN
-    public function previewPembayaran()
+
+    public function previewPembayaran(PdUnsriAPI $api)
     {
-        $data = DB::connection('keu_con')
-            ->table('pembayaran')
-            ->limit(20)
-            ->get();
+        $probe = $api->getImportPembayaran(20, 0);
+
+        // Ambil array 'data' dari response paginasi API
+        $rows = $probe['data'] ?? [];
 
         return view('universitas.import-data.pembayaran', [
-            'data' => $data,
-            'source' => 'Pembayaran'
+            'data' => $rows,
+            'source' => 'Pembayaran (PD Unsri)'
         ]);
     }
 
-    // IMPORT DATA PEMBAYARAN
-    public function importPembayaran()
+    public function importPembayaran(PdUnsriAPI $api)
     {
-        // $min = DB::connection('keu_con')->table('pembayaran')->min('id_record_pembayaran');
-        // $max = DB::connection('keu_con')->table('pembayaran')->max('id_record_pembayaran');
+        $probe = $api->getImportPembayaran(1, 0);
 
-        $min = (int) DB::connection('keu_con')->table('tagihan')->min('id_record_tagihan');
-        $max = (int) DB::connection('keu_con')->table('tagihan')->max('id_record_tagihan');
-
-        $step = 50000;
-
-        $batch = Bus::batch([])->name('Import Pembayaran')->dispatch();
-
-        for ($i = $min; $i <= $max; $i += $step) {
-            $batch->add(new PembayaranJob($i, $i + $step));
+        if (!$probe || !isset($probe['totalData'])) {
+            return redirect()->back()->with('error', 'Gagal mengambil data Pembayaran dari API PD Unsri.');
         }
 
-        return back()->with('success', 'Import Pembayaran berjalan di background');
+        $count = $probe['totalData'];
+        $limit = 1000;
+
+        $batch = Bus::batch([])
+            ->name('import-pembayaran-pdunsri')
+            ->dispatch();
+
+        for ($i = 0; $i < $count; $i += $limit) {
+            $batch->add(new PembayaranJob($limit, $i));
+        }
+
+        return redirect()->back()->with('success', 'Sync Pembayaran Dimulai! Total data: ' . $count);
     }
-
-
 
     /*
     |--------------------------------------------------------------------------
-    | DATA TAGIHAN
+    | DATA TAGIHAN (VIA PD UNSRI API)
     |--------------------------------------------------------------------------
     */
-    //PREVIEW DATA TAGIHAN
-    public function previewTagihan()
+    public function previewTagihan(PdUnsriAPI $api)
     {
-        $data = DB::connection('keu_con')
-            ->table('tagihan')
-            ->limit(20)
-            ->get();
+        $probe = $api->getImportTagihan(20, 0);
+
+        // Ambil array 'data' dari response paginasi API
+        $rows = $probe['data'] ?? [];
 
         return view('universitas.import-data.tagihan', [
-            'data' => $data,
-            'source' => 'Tagihan'
+            'data' => $rows,
+            'source' => 'Tagihan (PD Unsri)'
         ]);
     }
 
-    // IMPORT DATA TAGIHAN
-    public function importTagihan()
+    public function importTagihan(PdUnsriAPI $api)
     {
-        // $min = DB::connection('keu_con')->table('tagihan')->min('id_record_tagihan');
-        // $max = DB::connection('keu_con')->table('tagihan')->max('id_record_tagihan');
+        try {
+            // Ambil data tagihan dari API (misal 500-1000 record per batch)
+            $response = $api->getImportTagihan(1000, 0);
 
-        $min = (int) DB::connection('keu_con')->table('tagihan')->min('id_record_tagihan');
-        $max = (int) DB::connection('keu_con')->table('tagihan')->max('id_record_tagihan');
-        
+            if (!$response || empty($response['data'])) {
+                return redirect()->back()->with('error', 'Gagal mengambil data dari API atau data tagihan kosong.');
+            }
 
-        $step = 50000;
+            // Ambil array 'data' dari response paginasi API
+            $dataTagihan = $response['data'];
+            
+            $importedCount = 0;
 
-        $batch = Bus::batch([])->name('Import Tagihan')->dispatch();
+            DB::beginTransaction();
 
-        // for ($i = $min; $i <= $max; $i += $step) {
-        for ($i = $min; $i <= $max; $i += $step) {
-            $batch->add(new TagihanJob($i, $i + $step));
+            foreach ($dataTagihan as $item) {
+                // Mapping/Upsert data tagihan ke Database SIMAK
+                // Sesuaikan nama kolom database SIMAK dengan key dari API
+                DB::table('import_tagihan')->updateOrInsert(
+                    [
+                        // Key unik untuk identifikasi record (sesuaikan key dari API)
+                        'id_record_tagihan' => $item['id_record_tagihan'] ?? $item['id'] ?? null,
+                    ],
+                    [
+                        'nomor_pembayaran' => $item['nomor_pembayaran'] ?? null,
+                        'nama'             => $item['nama'] ?? null,
+                        'kode_fakultas'    => $item['kode_fakultas'] ?? null,
+                        'nama_fakultas'    => $item['nama_fakultas'] ?? null,
+                        'kode_prodi'       => $item['kode_prodi'] ?? null,
+                        'nama_prodi'       => $item['nama_prodi'] ?? null,
+                        'kode_periode'     => $item['kode_periode'] ?? null,
+                        'updated_at'       => now(),
+                    ]
+                );
+
+                $importedCount++;
+            }
+
+            DB::commit();
+
+            return redirect()->back()->with('success', "Berhasil mengimpor {$importedCount} data tagihan.");
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('Gagal Import Tagihan: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat import: ' . $e->getMessage());
         }
-
-        return back()->with('success', 'Import Tagihan berjalan di background');
     }
-
 }

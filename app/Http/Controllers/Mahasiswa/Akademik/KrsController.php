@@ -1091,23 +1091,52 @@ class KrsController extends Controller
             return redirect()->back()->with('error' , 'KRS tidak dapat dicetak, KRS belum disetujui Dosen PA');
         }
 
+        // KONDISI LAMA
+        // if (!empty($tgl_krs_regular)) {
+        //     $tanggal_approve = Carbon::parse($tgl_krs_regular->tanggal_approve);
+        // }
+        // elseif (!empty($tgl_krs_merdeka))
+        // {
+        //     $tanggal_approve = Carbon::parse($tgl_krs_merdeka->tanggal_approve);
+        // }
+        // elseif (!empty($tgl_krs_akt))
+        // {
+        //     $tanggal_approve = Carbon::parse($tgl_krs_akt->tanggal_approve);
+        // }
+        // elseif (!empty($tgl_krs_mbkm))
+        // {
+        //     $tanggal_approve = Carbon::parse($tgl_krs_mbkm->tanggal_approve);
+        // }
+        // else
+        // {
+        //     $tanggal_approve = '-';
+        // }
+
         if (!empty($tgl_krs_regular)) {
-            $tanggal_approve = Carbon::parse($tgl_krs_regular->tanggal_approve);
+            $tanggal_approve = Carbon::parse(
+                $tgl_krs_regular->tanggal_approve
+                ?? $tgl_krs_regular->created_at
+            );
         }
-        elseif (!empty($tgl_krs_merdeka))
-        {
-            $tanggal_approve = Carbon::parse($tgl_krs_merdeka->tanggal_approve);
+        elseif (!empty($tgl_krs_merdeka)) {
+            $tanggal_approve = Carbon::parse(
+                $tgl_krs_merdeka->tanggal_approve
+                ?? $tgl_krs_merdeka->created_at
+            );
         }
-        elseif (!empty($tgl_krs_akt))
-        {
-            $tanggal_approve = Carbon::parse($tgl_krs_akt->tanggal_approve);
+        elseif (!empty($tgl_krs_akt)) {
+            $tanggal_approve = Carbon::parse(
+                $tgl_krs_akt->tanggal_approve
+                ?? $tgl_krs_akt->created_at
+            );
         }
-        elseif (!empty($tgl_krs_mbkm))
-        {
-            $tanggal_approve = Carbon::parse($tgl_krs_mbkm->tanggal_approve);
+        elseif (!empty($tgl_krs_mbkm)) {
+            $tanggal_approve = Carbon::parse(
+                $tgl_krs_mbkm->tanggal_approve
+                ?? $tgl_krs_mbkm->created_at
+            );
         }
-        else
-        {
+        else {
             $tanggal_approve = '-';
         }
 

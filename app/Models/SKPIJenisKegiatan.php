@@ -14,4 +14,9 @@ class SKPIJenisKegiatan extends Model
     {
         return $this->belongsTo(SKPIBidangKegiatan::class, 'bidang_id');
     }
+
+    public function subBidang()
+    {
+        return $this->belongsTo(SKPISubBidangKegiatan::class, 'sub_bidang_id');
+    }
 }

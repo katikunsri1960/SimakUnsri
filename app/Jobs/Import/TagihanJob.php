@@ -2,83 +2,85 @@
 
 namespace App\Jobs\Import;
 
-use Illuminate\Bus\Queueable;
+use App\Services\PdUnsri\PdUnsriAPI;
 use Illuminate\Bus\Batchable;
-use Illuminate\Support\Facades\DB; // ✅ ini yang kurang
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class TagihanJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels, Batchable;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $start;
-    protected $end;
+    public $limit, $offset;
 
-    public function __construct($start, $end)
+    public function __construct($limit, $offset)
     {
-        $this->start = $start;
-        $this->end   = $end;
+        $this->limit = $limit;
+        $this->offset = $offset;
     }
 
-    public function handle()
+    public function handle(PdUnsriAPI $api): void
     {
-        if ($this->batch()->cancelled()) {
+        $response = $api->getImportTagihan($this->limit, $this->offset);
+
+        if (!isset($response['data']) || empty($response['data'])) {
+            Log::warning('Sync tagihan: response kosong/gagal', [
+                'offset' => $this->offset,
+                'limit' => $this->limit,
+            ]);
             return;
         }
 
-        DB::connection('keu_con')
-            ->table('tagihan')
-            ->whereBetween('id_record_tagihan', [$this->start, $this->end])
-            ->orderBy('id_record_tagihan')
-            // ->limit(500)
-            ->chunkById(5000, function ($rows) {
+        $data = [];
 
-                $data = [];
+        foreach ($response['data'] as $value) {
+            if (empty($value['id_record_tagihan'])) {
+                continue;
+            }
 
-                foreach ($rows as $row) {
+            $data[] = [
+                'id_record_tagihan' => $value['id_record_tagihan'],
+                'nomor_pembayaran'  => $value['nomor_pembayaran'] ?? null,
+                'nim'               => $value['nim'] ?? null,
+                'nama'              => $value['nama'] ?? null,
+                'kode_periode'      => $value['kode_periode'] ?? null,
+                'total_nilai_tagihan' => $value['total_nilai_tagihan'] ?? 0,
+                'status_tagihan'    => $value['status_tagihan'] ?? null,
+                'updated_at'        => now(),
+            ];
+        }
 
-                    $data[] = [
-                        'id_record_tagihan' => $row->id_record_tagihan,
-                        'nomor_pembayaran' => $row->nomor_pembayaran,
-                        'nama' => $row->nama,
-                        'kode_fakultas' => $row->kode_fakultas,
-                        'nama_fakultas' => $row->nama_fakultas,
-                        'kode_prodi' => $row->kode_prodi,
-                        'nama_prodi' => $row->nama_prodi,
-                        'kode_periode' => $row->kode_periode,
-                        'nama_periode' => $row->nama_periode,
-                        'is_tagihan_aktif' => $row->is_tagihan_aktif,
-                        'waktu_berlaku' => $this->safeDate($row->waktu_berlaku),
-                        'waktu_berakhir' => $this->safeDate($row->waktu_berakhir),
-                        'strata' => $row->strata,
-                        'angkatan' => $row->angkatan,
-                        'urutan_antrian' => $row->urutan_antrian,
-                        'total_nilai_tagihan' => $row->total_nilai_tagihan,
-                        'nomor_induk' => $row->nomor_induk,
-                        'pembayaran_atau_voucher' => $row->pembayaran_atau_voucher,
-                        'voucher_nama' => $row->voucher_nama,
-                        'voucher_nama_fakultas' => $row->voucher_nama_fakultas,
-                        'voucher_nama_prodi' => $row->voucher_nama_prodi,
-                        'voucher_nama_periode' => $row->voucher_nama_periode,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                }
+        if (empty($data)) {
+            return;
+        }
 
-                DB::table('import_tagihan')->insertOrIgnore($data);
+        $chunks = array_chunk($data, 500);
 
-                $data = [];
+        foreach ($chunks as $chunk) {
+            DB::table('import_tagihan')->upsert(
+                $chunk,
+                ['id_record_tagihan'],
+                [
+                    'nomor_pembayaran',
+                    'nim',
+                    'nama',
+                    'kode_periode',
+                    'total_nilai_tagihan',
+                    'status_tagihan',
+                    'updated_at'
+                ]
+            );
+        }
 
-            }, 'id_record_tagihan');
-    }
-
-    private function safeDate($value)
-    {
-        return ($value && $value !== '0000-00-00 00:00:00')
-            ? $value
-            : null;
+        Log::info('Sync tagihan berhasil', [
+            'offset' => $this->offset,
+            'limit' => $this->limit,
+            'total_valid' => count($data),
+        ]);
     }
 }

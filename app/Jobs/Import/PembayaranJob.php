@@ -2,62 +2,83 @@
 
 namespace App\Jobs\Import;
 
-use Illuminate\Bus\Queueable;
+use App\Services\PdUnsri\PdUnsriAPI;
 use Illuminate\Bus\Batchable;
-use Illuminate\Support\Facades\DB; // ✅ ini yang kurang
+use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PembayaranJob implements ShouldQueue
 {
-    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    use Batchable, Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $start;
-    protected $end;
+    public $limit, $offset;
 
-    public function __construct($start, $end)
+    public function __construct($limit, $offset)
     {
-        $this->start = $start;
-        $this->end   = $end;
+        $this->limit = $limit;
+        $this->offset = $offset;
     }
 
-    public function handle()
+    public function handle(PdUnsriAPI $api): void
     {
-        DB::connection('keu_con')
-            ->table('pembayaran')
-            ->whereBetween('id_record_pembayaran', [$this->start, $this->end])
-            ->orderBy('id_record_pembayaran')
-            ->chunkById(2000, function ($rows) {
+        $response = $api->getImportPembayaran($this->limit, $this->offset);
 
-                $data = [];
+        if (!isset($response['data']) || empty($response['data'])) {
+            Log::warning('Sync pembayaran: response kosong/gagal', [
+                'offset' => $this->offset,
+                'limit' => $this->limit,
+            ]);
+            return;
+        }
 
-                foreach ($rows as $row) {
-                    $data[] = [
-                        'id_record_pembayaran' => $row->id_record_pembayaran,
-                        'id_record_tagihan' => $row->id_record_tagihan,
-                        'waktu_transaksi' => $this->safeDate($row->waktu_transaksi),
-                        'nomor_pembayaran' => $row->nomor_pembayaran,
-                        'total_nilai_pembayaran' => $row->total_nilai_pembayaran,
-                        'status_pembayaran' => $row->status_pembayaran,
-                        'created_at' => now(),
-                        'updated_at' => now(),
-                    ];
-                }
+        $data = [];
 
-                DB::table('import_pembayaran')->upsert(
-                    $data,
-                    ['id_record_pembayaran']
-                );
+        foreach ($response['data'] as $value) {
+            if (empty($value['id_record_pembayaran'])) {
+                continue;
+            }
 
-            }, 'id_record_pembayaran');
-    }
+            $data[] = [
+                'id_record_pembayaran' => $value['id_record_pembayaran'],
+                'id_record_tagihan'    => $value['id_record_tagihan'] ?? null,
+                'nomor_pembayaran'     => $value['nomor_pembayaran'] ?? null,
+                'nim'                  => $value['nim'] ?? null,
+                'nominal_pembayaran'   => $value['nominal_pembayaran'] ?? 0,
+                'tgl_pembayaran'       => $value['tgl_pembayaran'] ?? null,
+                'updated_at'           => now(),
+            ];
+        }
 
-    private function safeDate($value)
-    {
-        return ($value && $value !== '0000-00-00 00:00:00')
-            ? $value
-            : null;
+        if (empty($data)) {
+            return;
+        }
+
+        $chunks = array_chunk($data, 500);
+
+        foreach ($chunks as $chunk) {
+            DB::table('import_pembayaran')->upsert(
+                $chunk,
+                ['id_record_pembayaran'],
+                [
+                    'id_record_tagihan',
+                    'nomor_pembayaran',
+                    'nim',
+                    'nominal_pembayaran',
+                    'tgl_pembayaran',
+                    'updated_at'
+                ]
+            );
+        }
+
+        Log::info('Sync pembayaran berhasil', [
+            'offset' => $this->offset,
+            'limit' => $this->limit,
+            'total_valid' => count($data),
+        ]);
     }
 }

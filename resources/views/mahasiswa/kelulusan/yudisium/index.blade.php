@@ -246,42 +246,105 @@ Yudisium Mahasiswa
                                                     @if($wisuda->finalisasi_data == 1)
                                                         
                                                         {{-- KONDISI BEBAS PUSTAKA--}}
-                                                        @if($bebas_pustaka && $bebas_pustaka->file_bebas_pustaka && $bebas_pustaka->link_repo)
+                                                        @if($isProfesi)
+                                                            {{-- PRODI PROFESI: BEBAS PUSTAKA TIDAK MENJADI SYARAT --}}
                                                             
-                                                            {{-- KONDISI APPROVED--}}
                                                             @if($wisuda->approved == 0)
-                                                                <span class="badge badge-lg badge-warning mb-5 rounded">Belum Disetujui Koor. Prodi</span>
+                                                                <span class="badge badge-lg badge-warning mb-5 rounded">
+                                                                    Belum Disetujui Koor. Prodi
+                                                                </span>
+
                                                             @elseif($wisuda->approved == 11)
-                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Dosen Pembimbing TA</span>
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">
+                                                                    Disetujui Dosen Pembimbing TA
+                                                                </span>
+
                                                             @elseif($wisuda->approved == 1)
-                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Koor. Prodi</span>
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">
+                                                                    Disetujui Koor. Prodi
+                                                                </span>
+
                                                             @elseif($wisuda->approved == 2)
-                                                                <span class="badge badge-lg badge-primary mb-5 rounded">Disetujui Fakultas</span>
+                                                                <span class="badge badge-lg badge-primary mb-5 rounded">
+                                                                    Disetujui Fakultas
+                                                                </span>
+
                                                             @elseif($wisuda->approved == 3)
-                                                                <span class="badge badge-lg badge-success mb-5 rounded">Disetujui Dir. Akademik</span>
+                                                                <span class="badge badge-lg badge-success mb-5 rounded">
+                                                                    Disetujui Dir. Akademik
+                                                                </span>
                                                             @endif
-                                                        @elseif($bebas_pustaka && !$bebas_pustaka->file_bebas_pustaka)
-                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
-                                                                Ditangguhkan
-                                                            </span>
-                                                            <p class="text-danger">
-                                                                <strong>
-                                                                    Anda belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi ke UPT Perpustakaan!
-                                                                </strong>
-                                                            </p>
-                                                        @elseif($bebas_pustaka && !$bebas_pustaka->link_repo)
-                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
-                                                                Ditangguhkan
-                                                            </span>
-                                                            <p class="text-danger">
-                                                                <strong>
-                                                                    Anda belum Upload Repository!
-                                                                </strong>
-                                                            </p>
+
+
                                                         @else
-                                                            <span class="badge badge-lg bg-danger mb-5 rounded">
-                                                                Persyaratan Yudisium Belum Lengkap
-                                                            </span>
+
+                                                            {{-- PRODI NON PROFESI: BEBAS PUSTAKA WAJIB --}}
+
+                                                            @if(
+                                                                $bebas_pustaka &&
+                                                                !empty($bebas_pustaka->file_bebas_pustaka) &&
+                                                                !empty($bebas_pustaka->link_repo)
+                                                            )
+
+                                                                @if($wisuda->approved == 0)
+                                                                    <span class="badge badge-lg badge-warning mb-5 rounded">
+                                                                        Belum Disetujui Koor. Prodi
+                                                                    </span>
+
+                                                                @elseif($wisuda->approved == 11)
+                                                                    <span class="badge badge-lg badge-primary mb-5 rounded">
+                                                                        Disetujui Dosen Pembimbing TA
+                                                                    </span>
+
+                                                                @elseif($wisuda->approved == 1)
+                                                                    <span class="badge badge-lg badge-primary mb-5 rounded">
+                                                                        Disetujui Koor. Prodi
+                                                                    </span>
+
+                                                                @elseif($wisuda->approved == 2)
+                                                                    <span class="badge badge-lg badge-primary mb-5 rounded">
+                                                                        Disetujui Fakultas
+                                                                    </span>
+
+                                                                @elseif($wisuda->approved == 3)
+                                                                    <span class="badge badge-lg badge-success mb-5 rounded">
+                                                                        Disetujui Dir. Akademik
+                                                                    </span>
+                                                                @endif
+
+                                                            @elseif($bebas_pustaka && empty($bebas_pustaka->file_bebas_pustaka))
+
+                                                                <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                    Ditangguhkan
+                                                                </span>
+
+                                                                <p class="text-danger">
+                                                                    <strong>
+                                                                        Anda belum Mengumpulkan Bundle Skripsi/Tesis/Disertasi
+                                                                        ke UPT Perpustakaan!
+                                                                    </strong>
+                                                                </p>
+
+                                                            @elseif($bebas_pustaka && empty($bebas_pustaka->link_repo))
+
+                                                                <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                    Ditangguhkan
+                                                                </span>
+
+                                                                <p class="text-danger">
+                                                                    <strong>
+                                                                        Anda belum Upload Repository!
+                                                                    </strong>
+                                                                </p>
+
+                                                            @else
+
+                                                                <span class="badge badge-lg bg-danger mb-5 rounded">
+                                                                    Persyaratan Yudisium Belum Lengkap
+                                                                </span>
+
+                                                            @endif
+
                                                         @endif
                                                     @elseif($wisuda->finalisasi_data == 0 && $wisuda->approved > 3)
                                                         {{-- KONDISI APPROVED--}}

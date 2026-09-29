@@ -1,8 +1,9 @@
 <div class="modal fade" id="modalEdit{{ $d->id }}" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content">
+    <div class="modal-dialog modal-dialog-centered">
+        <!-- Tambahkan rounded-4 dan overflow-hidden di sini -->
+        <div class="modal-content rounded-4 overflow-hidden border-0 shadow">
 
-            <form action="{{ route('bak.skpi.bidang.update', $d->id) }}" method="POST" class="form-edit">
+            <form action="{{ route('ditmawa.skpi.bidang.update', $d->id) }}" method="POST" class="form-edit">
                 @csrf
                 @method('PUT')
 
