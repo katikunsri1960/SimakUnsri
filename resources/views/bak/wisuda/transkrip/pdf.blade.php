@@ -227,7 +227,7 @@
     }elseif($rowStyle == 'mk-large'){
         $MAX_ROWS_LEFT = 37;
     } elseif($rowStyle == 'mk-xlarge'){
-        $MAX_ROWS_LEFT = 60;
+        $MAX_ROWS_LEFT = 53;
     } else{
         $MAX_ROWS_LEFT = 53;
     }
@@ -433,11 +433,21 @@
                             <em>({{$d->masa_studi_en}})</em>
                         </td>
                     </tr>
-                    <tr class="text-upper {{$rowStyle}}">
-                        <td>NOMOR IJAZAH NASIONAL <em>(NATIONAL CERTIFICATE NUMBER)</em></td> 
-                        <td width="1%">:  </td>
-                        <td> {{ $d->no_ijazah }}</td>
-                    </tr>
+                    
+                    @if($d->jenjang == 'Profesi')
+                        <tr class="text-upper {{$rowStyle}}">
+                            <td>NOMOR SERTIFIKAT NASIONAL <em>(NATIONAL CERTIFICATE NUMBER)</em></td> 
+                            <td width="1%">:  </td>
+                            <td> {{ $d->no_ijazah }}</td>
+                        </tr>
+                    @else
+                        <tr class="text-upper {{$rowStyle}}">
+                            <td>NOMOR IJAZAH NASIONAL <em>(NATIONAL CERTIFICATE NUMBER)</em></td> 
+                            <td width="1%">:  </td>
+                            <td> {{ $d->no_ijazah }}</td>
+                        </tr>
+                    @endif
+
                     <tr class="{{$rowStyle}}">
                         <td>KODE UNIVERSITAS <em>(UNIVERSITY CODE)</em></td> 
                         <td width="1%">:  </td>
