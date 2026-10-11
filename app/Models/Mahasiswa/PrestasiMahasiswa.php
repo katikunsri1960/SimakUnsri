@@ -33,6 +33,13 @@ class PrestasiMahasiswa extends Model
         return $this->belongsTo(BiodataMahasiswa::class, 'id_mahasiswa', 'id_mahasiswa');
     }
 
+    public function riwayat_pendidikan()
+{
+    return $this->hasOne(RiwayatPendidikan::class, 'id_mahasiswa', 'id_mahasiswa')
+        ->whereNull('id_jenis_keluar')
+        ->latestOfMany('id_periode_masuk'); // Mengambil 1 record riwayat aktif dengan periode terbaru
+}
+
     public function skpi()
     {
         return $this->hasOne(SKPI::class, 'id_prestasi', 'id_prestasi');

@@ -1517,6 +1517,20 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
             });
 
+            //ROUTE PRESTASI
+            Route::prefix('data-prestasi')->group(function () {
+                Route::prefix('prestasi-belmawa')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'belmawa_index'])->name('fakultas.data-prestasi.belmawa.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'belmawa_approve'])->name('fakultas.data-prestasi.belmawa.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'belmawa_decline'])->name('fakultas.data-prestasi.belmawa.decline');
+                });
+                Route::prefix('prestasi-mandiri')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'mandiri_index'])->name('fakultas.data-prestasi.mandiri.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'mandiri_approve'])->name('fakultas.data-prestasi.mandiri.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('fakultas.data-prestasi.mandiri.decline');
+                });
+            });
+
             //ROUTE MONITORING
 
             Route::prefix('monitoring')->group(function(){
@@ -1854,6 +1868,19 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
             });
 
+            //Route Prestasi Mahasiswa Akun Prodi
+            Route::prefix('data-prestasi')->group(function () {
+                Route::prefix('prestasi-belmawa')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'belmawa_index'])->name('prodi.data-prestasi.belmawa.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'belmawa_approve'])->name('prodi.data-prestasi.belmawa.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'belmawa_decline'])->name('prodi.data-prestasi.belmawa.decline');
+                });
+                Route::prefix('prestasi-mandiri')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'mandiri_index'])->name('prodi.data-prestasi.mandiri.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'mandiri_approve'])->name('prodi.data-prestasi.mandiri.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('prodi.data-prestasi.mandiri.decline');
+                });
+            });
 
             //Route for Data Aktivitas
             Route::prefix('data-aktivitas')->group(function(){
