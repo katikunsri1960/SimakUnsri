@@ -342,6 +342,21 @@
                                 </ul>
                             </li>
 
+                            <li class="treeview {{request()->routeIs('univ.feeder-upload.prestasi.*') ? 'active menu-open' : ''}}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Prestasi
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+                                <ul class="treeview-menu">
+                                    <li class="{{request()->routeIs('univ.feeder-upload.prestasi.mandiri') ? 'active' : ''}}">
+                                        <a href="{{route('univ.feeder-upload.prestasi.mandiri')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Mandiri</a>
+                                    </li>
+                                </ul>
+                            </li>
+
                             <li class="treeview {{request()->routeIs('univ.feeder-upload.pelengkap.*') ? 'active menu-open' : ''}}">
                                 <a href="#">
                                     <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Pelengkap

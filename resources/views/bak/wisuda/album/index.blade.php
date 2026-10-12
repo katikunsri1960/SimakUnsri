@@ -81,10 +81,14 @@ Daftar Album Wisudawan
                 <div class="box-body">
                     <div class="table-responsive">
                         <div class="mb-3">
-                            <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD ALBUM (PDF)</button>
-                            <!-- <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()"><i class="fa fa-file-pdf me-2"></i> DOWNLOAD ALBUM (PPT)</button> -->
+                            <button class="btn btn-outline btn-danger btn-sm me-2" onclick="downloadPdf()">
+                                <i class="fa fa-file-pdf me-2"></i> DOWNLOAD ALBUM (PDF)
+                            </button>
+                            <button class="btn btn-outline btn-success btn-sm me-2" onclick="openModalImport()">
+                                <i class="fa fa-file-excel me-2"></i> IMPORT NO URUT (EXCEL)
+                            </button>
                         </div>
-
+                        @include('bak.wisuda.album.modal-import')
                         <table id="data" class="table table-bordered table-hover margin-top-10 w-p100">
                             <thead>
                                 <tr>
@@ -386,6 +390,45 @@ function simpanNoUrut()
         }
     });
 }
+
+function openModalImport() {
+    $('#formImportExcel')[0].reset();
+    $('#modalImportExcel').modal('show');
+}
+
+$('#formImportExcel').on('submit', function (e) {
+    e.preventDefault();
+
+    var formData = new FormData(this);
+    var btn = $('#btnSubmitImport');
+    btn.prop('disabled', true).html('<i class="fa fa-spinner fa-spin me-1"></i> Memproses...');
+
+    $.ajax({
+        url: '{{ route("bak.wisuda.album.import-no-urut") }}',
+        type: 'POST',
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function (response) {
+            btn.prop('disabled', false).html('<i class="fa fa-upload me-1"></i> Upload & Process');
+
+            if (response.status === 'success') {
+                $('#modalImportExcel').modal('hide');
+                swal('Berhasil', response.message, 'success');
+                getData(); // Refresh DataTable secara otomatis
+            } else {
+                swal('Gagal', response.message, 'error');
+            }
+        },
+        error: function (xhr) {
+            btn.prop('disabled', false).html('<i class="fa fa-upload me-1"></i> Upload & Process');
+            var errMsg = xhr.responseJSON && xhr.responseJSON.message 
+                ? xhr.responseJSON.message 
+                : 'Terjadi kesalahan saat mengunggah file.';
+            swal('Error', errMsg, 'error');
+        }
+    });
+});
 
 $(function () {
     // "use strict";

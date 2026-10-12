@@ -46,7 +46,7 @@ Data Prestasi Mandiri Mahasiswa (Fakultas)
                                 <label for="tahun_view" class="form-label fw-bold">Pilih Tahun Prestasi</label>
                                 <select class="form-select" name="tahun_view" id="tahun_view">
                                     <option value="all" {{ ($tahun_view == 'all') ? 'selected' : '' }}>--- Semua Tahun ---</option>
-                                    @foreach ($pilihan_tahun as$t)
+                                    @foreach ($pilihan_tahun as $t)
                                         <option value="{{ $t }}" 
                                             {{ ($tahun_view ? ($tahun_view ==$t) : ($tahun_aktif ==$t)) ? 'selected' : '' }}>
                                             {{ $t }}
@@ -58,8 +58,8 @@ Data Prestasi Mandiri Mahasiswa (Fakultas)
                             <div class="col-md-5">
                                 <label for="prodi_view" class="form-label fw-bold">Pilih Program Studi</label>
                                 <select class="form-select" name="prodi_view" id="prodi_view">
-                                    <option value="all" {{ ($prodi_view == 'all' \vert{}\vert{} !$prodi_view) ? 'selected' : '' }}>--- Semua Program Studi ---</option>
-                                    @foreach ($pilihan_prodi as$pr)
+                                    <option value="all" {{ ($prodi_view == 'all' || !$prodi_view) ? 'selected' : '' }}>--- Semua Program Studi ---</option>
+                                    @foreach ($pilihan_prodi as $pr)
                                         <option value="{{ $pr->id_prodi }}" {{ ($prodi_view ==$pr->id_prodi) ? 'selected' : '' }}>
                                             {{ $pr->nama_jenjang_pendidikan }} - {{$pr->nama_program_studi }}
                                         </option>
@@ -93,7 +93,7 @@ Data Prestasi Mandiri Mahasiswa (Fakultas)
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($data as$d)
+                                @foreach ($data as $d)
                                 <tr>
                                     <td class="text-center align-middle"></td>
                                     <td class="text-center align-middle">
@@ -167,6 +167,8 @@ Data Prestasi Mandiri Mahasiswa (Fakultas)
                                                 </form>
                                             @elseif($d->approved == 0)
                                                 <button class="btn btn-sm btn-warning" disabled>Menunggu Prodi</button>
+                                            @elseif($d->approved > 90)
+                                                
                                             @else
                                                 <button class="btn btn-sm btn-secondary" disabled>Selesai Diproses</button>
                                             @endif

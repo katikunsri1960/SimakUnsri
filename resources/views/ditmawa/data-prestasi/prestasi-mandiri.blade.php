@@ -39,12 +39,12 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
                     
-                    {{-- Form Filter Tiga Tingkat: Fakultas, Prodi, Tahun --}}
+                    {{-- Form Filter Tiga Tingkat dengan Tombol Tampilkan --}}
                     <form action="{{ route('ditmawa.data-prestasi.mandiri.index') }}" method="get" id="filterForm">
-                        <div class="row mb-3">
-                            <div class="col-md-4">
+                        <div class="row align-items-end mb-3">
+                            <div class="col-md-3">
                                 <label for="fakultas_view" class="form-label fw-bold">Pilih Fakultas</label>
-                                <select class="form-select" name="fakultas_view" id="fakultas_view" onchange="filterProdiByFakultas(); document.getElementById('filterForm').submit();">
+                                <select class="form-select" name="fakultas_view" id="fakultas_view" onchange="filterProdiByFakultas()">
                                     <option value="all" {{ ($fakultas_view == 'all' || !$fakultas_view) ? 'selected' : '' }}>--- Semua Fakultas ---</option>
                                     @foreach ($fakultas as $f)
                                         <option value="{{ $f->id }}" {{ ($fakultas_view ==$f->id) ? 'selected' : '' }}>
@@ -56,7 +56,7 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
 
                             <div class="col-md-4">
                                 <label for="prodi_view" class="form-label fw-bold">Pilih Program Studi</label>
-                                <select class="form-select" name="prodi_view" id="prodi_view" onchange="document.getElementById('filterForm').submit();">
+                                <select class="form-select" name="prodi_view" id="prodi_view">
                                     <option value="all" {{ ($prodi_view == 'all' || !$prodi_view) ? 'selected' : '' }}>--- Semua Program Studi ---</option>
                                     @foreach ($prodi as $pr)
                                         <option value="{{ $pr->id_prodi }}" data-fakultas="{{ $pr->fakultas_id }}" {{ ($prodi_view ==$pr->id_prodi) ? 'selected' : '' }}>
@@ -66,9 +66,9 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
                                 </select>
                             </div>
 
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="tahun_view" class="form-label fw-bold">Pilih Tahun Prestasi</label>
-                                <select class="form-select" name="tahun_view" id="tahun_view" onchange="document.getElementById('filterForm').submit();">
+                                <select class="form-select" name="tahun_view" id="tahun_view">
                                     <option value="all" {{ ($tahun_view == 'all') ? 'selected' : '' }}>--- Semua Tahun ---</option>
                                     @foreach ($pilihan_tahun as $t)
                                         <option value="{{ $t }}" 
@@ -77,6 +77,12 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
                                         </option>
                                     @endforeach
                                 </select>
+                            </div>
+
+                            <div class="col-md-2 mt-2 mt-md-0">
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fa fa-filter"></i> Tampilkan
+                                </button>
                             </div>
                         </div>
                     </form>
