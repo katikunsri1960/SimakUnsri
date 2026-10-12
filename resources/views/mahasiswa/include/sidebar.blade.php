@@ -183,12 +183,12 @@
                     </li>
 
                     <li class="header">PRESTASI</li>
-                    <li class="{{request()->routeIs('mahasiswa.prestasi.index') || request()->routeIs('mahasiswa.prestasi.tambah') ? 'active' : ''}}">
+                    {{--<li class="{{request()->routeIs('mahasiswa.prestasi.index') || request()->routeIs('mahasiswa.prestasi.tambah') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.prestasi.index')}}">
                             <i class="fa fa-trophy"><span class="path1"></span><span class="path2"></span></i>
                             <span>Pelaporan Prestasi</span>
                         </a>
-                    </li>
+                    </li>--}}
                     <li class="{{request()->routeIs('mahasiswa.prestasi-skpi.index') || request()->routeIs('mahasiswa.prestasi-skpi.tambah') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.prestasi-skpi.index')}}">
                             <i class="fa fa-trophy"><span class="path1"></span><span class="path2"></span></i>

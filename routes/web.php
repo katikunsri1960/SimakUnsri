@@ -563,6 +563,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/peserta-dp', [App\Http\Controllers\DAK\WisudaController::class, 'peserta_data_album_dp'])->name('bak.wisuda.peserta.data_album_dp');
                     Route::get('/peserta-non-dp', [App\Http\Controllers\DAK\WisudaController::class, 'peserta_data_album'])->name('bak.wisuda.album.peserta');
                     Route::post('/wisuda/update-no-urut', [App\Http\Controllers\DAK\WisudaController::class, 'updateNoUrut'])->name('bak.wisuda.album.update-no-urut');
+                    Route::post('/import-no-urut', [App\Http\Controllers\DAK\WisudaController::class, 'importNoUrut'])->name('bak.wisuda.album.import-no-urut');
                 });
 
                 Route::prefix('skpi')->group(function(){
@@ -634,6 +635,20 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/', [App\Http\Controllers\DITMAWA\TundaBayarController::class, 'index'])->name('ditmawa.tunda-bayar');
                 Route::post('/approve/{tunda_bayar}', [App\Http\Controllers\DITMAWA\TundaBayarController::class, 'approve'])->name('ditmawa.tunda-bayar.approve');
                 Route::post('/decline/{tunda_bayar}', [App\Http\Controllers\DITMAWA\TundaBayarController::class, 'decline'])->name('ditmawa.tunda-bayar.decline');
+            });
+
+            // Route Prestasi Mahasiswa Akun Ditmawa
+            Route::prefix('data-prestasi')->group(function () {
+                Route::prefix('prestasi-belmawa')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'belmawa_index'])->name('ditmawa.data-prestasi.belmawa.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'belmawa_approve'])->name('ditmawa.data-prestasi.belmawa.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'belmawa_decline'])->name('ditmawa.data-prestasi.belmawa.decline');
+                });
+                Route::prefix('prestasi-mandiri')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'mandiri_index'])->name('ditmawa.data-prestasi.mandiri.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'mandiri_approve'])->name('ditmawa.data-prestasi.mandiri.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('ditmawa.data-prestasi.mandiri.decline');
+                });
             });
 
             Route::prefix('beasiswa')->group(function(){
@@ -1237,6 +1252,23 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     });
                 });
 
+                Route::prefix('prestasi')->group(function(){
+                    Route::prefix('mandiri')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\SimkatmawaUploadController::class, 'prestasi_mandiri'])->name('univ.feeder-upload.prestasi.mandiri');
+                        Route::get('/data', [App\Http\Controllers\Universitas\SimkatmawaUploadController::class, 'prestasi_mandiri_data'])->name('univ.feeder-upload.prestasi.mandiri.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\SimkatmawaUploadController::class, 'prestasi_mandiri_upload'])->name('univ.feeder-upload.prestasi.mandiri.upload');
+                    });
+                });
+
+                Route::prefix('pelengkap')->group(function(){
+                    Route::prefix('periode-perkuliahan')->group(function(){
+                        Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan');
+                        Route::get('/data', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan_data'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.data');
+                        Route::get('/upload', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan_upload'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.upload');
+                        Route::post('/upload-ajax', [App\Http\Controllers\Universitas\FeederUploadController::class, 'upload_periode_perkuliahan_ajax'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan.upload-ajax');
+                    });
+                });
+
                 Route::prefix('pelengkap')->group(function(){
                     Route::prefix('periode-perkuliahan')->group(function(){
                         Route::get('/', [App\Http\Controllers\Universitas\FeederUploadController::class, 'periode_perkuliahan'])->name('univ.feeder-upload.pelengkap.periode-perkuliahan');
@@ -1514,6 +1546,20 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'index'])->name('fakultas.data-akademik.transkrip-nilai');
                     Route::Get('/get-transkrip-nilai', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'data'])->name('fakultas.data-akademik.transkrip-nilai.get');
                     Route::get('/download', [App\Http\Controllers\Fakultas\Akademik\TranskripController::class, 'download'])->name('fakultas.data-akademik.transkrip-nilai.download');
+                });
+            });
+
+            //ROUTE PRESTASI
+            Route::prefix('data-prestasi')->group(function () {
+                Route::prefix('prestasi-belmawa')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'belmawa_index'])->name('fakultas.data-prestasi.belmawa.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'belmawa_approve'])->name('fakultas.data-prestasi.belmawa.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'belmawa_decline'])->name('fakultas.data-prestasi.belmawa.decline');
+                });
+                Route::prefix('prestasi-mandiri')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'mandiri_index'])->name('fakultas.data-prestasi.mandiri.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'mandiri_approve'])->name('fakultas.data-prestasi.mandiri.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Fakultas\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('fakultas.data-prestasi.mandiri.decline');
                 });
             });
 
@@ -1854,6 +1900,19 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 });
             });
 
+            //Route Prestasi Mahasiswa Akun Prodi
+            Route::prefix('data-prestasi')->group(function () {
+                Route::prefix('prestasi-belmawa')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'belmawa_index'])->name('prodi.data-prestasi.belmawa.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'belmawa_approve'])->name('prodi.data-prestasi.belmawa.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'belmawa_decline'])->name('prodi.data-prestasi.belmawa.decline');
+                });
+                Route::prefix('prestasi-mandiri')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'mandiri_index'])->name('prodi.data-prestasi.mandiri.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'mandiri_approve'])->name('prodi.data-prestasi.mandiri.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\Prodi\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('prodi.data-prestasi.mandiri.decline');
+                });
+            });
 
             //Route for Data Aktivitas
             Route::prefix('data-aktivitas')->group(function(){
@@ -2250,7 +2309,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::get('/{id}/edit', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'edit'])->name('mahasiswa.prestasi-skpi.edit');
                 Route::put('/{id}', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'update'])->name('mahasiswa.prestasi-skpi.update');
                 Route::post('/upload/{id}', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'upload_file'])->name('mahasiswa.prestasi-skpi.upload');
-                Route::delete('/{id}', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'delete_prestasi_mahasiswa'])->name('mahasiswa.prestasi-skpi.hapus');
+                Route::delete('/{id}/delete', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'delete_prestasi_mahasiswa'])->name('mahasiswa.prestasi-skpi.delete');
             });
 
             Route::prefix('bimbingan-tugas-akhir')->group(function(){

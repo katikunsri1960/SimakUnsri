@@ -34,7 +34,7 @@ use App\Models\Mahasiswa\BiodataMahasiswa;
 use App\Models\Mahasiswa\PerbaikanDataPokok;
 use App\Models\Referensi\PredikatKelulusan;
 use Maatwebsite\Excel\Facades\Excel;
-use setasign\Fpdi\Fpdi;
+use App\Imports\NoUrutWisudaImport;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Storage;
 
@@ -1311,6 +1311,33 @@ class WisudaController extends Controller
         return response()->json([
             'status' => 'success'
         ]);
+    }
+
+    public function importNoUrut(Request $request)
+    {
+        $request->validate([
+            'file_excel' => 'required|mimes:xlsx,xls,csv|max:5120'
+        ], [
+            'file_excel.required' => 'File Excel wajib diunggah.',
+            'file_excel.mimes'    => 'Format file harus .xlsx, .xls, atau .csv',
+            'file_excel.max'      => 'Ukuran file maksimal 5 MB.'
+        ]);
+
+        // dd($request->file('file_excel'));
+
+        try {
+            Excel::import(new NoUrutWisudaImport, $request->file('file_excel'));
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Nomor urut wisudawan berhasil diperbarui dari file Excel!'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Gagal mengimpor file: ' . $e->getMessage()
+            ], 500);
+        }
     }
 
     public function album_download_pdf(Request $request)

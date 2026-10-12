@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Mahasiswa\RiwayatPendidikan;
 use App\Models\SKPIJenisKegiatan;
+use App\Models\Mahasiswa\PrestasiMahasiswa;
 
 
 
@@ -55,5 +56,10 @@ class SKPI extends Model
         ];
 
         return $status[$this->approved];
+    }
+
+    public function prestasi()
+    {
+        return $this->belongsTo(PrestasiMahasiswa::class, 'id_prestasi', 'id_prestasi');
     }
 }

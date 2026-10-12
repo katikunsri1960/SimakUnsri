@@ -124,6 +124,33 @@
                             </li>
                         </ul>
                     </li>
+                    <li class="treeview {{request()->routeIs('fakultas.data-prestasi.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-trophy"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Data Prestasi</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('fakultas.data-prestasi.belmawa.index') || request()->routeIs('fakultas.data-prestasi.belmawa.*')
+                                ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-prestasi.belmawa.index')}}"><i class="icon-Commit"><span class="path1"></span><span 
+                                class="path2"></span></i>
+                                    Prestasi Belmawa
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('fakultas.data-prestasi.mandiri.index') || request()->routeIs('fakultas.data-prestasi.mandiri.*')
+                                ? 'active' : ''}}">
+                                <a href="{{route('fakultas.data-prestasi.mandiri.index')}}"><i class="icon-Commit"><span class="path1"></span><span 
+                                class="path2"></span></i>
+                                    Prestasi Mandiri
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </li>
 
                     <li class="header">Kelulusan</li>
                     <li class="treeview {{request()->routeIs('fakultas.yudisium.index.*') ? 'active menu-open' : ''}}">

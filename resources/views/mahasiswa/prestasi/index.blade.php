@@ -61,12 +61,12 @@ Prestasi Mahasiswa
                                 <tr>
                                     @include('mahasiswa.prestasi.upload-file')
                                     <td>{{$loop->iteration}}</td>
-                                    <td class="text-start align-middle" style="white-space:nowrap;">{{$d->nama_prestasi}}</td>
-                                    <td class="text-center align-middle">{{$d->kategori_prestasi == 1 ? 'Pendanaan' : 'Non Pendanaan'}}</td>
-                                    <td class="text-center align-middle">{{$d->tahun_prestasi}}</td>
-                                    <td>{{$d->nama_jenis_prestasi}}</td>
-                                    <td>{{$d->nama_tingkat_prestasi}}</td>
-                                    <td class="text-start align-middle" style="white-space:nowrap;">{{$d->penyelenggara}}</td>
+                                    <td class="text-start align-middle" style="white-space:nowrap;">{{$d->prestasi->nama_prestasi ?? '-'}}</td>
+                                    <td class="text-center align-middle">{{$d->prestasi->kategori_prestasi == 1 ? 'Pendanaan' : 'Non Pendanaan'}}</td>
+                                    <td class="text-center align-middle">{{$d->prestasi->tahun_prestasi ?? 'N/A'}}</td>
+                                    <td>{{$d->prestasi->nama_jenis_prestasi ?? 'N/A'}}</td>
+                                    <td>{{$d->prestasi->nama_tingkat_prestasi ?? 'N/A'}}</td>
+                                    <td class="text-start align-middle" style="white-space:nowrap;">{{$d->prestasi->penyelenggara ?? '-'}}</td>
                                     <td class="text-center align-middle">
                                         @if($d->file_prestasi)
                                             <a href="{{ asset('storage/'.$d->file_prestasi) }}" 

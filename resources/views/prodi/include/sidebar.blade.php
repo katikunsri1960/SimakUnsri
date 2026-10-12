@@ -128,9 +128,36 @@
                             </li>
                         </ul>
                     </li>
-                    <li class="treeview {{request()->routeIs('prodi.data-aktivitas.*') ? 'active menu-open' : ''}}">
+                    <li class="treeview {{request()->routeIs('prodi.data-prestasi.*') ? 'active menu-open' : ''}}">
                         <a href="#">
                             <i span class="fa fa-trophy"><span class="path1"></span><span
+                                    class="path2"></span></i>
+                            <span>Data Prestasi</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{request()->routeIs('prodi.data-prestasi.belmawa.index') || request()->routeIs('prodi.data-prestasi.belmawa.*')
+                                ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-prestasi.belmawa.index')}}"><i class="icon-Commit"><span class="path1"></span><span 
+                                class="path2"></span></i>
+                                    Prestasi Belmawa
+                                </a>
+                            </li>
+                            <li class="{{request()->routeIs('prodi.data-prestasi.mandiri.index') || request()->routeIs('prodi.data-prestasi.mandiri.*')
+                                ? 'active' : ''}}">
+                                <a href="{{route('prodi.data-prestasi.mandiri.index')}}"><i class="icon-Commit"><span class="path1"></span><span 
+                                class="path2"></span></i>
+                                    Prestasi Mandiri
+                                </a>
+                            </li>
+                            
+                        </ul>
+                    </li>
+                    <li class="treeview {{request()->routeIs('prodi.data-aktivitas.*') ? 'active menu-open' : ''}}">
+                        <a href="#">
+                            <i span class="fa fa-tasks"><span class="path1"></span><span
                                     class="path2"></span></i>
                             <span>Data Aktivitas</span>
                             <span class="pull-right-container">
