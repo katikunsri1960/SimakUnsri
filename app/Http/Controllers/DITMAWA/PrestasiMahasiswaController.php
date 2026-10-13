@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Ditmawa;
+namespace App\Http\Controllers\DITMAWA;
 
 use App\Http\Controllers\Controller;
 use App\Models\Fakultas;
