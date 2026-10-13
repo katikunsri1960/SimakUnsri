@@ -640,14 +640,14 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             // Route Prestasi Mahasiswa Akun Ditmawa
             Route::prefix('data-prestasi')->group(function () {
                 Route::prefix('prestasi-belmawa')->group(function () {
-                    Route::get('/', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'belmawa_index'])->name('ditmawa.data-prestasi.belmawa.index');
-                    Route::post('/{id}/approve', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'belmawa_approve'])->name('ditmawa.data-prestasi.belmawa.approve');
-                    Route::post('/{id}/decline', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'belmawa_decline'])->name('ditmawa.data-prestasi.belmawa.decline');
+                    Route::get('/', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'belmawa_index'])->name('ditmawa.data-prestasi.belmawa.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'belmawa_approve'])->name('ditmawa.data-prestasi.belmawa.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'belmawa_decline'])->name('ditmawa.data-prestasi.belmawa.decline');
                 });
                 Route::prefix('prestasi-mandiri')->group(function () {
-                    Route::get('/', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'mandiri_index'])->name('ditmawa.data-prestasi.mandiri.index');
-                    Route::post('/{id}/approve', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'mandiri_approve'])->name('ditmawa.data-prestasi.mandiri.approve');
-                    Route::post('/{id}/decline', [App\Http\Controllers\Ditmawa\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('ditmawa.data-prestasi.mandiri.decline');
+                    Route::get('/', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'mandiri_index'])->name('ditmawa.data-prestasi.mandiri.index');
+                    Route::post('/{id}/approve', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'mandiri_approve'])->name('ditmawa.data-prestasi.mandiri.approve');
+                    Route::post('/{id}/decline', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('ditmawa.data-prestasi.mandiri.decline');
                 });
             });
 

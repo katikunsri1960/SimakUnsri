@@ -79,14 +79,14 @@
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
-                                            @if($d->prestasi->status_prestasi == 0)
+                                            @if($d->prestasi->approved == 0)
                                                 <span class="badge badge-warning">Menunggu Persetujuan Koor. Prodi</span>
-                                            @elseif($d->prestasi->status_prestasi == 1)
-                                                <span class="badge badge-primary">Menunggu Persetujuan Fakultas</span>
-                                            @elseif($d->prestasi->status_prestasi == 2)
-                                                <span class="badge badge-info">Menunggu Persetujuan Dir. Kemahasiswaan</span>
-                                            @elseif($d->prestasi->status_prestasi == 3)
-                                                <span class="badge badge-success">Disetujui</span>
+                                            @elseif($d->prestasi->approved == 1)
+                                                <span class="badge badge-primary">Disetujui Koor. Prodi</span>
+                                            @elseif($d->prestasi->approved == 2)
+                                                <span class="badge badge-info">Disetujui Fakultas</span>
+                                            @elseif($d->prestasi->approved == 3)
+                                                <span class="badge badge-success">Disetujui Dir. Kemahasiswaan</span>
                                             @endif
                                         </td>
                                         <td class="text-center align-middle">
