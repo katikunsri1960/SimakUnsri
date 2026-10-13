@@ -79,9 +79,9 @@ class SimkatmawaUploadController extends Controller
         $query = PrestasiMahasiswa::with(['riwayat_pendidikan'])
             ->where('penyelenggara', '!=', 'Belmawa')
             ->where('approved', 3)
-            ->where(function ($q) {
+            ->orWhere(function ($q) {
                 $q->where('simkatmawa', 0)
-                  ->orWhere('pdunsri', 0);
+                  ->where('pdunsri', 0);
             });
 
         if ($request->filled('id_prodi') && $request->id_prodi != 'all') {

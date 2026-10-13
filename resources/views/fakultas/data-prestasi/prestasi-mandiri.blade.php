@@ -127,11 +127,11 @@ Data Prestasi Mandiri Mahasiswa (Fakultas)
                                         @if($d->approved == 0)
                                             <span class="badge badge-warning">Menunggu Koor. Prodi</span>
                                         @elseif($d->approved == 1)
-                                            <span class="badge badge-primary">Approved Koor. Prodi</span>
+                                            <span class="badge badge-primary">Disetujui Koor. Prodi</span>
                                         @elseif($d->approved == 2)
-                                            <span class="badge badge-info">Approved Fakultas</span>
+                                            <span class="badge badge-info">Disetujui Fakultas</span>
                                         @elseif($d->approved == 3)
-                                            <span class="badge badge-success">Approved Ditmawa</span>
+                                            <span class="badge badge-success">Disetujui Dir. Kemahasiswaan</span>
                                         @elseif($d->approved == 97)
                                             <span class="badge badge-danger">Dibatalkan Prodi</span>
                                             @if($d->alasan_pembatalan)
@@ -144,6 +144,9 @@ Data Prestasi Mandiri Mahasiswa (Fakultas)
                                             @endif
                                         @elseif($d->approved == 99)
                                             <span class="badge badge-danger">Dibatalkan Ditmawa</span>
+                                            @if($d->alasan_pembatalan)
+                                                <br><small class="text-muted">({{ $d->alasan_pembatalan }})</small>
+                                            @endif
                                         @endif
                                     </td>
                                     <td class="text-center align-middle">
