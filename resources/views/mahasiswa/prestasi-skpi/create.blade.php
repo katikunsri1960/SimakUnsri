@@ -111,7 +111,14 @@
                             {{-- Tahun --}}
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Tahun Pelaksanaan <span class="text-danger">*</span></label>
-                                <input type="number" class="form-control @error('tahun_prestasi') is-invalid @enderror" name="tahun_prestasi" value="{{ old('tahun_prestasi') }}" placeholder="Contoh: 2024" required />
+                                <select class="form-select @error('tahun_prestasi') is-invalid @enderror" name="tahun_prestasi" required>
+                                    <option value="" {{ old('tahun_prestasi') == '' ? 'selected' : '' }}>-- Pilih Tahun --</option>
+                                    @foreach($tahun_list as $thn)
+                                        <option value="{{ $thn }}" {{ old('tahun_prestasi') == $thn ? 'selected' : '' }}>
+                                            {{ $thn }}
+                                        </option>
+                                    @endforeach
+                                </select>
                                 @error('tahun_prestasi')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

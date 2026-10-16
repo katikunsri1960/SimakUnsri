@@ -1,7 +1,7 @@
 @extends('layouts.ditmawa')
 
 @section('title')
-Data Prestasi Belmawa Mahasiswa (Ditmawa)
+Data Prestasi Belmawa Mahasiswa
 @endsection
 
 @section('content')

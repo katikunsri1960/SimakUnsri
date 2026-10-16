@@ -13,10 +13,10 @@ use App\Models\SKPI; // Adjust namespace if necessary
 use App\Models\SKPIBidangKegiatan; // Adjust namespace if necessary
 use App\Models\SKPIJenisKegiatan;
 use App\Models\SKPISubBidangKegiatan; // Adjust namespace if necessary
-
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Ramsey\Uuid\Uuid;
+use App\Models\Perkuliahan\PenugasanDosen;
+use App\Models\Referensi\SemesterAktif;
 
 class PrestasiMahasiswaController extends Controller
 {
@@ -53,12 +53,17 @@ class PrestasiMahasiswaController extends Controller
         $sub_bidang = SKPISubBidangKegiatan::all();
         $data = RiwayatPendidikan::where('id_registrasi_mahasiswa', $id_reg_mhs)->first();
 
+        // Generate array tahun dari 2024 sampai tahun sekarang secara descending (terbaru di atas)
+        $tahun_sekarang = date('Y');
+        $tahun_list = range($tahun_sekarang, 2024);
+
         return view('mahasiswa.prestasi-skpi.create', compact(
             'data',
             'tingkat_prestasi',
             'jenis_prestasi',
             'bidang',
-            'sub_bidang'
+            'sub_bidang',
+            'tahun_list'
         ));
     }
 
@@ -119,7 +124,7 @@ class PrestasiMahasiswaController extends Controller
 
                 // A. Simpan ke tabel `prestasi_mahasiswa` (Menggunakan ID Dikti yang valid)
                 PrestasiMahasiswa::create([
-                    'id_prestasi' => $id_prestasi_mahasiswa,
+                    'id_prestasi'           => $id_prestasi_mahasiswa,
                     'approved'              => 0,
                     'id_mahasiswa'          => $riwayat->id_mahasiswa,
                     'nama_mahasiswa'        => $riwayat->nama_mahasiswa,
@@ -132,6 +137,9 @@ class PrestasiMahasiswaController extends Controller
                     'tahun_prestasi'        => $request->tahun_prestasi,
                     'penyelenggara'         => $request->penyelenggara,
                     'file_prestasi'         => $filePath,
+                    'feeder'                => 0,
+                    'simkatmawa'            => 0,
+                    'pdunsri'               => 0,
                 ]);
 
                 // B. Simpan ke tabel `skpi_data` (Menggunakan data SKPI lokal)
@@ -361,4 +369,59 @@ class PrestasiMahasiswaController extends Controller
                 ->with('error', 'Terjadi kesalahan saat menghapus data: ' . $e->getMessage());
         }
     }
+
+    // public function getMahasiswaByNim(Request $request)
+    // {
+    //     $mhs = \App\Models\Mahasiswa\RiwayatPendidikan::where('nim', $request->nim)->first();
+
+    //     if ($mhs) {
+    //         return response()->json([
+    //             'status' => 'success',
+    //             'nama_mahasiswa' => $mhs->nama_mahasiswa,
+    //         ]);
+    //     }
+
+    //     return response()->json([
+    //         'status' => 'error',
+    //         'message' => 'Data tidak ditemukan'
+    //     ], 404);
+    // }
+
+    // public function getDosen(Request $request)
+    // {
+    //     $search = $request->get('q');
+    //     $tahun_ajaran = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')->first();
+
+    //     $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran)
+    //         ->orderBy('nama_dosen', 'asc');
+
+    //     if ($search) {
+    //         $query->where(function($q) use ($search, $tahun_ajaran) {
+    //             $q->where('nama_dosen', 'like', "%{$search}%")
+    //             ->orWhere('nidn', 'like', "%{$search}%")
+    //             ->orWhere('nama_program_studi', 'like', "%{$search}%");
+    //         })->where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran);
+    //     }
+
+    //     return response()->json($query->get());
+    // }
+
+    // // Endpoint AJAX Pencarian Mahasiswa
+    // public function getMahasiswa(Request $request)
+    // {
+    //     $search = $request->get('q');
+
+    //     $query = RiwayatPendidikan::with('prodi')
+    //         ->whereNull('id_jenis_keluar')
+    //         ->orderBy('nama_mahasiswa', 'asc');
+
+    //     if ($search) {
+    //         $query->where(function($q) use ($search) {
+    //             $q->where('nama_mahasiswa', 'like', "%{$search}%")
+    //             ->orWhere('nim', 'like', "%{$search}%");
+    //         });
+    //     }
+
+    //     return response()->json($query->limit(20)->get());
+    // }
 }
