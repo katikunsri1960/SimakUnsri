@@ -36,7 +36,7 @@ Tambah Data Prestasi Mandiri Mahasiswa
 <section class="content">
     <div class="row">
         <div class="col-12">
-            <form action="{{ route('ditmawa.data-prestasi.mandiri.store') }}" method="POST" id="form-prestasi" enctype="multipart/form-data">
+            <form action="{{ route('ditmawa.data-prestasi.mandiri.store') }}" method="POST" id="form-prestasi">
                 @csrf
 
                 {{-- SECTION 1: DATA PRESTASI --}}
@@ -48,7 +48,7 @@ Tambah Data Prestasi Mandiri Mahasiswa
                             </div>
                             <div>
                                 <h5 class="mb-0 fw-bold">Data Prestasi</h5>
-                                <small class="text-muted">Informasi kompetisi, prestasi, dan dokumen bukti utama.</small>
+                                <small class="text-muted">Informasi kompetisi, prestasi, dan tautan bukti utama.</small>
                             </div>
                         </div>
                         <hr class="my-15">
@@ -56,7 +56,7 @@ Tambah Data Prestasi Mandiri Mahasiswa
                         <div class="row g-3">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Kategori<span class="text-danger">*</span></label>
-                                <select name="kategori_pendanaan" class="form-select @error('kategori_prpendanaan') is-invalid @enderror" required>
+                                <select name="kategori_pendanaan" class="form-select @error('kategori_pendanaan') is-invalid @enderror" required>
                                     <option value="">Pilih Kategori</option>
                                     <option value="1" {{ old('kategori_pendanaan') == '1' ? 'selected' : '' }}>Pendanaan</option>
                                     <option value="2" {{ old('kategori_pendanaan') == '2' ? 'selected' : '' }}>Non Pendanaan</option>
@@ -79,15 +79,12 @@ Tambah Data Prestasi Mandiri Mahasiswa
                                 <label class="form-label">Kategori <span class="text-danger">*</span></label>
                                 <select name="kategori_prestasi" class="form-select @error('kategori_prestasi') is-invalid @enderror" required>
                                     <option value="">Pilih Kategori</option>
-                                    <option value="4" {{ old('kategori_prestasi') == 'Riset dan Inovasi : STEM' ? 'selected' : '' }}>Riset dan Inovasi : STEM</option>
-                                    <option value="5" {{ old('kategori_prestasi') == 'Riset dan Inovasi : SSH' ? 'selected' : '' }}>Riset dan Inovasi : SSH</option>
-                                    <option value="2" {{ old('kategori_prestasi') == 'Seni dan Budaya' ? 'selected' : '' }}>Seni dan Budaya</option>
-                                    <option value="3" {{ old('kategori_prestasi') == 'Olahraga' ? 'selected' : '' }}>Olahraga</option>
-                                    <option value="1" {{ old('kategori_prestasi') == 'Minat Khusus' ? 'selected' : '' }}>Minat Khusus</option>
+                                    <option value="4" {{ old('kategori_prestasi') == '4' ? 'selected' : '' }}>Riset dan Inovasi : STEM</option>
+                                    <option value="5" {{ old('kategori_prestasi') == '5' ? 'selected' : '' }}>Riset dan Inovasi : SSH</option>
+                                    <option value="2" {{ old('kategori_prestasi') == '2' ? 'selected' : '' }}>Seni dan Budaya</option>
+                                    <option value="3" {{ old('kategori_prestasi') == '3' ? 'selected' : '' }}>Olahraga</option>
+                                    <option value="1" {{ old('kategori_prestasi') == '1' ? 'selected' : '' }}>Minat Khusus</option>
                                 </select>
-                                @error('kategori_prestasi')
-                                    <div class="invalid-feedback d-block">{{ $message }}</div>
-                                @enderror
                             </div>
 
                             <div class="col-md-12 mb-3">
@@ -133,50 +130,48 @@ Tambah Data Prestasi Mandiri Mahasiswa
                                 <label class="form-label">Bentuk Pelaksanaan<span class="text-danger">*</span></label>
                                 <select name="bentuk" class="form-select" required>
                                     <option value="">Pilih Bentuk</option>
-                                    <option value="Luring" {{ old('bentuk') == 'Tatap Muka' ? 'selected' : '' }}>Tatap Muka / Luring</option>
-                                    <option value="Daring" {{ old('bentuk') == 'Daring' ? 'selected' : '' }}>Daring / Online</option>
+                                    <option value="LURING" {{ old('bentuk') == 'LURING' ? 'selected' : '' }}>Tatap Muka / Luring</option>
+                                    <option value="DARING" {{ old('bentuk') == 'DARING' ? 'selected' : '' }}>Daring / Online</option>
                                 </select>
                             </div>
 
                             <div class="row g-3">
-                                <!-- URL Kompetisi -->
                                 <div class="col-md-12 mb-3">
                                     <label class="form-label">URL Website / Link Informasi Lomba</label>
                                     <input type="url" name="url_kompetisi" class="form-control" value="{{ old('url_kompetisi') }}" placeholder="https://...">
                                 </div>
 
-                                <!-- Upload File Sertifikat -->
+                                {{-- URL SERTIFIKAT --}}
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Upload Dokumen Sertifikat (PDF Max 500 KB) <span class="text-danger">*</span></label>
-                                    <input type="file" name="file_sertifikat" class="form-control @error('file_sertifikat') is-invalid @enderror" accept="application/pdf" required>
-                                    <small class="text-muted d-block mt-1">Format file harus PDF dan maksimal 500 KB.</small>
-                                    @error('file_sertifikat')
+                                    <label class="form-label">URL Dokumen Sertifikat <span class="text-danger">*</span></label>
+                                    <input type="url" name="url_sertifikat" class="form-control @error('url_sertifikat') is-invalid @enderror" value="{{ old('url_sertifikat') }}" placeholder="https://..." required>
+                                    <small class="text-muted d-block mt-1">Masukkan tautan langsung ke berkas sertifikat.</small>
+                                    @error('url_sertifikat')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <!-- Tanggal Sertifikat -->
                                 <div class="col-md-6 mb-3">
                                     <label class="form-label">Tanggal Sertifikat <span class="text-danger">*</span></label>
                                     <input type="date" name="tanggal_sertifikat" class="form-control" value="{{ old('tanggal_sertifikat') }}" required>
                                 </div>
 
-                                <!-- Upload Foto UPP -->
+                                {{-- URL FOTO UPP --}}
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Upload Dokumentasi / Foto UPP (PDF Max 500 KB)</label>
-                                    <input type="file" name="file_foto_upp" class="form-control @error('file_foto_upp') is-invalid @enderror" accept="application/pdf">
-                                    <small class="text-muted d-block mt-1">Opsional, format PDF maksimal 500 KB.</small>
-                                    @error('file_foto_upp')
+                                    <label class="form-label">URL Dokumentasi / Foto UPP</label>
+                                    <input type="url" name="url_foto_upp" class="form-control @error('url_foto_upp') is-invalid @enderror" value="{{ old('url_foto_upp') }}" placeholder="https://...">
+                                    <small class="text-muted d-block mt-1">Opsional, tautan berkas foto / UPP.</small>
+                                    @error('url_foto_upp')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
 
-                                <!-- Upload Surat Undangan -->
+                                {{-- URL SURAT UNDANGAN --}}
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label">Upload Dokumen Surat Undangan (PDF Max 500 KB)</label>
-                                    <input type="file" name="file_undangan" class="form-control @error('file_undangan') is-invalid @enderror" accept="application/pdf">
-                                    <small class="text-muted d-block mt-1">Opsional, format PDF maksimal 500 KB.</small>
-                                    @error('file_undangan')
+                                    <label class="form-label">URL Dokumen Surat Undangan</label>
+                                    <input type="url" name="url_undangan" class="form-control @error('url_undangan') is-invalid @enderror" value="{{ old('url_undangan') }}" placeholder="https://...">
+                                    <small class="text-muted d-block mt-1">Opsional, tautan berkas surat undangan.</small>
+                                    @error('url_undangan')
                                         <div class="invalid-feedback d-block">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -190,7 +185,7 @@ Tambah Data Prestasi Mandiri Mahasiswa
                     </div>
                 </div>
 
-                {{-- SECTION 2: DATA MAHASISWA (ADAPTISED WITH SELECT2) --}}
+                {{-- SECTION 2: DATA MAHASISWA --}}
                 <div class="box box-outline-success bs-3 border-success mb-4">
                     <div class="box-header with-border">
                         <div class="row align-items-center">
@@ -222,7 +217,7 @@ Tambah Data Prestasi Mandiri Mahasiswa
                     </div>
                 </div>
 
-                {{-- SECTION 3: DATA DOSEN PENDAMPING --}}
+                {{-- SECTION 3: DATA DOSEN PENDAMPING & SINGLE SK PEMBIMBING --}}
                 <div class="box box-outline-success bs-3 border-success mb-4">
                     <div class="box-header with-border">
                         <div class="row align-items-center">
@@ -237,15 +232,31 @@ Tambah Data Prestasi Mandiri Mahasiswa
                         </div>
                     </div>
                     <div class="box-body">
+                        <div class="row mb-3 pb-3 border-bottom g-3">
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Nomor SK Pembimbing</label>
+                                <input type="text" name="no_sk_pembimbing" class="form-control" value="{{ old('no_sk_pembimbing') }}" placeholder="Contoh: 0123/UN9/SK/2026">
+                            </div>
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">Tanggal SK Pembimbing</label>
+                                <input type="date" name="tanggal_sk_pembimbing" class="form-control" value="{{ old('tanggal_sk_pembimbing') }}">
+                            </div>
+                            {{-- URL SK PEMBIMBING --}}
+                            <div class="col-md-4">
+                                <label class="form-label fw-bold">URL SK Pembimbing</label>
+                                <input type="url" name="url_sk_pembimbing" class="form-control @error('url_sk_pembimbing') is-invalid @enderror" value="{{ old('url_sk_pembimbing') }}" placeholder="https://...">
+                                <small class="text-muted d-block mt-1">Tautan berkas SK Pembimbing.</small>
+                                @error('url_sk_pembimbing')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
                         <div id="dosen-fields">
                             <div class="dosen-field row mb-2 align-items-center">
-                                <div class="col-md-6 mb-2">
+                                <div class="col-md-11 mb-2">
                                     <label class="form-label label-dosen">Nama Dosen Pendamping 1</label>
                                     <select class="form-select select2-dosen" name="dosen_bimbing[]"></select>
-                                </div>
-                                <div class="col-md-5 mb-2">
-                                    <label class="form-label">Upload Surat Tugas (PDF Max 500 KB)</label>
-                                    <input type="file" name="file_surat_tugas[]" class="form-control" accept="application/pdf">
                                 </div>
                                 <div class="col-md-1 mb-2">
                                     <label class="form-label">&nbsp;</label>
@@ -263,7 +274,7 @@ Tambah Data Prestasi Mandiri Mahasiswa
                     <a href="{{ route('ditmawa.data-prestasi.mandiri.index') }}" class="btn btn-secondary px-4">
                         <i class="fa fa-arrow-left me-1"></i> Kembali
                     </a>
-                    <button type="submit" class="btn btn-primary px-4">
+                    <button type="button" class="btn btn-primary px-4" id="btn-submit-confirm">
                         <i class="fa fa-save me-1"></i> Simpan Data
                     </button>
                 </div>
@@ -282,7 +293,27 @@ $(document).ready(function() {
     var mhsCounter = 1;
     var dosenCounter = 1;
 
-    // 1. Initializer Select2 Mahasiswa (AJAX)
+    // Function mengumpulkan ID Mahasiswa terpilih
+    function getSelectedMahasiswa() {
+        var selected = [];
+        $('.select2-mhs').each(function() {
+            var val = $(this).val();
+            if (val) selected.push(val);
+        });
+        return selected;
+    }
+
+    // Function mengumpulkan ID Dosen terpilih
+    function getSelectedDosen() {
+        var selected = [];
+        $('.select2-dosen').each(function() {
+            var val = $(this).val();
+            if (val) selected.push(val);
+        });
+        return selected;
+    }
+
+    // Initializer Select2 Mahasiswa (Dengan Filter Exclude)
     function initializeSelect2Mhs(element) {
         return element.select2({
             placeholder: '-- Ketik NIM / Nama Mahasiswa --',
@@ -293,19 +324,20 @@ $(document).ready(function() {
                 dataType: 'json',
                 delay: 250,
                 data: function (params) {
-                    return { q: params.term };
+                    return { 
+                        q: params.term,
+                        selected: getSelectedMahasiswa()
+                    }; 
                 },
-                processResults: function (data) {
-                    return {
-                        results: data.results || []
-                    };
+                processResults: function (data) { 
+                    return { results: data.results || [] }; 
                 },
                 cache: true
             }
         });
     }
 
-    // 2. Initializer Select2 Dosen (AJAX)
+    // Initializer Select2 Dosen (Dengan Filter Exclude)
     function initializeSelect2Dosen(element) {
         return element.select2({
             placeholder: '-- Ketik NIDN / Nama Dosen --',
@@ -315,26 +347,25 @@ $(document).ready(function() {
                 type: "GET",
                 dataType: 'json',
                 delay: 250,
-                data: function (params) {
-                    return { q: params.term };
+                data: function (params) { 
+                    return { 
+                        q: params.term,
+                        selected: getSelectedDosen()
+                    }; 
                 },
-                processResults: function (data) {
-                    return {
-                        results: data.results || []
-                    };
+                processResults: function (data) { 
+                    return { results: data.results || [] }; 
                 },
                 cache: true
             }
         });
     }
 
-    // Inisialisasi awal untuk baris pertama
+    // Inisialisasi awal
     $('.select2-mhs').each(function() { initializeSelect2Mhs($(this)); });
     $('.select2-dosen').each(function() { initializeSelect2Dosen($(this)); });
 
-    // ==========================================
-    // EVENT LISTENER: TAMBAH MAHASISWA
-    // ==========================================
+    // Tambah Baris Mahasiswa
     $('#add-mhs').click(function() {
         mhsCounter++;
         var newRow = $(
@@ -351,26 +382,19 @@ $(document).ready(function() {
                 '</div>' +
             '</div>'
         );
-
         $('#mhs-fields').append(newRow);
         initializeSelect2Mhs(newRow.find('.select2-mhs'));
         updateRemoveButtonMhs();
     });
 
-    // ==========================================
-    // EVENT LISTENER: TAMBAH DOSEN
-    // ==========================================
+    // Tambah Baris Dosen
     $('#add-dosen').click(function() {
         dosenCounter++;
         var newRow = $(
             '<div class="dosen-field row mb-2 align-items-center">' +
-                '<div class="col-md-6 mb-2">' +
+                '<div class="col-md-11 mb-2">' +
                     '<label class="form-label label-dosen">Nama Dosen Pendamping ' + dosenCounter + '</label>' +
                     '<select class="form-select select2-dosen" name="dosen_bimbing[]"></select>' +
-                '</div>' +
-                '<div class="col-md-5 mb-2">' +
-                    '<label class="form-label">Upload Surat Tugas (PDF Max 500 KB)</label>' +
-                    '<input type="file" name="file_surat_tugas[]" class="form-control" accept="application/pdf">' +
                 '</div>' +
                 '<div class="col-md-1 mb-2">' +
                     '<label class="form-label">&nbsp;</label>' +
@@ -380,25 +404,23 @@ $(document).ready(function() {
                 '</div>' +
             '</div>'
         );
-
         $('#dosen-fields').append(newRow);
         initializeSelect2Dosen(newRow.find('.select2-dosen'));
         updateRemoveButtonDosen();
     });
 
-    // Event Hapus Baris Mahasiswa
+    // Hapus Baris Mahasiswa
     $(document).on('click', '.remove-mhs', function() {
         $(this).closest('.mhs-field').remove();
         updateRemoveButtonMhs();
     });
 
-    // Event Hapus Baris Dosen
+    // Hapus Baris Dosen
     $(document).on('click', '.remove-dosen', function() {
         $(this).closest('.dosen-field').remove();
         updateRemoveButtonDosen();
     });
 
-    // Kelola Tampilan Tombol Hapus Mahasiswa
     function updateRemoveButtonMhs() {
         if ($('.mhs-field').length <= 1) {
             $('.remove-mhs').hide();
@@ -407,7 +429,6 @@ $(document).ready(function() {
         }
     }
 
-    // Kelola Tampilan Tombol Hapus Dosen
     function updateRemoveButtonDosen() {
         if ($('.dosen-field').length <= 1) {
             $('.remove-dosen').hide();
@@ -415,6 +436,32 @@ $(document).ready(function() {
             $('.remove-dosen').show();
         }
     }
+
+    // ==========================================
+    // ALERT KONFIRMASI DENGAN SWEETALERT
+    // ==========================================
+    $('#btn-submit-confirm').click(function() {
+        var form = document.getElementById('form-prestasi');
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return;
+        }
+
+        swal({
+            title: "Apakah Anda yakin?",
+            text: "Data prestasi mandiri mahasiswa ini akan disimpan ke dalam sistem.",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, Simpan!",
+            cancelButtonText: "Batal"
+        }, function(isConfirm) {
+            if (isConfirm) {
+                form.submit();
+            }
+        });
+    });
 });
 </script>
 @endpush
