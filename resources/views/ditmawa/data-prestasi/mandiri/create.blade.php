@@ -234,18 +234,18 @@ Tambah Data Prestasi Mandiri Mahasiswa
                     <div class="box-body">
                         <div class="row mb-3 pb-3 border-bottom g-3">
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">Nomor SK Pembimbing</label>
+                                <label class="form-label fw-bold">Nomor ST Pembimbing</label>
                                 <input type="text" name="no_sk_pembimbing" class="form-control" value="{{ old('no_sk_pembimbing') }}" placeholder="Contoh: 0123/UN9/SK/2026">
                             </div>
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">Tanggal SK Pembimbing</label>
+                                <label class="form-label fw-bold">Tanggal ST Pembimbing</label>
                                 <input type="date" name="tanggal_sk_pembimbing" class="form-control" value="{{ old('tanggal_sk_pembimbing') }}">
                             </div>
                             {{-- URL SK PEMBIMBING --}}
                             <div class="col-md-4">
-                                <label class="form-label fw-bold">URL SK Pembimbing</label>
+                                <label class="form-label fw-bold">URL ST Pembimbing</label>
                                 <input type="url" name="url_sk_pembimbing" class="form-control @error('url_sk_pembimbing') is-invalid @enderror" value="{{ old('url_sk_pembimbing') }}" placeholder="https://...">
-                                <small class="text-muted d-block mt-1">Tautan berkas SK Pembimbing.</small>
+                                <small class="text-muted d-block mt-1">Tautan berkas ST Pembimbing.</small>
                                 @error('url_sk_pembimbing')
                                     <div class="invalid-feedback d-block">{{ $message }}</div>
                                 @enderror
