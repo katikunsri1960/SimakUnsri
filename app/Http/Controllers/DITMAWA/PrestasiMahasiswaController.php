@@ -229,243 +229,239 @@ class PrestasiMahasiswaController extends Controller
     }
 
     public function store_mandiri(Request $request)
-{
-    $request->validate([
-        'kategori_pendanaan'  => 'required',
-        'id_tingkat_prestasi' => 'required',
-        'kategori_prestasi'   => 'required',
-        'nama_kompetisi'      => 'required|string',
-        'nama_cabang'         => 'required|string',
-        'peringkat'           => 'required',
-        'penyelenggara'       => 'required|string',
-        'jumlah_pt_peserta'   => 'required|numeric',
-        'kepesertaan'         => 'required',
-        'bentuk'              => 'required',
-        'url_kompetisi'       => 'nullable|url',
-        'file_sertifikat'     => 'required|file|mimes:pdf|max:500',
-        'file_foto_upp'       => 'nullable|file|mimes:pdf|max:500',
-        'file_undangan'       => 'nullable|file|mimes:pdf|max:500',
-        'file_surat_tugas.*'  => 'nullable|file|mimes:pdf|max:500',
-        'tanggal_sertifikat'  => 'required|date',
-        'mahasiswa'           => 'required|array|min:1',
-    ], [
-        'kategori_prestasi.required' => 'Kategori prestasi wajib dipilih.',
-        'file_sertifikat.max'        => 'Ukuran file sertifikat tidak boleh melebihi 500 KB.',
-        'file_sertifikat.mimes'      => 'Format file sertifikat harus PDF.',
-        'file_surat_tugas.*.max'     => 'Ukuran file surat tugas dosen tidak boleh melebihi 500 KB.',
-        'file_surat_tugas.*.mimes'   => 'Format file surat tugas dosen harus PDF.',
-    ]);
+    {
+        $request->validate([
+            'kategori_pendanaan'    => 'required',
+            'id_tingkat_prestasi'   => 'required',
+            'kategori_prestasi'     => 'required',
+            'nama_kompetisi'        => 'required|string',
+            'nama_cabang'           => 'required|string',
+            'peringkat'             => 'required',
+            'penyelenggara'         => 'required|string',
+            'jumlah_pt_peserta'     => 'required|numeric',
+            'kepesertaan'           => 'required',
+            'bentuk'                => 'required',
+            'url_kompetisi'         => 'nullable|url',
+            'url_sertifikat'        => 'required|url',
+            'url_foto_upp'          => 'nullable|url',
+            'url_undangan'          => 'nullable|url',
+            'url_sk_pembimbing'     => 'nullable|url',
+            'no_sk_pembimbing'      => 'nullable|string',
+            'tanggal_sk_pembimbing' => 'nullable|date',
+            'tanggal_sertifikat'    => 'required|date',
+            'mahasiswa'             => 'required|array|min:1',
+        ], [
+            'kategori_prestasi.required' => 'Kategori prestasi wajib dipilih.',
+            'url_sertifikat.required'    => 'URL sertifikat wajib diisi.',
+            'url_sertifikat.url'         => 'Format URL sertifikat tidak valid.',
+        ]);
 
-    DB::beginTransaction();
-    try {
-        $id_aktivitas = (string) Str::uuid();
+        DB::beginTransaction();
+        try {
+            $id_aktivitas = (string) Str::uuid();
 
-        // ----------------------------------------------------
-        // KONDISI DETERMINASI ID_SEMESTER DARI TANGGAL SERTIFIKAT
-        // ----------------------------------------------------
-        $tgl_sertifikat = \Carbon\Carbon::parse($request->tanggal_sertifikat);
+            // ----------------------------------------------------
+            // DETERMINASI ID_SEMESTER DARI TANGGAL SERTIFIKAT
+            // ----------------------------------------------------
+            $tgl_sertifikat = \Carbon\Carbon::parse($request->tanggal_sertifikat);
 
-        if ($tgl_sertifikat->month >= 1 && $tgl_sertifikat->month <= 7) {
-            $calculated_id_semester = ($tgl_sertifikat->year - 1) . '2';
-        } else {
-            $calculated_id_semester = $tgl_sertifikat->year . '1';
-        }
+            if ($tgl_sertifikat->month >= 1 && $tgl_sertifikat->month <= 7) {
+                $calculated_id_semester = ($tgl_sertifikat->year - 1) . '2';
+            } else {
+                $calculated_id_semester = $tgl_sertifikat->year . '1';
+            }
 
-        // Ambil nama semester berdasarkan id_semester yang terbentuk
-        $semester = Semester::where('id_semester', $calculated_id_semester)->first();
+            $semester = Semester::where('id_semester', $calculated_id_semester)->first();
+            $semesterAktif = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')->first();
 
-        // Fallback semester aktif jika semester dari kalkulasi tidak ditemukan di tabel semesters
-        $semesterAktif = SemesterAktif::leftJoin('semesters', 'semesters.id_semester', 'semester_aktifs.id_semester')->first();
+            $id_semester_final   = $semester ? $semester->id_semester : ($semesterAktif ? $semesterAktif->id_semester : $calculated_id_semester);
+            $nama_semester_final = $semester ? $semester->nama_semester : ($semesterAktif ? $semesterAktif->nama_semester : $calculated_id_semester);
 
-        // DIE DUMP UNTUK CEK KONDISI DATA SEMESTER
-        // dd([
-        //     'input_tanggal_sertifikat' => $request->tanggal_sertifikat,
-        //     'parsed_month'             => $tgl_sertifikat->month,
-        //     'parsed_year'              => $tgl_sertifikat->year,
-        //     'calculated_id_semester'   => $calculated_id_semester,
-        //     'query_semester_found'     => $semester ? $semester->toArray() : 'NOT FOUND IN DB',
-        //     'semester_aktif_fallback'  => $semesterAktif ? $semesterAktif->toArray() : 'NULL',
-        // ]);
+            $nama_jenis_anggota = $request->kepesertaan == '0' ? 'Personal' : 'Kelompok';
 
-        // Penentuan jenis_anggota untuk Aktivitas Mahasiswa
-        $isIndividu = in_array(strtolower($request->kepesertaan), ['0', '1', 'individu', 'personal']);
-        $nama_jenis_anggota = $request->kepesertaan== '0' ? 'Personal' : 'Kelompok';
-
-        // Ambil data prodi dari mahasiswa pertama
-        $firstMhs = RiwayatPendidikan::with('prodi')
-            ->where('id_mahasiswa', $request->mahasiswa[0])
-            ->orWhere('id_registrasi_mahasiswa', $request->mahasiswa[0])
-            ->whereNull('id_jenis_keluar')
-            ->first();
-
-        $id_prodi_pertama   = $firstMhs ? $firstMhs->id_prodi : NULL;
-        $nama_prodi_pertama = $firstMhs ? ($firstMhs->nama_program_studi ?? optional($firstMhs->prodi)->nama_program_studi) : NULL;
-
-        // 1. Upload File Sertifikat, Foto UPP, Undangan, dan SK Pembimbing Dosen Pertama
-        $path_sertifikat = $request->hasFile('file_sertifikat') 
-            ? $request->file('file_sertifikat')->store('prestasi-mahasiswa/sertifikat', 'public') 
-            : null;
-
-        $path_foto_upp = $request->hasFile('file_foto_upp') 
-            ? $request->file('file_foto_upp')->store('prestasi-mahasiswa/foto-upp', 'public') 
-            : null;
-
-        $path_undangan = $request->hasFile('file_undangan') 
-            ? $request->file('file_undangan')->store('prestasi-mahasiswa/undangan', 'public') 
-            : null;
-
-        // File surat tugas dari dosen pertama (index 0)
-        $path_sk_tugas_utama = null;
-        if ($request->hasFile('file_surat_tugas.0')) {
-            $path_sk_tugas_utama = $request->file('file_surat_tugas.0')
-                ->store('prestasi-mahasiswa/sk-pembimbing', 'public');
-        }
-
-        // 2. Insert Aktivitas Mahasiswa
-        $data_aktivitas = [
-            'feeder'                    => 0,
-            'id_aktivitas'              => $id_aktivitas,
-            'program_mbkm'              => 0,
-            'nama_program_mbkm'         => 'Mandiri',
-            'jenis_anggota'             => $request->kepesertaan,
-            'nama_jenis_anggota'        => $nama_jenis_anggota,
-            'id_jenis_aktivitas'        => 12,
-            'nama_jenis_aktivitas'      => 'Kompetisi',
-            'id_prodi'                  => $id_prodi_pertama,
-            'nama_prodi'                => $nama_prodi_pertama,
-            'id_semester'               => $semester->id_semester,
-            'nama_semester'             => $semester->nama_semester,
-            'judul'                     => $request->nama_kompetisi,
-            'keterangan'                => $request->keterangan,
-            'lokasi'                    => $request->lokasi ?? $request->penyelenggara,
-            'sk_tugas'                  => $path_sk_tugas_utama,
-            'tanggal_sk_tugas'          => $request->tanggal_sertifikat,
-            'untuk_kampus_merdeka'      => 0,
-            'asal_data'                 => 9,
-            'status_sync'               => 'belum sync'
-        ];
-        AktivitasMahasiswa::create($data_aktivitas);
-
-        // 3 & 4. Insert Prestasi Mahasiswa & Anggota Aktivitas
-        $totalMahasiswa = count($request->mahasiswa);
-        $jenis_prestasi = JenisPrestasi::where('id_jenis_prestasi', $request->kategori_prestasi)->first();
-        $tingkat_prestasi = TingkatPrestasi::where('id_tingkat_prestasi', $request->id_tingkat_prestasi)->first();
-
-        foreach ($request->mahasiswa as $index => $id_mhs) {
-            $riwayat = RiwayatPendidikan::where('id_mahasiswa', $id_mhs)
-                ->orWhere('id_registrasi_mahasiswa', $id_mhs)
+            // Ambil data prodi dari mahasiswa pertama
+            $firstMhs = RiwayatPendidikan::with('prodi')
+                ->where('id_mahasiswa', $request->mahasiswa[0])
+                ->orWhere('id_registrasi_mahasiswa', $request->mahasiswa[0])
                 ->whereNull('id_jenis_keluar')
                 ->first();
 
-            if ($riwayat) {
-                // Insert Record Prestasi
-                PrestasiMahasiswa::create([
-                    'id_prestasi'           => (string) Str::uuid(),
-                    'approved'              => 3,
-                    'id_mahasiswa'          => $riwayat->id_mahasiswa,
-                    'nama_mahasiswa'        => $riwayat->nama_mahasiswa,
-                    'kategori_prestasi'     => $request->kategori_pendanaan,
-                    'id_jenis_prestasi'     => $jenis_prestasi ? $jenis_prestasi->id_jenis_prestasi : 9,
-                    'nama_jenis_prestasi'   => $jenis_prestasi ? $jenis_prestasi->nama_jenis_prestasi : 'Lain-lain',
-                    'id_tingkat_prestasi'   => $tingkat_prestasi ? $tingkat_prestasi->id_tingkat_prestasi : $request->id_tingkat_prestasi,
-                    'nama_tingkat_prestasi' => $tingkat_prestasi ? $tingkat_prestasi->nama_tingkat_prestasi : '-',
-                    'nama_prestasi'         => $request->nama_kompetisi,
-                    'tahun_prestasi'        => date('Y', strtotime($request->tanggal_sertifikat)),
-                    'penyelenggara'         => $request->penyelenggara,
-                    'peringkat'             => $request->peringkat,
-                    'id_aktivitas'          => $id_aktivitas,
-                    'kategori_simkatmawa'   => $request->kategori_prestasi,
-                    'jumlah_unit_peserta'   => $request->jumlah_pt_peserta,
-                    'bentuk'                => $request->bentuk,
-                    'url_kompetisi'         => $request->url_kompetisi,
-                    'file_prestasi'         => $path_sertifikat,
-                    'file_foto_upp'         => $path_foto_upp,
-                    'file_undangan'         => $path_undangan,
-                    'simkatmawa'            => 0,
-                    'pdunsri'               => 0,
-                    'feeder'                => 0,
-                    'status_sync'           => 'belum sync'
-                ]);
+            $id_prodi_pertama   = $firstMhs ? $firstMhs->id_prodi : NULL;
+            $nama_prodi_pertama = $firstMhs ? ($firstMhs->nama_program_studi ?? optional($firstMhs->prodi)->nama_program_studi) : NULL;
 
-                // Penentuan Jenis Peran Anggota
-                if ($totalMahasiswa === 1 || $request->kepesertaan == '0') {
-                    $jenis_peran = '3';
-                    $nama_jenis_peran = 'Personal';
-                } else {
-                    $jenis_peran = ($index === 0) ? '1' : '2';
-                    $nama_jenis_peran = ($index === 0) ? 'Ketua' : 'Anggota';
-                }
+            // 1. INSERT AKTIVITAS MAHASISWA (Disimpan No SK & Tanggal SK ke sk_tugas)
+            $data_aktivitas = [
+                'feeder'                    => 0,
+                'id_aktivitas'              => $id_aktivitas,
+                'program_mbkm'              => 0,
+                'nama_program_mbkm'         => 'Mandiri',
+                'jenis_anggota'             => $request->kepesertaan,
+                'nama_jenis_anggota'        => $nama_jenis_anggota,
+                'id_jenis_aktivitas'        => 12,
+                'nama_jenis_aktivitas'      => 'Kompetisi',
+                'id_prodi'                  => $id_prodi_pertama,
+                'nama_prodi'                => $nama_prodi_pertama,
+                'id_semester'               => $id_semester_final,
+                'nama_semester'             => $nama_semester_final,
+                'judul'                     => $request->nama_kompetisi,
+                'keterangan'                => $request->keterangan,
+                'lokasi'                    => $request->lokasi ?? $request->penyelenggara,
+                'sk_tugas'                  => $request->no_sk_pembimbing, // Nomor SK
+                'tanggal_sk_tugas'          => $request->tanggal_sk_pembimbing ?? $request->tanggal_sertifikat, // Tanggal SK
+                'untuk_kampus_merdeka'      => 0,
+                'asal_data'                 => 9,
+                'status_sync'               => 'belum sync'
+            ];
+            AktivitasMahasiswa::create($data_aktivitas);
 
-                // Insert Anggota
-                AnggotaAktivitasMahasiswa::create([
-                    'feeder'                  => 0,
-                    'id_anggota'              => (string) Str::uuid(),
-                    'id_aktivitas'            => $id_aktivitas,
-                    'judul'                   => $request->nama_kompetisi,
-                    'id_registrasi_mahasiswa' => $riwayat->id_registrasi_mahasiswa,
-                    'nim'                     => $riwayat->nim,
-                    'nama_mahasiswa'          => $riwayat->nama_mahasiswa,
-                    'jenis_peran'             => $jenis_peran,
-                    'nama_jenis_peran'        => $nama_jenis_peran,
-                    'status_sync'             => 'belum sync'
-                ]);
-            }
-        }
+            // 2 & 3. INSERT PRESTASI MAHASISWA & ANGGOTA AKTIVITAS
+            $totalMahasiswa = count($request->mahasiswa);
+            $jenis_prestasi = JenisPrestasi::where('id_jenis_prestasi', $request->kategori_prestasi)->first();
+            $tingkat_prestasi = TingkatPrestasi::where('id_tingkat_prestasi', $request->id_tingkat_prestasi)->first();
 
-        // 5. Insert Dosen Pembimbing ke bimbing_mahasiswas
-        if (!empty($request->dosen_bimbing)) {
-            foreach ($request->dosen_bimbing as $idx => $id_dosen) {
-                if (!empty($id_dosen)) {
-                    $dosen = PenugasanDosen::where('id_dosen', $id_dosen)->first();
+            foreach ($request->mahasiswa as $index => $id_mhs) {
+                $riwayat = RiwayatPendidikan::where('id_mahasiswa', $id_mhs)
+                    ->orWhere('id_registrasi_mahasiswa', $id_mhs)
+                    ->whereNull('id_jenis_keluar')
+                    ->first();
 
-                    $path_surat_tugas = null;
-                    if ($idx === 0 && $path_sk_tugas_utama) {
-                        $path_surat_tugas = $path_sk_tugas_utama;
-                    } elseif ($request->hasFile("file_surat_tugas.{$idx}")) {
-                        $path_surat_tugas = $request->file("file_surat_tugas.{$idx}")
-                            ->store('prestasi-mahasiswa/SK Pembimbing', 'public');
+                if ($riwayat) {
+                    PrestasiMahasiswa::create([
+                        'id_prestasi'           => (string) Str::uuid(),
+                        'approved'              => 3,
+                        'id_mahasiswa'          => $riwayat->id_mahasiswa,
+                        'nama_mahasiswa'        => $riwayat->nama_mahasiswa,
+                        'kategori_prestasi'     => $request->kategori_pendanaan,
+                        'id_jenis_prestasi'     => $jenis_prestasi ? $jenis_prestasi->id_jenis_prestasi : 9,
+                        'nama_jenis_prestasi'   => $jenis_prestasi ? $jenis_prestasi->nama_jenis_prestasi : 'Lain-lain',
+                        'id_tingkat_prestasi'   => $tingkat_prestasi ? $tingkat_prestasi->id_tingkat_prestasi : $request->id_tingkat_prestasi,
+                        'nama_tingkat_prestasi' => $tingkat_prestasi ? $tingkat_prestasi->nama_tingkat_prestasi : '-',
+                        'nama_prestasi'         => $request->nama_kompetisi,
+                        'tahun_prestasi'        => date('Y', strtotime($request->tanggal_sertifikat)),
+                        'penyelenggara'         => $request->penyelenggara,
+                        'peringkat'             => $request->peringkat,
+                        'id_aktivitas'          => $id_aktivitas,
+                        'kategori_simkatmawa'   => $request->kategori_prestasi,
+                        'jumlah_unit_peserta'   => $request->jumlah_pt_peserta,
+                        'bentuk'                => $request->bentuk,
+                        'url_kompetisi'         => $request->url_kompetisi,
+                        'file_prestasi'         => $request->url_sertifikat, // Disimpan String URL
+                        'file_foto_upp'         => $request->url_foto_upp,   // Disimpan String URL
+                        'file_undangan'         => $request->url_undangan,   // Disimpan String URL
+                        'sk_pembimbing'         => $request->url_sk_pembimbing, // Disimpan String URL SK
+                        'simkatmawa'            => 0,
+                        'pdunsri'               => 0,
+                        'feeder'                => 0,
+                        'status_sync'           => 'belum sync'
+                    ]);
+
+                    // Penentuan Jenis Peran Anggota
+                    if ($totalMahasiswa === 1 || $request->kepesertaan == '0') {
+                        $jenis_peran = '3';
+                        $nama_jenis_peran = 'Personal';
+                    } else {
+                        $jenis_peran = ($index === 0) ? '1' : '2';
+                        $nama_jenis_peran = ($index === 0) ? 'Ketua' : 'Anggota';
                     }
 
-                    BimbingMahasiswa::create([
-                        'feeder'                 => 0,
-                        'approved'               => 1,
-                        'approved_dosen'         => 1,
-                        'alasan_pembatalan'      => NULL,
-                        'id_bimbing_mahasiswa'   => (string) Str::uuid(),
-                        'id_aktivitas'           => $id_aktivitas,
-                        'judul'                  => $request->nama_kompetisi,
-                        'id_kategori_kegiatan'   => 110600,
-                        'nama_kategori_kegiatan' => 'Membina kegiatan mahasiswa di bidang akademik dan kemahasiswaan, termasuk dalam kegiatan ini adalah membimbing mahasiswa menghasilkan produk saintifik, membimbing mahasiswa mengikuti kompetisi di bidang akademik dan kemahasiswaan',
-                        'id_dosen'               => $id_dosen,
-                        'nidn'                   => $dosen ? $dosen->nidn : NULL,
-                        'nuptk'                  => $dosen ? $dosen->nuptk : NULL,
-                        'nama_dosen'             => $dosen ? $dosen->nama_dosen : NULL,
-                        'pembimbing_ke'          => $idx + 1,
-                        'nilai_proses_bimbingan' => NULL,
-                        'status_sync'            => 'belum sync',
-                        // 'file_surat_tugas'       => $path_surat_tugas,
+                    // Insert Anggota
+                    AnggotaAktivitasMahasiswa::create([
+                        'feeder'                  => 0,
+                        'id_anggota'              => (string) Str::uuid(),
+                        'id_aktivitas'            => $id_aktivitas,
+                        'judul'                   => $request->nama_kompetisi,
+                        'id_registrasi_mahasiswa' => $riwayat->id_registrasi_mahasiswa,
+                        'nim'                     => $riwayat->nim,
+                        'nama_mahasiswa'          => $riwayat->nama_mahasiswa,
+                        'jenis_peran'             => $jenis_peran,
+                        'nama_jenis_peran'        => $nama_jenis_peran,
+                        'status_sync'             => 'belum sync'
                     ]);
                 }
             }
+
+            // ----------------------------------------------------
+            // DETERMINASI DINAMIS KATEGORI KEGIATAN PEMBIMBING DOSEN
+            // ----------------------------------------------------
+            $id_tingkat = (string) $request->id_tingkat_prestasi;
+            $peringkat  = (string) $request->peringkat;
+
+            $isJuara = in_array($peringkat, ['1', '2', '3', 'JUARA1', 'JUARA2', 'JUARA3']);
+
+            if ($id_tingkat === '6') { // Internasional
+                if ($isJuara) {
+                    $id_kategori_kegiatan = 110604;
+                    $nama_kategori_kegiatan = 'Membimbing mahasiswa mengikuti kompetisi dibidang akademik dan kemahasiswaan bereputasi dan mencapai juara tingkat Internasional';
+                } else {
+                    $id_kategori_kegiatan = 110602;
+                    $nama_kategori_kegiatan = 'Membimbing mahasiswa menghasilkan produk saintifik bereputasi dan mendapat pengakuan tingkat Internasional';
+                }
+            } elseif ($id_tingkat === '5') { // Nasional
+                if ($isJuara) {
+                    $id_kategori_kegiatan = 110605;
+                    $nama_kategori_kegiatan = 'Membimbing mahasiswa mengikuti kompetisi dibidang akademik dan kemahasiswaan bereputasi dan mencapai juara tingkat Nasional';
+                } else {
+                    $id_kategori_kegiatan = 110603;
+                    $nama_kategori_kegiatan = 'Membimbing mahasiswa menghasilkan produk saintifik bereputasi dan mendapat pengakuan tingkat Nasional';
+                }
+            } else { // Provinsi, Kab/Kota, dll.
+                $id_kategori_kegiatan = 110600;
+                $nama_kategori_kegiatan = 'Membina kegiatan mahasiswa di bidang akademik dan kemahasiswaan, termasuk dalam kegiatan ini adalah membimbing mahasiswa menghasilkan produk saintifik, membimbing mahasiswa mengikuti kompetisi di bidang akademik dan kemahasiswaan';
+            }
+
+            // 4. INSERT DOSEN PEMBIMBING KE BIMBING_MAHASISWAS
+            if (!empty($request->dosen_bimbing)) {
+                foreach ($request->dosen_bimbing as $idx => $id_dosen) {
+                    if (!empty($id_dosen)) {
+                        $dosen = PenugasanDosen::where('id_dosen', $id_dosen)->first();
+
+                        BimbingMahasiswa::create([
+                            'feeder'                 => 0,
+                            'approved'               => 1,
+                            'approved_dosen'         => 1,
+                            'alasan_pembatalan'      => NULL,
+                            'id_bimbing_mahasiswa'   => (string) Str::uuid(),
+                            'id_aktivitas'           => $id_aktivitas,
+                            'judul'                  => $request->nama_kompetisi,
+                            'id_kategori_kegiatan'   => $id_kategori_kegiatan,
+                            'nama_kategori_kegiatan' => $nama_kategori_kegiatan,
+                            'id_dosen'               => $id_dosen,
+                            'nidn'                   => $dosen ? $dosen->nidn : NULL,
+                            'nuptk'                  => $dosen ? $dosen->nuptk : NULL,
+                            'nama_dosen'             => $dosen ? $dosen->nama_dosen : NULL,
+                            'pembimbing_ke'          => $idx + 1,
+                            'nilai_proses_bimbingan' => NULL,
+                            'status_sync'            => 'belum sync',
+                            // 'sk_tugas'               => $request->no_sk_pembimbing,   // Disimpan No SK
+                            // 'file_surat_tugas'       => $request->url_sk_pembimbing, // Disimpan URL SK
+                        ]);
+                    }
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('ditmawa.data-prestasi.mandiri.index')->with('success', 'Data prestasi berhasil disimpan.');
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage())->withInput();
         }
-
-        DB::commit();
-        return redirect()->route('ditmawa.data-prestasi.mandiri.index')->with('success', 'Data prestasi berhasil disimpan.');
-
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return redirect()->back()->with('error', 'Gagal menyimpan data: ' . $e->getMessage())->withInput();
     }
-}
-
 
     public function get_mahasiswa(Request $request)
     {
         try {
-            $search = $request->get('q');
+            $search   = $request->get('q');
+            $selected = $request->get('selected', []); // Array ID yang sudah dipilih
 
             $query = RiwayatPendidikan::with('prodi')
                 ->whereNull('id_jenis_keluar');
+
+            // Kecualikan mahasiswa yang sudah dipilih
+            if (!empty($selected) && is_array($selected)) {
+                $query->whereNotIn('id_registrasi_mahasiswa', $selected)
+                    ->whereNotIn('id_mahasiswa', $selected);
+            }
 
             if ($search) {
                 $query->where(function($q) use ($search) {
@@ -478,11 +474,9 @@ class PrestasiMahasiswaController extends Controller
 
             $results = [];
             foreach ($mahasiswa as $item) {
-                // Ambil nama prodi dari kolom langsung atau relasi prodi
                 $namaProdi = $item->nama_program_studi ?? optional($item->prodi)->nama_program_studi ?? '-';
 
                 $results[] = [
-                    // Menggunakan id_registrasi_mahasiswa atau id_mahasiswa yang pasti terisi
                     'id'   => $item->id_registrasi_mahasiswa ?? $item->id_mahasiswa,
                     'text' => $item->nim . " - " . $item->nama_mahasiswa . " (" . $namaProdi . ")"
                 ];
@@ -497,13 +491,19 @@ class PrestasiMahasiswaController extends Controller
     public function get_dosen(Request $request)
     {
         try {
-            $search = $request->get('q');
+            $search   = $request->get('q');
+            $selected = $request->get('selected', []); // Array ID yang sudah dipilih
 
             $tahun_ajaran = SemesterAktif::leftJoin('semesters','semesters.id_semester','semester_aktifs.id_semester')
                             ->first();
 
-            $query = PenugasanDosen::where('id_tahun_ajaran', $tahun_ajaran->id_tahun_ajaran)
-                                    ->orderby('nama_dosen', 'asc');
+            $query = PenugasanDosen::where('id_tahun_ajaran', optional($tahun_ajaran)->id_tahun_ajaran)
+                                    ->orderBy('nama_dosen', 'asc');
+
+            // Kecualikan dosen yang sudah dipilih
+            if (!empty($selected) && is_array($selected)) {
+                $query->whereNotIn('id_dosen', $selected);
+            }
 
             if ($search) {
                 $query->where(function($q) use ($search) {
