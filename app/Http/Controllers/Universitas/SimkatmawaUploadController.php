@@ -11,6 +11,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 use App\Services\Simkatmawa\SimkatmawaUpload;
 use App\Http\Controllers\Universitas\PdUnsriUploadController; // 1. Import PDUnsri Controller
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 
 class SimkatmawaUploadController extends Controller
 {
@@ -34,9 +35,9 @@ class SimkatmawaUploadController extends Controller
         $query = PrestasiMahasiswa::with(['riwayat_pendidikan', 'riwayat_pendidikan.prodi'])
             ->where('penyelenggara', '!=', 'Belmawa') // Khusus Mandiri
             ->where('approved', 3)
-            ->orWhere(function ($q) {
+            ->Where(function ($q) {
                 $q->where('simkatmawa', 0)
-                  ->where('pdunsri', 0);
+                  ->orWhere('pdunsri', 0);
             });                   // Sudah disetujui Ditmawa
 
         // Filter Prodi
@@ -69,222 +70,332 @@ class SimkatmawaUploadController extends Controller
     }
 
     public function prestasi_mandiri_upload(Request $request)
-    {
-        Log::info("==================================================");
-        Log::info("START STREAMING PUSH PRESTASI MANDIRI (TERPISAH SIMKATMAWA & PDUNSRI)");
-        Log::info("==================================================", [
-            'id_prodi_filter' => $request->input('id_prodi', 'all')
-        ]);
+{
+    Log::info("==================================================");
+    Log::info("START STREAMING PUSH PRESTASI MANDIRI (TERPISAH SIMKATMAWA & PDUNSRI)");
+    Log::info("==================================================", [
+        'id_prodi_filter' => $request->input('id_prodi', 'all')
+    ]);
 
-        $query = PrestasiMahasiswa::with(['riwayat_pendidikan'])
-            ->where('penyelenggara', '!=', 'Belmawa')
-            ->where('approved', 3)
-            ->orWhere(function ($q) {
-                $q->where('simkatmawa', 0)
-                  ->where('pdunsri', 0);
-            });
+    // Subquery mengambil 1 perwakilan id_prestasi per id_aktivitas untuk Simkatmawa
+    $subQuery = PrestasiMahasiswa::select(DB::raw('MIN(id_prestasi) as min_id_prestasi'))
+        ->where('penyelenggara', '!=', 'Belmawa')
+        ->where('approved', 3)
+        ->where(function ($q) {
+            $q->where('simkatmawa', 0)
+              ->orWhere('pdunsri', 0);
+        })
+        ->groupBy('id_aktivitas');
 
-        if ($request->filled('id_prodi') && $request->id_prodi != 'all') {
-            $query->whereHas('riwayat_pendidikan', function ($q) use ($request) {
-                $q->where('id_prodi', $request->id_prodi);
-            });
-        }
+    // Load relasi ke Aktivitas Mahasiswa, Anggota Aktivitas, dan Bimbingan Dosen
+    $query = PrestasiMahasiswa::with([
+            'riwayat_pendidikan',
+            'aktivitas_mahasiswa.anggota_aktivitas',
+            'aktivitas_mahasiswa.bimbing_mahasiswa'
+        ])
+        ->whereIn('id_prestasi', $subQuery);
 
-        $data = $query->get();
-        $totalData = $data->count();
+    if ($request->filled('id_prodi') && $request->id_prodi != 'all') {
+        $query->whereHas('riwayat_pendidikan', function ($q) use ($request) {
+            $q->where('id_prodi', $request->id_prodi);
+        });
+    }
 
-        if ($totalData == 0) {
-            Log::warning("PUSH PRESTASI MANDIRI: Tidak ada data yang perlu di-sync.");
-            return response()->json(['error' => 'Data tidak ditemukan / Semua data sudah ter-sync'], 404);
-        }
+    $data = $query->get();
+    $totalData = $data->count();
 
-        Log::info("PUSH PRESTASI MANDIRI: Ditemukan {$totalData} data yang akan diproses.");
+    if ($totalData == 0) {
+        Log::warning("PUSH PRESTASI MANDIRI: Tidak ada data yang perlu di-sync.");
+        return response()->json(['error' => 'Data tidak ditemukan / Semua data sudah ter-sync'], 404);
+    }
 
-        // Inisialisasi statistik terpisah untuk SIMKATMAWA dan PDUNSRI
-        $simkatmawaBerhasil = 0;
-        $simkatmawaGagal    = 0;
-        $pdunsriBerhasil    = 0;
-        $pdunsriGagal       = 0;
+    Log::info("PUSH PRESTASI MANDIRI: Ditemukan {$totalData} data unik aktivitas yang akan diproses.");
 
-        $pdUnsriController = new PdUnsriUploadController();
+    $simkatmawaBerhasil = 0;
+    $simkatmawaGagal    = 0;
+    $pdunsriBerhasil    = 0;
+    $pdunsriGagal       = 0;
 
-        $response = new StreamedResponse(function () use (
-            $data, 
-            $totalData, 
-            &$simkatmawaBerhasil, 
-            &$simkatmawaGagal, 
-            &$pdunsriBerhasil, 
-            &$pdunsriGagal, 
-            $pdUnsriController
-        ) {
+    $pdUnsriController = new PdUnsriUploadController();
 
-            foreach ($data as $index => $d) {
+    $response = new StreamedResponse(function () use (
+        $data, 
+        $totalData, 
+        &$simkatmawaBerhasil, 
+        &$simkatmawaGagal, 
+        &$pdunsriBerhasil, 
+        &$pdunsriGagal, 
+        $pdUnsriController
+    ) {
 
-                $nim = optional($d->riwayat_pendidikan)->nim ?? 'UNKNOWN';
-                $idPrestasi = $d->id_prestasi_mahasiswa;
+        foreach ($data as $index => $d) {
 
-                Log::info("--- Processing Item [" . ($index + 1) . "/{$totalData}] ID: {$idPrestasi} | NIM: {$nim} ---");
+            $nim = optional($d->riwayat_pendidikan)->nim ?? 'UNKNOWN';
+            $idPrestasi = $d->id_prestasi;
+            $aktivitas = $d->aktivitas_mahasiswa;
 
-                $fileSertifikat = $d->file_prestasi 
-                    ? asset('storage/' . $d->file_prestasi) 
-                    : 'http://www.test.com';
+            Log::info("--- Processing Item [" . ($index + 1) . "/{$totalData}] ID Aktivitas: {$d->id_aktivitas} | Ketua/Representatif NIM: {$nim} ---");
 
-                $fileSuratTugas = $d->file_sk_tugas 
-                    ? asset('storage/' . $d->file_sk_tugas) 
-                    : $fileSertifikat;
+            // 1. HELPER MAPPING ENUM SIMKATMAWA
+            $rawLevel = $d->nama_tingkat_prestasi;
+            $idTingkat = (string) ($d->id_tingkat_prestasi ?? '');
 
-                $arrayMahasiswa = [
-                    [
-                        'nim'  => $nim,
-                        'nama' => strtoupper($d->nama_mahasiswa ?? '')
-                    ]
-                ];
-
-                $arrayDosen = [];
-                if (!empty($d->nidn_pembimbing)) {
-                    $arrayDosen[] = [
-                        'nuptk'            => (string) $d->nidn_pembimbing,
-                        'nama'             => $d->nama_pembimbing ?? '',
-                        'url_surat_tugas'  => $fileSuratTugas
-                    ];
-                }
-
-                $recordSimkatmawa = [
-                    'level'                 => 'NAS',
-                    'kategori'              => 'OLAHRAGA',
-                    'lomba'                 => $d->nama_prestasi,
-                    'cabang'                => $d->kategori_kegiatan ?? 'Umum',
-                    'penyelenggara'         => $d->penyelenggara,
-                    'peringkat'             => $d->peringkat ?? 'JUARA1',
-                    'jumlah_unit_peserta'   => (string) ($d->jumlah_peserta ?? '3'),
-                    'kelompok_prestasi'     => $d->kelompok_prestasi ?? 'KELOMPOK',
-                    'bentuk'                => $d->bentuk_kegiatan ?? 'DARING',
-                    'url_peserta'           => $fileSuratTugas,
-                    'url_sertifikat'        => $fileSertifikat,
-                    'tgl_sertifikat'        => $d->tanggal_sk ?? date('Y-m-d', strtotime($d->created_at ?? 'now')),
-                    'url_foto_upp'          => $fileSertifikat,
-                    'url_dokumen_undangan'  => $fileSuratTugas,
-                    'keterangan'            => $d->keterangan ?? 'Prestasi Mahasiswa Mandiri',
-                    'mahasiswa'             => $arrayMahasiswa,
-                    'dosen'                 => $arrayDosen,
-                ];
-
-                $isSimkatmawaSuccess = false;
-                $isPdUnsriSuccess = false;
-                $errorMessages = [];
-
-                // =============================================================
-                // TAHAP 1: EXECUTE PUSH TO SIMKATMAWA
-                // =============================================================
-                if ($d->simkatmawa == 0) {
-                    Log::info("[NIM: {$nim}] [STEP 1/2] Memulai push ke SIMKATMAWA...");
-                    try {
-                        $reqSimkatmawa = new SimkatmawaUpload($recordSimkatmawa);
-                        $resultSimkatmawa = $reqSimkatmawa->uploadPrestasiMahasiswa();
-
-                        Log::info("[NIM: {$nim}] Response SIMKATMAWA:", [
-                            'payload' => $recordSimkatmawa,
-                            'result'  => $resultSimkatmawa
-                        ]);
-
-                        if (isset($resultSimkatmawa['error_code']) && $resultSimkatmawa['error_code'] == 0) {
-                            $isSimkatmawaSuccess = true;
-                            $d->simkatmawa = 1;
-                            $d->id_simkatmawa = $resultSimkatmawa['data']['id_simkatmawa'] ?? $d->id_prestasi_mahasiswa;
-                            $d->save();
-
-                            $simkatmawaBerhasil++;
-                            Log::info("[NIM: {$nim}] STEP 1 SUCCESS: SIMKATMAWA Berhasil | ID: {$d->id_simkatmawa}");
-                        } else {
-                            $simkatmawaGagal++;
-                            $errorDesc = $resultSimkatmawa['error_desc'] ?? ($resultSimkatmawa['message'] ?? 'Gagal sync');
-                            $errorMessages[] = "Simkatmawa: " . $errorDesc;
-                            Log::warning("[NIM: {$nim}] STEP 1 FAILED: SIMKATMAWA Gagal ({$errorDesc}). Push ke PDUNSRI dibatalkan.");
-                        }
-                    } catch (\Exception $e) {
-                        $simkatmawaGagal++;
-                        $errorMessages[] = "Simkatmawa: " . $e->getMessage();
-                        Log::error("[NIM: {$nim}] STEP 1 EXCEPTION: " . $e->getMessage());
-                    }
-                } else {
-                    $isSimkatmawaSuccess = true;
-                    Log::info("[NIM: {$nim}] [STEP 1/2] SIMKATMAWA Skipped (Sudah ter-sync sebelumnya).");
-                }
-
-                // =============================================================
-                // TAHAP 2: EXECUTE PUSH TO PDUNSRI (JIKA SIMKATMAWA BERHASIL)
-                // =============================================================
-                if ($isSimkatmawaSuccess) {
-                    if (($d->pdunsri ?? 0) == 0) {
-                        Log::info("[NIM: {$nim}] [STEP 2/2] Memulai push ke PDUNSRI...");
-                        try {
-                            $resultPdUnsri = $pdUnsriController->uploadSinglePrestasi($d);
-
-                            Log::info("[NIM: {$nim}] Response PDUNSRI:", [
-                                'result' => $resultPdUnsri
-                            ]);
-
-                            if (isset($resultPdUnsri['error_code']) && $resultPdUnsri['error_code'] == 0) {
-                                $isPdUnsriSuccess = true;
-                                
-                                // Cukup set flag pdunsri menjadi 1 tanpa update id_pdunsri
-                                $d->pdunsri = 1;
-
-                                $pdunsriBerhasil++;
-                                Log::info("[NIM: {$nim}] STEP 2 SUCCESS: PDUNSRI Berhasil diproses.");
-                            } else {
-                                $pdunsriGagal++;
-                                $errorDesc = $resultPdUnsri['error_desc'] ?? ($resultPdUnsri['message'] ?? 'Gagal sync');
-                                $errorMessages[] = "PDUNSRI: " . $errorDesc;
-                                Log::warning("[NIM: {$nim}] STEP 2 FAILED: PDUNSRI Gagal ({$errorDesc}).");
-                            }
-                        } catch (\Exception $e) {
-                            $pdunsriGagal++;
-                            $errorMessages[] = "PDUNSRI: " . $e->getMessage();
-                            Log::error("[NIM: {$nim}] STEP 2 EXCEPTION: " . $e->getMessage());
-                        }
-                    } else {
-                        $isPdUnsriSuccess = true;
-                        Log::info("[NIM: {$nim}] [STEP 2/2] PDUNSRI Skipped (Sudah ter-sync sebelumnya).");
-                    }
-                }
-
-                // =============================================================
-                // UPDATE STATUS TEKS SYNC PADA DATABASE RECORD
-                // =============================================================
-                if ($isSimkatmawaSuccess && $isPdUnsriSuccess) {
-                    $d->status_sync = 'Sudah sync (SIMKATMAWA & PDUNSRI)';
-                } else {
-                    $d->status_sync = !empty($errorMessages) ? implode(' | ', $errorMessages) : 'Gagal Sync';
-                }
-                $d->save();
-
-                $progress = round((($index + 1) / $totalData) * 100, 2);
-
-                // Kirim Payload JSON SSE dengan Data Terpisah
-                echo "data: " . json_encode([
-                    'progress'           => $progress,
-                    'simkatmawaBerhasil' => $simkatmawaBerhasil,
-                    'simkatmawaGagal'    => $simkatmawaGagal,
-                    'pdunsriBerhasil'    => $pdunsriBerhasil,
-                    'pdunsriGagal'       => $pdunsriGagal,
-                ]) . "\n\n";
-
-                ob_flush();
-                flush();
+            if ($idTingkat === '6' || str_contains(strtolower($rawLevel), 'internasional')) {
+                $level = 'INT';
+            } elseif ($idTingkat === '5' || str_contains(strtolower($rawLevel), 'nasional')) {
+                $level = 'NAS';
+            } elseif ($idTingkat === '4' || str_contains(strtolower($rawLevel), 'propinsi')) {
+                $level = 'PROV';
+            } elseif ($idTingkat === '3' || str_contains(strtolower($rawLevel), 'kab/kota')) {
+                $level = 'KAB';
+            } else {
+                $level = 'NAS';
             }
 
-            Log::info("==================================================");
-            Log::info("FINISH STREAMING PUSH PRESTASI MANDIRI");
-            Log::info("SIMKATMAWA -> Berhasil: {$simkatmawaBerhasil} | Gagal: {$simkatmawaGagal}");
-            Log::info("PDUNSRI    -> Berhasil: {$pdunsriBerhasil} | Gagal: {$pdunsriGagal}");
-            Log::info("==================================================");
-        });
+            // Mapping Kategori Simkatmawa
+            $rawKategori = $d->kategori_simkatmawa;
+            if (str_contains($rawKategori, '1')) {
+                $kategori = 'RISNOV';
+            } elseif (str_contains($rawKategori, 'SSH')) {
+                $kategori = 'RISNOVSSH';
+            } elseif (str_contains($rawKategori, '2')) {
+                $kategori = 'SENBUD';
+            } elseif (str_contains($rawKategori, '3')) {
+                $kategori = 'OLAHRAGA';
+            } else {
+                $kategori = 'MINAT';
+            }
 
-        $response->headers->set('Content-Type', 'text/event-stream');
-        $response->headers->set('Cache-Control', 'no-cache');
-        $response->headers->set('Connection', 'keep-alive');
+            // Mapping Peringkat/Juara
+            $rawPeringkat = $d->peringkat;
+            if (str_contains($rawPeringkat, '1')) {
+                $peringkat = 'JUARA1';
+            } elseif (str_contains($rawPeringkat, '2')) {
+                $peringkat = 'JUARA2';
+            } elseif (str_contains($rawPeringkat, '3')) {
+                $peringkat = 'JUARA3';
+            } elseif (str_contains($rawPeringkat, '4')) {
+                $peringkat = 'HARAPAN1';
+            } elseif (str_contains($rawPeringkat, '5')) {
+                $peringkat = 'HARAPAN2';
+            } elseif (str_contains($rawPeringkat, '6')) {
+                $peringkat = 'HARAPAN3';
+            } elseif (str_contains($rawPeringkat, '9')) {
+                $peringkat = 'APRESIASI';
+            } else {
+                $peringkat = 'PESERTA';
+            }
 
-        return $response;
-    }
+            // Mapping Kelompok Prestasi (INDIVIDU / KELOMPOK)
+            $rawKelompok = strtoupper(optional($aktivitas)->nama_jenis_anggota ?? optional($aktivitas)->jenis_anggota ?? '');
+            $kelompokPrestasi = (str_contains($rawKelompok, 'PERSONAL') || $rawKelompok === '0') 
+                ? 'INDIVIDU' 
+                : 'KELOMPOK';
+
+            // 2. PEMBENTUKAN URL FILE & ASSETS VALID TANPA LTRIM (AMAIN TERHINDAR DARI DOUBLE SLASH MAUPUN KEHILANGAN SLASH)
+            $baseUrlStorage = 'https://akademik.unsri.ac.id/storage/';
+
+            $urlSertifikat = $d->file_prestasi 
+                ? $baseUrlStorage . $d->file_prestasi 
+                : $baseUrlStorage . 'default-sertifikat.pdf';
+
+            $urlFotoUpp = $d->file_foto_upp 
+                ? $baseUrlStorage . $d->file_foto_upp 
+                : $urlSertifikat;
+
+            $urlUndangan = $d->file_undangan 
+                ? $baseUrlStorage . $d->file_undangan 
+                : $urlSertifikat;
+
+            $urlKompetisi = $d->url_kompetisi ?? 'https://unsri.ac.id';
+
+            // Clean up jika terjadi double slash pada URL file
+            $urlSertifikat = str_replace('https://akademik.unsri.ac.id/storage//', 'https://akademik.unsri.ac.id/storage/', $urlSertifikat);
+            $urlFotoUpp    = str_replace('https://akademik.unsri.ac.id/storage//', 'https://akademik.unsri.ac.id/storage/', $urlFotoUpp);
+            $urlUndangan   = str_replace('https://akademik.unsri.ac.id/storage//', 'https://akademik.unsri.ac.id/storage/', $urlUndangan);
+
+            // 3. SUSUN ARRAY MAHASISWA (Seluruh Anggota Aktivitas)
+            $arrayMahasiswa = [];
+            $anggotaAktivitas = optional($aktivitas)->anggota_aktivitas;
+
+            if ($anggotaAktivitas && $anggotaAktivitas->count() > 0) {
+                foreach ($anggotaAktivitas as $mhs) {
+                    $arrayMahasiswa[] = [
+                        'nim'  => $mhs->nim,
+                        'nama' => strtoupper($mhs->nama_mahasiswa ?? '')
+                    ];
+                }
+            } else {
+                $arrayMahasiswa[] = [
+                    'nim'  => $nim,
+                    'nama' => strtoupper($d->nama_mahasiswa ?? '')
+                ];
+            }
+
+            // 4. SUSUN ARRAY DOSEN PEMBIMBING
+            $arrayDosen = [];
+            $bimbinganDosen = optional($aktivitas)->bimbing_mahasiswa;
+
+            if ($bimbinganDosen && $bimbinganDosen->count() > 0) {
+                foreach ($bimbinganDosen as $dos) {
+                    if ($dos->file_surat_tugas) {
+                        $urlSuratTugas = $baseUrlStorage . $dos->file_surat_tugas;
+                    } elseif (optional($aktivitas)->sk_tugas) {
+                        $urlSuratTugas = $baseUrlStorage . $aktivitas->sk_tugas;
+                    } else {
+                        $urlSuratTugas = $urlSertifikat;
+                    }
+
+                    $urlSuratTugas = str_replace('https://akademik.unsri.ac.id/storage//', 'https://akademik.unsri.ac.id/storage/', $urlSuratTugas);
+
+                    $arrayDosen[] = [
+                        'nuptk'            => (string) ($dos->nidn ?? $dos->nuptk ?? $dos->id_dosen),
+                        'nama'             => $dos->nama_dosen ?? '',
+                        'url_surat_tugas'  => $urlSuratTugas
+                    ];
+                }
+            }
+
+            // 5. PAYLOAD SIMKATMAWA (1 Laporan Tunggal Per Aktivitas)
+            $recordSimkatmawa = [
+                'level'                 => $level,
+                'kategori'              => $kategori,
+                'lomba'                 => $d->nama_prestasi,
+                'cabang'                => $d->nama_prestasi,
+                'penyelenggara'         => $d->penyelenggara,
+                'peringkat'             => $peringkat,
+                'jumlah_unit_peserta'   => $d->jumlah_pt_peserta,
+                'kelompok_prestasi'     => $kelompokPrestasi,
+                'bentuk'                => $d->bentuk,
+                'url_peserta'           => $urlKompetisi,
+                'url_sertifikat'        => $urlSertifikat,
+                'tgl_sertifikat'        => date('Y-m-d', strtotime($aktivitas->tanggal_sk_tugas)),
+                'url_foto_upp'          => $urlFotoUpp,
+                'url_dokumen_undangan'  => $urlUndangan,
+                'keterangan'            => optional($aktivitas)->keterangan ?? 'Prestasi Mahasiswa',
+                'mahasiswa'             => $arrayMahasiswa,
+                'dosen'                 => $arrayDosen,
+            ];
+
+            $isSimkatmawaSuccess = false;
+            $isPdUnsriSuccess = false;
+            $errorMessages = [];
+
+            // =============================================================
+            // TAHAP 1: EXECUTE PUSH TO SIMKATMAWA (1 X PER AKTIVITAS)
+            // =============================================================
+            if ($d->simkatmawa == 0) {
+                Log::info("[Aktivitas: {$d->id_aktivitas}] [STEP 1/2] Memulai push ke SIMKATMAWA...");
+                try {
+                    $reqSimkatmawa = new SimkatmawaUpload($recordSimkatmawa);
+                    $resultSimkatmawa = $reqSimkatmawa->uploadPrestasiMahasiswa();
+
+                    Log::info("[Aktivitas: {$d->id_aktivitas}] Response SIMKATMAWA:", [
+                        'payload' => $recordSimkatmawa,
+                        'result'  => $resultSimkatmawa
+                    ]);
+
+                    if (isset($resultSimkatmawa['error_code']) && $resultSimkatmawa['error_code'] == 0) {
+                        $isSimkatmawaSuccess = true;
+                        
+                        // Set simkatmawa = 1 untuk seluruh baris prestasi di aktivitas ini
+                        PrestasiMahasiswa::where('id_aktivitas', $d->id_aktivitas)->update([
+                            'simkatmawa'    => 1,
+                            'id_simkatmawa' => $resultSimkatmawa['data']['id_simkatmawa'] ?? $d->id_prestasi
+                        ]);
+
+                        $simkatmawaBerhasil++;
+                        Log::info("[Aktivitas: {$d->id_aktivitas}] STEP 1 SUCCESS: SIMKATMAWA Berhasil.");
+                    } else {
+                        $simkatmawaGagal++;
+                        $errorDesc = $resultSimkatmawa['error_desc'] ?? ($resultSimkatmawa['message'] ?? 'Gagal sync');
+                        $errorMessages[] = "Simkatmawa: " . $errorDesc;
+                        Log::warning("[Aktivitas: {$d->id_aktivitas}] STEP 1 FAILED: SIMKATMAWA Gagal ({$errorDesc}).");
+                    }
+                } catch (\Exception $e) {
+                    $simkatmawaGagal++;
+                    $errorMessages[] = "Simkatmawa: " . $e->getMessage();
+                    Log::error("[Aktivitas: {$d->id_aktivitas}] STEP 1 EXCEPTION: " . $e->getMessage());
+                }
+            } else {
+                $isSimkatmawaSuccess = true;
+                Log::info("[Aktivitas: {$d->id_aktivitas}] [STEP 1/2] SIMKATMAWA Skipped.");
+            }
+
+            // =============================================================
+            // TAHAP 2: EXECUTE PUSH TO PDUNSRI (DILAPORKAN PER MAHASISWA)
+            // =============================================================
+            if ($isSimkatmawaSuccess) {
+                // Ambil semua record PrestasiMahasiswa milik aktivitas ini
+                $semuaPrestasiAktivitas = PrestasiMahasiswa::where('id_aktivitas', $d->id_aktivitas)->get();
+                $allPdUnsriOk = true;
+
+                foreach ($semuaPrestasiAktivitas as $itemPrestasi) {
+                    if (($itemPrestasi->pdunsri ?? 0) == 0) {
+                        Log::info("[ID Prestasi: {$itemPrestasi->id_prestasi}] [STEP 2/2] Memulai push ke PDUNSRI per mahasiswa...");
+                        try {
+                            $resultPdUnsri = $pdUnsriController->uploadSinglePrestasi($itemPrestasi);
+
+                            if (isset($resultPdUnsri['error_code']) && $resultPdUnsri['error_code'] == 0) {
+                                $itemPrestasi->pdunsri = 1;
+                                $itemPrestasi->save();
+
+                                $pdunsriBerhasil++;
+                                Log::info("[ID Prestasi: {$itemPrestasi->id_prestasi}] STEP 2 SUCCESS: PDUNSRI Berhasil.");
+                            } else {
+                                $allPdUnsriOk = false;
+                                $pdunsriGagal++;
+                                $errorDesc = $resultPdUnsri['error_desc'] ?? ($resultPdUnsri['message'] ?? 'Gagal sync');
+                                $errorMessages[] = "PDUNSRI (Mhs {$itemPrestasi->nama_mahasiswa}): " . $errorDesc;
+                                Log::warning("[ID Prestasi: {$itemPrestasi->id_prestasi}] STEP 2 FAILED: PDUNSRI Gagal ({$errorDesc}).");
+                            }
+                        } catch (\Exception $e) {
+                            $allPdUnsriOk = false;
+                            $pdunsriGagal++;
+                            $errorMessages[] = "PDUNSRI (Mhs {$itemPrestasi->nama_mahasiswa}): " . $e->getMessage();
+                            Log::error("[ID Prestasi: {$itemPrestasi->id_prestasi}] STEP 2 EXCEPTION: " . $e->getMessage());
+                        }
+                    }
+                }
+                $isPdUnsriSuccess = $allPdUnsriOk;
+            }
+
+            // =============================================================
+            // UPDATE STATUS TEKS SYNC UNTUK SEMUA REKOR DALAM AKTIVITAS
+            // =============================================================
+            $statusText = ($isSimkatmawaSuccess && $isPdUnsriSuccess)
+                ? 'Sudah sync (SIMKATMAWA & PDUNSRI)'
+                : (!empty($errorMessages) ? implode(' | ', $errorMessages) : 'Gagal Sync');
+
+            PrestasiMahasiswa::where('id_aktivitas', $d->id_aktivitas)->update([
+                'status_sync' => $statusText
+            ]);
+
+            $progress = round((($index + 1) / $totalData) * 100, 2);
+
+            echo "data: " . json_encode([
+                'progress'           => $progress,
+                'simkatmawaBerhasil' => $simkatmawaBerhasil,
+                'simkatmawaGagal'    => $simkatmawaGagal,
+                'pdunsriBerhasil'    => $pdunsriBerhasil,
+                'pdunsriGagal'       => $pdunsriGagal,
+            ]) . "\n\n";
+
+            ob_flush();
+            flush();
+        }
+
+        Log::info("==================================================");
+        Log::info("FINISH STREAMING PUSH PRESTASI MANDIRI");
+        Log::info("SIMKATMAWA -> Berhasil: {$simkatmawaBerhasil} | Gagal: {$simkatmawaGagal}");
+        Log::info("PDUNSRI    -> Berhasil: {$pdunsriBerhasil} | Gagal: {$pdunsriGagal}");
+        Log::info("==================================================");
+    });
+
+    $response->headers->set('Content-Type', 'text/event-stream');
+    $response->headers->set('Cache-Control', 'no-cache');
+    $response->headers->set('Connection', 'keep-alive');
+
+    return $response;
+}
 }

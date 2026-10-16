@@ -2,148 +2,64 @@
 @section('title')
 Login Page
 @endsection
+
 @section('content')
 <div class="container h-p100">
-    <div class="row align-items-center justify-content-md-center h-p100">
-        <div class="col-12">
-            <div class="row justify-content-center g-0">
-                <div class="col-lg-5 col-md-12 col-sm-12">
-                    <div class="text-center">
-                        <img src="{{asset('images/logo-unsri.png')}}" alt="UNSRI" class="img-responsive w-350">
-                    </div>
-                    <div class="bg-white rounded10 shadow-lg">
-                        <div class="content-top-agile p-20 pb-0">
-                            <h2 class="text-primary">SISTEM INFORMASI AKADEMIK</h2>
-                            <h2 class="text-primary">UNIVERSITAS SRIWIJAYA</h2>
-                        </div>
-                        <div class="p-40">
-                            {{-- if has any error --}}
-                            @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <ul>
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            @endif
-                            {{-- if session has error --}}
-                            @if (session('error'))
-                            <div class="alert alert-danger">
-                                {{ session('error') }}
-                            </div>
-                            @endif
+    <div class="row align-items-center justify-content-center h-p100">
+        <div class="col-lg-4 col-md-6 col-sm-10 col-12">
+            
+            {{-- Logo di Luar --}}
+            <div class="text-center mb-20">
+                <img src="{{asset('images/logo-unsri-2.png')}}" alt="UNSRI" style="max-width: 140px; height: auto;">
+            </div>
 
-                            <form action="{{ route('login') }}" method="post">
-                                @csrf
-                                <div class="form-group">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text bg-transparent"><i class="ti-user"></i></span>
-                                        <input type="text" class="form-control ps-15 bg-transparent" placeholder="Username/NIM mahasiswa" name="username" value="{{old('username')}}">
-                                    </div>
-                                    @error('username')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group mb-3">
-                                        <span class="input-group-text  bg-transparent"><i class="ti-lock"></i></span>
-                                        <input type="password" class="form-control ps-15 bg-transparent" placeholder="Password" name="password">
-                                    </div>
-                                    @error('password')
-                                    <span class="invalid-feedback text-danger" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
-                                  <div class="row">
-
-                                    <div class="col-12 text-center">
-                                      <button type="submit" class="btn btn-danger mt-10 w-200">LOGIN</button>
-                                    </div>
-                                    <!-- /.col -->
-                                  </div>
-                            </form>
-                        </div>
-                    </div>
+            {{-- Card Login --}}
+            <div class="bg-white rounded10 shadow-lg p-30">
+                <div class="text-center mb-20">
+                    {{-- Teks Dipisah Menjadi 2 Baris --}}
+                    <h5 class="text-primary fw-600 mb-3 fs-13 lh-base">
+                        SISTEM INFORMASI MANAJEMEN<br>
+                        AKADEMIK DAN KEMAHASISWAAN
+                    </h5>
+                    <h3 class="text-dark fw-700 fs-16 mb-5">UNIVERSITAS SRIWIJAYA</h3>
                 </div>
+
+                @if ($errors->any())
+                <div class="alert alert-danger py-10 px-15 mb-20 fs-13">
+                    <ul class="mb-0 ps-15">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+                @endif
+
+                @if (session('error'))
+                <div class="alert alert-danger py-10 px-15 mb-20 fs-13">
+                    {{ session('error') }}
+                </div>
+                @endif
+
+                <form action="{{ route('login') }}" method="post">
+                    @csrf
+                    <div class="form-group mb-20">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="ti-user text-muted"></i></span>
+                            <input type="text" class="form-control ps-10 bg-light" placeholder="Username / NIM Mahasiswa" name="username" value="{{old('username')}}" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-25">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light"><i class="ti-lock text-muted"></i></span>
+                            <input type="password" class="form-control ps-10 bg-light" placeholder="Password" name="password" required>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-danger w-p100 py-10 fw-600">LOGIN</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 @endsection
-{{-- @extends('layouts.app')
-
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
-
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
-
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
-
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
-
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
-
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endsection --}}

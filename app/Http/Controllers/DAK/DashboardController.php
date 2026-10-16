@@ -5,6 +5,7 @@ namespace App\Http\Controllers\DAK;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Bus;
+use App\Models\Mahasiswa\RiwayatPendidikan;
 
 class DashboardController extends Controller
 {
@@ -24,5 +25,15 @@ class DashboardController extends Controller
             'job_pending' => $batching->pendingJobs,
             'progress' => $batching->progress(),
         ];
+    }
+
+    public function search(Request $request)
+    {
+        $data = RiwayatPendidikan::select('id_registrasi_mahasiswa', 'nim', 'nama_mahasiswa', 'nama_program_studi')
+                ->where('nim', 'like', '%'.$request->q.'%')
+                ->orWhere('nama_mahasiswa', 'like', '%'.$request->q.'%')
+                ->get();
+
+        return response()->json($data);
     }
 }

@@ -39,6 +39,15 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-body">
                     
+                    {{-- Header Action: Tombol Tambah Data --}}
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="box-title mb-0 fw-bold text-dark">Daftar Prestasi Mandiri</h4>
+                        <a href="{{ route('ditmawa.data-prestasi.mandiri.create') }}" class="btn btn-success">
+                            <i class="fa fa-plus me-1"></i> Tambah Data Prestasi
+                        </a>
+                    </div>
+                    <hr class="my-15">
+
                     {{-- Form Filter Tiga Tingkat dengan Tombol Tampilkan --}}
                     <form action="{{ route('ditmawa.data-prestasi.mandiri.index') }}" method="get" id="filterForm">
                         <div class="row align-items-end mb-3">
@@ -47,7 +56,7 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
                                 <select class="form-select" name="fakultas_view" id="fakultas_view" onchange="filterProdiByFakultas()">
                                     <option value="all" {{ ($fakultas_view == 'all' || !$fakultas_view) ? 'selected' : '' }}>--- Semua Fakultas ---</option>
                                     @foreach ($fakultas as $f)
-                                        <option value="{{ $f->id }}" {{ ($fakultas_view ==$f->id) ? 'selected' : '' }}>
+                                        <option value="{{ $f->id }}" {{ ($fakultas_view == $f->id) ? 'selected' : '' }}>
                                             {{ $f->nama_fakultas }}
                                         </option>
                                     @endforeach
@@ -59,8 +68,8 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
                                 <select class="form-select" name="prodi_view" id="prodi_view">
                                     <option value="all" {{ ($prodi_view == 'all' || !$prodi_view) ? 'selected' : '' }}>--- Semua Program Studi ---</option>
                                     @foreach ($prodi as $pr)
-                                        <option value="{{ $pr->id_prodi }}" data-fakultas="{{ $pr->fakultas_id }}" {{ ($prodi_view ==$pr->id_prodi) ? 'selected' : '' }}>
-                                            {{ $pr->nama_jenjang_pendidikan }} - {{$pr->nama_program_studi }}
+                                        <option value="{{ $pr->id_prodi }}" data-fakultas="{{ $pr->fakultas_id }}" {{ ($prodi_view == $pr->id_prodi) ? 'selected' : '' }}>
+                                            {{ $pr->nama_jenjang_pendidikan }} - {{ $pr->nama_program_studi }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -72,7 +81,7 @@ Data Prestasi Mandiri Mahasiswa (Ditmawa)
                                     <option value="all" {{ ($tahun_view == 'all') ? 'selected' : '' }}>--- Semua Tahun ---</option>
                                     @foreach ($pilihan_tahun as $t)
                                         <option value="{{ $t }}" 
-                                            {{ ($tahun_view ? ($tahun_view ==$t) : ($tahun_aktif ==$t)) ? 'selected' : '' }}>
+                                            {{ ($tahun_view ? ($tahun_view == $t) : ($tahun_aktif == $t)) ? 'selected' : '' }}>
                                             {{ $t }}
                                         </option>
                                     @endforeach

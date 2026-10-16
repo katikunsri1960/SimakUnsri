@@ -609,6 +609,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
         Route::prefix('ditmawa')->group(function(){
             Route::get('/dashboard', [App\Http\Controllers\DITMAWA\DashboardController::class, 'index'])->name('ditmawa');
             Route::get('/check-sync', [App\Http\Controllers\DITMAWA\DashboardController::class, 'check_sync'])->name('ditmawa.check-sync');
+            // Route::get('/get-mahasiswa', [App\Http\Controllers\DITMAWA\DashboardController::class, 'get-mahasiswa'])->name('ditmawa.get-mahasiswa');
             
             Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'getProdi'])->name('ditmawa.mahasiswa.get-fak-prodi-ang');
 
@@ -648,6 +649,10 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'mandiri_index'])->name('ditmawa.data-prestasi.mandiri.index');
                     Route::post('/{id}/approve', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'mandiri_approve'])->name('ditmawa.data-prestasi.mandiri.approve');
                     Route::post('/{id}/decline', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('ditmawa.data-prestasi.mandiri.decline');
+                    Route::get('/create', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'create_mandiri'])->name('ditmawa.data-prestasi.mandiri.create');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'store_mandiri'])->name('ditmawa.data-prestasi.mandiri.store');
+                    Route::get('/get-mahasiswa', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'get_mahasiswa'])->name('ditmawa.data-prestasi.mandiri.get-mahasiswa');
+                    Route::get('/get-dosen', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'get_dosen'])->name('ditmawa.data-prestasi.mandiri.get-dosen');
                 });
             });
 

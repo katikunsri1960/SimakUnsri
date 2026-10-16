@@ -11,7 +11,7 @@ Perubahan Password Akun
                 <div class="box-header with-border">
                     <div class="row">
                         <div class="col-xl-12 col-lg-12 pb-10 text-center">
-                            <img src="{{asset('images/logo-unsri.png')}}" alt="UNSRI" class="img-responsive w-150">
+                            <img src="{{asset('images/logo-unsri-2.png')}}" alt="UNSRI" class="img-responsive w-150">
                         </div>
                     </div>
                     <div class="row">

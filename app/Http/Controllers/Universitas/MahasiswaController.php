@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Services\Feeder\FeederAPI;
 use Illuminate\Support\Facades\Bus;
+use Illuminate\Support\Facades\Log;
 
 class MahasiswaController extends Controller
 {
@@ -196,55 +197,139 @@ class MahasiswaController extends Controller
         return response()->json($response);
     }
 
+    // public function sync_prestasi_mahasiswa()
+    // {
+    //     ini_set('max_execution_time', 0);
+    //     ini_set('memory_limit', '1G');
+
+    //     $data = [
+    //         ['act' => 'GetListPrestasiMahasiswa', 'count' => 'GetCountPrestasiMahasiswa', 'order' => 'id_prestasi', 'model' => \App\Models\Mahasiswa\PrestasiMahasiswa::class],
+    //         ['act' => 'GetNilaiTransferPendidikanMahasiswa', 'count' => 'GetCountNilaiTransferPendidikanMahasiswa', 'order' => 'id_transfer', 'model' => \App\Models\Perkuliahan\NilaiTransferPendidikan::class],
+    //     ];
+
+
+    //     foreach ($data as $d) {
+
+    //         $count = $this->count_value($d['count']);
+
+    //         $limit = 500;
+    //         $act = $d['act'];
+    //         $order = $d['order'];
+    //         $filter = $d['filter'] ?? null;
+
+    //         for ($i=0; $i < $count; $i+=$limit) {
+
+    //             $api = new FeederAPI($act, $i, $limit, $order, $filter);
+    //             $data = $api->runWS();
+
+    //             try {
+
+    //                 $d['model']::upsert($data['data'], $order);
+
+    //             } catch (\Throwable $th) {
+    //                 // return redirect()->back()->with('error', $th->getMessage());
+    //                 foreach ($data['data'] as $a) {
+    //                     try {
+    //                         $d['model']::updateOrCreate([$order => $a[$order]], $a);
+    //                     } catch (\Throwable $th) {
+    //                         SyncError::create([
+    //                             'model' => $act,
+    //                             'message' => $th->getMessage()
+    //                         ]);
+    //                         continue;
+    //                     }
+    //                 }
+
+    //                 continue;
+
+    //             }
+
+    //         }
+
+    //     }
+
+    //     return redirect()->back()->with('success', 'Data prestasi mahasiswa berhasil disinkronisasi');
+    // }
+
+
     public function sync_prestasi_mahasiswa()
     {
         ini_set('max_execution_time', 0);
         ini_set('memory_limit', '1G');
 
         $data = [
-            ['act' => 'GetListPrestasiMahasiswa', 'count' => 'GetCountPrestasiMahasiswa', 'order' => 'id_prestasi', 'model' => \App\Models\Mahasiswa\PrestasiMahasiswa::class],
-            ['act' => 'GetNilaiTransferPendidikanMahasiswa', 'count' => 'GetCountNilaiTransferPendidikanMahasiswa', 'order' => 'id_transfer', 'model' => \App\Models\Perkuliahan\NilaiTransferPendidikan::class],
+            [
+                'act' => 'GetListPrestasiMahasiswa', 
+                'count' => 'GetCountPrestasiMahasiswa', 
+                'order' => 'id_prestasi', 
+                'model' => \App\Models\Mahasiswa\PrestasiMahasiswa::class
+            ],
+            [
+                'act' => 'GetNilaiTransferPendidikanMahasiswa', 
+                'count' => 'GetCountNilaiTransferPendidikanMahasiswa', 
+                'order' => 'id_transfer', 
+                'model' => \App\Models\Perkuliahan\NilaiTransferPendidikan::class
+            ],
         ];
 
-
         foreach ($data as $d) {
+            try {
+                $count = $this->count_value($d['count']);
+            } catch (\Throwable $e) {
+                continue;
+            }
 
-            $count = $this->count_value($d['count']);
+            if ($count <= 0) {
+                continue;
+            }
 
             $limit = 500;
             $act = $d['act'];
             $order = $d['order'];
             $filter = $d['filter'] ?? null;
 
-            for ($i=0; $i < $count; $i+=$limit) {
+            for ($i = 0; $i < $count; $i += $limit) {
+                try {
+                    $api = new FeederAPI($act, $i, $limit, $order, $filter);
+                    $response = $api->runWS();
+                } catch (\Throwable $e) {
+                    continue;
+                }
 
-                $api = new FeederAPI($act, $i, $limit, $order, $filter);
-                $data = $api->runWS();
+                if (empty($response['data'])) {
+                    continue;
+                }
+
+                // Injeksi nilai feeder = 1 dan default file_prestasi jika tidak ada
+                $payloadData = array_map(function ($item) use ($act) {
+                    if ($act === 'GetListPrestasiMahasiswa') {
+                        $item['feeder'] = 1;
+                        if (!isset($item['file_prestasi'])) {
+                            $item['file_prestasi'] = '';
+                        }
+                    }
+                    return $item;
+                }, $response['data']);
 
                 try {
-
-                    $d['model']::upsert($data['data'], $order);
-
+                    // Upsert data beserta kolom feeder
+                    $d['model']::upsert($payloadData, [$order]);
                 } catch (\Throwable $th) {
-                    // return redirect()->back()->with('error', $th->getMessage());
-                    foreach ($data['data'] as $a) {
+                    // Fallback jika upsert gagal
+                    foreach ($payloadData as $a) {
                         try {
                             $d['model']::updateOrCreate([$order => $a[$order]], $a);
-                        } catch (\Throwable $th) {
+                        } catch (\Throwable $thInner) {
                             SyncError::create([
                                 'model' => $act,
-                                'message' => $th->getMessage()
+                                'message' => $thInner->getMessage()
                             ]);
                             continue;
                         }
                     }
-
                     continue;
-
                 }
-
             }
-
         }
 
         return redirect()->back()->with('success', 'Data prestasi mahasiswa berhasil disinkronisasi');
