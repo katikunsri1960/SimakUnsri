@@ -381,7 +381,7 @@ class PrestasiMahasiswaController extends Controller
     }
 
     // Proteksi approval
-    if ($prestasi->approved > 0 && !empty($prestasi->skpi) && $prestasi->skpi->approved > 0) {
+    if ($prestasi->approved > 0 && $prestasi->approved < 97 && !empty($prestasi->skpi) && $prestasi->skpi->approved > 0) {
         return redirect()->route('mahasiswa.prestasi-skpi.index')
             ->with('error', 'Data yang sudah diverifikasi tidak dapat diedit.');
     }
@@ -412,7 +412,7 @@ public function update(Request $request, $id)
         return redirect()->back()->with('error', 'Data prestasi tidak ditemukan.');
     }
 
-    if ($prestasi->approved > 0 && !empty($prestasi->skpi) && $prestasi->skpi->approved > 0) {
+    if ($prestasi->approved > 0 && $prestasi->approved < 97 && !empty($prestasi->skpi) && $prestasi->skpi->approved > 0) {
         return redirect()->back()->with('error', 'Data yang sudah diverifikasi tidak dapat diedit.');
     }
 
@@ -498,6 +498,7 @@ public function update(Request $request, $id)
 
         // 4. UPDATE SEMUA MAHASISWA DALAM AKTIVITAS INI (JIKA KELOMPOK)
         PrestasiMahasiswa::where('id_aktivitas', $prestasi->id_aktivitas)->update([
+            'approved'              => 0,
             'kategori_prestasi'     => $request->kategori_pendanaan,
             'id_jenis_prestasi'     => $jenis_prestasi ? $jenis_prestasi->id_jenis_prestasi : 9,
             'nama_jenis_prestasi'   => $jenis_prestasi ? $jenis_prestasi->nama_jenis_prestasi : 'Lain-lain',
