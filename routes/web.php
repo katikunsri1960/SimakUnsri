@@ -2315,6 +2315,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 Route::put('/{id}', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'update'])->name('mahasiswa.prestasi-skpi.update');
                 Route::post('/upload/{id}', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'upload_file'])->name('mahasiswa.prestasi-skpi.upload');
                 Route::delete('/{id}/delete', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'delete_prestasi_mahasiswa'])->name('mahasiswa.prestasi-skpi.delete');
+                Route::get('/get-dosen', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'get_dosen'])->name('mahasiswa.prestasi-skpi.get-dosen');
+                Route::get('/get-mahasiswa', [App\Http\Controllers\Mahasiswa\PrestasiSKPI\PrestasiMahasiswaController::class, 'get_mahasiswa'])->name('mahasiswa.prestasi-skpi.get-mahasiswa');
             });
 
             Route::prefix('bimbingan-tugas-akhir')->group(function(){
