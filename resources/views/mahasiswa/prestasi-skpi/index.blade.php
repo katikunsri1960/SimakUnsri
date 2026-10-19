@@ -18,7 +18,7 @@
                         </div>
                     </div>
                 </div>
-            </div>							
+            </div>                          
         </div>
     </div>
 
@@ -59,38 +59,55 @@
                             <tbody>
                                 @foreach($data as $d)
                                     <tr>
-                                        @include('mahasiswa.prestasi.upload-file')
                                         <td>{{$loop->iteration}}</td>
-                                        <td class="text-start align-middle" style="white-space:nowrap;">{{$d->prestasi->nama_prestasi}}</td>
-                                        <td class="text-center align-middle">{{$d->prestasi->kategori_prestasi == 1 ? 'Pendanaan' : 'Non Pendanaan'}}</td>
-                                        <td class="text-center align-middle">{{$d->prestasi->tahun_prestasi}}</td>
-                                        <td class="align-middle">{{$d->prestasi->nama_jenis_prestasi}}</td>
-                                        <td class="align-middle">{{$d->prestasi->nama_tingkat_prestasi}}</td>
-                                        <td class="text-start align-middle" style="white-space:nowrap;">{{$d->prestasi->penyelenggara}}</td>
+                                        <td class="text-start align-middle" style="white-space:nowrap;">{{ $d->nama_prestasi }}</td>
+                                        <td class="text-center align-middle">{{ $d->kategori_prestasi == 1 ? 'Pendanaan' : 'Non Pendanaan' }}</td>
+                                        <td class="text-center align-middle">{{ $d->tahun_prestasi }}</td>
+                                        <td class="align-middle">{{ $d->nama_jenis_prestasi ?? '-' }}</td>
+                                        <td class="align-middle">{{ $d->nama_tingkat_prestasi ?? '-' }}</td>
+                                        <td class="text-start align-middle" style="white-space:nowrap;">{{ $d->penyelenggara }}</td>
+                                        
+                                        {{-- BUKTI PRESTASI (URL EKSPLISIT) --}}
                                         <td class="text-center align-middle">
-                                            @if($d->prestasi->file_prestasi)
-                                                <a href="{{ asset('storage/'.$d->prestasi->file_prestasi) }}" target="_blank" class="btn btn-sm btn-success">
-                                                    <i class="fa fa-file-pdf-o"></i> Lihat File
+                                            @if($d->file_prestasi)
+                                                <a href="{{ $d->file_prestasi }}" target="_blank" class="btn btn-sm btn-success">
+                                                    <i class="fa fa-external-link"></i> Lihat File
                                                 </a>
                                             @else
-                                                <button type="button" class="btn btn-sm btn-warning" data-bs-toggle="modal" data-bs-target="#uploadModal{{$d->prestasi->id}}">
-                                                    <i class="fa fa-upload"></i> Upload Piagam
-                                                </button>
+                                                <span class="badge badge-secondary">Tidak ada bukti</span>
                                             @endif
                                         </td>
+
+                                        {{-- STATUS APPROVAL & PENGECEKAN DATA SKPI --}}
                                         <td class="text-center align-middle">
-                                            @if($d->prestasi->approved == 0)
+                                            @if(is_null($d->skpi))
+                                                <span class="badge badge-danger">Data SKPI Belum Lengkap, Silakan Edit Pelaporan Prestasi Anda!</span>
+                                            @elseif($d->approved == 0)
                                                 <span class="badge badge-warning">Menunggu Persetujuan Koor. Prodi</span>
-                                            @elseif($d->prestasi->approved == 1)
+                                            @elseif($d->approved == 1)
                                                 <span class="badge badge-primary">Disetujui Koor. Prodi</span>
-                                            @elseif($d->prestasi->approved == 2)
+                                            @elseif($d->approved == 2)
                                                 <span class="badge badge-info">Disetujui Fakultas</span>
-                                            @elseif($d->prestasi->approved == 3)
+                                            @elseif($d->approved == 3)
                                                 <span class="badge badge-success">Disetujui Dir. Kemahasiswaan</span>
                                             @endif
                                         </td>
+
+                                        {{-- AKSI EDIT / DELETE --}}
                                         <td class="text-center align-middle">
-                                            @if($d->approved > 0 || ($d->prestasi && $d->prestasi->approved > 0))
+                                            @if(is_null($d->skpi))
+                                                <a href="{{ route('mahasiswa.prestasi-skpi.edit', $d->id_prestasi) }}" class="btn btn-warning btn-sm mx-1 mb-1" title="Edit">
+                                                    <i class="fa fa-edit"></i>
+                                                </a>
+                                                
+                                                <form id="delete-form-{{ $d->id_prestasi }}" action="{{ route('mahasiswa.prestasi-skpi.delete', $d->id_prestasi) }}" method="POST" style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-danger btn-sm mx-1" title="Hapus" onclick="deleteConfirmation('{{ $d->id_prestasi }}')">
+                                                        <i class="fa fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            @elseif($d->approved > 0)
                                                 <button type="button" class="btn btn-warning btn-sm me-1" disabled title="Data sudah diverifikasi, tidak bisa diedit">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
@@ -98,14 +115,14 @@
                                                     <i class="fa fa-lock"></i>
                                                 </button>
                                             @else
-                                                <a href="{{ route('mahasiswa.prestasi-skpi.edit', $d->id) }}" class="btn btn-warning btn-sm mx-1 mb-1" title="Edit">
+                                                <a href="{{ route('mahasiswa.prestasi-skpi.edit', $d->id_prestasi) }}" class="btn btn-warning btn-sm mx-1 mb-1" title="Edit">
                                                     <i class="fa fa-edit"></i>
                                                 </a>
                                                 
-                                                <form id="delete-form-{{ $d->id }}" action="{{ route('mahasiswa.prestasi-skpi.delete', $d->id) }}" method="POST" style="display:inline;">
+                                                <form id="delete-form-{{ $d->id_prestasi }}" action="{{ route('mahasiswa.prestasi-skpi.delete', $d->id_prestasi) }}" method="POST" style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="button" class="btn btn-danger btn-sm mx-1" title="Hapus" onclick="deleteConfirmation({{ $d->id }})">
+                                                    <button type="button" class="btn btn-danger btn-sm mx-1" title="Hapus" onclick="deleteConfirmation('{{ $d->id_prestasi }}')">
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
@@ -119,7 +136,7 @@
                 </div>
             </div>
         </div>
-    </div>			
+    </div>          
 </section>
 @endsection
 
@@ -135,13 +152,13 @@
 
     function deleteConfirmation(id) {
         swal({
-            title: 'Delete Data',
-            text: "Apakah anda yakin ingin menghapus data?",
+            title: 'Hapus Data',
+            text: "Apakah Anda yakin ingin menghapus data prestasi ini?",
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
-            confirmButtonText: 'Lanjutkan',
+            confirmButtonText: 'Ya, Hapus',
             cancelButtonText: 'Batal'
         }, function(isConfirm){
             if (isConfirm) {
