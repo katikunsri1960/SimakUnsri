@@ -122,7 +122,8 @@
                                                         <i class="fa fa-trash"></i>
                                                     </button>
                                                 </form>
-                                            @elseif($d->approved > 0)
+                                            @elseif($d->approved > 0 && $d->approved < 97 )
+                                                {{-- Data sudah diverifikasi, tidak bisa diedit atau dihapus --}}
                                                 <button type="button" class="btn btn-warning btn-sm mb-1" disabled title="Data sudah diverifikasi, tidak bisa diedit">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
