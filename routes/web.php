@@ -651,6 +651,16 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::post('/{id}/decline', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'mandiri_decline'])->name('ditmawa.data-prestasi.mandiri.decline');
                     Route::get('/create', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'create_mandiri'])->name('ditmawa.data-prestasi.mandiri.create');
                     Route::post('/store', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'store_mandiri'])->name('ditmawa.data-prestasi.mandiri.store');
+                    
+                    // RUTE EDIT, UPDATE, DELETE DITMAWA
+                    // Rute Action Edit, Update, Approve, Decline, Delete
+                    Route::get('/detail/{id}', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'show'])->name('ditmawa.data-prestasi.mandiri.detail');
+                    Route::get('/edit/{id}', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'edit'])->name('ditmawa.data-prestasi.mandiri.edit');
+                    Route::put('/update/{id}', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'update'])->name('ditmawa.data-prestasi.mandiri.update');
+                    Route::post('/approve/{id}', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'approve'])->name('ditmawa.data-prestasi.mandiri.approve');
+                    Route::post('/decline/{id}', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'decline'])->name('ditmawa.data-prestasi.mandiri.decline');
+                    Route::delete('/delete/{id}', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'destroy'])->name('ditmawa.data-prestasi.mandiri.delete');
+                    
                     Route::get('/get-mahasiswa', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'get_mahasiswa'])->name('ditmawa.data-prestasi.mandiri.get-mahasiswa');
                     Route::get('/get-dosen', [App\Http\Controllers\DITMAWA\PrestasiMahasiswaController::class, 'get_dosen'])->name('ditmawa.data-prestasi.mandiri.get-dosen');
                 });

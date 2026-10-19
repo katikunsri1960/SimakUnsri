@@ -83,13 +83,28 @@
                                             @if(is_null($d->skpi))
                                                 <span class="badge badge-danger">Data SKPI Belum Lengkap, Silakan Edit Pelaporan Prestasi Anda!</span>
                                             @elseif($d->approved == 0)
-                                                <span class="badge badge-warning">Menunggu Persetujuan Koor. Prodi</span>
+                                                <span class="badge badge-warning">Menunggu Koor. Prodi</span>
                                             @elseif($d->approved == 1)
                                                 <span class="badge badge-primary">Disetujui Koor. Prodi</span>
                                             @elseif($d->approved == 2)
                                                 <span class="badge badge-info">Disetujui Fakultas</span>
                                             @elseif($d->approved == 3)
-                                                <span class="badge badge-success">Disetujui Dir. Kemahasiswaan</span>
+                                                <span class="badge badge-success"><i class="fa fa-check-circle me-1"></i> Disetujui Ditmawa</span>
+                                            @elseif($d->approved == 97)
+                                                <span class="badge badge-danger">Dibatalkan Koor. Prodi</span>
+                                                @if($d->alasan_pembatalan)
+                                                    <br><small class="text-danger">({{ $d->alasan_pembatalan }})</small>
+                                                @endif
+                                            @elseif($d->approved == 98)
+                                                <span class="badge badge-danger">Dibatalkan Fakultas</span>
+                                                @if($d->alasan_pembatalan)
+                                                    <br><small class="text-danger">({{ $d->alasan_pembatalan }})</small>
+                                                @endif
+                                            @elseif($d->approved == 99)
+                                                <span class="badge badge-danger">Dibatalkan Ditmawa</span>
+                                                @if($d->alasan_pembatalan)
+                                                    <br><small class="text-danger">({{ $d->alasan_pembatalan }})</small>
+                                                @endif
                                             @endif
                                         </td>
 
@@ -108,7 +123,7 @@
                                                     </button>
                                                 </form>
                                             @elseif($d->approved > 0)
-                                                <button type="button" class="btn btn-warning btn-sm me-1" disabled title="Data sudah diverifikasi, tidak bisa diedit">
+                                                <button type="button" class="btn btn-warning btn-sm mb-1" disabled title="Data sudah diverifikasi, tidak bisa diedit">
                                                     <i class="fa fa-edit"></i>
                                                 </button>
                                                 <button type="button" class="btn btn-secondary btn-sm" disabled title="Data sudah diverifikasi, tidak bisa dihapus">

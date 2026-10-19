@@ -105,6 +105,7 @@ Tambah Data Prestasi Mandiri Mahasiswa
                                     <option value="3" {{ old('peringkat') == '3' ? 'selected' : '' }}>Juara 3</option>
                                     <option value="4" {{ old('peringkat') == '4' ? 'selected' : '' }}>Harapan 1</option>
                                     <option value="5" {{ old('peringkat') == '5' ? 'selected' : '' }}>Harapan 2</option>
+                                    <option value="6" {{ old('peringkat') == '6' ? 'selected' : '' }}>Harapan 3</option>
                                     <option value="9" {{ old('peringkat') == '9' ? 'selected' : '' }}>Finalis / Peserta</option>
                                 </select>
                             </div>
