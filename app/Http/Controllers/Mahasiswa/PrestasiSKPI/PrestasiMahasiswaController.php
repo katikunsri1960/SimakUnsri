@@ -381,7 +381,7 @@ class PrestasiMahasiswaController extends Controller
     }
 
     // Proteksi approval
-    if ($prestasi->approved > 0 && !empty($prestasi->skpi)) {
+    if ($prestasi->approved > 0 && !empty($prestasi->skpi) && $prestasi->skpi->approved > 0) {
         return redirect()->route('mahasiswa.prestasi-skpi.index')
             ->with('error', 'Data yang sudah diverifikasi tidak dapat diedit.');
     }
@@ -412,7 +412,7 @@ public function update(Request $request, $id)
         return redirect()->back()->with('error', 'Data prestasi tidak ditemukan.');
     }
 
-    if ($prestasi->approved > 0 && !empty($prestasi->skpi)) {
+    if ($prestasi->approved > 0 && !empty($prestasi->skpi) && $prestasi->skpi->approved > 0) {
         return redirect()->back()->with('error', 'Data yang sudah diverifikasi tidak dapat diedit.');
     }
 
@@ -619,7 +619,7 @@ public function update(Request $request, $id)
 
         if ($prestasi) {
             // Cek proteksi approval di Prestasi atau SKPI
-            $isApproved = ($prestasi->approved > 0) || (optional($prestasi->skpi)->approved > 0);
+            $isApproved = ($prestasi->approved > 0) && !empty($prestasi->skpi) && ($prestasi->skpi->approved > 0);
 
             if ($isApproved) {
                 return redirect()->back()
@@ -642,7 +642,7 @@ public function update(Request $request, $id)
                     ->with('error', 'Data prestasi tidak ditemukan.');
             }
 
-            $isApproved = ($skpi->approved > 0) || (optional($skpi->prestasi)->approved > 0);
+            $isApproved = ($skpi->approved > 0) && !empty($skpi->prestasi) && ($skpi->prestasi->approved > 0);
 
             if ($isApproved) {
                 return redirect()->back()
