@@ -65,9 +65,9 @@ Bimbingan Tugas Akhir Mahasiswa
                                         <ul style="padding: 0; padding-left:0.8rem">
                                             @foreach ($aktivitas->bimbing_mahasiswa as $bimbingan)
                                             <li>Pembimbing {{$bimbingan->pembimbing_ke}} : {{$bimbingan->nama_dosen}}  
-                                                @if ($bimbingan->approved == 0)
+                                                @if ($bimbingan->approved_dosen == 0)
                                                     <span class="badge bg-warning mx-5">Menunggu Persetujuan</span>
-                                                @elseif ($bimbingan->approved == 1)
+                                                @elseif ($bimbingan->approved_dosen == 1)
                                                     <span class="badge bg-success mx-5">Disetujui</span>
                                                 @endif
                                             </li>
