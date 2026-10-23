@@ -1,7 +1,7 @@
 @extends('layouts.universitas')
 
 @section('title')
-SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
+SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA, PDUNSRI & FEEDER DIKTI)
 @endsection
 
 @section('content')
@@ -34,30 +34,46 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
                             <form id="uploadSimkatmawaForm">
                                 @csrf
                                 <input type="hidden" name="id_prodi" id="form_id_prodi" required>
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <div class="row">
                                         <button type="submit" class="btn btn-primary btn-sm" disabled id="buttonSubmitForm">
-                                            <i class="fa fa-upload me-3"></i> Upload Data (SIMKATMAWA & PDUNSRI)
+                                            <i class="fa fa-upload me-3"></i> Upload Data (FEEDER DIKTI, SIMKATMAWA & PDUNSRI)
                                         </button>
                                     </div>
                                 </div>
                             </form>
                             <div class="row mt-3">
                                 <div id="progressContainer" style="display: none;">
+                                    <!-- Header Status & Spinner -->
+                                    <div class="d-flex align-items-center mb-3" id="syncStatusHeader">
+                                        <div class="spinner-border spinner-border-sm text-primary me-2" role="status" id="syncSpinner">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                        <strong class="text-primary" id="syncStatusText">Proses sinkronisasi sedang berjalan, mohon tunggu...</strong>
+                                    </div>
+
                                     <div class="progress mb-2">
                                         <div id="progressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;"
                                             aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
                                     </div>
                                     
                                     <div class="row text-center mt-3">
-                                        <div class="col-md-6 border-end">
+
+                                        <div class="col-md-4 border-end">
+                                            <h6 class="fw-bold text-warning"><i class="fa fa-database"></i> FEEDER DIKTI</h6>
+                                            <p class="mb-0">
+                                                Berhasil: <span id="feederBerhasil" class="badge badge-success fs-14">0</span> | 
+                                                Gagal: <span id="feederGagal" class="badge badge-danger fs-14">0</span>
+                                            </p>
+                                        </div>
+                                        <div class="col-md-4 border-end">
                                             <h6 class="fw-bold text-primary"><i class="fa fa-cloud-upload"></i> SIMKATMAWA</h6>
                                             <p class="mb-0">
                                                 Berhasil: <span id="simkatmawaBerhasil" class="badge badge-success fs-14">0</span> | 
                                                 Gagal: <span id="simkatmawaGagal" class="badge badge-danger fs-14">0</span>
                                             </p>
                                         </div>
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <h6 class="fw-bold text-info"><i class="fa fa-server"></i> PDUNSRI</h6>
                                             <p class="mb-0">
                                                 Berhasil: <span id="pdunsriBerhasil" class="badge badge-success fs-14">0</span> | 
@@ -114,6 +130,7 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
                                 <thead>
                                     <tr>
                                         <th class="text-center align-middle">No</th>
+                                        <th class="text-center align-middle">Status Feeder</th>
                                         <th class="text-center align-middle">Status SIMKATMAWA</th>
                                         <th class="text-center align-middle">Status PDUNSRI</th>
                                         <th class="text-center align-middle">NIM</th>
@@ -123,7 +140,6 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
                                         <th class="text-center align-middle">Penyelenggara</th>
                                         <th class="text-center align-middle">Tahun</th>
                                         <th class="text-center align-middle">ID SIMKATMAWA</th>
-                                        <th class="text-center align-middle">ID PDUNSRI</th>
                                     </tr>
                                 </thead>
                                 <tbody></tbody>
@@ -183,13 +199,17 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
                         ? '<span class="badge badge-success">Sudah Sync</span>' 
                         : '<span class="badge badge-secondary">Belum Sync</span>';
 
-                    // Tombol upload akan aktif jika setidaknya 1 server belum sync
-                    if (item.simkatmawa == 0 || (item.pdunsri ?? 0) == 0) {
+                    var statusFeeder = (item.feeder == 1) 
+                        ? '<span class="badge badge-success">Sudah Sync</span>' 
+                        : '<span class="badge badge-secondary">Belum Sync</span>';
+
+                    if (item.simkatmawa == 0 || (item.pdunsri ?? 0) == 0 || (item.feeder ?? 0) == 0) {
                         hasUnsynced = true;
                     }
 
                     html += '<tr>';
                     html += '<td class="text-center">' + no + '</td>';
+                    html += '<td class="text-center">' + statusFeeder + '</td>';
                     html += '<td class="text-center">' + statusSimkatmawa + '</td>';
                     html += '<td class="text-center">' + statusPdunsri + '</td>';
                     html += '<td class="text-center">' + item.nim + '</td>';
@@ -199,7 +219,6 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
                     html += '<td class="text-center">' + item.penyelenggara + '</td>';
                     html += '<td class="text-center">' + item.tahun + '</td>';
                     html += '<td class="text-center">' + (item.id_simkatmawa ?? '-') + '</td>';
-                    html += '<td class="text-center">' + (item.id_pdunsri ?? '-') + '</td>';
                     html += '</tr>';
 
                     no++;
@@ -236,8 +255,8 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
             var submitButton = form.find('button[type="submit"]');
 
             swal({
-                title: 'Sinkronisasi SIMKATMAWA & PDUNSRI',
-                text: "Apakah Anda yakin ingin mengirim data Prestasi Mandiri ke SIMKATMAWA dan PDUNSRI?",
+                title: 'Sinkronisasi Prestasi',
+                text: "Apakah Anda yakin ingin mengirim data Prestasi Mandiri ke SIMKATMAWA, PDUNSRI, dan FEEDER DIKTI?",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
@@ -246,7 +265,10 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
                 cancelButtonText: 'Batal'
             }, function(isConfirm){
                 if (isConfirm) {
+                    // Tampilkan spinner dan status loading
                     $('#progressContainer').show();
+                    $('#syncSpinner').show();
+                    $('#syncStatusText').text('Proses sinkronisasi sedang berjalan, mohon tunggu...').removeClass('text-success').addClass('text-primary');
                     submitButton.prop('disabled', true);
 
                     var id_prodi = $('#id_prodi').val();
@@ -265,12 +287,19 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
                         $('#simkatmawaGagal').text(data.simkatmawaGagal);
                         $('#pdunsriBerhasil').text(data.pdunsriBerhasil);
                         $('#pdunsriGagal').text(data.pdunsriGagal);
+                        $('#feederBerhasil').text(data.feederBerhasil);
+                        $('#feederGagal').text(data.feederGagal);
 
                         if (data.progress >= 100) {
                             source.close();
+
+                            // Sembunyikan spinner setelah selesai
+                            $('#syncSpinner').hide();
+                            $('#syncStatusText').text('Proses sinkronisasi selesai!').removeClass('text-primary').addClass('text-success');
+
                             swal({
                                 title: 'Sinkronisasi Selesai',
-                                text: "Proses sinkronisasi terpisah ke SIMKATMAWA dan PDUNSRI telah selesai!",
+                                text: "Proses sinkronisasi ke SIMKATMAWA, PDUNSRI, dan Feeder Dikti telah selesai!",
                                 type: 'success',
                                 confirmButtonColor: '#3085d6',
                                 confirmButtonText: 'OK'
@@ -283,6 +312,8 @@ SINKRONISASI PRESTASI MANDIRI (SIMKATMAWA & PDUNSRI)
 
                     source.onerror = function(event) {
                         source.close();
+                        $('#syncSpinner').hide();
+                        $('#syncStatusText').text('Proses terhenti akibat kendala koneksi.').removeClass('text-primary').addClass('text-danger');
                         getData();
                         swal({
                             title: 'Sinkronisasi Terhenti',

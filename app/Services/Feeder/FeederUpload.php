@@ -1375,6 +1375,46 @@ class FeederUpload {
         }
     }
 
+    public function uploadPrestasiMahasiswa()
+    {
+        // 1. Dapatkan token (Gunakan cache agar tidak memanggil GetToken berulang kali)
+        $token = $this->get_token();
+
+        if (!$token) {
+            return [
+                'error_code' => 500,
+                'error_desc' => 'Gagal mendapatkan token Feeder Dikti.'
+            ];
+        }
+
+        // 2. Tentukan action utama (Insert/Update)
+        $act = !empty($this->record['id_prestasi']) ? 'UpdatePrestasiMahasiswa' : 'InsertPrestasiMahasiswa';
+
+        // Jika Insert, hapus key id_prestasi jika nilainya null agar tidak ditolak Feeder
+        $payloadRecord = $this->record;
+        if ($act === 'InsertPrestasiMahasiswa' && empty($payloadRecord['id_prestasi'])) {
+            unset($payloadRecord['id_prestasi']);
+        }
+
+        // 3. Eksekusi Request Tunggal Langsung ke Feeder
+        $data = [
+            'act'    => $act,
+            'token'  => $token,
+            'record' => $payloadRecord
+        ];
+
+        if ($act === 'UpdatePrestasiMahasiswa') {
+            $data['key'] = [
+                'id_prestasi' => $this->record['id_prestasi']
+            ];
+        }
+
+        // Kirim request tunggal menggunakan service_native dengan timeout
+        $response = $this->service_native($data, $this->url, 'POST');
+
+        return $response;
+    }
+
     private function get_token()
     {
         $client = new Client();
@@ -1398,35 +1438,43 @@ class FeederUpload {
         return $result['data']['token'];
     }
 
-    private function service_native($data,$url,$type='POST') {
+    private function service_native($data, $url, $type = 'POST') 
+    {
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_POST, 1);
 
-        $headers = array();
-        // $headers[] = 'Authorization: Bearer '.$this->get_token();
-        $headers[] = 'Content-Type: application/json';
+        $headers = [
+            'Content-Type: application/json'
+        ];
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
-        $data = json_encode($data);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-        //curl_setopt($ch, CURLOPT_HEADER, 1);
-         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_ENCODING, '');
         curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
-        curl_setopt($ch, CURLOPT_TIMEOUT, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 
+        // ATUR TIMEOUT KE 30 DETIK (Cukup untuk 2x request ke Neo Feeder)
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 10);
+
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
         curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 
         $result = curl_exec($ch);
 
-        //print_r($data);
-        curl_close($ch);
+        if (curl_errno($ch)) {
+            $error_msg = curl_error($ch);
+            curl_close($ch);
+            return [
+                'error_code' => 999,
+                'error_desc' => 'cURL Timeout/Error: ' . $error_msg
+            ];
+        }
 
+        curl_close($ch);
         return json_decode($result, true);
     }
 }

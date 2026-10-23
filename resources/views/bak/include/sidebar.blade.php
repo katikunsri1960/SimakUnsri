@@ -246,9 +246,32 @@
                             </span>
                         </a>
                         <ul class="treeview-menu">
-                            <li class="{{request()->routeIs('bak.monitoring.status-aipt')
-                             ? 'active' : ''}}">
-                                <a href="{{route('bak.monitoring.status-aipt')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Data Akd AIPT</a>
+                            <li class="treeview {{ request()->routeIs('bak.monitoring.status-aipt*') ? 'active' : '' }}">
+                                <a href="#">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    <span>Data AIPT</span>
+                                    <span class="pull-right-container">
+                                        <i class="fa fa-angle-right pull-right"></i>
+                                    </span>
+                                </a>
+
+                                <ul class="treeview-menu">
+                                    {{-- Dosen --}}
+                                    <li class="{{ request()->routeIs('bak.monitoring.status-aipt.dosen') ? 'active' : '' }}">
+                                        <a href="{{ route('bak.monitoring.status-aipt.dosen') }}">
+                                            <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                            <span>Dosen</span>
+                                        </a>
+                                    </li>
+
+                                    {{-- Mahasiswa --}}
+                                    <li class="{{ request()->routeIs('bak.monitoring.status-aipt.mahasiswa') ? 'active' : '' }}">
+                                        <a href="{{ route('bak.monitoring.status-aipt.mahasiswa') }}">
+                                            <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                            <span>Mahasiswa</span>
+                                        </a>
+                                    </li>
+                                </ul>
                             </li>
                             <li class="{{request()->routeIs('bak.monitoring.status-mahasiswa') || request()->routeIs('bak.monitoring.status-mahasiswa.*') ? 'active' : ''}}">
                                 <a href="{{route('bak.monitoring.status-mahasiswa')}}"><i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>Status Akd Mhs</a>

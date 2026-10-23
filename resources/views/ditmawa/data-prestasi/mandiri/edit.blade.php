@@ -202,20 +202,20 @@
                     {{-- SECTION DATA DOSEN PEMBIMBING --}}
                     <div class="col-12 mb-4">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="fw-bold text-dark mb-0"><i class="fa fa-user-md me-2 text-info"></i> Data Dosen Pendamping & SK</h5>
+                            <h5 class="fw-bold text-dark mb-0"><i class="fa fa-user-md me-2 text-info"></i> Data Dosen Pendamping & ST</h5>
                             <button id="add-dosen" type="button" class="btn btn-success btn-sm">
                                 <i class="fa fa-plus me-1"></i> Tambah Dosen
                             </button>
                         </div>
 
-                        {{-- Input SK Pembimbing --}}
+                        {{-- Input ST Pembimbing --}}
                         <div class="row mb-3 bg-light p-3 rounded">
                             <div class="col-md-6 mb-2">
-                                <label class="form-label fw-bold">Nomor SK Pembimbing</label>
+                                <label class="form-label fw-bold">Nomor ST Pembimbing</label>
                                 <input type="text" name="no_sk_pembimbing" class="form-control" value="{{ old('no_sk_pembimbing', optional($prestasi->aktivitas_mahasiswa)->sk_tugas) }}" placeholder="Contoh: 0123/UN9/SK/2026">
                             </div>
                             <div class="col-md-6 mb-2">
-                                <label class="form-label fw-bold">URL SK Pembimbing</label>
+                                <label class="form-label fw-bold">URL ST Pembimbing</label>
                                 <input type="url" name="url_sk_pembimbing" class="form-control" value="{{ old('url_sk_pembimbing', $prestasi->sk_pembimbing) }}" placeholder="https://...">
                             </div>
                         </div>
