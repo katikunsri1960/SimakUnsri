@@ -2194,8 +2194,102 @@ class FeederUploadController extends Controller
 
         return $response;
     }
-
     //END FEEDER UPLOAD BIODATA MAHASISWA
+
+
+    public function prestasi_mahasiswa_upload(Request $request)
+    {
+        // Ambil data prestasi yang belum tersinkronisasi ke Feeder
+        $data = PrestasiMahasiswa::with(['riwayatPendidikan'])
+            ->where('is_sync_feeder', 0) // atau indikator status sync lokal Anda (misal: feeder = 0)
+            ->get();
+
+        $totalData = $data->count();
+
+        if ($totalData == 0) {
+            return response()->json([
+                'error' => 'Data prestasi tidak ditemukan atau sudah tersinkronisasi seluruhnya.'
+            ], 404);
+        }
+
+        $act = 'InsertPrestasiMahasiswa';
+        $actGet = 'GetPrestasiMahasiswa';
+
+        $dataGagal = 0;
+        $dataBerhasil = 0;
+
+        $response = new StreamedResponse(function () use (
+            $data, $totalData, $act, $actGet, 
+            &$dataGagal, &$dataBerhasil 
+        ) {
+
+            foreach ($data as $index => $d) {
+
+                // Menyiapkan payload sesuai spesifikasi InsertPrestasiMahasiswa
+                $record = [
+                    'id_prestasi'         => $d->id_prestasi_feeder, // Diisi jika sudah ada UUID Feeder, atau null
+                    'id_mahasiswa'        => optional($d->riwayatPendidikan)->id_mahasiswa_feeder ?? $d->id_mahasiswa,
+                    'id_jenis_prestasi'   => (int) $d->id_jenis_prestasi_feeder,
+                    'id_tingkat_prestasi' => (int) $d->id_tingkat_prestasi_feeder,
+                    'nama_prestasi'       => $d->nama_prestasi,
+                    'tahun_prestasi'      => (int) $d->tahun_prestasi,
+                    'penyelenggara'       => $d->penyelenggara,
+                    'peringkat'           => $d->peringkat ? (int) $d->peringkat : null,
+                    'id_aktivitas'        => $d->id_aktivitas_feeder ?? null,
+                ];
+
+                // Filter pencarian data prestasi di Feeder untuk mengecek apakah sudah ada atau belum
+                $idMahasiswaFeeder = optional($d->riwayatPendidikan)->id_mahasiswa_feeder ?? $d->id_mahasiswa;
+                $recordGet = "id_mahasiswa = '" . $idMahasiswaFeeder . "' AND nama_prestasi = '" . addslashes($d->nama_prestasi) . "'";
+
+                // Inisialisasi Service FeederUpload
+                $req = new FeederUpload($act, $record, $actGet, $recordGet);
+
+                // Memanggil method uploadPrestasiMahasiswa() pada FeederUpload
+                $result = $req->uploadPrestasiMahasiswa();
+
+                if (isset($result['error_code']) && $result['error_code'] == 0) {
+
+                    // Ambil ID Prestasi jika mengembalikan data hasil insert baru
+                    $idPrestasiFeeder = $result['data']['id_prestasi'] ?? $d->id_prestasi_feeder;
+
+                    $d->update([
+                        'id_prestasi_feeder' => $idPrestasiFeeder,
+                        'is_sync_feeder'     => 1,
+                        'status_sync'        => 'Sudah sync'
+                    ]);
+
+                    $dataBerhasil++;
+
+                } else {
+
+                    $d->update([
+                        'status_sync' => ($result['error_desc'] ?? 'Unknown Error')
+                    ]);
+
+                    $dataGagal++;
+                }
+
+                // Hitung persentase progress untuk dikirim ke frontend
+                $progress = round((($index + 1) / $totalData) * 100, 2);
+
+                echo "data: " . json_encode([
+                    'progress'     => $progress,
+                    'dataBerhasil' => $dataBerhasil,
+                    'dataGagal'    => $dataGagal
+                ]) . "\n\n";
+
+                ob_flush();
+                flush();
+            }
+        });
+
+        $response->headers->set('Content-Type', 'text/event-stream');
+        $response->headers->set('Cache-Control', 'no-cache');
+        $response->headers->set('Connection', 'keep-alive');
+
+        return $response;
+    }
 
 
     private function convert_ascii($string)
@@ -2237,5 +2331,40 @@ class FeederUploadController extends Controller
       $string = preg_replace( '/[^[:print:]]/', '',$string);
       $string = trim($string);
       return $string;
+    }
+
+    private function service_native($data,$url,$type='POST') {
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_POST, 1);
+
+        $headers = array();
+        // $headers[] = 'Authorization: Bearer '.$this->get_token();
+        $headers[] = 'Content-Type: application/json';
+
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $type);
+        $data = json_encode($data);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        //curl_setopt($ch, CURLOPT_HEADER, 1);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_ENCODING, '');
+        curl_setopt($ch, CURLOPT_MAXREDIRS, 10);
+        
+        // --- DI SINI PENYEBAB STUCK (TIMEOUT = 0) ---
+        curl_setopt($ch, CURLOPT_TIMEOUT, 0); 
+        
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+        curl_setopt($ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+
+        $result = curl_exec($ch);
+
+        //print_r($data);
+        curl_close($ch);
+
+        return json_decode($result, true);
     }
 }
