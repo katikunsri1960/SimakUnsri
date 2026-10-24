@@ -26,25 +26,30 @@ Data Dosen AIPT
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    <div class="d-flex justify-content-start">
-                        <button type="button"
-                            class="btn btn-success waves-effect waves-light"
-                            data-bs-toggle="modal"
-                            data-bs-target="#filter-button">
-                            <i class="fa fa-filter"></i> Filter
-                        </button>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <button type="button"
+                                class="btn btn-success waves-effect waves-light"
+                                data-bs-toggle="modal"
+                                data-bs-target="#filter-button">
+                                <i class="fa fa-filter"></i> Filter
+                            </button>
 
-                        @include('bak.monitoring.status-aipt.dosen.filter')
+                            @include('bak.monitoring.status-aipt.dosen.filter')
 
-                        <span class="divider-line mx-1"></span>
+                            <span class="divider-line mx-1"></span>
 
-                        <a href="{{route('bak.monitoring.status-aipt.dosen')}}"
-                        class="btn btn-warning waves-effect waves-light">
-                            <i class="fa fa-refresh"></i> Reset Filter
-                        </a>
+                            <a href="{{route('bak.monitoring.status-aipt.dosen')}}"
+                            class="btn btn-warning waves-effect waves-light">
+                                <i class="fa fa-refresh"></i> Reset Filter
+                            </a>
+                        </div>
                     </div>
                 </div>
                 <div class="box-body">
+                    <div class="d-flex justify-content-end align-items-center">
+                        <div id="export-buttons-container"></div>
+                    </div>
                     <div class="table-responsive">
                         <table id="data" class="table table-hover margin-top-10 w-p100">
                             <thead>
@@ -286,7 +291,7 @@ Data Dosen AIPT
             width: '100%'
         });
 
-        $('#data').DataTable({
+        var table = $('#data').DataTable({
             paging: true,
             ordering: true,
             searching: true,
@@ -296,7 +301,7 @@ Data Dosen AIPT
             buttons: [
                 {
                     extend: 'excelHtml5',
-                    text: '<i class="fa fa-file-excel-o"></i> Excel',
+                    text: '<i class="fa fa-file-excel-o"></i> Download Excel',
                     className: 'btn btn-primary',
                     title: 'Data Dosen AIPT',
                     filename: 'Data_Dosen_AIPT',
@@ -319,7 +324,7 @@ Data Dosen AIPT
 
                 {
                     extend: 'csvHtml5',
-                    text: '<i class="fa fa-file-text-o"></i> CSV',
+                    text: '<i class="fa fa-file-text-o"></i> Download CSV',
                     className: 'btn btn-primary',
                     title: 'Data Dosen AIPT',
                     filename: 'Data_Dosen_AIPT',
@@ -341,6 +346,8 @@ Data Dosen AIPT
                 }
             ]
         });
+
+        table.buttons().container().appendTo('#export-buttons-container');
     });
 
     $('#editForm').submit(function(e){

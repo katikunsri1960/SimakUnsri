@@ -26,22 +26,32 @@ Mahasiswa AIPT
         <div class="col-12">
             <div class="box box-outline-success bs-3 border-success">
                 <div class="box-header with-border">
-                    <div class="d-flex justify-content-start">
-                        <!-- Modal trigger button -->
-                        <button type="button" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
-                            data-bs-target="#filter-button">
-                            <i class="fa fa-filter"></i> Filter
-                        </button>
-                        @include('bak.monitoring.status-aipt.mahasiswa.filter')
-                        <span class="divider-line mx-1"></span>
-                        <a href="{{route('bak.monitoring.status-aipt.mahasiswa')}}" class="btn btn-warning waves-effect waves-light" >
-                            <i class="fa fa-refresh"></i> Reset Filter
-                        </a>
+                    <div class="d-flex justify-content-between align-items-center w-p100">
+                        <!-- Bagian Kiri: Filter & Reset -->
+                        <div class="d-flex align-items-center">
+                            <button type="button" class="btn btn-success waves-effect waves-light" data-bs-toggle="modal"
+                                data-bs-target="#filter-button">
+                                <i class="fa fa-filter"></i> Filter
+                            </button>
+                            @include('bak.monitoring.status-aipt.mahasiswa.filter')
+                            <span class="divider-line mx-1"></span>
+                            <a href="{{route('bak.monitoring.status-aipt.mahasiswa')}}" class="btn btn-warning waves-effect waves-light">
+                                <i class="fa fa-refresh"></i> Reset Filter
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="box-body">
+                <div class="box-body pt-0">
+                    <div class="d-flex justify-content-end align-items-center w-p100 my-10">
+                        <!-- Bagian Kanan: Tombol Download Excel -->
+                        <div>
+                            <a href="javascript:void(0)" id="btn-export-excel" class="btn btn-primary waves-effect waves-light">
+                                <i class="fa fa-file-excel-o "></i> Download CSV
+                            </a>
+                        </div>
+                    </div>
                     <div class="table-responsive">
-                        <table id="data" class="table  table-hover margin-top-10 w-p100">
+                        <table id="data" class="table table-hover margin-top-10 w-p100">
                             <thead>
                                 <tr>
                                     <th class="text-center align-middle">No</th>
@@ -97,8 +107,6 @@ Mahasiswa AIPT
 <script src="{{asset('assets/vendor_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
     $(function () {
-        // "use strict";
-
 
         $('#id_prodi').select2({
             placeholder: 'Pilih Program Studi',
@@ -115,7 +123,7 @@ Mahasiswa AIPT
         });
 
         $('#jenis_keluar').select2({
-            placeholder: 'Pilih Angkatan',
+            placeholder: 'Pilih Jenis Keluar',
             allowClear: true,
             width: '100%',
             dropdownParent: $('#filter-button')
@@ -128,11 +136,7 @@ Mahasiswa AIPT
             dropdownParent: $('#filter-button')
         });
 
-        $('#data').DataTable({
-            // dom: 'Bfrtip',
-            // buttons: [
-            //     'copy', 'csv', 'excel', 'pdf', 'print'
-            // ],
+        var table = $('#data').DataTable({
             processing: true,
             serverSide: true,
             ajax: {
@@ -161,7 +165,7 @@ Mahasiswa AIPT
                 {data: 'nama_mahasiswa', name: 'nama_mahasiswa', class: 'text-start', searchable: true, orderData: [1]},
                 {data: null, name: 'nama_program_studi', class: "text-start align-middle", searchable: true, orderData: [2],
                     render: function(data, type, row) {
-                        return data.prodi.nama_jenjang_pendidikan + ' ' + data.prodi.nama_program_studi;
+                        return data.prodi ? (data.prodi.nama_jenjang_pendidikan + ' ' + data.prodi.nama_program_studi) : '-';
                     }
                 },
                 {data: 'angkatan', name: 'angkatan', class: "text-center align-middle", searchable: true, orderData: [3]},
@@ -179,7 +183,7 @@ Mahasiswa AIPT
                             : '-';
                     }
                 },
-                {data: null, class: "text-center align-middle", searchable: true,   sortable: false,
+                {data: null, class: "text-center align-middle", searchable: true, sortable: false,
                     render: function(data, type, row) {
                         if (data.no_seri_ijazah) {
                             return data.no_seri_ijazah;
@@ -196,7 +200,20 @@ Mahasiswa AIPT
             ],
         });
 
+        // Trigger Event Download Excel dengan Filter Aktif
+        $('#btn-export-excel').on('click', function(e) {
+            e.preventDefault();
+            
+            var baseUrl = "{{ route('bak.monitoring.status-aipt.mahasiswa.export-excel') }}";
+            var params = $.param({
+                id_prodi: $('#id_prodi').val() || '',
+                angkatan: $('#angkatan').val() || '',
+                jenis_keluar: $('#jenis_keluar').val() || '',
+                periode_keluar: $('#periode_keluar').val() || ''
+            });
 
+            window.location.href = baseUrl + '?' + params;
+        });
 
     });
 </script>
