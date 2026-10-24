@@ -421,7 +421,8 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::get('/dosen', [App\Http\Controllers\DAK\MonitoringAIPTController::class, 'dosen_aipt'])->name('bak.monitoring.status-aipt.dosen');
                     Route::get('/mahasiswa', [App\Http\Controllers\DAK\MonitoringAIPTController::class, 'mahasiswa_aipt'])->name('bak.monitoring.status-aipt.mahasiswa');
                     Route::get('/mahasiswa/data', [App\Http\Controllers\DAK\MonitoringAIPTController::class, 'mahasiswa_aipt_data'])->name('bak.monitoring.status-aipt.mahasiswa.data');
-                    // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\DPPTI\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('dppti.monitoring.status-mahasiswa.detail-total');
+                    Route::get('/mahasiswa/export-excel', [App\Http\Controllers\DAK\MonitoringAIPTController::class, 'mahasiswa_aipt_excel'])->name('bak.monitoring.status-aipt.mahasiswa.export-excel');
+    // Route::get('/detail-total/{semester}/{status}', [App\Http\Controllers\DPPTI\MonitoringController::class, 'detail_total_status_mahasiswa'])->name('dppti.monitoring.status-mahasiswa.detail-total');
                     // Route::get('/detail-prodi/{id}/{status}', [App\Http\Controllers\DPPTI\MonitoringController::class, 'detail_prodi_status_mahasiswa'])->name('dppti.monitoring.status-mahasiswa.detail-prodi');
                 });
 

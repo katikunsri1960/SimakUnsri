@@ -558,4 +558,110 @@ class MonitoringAIPTController extends Controller
         );
     }
 
+    public function mahasiswa_aipt_excel(Request $request)
+    {
+        $query = LulusDo::with([
+            'prodi',
+            'biodata',
+            'periode_keluar'
+        ]);
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Program Studi
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('id_prodi')) {
+            $query->whereIn('id_prodi', (array) $request->input('id_prodi'));
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Angkatan
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('angkatan')) {
+            $query->whereIn('angkatan', (array) $request->input('angkatan'));
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Jenis Keluar
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('jenis_keluar')) {
+            $query->whereIn('id_jenis_keluar', (array) $request->input('jenis_keluar'));
+        }
+
+        /*
+        |--------------------------------------------------------------------------
+        | Filter Periode Keluar
+        |--------------------------------------------------------------------------
+        */
+        if ($request->filled('periode_keluar')) {
+            $query->whereIn('id_periode_keluar', (array) $request->input('periode_keluar'));
+        }
+
+        $fileName = 'Data_Mahasiswa_AIPT_' . date('Ymd_His') . '.csv';
+
+        $headers = [
+            "Content-type"        => "text/csv; charset=UTF-8",
+            "Content-Disposition" => "attachment; filename={$fileName}",
+            "Pragma"              => "no-cache",
+            "Cache-Control"       => "must-revalidate, post-check=0, pre-check=0",
+            "Expires"             => "0"
+        ];
+
+        return response()->stream(function () use ($query) {
+            $file = fopen('php://output', 'w');
+
+            // Tambahkan BOM (Byte Order Mark) agar karakter UTF-8 terbaca dengan benar di Microsoft Excel
+            fputs($file, "\xEF\xBB\xBF");
+
+            // Header Kolom Excel
+            fputcsv($file, [
+                'No',
+                'NIM',
+                'Nama Mahasiswa',
+                'Program Studi',
+                'Angkatan',
+                'Jenis Keluar',
+                'Tanggal Keluar',
+                'Periode Keluar',
+                'PISN / No. Ijazah',
+                'Keterangan'
+            ], ';');
+
+            $no = 1;
+
+            // Chunk data agar hemat memori jika jumlah baris sangat besar
+            $query->chunk(500, function ($rows) use ($file, &$no) {
+                foreach ($rows as $row) {
+                    $namaProdi = optional($row->prodi)->nama_program_studi 
+                        ? optional($row->prodi)->nama_jenjang_pendidikan . ' ' . optional($row->prodi)->nama_program_studi 
+                        : '-';
+
+                    $periodeKeluar = optional($row->periode_keluar)->nama_semester ?? '-';
+
+                    $pisn = $row->no_seri_ijazah ?: ($row->no_sertifikat_profesi ?: '');
+
+                    fputcsv($file, [
+                        $no++,
+                        "'" . $row->nim, // Tanda petik tunggal mencegah NIM terkonversi format Scientific di Excel
+                        $row->nama_mahasiswa,
+                        $namaProdi,
+                        $row->angkatan,
+                        $row->nama_jenis_keluar,
+                        $row->tanggal_keluar,
+                        $periodeKeluar,
+                        "'" . $pisn,
+                        $row->keterangan
+                    ], ';');
+                }
+            });
+
+            fclose($file);
+        }, 200, $headers);
+    }
+
 }
