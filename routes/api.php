@@ -22,8 +22,8 @@ use App\Http\Controllers\API\ApiKuisioner;
 |
 */
 
-Route::post('/login', [AuthController::class, 'login']);
-Route::post('/register', [AuthController::class, 'register']);
+// Route::post('/login', [AuthController::class, 'login']);
+// Route::post('/register', [AuthController::class, 'register']);
 Route::middleware(['auth:sanctum', 'role:univ'])->group(function () {
     Route::get('/kehadiran-dosen', [ApiKehadiranDosen::class, 'kehadiran_dosen']);
     Route::get('/kehadiran-mahasiswa', [ApiKehadiranMahasiswa::class, 'kehadiran_mahasiswa']);
