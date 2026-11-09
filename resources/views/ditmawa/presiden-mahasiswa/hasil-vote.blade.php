@@ -38,9 +38,24 @@ Hasil Perolehan Suara Pemilihan Presma
         </div>
     </div>
 
-    {{-- Widget Ringkasan Statistik --}}
+    {{-- Widget Ringkasan Statistik (4 Card) --}}
     <div class="row">
-        <div class="col-xl-4 col-md-4 col-12">
+        <div class="col-xl-3 col-md-6 col-12">
+            <div class="box pull-up bg-success">
+                <div class="box-body">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <p class="mb-0 text-white-50">Jumlah Hak Suara (DPT)</p>
+                            <h2 class="mb-0 text-white fw-bold">{{ number_format($totalMahasiswa) }}</h2>
+                        </div>
+                        <div class="p-3 bg-white-10 rounded">
+                            <i class="fa fa-id-card-o fa-2x text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 col-12">
             <div class="box pull-up bg-primary">
                 <div class="box-body">
                     <div class="d-flex align-items-center justify-content-between">
@@ -55,7 +70,7 @@ Hasil Perolehan Suara Pemilihan Presma
                 </div>
             </div>
         </div>
-        <div class="col-xl-4 col-md-4 col-12">
+        <div class="col-xl-3 col-md-6 col-12">
             <div class="box pull-up bg-info">
                 <div class="box-body">
                     <div class="d-flex align-items-center justify-content-between">
@@ -70,7 +85,7 @@ Hasil Perolehan Suara Pemilihan Presma
                 </div>
             </div>
         </div>
-        <div class="col-xl-4 col-md-4 col-12">
+        <div class="col-xl-3 col-md-6 col-12">
             <div class="box pull-up bg-warning">
                 <div class="box-body">
                     <div class="d-flex align-items-center justify-content-between">
@@ -126,10 +141,6 @@ Hasil Perolehan Suara Pemilihan Presma
                                     <small class="text-muted">NIM: {{ optional($h->cawapresma)->nim ?? '-' }}</small>
                                 </div>
                             </div>
-
-                            <hr>
-                            
-                            
                         </div>
                     </div>
 
@@ -149,7 +160,7 @@ Hasil Perolehan Suara Pemilihan Presma
             </div>
         @empty
             <div class="col-12">
-                <div class="box box-body text-center p-5">
+                <div class="box box-body text-center p-50">
                     <i class="fa fa-info-circle fa-4x text-muted mb-3"></i>
                     <h4 class="text-muted">Belum ada Pasangan Calon yang terdaftar.</h4>
                 </div>
@@ -171,21 +182,29 @@ Hasil Perolehan Suara Pemilihan Presma
                                 <tr>
                                     <th style="width: 50px;">#</th>
                                     <th>Nama Fakultas</th>
+                                    <th class="text-center bg-secondary-light" style="width: 170px;">Jumlah Hak Suara</th>
                                     @foreach($kandidat as $paslon)
                                         <th class="text-center">Paslon No. {{ $paslon->no_urut }}</th>
                                     @endforeach
-                                    <th class="text-center bg-primary-light" style="width: 200px;">Total Suara Fakultas</th>
+                                    <th class="text-center bg-primary-light" style="width: 180px;">Total Suara Masuk</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($rekapFakultas as $namaFakultas => $votes)
                                     @php
                                         $totalFakultas = $totalSuaraPerFakultas[$namaFakultas] ?? 0;
+                                        $hakSuaraFakultas = $totalHakSuaraPerFakultas[$namaFakultas] ?? 0;
+                                        $persenPartisipasiFakultas = $hakSuaraFakultas > 0 ? round(($totalFakultas / $hakSuaraFakultas) * 100, 1) : 0;
                                     @endphp
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td class="fw-bold text-dark">{{ $namaFakultas }}</td>
                                         
+                                        {{-- Column Jumlah Hak Suara --}}
+                                        <td class="text-center bg-secondary-light fw-bold">
+                                            <span class="fs-6 text-dark">{{ number_format($hakSuaraFakultas) }}</span>
+                                        </td>
+
                                         @foreach($kandidat as $paslon)
                                             @php
                                                 $votePaslon = $votes->firstWhere('no_urut', $paslon->no_urut);
@@ -199,12 +218,13 @@ Hasil Perolehan Suara Pemilihan Presma
                                         @endforeach
 
                                         <td class="text-center bg-primary-light fw-bold">
-                                            <span class="badge bg-primary fs-6">{{ number_format($totalFakultas) }} Suara</span>
+                                            <span class="badge bg-primary fs-6 mb-1">{{ number_format($totalFakultas) }} Suara</span>
+                                            <small class="text-muted d-block">Partisipasi: {{ $persenPartisipasiFakultas }}%</small>
                                         </td>
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="{{ count($kandidat) + 3 }}" class="text-center py-4 text-muted">
+                                        <td colspan="{{ count($kandidat) + 4 }}" class="text-center py-4 text-muted">
                                             Belum ada data suara masuk dari fakultas manapun.
                                         </td>
                                     </tr>

@@ -414,19 +414,33 @@ class PresmaController extends Controller
         }
 
         // 4. Statistik Partisipasi Mahasiswa
-        $totalMahasiswa        = RiwayatPendidikan::count();
+        $totalMahasiswa        = RiwayatPendidikan::where('id_jenis_keluar', NULL)
+                                ->count();
+
         $belumMemilih          = max(0, $totalMahasiswa - $totalVotes);
         $persentasePartisipasi = $totalMahasiswa > 0 ? round(($totalVotes / $totalMahasiswa) * 100, 2) : 0;
 
+        // Hitung Total Hak Suara (Mahasiswa Aktif) Per Fakultas
+        $totalHakSuaraPerFakultas = RiwayatPendidikan::with('prodi.fakultas')
+            ->whereNull('id_jenis_keluar')
+            ->get()
+            ->groupBy(function ($mhs) {
+                return optional(optional($mhs->prodi)->fakultas)->nama_fakultas ?? 'Fakultas Lainnya';
+            })
+            ->map(function ($items) {
+                return $items->count();
+            });
+
         return view('ditmawa.presiden-mahasiswa.hasil-vote', [
-            'kandidat'              => $kandidat,
-            'rekapFakultas'         => $rekapFakultas,
-            'totalSuaraPerFakultas' => $totalSuaraPerFakultas,
-            'totalVotes'            => $totalVotes,
-            'totalMahasiswa'        => $totalMahasiswa,
-            'belumMemilih'          => $belumMemilih,
-            'persentasePartisipasi' => $persentasePartisipasi,
-            'idSemesterAktif'       => $semester_aktif,
+            'kandidat'                 => $kandidat,
+            'rekapFakultas'            => $rekapFakultas,
+            'totalSuaraPerFakultas'    => $totalSuaraPerFakultas,
+            'totalHakSuaraPerFakultas' => $totalHakSuaraPerFakultas, // <-- Tambahkan ini
+            'totalVotes'               => $totalVotes,
+            'totalMahasiswa'           => $totalMahasiswa,
+            'belumMemilih'             => $belumMemilih,
+            'persentasePartisipasi'    => $persentasePartisipasi,
+            'idSemesterAktif'          => $semester_aktif,
         ]);
     }
 }
