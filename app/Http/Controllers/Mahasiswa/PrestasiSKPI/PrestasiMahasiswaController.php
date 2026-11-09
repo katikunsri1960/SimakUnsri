@@ -259,6 +259,7 @@ class PrestasiMahasiswaController extends Controller
                 'id_tingkat_prestasi'   => $tingkat_prestasi ? $tingkat_prestasi->id_tingkat_prestasi : $request->id_tingkat_prestasi,
                 'nama_tingkat_prestasi' => $tingkat_prestasi ? $tingkat_prestasi->nama_tingkat_prestasi : '-',
                 'nama_prestasi'         => $request->nama_kompetisi,
+                'cabang'                => $request->nama_cabang,
                 'tahun_prestasi'        => date('Y', strtotime($request->tanggal_sertifikat)),
                 'penyelenggara'         => $request->penyelenggara,
                 'peringkat'             => $request->peringkat,
@@ -369,6 +370,7 @@ class PrestasiMahasiswaController extends Controller
     // Cari data PrestasiMahasiswa berdasarkan id_prestasi
     $prestasi = PrestasiMahasiswa::with(['skpi', 'aktivitas_mahasiswa'])->where('id_prestasi', $id)->first();
 
+    // dd($prestasi);
     if (!$prestasi) {
         // Fallback jika id yang dikirim milik tabel SKPI
         $skpi = SKPI::with('prestasi.aktivitas_mahasiswa')->find($id);
@@ -505,6 +507,7 @@ public function update(Request $request, $id)
             'id_tingkat_prestasi'   => $tingkat_prestasi ? $tingkat_prestasi->id_tingkat_prestasi : $request->id_tingkat_prestasi,
             'nama_tingkat_prestasi' => $tingkat_prestasi ? $tingkat_prestasi->nama_tingkat_prestasi : '-',
             'nama_prestasi'         => $request->nama_kompetisi,
+            'cabang'                => $request->nama_cabang,
             'tahun_prestasi'        => date('Y', strtotime($request->tanggal_sertifikat)),
             'penyelenggara'         => $request->penyelenggara,
             'peringkat'             => $request->peringkat,
