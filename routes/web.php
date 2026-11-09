@@ -946,7 +946,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                     Route::delete('/{id}/destroy', [App\Http\Controllers\DITMAWA\PresmaController::class, 'destroy'])->name('ditmawa.presiden-mahasiswa.kandidat.destroy');
                 });
                 Route::prefix('/hasil-vote')->group(function () {
-                    Route::get('/', [App\Http\Controllers\Ditmawa\PresmaController::class, 'hasilVote'])->name('ditmawa.presiden-mahasiswa.hasil.index');
+                    Route::get('/', [App\Http\Controllers\DITMAWA\PresmaController::class, 'hasilVote'])->name('ditmawa.presiden-mahasiswa.hasil.index');
                 });
 
             });
