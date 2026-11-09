@@ -72,7 +72,7 @@
                     {{-- Nama Cabang & Peringkat --}}
                     <div class="col-md-8 mb-3">
                         <label class="form-label fw-bold">Nama Cabang <span class="text-danger">*</span></label>
-                        <input type="text" name="nama_cabang" class="form-control" value="{{ old('nama_cabang', $prestasi->nama_prestasi) }}" required>
+                        <input type="text" name="nama_cabang" class="form-control" value="{{ old('nama_cabang', $prestasi->cabang) }}" required>
                     </div>
                     <div class="col-md-4 mb-3">
                         <label class="form-label fw-bold">Peringkat <span class="text-danger">*</span></label>

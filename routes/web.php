@@ -613,6 +613,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
         Route::prefix('ditmawa')->group(function(){
             Route::get('/dashboard', [App\Http\Controllers\DITMAWA\DashboardController::class, 'index'])->name('ditmawa');
             Route::get('/check-sync', [App\Http\Controllers\DITMAWA\DashboardController::class, 'check_sync'])->name('ditmawa.check-sync');
+            Route::get('/get-mahasiswa', [App\Http\Controllers\DITMAWA\DashboardController::class, 'get_mahasiswa'])->name('ditmawa.get-mahasiswa');
             // Route::get('/get-mahasiswa', [App\Http\Controllers\DITMAWA\DashboardController::class, 'get-mahasiswa'])->name('ditmawa.get-mahasiswa');
             
             Route::get('/get-prodi/{fakultas_id}', [App\Http\Controllers\DITMAWA\DataMasterController::class, 'getProdi'])->name('ditmawa.mahasiswa.get-fak-prodi-ang');
@@ -931,6 +932,22 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 // Route::put('/update/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'update_detail_skpi'])->name('ditmawa.skpi.data.detail.update');
                 // Route::post('/approve/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'approve_skpi'])->name('ditmawa.skpi.data.approve');
                 // Route::post('/decline/{id}', [App\Http\Controllers\DITMAWA\SKPIController::class, 'decline_skpi'])->name('ditmawa.skpi.data.decline');
+
+            });
+
+            //LAIN-LAIN
+            Route::prefix('presiden-mahasiswa')->group(function () {
+                Route::prefix('/kandidat')->group(function () {
+                    Route::get('/', [App\Http\Controllers\DITMAWA\PresmaController::class, 'index'])->name('ditmawa.presiden-mahasiswa.kandidat.index');
+                    Route::get('/create', [App\Http\Controllers\DITMAWA\PresmaController::class, 'create'])->name('ditmawa.presiden-mahasiswa.kandidat.create');
+                    Route::post('/store', [App\Http\Controllers\DITMAWA\PresmaController::class, 'store'])->name('ditmawa.presiden-mahasiswa.kandidat.store');
+                    Route::get('/{id}/edit', [App\Http\Controllers\DITMAWA\PresmaController::class, 'edit'])->name('ditmawa.presiden-mahasiswa.kandidat.edit');
+                    Route::put('/{id}/update', [App\Http\Controllers\DITMAWA\PresmaController::class, 'update'])->name('ditmawa.presiden-mahasiswa.kandidat.update');
+                    Route::delete('/{id}/destroy', [App\Http\Controllers\DITMAWA\PresmaController::class, 'destroy'])->name('ditmawa.presiden-mahasiswa.kandidat.destroy');
+                });
+                Route::prefix('/hasil-vote')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Ditmawa\PresmaController::class, 'hasilVote'])->name('ditmawa.presiden-mahasiswa.hasil.index');
+                });
 
             });
         });
@@ -1841,7 +1858,7 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
                 // Route::get('', [App\Http\Controllers\Prodi\Akademik\KRSController::class, 'krs'])->name('prodi.data-akademik.krs');
                 Route::get('/sidang-mahasiswa', [App\Http\Controllers\Prodi\Akademik\SidangMahasiswaController::class, 'sidang_mahasiswa'])->name('prodi.data-akademik.sidang-mahasiswa');
                 Route::get('/transkrip-mahasiswa', [App\Http\Controllers\Prodi\Akademik\TranskripMahasiswaController::class, 'transkrip_mahasiswa'])->name('prodi.data-akademik.transkrip-mahasiswa');
-                Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
+                // Route::get('/yudisium-mahasiswa', [App\Http\Controllers\Prodi\Akademik\YudisiumMahasiswaController::class, 'yudisium_mahasiswa'])->name('prodi.data-akademik.yudisium-mahasiswa');
 
 
                 Route::get('/khs', [App\Http\Controllers\Prodi\Akademik\KHSController::class, 'khs'])->name('prodi.data-akademik.khs');
@@ -2447,6 +2464,17 @@ Route::group(['middleware' => ['auth', 'auth.session']], function() {
             Route::get('/kegiatan-akademik', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'akademik'])->name('mahasiswa.akademik');
             Route::get('/kegiatan-seminar', [App\Http\Controllers\Mahasiswa\KegiatanController::class, 'seminar'])->name('mahasiswa.seminar');
             // Route::get('/pengajuan-cuti', [App\Http\Controllers\Mahasiswa\CutiController::class, 'index'])->name('mahasiswa.pengajuan-cuti');
+
+            //Route Lain-lain
+            // Route Pemilihan Presma
+            // Route::get('/pemilihan-presma', [App\Http\Controllers\Mahasiswa\LainLainController::class, 'pemilihanPresma'])->name('mahasiswa.lain-lain.pemilihan-presma.index');
+            // Route::post('/pemilihan-presma/vote', [App\Http\Controllers\Mahasiswa\LainLainController::class, 'submitVote'])->name('mahasiswa.lain-lain.pemilihan-presma.vote');
+            Route::prefix('/lain-lain')->group(function () {
+                Route::prefix('/pemilihan-presma')->group(function () {
+                    Route::get('/', [App\Http\Controllers\Mahasiswa\LainLainController::class, 'index'])->name('mahasiswa.lain-lain.presiden-mahasiswa.index');
+                    Route::post('/vote', [App\Http\Controllers\Mahasiswa\LainLainController::class, 'vote'])->name('mahasiswa.lain-lain.presiden-mahasiswa.vote');
+                });
+            });
 
             //Route Bantuan
             Route::prefix('bantuan')->group(function () {
