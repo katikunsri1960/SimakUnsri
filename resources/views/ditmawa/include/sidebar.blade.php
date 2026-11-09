@@ -356,6 +356,34 @@
                             </li>
                         </ul>
                     </li>
+
+
+                    <li class="header">LAIN-LAIN</li>
+                    <li class="treeview {{ request()->routeIs('ditmawa.presiden-mahasiswa.*') ? 'active menu-open' : '' }}">
+                        <a href="#">
+                            <i class="icon-User"><span class="path1"></span><span class="path2"></span></i>
+                            <span>Presiden Mahasiswa</span>
+                            <span class="pull-right-container">
+                                <i class="fa fa-angle-right pull-right"></i>
+                            </span>
+                        </a>
+                        <ul class="treeview-menu">
+                            <li class="{{ request()->routeIs('ditmawa.presiden-mahasiswa.kandidat.*') ? 'active' : '' }}">
+                                <a href="{{ route('ditmawa.presiden-mahasiswa.kandidat.index') }}">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Kandidat Capresma
+                                </a>
+                            </li>
+
+                            <li class="{{ request()->routeIs('ditmawa.presiden-mahasiswa.hasil.*') ? 'active' : '' }}">
+                                <a href="{{ route('ditmawa.presiden-mahasiswa.hasil.index') }}">
+                                    <i class="icon-Commit"><span class="path1"></span><span class="path2"></span></i>
+                                    Hasil Suara
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+
                     
                     {{-- <li class="treeview {{request()->routeIs('dosen.profile.*') ? 'active menu-open' : ''}}">
                         <a href="#">

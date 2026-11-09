@@ -99,7 +99,7 @@
                             {{-- Nama Cabang / Bidang --}}
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Nama Cabang / Bidang <span class="text-danger">*</span></label>
-                                <input type="text" name="nama_cabang" class="form-control @error('nama_cabang') is-invalid @enderror" value="{{ old('nama_cabang', $prestasi->nama_prestasi) }}" placeholder="Contoh: Debat / Karya Tulis / Futsal" required>
+                                <input type="text" name="nama_cabang" class="form-control @error('nama_cabang') is-invalid @enderror" value="{{ old('nama_cabang', $prestasi->cabang) }}" placeholder="Contoh: Debat / Karya Tulis / Futsal" required>
                                 @error('nama_cabang')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror

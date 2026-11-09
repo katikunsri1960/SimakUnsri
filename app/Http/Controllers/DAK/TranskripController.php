@@ -179,7 +179,7 @@ class TranskripController extends Controller
 
         $today = Carbon::now();
 
-        $pejabat = PejabatUniversitas::where('jabatan_id', 2)->first();
+        $pejabat = PejabatUniversitas::with('jabatan')->where('jabatan_id', 2)->first();
 
 
         $pdf = PDF::loadview('bak.transkrip.pdf', [

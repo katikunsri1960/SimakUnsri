@@ -21,36 +21,38 @@
 <br>
 <div class="container-fluid table-responsive ml-3">
     <div class="row mt-3" style="align-content: center">
-        <table class="table" style="width:100%" class="mb-3" style="font-size: 11pt">
+        <!-- PERBAIKAN: Struktur Tabel Data Diri dengan Total Lebar 100% -->
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 11pt;">
             <tr>
-                <td class="text-start align-middle" style="width: 12%">Nama</td>
-                <td style="padding-left: 16px">:</td>
-                <td class="text-start" id="namaKrs" style="width: 45%; padding-left: 10px; font-wight: bold">{{Str::title($riwayat->nama_mahasiswa)}}</td>
+                <td style="width: 28%; vertical-align: top; text-align: left;">Nama</td>
+                <td style="width: 2%; vertical-align: top; text-align: center;">:</td>
+                <td style="width: 70%; vertical-align: top; text-align: left; font-weight: bold;">{{Str::title($riwayat->nama_mahasiswa)}}</td>
             </tr>
             <tr>
-                <td class="text-start align-middle" style="width: 12%">Tempat, Tanggal Lahir</td>
-                <td style="padding-left: 16px">:</td>
-                <td class="text-start" id="nimKrs" style="width: 45%; padding-left: 10px">
+                <td style="width: 28%; vertical-align: top; text-align: left;">Tempat, Tanggal Lahir</td>
+                <td style="width: 2%; vertical-align: top; text-align: center;">:</td>
+                <td style="width: 70%; vertical-align: top; text-align: left;">
                     {{$riwayat->biodata ? Str::title($riwayat->biodata->tempat_lahir).', '.\Carbon\Carbon::createFromFormat('d-m-Y', $riwayat->biodata->tanggal_lahir)->translatedFormat('d F Y') : ''}}
                 </td>
             </tr>
             <tr>
-                <td class="text-start align-middle" style="width: 12%">NIM</td>
-                <td style="padding-left: 16px">:</td>
-                <td class="text-start" id="nimKrs" style="width: 45%; padding-left: 10px">{{$riwayat->nim}}</td>
+                <td style="width: 28%; vertical-align: top; text-align: left;">NIM</td>
+                <td style="width: 2%; vertical-align: top; text-align: center;">:</td>
+                <td style="width: 70%; vertical-align: top; text-align: left;">{{$riwayat->nim}}</td>
             </tr>
             <tr>
-                <td class="text-start align-middle" style="width: 12%">Program Studi</td>
-                <td style="padding-left: 16px">:</td>
-                <td class="text-start" id="namaKrs" style="width: 45%; padding-left: 10px; font-wight: bold">{{Str::title($riwayat->prodi->nama_program_studi)}}</td>
+                <td style="width: 28%; vertical-align: top; text-align: left;">Program Studi</td>
+                <td style="width: 2%; vertical-align: top; text-align: center;">:</td>
+                <td style="width: 70%; vertical-align: top; text-align: left; font-weight: bold;">{{Str::title($riwayat->prodi->nama_program_studi)}}</td>
             </tr>
             <tr>
-                <td class="text-start align-middle" style="width: 12%">Tahun Masuk</td>
-                <td style="padding-left: 16px">:</td>
-                <td class="text-start" id="namaKrs" style="width: 45%; padding-left: 10px; font-wight: bold">{{\Carbon\Carbon::parse($riwayat->tanggal_daftar)->format('Y')}}</td>
+                <td style="width: 28%; vertical-align: top; text-align: left;">Tahun Masuk</td>
+                <td style="width: 2%; vertical-align: top; text-align: center;">:</td>
+                <td style="width: 70%; vertical-align: top; text-align: left; font-weight: bold;">{{\Carbon\Carbon::parse($riwayat->tanggal_daftar)->format('Y')}}</td>
             </tr>
         </table>
     </div>
+
     <div class="row" style="margin-top: 15px">
         <table class="table-pdf" id="krs-regular" border="1" rules="all" style="font-size: 8pt; width: 100%; font-family: 'Times New Roman', Times, serif">
             <thead>
@@ -72,7 +74,7 @@
                 <tr>
                     <td class="text-center align-middle table-pdf">{{$loop->iteration}}</td>
                     <td class="text-start align-middle table-pdf">{{$d->kode_mata_kuliah}}</td>
-                    <td class="text-start align-middle table-pdf">{{$d->nama_mata_kuliah}} {{$d->nama_mata_kuliah_english ? '('.$d->nama_mata_kuliah_english.')' : ''}}</td>
+                    <td class="text-start align-middle table-pdf">{{ strtoupper($d->nama_mata_kuliah) }} {{ $d->nama_mata_kuliah_english ? '(' . $d->nama_mata_kuliah_english . ')' : '' }}</td>
                     <td class="text-center align-middle table-pdf">{{$d->nilai_huruf}}</td>
                     <td class="text-center align-middle table-pdf">{{$d->nilai_indeks}}</td>
                     <td class="text-center align-middle table-pdf">{{$d->sks_mata_kuliah}}</td>
@@ -95,24 +97,20 @@
                     </th>
                     <th class="text-center align-middle table-pdf">{{$mutu}}</th>
                 </tr>
-                {{-- <tr>
-                    <th colspan="3" class="text-center align-middle table-pdf">IPK</th>
-                    <th class="text-center align-middle table-pdf" id="totalSks">{{$ipk}}</th>
-                    <th class="text-center align-middle table-pdf"></th>
-                    <th class="text-center align-middle table-pdf"></th>
-                </tr> --}}
             </tfoot>
         </table>
     </div>
-    <div class="">
-        <table style="font-size: 10pt; margin-top: 15px">
+
+    <div>
+        <table style="font-size: 10pt; margin-top: 15px; width: 100%;">
             <tr>
-                <td>INDEKS PRESTASI KUMULATIF (IPK)</td>
-                <td style="padding-left: 20px; padding-right:20px">:</td>
-                <td>{{$mutu}}/{{$transkrip->sum('sks_mata_kuliah')}} = {{number_format($mutu/$transkrip->sum('sks_mata_kuliah'), 2, ',','.')}} ({{$ipk_terbilang}})</td>
+                <td style="width: 28%;">INDEKS PRESTASI KUMULATIF (IPK)</td>
+                <td style="width: 2%; text-align: center;">:</td>
+                <td style="width: 70%;">{{$mutu}}/{{$transkrip->sum('sks_mata_kuliah')}} = {{number_format($mutu/$transkrip->sum('sks_mata_kuliah'), 2, ',','.')}} ({{$ipk_terbilang}})</td>
             </tr>
         </table>
     </div>
+
     <div style="page-break-inside: avoid;">
         <table style="width: 100%" class="no-break">
             <tbody>
@@ -126,37 +124,29 @@
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-left text-10" width="60%">
-                        {{-- Catatan: --}}
-                    </td>
+                    <td class="text-left text-10" width="60%"></td>
                     <td width="40%" class="text-start text-10">
                         a.n Rektor,
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-left text-10" width="60%">
-                        {{-- Catatan: --}}
-                    </td>
+                    <td class="text-left text-10" width="60%"></td>
                     <td width="40%" class="text-start text-10">
-                        Wakil Rektor Bidang Akademik
+                        {{ $pejabat === NULL ? 'Belum Diisi' : $pejabat->jabatan->nama}}
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-left text-10" width="60%" style="vertical-align: text-top">
-                        {{-- KSM harus dibawa pada saat mengikuti ujian akhir semester --}}
-                    </td>
-                    <td height="60" width="40%" class="text-right text-10 mx-50"><strong><strong></td>
+                    <td class="text-left text-10" width="60%" style="vertical-align: text-top"></td>
+                    <td height="60" width="40%" class="text-right text-10 mx-50"></td>
                 </tr>
                 <tr>
                     <td width="60%"></td>
                     <td width="40%" class="text-start text-10">
-                        {{ $pejabat === NULL ? 'Belum Diisi' : $pejabat->gelar_depan . ' ' . ucwords(strtolower($pejabat->nama_dosen)) . ', ' . $pejabat->gelar_belakang }}
+                        {{ $pejabat === NULL ? 'Belum Diisi' : $pejabat->gelar_depan . ' ' . ucwords(strtolower($pejabat->nama)) . ', ' . $pejabat->gelar_belakang }}
                     </td>
                 </tr>
                 <tr>
-                    <td class="text-left text-10" width="60%" style="font-style: italic;">
-                        {{-- Lembar untuk mahasiswa --}}
-                    </td>
+                    <td class="text-left text-10" width="60%" style="font-style: italic;"></td>
                     <td width="40%" class="text-start text-10">
                         NIP. {{ $pejabat === NULL ? 'Belum Diisi' : $pejabat->nip}}
                     </td>
