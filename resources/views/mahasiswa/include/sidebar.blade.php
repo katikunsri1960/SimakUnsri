@@ -221,13 +221,14 @@
                             </li>
                         </ul>
                     </li>
+                    {{--
                     <li class="{{ request()->routeIs('mahasiswa.lain-lain.presiden-mahasiswa.*') ? 'active' : '' }}">
                         <a href="{{ route('mahasiswa.lain-lain.presiden-mahasiswa.index') }}">
                             <i class="fa fa-check-square-o"></i>
                             <span>Pemilihan Capresma</span>
                         </a>
                     </li>
-
+                    --}}
                     <li class="header">BANTUAN</li>
                     <li class="{{request()->routeIs('mahasiswa.bantuan.ganti-password') ? 'active' : ''}}">
                         <a href="{{route('mahasiswa.bantuan.ganti-password')}}">
