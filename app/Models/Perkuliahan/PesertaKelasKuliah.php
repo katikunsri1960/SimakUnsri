@@ -33,7 +33,7 @@ class PesertaKelasKuliah extends Model
 
     public function matkul()
     {
-        $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');
+        return $this->belongsTo(MataKuliah::class, 'id_matkul', 'id_matkul');
     }
 
     public function nilai_perkuliahan()

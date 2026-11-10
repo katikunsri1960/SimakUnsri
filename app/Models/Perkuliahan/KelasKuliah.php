@@ -15,6 +15,11 @@ class KelasKuliah extends Model
 {
     use HasFactory;
 
+    protected $table = 'kelas_kuliahs'; // sesuaikan dengan nama tabel di DB
+    protected $primaryKey = 'id_kelas_kuliah';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $guarded = [];
 
     protected $appends = [ 'id_tanggal_mulai_efektif', 'id_tanggal_akhir_efektif'];
