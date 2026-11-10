@@ -1,4 +1,4 @@
-@extends('layouts.dppti')
+@extends('layouts.ditmawa')
 @section('title')
 Daftar Tunda Bayar
 @endsection
@@ -27,7 +27,7 @@ Daftar Tunda Bayar
                 <div class="box-header with-border d-flex justify-content-between">
                     <div class="d-flex justify-content-start">
                         <!-- Modal trigger button -->
-                        <form action="{{ route('dppti.tunda-bayar') }}" method="get" id="semesterForm">
+                        <form action="{{ route('ditmawa.tunda-bayar') }}" method="get" id="semesterForm">
 
                             <div class="row">
                                 <div class="col-md-3 pt-2">
@@ -149,7 +149,7 @@ Daftar Tunda Bayar
                                     <td class="text-center align-middle">{{$d->terakhir_update}}</td>
                                     <td class="text-center align-middle text-nowrap">
                                         @if ($d->status == 3)
-                                        <form action="{{route('dppti.tunda-bayar.approve', ['tunda_bayar' => $d->id])}}"
+                                        <form action="{{route('ditmawa.tunda-bayar.approve', ['tunda_bayar' => $d->id])}}"
                                             method="post" class="d-inline approve-form" id="approveForm{{ $d->id }}"
                                             data-id="{{ $d->id }}">
                                             @csrf
@@ -207,7 +207,7 @@ Daftar Tunda Bayar
     });
 
     function tolak(id) {
-        document.getElementById('declineForm').action = '/dppti/tunda-bayar/decline/' + id;
+        document.getElementById('declineForm').action = '/ditmawa/tunda-bayar/decline/' + id;
         document.getElementById('alasan_pembatalan').value = '';
     }
 

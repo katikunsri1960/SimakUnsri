@@ -1,4 +1,4 @@
-@extends('layouts.dppti')
+@extends('layouts.ditmawa')
 @section('title')
 Daftar Peserta Yudisium
 @endsection
@@ -165,7 +165,7 @@ function getData()
     }
 
     $.ajax({
-        url: `{{route('dppti.yudisium.peserta.data')}}`,
+        url: `{{route('ditmawa.yudisium.peserta.data')}}`,
         type: 'GET',
         data: {
             fakultas: fakultas,
@@ -191,7 +191,7 @@ function getData()
                 table.clear().draw();
                 $.each(response.data, function (index, item) {
                     // console.log(item.id);
-                    var url_berkas = '{{route('dppti.yudisium.peserta.formulir', ['id' => 'ID'])}}';
+                    var url_berkas = '{{route('ditmawa.yudisium.peserta.formulir', ['id' => 'ID'])}}';
                     url_berkas = url_berkas.replace('ID', item.id);
                     var berkasButton = '<a class="btn btn-sm btn-success" href="' + url_berkas + '" target="_blank"><i class="fa fa-file me-2"></i>Unduh Berkas Registrasi</a>';
                     
@@ -267,7 +267,7 @@ function getData()
                                 <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content rounded-3">
                                         <form method="POST"
-                                            action="{{ route('dppti.yudisium.peserta.update-foto') }}"
+                                            action="{{ route('ditmawa.yudisium.peserta.update-foto') }}"
                                             enctype="multipart/form-data">
                                             @csrf
 
@@ -335,7 +335,7 @@ function getData()
                                     <div class="modal-content rounded-3">
 
                                         <form method="POST"
-                                            action="{{ route('dppti.yudisium.peserta.update-predikat') }}">
+                                            action="{{ route('ditmawa.yudisium.peserta.update-predikat') }}">
                                             @csrf
 
                                             <input type="hidden" name="id" value="${item.id}">
@@ -508,7 +508,7 @@ function submitPredikat(id) {
         if (!isConfirm) return;
 
         $.ajax({
-            url: `{{ route('dppti.yudisium.peserta.update-predikat', ['id' => 'ID']) }}`.replace('ID', id),
+            url: `{{ route('ditmawa.yudisium.peserta.update-predikat', ['id' => 'ID']) }}`.replace('ID', id),
             type: 'POST',
             data: {
                 _token: '{{ csrf_token() }}',
@@ -562,7 +562,7 @@ function approvePeserta(id) {
     }, function (isConfirm) {
         if (isConfirm) {
             $.ajax({
-                url: `{{ route('dppti.yudisium.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
+                url: `{{ route('ditmawa.yudisium.peserta.approve', ['id' => 'ID']) }}`.replace('ID', id),
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}'
@@ -619,7 +619,7 @@ function submitDecline(id) {
         if (isConfirmed) {
             // console.log('alasan_pembatalan:', alasan);
             $.ajax({
-                url: `{{route('dppti.yudisium.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
+                url: `{{route('ditmawa.yudisium.peserta.decline', ['id' => 'ID'])}}`.replace('ID', id),
                 type: 'POST',
                 data: {
                     _token: '{{ csrf_token() }}',
